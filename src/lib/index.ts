@@ -1,1 +1,1 @@
-export const LIB_CONTENT = 'svelte-lib-template';
+export const LIB_CONTENT = 'neo-svelte';

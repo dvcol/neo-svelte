@@ -1,23 +1,29 @@
 {
-  "name": "@dvcol/svelte-lib-template",
+  "name": "@dvcol/neo-svelte",
   "type": "module",
   "version": "1.6.1",
   "packageManager": "pnpm@9.12.3",
-  "description": "<description>",
-  "homepage": "https://github.com/dvcol/svelte-lib-template",
-  "bugs": "https://github.com/dvcol/svelte-lib-template/issues",
+  "description": "Neomorphic ui library for svelte 5",
+  "homepage": "https://github.com/dvcol/neo-svelte",
+  "bugs": "https://github.com/dvcol/neo-svelte/issues",
   "keywords": [
     "typescript",
     "library",
     "svelte",
     "svelte 5",
-    "svelte-lib-template"
+    "neo-svelte",
+    "neomorphism",
+    "glassmorphism",
+    "components",
+    "component-library",
+    "ui",
+    "ui-library"
   ],
   "license": "MIT",
   "author": "dvcol",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dvcol/svelte-lib-template.git"
+    "url": "https://github.com/dvcol/neo-svelte.git"
   },
   "engines": {
     "node": ">=20",
@@ -72,6 +78,8 @@
     "svelte": ">=5"
   },
   "dependencies": {
+    "@dvcol/common-utils": "^1.18.1",
+    "@dvcol/svelte-utils": "^1.1.0",
     "svelte": "^5.1.9",
     "vite": "^5.4.10"
   },

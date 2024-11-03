@@ -22,8 +22,8 @@ jobs:
     runs-on: ubuntu-latest
 
     environment:
-      name: svelte-lib-template
-      url: https://dvcol.github.io/svelte-lib-template/
+      name: neo-svelte
+      url: https://dvcol.github.io/neo-svelte/
 
     steps:
       - name: ⛙ Checkout branch ${{ github.ref }}

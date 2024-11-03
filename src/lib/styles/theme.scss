@@ -1,0 +1,12 @@
+@use 'src/lib/styles/common/z-index';
+@use 'src/lib/styles/common/colors';
+@use 'src/lib/styles/common/typography';
+@use 'src/lib/styles/common/shadows';
+@use 'src/lib/styles/common/spacing';
+@use 'src/lib/styles/common/utils';
+
+:root,
+:host {
+  color: var(--text-color);
+  background-color: var(--background-color);
+}

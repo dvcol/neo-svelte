@@ -1,0 +1,83 @@
+@use 'src/lib/styles/animation' as animation;
+@include animation.coalesce;
+@include animation.pulse;
+
+%after-before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  opacity: 0;
+  content: '';
+}
+
+@mixin pulse(
+  $box-shadow: var(--pulse-box-shadow, var(--box-shadow-raised-2)),
+  $duration: var(--pulse-duration, 4s),
+  $delay: var(--pulse-delay, 2s),
+  $iteration: infinite
+) {
+  &.pulse {
+    &::after,
+    &::before {
+      @extend %after-before;
+
+      box-shadow: $box-shadow;
+    }
+
+    &::before {
+      animation: pulse $duration linear $iteration;
+    }
+
+    &::after {
+      animation: pulse $duration linear $delay $iteration;
+    }
+
+    &.pressed,
+    &:focus-visible,
+    &:hover,
+    &:active {
+      &::after,
+      &::before {
+        animation-direction: reverse;
+      }
+    }
+  }
+}
+
+@mixin coalesce(
+  $box-shadow: var(--coalesce-box-shadow, var(--box-shadow-raised-2)),
+  $duration: var(--coalesce-duration, 4s),
+  $delay: var(--coalesce-delay, 2s),
+  $iteration: infinite
+) {
+  &.coalesce {
+    &::after,
+    &::before {
+      @extend %after-before;
+
+      box-shadow: $box-shadow;
+    }
+
+    &::before {
+      animation: coalesce $duration linear $iteration;
+    }
+
+    &::after {
+      animation: coalesce $duration linear $delay $iteration;
+    }
+
+    &.pressed,
+    &:focus-visible,
+    &:hover,
+    &:active {
+      &::after,
+      &::before {
+        animation-direction: reverse;
+      }
+    }
+  }
+}

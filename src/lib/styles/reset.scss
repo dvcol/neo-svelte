@@ -1,0 +1,81 @@
+/*
+  Use a more-intuitive box-sizing model.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default */
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+/* Global defaults */
+:host,
+html {
+  /* Default to dark mode */
+  color-scheme: dark light;
+  hanging-punctuation: first last;
+}
+
+/*
+  Typographic tweaks!
+   - Add accessible line-height
+   - Improve text rendering
+*/
+:host,
+body {
+  min-height: 100svh;
+  line-height: 1.5rem;
+  -webkit-font-smoothing: antialiased;
+  transition-behavior: allow-discrete;
+  // stylelint-disable-next-line property-no-unknown -- @see https://caniuse.com/mdn-css_properties_interpolate-size_allow-keywords
+  interpolate-size: allow-keywords;
+}
+
+/* Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Avoid ugly unbalanced word wrap */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+/* Avoid ugly orphan word wrap */
+p,
+li,
+figcaption {
+  max-width: 80ch;
+  text-wrap: pretty;
+}
+
+/* Declare as container for container queries */
+:host > :is(header, main, footer),
+body > :is(header, main, footer),
+section,
+article {
+  container-type: inline-size;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :has(:target) {
+    scroll-behavior: smooth;
+    scroll-padding-top: 3rem;
+  }
+}

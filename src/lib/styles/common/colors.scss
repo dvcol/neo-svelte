@@ -1,0 +1,42 @@
+:root,
+:host {
+  /** source colors */
+  --white-source: 255 255 255;
+  --white-soft-source: 230 231 238;
+  --grey-source: 200 208 231;
+  --black-source: 0 0 0;
+  --black-soft-source: 68 71 106;
+  --black-strong-source: 49 52 75;
+  --purple-source: 46 0 255;
+
+  /* ui color variables */
+  --white: rgb(var(--white-source));
+  --white-soft: rgb(var(--white-soft-source));
+  --grey: rgb(var(--grey-source));
+  --grey-50: rgba(var(--grey-source) / 50%);
+  --black: rgb(var(--black-source));
+  --black-soft: rgb(var(--black-soft-source));
+  --black-strong: rgb(var(--black-strong-source));
+  --purple: rgb(var(--purple-source));
+  --purple-50: rgba(var(--purple-source) / 50%);
+  --purple-90: rgba(var(--purple-source) / 90%);
+
+  /** semantic colors */
+  --text-color: var(--black-soft);
+  --text-color-focused: var(--purple);
+  --text-color-hover: var(--purple-90);
+  --border-color: var(--grey-50);
+  --border-color-focused: var(--purple-50);
+  --border-color-hover: var(--purple-90);
+  --background-color: var(--white-soft);
+  --shadow-color-light: var(--white);
+  --shadow-color-dark: var(--grey);
+
+  /* touch highlight */
+  -webkit-tap-highlight-color: transparent;
+
+  /* cursor highlight */
+  *::selection {
+    background-color: var(--grey);
+  }
+}

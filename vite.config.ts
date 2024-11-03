@@ -49,11 +49,11 @@ const config: ViteUserConfig = {
   },
   server: {
     port: 3303,
-    open: '/svelte-lib-template/',
+    open: '/neo-svelte/',
   },
   preview: {
     port: 3304,
-    open: '/svelte-lib-template/',
+    open: '/neo-svelte/',
   },
   test: {
     include: ['test/**/*.{test,spec}.{js,ts}'],
@@ -66,6 +66,6 @@ const config: ViteUserConfig = {
   },
 };
 
-if (isWeb) config.base = '/svelte-lib-template/';
+if (isWeb) config.base = '/neo-svelte/';
 
 export default defineConfig(config);
