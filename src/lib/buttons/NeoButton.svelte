@@ -12,8 +12,9 @@
     icon,
     // States
     loading,
-    skeleton,
+    skeleton, // todo
     // Styles
+    class: classNames,
     text,
     flat,
     glass, // todo
@@ -48,27 +49,40 @@
     onkeyup?: (e: KeyboardEvent) => unknown;
   } & Partial<Omit<HTMLButtonAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> = $props();
 
-  let pressed = $state(false);
+  let enter = $state(false);
+  let active = $state(false);
+  const pressed = $derived(enter || active);
+
   const onKeydownEnter = (e: KeyboardEvent) => {
     if (loading) return;
-    if (e.key === 'Enter') pressed = true;
+    if (e.key === 'Enter') enter = true;
     onkeydown?.(e);
   };
 
   const onKeyUpEnter = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') pressed = false;
+    if (e.key === 'Enter') enter = false;
     if (loading) return;
     onkeyup?.(e);
+  };
+
+  let timeout: ReturnType<typeof setTimeout>;
+  const onActive = () => {
+    clearTimeout(timeout);
+    active = true;
+    timeout = setTimeout(() => {
+      active = false;
+    }, 100);
   };
 
   const onClick = (e: MouseEvent) => {
     if (loading) return;
     onclick?.(e);
+    onActive();
   };
 </script>
 
 <button
-  class="neo-button"
+  class={['neo-button', classNames].filter(Boolean).join(' ')}
   class:pulse
   class:coalesce
   class:pressed
@@ -102,6 +116,7 @@
   .neo-button {
     position: relative;
     display: flex;
+    box-sizing: border-box;
     margin: 0.25rem;
     padding: 0.25rem 0.5rem;
     color: var(--btn-text-color, inherit);
@@ -129,7 +144,7 @@
     }
 
     &.text {
-      border-color: transparent !important;
+      border: none;
     }
 
     &.text:hover,
@@ -147,7 +162,7 @@
 
     &.flat.loading:active,
     &.flat:hover:not(:active, &.pressed) {
-      border-color: var(--btn-border-color-hover, var(--border-color-hover)) !important;
+      border-color: var(--btn-border-color-hover, var(--border-color-hover));
     }
 
     &.flat,
@@ -157,14 +172,19 @@
     }
 
     &[disabled]:not([disabled='false']) {
-      color: var(--btn-text-color-disabled, var(--text-color));
-      box-shadow: none;
+      color: var(--btn-text-color-disabled, var(--text-color-disabled)) !important;
+      border-color: var(--btn-border-color-disabled, var(--border-color-disabled)) !important;
+      box-shadow: var(--box-shadow-flat);
       cursor: not-allowed;
-      opacity: 0.5;
     }
 
-    @include mixin.pulse;
-    @include mixin.coalesce;
+    &.pulse {
+      @include mixin.pulse;
+    }
+
+    &.coalesce {
+      @include mixin.coalesce;
+    }
 
     .icon,
     .content {
@@ -175,6 +195,7 @@
 
     .content {
       gap: var(--btn-icon-gap, 0.35rem);
+      height: 100%;
 
       &.reverse {
         flex-direction: row-reverse;

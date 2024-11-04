@@ -14,6 +14,7 @@
   --white-soft: rgb(var(--white-soft-source));
   --grey: rgb(var(--grey-source));
   --grey-50: rgba(var(--grey-source) / 50%);
+  --grey-70: rgba(var(--grey-source) / 70%);
   --black: rgb(var(--black-source));
   --black-soft: rgb(var(--black-soft-source));
   --black-strong: rgb(var(--black-strong-source));
@@ -25,9 +26,11 @@
   --text-color: var(--black-soft);
   --text-color-focused: var(--purple);
   --text-color-hover: var(--purple-90);
+  --text-color-disabled: var(--grey);
   --border-color: var(--grey-50);
   --border-color-focused: var(--purple-50);
   --border-color-hover: var(--purple-90);
+  --border-color-disabled: var(--grey-70);
   --background-color: var(--white-soft);
   --shadow-color-light: var(--white);
   --shadow-color-dark: var(--grey);

@@ -1,0 +1,23 @@
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --progress {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+
+@property --source-color {
+  syntax: '<color>';
+  initial-value: transparent;
+  inherits: false;
+}
+
+@property --target-color {
+  syntax: '<color>';
+  initial-value: transparent;
+  inherits: false;
+}

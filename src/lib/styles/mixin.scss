@@ -1,6 +1,4 @@
 @use 'src/lib/styles/animation' as animation;
-@include animation.coalesce;
-@include animation.pulse;
 
 %after-before {
   position: absolute;
@@ -20,32 +18,32 @@
   $delay: var(--pulse-delay, 2s),
   $iteration: infinite
 ) {
-  &.pulse {
+  &::after,
+  &::before {
+    @extend %after-before;
+
+    box-shadow: $box-shadow;
+  }
+
+  &::before {
+    animation: pulse $duration linear $iteration;
+  }
+
+  &::after {
+    animation: pulse $duration linear $delay $iteration;
+  }
+
+  &.pressed,
+  &:focus-visible,
+  &:hover,
+  &:active {
     &::after,
     &::before {
-      @extend %after-before;
-
-      box-shadow: $box-shadow;
-    }
-
-    &::before {
-      animation: pulse $duration linear $iteration;
-    }
-
-    &::after {
-      animation: pulse $duration linear $delay $iteration;
-    }
-
-    &.pressed,
-    &:focus-visible,
-    &:hover,
-    &:active {
-      &::after,
-      &::before {
-        animation-direction: reverse;
-      }
+      animation-direction: reverse;
     }
   }
+
+  @include animation.pulse;
 }
 
 @mixin coalesce(
@@ -54,30 +52,77 @@
   $delay: var(--coalesce-delay, 2s),
   $iteration: infinite
 ) {
-  &.coalesce {
+  &::after,
+  &::before {
+    @extend %after-before;
+
+    box-shadow: $box-shadow;
+  }
+
+  &::before {
+    animation: coalesce $duration linear $iteration;
+  }
+
+  &::after {
+    animation: coalesce $duration linear $delay $iteration;
+  }
+
+  &.pressed,
+  &:focus-visible,
+  &:hover,
+  &:active {
     &::after,
     &::before {
-      @extend %after-before;
-
-      box-shadow: $box-shadow;
-    }
-
-    &::before {
-      animation: coalesce $duration linear $iteration;
-    }
-
-    &::after {
-      animation: coalesce $duration linear $delay $iteration;
-    }
-
-    &.pressed,
-    &:focus-visible,
-    &:hover,
-    &:active {
-      &::after,
-      &::before {
-        animation-direction: reverse;
-      }
+      animation-direction: reverse;
     }
   }
+
+  @include animation.coalesce;
+}
+
+@mixin border-rotate(
+  $background-color: var(--background-color),
+  $border-color: var(--border-color-hover),
+  $border-width: 1px,
+  $speed: 3s,
+  $easing: linear,
+  $transition: (
+    1s --source-color,
+    1s --target-color,
+  )
+) {
+  --source-color: #{$background-color};
+  --target-color: #{$border-color};
+
+  background:
+    linear-gradient($background-color, $background-color) padding-box,
+    conic-gradient(from var(--angle), var(--source-color), var(--target-color)) border-box;
+  border: $border-width solid transparent;
+  transition: $transition;
+  animation: $speed rotate $easing infinite;
+
+  &.filled {
+    --source-color: var(--target-color);
+  }
+
+  &.empty {
+    --target-color: transparent;
+  }
+
+  @include animation.rotate;
+}
+
+@mixin border-progress(
+  $background-color: var(--background-color),
+  $border-color: var(--border-color-hover),
+  $border-width: 1px,
+  $transition: --progress,
+  $speed: 2s,
+  $easing: var(--transition-bezier)
+) {
+  background:
+    linear-gradient($background-color, $background-color) padding-box,
+    conic-gradient($border-color, $border-color var(--progress), transparent var(--progress)) border-box;
+  border: $border-width solid transparent;
+  transition: $transition $speed $easing;
 }
