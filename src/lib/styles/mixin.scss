@@ -126,3 +126,19 @@
   border: $border-width solid transparent;
   transition: $transition $speed $easing;
 }
+
+@mixin skeleton(
+  $background-color: var(--skeleton-color),
+  $border-color: var(--skeleton-color),
+  $text-color: var(--skeleton-color),
+  $timing: 2s,
+  $easing: var(--transition-skeleton)
+) {
+  color: $text-color !important;
+  background-color: $background-color !important;
+  border-color: $border-color !important;
+  transition: none;
+  animation: skeleton $timing $easing infinite;
+
+  @include animation.skeleton;
+}

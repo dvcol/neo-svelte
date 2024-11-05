@@ -45,3 +45,11 @@
     }
   }
 }
+
+@mixin skeleton {
+  @keyframes skeleton {
+    50% {
+      opacity: 0.5;
+    }
+  }
+}

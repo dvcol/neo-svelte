@@ -11,8 +11,9 @@
   --black-soft-strong: oklch(from var(--black-soft) calc(l - 0.075) c h);
   --grey: oklch(85.9% 0.033 270.413deg);
   --grey-50: oklch(from var(--grey) l c h / 50%);
-  --grey-soft: oklch(from var(--grey) calc(l - 0.4) c h);
-  --grey-soft-20: oklch(from var(--grey-soft) l c h / 20%);
+  --grey-soft: oklch(from var(--grey) calc(l - 0.05) c h);
+  --grey-dark: oklch(from var(--grey) calc(l - 0.4) c h);
+  --grey-dark-20: oklch(from var(--grey-soft) l c h / 20%);
   --purple: oklch(46.4% 0.305 269.594deg);
   --purple-50: oklch(from var(--purple) l c h / 50%);
   --purple-80: oklch(from var(--purple) l c h / 80%);
@@ -21,17 +22,18 @@
   --purple-soft-80: oklch(from var(--purple-soft) l c h / 80%);
 
   /** semantic colors */
-  --text-color: var(--grey-soft);
+  --text-color: var(--grey-dark);
   --text-color-focused: var(--purple-80);
   --text-color-hover: var(--purple);
   --text-color-disabled: var(--text-color);
-  --border-color: var(--grey-soft-20);
+  --border-color: var(--grey-dark-20);
   --border-color-focused: var(--purple-50);
   --border-color-hover: var(--purple-80);
   --border-color-disabled: var(--border-color);
   --background-color: var(--white-soft);
   --shadow-color-light: var(--white);
   --shadow-color-dark: var(--grey);
+  --skeleton-color: var(--grey-soft);
 
   /** dark mode semantic colors */
   --dark-text-color: var(--white-80);
@@ -45,6 +47,7 @@
   --dark-background-color: var(--black-soft);
   --dark-shadow-color-light: var(--black-soft-light);
   --dark-shadow-color-dark: var(--black-soft-strong);
+  --dark-skeleton-color: var(--grey-dark);
 
   /* touch highlight */
   -webkit-tap-highlight-color: transparent;
@@ -66,6 +69,7 @@
     --background-color: var(--dark-background-color);
     --shadow-color-light: var(--dark-shadow-color-light);
     --shadow-color-dark: var(--dark-shadow-color-dark);
+    --skeleton-color: var(--dark-skeleton-color);
   }
 
   /* override semantic color if dark mode is enabled */
