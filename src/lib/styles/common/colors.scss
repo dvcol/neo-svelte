@@ -1,39 +1,50 @@
 :root,
 :host {
-  /** source colors */
-  --white-source: 255 255 255;
-  --white-soft-source: 230 231 238;
-  --grey-source: 200 208 231;
-  --black-source: 0 0 0;
-  --black-soft-source: 68 71 106;
-  --black-strong-source: 49 52 75;
-  --purple-source: 46 0 255;
-
   /* ui color variables */
-  --white: rgb(var(--white-source));
-  --white-soft: rgb(var(--white-soft-source));
-  --grey: rgb(var(--grey-source));
-  --grey-50: rgba(var(--grey-source) / 50%);
-  --grey-70: rgba(var(--grey-source) / 70%);
-  --black: rgb(var(--black-source));
-  --black-soft: rgb(var(--black-soft-source));
-  --black-strong: rgb(var(--black-strong-source));
-  --purple: rgb(var(--purple-source));
-  --purple-50: rgba(var(--purple-source) / 50%);
-  --purple-90: rgba(var(--purple-source) / 90%);
+  --white: oklch(100% 0 89.876deg);
+  --white-5: oklch(from var(--white) l c h / 5%);
+  --white-80: oklch(from var(--white) l c h / 80%);
+  --white-soft: oklch(92.9% 0.009 279.682deg);
+  --black: oklch(0% 0 0deg);
+  --black-soft-light: oklch(from var(--black-soft) calc(l + 0.075) c h);
+  --black-soft: oklch(24.7% 0.008 264.416deg);
+  --black-soft-strong: oklch(from var(--black-soft) calc(l - 0.075) c h);
+  --grey: oklch(85.9% 0.033 270.413deg);
+  --grey-50: oklch(from var(--grey) l c h / 50%);
+  --grey-soft: oklch(from var(--grey) calc(l - 0.4) c h);
+  --grey-soft-20: oklch(from var(--grey-soft) l c h / 20%);
+  --purple: oklch(46.4% 0.305 269.594deg);
+  --purple-50: oklch(from var(--purple) l c h / 50%);
+  --purple-80: oklch(from var(--purple) l c h / 80%);
+  --purple-soft: oklch(from var(--purple) calc(l + 0.4) c h);
+  --purple-soft-50: oklch(from var(--purple-soft) l c h / 50%);
+  --purple-soft-80: oklch(from var(--purple-soft) l c h / 80%);
 
   /** semantic colors */
-  --text-color: var(--black-soft);
-  --text-color-focused: var(--purple);
-  --text-color-hover: var(--purple-90);
-  --text-color-disabled: var(--grey);
-  --border-color: var(--grey-50);
+  --text-color: var(--grey-soft);
+  --text-color-focused: var(--purple-80);
+  --text-color-hover: var(--purple);
+  --text-color-disabled: var(--text-color);
+  --border-color: var(--grey-soft-20);
   --border-color-focused: var(--purple-50);
-  --border-color-hover: var(--purple-90);
-  --border-color-disabled: var(--grey-70);
+  --border-color-hover: var(--purple-80);
+  --border-color-disabled: var(--border-color);
   --background-color: var(--white-soft);
   --shadow-color-light: var(--white);
   --shadow-color-dark: var(--grey);
+
+  /** dark mode semantic colors */
+  --dark-text-color: var(--white-80);
+  --dark-text-color-focused: var(--purple-soft-80);
+  --dark-text-color-hover: var(--purple-soft);
+  --dark-text-color-disabled: var(--white-soft-50);
+  --dark-border-color: var(--white-5);
+  --dark-border-color-focused: var(--purple-soft-50);
+  --dark-border-color-hover: var(--purple-soft-80);
+  --dark-border-color-disabled: var(--dark-border-color);
+  --dark-background-color: var(--black-soft);
+  --dark-shadow-color-light: var(--black-soft-light);
+  --dark-shadow-color-dark: var(--black-soft-strong);
 
   /* touch highlight */
   -webkit-tap-highlight-color: transparent;
@@ -41,5 +52,31 @@
   /* cursor highlight */
   *::selection {
     background-color: var(--grey);
+  }
+
+  @mixin dark-theme {
+    --text-color: var(--dark-text-color);
+    --text-color-focused: var(--dark-text-color-focused);
+    --text-color-hover: var(--dark-text-color-hover);
+    --text-color-disabled: var(--dark-text-color-disabled);
+    --border-color: var(--dark-border-color);
+    --border-color-focused: var(--dark-border-color-focused);
+    --border-color-hover: var(--dark-border-color-hover);
+    --border-color-disabled: var(--dark-border-color-disabled);
+    --background-color: var(--dark-background-color);
+    --shadow-color-light: var(--dark-shadow-color-light);
+    --shadow-color-dark: var(--dark-shadow-color-dark);
+  }
+
+  /* override semantic color if dark mode is enabled */
+  &:root[theme='dark'] {
+    @include dark-theme;
+  }
+
+  /* apply dark mode if not overridden */
+  @media (prefers-color-scheme: dark) {
+    &:not(:root[theme='light']) {
+      @include dark-theme;
+    }
   }
 }

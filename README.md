@@ -44,6 +44,7 @@ Neomorphic ui library for svelte 5
         - progress ?
     - slider
     - time/date
+    - floating label
 
 
 - Progress/Loading

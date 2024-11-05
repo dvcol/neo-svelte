@@ -49,7 +49,7 @@
     <NeoButton flat {loading} onclick={onLoading}>Loading</NeoButton>
     <NeoButton flat {loading} onclick={onLoading} {icon} />
     <NeoButton flat onclick={onClick} {icon}>Icon</NeoButton>
-    <NeoButton text onclick={onClick} {icon}>Reversed</NeoButton>
+    <NeoButton flat onclick={onClick} {icon}>Reversed</NeoButton>
     <NeoButton flat {loading} pulse onclick={onLoading}>Pulse</NeoButton>
     <NeoButton flat coalesce onclick={onClick}>Coalesce</NeoButton>
   </div>

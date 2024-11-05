@@ -119,16 +119,21 @@
     box-sizing: border-box;
     margin: 0.25rem;
     padding: 0.25rem 0.5rem;
-    color: var(--btn-text-color, inherit);
-    background-color: var(--btn-bg-color, inherit);
-    border: 1px var(--btn-border-color, transparent) solid;
-    border-radius: var(--btn-border-radius, var(--border-radius));
+    color: var(--neo-btn-text-color, inherit);
+    background-color: var(--neo-btn-bg-color, inherit);
+    border: 1px var(--neo-btn-border-color, transparent) solid;
+    border-radius: var(--neo-btn-border-radius, var(--border-radius));
     box-shadow: var(--box-shadow-raised-2);
     cursor: pointer;
-    transition: all 0.2s ease-in;
+    transition:
+      opacity 0.4s ease,
+      color 0.4s ease,
+      background-color 0.4s ease,
+      border-color 0.4s ease,
+      box-shadow 0.2s ease-in;
 
     &:focus-visible {
-      color: var(--btn-text-color-focused, var(--text-color-focused));
+      color: var(--neo-btn-text-color-focused, var(--text-color-focused));
       outline: none;
       box-shadow: var(--box-shadow-raised-1);
     }
@@ -147,35 +152,42 @@
       border: none;
     }
 
-    &.text:hover,
-    &.flat:hover {
-      color: var(--btn-text-color-hover, var(--text-color-hover));
-    }
-
-    &.text:not(:active, &.pressed),
-    &.flat:not(:active, &.pressed),
-    &.loading:active,
-    &:hover:not(:active, &.pressed) {
-      border-color: var(--btn-border-color-hover, var(--border-color));
-      box-shadow: var(--box-shadow-flat);
-    }
-
-    &.flat.loading:active,
-    &.flat:hover:not(:active, &.pressed) {
-      border-color: var(--btn-border-color-hover, var(--border-color-hover));
-    }
-
     &.flat,
     &.text {
       --coalesce-box-shadow: var(--box-shadow-raised-1);
       --pulse-box-shadow: var(--box-shadow-raised-1);
     }
 
+    &.text:hover,
+    &.flat:hover {
+      color: var(--neo-btn-text-color-hover, var(--text-color-hover));
+    }
+
+    &.text:not(:active, &.pressed),
+    &.flat:not(:active, &.pressed),
+    &.loading:active,
+    &:hover:not(:active, &.pressed) {
+      border-color: var(--neo-btn-border-color-hover, var(--border-color));
+      box-shadow: var(--box-shadow-flat);
+    }
+
+    &.flat {
+      &:focus-visible:not(:active, &.pressed) {
+        border-color: var(--neo-btn-border-color-focused, var(--border-color-focused));
+      }
+
+      &.loading:active,
+      &:hover:not(:active, &.pressed) {
+        border-color: var(--neo-btn-border-color-hover, var(--border-color-hover));
+      }
+    }
+
     &[disabled]:not([disabled='false']) {
-      color: var(--btn-text-color-disabled, var(--text-color-disabled)) !important;
-      border-color: var(--btn-border-color-disabled, var(--border-color-disabled)) !important;
+      color: var(--neo-btn-text-color-disabled, var(--text-color-disabled)) !important;
+      border-color: var(--neo-btn-border-color-disabled, var(--border-color-disabled)) !important;
       box-shadow: var(--box-shadow-flat);
       cursor: not-allowed;
+      opacity: var(--neo-btn-opacity-disabled, var(--opacity-disabled));
     }
 
     &.pulse {
@@ -194,7 +206,7 @@
     }
 
     .content {
-      gap: var(--btn-icon-gap, 0.35rem);
+      gap: var(--neo-btn-icon-gap, 0.35rem);
       height: 100%;
 
       &.reverse {
@@ -203,7 +215,7 @@
     }
 
     &.rounded {
-      border-radius: var(--btn-border-radius-rounded, var(--border-radius-lg));
+      border-radius: var(--neo-btn-border-radius-rounded, var(--border-radius-lg));
     }
   }
 </style>
