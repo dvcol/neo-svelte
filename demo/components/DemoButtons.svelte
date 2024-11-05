@@ -7,12 +7,12 @@
   };
 
   let loading = $state(false);
-  const onLoading = (...args: any) => {
+  const onLoading = (e: MouseEvent, duration = 5000) => {
     loading = !loading;
     setTimeout(() => {
       loading = !loading;
-    }, 3000);
-    onClick(...args);
+    }, duration);
+    onClick(e);
   };
 </script>
 
@@ -22,7 +22,7 @@
 
 <div class="column">
   <div class="row">
-    <NeoButton onclick={onClick}>Hello</NeoButton>
+    <NeoButton onclick={onClick}>Button</NeoButton>
     <NeoButton disabled onclick={onClick}>Disabled</NeoButton>
     <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
     <NeoButton {loading} onclick={onLoading} {icon} />
@@ -30,10 +30,11 @@
     <NeoButton onclick={onClick} {icon}>Reversed</NeoButton>
     <NeoButton {loading} pulse onclick={onLoading}>Pulse</NeoButton>
     <NeoButton coalesce onclick={onClick}>Coalesce</NeoButton>
+    <NeoButton skeleton={loading} onclick={onLoading}>Skeleton</NeoButton>
   </div>
 
   <div class="row">
-    <NeoButton rounded onclick={onClick}>Hello</NeoButton>
+    <NeoButton rounded onclick={onClick}>Button</NeoButton>
     <NeoButton rounded disabled onclick={onClick}>Disabled</NeoButton>
     <NeoButton rounded {loading} onclick={onLoading}>Loading</NeoButton>
     <NeoButton rounded {loading} onclick={onLoading} {icon} />
@@ -41,10 +42,11 @@
     <NeoButton rounded onclick={onClick} {icon}>Reversed</NeoButton>
     <NeoButton rounded {loading} pulse onclick={onLoading}>Pulse</NeoButton>
     <NeoButton rounded coalesce onclick={onClick}>Coalesce</NeoButton>
+    <NeoButton skeleton={loading} onclick={onLoading}>Skeleton</NeoButton>
   </div>
 
   <div class="row">
-    <NeoButton flat onclick={onClick}>Hello</NeoButton>
+    <NeoButton flat onclick={onClick}>Button</NeoButton>
     <NeoButton flat disabled onclick={onClick}>Disabled</NeoButton>
     <NeoButton flat {loading} onclick={onLoading}>Loading</NeoButton>
     <NeoButton flat {loading} onclick={onLoading} {icon} />
@@ -52,10 +54,11 @@
     <NeoButton flat onclick={onClick} {icon}>Reversed</NeoButton>
     <NeoButton flat {loading} pulse onclick={onLoading}>Pulse</NeoButton>
     <NeoButton flat coalesce onclick={onClick}>Coalesce</NeoButton>
+    <NeoButton flat skeleton={loading} onclick={onLoading}>Skeleton</NeoButton>
   </div>
 
   <div class="row">
-    <NeoButton text onclick={onClick}>Hello</NeoButton>
+    <NeoButton text onclick={onClick}>Button</NeoButton>
     <NeoButton text disabled onclick={onClick}>Disabled</NeoButton>
     <NeoButton text {loading} onclick={onLoading}>Loading</NeoButton>
     <NeoButton text {loading} onclick={onLoading} {icon} />
@@ -63,6 +66,7 @@
     <NeoButton text onclick={onClick} {icon}>Reversed</NeoButton>
     <NeoButton text {loading} pulse onclick={onLoading}>Pulse</NeoButton>
     <NeoButton text coalesce onclick={onClick}>Coalesce</NeoButton>
+    <NeoButton text skeleton={loading} onclick={onLoading}>Skeleton</NeoButton>
   </div>
 </div>
 

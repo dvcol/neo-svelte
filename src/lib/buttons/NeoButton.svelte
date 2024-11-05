@@ -12,7 +12,8 @@
     icon,
     // States
     loading,
-    skeleton, // todo
+    skeleton,
+    disabled,
     // Styles
     class: classNames,
     text,
@@ -71,7 +72,7 @@
     active = true;
     timeout = setTimeout(() => {
       active = false;
-    }, 100);
+    }, 300);
   };
 
   const onClick = (e: MouseEvent) => {
@@ -87,12 +88,14 @@
   class:coalesce
   class:pressed
   class:loading
+  class:skeleton
   class:text
   class:flat
   class:rounded
   onkeydown={onKeydownEnter}
   onkeyup={onKeyUpEnter}
   onclick={onClick}
+  disabled={disabled || skeleton}
   {...rest}
 >
   <span class="content" class:reverse>
@@ -126,11 +129,11 @@
     box-shadow: var(--box-shadow-raised-2);
     cursor: pointer;
     transition:
-      opacity 0.4s ease,
-      color 0.4s ease,
-      background-color 0.4s ease,
-      border-color 0.4s ease,
-      box-shadow 0.2s ease-in;
+      opacity 0.3s ease,
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease-out;
 
     &:focus-visible {
       color: var(--neo-btn-text-color-focused, var(--text-color-focused));
@@ -141,7 +144,6 @@
     &.pressed,
     &:active {
       box-shadow: var(--box-shadow-inset-2);
-      transition: all 0.1s ease-out;
     }
 
     &.loading {
@@ -149,7 +151,7 @@
     }
 
     &.text {
-      border: none;
+      border: 1px solid transparent !important;
     }
 
     &.flat,
@@ -161,6 +163,11 @@
     &.text:hover,
     &.flat:hover {
       color: var(--neo-btn-text-color-hover, var(--text-color-hover));
+    }
+
+    @starting-style {
+      border-color: var(--neo-btn-border-color-hover, var(--border-color));
+      box-shadow: var(--box-shadow-flat);
     }
 
     &.text:not(:active, &.pressed),
@@ -182,8 +189,16 @@
       }
     }
 
-    &[disabled]:not([disabled='false']) {
-      color: var(--neo-btn-text-color-disabled, var(--text-color-disabled)) !important;
+    &.skeleton {
+      @include mixin.skeleton;
+
+      box-shadow: var(--box-shadow-flat);
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    &[disabled]:not([disabled='false'], .skeleton) {
+      color: var(--neo-btn-text-color-disabled, var(--text-color-disabled));
       border-color: var(--neo-btn-border-color-disabled, var(--border-color-disabled)) !important;
       box-shadow: var(--box-shadow-flat);
       cursor: not-allowed;
