@@ -33,40 +33,6 @@
 
 <div class="row">
   <div class="column">
-    <span class="label">Glass</span>
-    <SphereBackdrop>
-      <NeoButton glass onclick={onClick}>Button</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass toggle onclick={onClick}>Toggle</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass disabled onclick={onClick}>Disabled</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {loading} onclick={onLoading}>Loading</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {loading} onclick={onLoading} {icon} />
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass onclick={onClick} {icon}>Icon</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass reverse onclick={onClick} {icon}>Reversed</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {loading} pulse onclick={onLoading}>Pulse</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass coalesce onclick={onClick}>Coalesce</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
-    </SphereBackdrop>
-  </div>
-
-  <div class="column">
     <span class="label">Default</span>
     <NeoButton onclick={onClick}>Button</NeoButton>
     <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
@@ -120,6 +86,40 @@
     <NeoButton text {loading} pulse onclick={onLoading}>Pulse</NeoButton>
     <NeoButton text coalesce onclick={onClick}>Coalesce</NeoButton>
     <NeoButton text {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
+  </div>
+
+  <div class="column">
+    <span class="label">Glass</span>
+    <SphereBackdrop>
+      <NeoButton glass onclick={onClick}>Button</NeoButton>
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass toggle onclick={onClick}>Toggle</NeoButton>
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass disabled onclick={onClick}>Disabled</NeoButton>
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass {loading} onclick={onLoading}>Loading</NeoButton>
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass {loading} onclick={onLoading} {icon} />
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass onclick={onClick} {icon}>Icon</NeoButton>
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass reverse onclick={onClick} {icon}>Reversed</NeoButton>
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass {loading} pulse onclick={onLoading}>Pulse</NeoButton>
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass coalesce onclick={onClick}>Coalesce</NeoButton>
+    </SphereBackdrop>
+    <SphereBackdrop>
+      <NeoButton glass {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
+    </SphereBackdrop>
   </div>
 </div>
 
