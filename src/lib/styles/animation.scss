@@ -48,8 +48,28 @@
 
 @mixin skeleton {
   @keyframes skeleton {
-    50% {
-      opacity: 0.5;
+    0% {
+      color: var(--skeleton-color-start);
+      background-color: var(--skeleton-color-start);
+      border-color: var(--skeleton-color-start);
+    }
+
+    40% {
+      color: var(--skeleton-color-end);
+      background-color: var(--skeleton-color-end);
+      border-color: var(--skeleton-color-end);
+    }
+
+    80% {
+      color: var(--skeleton-color-start);
+      background-color: var(--skeleton-color-start);
+      border-color: var(--skeleton-color-start);
+    }
+
+    100% {
+      color: var(--skeleton-color-start);
+      background-color: var(--skeleton-color-start);
+      border-color: var(--skeleton-color-start);
     }
   }
 }

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { width } from '@dvcol/svelte-utils/transition';
 
-  import type { Snippet } from 'svelte';
-  import type { HTMLButtonAttributes } from 'svelte/elements';
+  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
 
-  const {
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
     // Snippets
     children,
     icon,
@@ -14,6 +14,8 @@
     loading,
     skeleton,
     disabled,
+    toggle,
+    checked = $bindable(false),
     // Styles
     class: classNames,
     start = true,
@@ -25,36 +27,18 @@
     coalesce,
     pulse,
     // Events
+    onchecked,
     onclick,
     onkeydown,
     onkeyup,
     // other button props
     ...rest
-  }: {
-    // Snippets
-    children: Snippet;
-    icon?: Snippet;
-    // States
-    loading?: boolean;
-    skeleton?: boolean;
-    // Styles
-    start?: boolean;
-    text?: boolean;
-    flat?: boolean;
-    glass?: boolean;
-    rounded?: boolean;
-    reverse?: boolean;
-    coalesce?: boolean;
-    pulse?: boolean;
-    // Events
-    onclick?: (e: MouseEvent | KeyboardEvent) => unknown;
-    onkeydown?: (e: KeyboardEvent) => unknown;
-    onkeyup?: (e: KeyboardEvent) => unknown;
-  } & Partial<Omit<HTMLButtonAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> = $props();
+  }: NeoButtonProps = $props();
+  /* eslint-enable prefer-const */
 
   let enter = $state(false);
   let active = $state(false);
-  const pressed = $derived(enter || active);
+  const pressed = $derived(enter || active || checked);
 
   const onKeydownEnter = (e: KeyboardEvent) => {
     if (loading) return;
@@ -79,6 +63,13 @@
 
   const onClick = (e: MouseEvent) => {
     if (loading) return;
+    if (toggle) {
+      checked = !checked;
+      onchecked?.(checked);
+      onclick?.(e, checked);
+      return;
+    }
+
     onclick?.(e);
     onActive();
   };
@@ -92,9 +83,11 @@
   class:loading
   class:skeleton
   class:start
+  class:glass
   class:text
   class:flat
   class:rounded
+  class:empty={!children}
   onkeydown={onKeydownEnter}
   onkeyup={onKeyUpEnter}
   onclick={onClick}
@@ -103,7 +96,7 @@
 >
   <span class="content" class:reverse>
     {#if loading || icon}
-      <span class="icon" transition:width={{ duration: 200 }}>
+      <span class="icon" class:only={!children} transition:width={{ duration: 200 }}>
         {#if loading}
           <IconCircleLoading />
         {:else}
@@ -124,9 +117,9 @@
     display: flex;
     box-sizing: border-box;
     margin: 0.25rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0.75rem;
     color: var(--neo-btn-text-color, inherit);
-    background-color: var(--neo-btn-bg-color, inherit);
+    background-color: var(--neo-btn-bg-color, var(--background-color));
     border: 1px var(--neo-btn-border-color, transparent) solid;
     border-radius: var(--neo-btn-border-radius, var(--border-radius));
     box-shadow: var(--box-shadow-raised-2);
@@ -136,7 +129,66 @@
       color 0.3s ease,
       background-color 0.3s ease,
       border-color 0.3s ease,
+      backdrop-filter 0.3s ease,
       box-shadow 0.3s ease-out;
+
+    &.empty {
+      padding: 0.5rem;
+    }
+
+    &.loading {
+      cursor: wait;
+    }
+
+    &.text {
+      border-color: transparent;
+    }
+
+    &.flat,
+    &.text {
+      --coalesce-box-shadow: var(--box-shadow-raised-1);
+      --pulse-box-shadow: var(--box-shadow-raised-1);
+    }
+
+    &.glass {
+      background-color: var(--glass-background-color);
+      box-shadow: var(--glass-box-shadow-raised-2);
+      backdrop-filter: var(--blur-4);
+
+      &:focus-visible {
+        background-color: var(--glass-background-color-focus);
+        box-shadow: var(--glass-box-shadow-raised-1);
+      }
+
+      &.pressed,
+      &:active {
+        box-shadow: var(--glass-box-shadow-inset-1);
+        backdrop-filter: var(--blur-2);
+      }
+
+      &:not(:active, &.pressed) {
+        border-top-color: var(--shadow-color-light);
+        border-left-color: var(--shadow-color-light);
+
+        &:hover {
+          background-color: var(--glass-background-color-hover);
+          border-color: var(--neo-btn-border-color-hover, var(--glass-border-color-hover));
+          box-shadow: var(--box-shadow-flat);
+          backdrop-filter: var(--blur-3);
+        }
+      }
+    }
+
+    &[disabled]:not([disabled='false'], .skeleton) {
+      color: var(--neo-btn-text-color-disabled, var(--text-color-disabled)) !important;
+      box-shadow: var(--box-shadow-flat);
+      cursor: not-allowed;
+      opacity: var(--neo-btn-opacity-disabled, var(--opacity-disabled));
+
+      &:not(.text) {
+        border-color: var(--neo-btn-border-color-disabled, var(--border-color-disabled)) !important;
+      }
+    }
 
     &:focus-visible {
       color: var(--neo-btn-text-color-focused, var(--text-color-focused));
@@ -146,38 +198,38 @@
 
     &.pressed,
     &:active {
+      color: var(--neo-btn-text-color-active, var(--text-color-active));
       box-shadow: var(--box-shadow-inset-2);
       transition:
         opacity 0.3s ease,
         color 0.3s ease,
         background-color 0.3s ease,
         border-color 0.3s ease,
+        backdrop-filter 0.3s ease,
         box-shadow 0.15s ease-out;
-    }
 
-    &.loading {
-      cursor: wait;
-    }
-
-    &.text {
-      border: 1px solid transparent !important;
-    }
-
-    &.flat,
-    &.text {
-      --coalesce-box-shadow: var(--box-shadow-raised-1);
-      --pulse-box-shadow: var(--box-shadow-raised-1);
+      &:focus-visible {
+        color: var(--neo-btn-text-color-focused-active, var(--text-color-focused-active));
+      }
     }
 
     &.text:hover,
     &.flat:hover {
       color: var(--neo-btn-text-color-hover, var(--text-color-hover));
+
+      &.pressed,
+      &:active {
+        color: var(--neo-btn-text-color-hover-active, var(--text-color-focused-active));
+      }
     }
 
     &.start {
       @starting-style {
-        border-color: var(--neo-btn-border-color-hover, var(--border-color));
         box-shadow: var(--box-shadow-flat);
+
+        &:not(.text, .glass) {
+          border-color: var(--neo-btn-border-color, var(--border-color));
+        }
       }
     }
 
@@ -185,8 +237,11 @@
     &.flat:not(:active, &.pressed),
     &.loading:active,
     &:hover:not(:active, &.pressed) {
-      border-color: var(--neo-btn-border-color-hover, var(--border-color));
       box-shadow: var(--box-shadow-flat);
+
+      &:not(.text, .glass) {
+        border-color: var(--neo-btn-border-color-hover, var(--border-color));
+      }
     }
 
     &.flat {
@@ -206,14 +261,6 @@
       pointer-events: none;
 
       @include mixin.skeleton;
-    }
-
-    &[disabled]:not([disabled='false'], .skeleton) {
-      color: var(--neo-btn-text-color-disabled, var(--text-color-disabled));
-      border-color: var(--neo-btn-border-color-disabled, var(--border-color-disabled)) !important;
-      box-shadow: var(--box-shadow-flat);
-      cursor: not-allowed;
-      opacity: var(--neo-btn-opacity-disabled, var(--opacity-disabled));
     }
 
     &.rounded {
@@ -239,8 +286,17 @@
       gap: var(--neo-btn-icon-gap, 0.35rem);
       height: 100%;
 
+      .icon:not(.only) {
+        margin-left: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.35rem)));
+      }
+
       &.reverse {
         flex-direction: row-reverse;
+
+        .icon:not(.only) {
+          margin-right: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.35rem)));
+          margin-left: 0;
+        }
       }
     }
   }
