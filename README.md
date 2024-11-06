@@ -2,31 +2,23 @@
 Neomorphic ui library for svelte 5
 
 ## TODO
-- buttons
-    - toggle
-    - skeleton
-    - border loading
+- navbar
+- card
+  - border loading
+  - skeleton
+  - images
+  - videos
+  - carousel
+- avatar
+  - badge
 - tags
     - badge
-- avatar
-    - badge
-- button groups
-- card
-    - border loading
-    - skeleton
-    - images
-    - videos
-    - carousel
-- navbar
 - switch
     - loading
     - border loading
     - skeleton
     - radio
     - checkbox
-- tooltip
-    - popconfirm
-    - popselect
 - Inputs
     - validation
     - loading
@@ -46,12 +38,15 @@ Neomorphic ui library for svelte 5
     - time/date
     - floating label
 
-
 - Progress/Loading
     - bar
     - circle
     - border
     - background
+- tooltip
+  - popconfirm
+  - popselect
+
 - Alerts
     - notification
     - simple message

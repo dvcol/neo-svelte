@@ -127,11 +127,11 @@
   @use 'src/lib/styles/common/flex' as flex;
 
   .column {
-    @include flex.column($center: true, $gap: var(--gap-md));
+    @include flex.column($center: true, $gap: var(--gap-lg));
   }
 
   .row {
-    @include flex.row;
+    @include flex.row($gap: var(--gap-xl));
   }
 
   @media (width > 1550px) {
@@ -140,7 +140,7 @@
     }
 
     .row {
-      @include flex.column($center: true, $gap: var(--gap-lg));
+      @include flex.column($center: true, $gap: var(--gap-xl));
     }
 
     .label {

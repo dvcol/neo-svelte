@@ -10,22 +10,25 @@
     // Snippets
     children,
     icon,
+
     // States
     loading,
     skeleton,
     disabled,
     toggle,
     checked = $bindable(false),
+
     // Styles
     class: classNames,
     start = true,
     text,
     flat,
-    glass, // todo
+    glass,
     rounded,
     reverse,
     coalesce,
     pulse,
+
     // Events
     onchecked,
     onclick,
@@ -113,8 +116,9 @@
   @use 'src/lib/styles/common/flex' as flex;
 
   .neo-button {
-    position: relative;
     display: flex;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
     margin: 0.25rem;
     padding: 0.25rem 0.75rem;
@@ -166,16 +170,17 @@
         backdrop-filter: var(--blur-2);
       }
 
-      &:not(:active, &.pressed) {
-        border-top-color: var(--shadow-color-light);
-        border-left-color: var(--shadow-color-light);
+      &:not(:hover, :active, &.pressed, &.skeleton) {
+        border-top-color: var(--glass-border-color);
+        border-left-color: var(--glass-border-color);
+      }
 
-        &:hover {
-          background-color: var(--glass-background-color-hover);
-          border-color: var(--neo-btn-border-color-hover, var(--glass-border-color-hover));
-          box-shadow: var(--box-shadow-flat);
-          backdrop-filter: var(--blur-3);
-        }
+      &.loading:active,
+      &:hover:not(:active, &.pressed) {
+        background-color: var(--glass-background-color-hover);
+        border-color: var(--neo-btn-border-color-hover, var(--glass-border-color-hover));
+        box-shadow: var(--box-shadow-flat);
+        backdrop-filter: var(--blur-3);
       }
     }
 
@@ -194,6 +199,10 @@
       color: var(--neo-btn-text-color-focused, var(--text-color-focused));
       outline: none;
       box-shadow: var(--box-shadow-raised-1);
+
+      &.flat:not(:active, :hover, &.pressed) {
+        border-color: var(--neo-btn-border-color-focused, var(--border-color-focused));
+      }
     }
 
     &.pressed,
@@ -213,16 +222,6 @@
       }
     }
 
-    &.text:hover,
-    &.flat:hover {
-      color: var(--neo-btn-text-color-hover, var(--text-color-hover));
-
-      &.pressed,
-      &:active {
-        color: var(--neo-btn-text-color-hover-active, var(--text-color-focused-active));
-      }
-    }
-
     &.start {
       @starting-style {
         box-shadow: var(--box-shadow-flat);
@@ -239,26 +238,25 @@
     &:hover:not(:active, &.pressed) {
       box-shadow: var(--box-shadow-flat);
 
-      &:not(.text, .glass) {
+      &:not(.text, .glass, .flat:hover, .flat:focus-visible) {
         border-color: var(--neo-btn-border-color-hover, var(--border-color));
       }
     }
 
-    &.flat {
-      &:focus-visible:not(:active, &.pressed) {
-        border-color: var(--neo-btn-border-color-focused, var(--border-color-focused));
-      }
-
-      &.loading:active,
-      &:hover:not(:active, &.pressed) {
-        border-color: var(--neo-btn-border-color-hover, var(--border-color-hover));
-      }
+    &.text.loading:active,
+    &.text:hover:not(:active, &.pressed),
+    &.flat.loading:active,
+    &.flat:hover:not(:active, &.pressed) {
+      box-shadow: var(--box-shadow-inset-1);
     }
 
     &.skeleton {
-      box-shadow: var(--box-shadow-flat);
-      opacity: 1;
+      box-shadow: var(--box-shadow-flat) !important;
       pointer-events: none;
+
+      &.glass {
+        --skeleton-color: var(--glass-skeleton-color);
+      }
 
       @include mixin.skeleton;
     }

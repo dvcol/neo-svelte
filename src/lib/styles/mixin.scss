@@ -4,6 +4,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  z-index: var(--z-index-behind, -1);
   display: flex;
   width: 100%;
   height: 100%;
@@ -14,23 +15,32 @@
 
 @mixin pulse(
   $box-shadow: var(--pulse-box-shadow, var(--box-shadow-raised-2)),
-  $duration: var(--pulse-duration, 4s),
-  $delay: var(--pulse-delay, 2s),
-  $iteration: infinite
+  $box-shadow-reverse: var(--pulse-box-shadow-reverse, var(--box-shadow-inset-1)),
+  $duration: var(--pulse-duration, 6s),
+  $delay: var(--pulse-delay, 1s),
+  $interval: var(--pulse-interval, 3s),
+  $iteration: infinite,
+  $scaleX: var(--pulse-scale-x, 2),
+  $scaleY: var(--pulse-scale-y, 2),
+  $opacity-start: 1,
+  $opacity-end: 0
 ) {
+  position: relative;
+
   &::after,
   &::before {
     @extend %after-before;
 
     box-shadow: $box-shadow;
+    will-change: transform, opacity;
   }
 
   &::before {
-    animation: pulse $duration linear $iteration;
+    animation: pulse $duration linear $delay $iteration;
   }
 
   &::after {
-    animation: pulse $duration linear $delay $iteration;
+    animation: pulse $duration linear calc(#{$delay} + #{$interval}) $iteration;
   }
 
   &.pressed,
@@ -39,32 +49,44 @@
   &:active {
     &::after,
     &::before {
-      animation-direction: reverse;
+      box-shadow: $box-shadow-reverse;
+      animation-name: coalesce;
+      animation-timing-function: ease-out;
     }
   }
 
-  @include animation.pulse;
+  @include animation.pulse($scaleX, $scaleY, $opacity-start, $opacity-end);
+  @include animation.coalesce($scaleX, $scaleY, $opacity-start, $opacity-end);
 }
 
 @mixin coalesce(
   $box-shadow: var(--coalesce-box-shadow, var(--box-shadow-raised-2)),
-  $duration: var(--coalesce-duration, 4s),
-  $delay: var(--coalesce-delay, 2s),
-  $iteration: infinite
+  $box-shadow-reverse: var(--pulse-box-shadow-reverse, var(--box-shadow-inset-1)),
+  $duration: var(--coalesce-duration, 6s),
+  $delay: var(--coalesce-delay, 1s),
+  $interval: var(--coalesce-interval, 3s),
+  $iteration: infinite,
+  $scaleX: var(--coalesce-scale-x, 2),
+  $scaleY: var(--coalesce-scale-y, 2),
+  $opacity-start: 1,
+  $opacity-end: 0
 ) {
+  position: relative;
+
   &::after,
   &::before {
     @extend %after-before;
 
     box-shadow: $box-shadow;
+    will-change: transform, opacity;
   }
 
   &::before {
-    animation: coalesce $duration linear $iteration;
+    animation: coalesce $duration ease-out $delay $iteration;
   }
 
   &::after {
-    animation: coalesce $duration linear $delay $iteration;
+    animation: coalesce $duration ease-out calc(#{$delay} + #{$interval}) $iteration;
   }
 
   &.pressed,
@@ -73,11 +95,14 @@
   &:active {
     &::after,
     &::before {
-      animation-direction: reverse;
+      box-shadow: $box-shadow-reverse;
+      animation-name: pulse;
+      animation-timing-function: linear;
     }
   }
 
-  @include animation.coalesce;
+  @include animation.pulse($scaleX, $scaleY, $opacity-start, $opacity-end);
+  @include animation.coalesce($scaleX, $scaleY, $opacity-start, $opacity-end);
 }
 
 @mixin border-rotate(
@@ -139,6 +164,11 @@
     color 1s,
     border-color 1s;
   animation: skeleton $timing $easing infinite;
+
+  :global(> *) {
+    visibility: hidden;
+    pointer-events: none;
+  }
 
   @include animation.skeleton;
 }

@@ -12,8 +12,8 @@ importers:
         specifier: ^1.18.1
         version: 1.18.1
       '@dvcol/svelte-utils':
-        specifier: ^1.1.0
-        version: 1.1.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)
+        specifier: ^1.2.1
+        version: 1.2.1(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)
       svelte:
         specifier: ^5.1.9
         version: 5.1.9
@@ -33,6 +33,9 @@ importers:
       '@dvcol/stylelint-plugin-presets':
         specifier: ^2.1.2
         version: 2.1.2(postcss-html@0.36.0)(postcss-scss@4.0.9(postcss@8.4.45))(postcss@8.4.45)(prettier@3.3.3)(stylelint@16.9.0(typescript@5.5.4))
+      '@dvcol/svelte-simple-router':
+        specifier: ^1.7.0
+        version: 1.7.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)
       '@sveltejs/adapter-auto':
         specifier: ^3.2.5
         version: 3.2.5(@sveltejs/kit@2.7.4(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.9)(vite@5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)))(svelte@5.1.9)(vite@5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)))
@@ -454,8 +457,14 @@ packages:
       postcss-scss:
         optional: true
 
-  '@dvcol/svelte-utils@1.1.0':
-    resolution: {integrity: sha512-O3vZ3e3lepJ0ln/3pQ8fBlJu60JGoKtpIzXiiH95J48/m59tYPzVKvCwq2bgq0b2ThotHMRQesVBoxVEYdnTmA==}
+  '@dvcol/svelte-simple-router@1.7.0':
+    resolution: {integrity: sha512-ZLSG5hYeiKO4ckJmCTwqc95pEy+iTxWGxyzOS0f8pDbqnLwbk1eRHg7GB6mZEqF+jmBi3t3qpM/aI6AQ6ndnPQ==}
+    engines: {node: '>=20', pnpm: '>= 8'}
+    peerDependencies:
+      svelte: '>=5'
+
+  '@dvcol/svelte-utils@1.2.1':
+    resolution: {integrity: sha512-YbiwoBobA9iV11dUixmeuED0bJkT5Wn003/2wnyINj9RmCxr7NlIhFRIV21+/RgauDxM+vb9SYhXmCtUY4oVtA==}
     engines: {node: '>=20', pnpm: '>= 8'}
     peerDependencies:
       svelte: '>=5'
@@ -5154,7 +5163,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@dvcol/svelte-utils@1.1.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)':
+  '@dvcol/svelte-simple-router@1.7.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)':
+    dependencies:
+      '@dvcol/common-utils': 1.18.1
+      '@dvcol/svelte-utils': 1.2.1(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)
+      svelte: 5.1.9
+      vite: 5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)
+    transitivePeerDependencies:
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+
+  '@dvcol/svelte-utils@1.2.1(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)':
     dependencies:
       '@dvcol/common-utils': 1.18.1
       svelte: 5.1.9

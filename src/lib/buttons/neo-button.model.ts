@@ -48,6 +48,9 @@ export type NeoButtonProps = {
    * If true, the button will be displayed with no elevation.
    */
   flat?: boolean;
+  /**
+   * If true, the button will be displayed with a glass effect.
+   */
   glass?: boolean;
   /**
    * If true, the button will have a rounded border.
