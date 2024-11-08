@@ -9,33 +9,48 @@
 
   import { router } from './router/router.js';
 
-  import { Route } from './router/routes';
+  import { routes } from './router/routes.js';
 
+  import type { Routes } from './router/routes.js';
   import type { TransitionProps } from '@dvcol/svelte-simple-router/models';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconMoon from '~/icons/IconMoon.svelte';
   import IconSun from '~/icons/IconSun.svelte';
+  import NeoTab from '~/nav/NeoTab.svelte';
+  import NeoTabs from '~/nav/NeoTabs.svelte';
 
   const transition: TransitionProps = {
     in: fade,
     out: fade,
-    params: { in: { delay: 200, duration: 200 }, out: { duration: 200 } },
+    params: { in: { delay: 100, duration: 100 }, out: { duration: 100 } },
+    props: { container: { style: 'display: flex; justify-content: center; align-items: center; overflow:hidden;' } },
     skipFirst: true,
   };
 
   const active = $derived(router.route?.name);
   let transitioning = $state(false);
 
+  let first = true;
   const onChange = async () => {
+    if (first) return;
     transitioning = true;
-    await wait(150);
+    await wait(200);
   };
 
   const onLoaded = async () => {
-    await wait(350);
+    if (active && first) {
+      first = false;
+      return;
+    }
+    await wait(200);
     transitioning = false;
+  };
+
+  const onClick = (id?: Routes) => {
+    if (id === undefined || id === active) return;
+    router.push({ name: id });
   };
 
   const initial = localStorage.getItem('theme');
@@ -48,19 +63,15 @@
     if (remember) localStorage.setItem('theme', dark ? 'dark' : 'light');
     else localStorage.removeItem('theme');
   });
-
-  const routes = [Route.Buttons, Route.ButtonGroups];
 </script>
 
 <div class="container">
   <div class="row">
-    <NeoButtonGroup>
+    <NeoTabs {active} onchange={onClick}>
       {#each routes as route}
-        <NeoButton checked={active === route} onclick={() => router.push({ name: route })}>
-          {route}
-        </NeoButton>
+        <NeoTab tabId={route}>{route}</NeoTab>
       {/each}
-    </NeoButtonGroup>
+    </NeoTabs>
 
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={dark}>

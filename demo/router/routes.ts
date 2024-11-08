@@ -4,9 +4,12 @@ export const Route = {
   Any: 'any' as const,
   Buttons: 'buttons' as const,
   ButtonGroups: 'button-groups' as const,
+  Tabs: 'tabs' as const,
 } as const;
 
 export type Routes = (typeof Route)[keyof typeof Route];
+
+export const routes = Object.values(Route).filter(key => key !== Route.Any);
 
 export const options: RouterOptions<Routes> = {
   hash: true,
@@ -20,6 +23,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.ButtonGroups,
       path: '/buttons/groups',
       component: () => import('../components/DemoButtonGroups.svelte'),
+    },
+    {
+      name: Route.Tabs,
+      path: '/tabs',
+      component: () => import('../components/DemoTabs.svelte'),
     },
     {
       name: Route.Any,

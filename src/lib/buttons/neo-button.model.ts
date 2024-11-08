@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLButtonAttributes } from 'svelte/elements';
+import type { HTMLTransitionProps } from '~/utils/transition.utils.js';
 
 export type NeoButtonProps = {
   // Snippets
@@ -25,9 +26,17 @@ export type NeoButtonProps = {
    */
   skeleton?: boolean;
   /**
+   * If true, only the icon (if any) will be displayed.
+   */
+  empty?: boolean;
+  /**
    * If true, the button will act as a toggle button.
    */
   toggle?: boolean;
+  /**
+   * If true, the button will ignore click events for the toggle state.
+   */
+  readonly?: boolean;
   /**
    * Bindable value for the toggle state.
    * @bindable
@@ -94,4 +103,5 @@ export type NeoButtonProps = {
    * @param e
    */
   onkeyup?: (e: KeyboardEvent) => unknown;
-} & Partial<Omit<HTMLButtonAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>>;
+} & Partial<Omit<HTMLButtonAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
+  HTMLTransitionProps;

@@ -1,12 +1,8 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
+import type { HTMLTransitionProps } from '~/utils/transition.utils.js';
 
-export type NeoButtonGroup = {
-  /**
-   * Optional snippet to display as the button content.
-   */
-  children?: Snippet;
-
+export type NeoButtonGroupContext = {
   // States
 
   /**
@@ -50,4 +46,13 @@ export type NeoButtonGroup = {
    * If true, the button group will be stacked vertically.
    */
   vertical?: boolean;
-} & Partial<HTMLAttributes<HTMLDivElement>>;
+};
+
+export type NeoButtonGroup = {
+  /**
+   * Optional snippet to display as the button content.
+   */
+  children?: Snippet<[NeoButtonGroupContext]>;
+} & NeoButtonGroupContext &
+  Partial<HTMLAttributes<HTMLDivElement>> &
+  HTMLTransitionProps;

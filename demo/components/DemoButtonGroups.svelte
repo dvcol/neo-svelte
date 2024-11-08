@@ -3,112 +3,63 @@
 
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import { useButtonState } from '../utils/use-button-state.svelte';
+
+  import type { NeoButtonGroupContext } from '~/buttons/neo-button-group.model';
+
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
 
-  const onClick = (...args: any) => {
-    console.info(...args);
-  };
-
-  let loading = $state(false);
-  const onLoading = (e: MouseEvent, checked?: boolean, duration = 5000) => {
-    loading = !loading;
-    setTimeout(() => {
-      loading = !loading;
-    }, duration);
-    onClick(e);
-  };
-
-  let skeleton = $state(false);
-  const onSkeleton = (e: MouseEvent, checked?: boolean, duration = 5000) => {
-    skeleton = !skeleton;
-    setTimeout(() => {
-      skeleton = !skeleton;
-    }, duration);
-    onClick(e);
-  };
+  const { onClick, loading: loading$, onLoading, skeleton: skeleton$, onSkeleton } = useButtonState('DemoGroupClicked');
+  const loading = $derived.by(loading$);
+  const skeleton = $derived.by(skeleton$);
 
   const { matches } = useWatchMedia('(max-width: 1550px)');
   const vertical = $derived.by(matches);
+
+  const columns = [
+    { label: 'Default' },
+    { label: 'Rounded', props: { rounded: true } },
+    { label: 'Flat', props: { flat: true } },
+    { label: 'Text', props: { text: true } },
+    { label: 'Glass', props: { glass: true } },
+  ];
 </script>
 
 {#snippet icon()}
   <IconAccount />
 {/snippet}
 
+{#snippet buttons()}
+  <NeoButton onclick={onClick}>Button</NeoButton>
+  <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
+  <NeoButton disabled onclick={onClick}>Disabled</NeoButton>
+  <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
+  <NeoButton {loading} onclick={onLoading} {icon} />
+  <NeoButton onclick={onClick} {icon}>Icon</NeoButton>
+  <NeoButton reverse onclick={onClick} {icon}>Reversed</NeoButton>
+  <NeoButton {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
+{/snippet}
+
+{#snippet group(props: NeoButtonGroupContext = {})}
+  <NeoButtonGroup {vertical} {skeleton} {...props}>
+    {@render buttons()}
+  </NeoButtonGroup>
+{/snippet}
+
 <div class="row">
-  <div class="column">
-    <span class="label">Default</span>
-    <NeoButtonGroup {vertical} {skeleton}>
-      <NeoButton onclick={onClick}>Button</NeoButton>
-      <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
-      <NeoButton disabled onclick={onClick}>Disabled</NeoButton>
-      <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
-      <NeoButton {loading} onclick={onLoading} {icon} />
-      <NeoButton onclick={onClick} {icon}>Icon</NeoButton>
-      <NeoButton reverse onclick={onClick} {icon}>Reversed</NeoButton>
-      <NeoButton {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
-    </NeoButtonGroup>
-  </div>
+  {#each columns as { label, props }}
+    <div class="column">
+      <span class="label">{label}</span>
 
-  <div class="column">
-    <span class="label">Rounded</span>
-    <NeoButtonGroup {vertical} {skeleton} rounded>
-      <NeoButton onclick={onClick}>Button</NeoButton>
-      <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
-      <NeoButton disabled onclick={onClick}>Disabled</NeoButton>
-      <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
-      <NeoButton {loading} onclick={onLoading} {icon} />
-      <NeoButton onclick={onClick} {icon}>Icon</NeoButton>
-      <NeoButton reverse onclick={onClick} {icon}>Reversed</NeoButton>
-      <NeoButton {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
-    </NeoButtonGroup>
-  </div>
-
-  <div class="column">
-    <span class="label">Flat</span>
-    <NeoButtonGroup {vertical} {skeleton} flat>
-      <NeoButton flat onclick={onClick}>Button</NeoButton>
-      <NeoButton flat toggle onclick={onClick}>Toggle</NeoButton>
-      <NeoButton flat disabled onclick={onClick}>Disabled</NeoButton>
-      <NeoButton flat {loading} onclick={onLoading}>Loading</NeoButton>
-      <NeoButton flat {loading} onclick={onLoading} {icon} />
-      <NeoButton flat onclick={onClick} {icon}>Icon</NeoButton>
-      <NeoButton flat reverse onclick={onClick} {icon}>Reversed</NeoButton>
-      <NeoButton flat {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
-    </NeoButtonGroup>
-  </div>
-
-  <div class="column">
-    <span class="label">Text</span>
-    <NeoButtonGroup {vertical} {skeleton} text>
-      <NeoButton text onclick={onClick}>Button</NeoButton>
-      <NeoButton text toggle onclick={onClick}>Toggle</NeoButton>
-      <NeoButton text disabled onclick={onClick}>Disabled</NeoButton>
-      <NeoButton text {loading} onclick={onLoading}>Loading</NeoButton>
-      <NeoButton text {loading} onclick={onLoading} {icon} />
-      <NeoButton text onclick={onClick} {icon}>Icon</NeoButton>
-      <NeoButton text reverse onclick={onClick} {icon}>Reversed</NeoButton>
-      <NeoButton text {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
-    </NeoButtonGroup>
-  </div>
-
-  <div class="column">
-    <span class="label">Glass</span>
-    <SphereBackdrop>
-      <NeoButtonGroup {vertical} {skeleton} glass>
-        <NeoButton onclick={onClick}>Button</NeoButton>
-        <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
-        <NeoButton disabled onclick={onClick}>Disabled</NeoButton>
-        <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
-        <NeoButton {loading} onclick={onLoading} {icon} />
-        <NeoButton onclick={onClick} {icon}>Icon</NeoButton>
-        <NeoButton reverse onclick={onClick} {icon}>Reversed</NeoButton>
-        <NeoButton {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
-      </NeoButtonGroup>
-    </SphereBackdrop>
-  </div>
+      {#if props?.glass}
+        <SphereBackdrop>{@render group(props)}</SphereBackdrop>
+      {:else}
+        {@render group(props)}
+      {/if}
+    </div>
+  {/each}
 
   <div class="column">
     <span class="label">Pulse</span>

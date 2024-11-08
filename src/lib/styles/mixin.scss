@@ -61,7 +61,7 @@
 
 @mixin coalesce(
   $box-shadow: var(--coalesce-box-shadow, var(--box-shadow-raised-2)),
-  $box-shadow-reverse: var(--pulse-box-shadow-reverse, var(--box-shadow-inset-1)),
+  $box-shadow-reverse: var(--coalesce-box-shadow-reverse, var(--box-shadow-inset-1)),
   $duration: var(--coalesce-duration, 6s),
   $delay: var(--coalesce-delay, 1s),
   $interval: var(--coalesce-interval, 3s),
