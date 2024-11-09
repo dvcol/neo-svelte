@@ -78,7 +78,7 @@
     margin: 0.25rem;
     padding: 0.25rem;
     background-color: var(--neo-btn-bg-color, var(--background-color));
-    border: 1px var(--neo-btn-border-color, transparent) solid;
+    border: var(--border-width, 1px) var(--neo-btn-border-color, transparent) solid;
     border-radius: calc(var(--neo-btn-border-radius, var(--border-radius)) + 0.25rem);
     transition:
       color 0.3s ease,

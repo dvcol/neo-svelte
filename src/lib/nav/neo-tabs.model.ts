@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'svelte/elements';
 import type { NeoButtonGroup } from '~/buttons/neo-button-group.model.js';
 import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
 
-export type OnChange<T = unknown> = (tabId?: TabId, value?: T) => unknown;
+export type OnChange<T = unknown> = (tabId?: TabId, value?: T, ref?: HTMLDivElement) => unknown;
 export type NeoTabsContext = {
   // States
   active?: TabId;
@@ -11,6 +11,7 @@ export type NeoTabsContext = {
 
   // Styles
   slide?: boolean;
+  line?: boolean;
   add?: boolean;
   close?: boolean;
   vertical?: boolean;

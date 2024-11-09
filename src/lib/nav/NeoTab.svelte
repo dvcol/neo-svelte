@@ -1,11 +1,14 @@
 <script lang="ts">
   import { height, width } from '@dvcol/svelte-utils/transition';
 
+  import { untrack } from 'svelte';
+
   import type { NeoTabProps } from '~/nav/neo-tab.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
+  import { defaultTransitionDuration, enterTransition } from '~/utils/transition.utils.js';
 
   const {
     // Snippets
@@ -32,26 +35,29 @@
   const disabled = $derived(rest.disabled || (rest.disabled !== false && context?.disabled));
   const closeable = $derived(close || (close !== false && context?.closeable));
   const transition = $derived(context?.vertical ? height : width);
+  const slide = $derived(context?.slide);
 
   const onClick: NeoTabProps['onclick'] = (e: MouseEvent) => {
     context?.onChange(tabId);
     onclick?.(e);
   };
 
+  let ref: HTMLDivElement | undefined;
   $effect(() => {
-    context?.register(tabId, value);
+    if (!ref) return;
+    untrack(() => context?.register(tabId, ref!, value));
     return () => context?.remove(tabId);
   });
 
   const onClose = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onclose?.(tabId);
-    context?.onClose(tabId);
+    onclose?.(tabId, value, ref);
+    context?.onClose(tabId, value, ref);
   };
 </script>
 
-<div class="neo-tab" transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }} {...tabProps}>
+<div bind:this={ref} class="neo-tab" class:active class:slide transition:transition={enterTransition} {...tabProps}>
   <NeoButton
     role="tab"
     data-tab-id={tabId}
@@ -66,7 +72,13 @@
   >
     {@render children?.({ active, tabId, value })}
     {#if closeable}
-      <button class="neo-tab-close" class:reverse={rest.reverse} class:disabled transition:width={{ duration: 200 }} onclick={onClose}>
+      <button
+        class="neo-tab-close"
+        class:reverse={rest.reverse}
+        class:disabled
+        transition:width={{ duration: defaultTransitionDuration }}
+        onclick={onClose}
+      >
         <IconClose class="icon-close" />
       </button>
     {/if}
@@ -81,6 +93,13 @@
     :global(.neo-button:hover) {
       :global(.icon-close) {
         opacity: 1;
+      }
+    }
+
+    &.slide {
+      :global(.neo-button:active .icon-close),
+      :global(.neo-button.pressed .icon-close) {
+        transition-delay: 0.3s;
       }
     }
   }
@@ -115,6 +134,7 @@
     &:focus-visible :global(.icon-close) {
       color: rgb(255 0 0 / 75%);
       background-color: rgb(255 0 0 / 5%);
+      opacity: 1;
     }
 
     &:hover :global(.icon-close) {

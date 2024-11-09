@@ -160,7 +160,7 @@
     color: var(--neo-btn-text-color, inherit);
     text-decoration: inherit;
     background-color: var(--neo-btn-bg-color, var(--background-color));
-    border: 1px var(--neo-btn-border-color, transparent) solid;
+    border: var(--border-width, 1px) var(--neo-btn-border-color, transparent) solid;
     border-radius: var(--neo-btn-border-radius, var(--border-radius));
     box-shadow: var(--box-shadow-raised-2);
     cursor: pointer;

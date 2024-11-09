@@ -67,7 +67,7 @@
 
 <div class="container">
   <div class="row">
-    <NeoTabs {active} onchange={onClick}>
+    <NeoTabs slide {active} onchange={onClick}>
       {#each routes as route}
         <NeoTab tabId={route}>{route}</NeoTab>
       {/each}

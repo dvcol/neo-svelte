@@ -2,7 +2,6 @@
 Neomorphic ui library for svelte 5
 
 ## TODO
-- navbar
 - card
   - border loading
   - skeleton

@@ -45,8 +45,8 @@
   --text-color-active: color-mix(in srgb, currentcolor, white 10%);
   --text-color-focused: var(--purple-80);
   --text-color-focused-active: color-mix(in srgb, var(--text-color-focused), white 10%);
-  --text-color-hover: var(--color-primary);
-  --text-color-hover-active: color-mix(in srgb, var(--text-color-hover), white 10%);
+  --text-color-hover: color-mix(in srgb, currentcolor, var(--color-primary) 50%);
+  --text-color-hover-active: color-mix(in srgb, var(--text-color-hover), white 20%);
   --text-color-disabled: var(--text-color);
   --border-color: var(--grey-strong-20);
   --border-color-focused: var(--purple-50);
@@ -74,8 +74,8 @@
   --dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
   --dark-text-color-focused: var(--purple-soft-80);
   --dark-text-color-focused-active: color-mix(in srgb, var(--dark-text-color-focused), black 10%);
-  --dark-text-color-hover: var(--dark-color-primary);
-  --dark-text-color-hover-active: color-mix(in srgb, var(--dark-text-color-hover), black 10%);
+  --dark-text-color-hover: color-mix(in srgb, currentcolor, var(--dark-color-primary) 50%);
+  --dark-text-color-hover-active: color-mix(in srgb, var(--dark-text-color-hover), black 20%);
   --dark-text-color-disabled: var(--white-soft-50);
   --dark-border-color: var(--grey-soft-10);
   --dark-border-color-focused: var(--purple-soft-50);

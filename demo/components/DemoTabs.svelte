@@ -14,9 +14,9 @@
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
 
-  const { onClick, loading: loading$, onLoading, skeleton: skeleton$, onSkeleton } = useButtonState('DemoTabsClicked');
+  const { onClick, loading: loading$, onLoading } = useButtonState('DemoTabsClicked');
   const loading = $derived.by(loading$);
-  const skeleton = $derived.by(skeleton$);
+  let skeleton = $state(false);
 
   const { matches } = useWatchMedia('(max-width: 1550px)');
   const vertical = $derived.by(matches);
@@ -36,18 +36,21 @@
   let active: unknown | undefined = $state('button');
   let value: unknown | undefined = $state('button');
 
-  const onChange = (id: TabId, _value?: unknown) => {
+  const onChange = (id?: TabId, _value?: unknown) => {
     active = id;
     value = _value;
   };
 
-  const options = $state({ disabled: false, close: true, add: true, slide: false });
+  const onClear = () => onChange();
+
+  const options = $state({ disabled: false, close: true, add: true, slide: true });
 
   const columns = [
     { label: 'Default' },
     { label: 'Rounded', props: { rounded: true } },
     { label: 'Flat', props: { flat: true } },
     { label: 'Text', props: { text: true } },
+    { label: 'Line', props: { text: true, line: true } },
     { label: 'Glass', props: { glass: true } },
   ];
 </script>
@@ -63,13 +66,12 @@
   <NeoTab tabId="icon" value="icon" {loading} close={false} onclick={onLoading} {icon} />
   <NeoTab tabId="icon-label" value="icon-label" close={false} onclick={onClick} {icon}>Icon</NeoTab>
   <NeoTab tabId="reversed" value="reversed" reverse close={false} onclick={onClick} {icon}>Reversed</NeoTab>
-  <NeoTab tabId="skeleton" value="skeleton" {skeleton} close={false} onclick={onSkeleton}>Skeleton</NeoTab>
 {/snippet}
 
 {#snippet group(props: NeoButtonGroupContext = {})}
   <NeoTabs bind:active onchange={onChange} {vertical} {skeleton} {onclose} {onadd} {...options} {...props}>
     {@render buttons()}
-    {#each added as { text, ...tab }}
+    {#each added as { text, ...tab } (tab.tabId)}
       <NeoTab {...tab}>{text}</NeoTab>
     {/each}
   </NeoTabs>
@@ -87,6 +89,8 @@
       <NeoButton toggle bind:checked={options.add}>Add</NeoButton>
       <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
       <NeoButton toggle bind:checked={options.slide}>Slide</NeoButton>
+      <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
+      <NeoButton onclick={onClear}>Clear</NeoButton>
     </NeoButtonGroup>
   </div>
 </div>

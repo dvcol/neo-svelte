@@ -165,6 +165,10 @@
     border-color 1s;
   animation: skeleton $timing $easing infinite;
 
+  &::before,
+  &::after,
+  :global(> *::before),
+  :global(> *::after),
   :global(> *) {
     visibility: hidden;
     pointer-events: none;
