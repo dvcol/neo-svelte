@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoButtonGroup } from '~/buttons/neo-button-group.model.js';
 
-  import { emptyFn } from '~/utils/transition.utils.js';
+  import { emptyFn } from '~/utils/action.utils.js';
 
   const {
     // Snippets

@@ -9,6 +9,13 @@ export const Route = {
 
 export type Routes = (typeof Route)[keyof typeof Route];
 
+export const Path: Record<keyof typeof Route, string> = {
+  Buttons: '/buttons' as const,
+  ButtonGroups: '/buttons/groups' as const,
+  Tabs: '/tabs' as const,
+  Any: '*' as const,
+} as const;
+
 export const routes = Object.values(Route).filter(key => key !== Route.Any);
 
 export const options: RouterOptions<Routes> = {
@@ -16,22 +23,22 @@ export const options: RouterOptions<Routes> = {
   routes: [
     {
       name: Route.Buttons,
-      path: '/buttons',
+      path: Path.Buttons,
       component: () => import('../components/DemoButtons.svelte'),
     },
     {
       name: Route.ButtonGroups,
-      path: '/buttons/groups',
+      path: Path.ButtonGroups,
       component: () => import('../components/DemoButtonGroups.svelte'),
     },
     {
       name: Route.Tabs,
-      path: '/tabs',
+      path: Path.Tabs,
       component: () => import('../components/DemoTabs.svelte'),
     },
     {
       name: Route.Any,
-      path: '*',
+      path: Path.Any,
       redirect: {
         name: Route.Buttons,
       },

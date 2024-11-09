@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { link } from '@dvcol/svelte-simple-router';
+
+  import { Path } from '../router/routes.js';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import { useButtonState } from '../utils/use-button-state.svelte';
@@ -25,6 +28,7 @@
 {/snippet}
 
 {#snippet buttons(opts: NeoButtonProps = {})}
+  <NeoButton {...opts} onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
   <NeoButton {...opts} onclick={onClick}>Button</NeoButton>
   <NeoButton {...opts} toggle onclick={onClick}>Toggle</NeoButton>
   <NeoButton {...opts} disabled onclick={onClick}>Disabled</NeoButton>
@@ -47,6 +51,9 @@
 
   <div class="column">
     <span class="label">Glass</span>
+    <SphereBackdrop>
+      <NeoButton glass onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
+    </SphereBackdrop>
     <SphereBackdrop>
       <NeoButton glass onclick={onClick}>Button</NeoButton>
     </SphereBackdrop>

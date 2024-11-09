@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLButtonAttributes } from 'svelte/elements';
-import type { HTMLTransitionProps } from '~/utils/transition.utils.js';
+import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+import type { HTMLActionProps } from '~/utils/action.utils.js';
 
 export type NeoButtonProps = {
   // Snippets
@@ -21,6 +21,11 @@ export type NeoButtonProps = {
    * If an icon is provided, the spinner will replace the icon.
    */
   loading?: boolean;
+  /**
+   * The loading mode to display when the button is loading.
+   * @default 'spinner'
+   */
+  loadingMode?: 'spinner' | 'border' | 'both';
   /**
    * If true, the button will be disabled and a loading skeleton will be displayed instead of the text.
    */
@@ -92,7 +97,7 @@ export type NeoButtonProps = {
    * @param e
    * @param checked
    */
-  onclick?: (e: MouseEvent | KeyboardEvent, checked?: boolean) => unknown;
+  onclick?: (e: MouseEvent, checked?: boolean) => unknown;
   /**
    * Callback function to be called when a key is pressed.
    * @param e
@@ -104,4 +109,5 @@ export type NeoButtonProps = {
    */
   onkeyup?: (e: KeyboardEvent) => unknown;
 } & Partial<Omit<HTMLButtonAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
-  HTMLTransitionProps;
+  Partial<Omit<HTMLAnchorAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
+  HTMLActionProps;

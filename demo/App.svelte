@@ -25,7 +25,7 @@
     in: fade,
     out: fade,
     params: { in: { delay: 100, duration: 100 }, out: { duration: 100 } },
-    props: { container: { style: 'display: flex; justify-content: center; align-items: center; overflow:hidden;' } },
+    props: { container: { style: 'display: flex; justify-content: center; align-items: center;' } },
     skipFirst: true,
   };
 
@@ -36,7 +36,7 @@
   const onChange = async () => {
     if (first) return;
     transitioning = true;
-    await wait(200);
+    await wait(150);
   };
 
   const onLoaded = async () => {
@@ -44,7 +44,7 @@
       first = false;
       return;
     }
-    await wait(200);
+    await wait(100);
     transitioning = false;
   };
 
@@ -103,6 +103,7 @@
 
   .view {
     min-height: 70vh;
+    overflow: hidden;
   }
 
   .container {
@@ -114,14 +115,6 @@
     :global(.transition *::before),
     :global(.transition *::after) {
       box-shadow: var(--box-shadow-flat) !important;
-    }
-
-    :global(.rotate) {
-      @include mixin.border-rotate;
-    }
-
-    :global(.progress) {
-      @include mixin.border-progress;
     }
   }
 </style>

@@ -70,6 +70,7 @@ export class NeoTabContext<T = unknown> {
   }
 
   onChange(tabId?: TabId, emit = true) {
+    if (tabId === this.#active) return;
     this.#active = tabId;
     if (emit) this.#onChange?.(this.active, this.value);
   }
@@ -90,7 +91,7 @@ export class NeoTabContext<T = unknown> {
 
 const TabContextSymbol = Symbol('NeoTabContext');
 
-export const getTabContext = <T = unknown>(): NeoTabContext<T> => {
+export const getTabContext = <T = unknown>(): NeoTabContext<T> | undefined => {
   return getContext<NeoTabContext<T>>(TabContextSymbol);
 };
 

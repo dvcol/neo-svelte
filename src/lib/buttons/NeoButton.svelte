@@ -4,7 +4,7 @@
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
-  import { emptyFn } from '~/utils/transition.utils.js';
+  import { emptyFn } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -13,7 +13,9 @@
     icon,
 
     // States
+    href,
     loading,
+    loadingMode = 'spinner',
     skeleton,
     disabled,
     empty: only,
@@ -46,6 +48,9 @@
     transition: transitionFn,
     transitionProps,
 
+    use,
+    useProps,
+
     // Other props
     ...rest
   }: NeoButtonProps = $props();
@@ -56,17 +61,8 @@
   const pressed = $derived(enter || active || checked);
   const empty = $derived(only || !children);
 
-  const onKeydownEnter = (e: KeyboardEvent) => {
-    if (loading) return;
-    if (e.key === 'Enter') enter = true;
-    onkeydown?.(e);
-  };
-
-  const onKeyUpEnter = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') enter = false;
-    if (loading) return;
-    onkeyup?.(e);
-  };
+  const rotate = $derived(['border', 'both'].includes(loadingMode) && loading);
+  const spinner = $derived(['spinner', 'both'].includes(loadingMode) && loading);
 
   let timeout: ReturnType<typeof setTimeout>;
   const onActive = () => {
@@ -90,11 +86,28 @@
     onActive();
   };
 
+  const onKeydownEnter = (e: KeyboardEvent) => {
+    if (loading) return;
+    if (e.key === 'Enter') enter = true;
+    onkeydown?.(e);
+  };
+
+  const onKeyUpEnter = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') enter = false;
+    if (loading) return;
+    onkeyup?.(e);
+  };
+
   const _inFn = $derived(inFn ?? transitionFn ?? emptyFn);
   const _outFn = $derived(outFn ?? transitionFn ?? emptyFn);
+  const _useFn = $derived(use ?? (() => {}));
 </script>
 
-<button
+<svelte:element
+  this={href ? 'a' : 'button'}
+  {href}
+  role={href ? 'link' : undefined}
+  tabindex={href && !disabled ? 0 : undefined}
   class={['neo-button', classNames].filter(Boolean).join(' ')}
   class:pulse
   class:coalesce
@@ -106,7 +119,9 @@
   class:text
   class:flat
   class:rounded
+  class:rotate
   class:empty
+  use:_useFn={useProps}
   out:_outFn={outProps ?? transitionProps}
   in:_inFn={inProps ?? transitionProps}
   onkeydown={onKeydownEnter}
@@ -116,9 +131,9 @@
   {...rest}
 >
   <span class="content" class:reverse>
-    {#if loading || icon}
+    {#if spinner || icon}
       <span class="icon" class:only={empty} transition:width={{ duration: 200 }}>
-        {#if loading}
+        {#if spinner}
           <IconCircleLoading />
         {:else}
           {@render icon?.()}
@@ -129,7 +144,7 @@
       {@render children?.()}
     {/if}
   </span>
-</button>
+</svelte:element>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
@@ -143,6 +158,7 @@
     margin: 0.25rem;
     padding: 0.25rem 0.75rem;
     color: var(--neo-btn-text-color, inherit);
+    text-decoration: inherit;
     background-color: var(--neo-btn-bg-color, var(--background-color));
     border: 1px var(--neo-btn-border-color, transparent) solid;
     border-radius: var(--neo-btn-border-radius, var(--border-radius));
@@ -294,6 +310,10 @@
 
     &.coalesce {
       @include mixin.coalesce;
+    }
+
+    &.rotate {
+      @include mixin.border-rotate;
     }
 
     .icon,

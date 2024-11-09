@@ -28,6 +28,7 @@
     onadd,
 
     // Other props
+    tabsProps,
     ...rest
   }: TabsProps = $props();
   /* eslint-enable prefer-const */
@@ -56,7 +57,7 @@
   <IconAdd />
 {/snippet}
 
-<div class="neo-tabs" class:add class:vertical={rest.vertical}>
+<div class="neo-tabs" class:add class:slide class:flat={rest.flat} class:text={rest.text} class:vertical={rest.vertical} {...tabsProps}>
   <NeoButtonGroup {...rest}>
     {@render children?.({ active, disabled, slide, close, add, vertical: rest.vertical })}
     {#if add}
@@ -99,6 +100,30 @@
 
     &.add:not(.vertical) :global(.neo-button-group) {
       padding-right: 0.5rem;
+    }
+
+    &.slide {
+      position: relative;
+
+      :global(.neo-tab .neo-button) {
+        box-shadow: var(--box-shadow-flat);
+      }
+
+      &.text {
+        ::after {
+          position: absolute;
+          bottom: 2px;
+          left: var(--neo-tab-active-left, 0);
+          width: var(--neo-tab-active-width, 1.5rem);
+          height: 2px;
+          background-color: var(--color-primary);
+          transition:
+            left 1s var(--transition-bezier),
+            bottom 1s var(--transition-bezier),
+            width 1s var(--transition-bezier);
+          content: '';
+        }
+      }
     }
   }
 </style>

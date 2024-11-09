@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { link } from '@dvcol/svelte-simple-router';
   import { useWatchMedia } from '@dvcol/svelte-utils/media';
 
+  import { Path } from '../router/routes.js';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import { useButtonState } from '../utils/use-button-state.svelte';
@@ -32,6 +34,7 @@
 {/snippet}
 
 {#snippet buttons()}
+  <NeoButton onclick={onClick} href={`${Path.Buttons}`} use={link}>Anchor</NeoButton>
   <NeoButton onclick={onClick}>Button</NeoButton>
   <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
   <NeoButton disabled onclick={onClick}>Disabled</NeoButton>

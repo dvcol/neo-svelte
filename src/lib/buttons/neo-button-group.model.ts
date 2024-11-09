@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { HTMLTransitionProps } from '~/utils/transition.utils.js';
+import type { HTMLActionProps } from '~/utils/action.utils.js';
 
 export type NeoButtonGroupContext = {
   // States
@@ -55,4 +55,4 @@ export type NeoButtonGroup = {
   children?: Snippet<[NeoButtonGroupContext]>;
 } & NeoButtonGroupContext &
   Partial<HTMLAttributes<HTMLDivElement>> &
-  HTMLTransitionProps;
+  HTMLActionProps;

@@ -37,12 +37,15 @@
   --purple-soft-50: oklch(from var(--purple-soft) l c h / 50%);
   --purple-soft-80: oklch(from var(--purple-soft) l c h / 80%);
 
+  /** primary colors */
+  --color-primary: var(--purple);
+
   /** semantic colors */
   --text-color: var(--grey-strong);
   --text-color-active: color-mix(in srgb, currentcolor, white 10%);
   --text-color-focused: var(--purple-80);
   --text-color-focused-active: color-mix(in srgb, var(--text-color-focused), white 10%);
-  --text-color-hover: var(--purple);
+  --text-color-hover: var(--color-primary);
   --text-color-hover-active: color-mix(in srgb, var(--text-color-hover), white 10%);
   --text-color-disabled: var(--text-color);
   --border-color: var(--grey-strong-20);
@@ -63,12 +66,15 @@
   --glass-border-color-hover: var(--glass-background-color);
   --glass-skeleton-color: var(--grey-soft-20);
 
+  /** dark primary colors */
+  --dark-color-primary: var(--purple-soft);
+
   /** dark mode semantic colors */
   --dark-text-color: var(--white-80);
   --dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
   --dark-text-color-focused: var(--purple-soft-80);
   --dark-text-color-focused-active: color-mix(in srgb, var(--dark-text-color-focused), black 10%);
-  --dark-text-color-hover: var(--purple-soft);
+  --dark-text-color-hover: var(--dark-color-primary);
   --dark-text-color-hover-active: color-mix(in srgb, var(--dark-text-color-hover), black 10%);
   --dark-text-color-disabled: var(--white-soft-50);
   --dark-border-color: var(--grey-soft-10);
@@ -97,6 +103,9 @@
   }
 
   @mixin dark-theme {
+    /** primary colors */
+    --color-primary: var(--dark-color-primary);
+
     /** semantic colors */
     --text-color: var(--dark-text-color);
     --text-color-active: var(--dark-text-color-active);

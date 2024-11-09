@@ -20,35 +20,38 @@
 
     // Events
     onclick,
+    onclose,
 
     // Other props
+    tabProps,
     ...rest
   }: NeoTabProps = $props();
 
   const context = getTabContext();
-  const active = $derived(context.active === tabId);
-  const disabled = $derived(rest.disabled || (rest.disabled !== false && context.disabled));
-  const closeable = $derived(close || (close !== false && context.closeable));
-  const transition = $derived(context.vertical ? height : width);
+  const active = $derived(context?.active === tabId);
+  const disabled = $derived(rest.disabled || (rest.disabled !== false && context?.disabled));
+  const closeable = $derived(close || (close !== false && context?.closeable));
+  const transition = $derived(context?.vertical ? height : width);
 
-  const onClick: NeoTabProps['onclick'] = e => {
-    context.onChange(tabId);
+  const onClick: NeoTabProps['onclick'] = (e: MouseEvent) => {
+    context?.onChange(tabId);
     onclick?.(e);
   };
 
   $effect(() => {
-    context.register(tabId, value);
-    return () => context.remove(tabId);
+    context?.register(tabId, value);
+    return () => context?.remove(tabId);
   });
 
   const onClose = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    context.onClose(tabId);
+    onclose?.(tabId);
+    context?.onClose(tabId);
   };
 </script>
 
-<div class="neo-tab" transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }}>
+<div class="neo-tab" transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }} {...tabProps}>
   <NeoButton
     role="tab"
     data-tab-id={tabId}
