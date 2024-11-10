@@ -12,20 +12,9 @@ export const useButtonState = (prefix = '') => {
     onClick(e);
   };
 
-  let skeleton = $state(false);
-  const onSkeleton = (e: MouseEvent, checked?: boolean, duration = 5000) => {
-    skeleton = !skeleton;
-    setTimeout(() => {
-      skeleton = !skeleton;
-    }, duration);
-    onClick(e);
-  };
-
   return {
     onClick,
     loading: () => loading,
-    skeleton: () => skeleton,
     onLoading,
-    onSkeleton,
   };
 };

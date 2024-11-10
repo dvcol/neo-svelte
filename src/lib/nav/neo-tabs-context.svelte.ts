@@ -8,6 +8,7 @@ export type NeoTabContextPosition = { id: TabId; top: number; left: number; widt
 export type NeoTabContextPositions = { oldTab?: NeoTabContextPosition; newTab?: NeoTabContextPosition };
 
 type NeoTabContextOptions = {
+  line?: boolean;
   slide?: boolean;
   closeable?: boolean;
   disabled?: boolean;
@@ -69,6 +70,7 @@ export class NeoTabContext<T = unknown> {
 
   onOption(options: NeoTabContextOptions) {
     Object.assign(this.#options, options);
+    if (!options.slide) delete this.#position.oldTab;
   }
 
   #getPosition(tabId?: TabId) {
@@ -94,7 +96,6 @@ export class NeoTabContext<T = unknown> {
       _new.newTab = this.#getPosition(this.active);
     }
     this.#position = _new;
-    console.info('onPosition', $state.snapshot(this.position));
     return this.position;
   }
 

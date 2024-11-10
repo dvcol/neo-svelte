@@ -9,17 +9,20 @@
   import type { NeoButtonProps } from '~/buttons/neo-button.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
 
-  const { onClick, loading: loading$, onLoading, skeleton: skeleton$, onSkeleton } = useButtonState('DemoButtonClick');
-  const loading = $derived.by(loading$);
-  const skeleton = $derived.by(skeleton$);
+  const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
+
+  const options = $state({ disabled: false, shallow: false, skeleton: false, loading: false });
+
+  const loading = $derived.by(() => isLoading() || options.loading);
 
   const columns = [
     { label: 'Default' },
-    { label: 'Rounded', props: { rounded: true } },
-    { label: 'Flat', props: { flat: true } },
-    { label: 'Text', props: { text: true } },
+    { label: 'Rounded', props: { rounded: true, shallow: true } },
+    { label: 'Flat', props: { flat: true, shallow: true } },
+    { label: 'Text', props: { text: true, shallow: true } },
   ];
 </script>
 
@@ -28,18 +31,28 @@
 {/snippet}
 
 {#snippet buttons(opts: NeoButtonProps = {})}
-  <NeoButton {...opts} onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
-  <NeoButton {...opts} onclick={onClick}>Button</NeoButton>
-  <NeoButton {...opts} toggle onclick={onClick}>Toggle</NeoButton>
-  <NeoButton {...opts} disabled onclick={onClick}>Disabled</NeoButton>
-  <NeoButton {...opts} {loading} onclick={onLoading}>Loading</NeoButton>
-  <NeoButton {...opts} {loading} onclick={onLoading} {icon} />
-  <NeoButton {...opts} onclick={onClick} {icon}>Icon</NeoButton>
-  <NeoButton {...opts} reverse onclick={onClick} {icon}>Reversed</NeoButton>
-  <NeoButton {...opts} {loading} pulse onclick={onLoading}>Pulse</NeoButton>
-  <NeoButton {...opts} coalesce onclick={onClick}>Coalesce</NeoButton>
-  <NeoButton {...opts} {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
+  <NeoButton {...opts} {...options} onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
+  <NeoButton {...opts} {...options} onclick={onClick}>Button</NeoButton>
+  <NeoButton {...opts} {...options} toggle onclick={onClick}>Toggle</NeoButton>
+  <NeoButton {...opts} {...options} disabled onclick={onClick}>Disabled</NeoButton>
+  <NeoButton {...opts} {...options} {loading} onclick={onLoading}>Loading</NeoButton>
+  <NeoButton {...opts} {...options} {loading} onclick={onLoading} {icon} />
+  <NeoButton {...opts} {...options} onclick={onClick} {icon}>Icon</NeoButton>
+  <NeoButton {...opts} {...options} reverse onclick={onClick} {icon}>Reversed</NeoButton>
+  <NeoButton {...opts} {...options} {loading} pulse onclick={onLoading}>Pulse</NeoButton>
+  <NeoButton {...opts} {...options} coalesce onclick={onClick}>Coalesce</NeoButton>
 {/snippet}
+
+<div class="row">
+  <div class="column">
+    <NeoButtonGroup>
+      <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+      <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
+      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
+      <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
+    </NeoButtonGroup>
+  </div>
+</div>
 
 <div class="row">
   {#each columns as { label, props }}
@@ -52,37 +65,34 @@
   <div class="column">
     <span class="label">Glass</span>
     <SphereBackdrop>
-      <NeoButton glass onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
+      <NeoButton glass {...options} onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass onclick={onClick}>Button</NeoButton>
+      <NeoButton glass {...options} onclick={onClick}>Button</NeoButton>
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass toggle onclick={onClick}>Toggle</NeoButton>
+      <NeoButton glass {...options} toggle onclick={onClick}>Toggle</NeoButton>
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass disabled onclick={onClick}>Disabled</NeoButton>
+      <NeoButton glass {...options} disabled onclick={onClick}>Disabled</NeoButton>
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass {loading} onclick={onLoading}>Loading</NeoButton>
+      <NeoButton glass {...options} {loading} onclick={onLoading}>Loading</NeoButton>
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass {loading} onclick={onLoading} {icon} />
+      <NeoButton glass {...options} {loading} onclick={onLoading} {icon} />
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass onclick={onClick} {icon}>Icon</NeoButton>
+      <NeoButton glass {...options} onclick={onClick} {icon}>Icon</NeoButton>
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass reverse onclick={onClick} {icon}>Reversed</NeoButton>
+      <NeoButton glass {...options} reverse onclick={onClick} {icon}>Reversed</NeoButton>
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass {loading} pulse onclick={onLoading}>Pulse</NeoButton>
+      <NeoButton glass {...options} {loading} pulse onclick={onLoading}>Pulse</NeoButton>
     </SphereBackdrop>
     <SphereBackdrop>
-      <NeoButton glass coalesce onclick={onClick}>Coalesce</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
+      <NeoButton glass {...options} coalesce onclick={onClick}>Coalesce</NeoButton>
     </SphereBackdrop>
   </div>
 </div>
@@ -96,6 +106,10 @@
 
   .row {
     @include flex.row($gap: var(--gap-xl));
+
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
   }
 
   @media (width > 1550px) {

@@ -1,7 +1,7 @@
 :root,
 :host {
   /* Default font stack */
-  font-family: 'Nunito Sans', ui-rounded, sans-serif;
+  --font-family: 'Nunito Sans', ui-rounded, sans-serif;
 
   /* font variables */
   --font-size-xxs: 0.625rem;
@@ -11,22 +11,4 @@
   --font-size-md: 1.125rem;
   --font-size-lg: 1.25rem;
   --font-size-xl: 1.5rem;
-
-  /* Transforms */
-  --transition-bezier: cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Bow shadows */
-  --box-shadow-flat: none;
-  --box-shadow-raised-0: 0.05rem 0.05rem 0.3rem var(--shadow-color-dark), -0.05rem -0.05rem 0.2rem var(--shadow-color-light),
-    inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
-  --box-shadow-raised-1: 0.1rem 0.1rem 0.3rem var(--shadow-color-dark), -0.1rem -0.1rem 0.2rem var(--shadow-color-light),
-    inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
-  --box-shadow-raised-2: 0.3rem 0.3rem 0.3rem var(--shadow-color-dark), -0.2rem -0.2rem 0.2rem var(--shadow-color-light),
-    inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
-  --box-shadow-inset-0: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), 0.05rem 0.05rem 0.3rem var(--shadow-color-light),
-    inset -0.05rem -0.05rem 0.2rem var(--shadow-color-light);
-  --box-shadow-inset-1: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), inset 0.1rem 0.1rem 0.3rem var(--shadow-color-dark),
-    inset -0.1rem -0.1rem 0.2rem var(--shadow-color-light);
-  --box-shadow-inset-2: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), inset 0.3rem 0.3rem 0.4rem var(--shadow-color-dark),
-    inset -0.2rem -0.2rem 0.3rem var(--shadow-color-light);
 }

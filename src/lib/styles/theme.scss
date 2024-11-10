@@ -9,6 +9,7 @@
 :root,
 :host {
   color: var(--text-color);
+  font-family: var(--font-family);
   line-height: var(--line-height);
   background-color: var(--background-color);
   transition:

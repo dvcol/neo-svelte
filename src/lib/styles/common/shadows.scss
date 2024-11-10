@@ -2,22 +2,24 @@
 :host {
   /* Box shadows */
   --box-shadow-flat: none;
-  --box-shadow-raised-0: 0.05rem 0.05rem 0.3rem var(--shadow-color-dark), -0.05rem -0.05rem 0.2rem var(--shadow-color-light),
+  --box-shadow-raised-0: 0.05rem 0.05rem 0.2rem var(--shadow-color-dark), -0.05rem -0.05rem 0.1rem var(--shadow-color-light),
     inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
   --box-shadow-raised-1: 0.1rem 0.1rem 0.3rem var(--shadow-color-dark), -0.1rem -0.1rem 0.2rem var(--shadow-color-light),
     inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
   --box-shadow-raised-2: 0.3rem 0.3rem 0.3rem var(--shadow-color-dark), -0.2rem -0.2rem 0.2rem var(--shadow-color-light),
     inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
+  --box-shadow-inset-0: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), inset 0.05rem 0.05rem 0.2rem var(--shadow-color-dark),
+    inset -0.05rem -0.05rem 0.1rem var(--shadow-color-light);
   --box-shadow-inset-1: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), inset 0.1rem 0.1rem 0.3rem var(--shadow-color-dark),
     inset -0.1rem -0.1rem 0.2rem var(--shadow-color-light);
   --box-shadow-inset-2: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), inset 0.3rem 0.3rem 0.4rem var(--shadow-color-dark),
     inset -0.2rem -0.2rem 0.3rem var(--shadow-color-light);
 
   /* Glass box shadows */
-  --glass-box-shadow-raised-0: 0.05rem 0.05rem 0.3rem var(--glass-shadow-color), 0.05rem 0.05rem 0.3rem var(--glass-shadow-color);
+  --glass-box-shadow-raised-0: 0.05rem 0.05rem 0.2rem var(--glass-shadow-color), 0.05rem 0.05rem 0.2rem var(--glass-shadow-color);
   --glass-box-shadow-raised-1: 0.1rem 0.1rem 0.3rem var(--glass-shadow-color), 0.1rem 0.1rem 0.3rem var(--glass-shadow-color);
   --glass-box-shadow-raised-2: 0.3rem 0.3rem 0.3rem var(--glass-shadow-color), 0.3rem 0.3rem 0.3rem var(--glass-shadow-color);
-  --glass-box-shadow-inset-0: inset 0.05rem 0.05rem 0.3rem var(--glass-shadow-color), inset 0.05rem 0.05rem 0.3rem var(--glass-shadow-color);
+  --glass-box-shadow-inset-0: inset 0.05rem 0.05rem 0.2rem var(--glass-shadow-color), inset 0.05rem 0.05rem 0.2rem var(--glass-shadow-color);
   --glass-box-shadow-inset-1: inset 0.1rem 0.1rem 0.3rem var(--glass-shadow-color), inset 0.1rem 0.1rem 0.3rem var(--glass-shadow-color);
   --glass-box-shadow-inset-2: inset 0.3rem 0.3rem 0.3rem var(--glass-shadow-color), inset 0.3rem 0.3rem 0.3rem var(--glass-shadow-color);
 

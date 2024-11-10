@@ -2,12 +2,25 @@
 Neomorphic ui library for svelte 5
 
 ## TODO
+- [x] Buttons
+  - @media any-pointer:coarse any-hover:none
+  - shallow
+- [x] Tabs
+  - @media any-pointer:coarse any-hover:none
+- paper ?
 - card
   - border loading
   - skeleton
   - images
   - videos
   - carousel
+  - closable
+  - hoverable
+  - action
+  - header/footer/buttons
+  - separator
+  - elevation
+  - shallow (raise on hover)
 - avatar
   - badge
 - tags

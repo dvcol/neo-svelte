@@ -43,7 +43,7 @@
 
   const onClear = () => onChange();
 
-  const options = $state({ disabled: false, close: true, add: true, slide: true });
+  const options = $state({ disabled: false, close: true, add: true, slide: true, shallow: false });
 
   const columns = [
     { label: 'Default' },
@@ -86,6 +86,7 @@
   <div class="column">
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
       <NeoButton toggle bind:checked={options.add}>Add</NeoButton>
       <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
       <NeoButton toggle bind:checked={options.slide}>Slide</NeoButton>

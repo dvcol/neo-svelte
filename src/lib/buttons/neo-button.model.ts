@@ -71,6 +71,10 @@ export type NeoButtonProps = {
    */
   rounded?: boolean;
   /**
+   * If true, the button will not depress past the initial plane.
+   */
+  shallow?: boolean;
+  /**
    * If true, the flex direction of the button will be reversed.
    */
   reverse?: boolean;

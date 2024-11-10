@@ -13,9 +13,9 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
 
-  const { onClick, loading: loading$, onLoading, skeleton: skeleton$, onSkeleton } = useButtonState('DemoGroupClicked');
+  const { onClick, loading: loading$, onLoading } = useButtonState('DemoGroupClicked');
   const loading = $derived.by(loading$);
-  const skeleton = $derived.by(skeleton$);
+  const options = $state({ shallow: false, skeleton: false });
 
   const { matches } = useWatchMedia('(max-width: 1550px)');
   const vertical = $derived.by(matches);
@@ -42,14 +42,22 @@
   <NeoButton {loading} onclick={onLoading} {icon} />
   <NeoButton onclick={onClick} {icon}>Icon</NeoButton>
   <NeoButton reverse onclick={onClick} {icon}>Reversed</NeoButton>
-  <NeoButton {skeleton} onclick={onSkeleton}>Skeleton</NeoButton>
 {/snippet}
 
 {#snippet group(props: NeoButtonGroupContext = {})}
-  <NeoButtonGroup {vertical} {skeleton} {...props}>
+  <NeoButtonGroup {...options} {vertical} {...props}>
     {@render buttons()}
   </NeoButtonGroup>
 {/snippet}
+
+<div class="row">
+  <div class="column">
+    <NeoButtonGroup>
+      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
+      <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
+    </NeoButtonGroup>
+  </div>
+</div>
 
 <div class="row">
   {#each columns as { label, props }}
@@ -66,14 +74,14 @@
 
   <div class="column">
     <span class="label">Pulse</span>
-    <NeoButtonGroup {skeleton} pulse>
+    <NeoButtonGroup {...options} pulse>
       <NeoButton onclick={onClick}>Button</NeoButton>
       <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
       <NeoButton {loading} onclick={onLoading} {icon} />
     </NeoButtonGroup>
 
     <span class="label">Coalesce</span>
-    <NeoButtonGroup {skeleton} coalesce>
+    <NeoButtonGroup {...options} coalesce>
       <NeoButton onclick={onClick}>Button</NeoButton>
       <NeoButton disabled onclick={onClick}>Disabled</NeoButton>
       <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
@@ -90,6 +98,10 @@
 
   .row {
     @include flex.row($gap: var(--gap-xl));
+
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
   }
 
   @media (width > 1550px) {

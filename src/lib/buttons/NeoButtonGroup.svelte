@@ -15,6 +15,7 @@
     text,
     flat,
     glass,
+    shallow,
     rounded,
     pulse,
     coalesce,
@@ -42,6 +43,7 @@
   class:text
   class:flat
   class:glass
+  class:shallow
   class:rounded
   class:pulse
   class:coalesce
@@ -167,6 +169,31 @@
         $scaleY: var(--neo-btn-grp-scale-y, 2),
         $box-shadow-reverse: var(--coalesce-box-shadow-reverse, var(--box-shadow-raised-2))
       );
+    }
+
+    &.shallow {
+      --coalesce-box-shadow: var(--box-shadow-raised-1);
+      --pulse-box-shadow: var(--box-shadow-raised-1);
+      --coalesce-box-shadow-reverse: var(--box-shadow-inset-0);
+      --pulse-box-shadow-reverse: var(--box-shadow-inset-0);
+
+      &:not(.text, .flat, .glass) {
+        box-shadow: var(--box-shadow-raised-1);
+      }
+
+      &.glass {
+        box-shadow: var(--glass-box-shadow-raised-1);
+      }
+
+      :global(.neo-button.loading:active:not(.pressed)),
+      :global(.neo-button:not(.flat, .text, :active, .pressed):hover) {
+        box-shadow: var(--box-shadow-inset-0);
+      }
+
+      :global(.neo-button:active),
+      :global(.neo-button.pressed) {
+        box-shadow: var(--box-shadow-inset-1);
+      }
     }
 
     &.rounded {
