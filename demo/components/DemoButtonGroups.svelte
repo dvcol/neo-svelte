@@ -25,6 +25,7 @@
     { label: 'Rounded', props: { rounded: true } },
     { label: 'Flat', props: { flat: true } },
     { label: 'Text', props: { text: true } },
+    { label: 'Recessed', props: { recessed: true } },
     { label: 'Glass', props: { glass: true } },
   ];
 </script>

@@ -16,6 +16,7 @@
     flat,
     glass,
     shallow,
+    recessed,
     rounded,
     pulse,
     coalesce,
@@ -44,6 +45,7 @@
   class:flat
   class:glass
   class:shallow
+  class:recessed
   class:rounded
   class:pulse
   class:coalesce
@@ -194,6 +196,10 @@
       :global(.neo-button.pressed) {
         box-shadow: var(--box-shadow-inset-1);
       }
+    }
+
+    &.recessed {
+      box-shadow: var(--box-shadow-inset-2);
     }
 
     &.rounded {

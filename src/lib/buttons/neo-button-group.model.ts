@@ -37,6 +37,10 @@ export type NeoButtonGroupContext = {
    */
   shallow?: boolean;
   /**
+   * If true, the button group will be recessed and the buttons flat.
+   */
+  recessed?: boolean;
+  /**
    * If true, the button group will be surrounded by expanding waves.
    * The waves will reverse direction on hover or active states.
    */

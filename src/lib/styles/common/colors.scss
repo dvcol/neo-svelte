@@ -15,7 +15,7 @@
   --black-soft-lighter-50: oklch(from var(--black-soft-lighter) l c h / 50%);
   --black-soft-lighter: oklch(from var(--black-soft) calc(l + 0.1) c h);
   --black-soft-light: oklch(from var(--black-soft) calc(l + 0.05) c h);
-  --black-soft: oklch(24.7% 0.008 264.416deg);
+  --black-soft: oklch(33% 0 264.416deg);
   --black-soft-10: oklch(from var(--black-soft) l c h / 10%);
   --black-soft-dark: oklch(from var(--black-soft) calc(l - 0.05) c h);
   --black-soft-dark-50: oklch(from var(--black-soft-dark) l c h / 50%);

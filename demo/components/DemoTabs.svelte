@@ -51,6 +51,7 @@
     { label: 'Flat', props: { flat: true } },
     { label: 'Text', props: { text: true } },
     { label: 'Line', props: { text: true, line: true } },
+    { label: 'Recessed', props: { recessed: true, line: true } },
     { label: 'Glass', props: { glass: true } },
   ];
 </script>
