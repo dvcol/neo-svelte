@@ -8,11 +8,41 @@ export type NeoTabContextPosition = { id: TabId; top: number; left: number; widt
 export type NeoTabContextPositions = { oldTab?: NeoTabContextPosition; newTab?: NeoTabContextPosition };
 
 type NeoTabContextOptions = {
-  line?: boolean;
-  slide?: boolean;
-  closeable?: boolean;
+  // States
+  /**
+   * Disables all tabs.
+   */
   disabled?: boolean;
+
+  // Styles
+  /**
+   * Whether to animate the tab transition.
+   */
+  slide?: boolean;
+  /**
+   * Clicking the active tab will unselect it.
+   */
+  toggle?: boolean;
+  /**
+   * Add a button to add new tabs.
+   */
+  add?: boolean;
+  /**
+   * Add a close button to each tab.
+   */
+  close?: boolean;
+  /**
+   * Display the tabs vertically.
+   */
   vertical?: boolean;
+};
+
+export type NeoTabsContext = NeoTabContextOptions & {
+  // States
+  /**
+   * The active tab ID.
+   */
+  active?: TabId;
 };
 
 type NeoTabContextCallbacks<T = unknown> = { onChange?: OnChange<T>; onClose?: OnChange<T> };
@@ -46,8 +76,12 @@ export class NeoTabContext<T = unknown> {
     return this.#options?.slide;
   }
 
+  get toggleable() {
+    return this.#options?.toggle;
+  }
+
   get closeable() {
-    return this.#options?.closeable;
+    return this.#options?.close;
   }
 
   get vertical() {
@@ -56,6 +90,18 @@ export class NeoTabContext<T = unknown> {
 
   get position() {
     return this.#position;
+  }
+
+  get state(): NeoTabsContext {
+    return {
+      active: this.active,
+      disabled: this.disabled,
+      slide: this.slide,
+      toggle: this.toggleable,
+      add: this.#options?.add,
+      close: this.closeable,
+      vertical: this.vertical,
+    };
   }
 
   constructor({ onChange, onClose }: NeoTabContextCallbacks<T> = {}) {
@@ -100,7 +146,10 @@ export class NeoTabContext<T = unknown> {
   }
 
   onChange(tabId?: TabId, emit = true) {
-    if (tabId === this.#active) return;
+    if (tabId === this.#active) {
+      if (this.#active && this.toggleable) this.onChange();
+      return;
+    }
     this.#active = tabId;
     this.onPosition();
     if (emit) this.#onChange?.(this.active, this.value, this.ref);

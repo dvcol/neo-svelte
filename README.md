@@ -3,10 +3,10 @@ Neomorphic ui library for svelte 5
 
 ## TODO
 - [x] Buttons
-  - @media any-pointer:coarse any-hover:none
-  - shallow
+  - [ ] @media any-pointer:coarse any-hover:none
 - [x] Tabs
-  - @media any-pointer:coarse any-hover:none
+  - [ ] @media any-pointer:coarse any-hover:none
+  - [ ] tabs panels
 - paper ?
 - card
   - border loading

@@ -1,12 +1,13 @@
 <script lang="ts">
+  import { randomHex } from '@dvcol/common-utils/common/crypto';
   import { useWatchMedia } from '@dvcol/svelte-utils/media';
 
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import { useButtonState } from '../utils/use-button-state.svelte';
 
-  import type { NeoButtonGroupContext } from '~/buttons/neo-button-group.model';
   import type { TabId } from '~/nav/neo-tab.model';
+  import type { TabsProps } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -30,7 +31,7 @@
   };
   const onadd = () => {
     console.info('Add');
-    added.push({ text: `Added ${added.length + 1}`, tabId: crypto.randomUUID() });
+    added.push({ text: `Added ${randomHex(2)}-${added.length + 1}`, tabId: crypto.randomUUID() });
   };
 
   let active: unknown | undefined = $state('button');
@@ -43,9 +44,9 @@
 
   const onClear = () => onChange();
 
-  const options = $state({ disabled: false, close: true, add: true, slide: true, shallow: false });
+  const options = $state({ disabled: false, close: false, add: false, slide: true, shallow: false, toggle: false });
 
-  const columns = [
+  const columns: { label: string; props?: TabsProps }[] = [
     { label: 'Default' },
     { label: 'Rounded', props: { rounded: true } },
     { label: 'Flat', props: { flat: true } },
@@ -60,21 +61,21 @@
   <IconAccount />
 {/snippet}
 
-{#snippet buttons()}
+{#snippet tabs()}
   <NeoTab tabId="button" value="button" close={false} onclick={onClick}>Button</NeoTab>
   <NeoTab tabId="disabled" value="disabled" disabled close={false} onclick={onClick}>Disabled</NeoTab>
   <NeoTab tabId="loading" value="loading" {loading} close={false} onclick={onLoading}>Loading</NeoTab>
   <NeoTab tabId="icon" value="icon" {loading} close={false} onclick={onLoading} {icon} />
   <NeoTab tabId="icon-label" value="icon-label" close={false} onclick={onClick} {icon}>Icon</NeoTab>
   <NeoTab tabId="reversed" value="reversed" reverse close={false} onclick={onClick} {icon}>Reversed</NeoTab>
+  {#each added as { text, ...tab } (tab.tabId)}
+    <NeoTab {...tab}>{text}</NeoTab>
+  {/each}
 {/snippet}
 
-{#snippet group(props: NeoButtonGroupContext = {})}
+{#snippet group(props: TabsProps = {})}
   <NeoTabs bind:active onchange={onChange} {vertical} {skeleton} {onclose} {onadd} {...options} {...props}>
-    {@render buttons()}
-    {#each added as { text, ...tab } (tab.tabId)}
-      <NeoTab {...tab}>{text}</NeoTab>
-    {/each}
+    {@render tabs()}
   </NeoTabs>
 {/snippet}
 
@@ -91,6 +92,7 @@
       <NeoButton toggle bind:checked={options.add}>Add</NeoButton>
       <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
       <NeoButton toggle bind:checked={options.slide}>Slide</NeoButton>
+      <NeoButton toggle bind:checked={options.toggle}>Toggle</NeoButton>
       <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
       <NeoButton onclick={onClear}>Clear</NeoButton>
     </NeoButtonGroup>

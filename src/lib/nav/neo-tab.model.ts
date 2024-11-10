@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { OnChange } from '~/nav/neo-tabs.model.js';
+import type { HTMLUseProps } from '~/utils/action.utils.js';
 
 export type TabId = string | number | symbol;
 export type NeoTabProps<T = unknown> = {
@@ -43,5 +44,5 @@ export type NeoTabProps<T = unknown> = {
   /**
    * Optional props to pass to the tab container.
    */
-  tabProps?: Partial<HTMLAttributes<HTMLDivElement>>;
+  tabProps?: Partial<HTMLAttributes<HTMLDivElement>> & HTMLUseProps;
 } & Omit<NeoButtonProps, 'value' | 'children'>;

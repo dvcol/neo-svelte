@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoButtonGroup } from '~/buttons/neo-button-group.model.js';
 
-  import { emptyFn } from '~/utils/action.utils.js';
+  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
   const {
     // Snippets
@@ -23,19 +23,24 @@
     vertical,
 
     // Transition
-    in: inFn,
-    inProps,
-    out: outFn,
-    outProps,
-    transition: transitionFn,
-    transitionProps,
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
+
+    // Actions
+    use,
 
     // Other props
     ...rest
   }: NeoButtonGroup = $props();
 
-  const _inFn = $derived(inFn ?? transitionFn ?? emptyFn);
-  const _outFn = $derived(outFn ?? transitionFn ?? emptyFn);
+  const inFn = $derived(toTransition(inAction ?? transitionAction));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
+  const outFn = $derived(toTransition(outAction ?? transitionAction));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
+
+  const useFn = $derived(toAction(use));
+  const useProps = $derived(toActionProps(use));
 </script>
 
 <div
@@ -51,8 +56,9 @@
   class:coalesce
   class:skeleton
   class:vertical
-  out:_outFn={outProps ?? transitionProps}
-  in:_inFn={inProps ?? transitionProps}
+  use:useFn={useProps}
+  out:outFn={outProps}
+  in:inFn={inProps}
   {...rest}
 >
   {@render children?.({

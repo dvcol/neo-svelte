@@ -4,7 +4,7 @@
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
-  import { emptyFn } from '~/utils/action.utils.js';
+  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -42,15 +42,12 @@
     onkeyup,
 
     // Transition
-    in: inFn,
-    inProps,
-    out: outFn,
-    outProps,
-    transition: transitionFn,
-    transitionProps,
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
 
+    // Actions
     use,
-    useProps,
 
     // Other props
     ...rest
@@ -99,9 +96,13 @@
     onkeyup?.(e);
   };
 
-  const _inFn = $derived(inFn ?? transitionFn ?? emptyFn);
-  const _outFn = $derived(outFn ?? transitionFn ?? emptyFn);
-  const _useFn = $derived(use ?? (() => {}));
+  const inFn = $derived(toTransition(inAction ?? transitionAction));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
+  const outFn = $derived(toTransition(outAction ?? transitionAction));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
+
+  const useFn = $derived(toAction(use));
+  const useProps = $derived(toActionProps(use));
 </script>
 
 <svelte:element
@@ -123,9 +124,9 @@
   class:rounded
   class:rotate
   class:empty
-  use:_useFn={useProps}
-  out:_outFn={outProps ?? transitionProps}
-  in:_inFn={inProps ?? transitionProps}
+  use:useFn={useProps}
+  out:outFn={outProps}
+  in:inFn={inProps}
   onkeydown={onKeydownEnter}
   onkeyup={onKeyUpEnter}
   onclick={onClick}

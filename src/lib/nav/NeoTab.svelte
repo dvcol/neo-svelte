@@ -1,13 +1,14 @@
 <script lang="ts">
   import { height, width } from '@dvcol/svelte-utils/transition';
 
-  import { untrack } from 'svelte';
+  import { tick, untrack } from 'svelte';
 
   import type { NeoTabProps } from '~/nav/neo-tab.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { defaultTransitionDuration, enterTransition } from '~/utils/transition.utils.js';
 
   const {
@@ -42,8 +43,16 @@
     onclick?.(e);
   };
 
+  let skip = $state(true);
+  // Skip enter transition on first render if closeable
+  const waitForTick = async () => {
+    await tick();
+    skip = false;
+  };
+
   let ref: HTMLDivElement | undefined;
   $effect(() => {
+    waitForTick();
     if (!ref) return;
     untrack(() => context?.register(tabId, ref!, value));
     return () => context?.remove(tabId);
@@ -55,28 +64,30 @@
     onclose?.(tabId, value, ref);
     context?.onClose(tabId, value, ref);
   };
+
+  const useFn = $derived(toAction(tabProps?.use));
+  const useProps = $derived(toActionProps(tabProps?.use));
 </script>
 
-<div bind:this={ref} class="neo-tab" class:active class:slide transition:transition={enterTransition} {...tabProps}>
-  <NeoButton
-    role="tab"
-    data-tab-id={tabId}
-    data-active={active}
-    toggle
-    readonly
-    checked={active}
-    onclick={onClick}
-    empty={!children}
-    {...rest}
-    {disabled}
-  >
+<div
+  bind:this={ref}
+  class="neo-tab"
+  data-tab-id={tabId}
+  data-active={active}
+  class:active
+  class:slide
+  transition:transition={enterTransition}
+  {...tabProps}
+  use:useFn={useProps}
+>
+  <NeoButton role="tab" toggle readonly checked={active} onclick={onClick} empty={!children} {...rest} {disabled}>
     {@render children?.({ active, tabId, value })}
     {#if closeable}
       <button
         class="neo-tab-close"
         class:reverse={rest.reverse}
         class:disabled
-        transition:width={{ duration: defaultTransitionDuration }}
+        transition:width={{ duration: skip ? 0 : defaultTransitionDuration }}
         onclick={onClose}
       >
         <IconClose class="icon-close" />
@@ -93,6 +104,7 @@
     :global(.neo-button:hover) {
       :global(.icon-close) {
         opacity: 1;
+        pointer-events: auto;
       }
     }
 
@@ -129,6 +141,7 @@
         opacity 0.2s ease-in,
         color 0.5s ease,
         background-color 0.5s ease;
+      pointer-events: none;
     }
 
     &:focus-visible :global(.icon-close) {

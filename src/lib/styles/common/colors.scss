@@ -30,6 +30,7 @@
   --grey-strong-15: oklch(from var(--grey-strong) l c h / 15%);
   --grey-strong-20: oklch(from var(--grey-strong) l c h / 20%);
   --grey-strong-dark: oklch(from var(--grey-strong) calc(l - 0.1) c h);
+  --grey-strong-dark-50: oklch(from var(--grey-strong-dark) l c h / 50%);
   --purple: oklch(46.4% 0.305 269.594deg);
   --purple-50: oklch(from var(--purple) l c h / 50%);
   --purple-80: oklch(from var(--purple) l c h / 80%);
@@ -93,6 +94,7 @@
   --dark-glass-shadow-color: var(--black-soft-dark-50);
   --dark-glass-border-color: var(--black-soft-lighter-50);
   --dark-glass-border-color-hover: var(--dark-glass-background-color);
+  --dark-glass-skeleton-color: var(--grey-strong-dark-50);
 
   /* touch highlight */
   -webkit-tap-highlight-color: transparent;
@@ -130,6 +132,7 @@
     --glass-shadow-color: var(--dark-glass-shadow-color);
     --glass-border-color: var(--dark-glass-border-color);
     --glass-border-color-hover: var(--dark-glass-border-color-hover);
+    --glass-skeleton-color: var(--dark-glass-skeleton-color);
   }
 
   /* override semantic color if dark mode is enabled */

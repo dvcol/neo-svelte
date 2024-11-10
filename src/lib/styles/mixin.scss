@@ -154,7 +154,7 @@
 
 @mixin skeleton($color: var(--skeleton-color), $timing: 3s, $easing: var(--transition-skeleton)) {
   --skeleton-color-start: #{$color};
-  --skeleton-color-end: oklch(from #{$color} calc(l + 0.1) c h);
+  --skeleton-color-end: oklch(from #{$color} calc(l - 0.05) c h);
 
   color: var(--skeleton-color-start);
   background-color: var(--skeleton-color-start);
