@@ -25,6 +25,10 @@ export type TabsProps<T = unknown> = {
    * Only applies when `slide` is `true`.
    */
   line?: boolean;
+  /**
+   * Sets the position of the pane snippet relative to the tabs.
+   */
+  position?: 'before' | 'after';
 
   // Events
   /**

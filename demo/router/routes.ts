@@ -5,6 +5,7 @@ export const Route = {
   Buttons: 'buttons' as const,
   ButtonGroups: 'button-groups' as const,
   Tabs: 'tabs' as const,
+  TabsPanels: 'tabs-panels' as const,
 } as const;
 
 export type Routes = (typeof Route)[keyof typeof Route];
@@ -13,6 +14,7 @@ export const Path: Record<keyof typeof Route, string> = {
   Buttons: '/buttons' as const,
   ButtonGroups: '/buttons/groups' as const,
   Tabs: '/tabs' as const,
+  TabsPanels: '/tabs/panels' as const,
   Any: '*' as const,
 } as const;
 
@@ -35,6 +37,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.Tabs,
       path: Path.Tabs,
       component: () => import('../components/DemoTabs.svelte'),
+    },
+    {
+      name: Route.TabsPanels,
+      path: Path.TabsPanels,
+      component: () => import('../components/DemoTabsPanels.svelte'),
     },
     {
       name: Route.Any,

@@ -3,12 +3,15 @@
 
   import { untrack } from 'svelte';
 
-  import type { NeoTabsContext, OnChange, TabsProps } from '~/nav/neo-tabs.model.js';
+  import type { NeoTabContextPositions, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
+
+  import type { OnChange, TabsProps } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
-  import { type NeoTabContextPositions, setTabContext } from '~/nav/neo-tabs-context.svelte.js';
+  import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
+
   import { toAction, toActionProps } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -21,6 +24,7 @@
     active = $bindable(),
 
     // Styles
+    position = 'after',
     toggle,
     close,
     add,
@@ -47,7 +51,7 @@
   const context = setTabContext({ onChange, onClose: onclose });
   const transition = $derived(rest.vertical ? height : width);
 
-  let position = $state(transform(context.position));
+  let translate = $state(transform(context.position));
   // Function to compute the transform
   function transform({ oldTab, newTab }: NeoTabContextPositions) {
     if (!newTab) return;
@@ -63,10 +67,10 @@
 
   $effect.pre(() => {
     if (!slide) return;
-    position = transform(context.position);
+    translate = transform(context.position);
   });
 
-  const style = $derived([tabsProps?.style, position].filter(Boolean).join('; '));
+  const style = $derived([tabsProps?.style, translate].filter(Boolean).join('; '));
 
   // reflect component active to context
   $effect(() => {
@@ -102,7 +106,7 @@
     class:add
     class:line
     class:slide
-    class:animate={!!position}
+    class:translate
     class:flat={rest.flat}
     class:text={rest.text}
     class:vertical={rest.vertical}
@@ -123,12 +127,14 @@
   </div>
 {/snippet}
 
-<!-- TODO: placement right left (vertical), top, bottom (horizontal) -->
-{#if panes}
-  {@render tabs()}
-  {@render panes(context.state)}
-{:else}
-  {@render tabs()}
+{#if position === 'before'}
+  {@render panes?.(context.state)}
+{/if}
+
+{@render tabs()}
+
+{#if position === 'after'}
+  {@render panes?.(context.state)}
 {/if}
 
 <style lang="scss">
@@ -256,7 +262,7 @@
         box-shadow: var(--box-shadow-inset-2);
       }
 
-      &.animate :global(.neo-tab.active::before) {
+      &.translate :global(.neo-tab.active::before) {
         animation: slide 0.5s var(--transition-bezier) forwards;
       }
 
