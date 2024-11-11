@@ -62,7 +62,7 @@
     const offsetY = oldTab.top - newTab.top;
 
     // Apply the transform to position absDiv over targetDiv
-    return `--transform: translate(${offsetX}px, ${offsetY}px); --neo-tab-old-width: ${oldTab.width}px; --neo-tab-old-height: ${oldTab.height}px;`;
+    return `--neo-tabs-transform: translate(${offsetX}px, ${offsetY}px); --neo-tab-old-width: ${oldTab.width}px; --neo-tab-old-height: ${oldTab.height}px;`;
   }
 
   $effect.pre(() => {
@@ -180,7 +180,7 @@
           margin-left: 0.3rem;
           transition:
             box-shadow 0.3s ease,
-            height 0.3s var(--transition-bezier);
+            height 0.3s var(--neo-transition-bezier);
           margin-block: 0.5rem;
         }
 
@@ -200,7 +200,7 @@
 
       :global(.neo-tab .neo-button) {
         color: var(--neo-btn-text-color, inherit);
-        box-shadow: var(--box-shadow-flat) !important;
+        box-shadow: var(--neo-box-shadow-flat) !important;
         transition:
           opacity 0.3s ease,
           color 0.3s ease,
@@ -211,19 +211,19 @@
 
       :global(.neo-tab) {
         position: relative;
-        box-shadow: var(--box-shadow-flat);
+        box-shadow: var(--neo-box-shadow-flat);
       }
 
       :global(.neo-tab::before) {
         position: absolute;
-        top: calc(0 - var(--border-width, 1px));
-        left: calc(0 - var(--border-width, 1px));
-        z-index: var(--z-index-in-front, 1);
+        top: calc(0 - var(--neo-border-width, 1px));
+        left: calc(0 - var(--neo-border-width, 1px));
+        z-index: var(--neo-z-index-in-front, 1);
         width: var(--neo-tab-width, 100%);
         height: var(--neo-tab-height, 100%);
-        border: var(--border-width, 1px) var(--neo-tab-border-color, transparent) solid;
-        border-radius: var(--neo-tab-border-radius, var(--border-radius));
-        box-shadow: var(--box-shadow-flat);
+        border: var(--neo-border-width, 1px) var(--neo-tab-border-color, transparent) solid;
+        border-radius: var(--neo-tab-border-radius, var(--neo-border-radius));
+        box-shadow: var(--neo-box-shadow-flat);
         backface-visibility: hidden;
         transition: box-shadow 0.3s ease;
         content: '';
@@ -232,8 +232,8 @@
 
       &.line :global(.neo-tab.active::before) {
         bottom: 0;
-        background-color: var(--color-primary, var(--text-color));
-        box-shadow: var(--box-shadow-flat);
+        background-color: var(--neo-color-primary, var(--neo-text-color));
+        box-shadow: var(--neo-box-shadow-flat);
       }
 
       &.line:not(.vertical) {
@@ -249,7 +249,7 @@
           margin-bottom: 0.125rem;
           transition:
             box-shadow 0.3s ease,
-            width 0.3s var(--transition-bezier);
+            width 0.3s var(--neo-transition-bezier);
           margin-inline: 0.75rem;
         }
 
@@ -259,11 +259,11 @@
       }
 
       :global(.neo-tab.active::before) {
-        box-shadow: var(--box-shadow-inset-2);
+        box-shadow: var(--neo-box-shadow-inset-2);
       }
 
       &.translate :global(.neo-tab.active::before) {
-        animation: slide 0.5s var(--transition-bezier) forwards;
+        animation: slide 0.6s var(--neo-transition-bezier) forwards;
       }
 
       @keyframes slide {
@@ -272,8 +272,8 @@
           max-width: var(--neo-tab-old-max-width);
           height: var(--neo-tab-old-height, var(--neo-tab-height, 100%));
           max-height: var(--neo-tab-old-max-height);
-          box-shadow: var(--box-shadow-inset-2);
-          transform: var(--transform);
+          box-shadow: var(--neo-box-shadow-inset-2);
+          transform: var(--neo-tabs-transform);
         }
 
         100% {
@@ -281,27 +281,27 @@
           max-width: var(--neo-tab-max-width);
           height: var(--neo-tab-height, 100%);
           max-height: var(--neo-tab-max-height);
-          box-shadow: var(--box-shadow-inset-2);
+          box-shadow: var(--neo-box-shadow-inset-2);
           transform: translate(0, 0);
         }
       }
 
       @keyframes fade {
         0% {
-          box-shadow: var(--box-shadow-flat);
+          box-shadow: var(--neo-box-shadow-flat);
         }
 
         100% {
-          box-shadow: var(--box-shadow-inset-2);
+          box-shadow: var(--neo-box-shadow-inset-2);
         }
       }
 
       &.shallow {
-        --box-shadow-inset-2: var(--box-shadow-inset-1);
+        --neo-box-shadow-inset-2: var(--neo-box-shadow-inset-1);
       }
 
       &.rounded :global(.neo-button-group .neo-tab::before) {
-        border-radius: var(--neo-tab-border-radius, var(--border-radius-lg));
+        border-radius: var(--neo-tab-border-radius, var(--neo-border-radius-lg));
       }
     }
   }

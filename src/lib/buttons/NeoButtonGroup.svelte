@@ -87,16 +87,16 @@
     width: fit-content;
     margin: 0.25rem;
     padding: 0.25rem;
-    background-color: var(--neo-btn-bg-color, var(--background-color));
-    border: var(--border-width, 1px) var(--neo-btn-border-color, transparent) solid;
-    border-radius: calc(var(--neo-btn-border-radius, var(--border-radius)) + 0.25rem);
+    background-color: var(--neo-btn-bg-color, var(--neo-background-color));
+    border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;
+    border-radius: calc(var(--neo-btn-border-radius, var(--neo-border-radius)) + 0.25rem);
     transition:
       color 0.3s ease,
       background-color 0.3s ease,
       box-shadow 0.3s ease-out;
 
     &.flat {
-      border-color: var(--neo-btn-border-color, var(--border-color));
+      border-color: var(--neo-btn-border-color, var(--neo-border-color));
     }
 
     &.text {
@@ -104,25 +104,25 @@
     }
 
     &:not(.text, .flat, .glass) {
-      box-shadow: var(--box-shadow-raised-2);
+      box-shadow: var(--neo-box-shadow-raised-2);
     }
 
     &.start {
       @starting-style {
-        box-shadow: var(--box-shadow-flat);
+        box-shadow: var(--neo-box-shadow-flat);
 
         &:not(.text, .glass) {
-          border-color: var(--neo-btn-border-color, var(--border-color));
+          border-color: var(--neo-btn-border-color, var(--neo-border-color));
         }
       }
     }
 
     &.glass {
-      background-color: var(--glass-background-color);
-      border-top-color: var(--glass-border-color);
-      border-left-color: var(--glass-border-color);
-      box-shadow: var(--glass-box-shadow-raised-2);
-      backdrop-filter: var(--blur-4);
+      background-color: var(--neo-glass-background-color);
+      border-top-color: var(--neo-glass-border-color);
+      border-left-color: var(--neo-glass-border-color);
+      box-shadow: var(--neo-glass-box-shadow-raised-2);
+      backdrop-filter: var(--neo-blur-4);
 
       :global(.neo-button) {
         background-color: transparent;
@@ -130,7 +130,7 @@
       }
 
       :global(.neo-button:not(:active, .pressed)) {
-        box-shadow: var(--glass-box-shadow-flat);
+        box-shadow: var(--neo-glass-box-shadow-flat);
       }
     }
 
@@ -144,16 +144,16 @@
     }
 
     :global(.neo-button[disabled]:not([disabled='false'], .skeleton, .pressed)) {
-      box-shadow: var(--box-shadow-flat) !important;
+      box-shadow: var(--neo-box-shadow-flat) !important;
     }
 
     :global(.neo-button:not(:active, .pressed)) {
-      box-shadow: var(--box-shadow-flat);
+      box-shadow: var(--neo-box-shadow-flat);
     }
 
     :global(.neo-button.loading:active:not(.pressed)),
     :global(.neo-button:not(.flat, .text, :active, .pressed):hover) {
-      box-shadow: var(--box-shadow-inset-1);
+      box-shadow: var(--neo-box-shadow-inset-1);
     }
 
     :global(.neo-button.pulse::after),
@@ -167,7 +167,7 @@
       @include mixin.pulse(
         $scaleX: var(--neo-btn-grp-scale-x, 1.2),
         $scaleY: var(--neo-btn-grp-scale-y, 2),
-        $box-shadow-reverse: var(--pulse-box-shadow-reverse, var(--box-shadow-raised-2))
+        $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-box-shadow-raised-2))
       );
     }
 
@@ -175,55 +175,55 @@
       @include mixin.coalesce(
         $scaleX: var(--neo-btn-grp-scale-x, 1.2),
         $scaleY: var(--neo-btn-grp-scale-y, 2),
-        $box-shadow-reverse: var(--coalesce-box-shadow-reverse, var(--box-shadow-raised-2))
+        $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-raised-2))
       );
     }
 
     &.shallow {
-      --coalesce-box-shadow: var(--box-shadow-raised-1);
-      --pulse-box-shadow: var(--box-shadow-raised-1);
-      --coalesce-box-shadow-reverse: var(--box-shadow-inset-0);
-      --pulse-box-shadow-reverse: var(--box-shadow-inset-0);
+      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-1);
+      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-1);
+      --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-0);
+      --neo-pulse-box-shadow-reverse: var(--neo-box-shadow-inset-0);
 
       &:not(.text, .flat, .glass) {
-        box-shadow: var(--box-shadow-raised-1);
+        box-shadow: var(--neo-box-shadow-raised-1);
       }
 
       &.glass {
-        box-shadow: var(--glass-box-shadow-raised-1);
+        box-shadow: var(--neo-glass-box-shadow-raised-1);
       }
 
       :global(.neo-button.loading:active:not(.pressed)),
       :global(.neo-button:not(.flat, .text, :active, .pressed):hover) {
-        box-shadow: var(--box-shadow-inset-0);
+        box-shadow: var(--neo-box-shadow-inset-0);
       }
 
       :global(.neo-button:active),
       :global(.neo-button.pressed) {
-        box-shadow: var(--box-shadow-inset-1);
+        box-shadow: var(--neo-box-shadow-inset-1);
       }
     }
 
     &.recessed {
-      box-shadow: var(--box-shadow-inset-2);
+      box-shadow: var(--neo-box-shadow-inset-2);
     }
 
     &.rounded {
-      border-radius: var(--neo-btn-border-radius-rounded, var(--border-radius-lg));
+      border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
 
       :global(.neo-button) {
-        border-radius: var(--neo-btn-border-radius-rounded, var(--border-radius-lg));
+        border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
       }
     }
 
     &.skeleton {
-      box-shadow: var(--box-shadow-flat);
+      box-shadow: var(--neo-box-shadow-flat);
       pointer-events: none;
 
       @include mixin.skeleton;
 
       &.glass {
-        --skeleton-color: var(--glass-skeleton-color);
+        --neo-skeleton-color: var(--neo-glass-skeleton-color);
       }
     }
 

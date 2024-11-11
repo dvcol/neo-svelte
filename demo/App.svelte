@@ -114,7 +114,7 @@
     :global(.transition *),
     :global(.transition *::before),
     :global(.transition *::after) {
-      box-shadow: var(--box-shadow-flat) !important;
+      box-shadow: var(--neo-box-shadow-flat) !important;
     }
   }
 </style>

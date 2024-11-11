@@ -1,19 +1,22 @@
 :root,
 :host {
   /* Borders */
-  --border-width: 1px;
-  --border-radius: 0.5rem;
-  --border-radius-lg: 2rem;
+  --neo-border-width: 1px;
+  --neo-border-radius: 0.5rem;
+  --neo-border-radius-lg: 2rem;
 
   /* Gap */
-  --gap-xs: 0.25rem;
-  --gap-sm: 0.5rem;
-  --gap: 1rem;
-  --gap-md: 1.5rem;
-  --gap-lg: 2rem;
-  --gap-xl: 3rem;
-  --gap-xxl: 5rem;
+  --neo-gap-xs: 0.25rem;
+  --neo-gap-sm: 0.5rem;
+  --neo-gap: 1rem;
+  --neo-gap-md: 1.5rem;
+  --neo-gap-lg: 2rem;
+  --neo-gap-xl: 3rem;
+  --neo-gap-xxl: 5rem;
 
   /* Line height */
-  --line-height: 1.5rem;
+  --neo-line-height: 1.5rem;
+
+  /* Margin */
+  --neo-shadow-margin: 0.25rem;
 }

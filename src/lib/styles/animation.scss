@@ -1,4 +1,4 @@
-@mixin pulse($scaleX: var(--pulse-scale-x, 2), $scaleY: var(--pulse-scale-y, 2), $opacity-start: 1, $opacity-end: 0) {
+@mixin pulse($scaleX: var(--neo-pulse-scale-x, 2), $scaleY: var(--neo-pulse-scale-y, 2), $opacity-start: 1, $opacity-end: 0) {
   @keyframes pulse {
     0% {
       transform: scaleX(1) scaleY(1);
@@ -16,7 +16,7 @@
   }
 }
 
-@mixin coalesce($scaleX: var(--coalesce-scale-x, 2), $scaleY: var(--coalesce-scale-y, 2), $opacity-start: 1, $opacity-end: 0) {
+@mixin coalesce($scaleX: var(--neo-coalesce-scale-x, 2), $scaleY: var(--neo-coalesce-scale-y, 2), $opacity-start: 1, $opacity-end: 0) {
   @keyframes coalesce {
     0% {
       transform: scaleX($scaleX) scaleY($scaleY);
@@ -37,11 +37,11 @@
 @mixin rotate {
   @keyframes rotate {
     from {
-      --angle: 0deg;
+      --neo-angle: 0deg;
     }
 
     to {
-      --angle: 360deg;
+      --neo-angle: 360deg;
     }
   }
 }
@@ -49,27 +49,27 @@
 @mixin skeleton {
   @keyframes skeleton {
     0% {
-      color: var(--skeleton-color-start);
-      background-color: var(--skeleton-color-start);
-      border-color: var(--skeleton-color-start);
+      color: var(--neo-skeleton-color-start);
+      background-color: var(--neo-skeleton-color-start);
+      border-color: var(--neo-skeleton-color-start);
     }
 
     40% {
-      color: var(--skeleton-color-end);
-      background-color: var(--skeleton-color-end);
-      border-color: var(--skeleton-color-end);
+      color: var(--neo-skeleton-color-end);
+      background-color: var(--neo-skeleton-color-end);
+      border-color: var(--neo-skeleton-color-end);
     }
 
     80% {
-      color: var(--skeleton-color-start);
-      background-color: var(--skeleton-color-start);
-      border-color: var(--skeleton-color-start);
+      color: var(--neo-skeleton-color-start);
+      background-color: var(--neo-skeleton-color-start);
+      border-color: var(--neo-skeleton-color-start);
     }
 
     100% {
-      color: var(--skeleton-color-start);
-      background-color: var(--skeleton-color-start);
-      border-color: var(--skeleton-color-start);
+      color: var(--neo-skeleton-color-start);
+      background-color: var(--neo-skeleton-color-start);
+      border-color: var(--neo-skeleton-color-start);
     }
   }
 }

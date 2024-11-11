@@ -1,22 +1,22 @@
-@property --angle {
+@property --neo-angle {
   syntax: '<angle>';
   initial-value: 0deg;
   inherits: false;
 }
 
-@property --progress {
+@property --neo-progress {
   syntax: '<percentage>';
   inherits: true;
   initial-value: 0%;
 }
 
-@property --source-color {
+@property --neo-source-color {
   syntax: '<color>';
   initial-value: transparent;
   inherits: false;
 }
 
-@property --target-color {
+@property --neo-target-color {
   syntax: '<color>';
   initial-value: transparent;
   inherits: false;

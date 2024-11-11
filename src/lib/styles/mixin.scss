@@ -4,7 +4,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: var(--z-index-behind, -1);
+  z-index: var(--neo-z-index-behind, -1);
   display: flex;
   width: 100%;
   height: 100%;
@@ -14,14 +14,14 @@
 }
 
 @mixin pulse(
-  $box-shadow: var(--pulse-box-shadow, var(--box-shadow-raised-2)),
-  $box-shadow-reverse: var(--pulse-box-shadow-reverse, var(--box-shadow-inset-1)),
-  $duration: var(--pulse-duration, 6s),
-  $delay: var(--pulse-delay, 1s),
-  $interval: var(--pulse-interval, 3s),
+  $box-shadow: var(--neo-pulse-box-shadow, var(--neo-box-shadow-raised-2)),
+  $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-box-shadow-inset-1)),
+  $duration: var(--neo-pulse-duration, 6s),
+  $delay: var(--neo-pulse-delay, 1s),
+  $interval: var(--neo-pulse-interval, 3s),
   $iteration: infinite,
-  $scaleX: var(--pulse-scale-x, 2),
-  $scaleY: var(--pulse-scale-y, 2),
+  $scaleX: var(--neo-pulse-scale-x, 2),
+  $scaleY: var(--neo-pulse-scale-y, 2),
   $opacity-start: 1,
   $opacity-end: 0
 ) {
@@ -60,14 +60,14 @@
 }
 
 @mixin coalesce(
-  $box-shadow: var(--coalesce-box-shadow, var(--box-shadow-raised-2)),
-  $box-shadow-reverse: var(--coalesce-box-shadow-reverse, var(--box-shadow-inset-1)),
-  $duration: var(--coalesce-duration, 6s),
-  $delay: var(--coalesce-delay, 1s),
-  $interval: var(--coalesce-interval, 3s),
+  $box-shadow: var(--neo-coalesce-box-shadow, var(--neo-box-shadow-raised-2)),
+  $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-inset-1)),
+  $duration: var(--neo-coalesce-duration, 6s),
+  $delay: var(--neo-coalesce-delay, 1s),
+  $interval: var(--neo-coalesce-interval, 3s),
   $iteration: infinite,
-  $scaleX: var(--coalesce-scale-x, 2),
-  $scaleY: var(--coalesce-scale-y, 2),
+  $scaleX: var(--neo-coalesce-scale-x, 2),
+  $scaleY: var(--neo-coalesce-scale-y, 2),
   $opacity-start: 1,
   $opacity-end: 0
 ) {
@@ -106,59 +106,59 @@
 }
 
 @mixin border-rotate(
-  $background-color: var(--background-color),
-  $border-color: var(--border-color-hover),
+  $background-color: var(--neo-background-color),
+  $border-color: var(--neo-border-color-hover),
   $border-width: 1px,
   $speed: 3s,
   $easing: linear,
   $transition: (
-    1s --source-color,
-    1s --target-color,
+    1s --neo-source-color,
+    1s --neo-target-color,
   )
 ) {
-  --source-color: #{$background-color};
-  --target-color: #{$border-color};
+  --neo-source-color: #{$background-color};
+  --neo-target-color: #{$border-color};
 
   background:
     linear-gradient($background-color, $background-color) padding-box,
-    conic-gradient(from var(--angle), var(--source-color), var(--target-color)) border-box;
+    conic-gradient(from var(--neo-angle), var(--neo-source-color), var(--neo-target-color)) border-box;
   border: $border-width solid transparent;
   transition: $transition;
   animation: $speed rotate $easing infinite;
 
   &.filled {
-    --source-color: var(--target-color);
+    --neo-source-color: var(--neo-target-color);
   }
 
   &.empty {
-    --target-color: transparent;
+    --neo-target-color: transparent;
   }
 
   @include animation.rotate;
 }
 
 @mixin border-progress(
-  $background-color: var(--background-color),
-  $border-color: var(--border-color-hover),
+  $background-color: var(--neo-background-color),
+  $border-color: var(--neo-border-color-hover),
   $border-width: 1px,
-  $transition: --progress,
+  $transition: --neo-progress,
   $speed: 2s,
-  $easing: var(--transition-bezier)
+  $easing: var(--neo-transition-bezier)
 ) {
   background:
     linear-gradient($background-color, $background-color) padding-box,
-    conic-gradient($border-color, $border-color var(--progress), transparent var(--progress)) border-box;
+    conic-gradient($border-color, $border-color var(--neo-progress), transparent var(--neo-progress)) border-box;
   border: $border-width solid transparent;
   transition: $transition $speed $easing;
 }
 
-@mixin skeleton($color: var(--skeleton-color), $timing: 3s, $easing: var(--transition-skeleton)) {
-  --skeleton-color-start: #{$color};
-  --skeleton-color-end: oklch(from #{$color} calc(l - 0.05) c h);
+@mixin skeleton($color: var(--neo-skeleton-color), $timing: 3s, $easing: var(--neo-transition-skeleton)) {
+  --neo-skeleton-color-start: #{$color};
+  --neo-skeleton-color-end: oklch(from #{$color} calc(l - 0.05) c h);
 
-  color: var(--skeleton-color-start);
-  background-color: var(--skeleton-color-start);
-  border-color: var(--skeleton-color-start);
+  color: var(--neo-skeleton-color-start);
+  background-color: var(--neo-skeleton-color-start);
+  border-color: var(--neo-skeleton-color-start);
   transition:
     background-color 1s,
     color 1s,

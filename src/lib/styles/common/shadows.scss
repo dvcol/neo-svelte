@@ -1,32 +1,43 @@
 :root,
 :host {
   /* Box shadows */
-  --box-shadow-flat: none;
-  --box-shadow-raised-0: 0.05rem 0.05rem 0.2rem var(--shadow-color-dark), -0.05rem -0.05rem 0.1rem var(--shadow-color-light),
-    inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
-  --box-shadow-raised-1: 0.1rem 0.1rem 0.3rem var(--shadow-color-dark), -0.1rem -0.1rem 0.2rem var(--shadow-color-light),
-    inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
-  --box-shadow-raised-2: 0.3rem 0.3rem 0.3rem var(--shadow-color-dark), -0.2rem -0.2rem 0.2rem var(--shadow-color-light),
-    inset 0 0 0 0 var(--shadow-color-light), inset 0 0 0 0 var(--shadow-color-light);
-  --box-shadow-inset-0: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), inset 0.05rem 0.05rem 0.2rem var(--shadow-color-dark),
-    inset -0.05rem -0.05rem 0.1rem var(--shadow-color-light);
-  --box-shadow-inset-1: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), inset 0.1rem 0.1rem 0.3rem var(--shadow-color-dark),
-    inset -0.1rem -0.1rem 0.2rem var(--shadow-color-light);
-  --box-shadow-inset-2: 0 0 0 0 var(--shadow-color-light), 0 0 0 0 var(--shadow-color-light), inset 0.3rem 0.3rem 0.4rem var(--shadow-color-dark),
-    inset -0.2rem -0.2rem 0.3rem var(--shadow-color-light);
+  --neo-box-shadow-flat: none;
+  --neo-box-shadow-raised-0: 0.05rem 0.05rem 0.2rem var(--neo-shadow-color-dark), -0.05rem -0.05rem 0.1rem var(--neo-shadow-color-light),
+    inset 0 0 0 0 var(--neo-shadow-color-light), inset 0 0 0 0 var(--neo-shadow-color-light);
+  --neo-box-shadow-raised-1: 0.1rem 0.1rem 0.3rem var(--neo-shadow-color-dark), -0.1rem -0.1rem 0.2rem var(--neo-shadow-color-light),
+    inset 0 0 0 0 var(--neo-shadow-color-light), inset 0 0 0 0 var(--neo-shadow-color-light);
+  --neo-box-shadow-raised-2: 0.3rem 0.3rem 0.3rem var(--neo-shadow-color-dark), -0.2rem -0.2rem 0.2rem var(--neo-shadow-color-light),
+    inset 0 0 0 0 var(--neo-shadow-color-light), inset 0 0 0 0 var(--neo-shadow-color-light);
+  --neo-box-shadow-raised-3: 0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark), -0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light),
+    inset 0 0 0 0 var(--neo-shadow-color-light), inset 0 0 0 0 var(--neo-shadow-color-light);
+  --neo-box-shadow-raised-4: 1rem 1rem 1.2rem var(--neo-shadow-color-dark), -0.75rem -0.75rem 0.8rem var(--neo-shadow-color-light),
+    inset 0 0 0 0 var(--neo-shadow-color-light), inset 0 0 0 0 var(--neo-shadow-color-light);
+  --neo-box-shadow-inset-0: 0 0 0 0 var(--neo-shadow-color-light), 0 0 0 0 var(--neo-shadow-color-light),
+    inset 0.05rem 0.05rem 0.2rem var(--neo-shadow-color-dark), inset -0.05rem -0.05rem 0.1rem var(--neo-shadow-color-light);
+  --neo-box-shadow-inset-1: 0 0 0 0 var(--neo-shadow-color-light), 0 0 0 0 var(--neo-shadow-color-light),
+    inset 0.1rem 0.1rem 0.3rem var(--neo-shadow-color-dark), inset -0.1rem -0.1rem 0.2rem var(--neo-shadow-color-light);
+  --neo-box-shadow-inset-2: 0 0 0 0 var(--neo-shadow-color-light), 0 0 0 0 var(--neo-shadow-color-light),
+    inset 0.3rem 0.3rem 0.4rem var(--neo-shadow-color-dark), inset -0.2rem -0.2rem 0.3rem var(--neo-shadow-color-light);
+  --neo-box-shadow-inset-3: 0 0 0 0 var(--neo-shadow-color-light), 0 0 0 0 var(--neo-shadow-color-light),
+    inset 0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark), inset -0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
+  --neo-box-shadow-inset-4: 0 0 0 0 var(--neo-shadow-color-light), 0 0 0 0 var(--neo-shadow-color-light),
+    inset 1rem 1rem 1.2rem var(--neo-shadow-color-dark), inset -0.75rem -0.75rem 0.8rem var(--neo-shadow-color-light);
 
   /* Glass box shadows */
-  --glass-box-shadow-raised-0: 0.05rem 0.05rem 0.2rem var(--glass-shadow-color), 0.05rem 0.05rem 0.2rem var(--glass-shadow-color);
-  --glass-box-shadow-raised-1: 0.1rem 0.1rem 0.3rem var(--glass-shadow-color), 0.1rem 0.1rem 0.3rem var(--glass-shadow-color);
-  --glass-box-shadow-raised-2: 0.3rem 0.3rem 0.3rem var(--glass-shadow-color), 0.3rem 0.3rem 0.3rem var(--glass-shadow-color);
-  --glass-box-shadow-inset-0: inset 0.05rem 0.05rem 0.2rem var(--glass-shadow-color), inset 0.05rem 0.05rem 0.2rem var(--glass-shadow-color);
-  --glass-box-shadow-inset-1: inset 0.1rem 0.1rem 0.3rem var(--glass-shadow-color), inset 0.1rem 0.1rem 0.3rem var(--glass-shadow-color);
-  --glass-box-shadow-inset-2: inset 0.3rem 0.3rem 0.3rem var(--glass-shadow-color), inset 0.3rem 0.3rem 0.3rem var(--glass-shadow-color);
+  --neo-glass-box-shadow-raised-0: 0.05rem 0.05rem 0.2rem var(--neo-glass-shadow-color), 0.05rem 0.05rem 0.2rem var(--neo-glass-shadow-color);
+  --neo-glass-box-shadow-raised-1: 0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color), 0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color);
+  --neo-glass-box-shadow-raised-2: 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color), 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color);
+  --neo-glass-box-shadow-raised-3: 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color), 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color);
+  --neo-glass-box-shadow-inset-0: inset 0.05rem 0.05rem 0.2rem var(--neo-glass-shadow-color),
+    inset 0.05rem 0.05rem 0.2rem var(--neo-glass-shadow-color);
+  --neo-glass-box-shadow-inset-1: inset 0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color), inset 0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color);
+  --neo-glass-box-shadow-inset-2: inset 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color), inset 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color);
+  --neo-glass-box-shadow-inset-3: inset 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color), inset 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color);
 
   /* Blurs */
-  --blur-0: blur(0);
-  --blur-1: blur(1px);
-  --blur-2: blur(2px);
-  --blur-3: blur(3px);
-  --blur-4: blur(4px);
+  --neo-blur-0: blur(0);
+  --neo-blur-1: blur(1px);
+  --neo-blur-2: blur(2px);
+  --neo-blur-3: blur(3px);
+  --neo-blur-4: blur(4px);
 }

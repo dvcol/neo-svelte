@@ -8,11 +8,11 @@
 
 :root,
 :host {
-  color: var(--text-color);
-  font-family: var(--font-family);
-  line-height: var(--line-height);
-  background-color: var(--background-color);
+  color: var(--neo-text-color);
+  font-family: var(--neo-font-family);
+  line-height: var(--neo-line-height);
+  background-color: var(--neo-background-color);
   transition:
-    color 0.2s var(--transition-bezier),
-    background-color 0.2s var(--transition-bezier);
+    color 0.2s var(--neo-transition-bezier),
+    background-color 0.2s var(--neo-transition-bezier);
 }
