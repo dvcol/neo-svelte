@@ -1,8 +1,8 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { OnChange } from '~/nav/neo-tabs.model.js';
 import type { HTMLUseProps } from '~/utils/action.utils.js';
+import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type TabId = string | number | symbol;
 export type NeoTabProps<T = unknown> = {
@@ -15,6 +15,11 @@ export type NeoTabProps<T = unknown> = {
 
   // States
 
+  /**
+   * The HTML tag to use for the tab.
+   * @default 'div'
+   */
+  tag?: keyof HTMLElementTagNameMap;
   /**
    * A unique identifier for the tab.
    * If none is provided, the tab will be assigned a random id.
@@ -44,5 +49,5 @@ export type NeoTabProps<T = unknown> = {
   /**
    * Optional props to pass to the tab container.
    */
-  tabProps?: Partial<HTMLAttributes<HTMLDivElement>> & HTMLUseProps;
+  tabProps?: HTMLNeoBaseElement & HTMLUseProps;
 } & Omit<NeoButtonProps, 'value' | 'children'>;

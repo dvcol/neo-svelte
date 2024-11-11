@@ -17,6 +17,12 @@ export type NeoButtonProps = {
   // States
 
   /**
+   * The HTML tag to use for the button.
+   * If an `href` is provided, the tag will default to `'a'`.
+   * @default 'button'
+   */
+  tag?: keyof HTMLElementTagNameMap;
+  /**
    * If true, the button will be disabled and a spinner will be displayed alongside the text.
    * If an icon is provided, the spinner will replace the icon.
    */
@@ -50,6 +56,10 @@ export type NeoButtonProps = {
 
   // Styles
 
+  /**
+   * If `true`, the button will never display a border.
+   */
+  borderless?: boolean;
   /**
    * If true, the button will start as flat on first render.
    */

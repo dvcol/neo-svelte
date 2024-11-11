@@ -8,6 +8,7 @@
     children,
 
     // States
+    tag = 'div',
     skeleton,
 
     // Styles
@@ -15,8 +16,8 @@
     text,
     flat,
     glass,
+    inset,
     shallow,
-    recessed,
     rounded,
     pulse,
     coalesce,
@@ -43,14 +44,15 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-<div
+<svelte:element
+  this={tag}
   class="neo-button-group"
   class:start
   class:text
   class:flat
   class:glass
   class:shallow
-  class:recessed
+  class:inset
   class:rounded
   class:pulse
   class:coalesce
@@ -75,7 +77,7 @@
     coalesce,
     vertical,
   })}
-</div>
+</svelte:element>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
@@ -84,10 +86,11 @@
   .neo-button-group {
     @include flex.row($flex: 0 1 auto, $center: true, $gap: var(--neo-btn-grp-gap, 0.25rem));
 
+    box-sizing: border-box;
     width: fit-content;
-    margin: 0.25rem;
+    margin: var(--neo-shadow-margin, 0.25rem);
     padding: 0.25rem;
-    background-color: var(--neo-btn-bg-color, var(--neo-background-color));
+    background-color: var(--neo-btn-bg-color, transparent);
     border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;
     border-radius: calc(var(--neo-btn-border-radius, var(--neo-border-radius)) + 0.25rem);
     transition:
@@ -179,7 +182,7 @@
       );
     }
 
-    &.shallow {
+    &.shallow:not(.inset) {
       --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-1);
       --neo-pulse-box-shadow: var(--neo-box-shadow-raised-1);
       --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-0);
@@ -204,7 +207,7 @@
       }
     }
 
-    &.recessed {
+    &.inset {
       box-shadow: var(--neo-box-shadow-inset-2);
     }
 

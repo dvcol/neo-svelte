@@ -16,6 +16,7 @@
     children,
 
     // States
+    tag = 'div',
     tabId = crypto.randomUUID(),
     value,
 
@@ -69,7 +70,8 @@
   const useProps = $derived(toActionProps(tabProps?.use));
 </script>
 
-<div
+<svelte:element
+  this={tag}
   bind:this={ref}
   class="neo-tab"
   data-tab-id={tabId}
@@ -94,7 +96,7 @@
       </button>
     {/if}
   </NeoButton>
-</div>
+</svelte:element>
 
 <style lang="scss">
   .neo-tab {

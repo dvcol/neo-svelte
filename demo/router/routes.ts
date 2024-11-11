@@ -6,6 +6,7 @@ export const Route = {
   ButtonGroups: 'button-groups' as const,
   Tabs: 'tabs' as const,
   TabsPanels: 'tabs-panels' as const,
+  Cards: 'cards' as const,
 } as const;
 
 export type Routes = (typeof Route)[keyof typeof Route];
@@ -15,6 +16,7 @@ export const Path: Record<keyof typeof Route, string> = {
   ButtonGroups: '/buttons/groups' as const,
   Tabs: '/tabs' as const,
   TabsPanels: '/tabs/panels' as const,
+  Cards: '/cards' as const,
   Any: '*' as const,
 } as const;
 
@@ -22,6 +24,7 @@ export const routes = Object.values(Route).filter(key => key !== Route.Any);
 
 export const options: RouterOptions<Routes> = {
   hash: true,
+  listen: 'navigation',
   routes: [
     {
       name: Route.Buttons,
@@ -42,6 +45,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.TabsPanels,
       path: Path.TabsPanels,
       component: () => import('../components/DemoTabsPanels.svelte'),
+    },
+    {
+      name: Route.Cards,
+      path: Path.Cards,
+      component: () => import('../components/DemoCards.svelte'),
     },
     {
       name: Route.Any,

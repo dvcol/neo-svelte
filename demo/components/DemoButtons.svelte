@@ -14,7 +14,7 @@
 
   const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
 
-  const options = $state({ disabled: false, shallow: false, skeleton: false, loading: false });
+  const options = $state({ disabled: false, shallow: false, skeleton: false, loading: false, borderless: false });
 
   const loading = $derived.by(() => isLoading() || options.loading);
 
@@ -49,6 +49,7 @@
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
       <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
       <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
+      <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     </NeoButtonGroup>
   </div>
@@ -101,11 +102,11 @@
   @use 'src/lib/styles/common/flex' as flex;
 
   .column {
-    @include flex.column($center: true, $gap: var(--gap-lg));
+    @include flex.column($center: true, $gap: var(--neo-gap-lg));
   }
 
   .row {
-    @include flex.row($gap: var(--gap-xl));
+    @include flex.row($gap: var(--neo-gap-xl));
 
     align-items: center;
     justify-content: center;
@@ -114,11 +115,11 @@
 
   @media (width > 1550px) {
     .column {
-      @include flex.row($gap: var(--gap-xl));
+      @include flex.row($gap: var(--neo-gap-xl));
     }
 
     .row {
-      @include flex.column($center: true, $gap: var(--gap-xl));
+      @include flex.column($center: true, $gap: var(--neo-gap-xl));
     }
 
     .label {

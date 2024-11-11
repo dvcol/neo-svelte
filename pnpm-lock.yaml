@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@dvcol/common-utils':
-        specifier: ^1.18.1
-        version: 1.18.1
+        specifier: ^1.18.3
+        version: 1.18.3
       '@dvcol/svelte-utils':
         specifier: ^1.3.0
         version: 1.3.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)
@@ -34,8 +34,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(postcss-html@0.36.0)(postcss-scss@4.0.9(postcss@8.4.45))(postcss@8.4.45)(prettier@3.3.3)(stylelint@16.9.0(typescript@5.5.4))
       '@dvcol/svelte-simple-router':
-        specifier: ^1.7.1
-        version: 1.7.1(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)
+        specifier: ^1.7.3
+        version: 1.7.3(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)
       '@sveltejs/adapter-auto':
         specifier: ^3.2.5
         version: 3.2.5(@sveltejs/kit@2.7.4(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.9)(vite@5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)))(svelte@5.1.9)(vite@5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)))
@@ -357,8 +357,8 @@ packages:
   '@dual-bundle/import-meta-resolve@4.1.0':
     resolution: {integrity: sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg==}
 
-  '@dvcol/common-utils@1.18.1':
-    resolution: {integrity: sha512-qCG7fHkAnOnjjJ0WLWCXA6s17RUKWED5Et9G0fXtNIzQJHcpeCuOTTtrTO1FA1L5kf7Mz8+o9Rb0wCPpeKmXZQ==}
+  '@dvcol/common-utils@1.18.3':
+    resolution: {integrity: sha512-8Q215wxY97+nu07i3cJfjaPs+3XedMtnRCdnQqJ497tcFml4ncK2W2l5/mJXg5uXaJXL40zM9k09f9NK/1oj5Q==}
     engines: {node: '>=20', pnpm: '>= 8'}
 
   '@dvcol/eslint-plugin-presets@1.3.11':
@@ -457,8 +457,8 @@ packages:
       postcss-scss:
         optional: true
 
-  '@dvcol/svelte-simple-router@1.7.1':
-    resolution: {integrity: sha512-8WNuPypsQftcFLrA6xJ8225ijlgyshAYAf2ID8uwfVUHophxkY48BFGcsOXJUR/7BevWABFWwFTTl1+eFE2mbQ==}
+  '@dvcol/svelte-simple-router@1.7.3':
+    resolution: {integrity: sha512-X7AC/gT1x0nJP3vJFWTxR03jz6LItYBmKLDHvnNzrG6Y9Oxoo/vg3mHOXgwV7NC14cvbejZ8FzSjr8jiO7pVvg==}
     engines: {node: '>=20', pnpm: '>= 8'}
     peerDependencies:
       svelte: '>=5'
@@ -5108,7 +5108,7 @@ snapshots:
 
   '@dual-bundle/import-meta-resolve@4.1.0': {}
 
-  '@dvcol/common-utils@1.18.1':
+  '@dvcol/common-utils@1.18.3':
     dependencies:
       pretty-bytes: 6.1.1
 
@@ -5163,9 +5163,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@dvcol/svelte-simple-router@1.7.1(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)':
+  '@dvcol/svelte-simple-router@1.7.3(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)':
     dependencies:
-      '@dvcol/common-utils': 1.18.1
+      '@dvcol/common-utils': 1.18.3
       '@dvcol/svelte-utils': 1.3.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)
       svelte: 5.1.9
       vite: 5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)
@@ -5181,7 +5181,7 @@ snapshots:
 
   '@dvcol/svelte-utils@1.3.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.1.9)':
     dependencies:
-      '@dvcol/common-utils': 1.18.1
+      '@dvcol/common-utils': 1.18.3
       svelte: 5.1.9
       vite: 5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)
     transitivePeerDependencies:

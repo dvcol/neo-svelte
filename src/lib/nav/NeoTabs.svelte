@@ -21,10 +21,11 @@
     panes,
 
     // States
+    tag = 'div',
     active = $bindable(),
 
     // Styles
-    position = 'after',
+    before,
     toggle,
     close,
     add,
@@ -101,7 +102,8 @@
 {/snippet}
 
 {#snippet tabs(ctx: NeoTabsContext = context.state)}
-  <div
+  <svelte:element
+    this={tag}
     class="neo-tabs"
     class:add
     class:line
@@ -124,16 +126,16 @@
         </div>
       {/if}
     </NeoButtonGroup>
-  </div>
+  </svelte:element>
 {/snippet}
 
-{#if position === 'before'}
+{#if before}
   {@render panes?.(context.state)}
 {/if}
 
 {@render tabs()}
 
-{#if position === 'after'}
+{#if !before}
   {@render panes?.(context.state)}
 {/if}
 
@@ -199,11 +201,20 @@
       --neo-tab-height: 100%;
 
       :global(.neo-tab .neo-button) {
-        color: var(--neo-btn-text-color, inherit);
         box-shadow: var(--neo-box-shadow-flat) !important;
         transition:
           opacity 0.3s ease,
           color 0.3s ease,
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          backdrop-filter 0.3s ease;
+      }
+
+      :global(.neo-tab .neo-button:not(:focus-visible)) {
+        color: var(--neo-btn-text-color, inherit);
+        transition:
+          opacity 0.3s ease,
+          color 0s,
           background-color 0.3s ease,
           border-color 0.3s ease,
           backdrop-filter 0.3s ease;

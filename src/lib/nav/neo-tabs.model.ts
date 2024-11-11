@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
 import type { NeoButtonGroup } from '~/buttons/neo-button-group.model.js';
 import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { HTMLUseProps } from '~/utils/action.utils.js';
+import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type OnChange<T = unknown> = (tabId?: TabId, value?: T, ref?: HTMLDivElement) => unknown;
 
@@ -19,18 +19,29 @@ export type TabsProps<T = unknown> = {
    */
   panes?: Snippet<[NeoTabsContext]>;
 
+  // States
+
+  /**
+   * The HTML tag to use for the tabs.
+   * @default 'div'
+   */
+  tag?: keyof HTMLElementTagNameMap;
+
   // Styles
+
   /**
    * Display the active tab with a line.
    * Only applies when `slide` is `true`.
    */
   line?: boolean;
   /**
-   * Sets the position of the pane snippet relative to the tabs.
+   * If `true`, the panes will be displayed before the tabs.
+   * @default false
    */
-  position?: 'before' | 'after';
+  before?: boolean;
 
   // Events
+
   /**
    * Event handler that fires when the active tab changes.
    */
@@ -49,6 +60,6 @@ export type TabsProps<T = unknown> = {
   /**
    * Optional props to pass to the tabs container.
    */
-  tabsProps?: Partial<HTMLAttributes<HTMLDivElement>> & HTMLUseProps;
+  tabsProps?: HTMLNeoBaseElement & HTMLUseProps;
 } & NeoTabsContext &
   Omit<NeoButtonGroup, 'onchange' | 'children' | 'vertical'>;

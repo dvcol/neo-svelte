@@ -8,6 +8,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import NeoCard from '~/cards/NeoCard.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabPane from '~/nav/NeoTabPane.svelte';
@@ -32,13 +33,17 @@
   };
 
   let loading = $state(false);
-  let skeleton = $state(false);
-  let vertical = $state(false);
-  const options = $state({ disabled: false, close: true, add: true, slide: true, shallow: false, toggle: true, position: 'after' });
-
-  const togglePosition = () => {
-    options.position = options.position === 'after' ? 'before' : 'after';
-  };
+  const options = $state<TabsProps>({
+    disabled: false,
+    close: true,
+    add: true,
+    slide: true,
+    shallow: false,
+    toggle: true,
+    before: false,
+    skeleton: false,
+    vertical: false,
+  });
 
   const columns: { label: string; props?: TabsProps }[] = [{ label: 'Default' }];
 </script>
@@ -48,9 +53,9 @@
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
       <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
-      <NeoButton onclick={togglePosition}>Position</NeoButton>
-      <NeoButton toggle bind:checked={vertical}>Vertical</NeoButton>
-      <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
+      <NeoButton toggle bind:checked={options.before}>Before</NeoButton>
+      <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
+      <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
       <NeoButton toggle bind:checked={loading}>Loading</NeoButton>
       <NeoButton onclick={onClear}>Clear</NeoButton>
     </NeoButtonGroup>
@@ -70,28 +75,40 @@
   {/each}
 {/snippet}
 
-{#snippet panes()}
-  <NeoTabPane empty>
-    <div>Empty</div>
-  </NeoTabPane>
-  <NeoTabPane tabId="button">
-    <div>Button</div>
-  </NeoTabPane>
-  <NeoTabPane tabId="icon" {loading} {icon}>
-    <div>Icon</div>
-  </NeoTabPane>
-  <NeoTabPane tabId="reversed" {icon}>
-    <div>Reversed</div>
-  </NeoTabPane>
+{#snippet content(word)}
+  <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
+  <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
+  <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
+  <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
+  <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
+{/snippet}
 
-  {#each added as { text, tabId } (tabId)}
-    <NeoTabPane {tabId}>{text}</NeoTabPane>
-  {/each}
+{#snippet panes()}
+  <NeoCard>
+    <NeoTabPane empty>
+      {@render content('Empty')}
+    </NeoTabPane>
+    <NeoTabPane tabId="button">
+      {@render content('Button')}
+    </NeoTabPane>
+    <NeoTabPane tabId="icon">
+      {@render content('Icon')}
+    </NeoTabPane>
+    <NeoTabPane tabId="reversed">
+      {@render content('Reversed')}
+    </NeoTabPane>
+
+    {#each added as { text, tabId } (tabId)}
+      <NeoTabPane {tabId}>
+        {@render content(text)}
+      </NeoTabPane>
+    {/each}
+  </NeoCard>
 {/snippet}
 
 {#snippet group(props: TabsProps = {})}
   <div class="column">
-    <NeoTabs {panes} {active} {vertical} {skeleton} {onclose} {onadd} {...options} {...props}>
+    <NeoTabs {panes} {active} {onclose} {onadd} {...options} {...props}>
       {@render tabs()}
     </NeoTabs>
   </div>
@@ -99,7 +116,7 @@
 
 <div class="row">
   {#each columns as { label, props }}
-    <div class="column">
+    <div class="column content">
       <span class="label">{label}</span>
 
       {#if props?.glass}
@@ -114,12 +131,16 @@
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
 
+  .content {
+    width: min-content;
+  }
+
   .column {
-    @include flex.column($center: true, $gap: var(--gap-lg));
+    @include flex.column($center: true, $gap: var(--neo-gap-lg));
   }
 
   .row {
-    @include flex.row($gap: var(--gap-xl));
+    @include flex.row($gap: var(--neo-gap-xl));
 
     align-items: center;
     justify-content: center;

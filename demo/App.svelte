@@ -24,7 +24,7 @@
   const transition: TransitionProps = {
     in: fade,
     out: fade,
-    params: { in: { delay: 100, duration: 100 }, out: { duration: 100 } },
+    params: { in: { delay: 200, duration: 200 }, out: { duration: 200 } },
     props: { container: { style: 'display: flex; justify-content: center; align-items: center;' } },
     skipFirst: true,
   };
@@ -36,7 +36,7 @@
   const onChange = async () => {
     if (first) return;
     transitioning = true;
-    await wait(150);
+    await wait(300);
   };
 
   const onLoaded = async () => {
@@ -44,7 +44,7 @@
       first = false;
       return;
     }
-    await wait(100);
+    await wait(300);
     transitioning = false;
   };
 
@@ -98,7 +98,7 @@
   @use 'src/lib/styles/common/flex' as flex;
 
   .row {
-    @include flex.row($center: true, $gap: var(--gap-xl));
+    @include flex.row($center: true, $gap: var(--neo-gap-xl));
   }
 
   .view {
@@ -107,7 +107,7 @@
   }
 
   .container {
-    @include flex.column($gap: var(--gap-xl));
+    @include flex.column($gap: var(--neo-gap-xl));
 
     padding: 1rem;
 

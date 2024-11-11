@@ -94,11 +94,11 @@
   @use 'src/lib/styles/common/flex' as flex;
 
   .column {
-    @include flex.column($center: true, $gap: var(--gap-lg));
+    @include flex.column($center: true, $gap: var(--neo-gap-lg));
   }
 
   .row {
-    @include flex.row($gap: var(--gap-xl));
+    @include flex.row($gap: var(--neo-gap-xl));
 
     align-items: center;
     justify-content: center;
@@ -107,11 +107,11 @@
 
   @media (width > 1550px) {
     .column {
-      @include flex.row($gap: var(--gap-xxl));
+      @include flex.row($gap: var(--neo-gap-xxl));
     }
 
     .row {
-      @include flex.column($center: true, $gap: var(--gap-xl));
+      @include flex.column($center: true, $gap: var(--neo-gap-xl));
     }
 
     .label {

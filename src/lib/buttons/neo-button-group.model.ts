@@ -1,10 +1,15 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAttributes } from 'svelte/elements';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoButtonGroupContext = {
   // States
 
+  /**
+   * The HTML tag to use for the button group.
+   * @default 'div'
+   */
+  tag?: keyof HTMLElementTagNameMap;
   /**
    * If true, the button will be disabled and a loading skeleton will be displayed instead of the text.
    */
@@ -37,9 +42,9 @@ export type NeoButtonGroupContext = {
    */
   shallow?: boolean;
   /**
-   * If true, the button group will be recessed and the buttons flat.
+   * If true, the button group will be inset and the buttons flat.
    */
-  recessed?: boolean;
+  inset?: boolean;
   /**
    * If true, the button group will be surrounded by expanding waves.
    * The waves will reverse direction on hover or active states.
@@ -62,5 +67,5 @@ export type NeoButtonGroup = {
    */
   children?: Snippet<[NeoButtonGroupContext]>;
 } & NeoButtonGroupContext &
-  Partial<HTMLAttributes<HTMLDivElement>> &
+  HTMLNeoBaseElement &
   HTMLActionProps;
