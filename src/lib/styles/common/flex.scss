@@ -3,23 +3,23 @@
   justify-content: center;
 }
 
-@mixin column($flex: 1 1 auto, $gap: var(--neo-gap, 1rem), $center: false) {
+@mixin column($display: flex, $flex: 1 1 auto, $gap: var(--neo-gap, 1rem), $center: false) {
   @if $center {
     @include center;
   }
 
-  display: flex;
+  display: $display;
   flex: $flex;
   flex-direction: column;
   gap: $gap;
 }
 
-@mixin row($flex: 1 1 auto, $wrap: wrap, $gap: var(--neo-gap, 1rem), $center: false) {
+@mixin row($display: flex, $flex: 1 1 auto, $wrap: wrap, $gap: var(--neo-gap, 1rem), $center: false) {
   @if $center {
     @include center;
   }
 
-  display: flex;
+  display: $display;
   flex: $flex;
   flex-flow: row $wrap;
   gap: $gap;

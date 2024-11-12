@@ -7,7 +7,7 @@ export type NeoButtonProps = {
   // Snippets
 
   /**
-   * Optional snippet to display as the button content.
+   * Snippet to display as the button content.
    */
   children?: Snippet;
   /**

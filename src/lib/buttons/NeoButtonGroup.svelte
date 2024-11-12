@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoButtonGroup } from '~/buttons/neo-button-group.model.js';
+  import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
@@ -42,7 +42,7 @@
 
     // Other props
     ...rest
-  }: NeoButtonGroup = $props();
+  }: NeoButtonGroupProps = $props();
   /* eslint-enable prefer-const */
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
@@ -96,11 +96,14 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
-  @use 'src/lib/styles/common/flex' as flex;
 
   .neo-button-group {
-    @include flex.row($flex: 0 1 auto, $center: true, $gap: var(--neo-btn-grp-gap, 0.25rem));
-
+    display: inline-flex;
+    flex: 0 1 auto;
+    flex-flow: row wrap;
+    gap: var(--neo-btn-grp-gap, 0.25rem);
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
     width: fit-content;
     margin: var(--neo-shadow-margin, 0.25rem);

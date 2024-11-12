@@ -58,7 +58,6 @@
 <svelte:element
   this={tag}
   bind:this={ref}
-  class="neo-card"
   class:borderless
   class:glass
   class:flat={!elevation}
@@ -70,6 +69,7 @@
   in:inFn={inProps}
   {...rest}
   {style}
+  class={['neo-card', rest.class].filter(Boolean).join(' ')}
 >
   {@render children?.()}
 </svelte:element>
@@ -77,7 +77,6 @@
 <style lang="scss">
   .neo-card {
     display: flex;
-    flex-direction: column;
     box-sizing: border-box;
     width: calc(100% - var(--neo-shadow-margin, 0.25rem) * 2);
     margin: var(--neo-shadow-margin, 0.25rem);

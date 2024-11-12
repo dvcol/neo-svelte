@@ -1,8 +1,11 @@
 import { getContext, setContext } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
+import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 import type { TabId } from '~/nav/neo-tab.model.js';
-import type { OnChange } from '~/nav/neo-tabs.model.js';
+import type { NeoTabContextValue, OnChange, OnClose } from '~/nav/neo-tabs.model.js';
+
+import { Logger } from '~/utils/logger.utils.js';
 
 export type NeoTabContextPosition = { id: TabId; top: number; left: number; width: number; height: number };
 export type NeoTabContextPositions = { oldTab?: NeoTabContextPosition; newTab?: NeoTabContextPosition };
@@ -31,28 +34,28 @@ type NeoTabContextOptions = {
    * Add a close button to each tab.
    */
   close?: boolean;
-  /**
-   * Display the tabs vertically.
-   */
-  vertical?: boolean;
-};
+} & Pick<NeoButtonGroupProps, 'vertical' | 'shallow' | 'inset' | 'glass'>;
 
-export type NeoTabsContext = NeoTabContextOptions & {
+export type NeoTabsContext<T = unknown> = NeoTabContextOptions & {
   // States
   /**
    * The active tab ID.
    */
   active?: TabId;
+  /**
+   * The active tab value.
+   */
+  value?: NeoTabContextValue<T>;
 };
 
-type NeoTabContextCallbacks<T = unknown> = { onChange?: OnChange<T>; onClose?: OnChange<T> };
-type NeoTabContextValue<T = unknown> = { value?: T; ref: HTMLElement };
+type NeoTabContextCallbacks<T = unknown> = { onChange?: OnChange<T>; onClose?: OnClose<T> };
 
 export class NeoTabContext<T = unknown> {
   readonly #tabs: Map<TabId, NeoTabContextValue<T>> = new SvelteMap();
   readonly #onChange?: OnChange<T>;
-  readonly #onClose?: OnChange<T>;
+  readonly #onClose?: OnClose<T>;
   #active?: TabId = $state();
+  #previous?: TabId = $state();
   #position: NeoTabContextPositions = $state({});
   #options: NeoTabContextOptions = $state({});
 
@@ -61,11 +64,11 @@ export class NeoTabContext<T = unknown> {
   }
 
   get value() {
-    return this.#getValue(this.active)?.value;
+    return this.#getValue(this.active);
   }
 
-  get ref() {
-    return this.#getValue(this.active)?.ref;
+  get previous() {
+    return this.#getValue(this.#previous);
   }
 
   get disabled() {
@@ -76,12 +79,24 @@ export class NeoTabContext<T = unknown> {
     return this.#options?.slide;
   }
 
-  get toggleable() {
+  get toggle() {
     return this.#options?.toggle;
   }
 
-  get closeable() {
+  get close() {
     return this.#options?.close;
+  }
+
+  get shallow() {
+    return this.#options?.shallow;
+  }
+
+  get inset() {
+    return this.#options?.inset;
+  }
+
+  get glass() {
+    return this.#options?.glass;
   }
 
   get vertical() {
@@ -94,13 +109,17 @@ export class NeoTabContext<T = unknown> {
 
   get state(): NeoTabsContext {
     return {
+      ...this.#options,
       active: this.active,
-      disabled: this.disabled,
+      value: this.value,
       slide: this.slide,
-      toggle: this.toggleable,
-      add: this.#options?.add,
-      close: this.closeable,
+      close: this.close,
+      toggle: this.toggle,
+      inset: this.inset,
+      glass: this.glass,
+      shallow: this.shallow,
       vertical: this.vertical,
+      disabled: this.disabled,
     };
   }
 
@@ -134,7 +153,7 @@ export class NeoTabContext<T = unknown> {
     };
   }
 
-  onPosition(_ref = this.ref) {
+  onPosition(_ref = this.value?.ref) {
     const _new: NeoTabContextPositions = {
       oldTab: this.#getPosition(this.position?.newTab?.id),
     };
@@ -147,21 +166,25 @@ export class NeoTabContext<T = unknown> {
 
   onChange(tabId?: TabId, emit = true) {
     if (tabId === this.#active) {
-      if (this.#active && this.toggleable) this.onChange();
+      if (this.#active && this.toggle) this.onChange();
       return;
     }
+    const current = this.value;
+    this.#previous = this.active;
     this.#active = tabId;
     this.onPosition();
-    if (emit) this.#onChange?.(this.active, this.value, this.ref);
+    if (emit) this.#onChange?.(this.active, this.value, current);
   }
 
-  onClose(tabId?: TabId, value?: T, ref?: HTMLElement) {
-    const active = this.#getValue(tabId);
-    this.#onClose?.(tabId, value ?? active?.value, ref ?? active?.ref);
+  onClose(tabId?: TabId) {
+    this.#onClose?.(tabId, this.value);
   }
 
-  register(tabId: TabId, ref: HTMLElement, value?: T) {
-    this.#tabs.set(tabId, { value, ref });
+  register(tabId: TabId, value: Omit<NeoTabContextValue<T>, 'index'>) {
+    if (this.#tabs.has(tabId)) {
+      return Logger.warn(`Tab ID '${String(tabId)}' already exists. Registration ignored.`, { existing: this.#getValue(tabId), ignored: value });
+    }
+    this.#tabs.set(tabId, { ...value, index: this.#tabs.size });
   }
 
   remove(tabId: TabId) {

@@ -38,7 +38,7 @@
   const context = getTabContext();
   const active = $derived(context?.active === tabId);
   const disabled = $derived(rest.disabled || (rest.disabled !== false && context?.disabled));
-  const closeable = $derived(close || (close !== false && context?.closeable));
+  const closeable = $derived(close || (close !== false && context?.close));
   const transition = $derived(context?.vertical ? height : width);
   const slide = $derived(context?.slide);
 
@@ -56,16 +56,18 @@
 
   $effect(() => {
     waitForTick();
-    if (!ref) return;
-    untrack(() => context?.register(tabId, ref!, value));
+    untrack(() => {
+      if (!ref) return;
+      context?.register(tabId, { ref, value });
+    });
     return () => context?.remove(tabId);
   });
 
   const onClose = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onclose?.(tabId, value, ref);
-    context?.onClose(tabId, value, ref);
+    onclose?.(tabId);
+    context?.onClose(tabId);
   };
 
   const useFn = $derived(toAction(tabProps?.use));
@@ -102,6 +104,8 @@
 
 <style lang="scss">
   .neo-tab {
+    display: flex;
+
     :global(.neo-button:active),
     :global(.neo-button.pressed),
     :global(.neo-button:focus-visible),
@@ -110,6 +114,10 @@
         opacity: 1;
         pointer-events: auto;
       }
+    }
+
+    :global(.neo-button .icon-close:focus-visible) {
+      transition: none;
     }
 
     &.slide {

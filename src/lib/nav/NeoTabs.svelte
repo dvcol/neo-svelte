@@ -24,6 +24,7 @@
     ref = $bindable(),
     tag = 'div',
     active = $bindable(),
+    disabled,
 
     // Styles
     before,
@@ -45,9 +46,9 @@
   /* eslint-enable prefer-const */
 
   // reflect context active to component
-  const onChange: OnChange = (_tabId, _value, _ref) => {
+  const onChange: OnChange = (_tabId, _new, _old) => {
     active = _tabId;
-    onchange?.(_tabId, _value, _ref);
+    onchange?.(_tabId, _new, _old);
   };
 
   const context = setTabContext({ onChange, onClose: onclose });
@@ -83,13 +84,16 @@
   $effect(() => {
     context.onOption({
       // States
-      disabled: rest.disabled,
+      disabled,
 
       // Styles
       slide,
       toggle,
       add,
       close,
+      glass: rest.glass,
+      inset: rest.inset,
+      shallow: rest.shallow,
       vertical: rest.vertical,
     });
   });
@@ -143,6 +147,10 @@
 
 <style lang="scss">
   .neo-tabs {
+    display: inline-flex;
+    flex: 0 1 auto;
+    flex-flow: row wrap;
+
     :global(.neo-tabs-add) {
       min-width: 1rem;
     }
@@ -151,6 +159,7 @@
       :global(.neo-tab) {
         position: relative;
         width: 100%;
+        min-width: max-content;
       }
 
       :global(.neo-tab .neo-button) {

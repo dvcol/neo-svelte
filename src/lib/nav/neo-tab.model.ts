@@ -9,7 +9,7 @@ export type NeoTabProps<T = unknown> = {
   // Snippets
 
   /**
-   * Optional snippet to display as the tab content.
+   * Snippet to display as the tab content.
    */
   children?: Snippet<[{ active: boolean; tabId: TabId; value?: unknown }]>;
 

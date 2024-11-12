@@ -7,7 +7,7 @@
   import { useButtonState } from '../utils/use-button-state.svelte';
 
   import type { TabId } from '~/nav/neo-tab.model';
-  import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
+  import type { NeoTabContextValue, NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -37,9 +37,9 @@
   let active: unknown | undefined = $state('button');
   let value: unknown | undefined = $state('button');
 
-  const onChange = (id?: TabId, _value?: unknown) => {
+  const onChange = (id?: TabId, context?: NeoTabContextValue) => {
     active = id;
-    value = _value;
+    value = context?.value;
   };
 
   const onClear = () => onChange();

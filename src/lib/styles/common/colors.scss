@@ -14,7 +14,7 @@
   --neo-black-5: oklch(from var(--neo-black) l c h / 5%);
   --neo-black-soft-lighter-50: oklch(from var(--neo-black-soft-lighter) l c h / 50%);
   --neo-black-soft-lighter: oklch(from var(--neo-black-soft) calc(l + 0.1) c h);
-  --neo-black-soft-light: oklch(from var(--neo-black-soft) calc(l + 0.025) c h);
+  --neo-black-soft-light: oklch(from var(--neo-black-soft) calc(l + 0.05) c h);
   --neo-black-soft: oklch(33% 0 264.416deg);
   --neo-black-soft-10: oklch(from var(--neo-black-soft) l c h / 10%);
   --neo-black-soft-dark: oklch(from var(--neo-black-soft) calc(l - 0.05) c h);

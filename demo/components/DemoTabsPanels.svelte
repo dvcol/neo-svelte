@@ -1,8 +1,6 @@
 <script lang="ts">
   import { randomHex } from '@dvcol/common-utils/common/crypto';
 
-  import { fade } from 'svelte/transition';
-
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import type { TabId } from '~/nav/neo-tab.model.js';
@@ -10,22 +8,19 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import NeoCard from '~/cards/NeoCard.svelte';
-  import TransitionContainer from '~/container/TransitionContainer.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabPane from '~/nav/NeoTabPane.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
+  import NeoTabsCard from '~/nav/NeoTabsCard.svelte';
 
-  const added = $state([
-    { text: `Added ${randomHex(1)}-0`, tabId: crypto.randomUUID() },
-    { text: `Added ${randomHex(1)}-1`, tabId: crypto.randomUUID() },
-  ]);
+  const added = $state([{ text: `Removable`, tabId: crypto.randomUUID() }]);
   const onclose = (id: TabId) => {
     const index = added.findIndex(tab => tab.tabId === id);
     if (index === -1) return;
     added.splice(index, 1);
   };
+
   const onadd = () => {
     added.push({ text: `Added ${randomHex(1)}-${added.length + 1}`, tabId: crypto.randomUUID() });
   };
@@ -40,6 +35,7 @@
     close: true,
     add: true,
     slide: true,
+    inset: false,
     shallow: false,
     toggle: true,
     before: false,
@@ -48,13 +44,14 @@
     nowrap: false,
   });
 
-  const columns: { label: string; props?: NeoTabsProps }[] = [{ label: 'Default' }];
+  const columns: { label: string; props?: NeoTabsProps }[] = [{ label: 'Default' }, { label: 'Glass', props: { glass: true } }];
 </script>
 
 <div class="row">
   <div class="column">
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+      <NeoButton toggle bind:checked={options.inset}>Inset</NeoButton>
       <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
       <NeoButton toggle bind:checked={options.before}>Before</NeoButton>
       <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
@@ -79,43 +76,35 @@
 {/snippet}
 
 {#snippet content(word)}
-  <div class="panel" in:fade={{ delay: 400 }} out:fade>
-    <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
-    <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
-    <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
-    <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
-    <div>{Array.from({ length: 10 }, () => word).join(' ')}</div>
-  </div>
+  <p>{Array.from({ length: 50 }, () => word).join(' ')}</p>
 {/snippet}
 
 {#snippet panes()}
-  <NeoCard>
-    <TransitionContainer>
-      <NeoTabPane empty>
-        {@render content('Empty')}
-      </NeoTabPane>
-      <NeoTabPane tabId="button">
-        {@render content('Button')}
-      </NeoTabPane>
-      <NeoTabPane tabId="icon">
-        {@render content('Icon')}
-      </NeoTabPane>
-      <NeoTabPane tabId="reversed">
-        {@render content('Reversed')}
-      </NeoTabPane>
+  <NeoTabsCard class="panel">
+    <NeoTabPane empty>
+      {@render content('Empty')}
+    </NeoTabPane>
+    <NeoTabPane tabId="button">
+      {@render content('Button')}
+    </NeoTabPane>
+    <NeoTabPane tabId="icon">
+      {@render content('Icon')}
+    </NeoTabPane>
+    <NeoTabPane tabId="reversed">
+      {@render content('Reversed')}
+    </NeoTabPane>
 
-      {#each added as { text, tabId } (tabId)}
-        <NeoTabPane {tabId}>
-          {@render content(text)}
-        </NeoTabPane>
-      {/each}
-    </TransitionContainer>
-  </NeoCard>
+    {#each added as { text, tabId } (tabId)}
+      <NeoTabPane {tabId}>
+        {@render content(text)}
+      </NeoTabPane>
+    {/each}
+  </NeoTabsCard>
 {/snippet}
 
 {#snippet group(props: NeoTabsProps = {})}
-  <div class="column">
-    <NeoTabs {panes} {active} {onclose} {onadd} {...options} {...props}>
+  <div class="column" class:vertical={options.vertical}>
+    <NeoTabs {panes} bind:active {onclose} {onadd} {onchange} {...options} {...props}>
       {@render tabs()}
     </NeoTabs>
   </div>
@@ -138,8 +127,27 @@
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
 
+  .content {
+    flex: 0 1 37.5rem;
+    max-width: 37.5rem;
+  }
+
+  :global(.panel) {
+    min-width: 34rem;
+    min-height: 20rem;
+  }
+
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg));
+
+    &.vertical {
+      flex-direction: row;
+
+      :global(.panel) {
+        min-width: 28.5rem;
+        min-height: 24rem;
+      }
+    }
   }
 
   .row {
@@ -148,15 +156,5 @@
     align-items: center;
     justify-content: center;
     margin: 2rem 0;
-  }
-
-  .content {
-    flex: 0 1 37.5rem;
-    max-width: 37.5rem;
-  }
-
-  .panel {
-    min-width: 37.5rem;
-    min-height: 15rem;
   }
 </style>

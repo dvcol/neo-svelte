@@ -61,9 +61,9 @@ export type NeoButtonGroupContext = {
   vertical?: boolean;
 };
 
-export type NeoButtonGroup = {
+export type NeoButtonGroupProps = {
   /**
-   * Optional snippet to display as the button content.
+   * Snippet to display as the button content.
    */
   children?: Snippet<[NeoButtonGroupContext]>;
 

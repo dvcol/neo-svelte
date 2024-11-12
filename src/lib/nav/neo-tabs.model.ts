@@ -1,17 +1,19 @@
 import type { Snippet } from 'svelte';
-import type { NeoButtonGroup } from '~/buttons/neo-button-group.model.js';
+import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-export type OnChange<T = unknown> = (tabId?: TabId, value?: T, ref?: HTMLElement) => unknown;
+export type NeoTabContextValue<T = unknown> = { index: number; value?: T; ref: HTMLElement };
+export type OnChange<T = unknown> = (tabId?: TabId, newValue?: NeoTabContextValue<T>, oldValue?: NeoTabContextValue) => unknown;
+export type OnClose<T = unknown> = (tabId?: TabId, value?: NeoTabContextValue<T>) => unknown;
 
 export type NeoTabsProps<T = unknown> = {
   // Snippets
 
   /**
-   * Optional snippet to display as the tabs content.
+   * Snippet to display as the tabs content.
    */
   children?: Snippet<[NeoTabsContext]>;
   /**
@@ -49,7 +51,7 @@ export type NeoTabsProps<T = unknown> = {
   /**
    * Event handler that fires when any close button is clicked.
    */
-  onclose?: OnChange<T>;
+  onclose?: OnClose<T>;
   /**
    * Event handler that fires when the add button is clicked.
    */
@@ -62,5 +64,5 @@ export type NeoTabsProps<T = unknown> = {
    */
   tabsProps?: HTMLNeoBaseElement & HTMLUseProps;
 } & NeoTabsContext &
-  Omit<NeoButtonGroup, 'onchange' | 'children' | 'vertical' | 'ref'> &
+  Omit<NeoButtonGroupProps, 'onchange' | 'children' | 'vertical' | 'ref'> &
   HTMLRefProps;
