@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { OnChange } from '~/nav/neo-tabs.model.js';
 import type { HTMLUseProps } from '~/utils/action.utils.js';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type TabId = string | number | symbol;
 export type NeoTabProps<T = unknown> = {
@@ -46,8 +46,10 @@ export type NeoTabProps<T = unknown> = {
   onclose?: OnChange<T>;
 
   // Other props
+
   /**
    * Optional props to pass to the tab container.
    */
   tabProps?: HTMLNeoBaseElement & HTMLUseProps;
-} & Omit<NeoButtonProps, 'value' | 'children'>;
+} & Omit<NeoButtonProps, 'value' | 'children' | 'ref'> &
+  HTMLRefProps;

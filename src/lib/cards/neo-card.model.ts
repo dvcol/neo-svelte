@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export const NeoCardElevations = [-4, -3, -2, -1, -0.5, 0, 0.5, 1, 2, 3, 4] as const;
 export type NeoCardElevation = (typeof NeoCardElevations)[number];
@@ -44,4 +44,6 @@ export type NeoCardProps = {
   start?: boolean;
   horizontal?: boolean;
 } & HTMLNeoBaseElement &
-  HTMLActionProps;
+  HTMLFlexProps &
+  HTMLActionProps &
+  HTMLRefProps;

@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoButtonGroupContext = {
   // States
@@ -66,6 +66,14 @@ export type NeoButtonGroup = {
    * Optional snippet to display as the button content.
    */
   children?: Snippet<[NeoButtonGroupContext]>;
+
+  // Styles
+  /**
+   * If true, the buttons will not wrap to the next line.
+   */
+  nowrap?: boolean;
 } & NeoButtonGroupContext &
+  HTMLFlexProps &
   HTMLNeoBaseElement &
-  HTMLActionProps;
+  HTMLActionProps &
+  HTMLRefProps;

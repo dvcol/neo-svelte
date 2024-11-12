@@ -3,11 +3,13 @@
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
-  const {
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
     // Snippets
     children,
 
     // States
+    ref = $bindable(),
     tag = 'div',
 
     // Styles
@@ -20,12 +22,18 @@
     out: outAction,
     transition: transitionAction,
 
+    // Flex
+    justify,
+    align,
+    flex,
+
     // Actions
     use,
 
     // Other props
     ...rest
   }: NeoCardProps = $props();
+  /* eslint-enable prefer-const */
 
   const style = $derived.by(() => {
     const level = Math.abs(elevation) > 0.5 ? Math.abs(elevation) : 0;
@@ -49,10 +57,14 @@
 
 <svelte:element
   this={tag}
+  bind:this={ref}
   class="neo-card"
   class:borderless
   class:glass
   class:flat={!elevation}
+  style:justify-content={justify}
+  style:align-items={align}
+  style:flex
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}

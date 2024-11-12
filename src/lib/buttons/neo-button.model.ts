@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { HTMLFlexProps, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoButtonProps = {
   // Snippets
@@ -124,4 +125,6 @@ export type NeoButtonProps = {
   onkeyup?: (e: KeyboardEvent) => unknown;
 } & Partial<Omit<HTMLButtonAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
   Partial<Omit<HTMLAnchorAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
-  HTMLActionProps;
+  HTMLFlexProps &
+  HTMLActionProps &
+  HTMLRefProps;

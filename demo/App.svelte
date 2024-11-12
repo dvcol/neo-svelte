@@ -36,7 +36,7 @@
   const onChange = async () => {
     if (first) return;
     transitioning = true;
-    await wait(300);
+    await wait(100);
   };
 
   const onLoaded = async () => {
@@ -88,7 +88,7 @@
     </NeoButtonGroup>
   </div>
 
-  <main class="row view" class:transition={transitioning}>
+  <main class="column view" class:transition={transitioning}>
     <RouterView {router} {transition} {onChange} {onLoaded} />
   </main>
 </div>
@@ -99,6 +99,10 @@
 
   .row {
     @include flex.row($center: true, $gap: var(--neo-gap-xl));
+  }
+
+  .column {
+    @include flex.column($center: true, $gap: var(--neo-gap-lg));
   }
 
   .view {

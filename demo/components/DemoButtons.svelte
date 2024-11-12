@@ -106,7 +106,7 @@
   }
 
   .row {
-    @include flex.row($gap: var(--neo-gap-xl));
+    @include flex.row($gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     align-items: center;
     justify-content: center;
@@ -119,7 +119,7 @@
     }
 
     .row {
-      @include flex.column($center: true, $gap: var(--neo-gap-xl));
+      @include flex.column($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
     }
 
     .label {

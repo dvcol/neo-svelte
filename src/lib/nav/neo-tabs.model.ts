@@ -3,11 +3,11 @@ import type { NeoButtonGroup } from '~/buttons/neo-button-group.model.js';
 import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { HTMLUseProps } from '~/utils/action.utils.js';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-export type OnChange<T = unknown> = (tabId?: TabId, value?: T, ref?: HTMLDivElement) => unknown;
+export type OnChange<T = unknown> = (tabId?: TabId, value?: T, ref?: HTMLElement) => unknown;
 
-export type TabsProps<T = unknown> = {
+export type NeoTabsProps<T = unknown> = {
   // Snippets
 
   /**
@@ -62,4 +62,5 @@ export type TabsProps<T = unknown> = {
    */
   tabsProps?: HTMLNeoBaseElement & HTMLUseProps;
 } & NeoTabsContext &
-  Omit<NeoButtonGroup, 'onchange' | 'children' | 'vertical'>;
+  Omit<NeoButtonGroup, 'onchange' | 'children' | 'vertical' | 'ref'> &
+  HTMLRefProps;

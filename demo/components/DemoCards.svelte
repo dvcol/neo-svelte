@@ -3,7 +3,7 @@
 
   import type { NeoCardProps } from '~/cards/neo-card.model';
 
-  import type { TabsProps } from '~/nav/neo-tabs.model.js';
+  import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -73,7 +73,7 @@
   </div>
 {/snippet}
 
-{#snippet group(props: TabsProps = {})}
+{#snippet group(props: NeoTabsProps = {})}
   <div class="column">
     <NeoCard {...options} {...props}>
       {@render lorem()}
@@ -103,7 +103,7 @@
   }
 
   .row {
-    @include flex.row($gap: var(--neo-gap-xl));
+    @include flex.row($gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     align-items: center;
     justify-content: center;

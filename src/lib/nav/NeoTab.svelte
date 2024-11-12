@@ -11,11 +11,13 @@
   import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { defaultTransitionDuration, enterTransition } from '~/utils/transition.utils.js';
 
-  const {
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
     // Snippets
     children,
 
     // States
+    ref = $bindable(),
     tag = 'div',
     tabId = crypto.randomUUID(),
     value,
@@ -31,6 +33,7 @@
     tabProps,
     ...rest
   }: NeoTabProps = $props();
+  /* eslint-enable prefer-const */
 
   const context = getTabContext();
   const active = $derived(context?.active === tabId);
@@ -51,7 +54,6 @@
     skip = false;
   };
 
-  let ref: HTMLDivElement | undefined;
   $effect(() => {
     waitForTick();
     if (!ref) return;
@@ -73,7 +75,6 @@
 <svelte:element
   this={tag}
   bind:this={ref}
-  class="neo-tab"
   data-tab-id={tabId}
   data-active={active}
   class:active
@@ -81,6 +82,7 @@
   transition:transition={enterTransition}
   {...tabProps}
   use:useFn={useProps}
+  class={['neo-tab', tabProps?.class].filter(Boolean).join(' ')}
 >
   <NeoButton role="tab" toggle readonly checked={active} onclick={onClick} empty={!children} {...rest} {disabled}>
     {@render children?.({ active, tabId, value })}

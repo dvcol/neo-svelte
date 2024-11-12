@@ -7,7 +7,7 @@
   import { useButtonState } from '../utils/use-button-state.svelte';
 
   import type { TabId } from '~/nav/neo-tab.model';
-  import type { TabsProps } from '~/nav/neo-tabs.model.js';
+  import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -46,7 +46,7 @@
 
   const options = $state({ disabled: false, close: false, add: false, slide: true, shallow: false, toggle: false });
 
-  const columns: { label: string; props?: TabsProps }[] = [
+  const columns: { label: string; props?: NeoTabsProps }[] = [
     { label: 'Default' },
     { label: 'Rounded', props: { rounded: true } },
     { label: 'Flat', props: { flat: true } },
@@ -73,7 +73,7 @@
   {/each}
 {/snippet}
 
-{#snippet group(props: TabsProps = {})}
+{#snippet group(props: NeoTabsProps = {})}
   <NeoTabs bind:active onchange={onChange} {vertical} {skeleton} {onclose} {onadd} {...options} {...props}>
     {@render tabs()}
   </NeoTabs>
@@ -121,7 +121,7 @@
   }
 
   .row {
-    @include flex.row($gap: var(--neo-gap-xl));
+    @include flex.row($gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     align-items: center;
     justify-content: center;
@@ -134,7 +134,7 @@
     }
 
     .row {
-      @include flex.column($center: true, $gap: var(--neo-gap-xl));
+      @include flex.column($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
     }
 
     .label {

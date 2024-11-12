@@ -13,6 +13,7 @@
     icon,
 
     // States
+    ref = $bindable(),
     tag,
     href,
     loading,
@@ -36,6 +37,11 @@
     reverse,
     coalesce,
     pulse,
+
+    // Flex
+    justify,
+    align,
+    flex,
 
     // Events
     onchecked,
@@ -113,6 +119,7 @@
 
 <svelte:element
   this={element}
+  bind:this={ref}
   {href}
   {role}
   {tabindex}
@@ -130,6 +137,9 @@
   class:rounded
   class:rotate
   class:empty
+  style:justify-content={justify}
+  style:align-items={align}
+  style:flex
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}

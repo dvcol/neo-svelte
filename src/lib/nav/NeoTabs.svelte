@@ -5,7 +5,7 @@
 
   import type { NeoTabContextPositions, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 
-  import type { OnChange, TabsProps } from '~/nav/neo-tabs.model.js';
+  import type { NeoTabsProps, OnChange } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -21,6 +21,7 @@
     panes,
 
     // States
+    ref = $bindable(),
     tag = 'div',
     active = $bindable(),
 
@@ -40,7 +41,7 @@
     // Other props
     tabsProps,
     ...rest
-  }: TabsProps = $props();
+  }: NeoTabsProps = $props();
   /* eslint-enable prefer-const */
 
   // reflect context active to component
@@ -98,13 +99,13 @@
 </script>
 
 {#snippet icon()}
-  <IconAdd />
+  <IconAdd class="neo-tabs-add" />
 {/snippet}
 
 {#snippet tabs(ctx: NeoTabsContext = context.state)}
   <svelte:element
     this={tag}
-    class="neo-tabs"
+    bind:this={ref}
     class:add
     class:line
     class:slide
@@ -117,6 +118,7 @@
     {...tabsProps}
     use:useFn={useProps}
     {style}
+    class={['neo-tabs', tabsProps?.class].filter(Boolean).join(' ')}
   >
     <NeoButtonGroup {...rest}>
       {@render children?.(ctx)}
@@ -141,6 +143,10 @@
 
 <style lang="scss">
   .neo-tabs {
+    :global(.neo-tabs-add) {
+      min-width: 1rem;
+    }
+
     &.vertical {
       :global(.neo-tab) {
         position: relative;

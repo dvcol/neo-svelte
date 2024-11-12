@@ -3,15 +3,18 @@
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
-  const {
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
     // Snippets
     children,
 
     // States
+    ref = $bindable(),
     tag = 'div',
     skeleton,
 
     // Styles
+    class: classNames,
     start,
     text,
     flat,
@@ -22,6 +25,12 @@
     pulse,
     coalesce,
     vertical,
+    nowrap,
+
+    // Flex
+    justify,
+    align,
+    flex,
 
     // Transition
     in: inAction,
@@ -34,6 +43,7 @@
     // Other props
     ...rest
   }: NeoButtonGroup = $props();
+  /* eslint-enable prefer-const */
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -46,7 +56,8 @@
 
 <svelte:element
   this={tag}
-  class="neo-button-group"
+  bind:this={ref}
+  class={['neo-button-group', classNames].filter(Boolean).join(' ')}
   class:start
   class:text
   class:flat
@@ -58,6 +69,10 @@
   class:coalesce
   class:skeleton
   class:vertical
+  class:nowrap
+  style:justify-content={justify}
+  style:align-items={align}
+  style:flex
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}
@@ -97,6 +112,13 @@
       color 0.3s ease,
       background-color 0.3s ease,
       box-shadow 0.3s ease-out;
+
+    &.nowrap {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow: auto;
+      white-space: nowrap;
+    }
 
     &.flat {
       border-color: var(--neo-btn-border-color, var(--neo-border-color));

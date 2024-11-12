@@ -46,7 +46,7 @@ export type NeoTabsContext = NeoTabContextOptions & {
 };
 
 type NeoTabContextCallbacks<T = unknown> = { onChange?: OnChange<T>; onClose?: OnChange<T> };
-type NeoTabContextValue<T = unknown> = { value?: T; ref: HTMLDivElement };
+type NeoTabContextValue<T = unknown> = { value?: T; ref: HTMLElement };
 
 export class NeoTabContext<T = unknown> {
   readonly #tabs: Map<TabId, NeoTabContextValue<T>> = new SvelteMap();
@@ -155,12 +155,12 @@ export class NeoTabContext<T = unknown> {
     if (emit) this.#onChange?.(this.active, this.value, this.ref);
   }
 
-  onClose(tabId?: TabId, value?: T, ref?: HTMLDivElement) {
+  onClose(tabId?: TabId, value?: T, ref?: HTMLElement) {
     const active = this.#getValue(tabId);
     this.#onClose?.(tabId, value ?? active?.value, ref ?? active?.ref);
   }
 
-  register(tabId: TabId, ref: HTMLDivElement, value?: T) {
+  register(tabId: TabId, ref: HTMLElement, value?: T) {
     this.#tabs.set(tabId, { value, ref });
   }
 
