@@ -76,12 +76,12 @@
   const style = $derived([tabsProps?.style, translate].filter(Boolean).join('; '));
 
   // reflect component active to context
-  $effect(() => {
+  $effect.pre(() => {
     if (active === context.active) return;
     untrack(() => context.onChange(active));
   });
 
-  $effect(() => {
+  $effect.pre(() => {
     context.onOption({
       // States
       disabled,

@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoTabPaneProps<T = unknown> = {
   // Snippets
@@ -31,7 +31,9 @@ export type NeoTabPaneProps<T = unknown> = {
   // Styles
   /**
    * If `true`, pane transition will be animated.
-   * @default true
+   * If `false`, the pane will check if any neo-tabs-card parent is animating.
+   * @default false
    */
   animate?: boolean;
-} & HTMLNeoBaseElement;
+} & HTMLNeoBaseElement &
+  HTMLRefProps;

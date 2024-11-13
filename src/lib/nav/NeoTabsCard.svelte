@@ -1,13 +1,18 @@
 <script lang="ts">
-  import type { NeoTabsCardProps } from '~/nav/neo-tabs-card.model.js';
+  import { setContext } from 'svelte';
 
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoTransitionContainer from '~/container/NeoTransitionContainer.svelte';
+  import { NeoTabsCardContextSymbol, type NeoTabsCardProps } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
-  const {
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
     // Snippets
     children,
+
+    // States
+    ref = $bindable(),
 
     // Styles
     animate = true,
@@ -16,6 +21,7 @@
     containerProps,
     ...rest
   }: NeoTabsCardProps = $props();
+  /* eslint-enable prefer-const */
 
   const context = getTabContext();
   const glass = $derived(context?.glass);
@@ -24,9 +30,11 @@
     if (context?.inset) return context?.shallow ? -1 : -2;
     return context?.shallow ? 1 : 2;
   });
+
+  $effect.pre(() => setContext(NeoTabsCardContextSymbol, { animate }));
 </script>
 
-<NeoCard {elevation} {glass} {...rest}>
+<NeoCard bind:ref {elevation} {glass} {...rest}>
   {#if animate}
     <NeoTransitionContainer {...containerProps}>
       {@render children?.(context?.state)}

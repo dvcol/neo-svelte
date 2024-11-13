@@ -193,12 +193,12 @@ export class NeoTabContext<T = unknown> {
   }
 }
 
-const TabContextSymbol = Symbol('NeoTabContext');
+const NeoTabsContextSymbol = Symbol('NeoTabsContext');
 
 export const getTabContext = <T = unknown>(): NeoTabContext<T> | undefined => {
-  return getContext<NeoTabContext<T>>(TabContextSymbol);
+  return getContext<NeoTabContext<T>>(NeoTabsContextSymbol);
 };
 
 export const setTabContext = <T = unknown>(callback?: NeoTabContextCallbacks<T>) => {
-  return setContext(TabContextSymbol, new NeoTabContext<T>(callback));
+  return setContext(NeoTabsContextSymbol, new NeoTabContext<T>(callback));
 };

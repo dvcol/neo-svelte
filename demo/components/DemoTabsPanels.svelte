@@ -30,6 +30,7 @@
     active = undefined;
   };
 
+  let animate = $state(true);
   const options = $state<NeoTabsProps>({
     disabled: false,
     close: true,
@@ -56,6 +57,7 @@
       <NeoButton toggle bind:checked={options.before}>Before</NeoButton>
       <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
       <NeoButton toggle bind:checked={options.nowrap}>No Wrap</NeoButton>
+      <NeoButton toggle bind:checked={animate}>Animate</NeoButton>
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
       <NeoButton onclick={onClear}>Clear</NeoButton>
     </NeoButtonGroup>
@@ -80,7 +82,7 @@
 {/snippet}
 
 {#snippet panes()}
-  <NeoTabsCard class="panel">
+  <NeoTabsCard {animate} class="panel">
     <NeoTabPane empty>
       {@render content('Empty')}
     </NeoTabPane>
