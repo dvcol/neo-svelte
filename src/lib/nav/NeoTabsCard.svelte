@@ -25,8 +25,10 @@
 
   const context = getTabContext();
   const glass = $derived(context?.glass);
+  const borderless = $derived(context?.text);
 
   const elevation = $derived.by(() => {
+    if (context?.flat) return 0;
     if (context?.inset) return context?.shallow ? -1 : -2;
     return context?.shallow ? 1 : 2;
   });
@@ -34,7 +36,7 @@
   $effect.pre(() => setContext(NeoTabsCardContextSymbol, { animate }));
 </script>
 
-<NeoCard bind:ref {elevation} {glass} {...rest}>
+<NeoCard bind:ref {elevation} {borderless} {glass} {...rest}>
   {#if animate}
     <NeoTransitionContainer {...containerProps}>
       {@render children?.(context?.state)}

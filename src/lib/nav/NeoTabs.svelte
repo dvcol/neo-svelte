@@ -76,7 +76,7 @@
   const style = $derived([tabsProps?.style, translate].filter(Boolean).join('; '));
 
   // reflect component active to context
-  $effect.pre(() => {
+  $effect(() => {
     if (active === context.active) return;
     untrack(() => context.onChange(active));
   });
@@ -95,6 +95,8 @@
       inset: rest.inset,
       shallow: rest.shallow,
       vertical: rest.vertical,
+      flat: rest.flat,
+      text: rest.text,
     });
   });
 
@@ -217,19 +219,12 @@
 
       :global(.neo-tab .neo-button) {
         box-shadow: var(--neo-box-shadow-flat) !important;
-        transition:
-          opacity 0.3s ease,
-          color 0.3s ease,
-          background-color 0.3s ease,
-          border-color 0.3s ease,
-          backdrop-filter 0.3s ease;
       }
 
-      :global(.neo-tab .neo-button:not(:focus-visible)) {
-        color: var(--neo-btn-text-color, inherit);
+      :global(.neo-tab .neo-button:not([disabled]:not([disabled='false']))) {
         transition:
           opacity 0.3s ease,
-          color 0s,
+          color 0.6s ease-in,
           background-color 0.3s ease,
           border-color 0.3s ease,
           backdrop-filter 0.3s ease;
@@ -237,7 +232,6 @@
 
       :global(.neo-tab) {
         position: relative;
-        box-shadow: var(--neo-box-shadow-flat);
       }
 
       :global(.neo-tab::before) {

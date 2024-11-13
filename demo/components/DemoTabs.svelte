@@ -44,7 +44,7 @@
 
   const onClear = () => onChange();
 
-  const options = $state({ disabled: false, close: false, add: false, slide: true, shallow: false, toggle: false });
+  const options = $state<NeoTabsProps>({ disabled: false, close: false, add: false, slide: true, shallow: false, toggle: false });
 
   const columns: { label: string; props?: NeoTabsProps }[] = [
     { label: 'Default' },
@@ -52,7 +52,7 @@
     { label: 'Flat', props: { flat: true } },
     { label: 'Text', props: { text: true } },
     { label: 'Line', props: { text: true, line: true } },
-    { label: 'Recessed', props: { recessed: true, line: true } },
+    { label: 'Inset', props: { inset: true, line: true } },
     { label: 'Glass', props: { glass: true } },
   ];
 </script>

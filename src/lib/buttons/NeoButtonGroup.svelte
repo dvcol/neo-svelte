@@ -128,7 +128,7 @@
     }
 
     &.text {
-      border-color: transparent;
+      border-color: transparent !important;
     }
 
     &:not(.text, .flat, .glass) {
@@ -149,8 +149,11 @@
       background-color: var(--neo-glass-background-color);
       border-top-color: var(--neo-glass-border-color);
       border-left-color: var(--neo-glass-border-color);
-      box-shadow: var(--neo-glass-box-shadow-raised-2);
       backdrop-filter: var(--neo-blur-4);
+
+      &:not(.text, .flat) {
+        box-shadow: var(--neo-glass-box-shadow-raised-2);
+      }
 
       :global(.neo-button) {
         background-color: transparent;

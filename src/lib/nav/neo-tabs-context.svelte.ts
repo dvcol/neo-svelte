@@ -34,7 +34,7 @@ type NeoTabContextOptions = {
    * Add a close button to each tab.
    */
   close?: boolean;
-} & Pick<NeoButtonGroupProps, 'vertical' | 'shallow' | 'inset' | 'glass'>;
+} & Pick<NeoButtonGroupProps, 'vertical' | 'shallow' | 'inset' | 'glass' | 'flat' | 'text'>;
 
 export type NeoTabsContext<T = unknown> = NeoTabContextOptions & {
   // States
@@ -107,6 +107,14 @@ export class NeoTabContext<T = unknown> {
     return this.#position;
   }
 
+  get text() {
+    return this.#options?.text;
+  }
+
+  get flat() {
+    return this.text || this.#options?.flat;
+  }
+
   get state(): NeoTabsContext {
     return {
       ...this.#options,
@@ -120,6 +128,8 @@ export class NeoTabContext<T = unknown> {
       shallow: this.shallow,
       vertical: this.vertical,
       disabled: this.disabled,
+      flat: this.flat,
+      text: this.text,
     };
   }
 

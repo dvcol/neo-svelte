@@ -18,6 +18,7 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconMoon from '~/icons/IconMoon.svelte';
   import IconSun from '~/icons/IconSun.svelte';
+  import IconSunrise from '~/icons/IconSunrise.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
 
@@ -55,18 +56,33 @@
 
   const initial = localStorage.getItem('theme');
   let dark = $state(initial ? initial === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+  let source = $state(0);
   let remember = $state(!!localStorage.getItem('theme'));
 
+  let angle = $state(0);
+  const sources = ['top-left', 'top-right', 'bottom-right', 'bottom-left'];
+  const onCycleSource = () => {
+    source = (source + 1) % sources.length;
+    angle += 90;
+  };
+
   $effect(() => {
+    // TODO wrap this in a NeoThemeProvider
     const theme = dark ? 'dark' : 'light';
     document.documentElement.setAttribute('theme', theme);
-    if (remember) localStorage.setItem('theme', dark ? 'dark' : 'light');
-    else localStorage.removeItem('theme');
+    document.documentElement.setAttribute('source', sources[source]);
+    if (remember) {
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+      localStorage.setItem('source', sources[source]);
+    } else {
+      localStorage.removeItem('theme');
+      localStorage.removeItem('source');
+    }
   });
 </script>
 
 <div class="container">
-  <div class="row">
+  <div class="row header">
     <NeoTabs slide {active} onchange={onClick}>
       {#each routes as route}
         <NeoTab tabId={route}>{route}</NeoTab>
@@ -74,6 +90,14 @@
     </NeoTabs>
 
     <NeoButtonGroup>
+      <NeoButton checked onclick={onCycleSource}>
+        {#snippet icon()}
+          <span class="source-icon" style:--neo-source-rotate={`${angle}deg`}>
+            <IconSunrise />
+          </span>
+        {/snippet}
+        <span>Source</span>
+      </NeoButton>
       <NeoButton toggle bind:checked={dark}>
         {#snippet icon()}
           {#if dark}
@@ -82,8 +106,9 @@
             <IconSun />
           {/if}
         {/snippet}
-        <span>{dark ? 'Dark' : 'Light'} Theme</span>
+        <span>{dark ? 'Dark' : 'Light'}</span>
       </NeoButton>
+
       <NeoButton toggle bind:checked={remember}>Remember</NeoButton>
     </NeoButtonGroup>
   </div>
@@ -105,14 +130,32 @@
     @include flex.column($center: true, $gap: var(--neo-gap-lg));
   }
 
+  .header {
+    flex: 0 1 auto;
+    padding: 1rem;
+
+    .source-icon {
+      overflow: hidden;
+      border-radius: var(--neo-border-radius-lg);
+      rotate: var(--neo-source-rotate, 0);
+      transition: rotate 0.5s ease;
+
+      :global(svg) {
+        width: 1.25rem;
+        height: 1.25rem;
+        translate: -30% -30%;
+      }
+    }
+  }
+
   .view {
-    min-height: 70vh;
     overflow: hidden;
   }
 
   .container {
     @include flex.column($gap: var(--neo-gap-xl));
 
+    min-height: 100dvh;
     padding: 1rem;
 
     :global(.transition *),
