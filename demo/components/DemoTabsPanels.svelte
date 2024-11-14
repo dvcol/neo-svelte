@@ -13,8 +13,14 @@
   import NeoTabPane from '~/nav/NeoTabPane.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
   import NeoTabsCard from '~/nav/NeoTabsCard.svelte';
+  import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
 
-  const added = $state([{ text: `Removable`, tabId: crypto.randomUUID() }]);
+  const added = $state([
+    { text: 'Button', tabId: 'button', close: false },
+    { text: 'Icon', tabId: 'icon', close: false, icon },
+    { text: 'Reversed', tabId: 'reversed', close: false, icon, reverse: true },
+    { text: `Removable`, tabId: crypto.randomUUID() },
+  ]);
   const onclose = (id: TabId) => {
     const index = added.findIndex(tab => tab.tabId === id);
     if (index === -1) return;
@@ -69,9 +75,6 @@
 {/snippet}
 
 {#snippet tabs()}
-  <NeoTab tabId="button" value="button" close={false}>Button</NeoTab>
-  <NeoTab tabId="icon" value="icon" close={false} {icon}>Icon</NeoTab>
-  <NeoTab tabId="reversed" value="reversed" reverse close={false} {icon}>Reversed</NeoTab>
   {#each added as { text, ...tab } (tab.tabId)}
     <NeoTab {...tab}>{text}</NeoTab>
   {/each}
@@ -84,21 +87,16 @@
 {#snippet panes()}
   <NeoTabsCard {animate} class="panel">
     <NeoTabPane empty>
-      {@render content('Empty')}
-    </NeoTabPane>
-    <NeoTabPane tabId="button">
-      {@render content('Button')}
-    </NeoTabPane>
-    <NeoTabPane tabId="icon">
-      {@render content('Icon')}
-    </NeoTabPane>
-    <NeoTabPane tabId="reversed">
-      {@render content('Reversed')}
+      <NeoSkeletonText alt justify loading={options.skeleton}>
+        {@render content('Empty')}
+      </NeoSkeletonText>
     </NeoTabPane>
 
     {#each added as { text, tabId } (tabId)}
       <NeoTabPane {tabId}>
-        {@render content(text)}
+        <NeoSkeletonText alt justify loading={options.skeleton}>
+          {@render content(text)}
+        </NeoSkeletonText>
       </NeoTabPane>
     {/each}
   </NeoTabsCard>
@@ -135,7 +133,7 @@
   }
 
   :global(.panel) {
-    min-width: 34rem;
+    min-width: 37rem;
     min-height: 20rem;
   }
 

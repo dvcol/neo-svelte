@@ -39,6 +39,12 @@
     $neo-glass-shadow-raised-3: null;
     $neo-glass-shadow-raised-4: null;
 
+    /** glass border-color */
+    $neo-glass-top-border-color: null;
+    $neo-glass-right-border-color: null;
+    $neo-glass-bottom-border-color: null;
+    $neo-glass-left-border-color: null;
+
     /* Box shadows top left */
     @if $direction == top-left {
       /* Base shadows raised top left */
@@ -81,6 +87,12 @@
       $neo-glass-shadow-raised-2: 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color);
       $neo-glass-shadow-raised-3: 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color);
       $neo-glass-shadow-raised-4: 0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color);
+
+      /** glass border-color */
+      $neo-glass-top-border-color: var(--neo-glass-border-color);
+      $neo-glass-right-border-color: transparent;
+      $neo-glass-left-border-color: var(--neo-glass-border-color);
+      $neo-glass-bottom-border-color: transparent;
     }
 
     /* Box shadows top right */
@@ -125,6 +137,12 @@
       $neo-glass-shadow-raised-2: -0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color);
       $neo-glass-shadow-raised-3: -0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color);
       $neo-glass-shadow-raised-4: -0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color);
+
+      /** glass border-color */
+      $neo-glass-top-border-color: var(--neo-glass-border-color);
+      $neo-glass-right-border-color: var(--neo-glass-border-color);
+      $neo-glass-left-border-color: transparent;
+      $neo-glass-bottom-border-color: transparent;
     }
 
     /* Box shadows bottom right */
@@ -169,6 +187,12 @@
       $neo-glass-shadow-raised-2: -0.3rem -0.3rem 0.3rem var(--neo-glass-shadow-color);
       $neo-glass-shadow-raised-3: -0.5rem -0.5rem 0.6rem var(--neo-glass-shadow-color);
       $neo-glass-shadow-raised-4: -0.8rem -0.8rem 0.7rem var(--neo-glass-shadow-color);
+
+      /** glass border-color */
+      $neo-glass-top-border-color: transparent;
+      $neo-glass-right-border-color: var(--neo-glass-border-color);
+      $neo-glass-left-border-color: transparent;
+      $neo-glass-bottom-border-color: var(--neo-glass-border-color);
     }
 
     /* Box shadows bottom left */
@@ -213,6 +237,12 @@
       $neo-glass-shadow-raised-2: 0.3rem -0.3rem 0.3rem var(--neo-glass-shadow-color);
       $neo-glass-shadow-raised-3: 0.5rem -0.5rem 0.6rem var(--neo-glass-shadow-color);
       $neo-glass-shadow-raised-4: 0.8rem -0.8rem 0.7rem var(--neo-glass-shadow-color);
+
+      /** glass border-color */
+      $neo-glass-top-border-color: transparent;
+      $neo-glass-right-border-color: transparent;
+      $neo-glass-left-border-color: var(--neo-glass-border-color);
+      $neo-glass-bottom-border-color: var(--neo-glass-border-color);
     }
 
     /** Base shadows flat */
@@ -245,6 +275,12 @@
     --neo-glass-box-shadow-inset-2: var(--neo-box-shadow-inset-2);
     --neo-glass-box-shadow-inset-3: var(--neo-box-shadow-inset-3);
     --neo-glass-box-shadow-inset-4: var(--neo-box-shadow-inset-4);
+
+    /** glass border-color */
+    --neo-glass-top-border-color: #{$neo-glass-top-border-color};
+    --neo-glass-right-border-color: #{$neo-glass-right-border-color};
+    --neo-glass-left-border-color: #{$neo-glass-left-border-color};
+    --neo-glass-bottom-border-color: #{$neo-glass-bottom-border-color};
   }
 
   @include shadows;

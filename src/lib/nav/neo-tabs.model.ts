@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
-import type { HTMLUseProps } from '~/utils/action.utils.js';
+import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoTabContextValue<T = unknown> = { index: number; value?: T; ref: HTMLElement };
@@ -62,7 +62,7 @@ export type NeoTabsProps<T = unknown> = {
   /**
    * Optional props to pass to the tabs container.
    */
-  tabsProps?: HTMLNeoBaseElement & HTMLUseProps;
+  tabsProps?: HTMLNeoBaseElement & HTMLActionProps;
 } & NeoTabsContext &
   Omit<NeoButtonGroupProps, 'onchange' | 'children' | 'vertical' | 'ref'> &
   HTMLRefProps;

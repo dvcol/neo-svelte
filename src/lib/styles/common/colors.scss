@@ -31,7 +31,7 @@
   --neo-grey-strong-12: oklch(from var(--neo-grey-strong) l c h / 12%);
   --neo-grey-strong-20: oklch(from var(--neo-grey-strong) l c h / 20%);
   --neo-grey-strong-dark: oklch(from var(--neo-grey-strong) calc(l - 0.1) c h);
-  --neo-grey-strong-dark-50: oklch(from var(--neo-grey-strong-dark) l c h / 50%);
+  --neo-grey-strong-dark-80: oklch(from var(--neo-grey-strong-dark) l c h / 80%);
   --neo-purple: oklch(46.4% 0.305 269.594deg);
   --neo-purple-50: oklch(from var(--neo-purple) l c h / 50%);
   --neo-purple-80: oklch(from var(--neo-purple) l c h / 80%);
@@ -52,12 +52,13 @@
   --neo-text-color-disabled: var(--neo-text-color);
   --neo-border-color: var(--neo-grey-strong-20);
   --neo-border-color-focused: var(--neo-purple-50);
-  --neo-border-color-hover: var(--neo-purple-80);
+  --neo-border-color-primary: var(--neo-purple-80);
   --neo-border-color-disabled: var(--neo-border-color);
   --neo-background-color: var(--neo-white-soft);
   --neo-shadow-color-light: var(--neo-white-soft-light);
   --neo-shadow-color-dark: var(--neo-white-soft-dark);
   --neo-skeleton-color: var(--neo-grey-soft);
+  --neo-skeleton-color-step: 0.1;
 
   /** glass colors */
   --neo-glass-background-color: var(--neo-white-20);
@@ -81,12 +82,13 @@
   --neo-dark-text-color-disabled: var(--neo-white-soft-50);
   --neo-dark-border-color: var(--neo-grey-soft-10);
   --neo-dark-border-color-focused: var(--neo-purple-soft-50);
-  --neo-dark-border-color-hover: var(--neo-purple-soft-80);
+  --neo-dark-border-color-primary: var(--neo-purple-soft-80);
   --neo-dark-border-color-disabled: var(--neo-dark-border-color);
   --neo-dark-background-color: var(--neo-black-soft);
   --neo-dark-shadow-color-light: var(--neo-black-soft-light);
   --neo-dark-shadow-color-dark: var(--neo-black-soft-dark);
   --neo-dark-skeleton-color: var(--neo-grey-strong-dark);
+  --neo-dark-skeleton-color-step: 0.05;
 
   /** dark mode glass colors */
   --neo-dark-glass-background-color: var(--neo-grey-strong-8);
@@ -95,7 +97,7 @@
   --neo-dark-glass-shadow-color: var(--neo-black-soft-dark-50);
   --neo-dark-glass-border-color: var(--neo-black-soft-lighter-50);
   --neo-dark-glass-border-color-hover: var(--neo-dark-glass-background-color);
-  --neo-dark-glass-skeleton-color: var(--neo-grey-strong-dark-50);
+  --neo-dark-glass-skeleton-color: var(--neo-grey-strong-dark-80);
 
   /* touch highlight */
   -webkit-tap-highlight-color: transparent;
@@ -119,12 +121,13 @@
     --neo-text-color-disabled: var(--neo-dark-text-color-disabled);
     --neo-border-color: var(--neo-dark-border-color);
     --neo-border-color-focused: var(--neo-dark-border-color-focused);
-    --neo-border-color-hover: var(--neo-dark-border-color-hover);
+    --neo-border-color-primary: var(--neo-dark-border-color-primary);
     --neo-border-color-disabled: var(--neo-dark-border-color-disabled);
     --neo-background-color: var(--neo-dark-background-color);
     --neo-shadow-color-light: var(--neo-dark-shadow-color-light);
     --neo-shadow-color-dark: var(--neo-dark-shadow-color-dark);
     --neo-skeleton-color: var(--neo-dark-skeleton-color);
+    --neo-skeleton-color-step: var(--neo-dark-skeleton-color-step);
 
     /** glass colors */
     --neo-glass-background-color: var(--neo-dark-glass-background-color);

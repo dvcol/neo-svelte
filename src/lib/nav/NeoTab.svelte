@@ -79,12 +79,12 @@
   bind:this={ref}
   data-tab-id={tabId}
   data-active={active}
+  class:neo-tab={true}
   class:active
   class:slide
   transition:transition={enterTransition}
   {...tabProps}
   use:useFn={useProps}
-  class={['neo-tab', tabProps?.class].filter(Boolean).join(' ')}
 >
   <NeoButton role="tab" toggle readonly checked={active} onclick={onClick} empty={!children} {...rest} {disabled}>
     {@render children?.({ active, tabId, value })}

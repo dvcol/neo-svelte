@@ -20,5 +20,5 @@ export type NeoTransitionContainerProps = {
   /**
    * Overflow style.
    */
-  overflow: CSSStyleDeclaration['overflow'];
+  overflow?: CSSStyleDeclaration['overflow'];
 } & HTMLNeoBaseElement;

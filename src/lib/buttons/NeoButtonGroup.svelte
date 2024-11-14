@@ -14,7 +14,6 @@
     skeleton,
 
     // Styles
-    class: classNames,
     start,
     text,
     flat,
@@ -57,7 +56,7 @@
 <svelte:element
   this={tag}
   bind:this={ref}
-  class={['neo-button-group', classNames].filter(Boolean).join(' ')}
+  class:neo-button-group={true}
   class:start
   class:text
   class:flat
@@ -146,9 +145,9 @@
     }
 
     &.glass {
-      background-color: var(--neo-glass-background-color);
-      border-top-color: var(--neo-glass-border-color);
-      border-left-color: var(--neo-glass-border-color);
+      background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
+      border-color: var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+        var(--neo-glass-left-border-color);
       backdrop-filter: var(--neo-blur-4);
 
       &:not(.text, .flat) {

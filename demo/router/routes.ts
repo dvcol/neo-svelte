@@ -7,6 +7,7 @@ export const Route = {
   Tabs: 'tabs' as const,
   TabsPanels: 'tabs-panels' as const,
   Cards: 'cards' as const,
+  Skeleton: 'skeleton' as const,
 } as const;
 
 export type Routes = (typeof Route)[keyof typeof Route];
@@ -17,6 +18,7 @@ export const Path: Record<keyof typeof Route, string> = {
   Tabs: '/tabs' as const,
   TabsPanels: '/tabs/panels' as const,
   Cards: '/cards' as const,
+  Skeleton: '/skeleton' as const,
   Any: '*' as const,
 } as const;
 
@@ -50,6 +52,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.Cards,
       path: Path.Cards,
       component: () => import('../components/DemoCards.svelte'),
+    },
+    {
+      name: Route.Skeleton,
+      path: Path.Skeleton,
+      component: () => import('../components/DemoSkeleton.svelte'),
     },
     {
       name: Route.Any,

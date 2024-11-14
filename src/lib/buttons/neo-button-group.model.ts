@@ -19,6 +19,7 @@ export type NeoButtonGroupContext = {
 
   /**
    * If true, the button group will start as flat on first render.
+   * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
    */
   start?: boolean;
   /**

@@ -10,12 +10,13 @@
   import NeoCard from '~/cards/NeoCard.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
   import IconMinus from '~/icons/IconMinus.svelte';
+  import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
 
+  let skeleton = $state(false);
   const options = $state<NeoCardProps>({
     elevation: 2,
     borderless: false,
-    skeleton: false,
-    loading: false,
+    hover: 0,
   });
 
   const onElevation = (value: number) => {
@@ -27,31 +28,51 @@
     options.elevation = 2;
   };
 
+  const onHoverElevation = (value: number) => {
+    options.hover += value;
+  };
+  const resetHover = () => {
+    options.hover = 0;
+  };
+
   const columns: { label: string; props?: NeoCardProps }[] = [{ label: 'Default' }, { label: 'Glass', props: { glass: true } }];
 </script>
 
 <div class="row">
-  <div class="column">
-    <NeoButtonGroup>
-      <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
-      <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
-      <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
-    </NeoButtonGroup>
+  <NeoButtonGroup>
+    <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
+  </NeoButtonGroup>
 
-    <NeoButtonGroup rounded>
-      <NeoButton disabled={options.elevation <= -4} onclick={() => onElevation(-1)}>
-        {#snippet icon()}
-          <IconMinus />
-        {/snippet}
-      </NeoButton>
-      <NeoButton onclick={resetElevation}>{options.elevation}</NeoButton>
-      <NeoButton disabled={options.elevation >= 4} onclick={() => onElevation(1)}>
-        {#snippet icon()}
-          <IconAdd />
-        {/snippet}
-      </NeoButton>
-    </NeoButtonGroup>
-  </div>
+  <span class="label">Elevation</span>
+  <NeoButtonGroup rounded>
+    <NeoButton disabled={options.elevation <= -4} onclick={() => onElevation(-1)}>
+      {#snippet icon()}
+        <IconMinus />
+      {/snippet}
+    </NeoButton>
+    <NeoButton onclick={resetElevation}>{options.elevation}</NeoButton>
+    <NeoButton disabled={options.elevation >= 4} onclick={() => onElevation(1)}>
+      {#snippet icon()}
+        <IconAdd />
+      {/snippet}
+    </NeoButton>
+  </NeoButtonGroup>
+
+  <span class="label">Hover Elevation</span>
+  <NeoButtonGroup rounded>
+    <NeoButton disabled={options.hover + options.elevation <= -4} onclick={() => onHoverElevation(-1)}>
+      {#snippet icon()}
+        <IconMinus />
+      {/snippet}
+    </NeoButton>
+    <NeoButton onclick={resetHover}>{options.hover}</NeoButton>
+    <NeoButton disabled={options.hover + options.elevation >= 4} onclick={() => onHoverElevation(1)}>
+      {#snippet icon()}
+        <IconAdd />
+      {/snippet}
+    </NeoButton>
+  </NeoButtonGroup>
 </div>
 
 {#snippet lorem()}
@@ -75,8 +96,10 @@
 
 {#snippet group(props: NeoTabsProps = {})}
   <div class="column">
-    <NeoCard {...options} {...props}>
-      {@render lorem()}
+    <NeoCard style="min-width: 48.625rem; min-height: 30.875rem;" {...options} {...props}>
+      <NeoSkeletonText loading={skeleton} paragraphs="2">
+        {@render lorem()}
+      </NeoSkeletonText>
     </NeoCard>
   </div>
 {/snippet}

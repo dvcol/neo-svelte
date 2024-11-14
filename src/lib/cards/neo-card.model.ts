@@ -21,8 +21,6 @@ export type NeoCardProps = {
    * @default 'div'
    */
   tag?: keyof HTMLElementTagNameMap;
-  loading?: boolean;
-  skeleton?: boolean;
 
   // Styles
 
@@ -36,12 +34,25 @@ export type NeoCardProps = {
    * If this is `true`, the card will never display a border.
    */
   borderless?: boolean;
-
+  /**
+   * If true, the card will be displayed with a glass effect.
+   */
   glass?: boolean;
-  close?: boolean;
-  hover?: boolean | 'raise' | 'lower';
-  separator?: boolean;
+  /**
+   * If true, the card will have a rounded border.
+   */
+  rounded?: boolean;
+  /**
+   * Weather to increase/decrease the elevation when hovered.
+   */
+  hover?: number;
+  /**
+   * If true, the card will start as flat on first render.
+   * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
+   */
   start?: boolean;
+  close?: boolean;
+  separator?: boolean;
   horizontal?: boolean;
 } & HTMLNeoBaseElement &
   HTMLFlexProps &

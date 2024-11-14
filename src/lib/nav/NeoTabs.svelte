@@ -12,7 +12,7 @@
   import IconAdd from '~/icons/IconAdd.svelte';
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
-  import { toAction, toActionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -100,6 +100,11 @@
     });
   });
 
+  const inFn = $derived(toTransition(tabsProps?.in ?? tabsProps?.transition));
+  const inProps = $derived(toTransitionProps(tabsProps?.in ?? tabsProps?.transition));
+  const outFn = $derived(toTransition(tabsProps?.out ?? tabsProps?.transition));
+  const outProps = $derived(toTransitionProps(tabsProps?.out ?? tabsProps?.transition));
+
   const useFn = $derived(toAction(tabsProps?.use));
   const useProps = $derived(toActionProps(tabsProps?.use));
 </script>
@@ -112,6 +117,7 @@
   <svelte:element
     this={tag}
     bind:this={ref}
+    class:neo-tabs={true}
     class:add
     class:line
     class:slide
@@ -123,8 +129,9 @@
     class:shallow={rest.shallow}
     {...tabsProps}
     use:useFn={useProps}
+    out:outFn={outProps}
+    in:inFn={inProps}
     {style}
-    class={['neo-tabs', tabsProps?.class].filter(Boolean).join(' ')}
   >
     <NeoButtonGroup {...rest}>
       {@render children?.(ctx)}

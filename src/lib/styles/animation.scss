@@ -46,30 +46,30 @@
   }
 }
 
-@mixin skeleton {
+@mixin skeleton($start: var(--neo-skeleton-color-start), $end: var(--neo-skeleton-color-end)) {
   @keyframes skeleton {
     0% {
-      color: var(--neo-skeleton-color-start);
-      background-color: var(--neo-skeleton-color-start);
-      border-color: var(--neo-skeleton-color-start);
+      color: $start;
+      background-color: $start;
+      border-color: $start;
     }
 
     40% {
-      color: var(--neo-skeleton-color-end);
-      background-color: var(--neo-skeleton-color-end);
-      border-color: var(--neo-skeleton-color-end);
+      color: $end;
+      background-color: $end;
+      border-color: $end;
     }
 
     80% {
-      color: var(--neo-skeleton-color-start);
-      background-color: var(--neo-skeleton-color-start);
-      border-color: var(--neo-skeleton-color-start);
+      color: $start;
+      background-color: $start;
+      border-color: $start;
     }
 
     100% {
-      color: var(--neo-skeleton-color-start);
-      background-color: var(--neo-skeleton-color-start);
-      border-color: var(--neo-skeleton-color-start);
+      color: $start;
+      background-color: $start;
+      border-color: $start;
     }
   }
 }

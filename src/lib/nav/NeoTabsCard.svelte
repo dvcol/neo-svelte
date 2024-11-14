@@ -1,9 +1,7 @@
 <script lang="ts">
-  import { setContext } from 'svelte';
-
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoTransitionContainer from '~/container/NeoTransitionContainer.svelte';
-  import { NeoTabsCardContextSymbol, type NeoTabsCardProps } from '~/nav/neo-tabs-card.model.js';
+  import { type NeoTabsCardProps, setTabsCardContext } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -33,7 +31,9 @@
     return context?.shallow ? 1 : 2;
   });
 
-  $effect.pre(() => setContext(NeoTabsCardContextSymbol, { animate }));
+  $effect.pre(() => {
+    setTabsCardContext({ animate });
+  });
 </script>
 
 <NeoCard bind:ref {elevation} {borderless} {glass} {...rest}>

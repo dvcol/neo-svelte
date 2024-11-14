@@ -16,6 +16,9 @@
     elevation = 2,
     borderless,
     glass,
+    rounded,
+    hover,
+    start,
 
     // Transition
     in: inAction,
@@ -35,16 +38,29 @@
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
 
-  const style = $derived.by(() => {
-    const level = Math.abs(elevation) > 0.5 ? Math.abs(elevation) : 0;
-    let shadow = `--neo-card-box-shadow: var(--neo-${glass ? 'glass-' : ''}box-shadow-`;
-    const filter = `--neo-glass-blur: var(--neo-blur-${level + 2})`;
-    if (!elevation) shadow += 'flat';
-    else if (elevation < 0) shadow += 'inset';
-    else shadow += 'raised';
-    shadow += `-${level})`;
-    return [shadow, filter, rest.style].filter(Boolean).join('; ');
+  const filter = $derived.by(() => {
+    if (!glass) return;
+    return `var(--neo-blur-${Math.abs(Math.trunc(elevation) + 2)})`;
   });
+
+  const getShadow = (level: number) => {
+    let shadow = `var(--neo-${glass ? 'glass-' : ''}box-shadow-`;
+    if (!level) return `${shadow}flat`;
+    shadow += level < 0 ? 'inset' : 'raised';
+    return `${shadow}-${Math.trunc(Math.abs(level))}`;
+  };
+
+  const boxShadow = $derived.by(() => getShadow(elevation));
+  const hoverShadow = $derived.by(() => {
+    if (!hover) return boxShadow;
+    let level = elevation + hover;
+    if (level < -4) level = -4;
+    if (level > 4) level = 4;
+    return getShadow(level);
+  });
+
+  const hoverFlat = $derived(boxShadow.endsWith('flat') && !hoverShadow.endsWith('flat'));
+  const flatHover = $derived(hoverShadow.endsWith('flat') && !boxShadow.endsWith('flat'));
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -58,9 +74,18 @@
 <svelte:element
   this={tag}
   bind:this={ref}
+  class:neo-card={true}
   class:borderless
+  class:rounded
+  class:hover
+  class:start
+  class:hover-flat={hoverFlat}
+  class:flat-hover={flatHover}
   class:glass
   class:flat={!elevation}
+  style:--neo-hover-shadow-level={hoverShadow}
+  style:--neo-card-box-shadow={boxShadow}
+  style:--neo-glass-blur={filter}
   style:justify-content={justify}
   style:align-items={align}
   style:flex
@@ -68,8 +93,6 @@
   out:outFn={outProps}
   in:inFn={inProps}
   {...rest}
-  {style}
-  class={['neo-card', rest.class].filter(Boolean).join(' ')}
 >
   {@render children?.()}
 </svelte:element>
@@ -92,13 +115,36 @@
       border-color 0.3s ease,
       box-shadow 0.3s ease-out;
 
-    &.flat:not(.borderless) {
+    &.hover:hover.flat-hover,
+    &.flat:not(.borderless, .hover-flat:hover) {
       border-color: var(--neo-card-border-color, var(--neo-border-color));
     }
 
+    &.hover:hover {
+      box-shadow: var(--neo-hover-shadow-level, var(--neo-card-box-shadow));
+    }
+
+    &.rounded {
+      border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+    }
+
     &.glass {
-      background-color: var(--neo-glass-background-color);
-      backdrop-filter: var(--neo-glass-blur);
+      --neo-skeleton-color: var(--neo-glass-skeleton-color);
+
+      background-color: var(--neo-card-bg-color, var(--neo-glass-background-color));
+      border-color: var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+        var(--neo-glass-left-border-color);
+      backdrop-filter: var(--neo-glass-blur, var(--neo-blur-4));
+    }
+
+    &.start {
+      @starting-style {
+        box-shadow: var(--neo-box-shadow-flat);
+
+        &:not(.borderless) {
+          border-color: var(--neo-btn-border-color, var(--neo-border-color));
+        }
+      }
     }
   }
 </style>

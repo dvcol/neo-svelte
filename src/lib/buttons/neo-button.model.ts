@@ -63,6 +63,7 @@ export type NeoButtonProps = {
   borderless?: boolean;
   /**
    * If true, the button will start as flat on first render.
+   * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
    */
   start?: boolean;
   /**

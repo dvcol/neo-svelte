@@ -18,13 +18,19 @@ export type TransitionWithProps<T extends TransitionProps = TransitionProps> = {
 export const isTransitionWithProps = <T extends TransitionProps>(
   transition: TransitionFunction<T> | TransitionWithProps<T>,
 ): transition is TransitionWithProps<T> => 'use' in transition && transition.use !== undefined;
-export const toTransition = <T extends TransitionProps>(transition?: TransitionFunction<T> | TransitionWithProps<T>): TransitionFunction<T> => {
-  if (!transition) return emptyTransition;
+export const toTransition = <T extends TransitionProps>(
+  transition?: TransitionFunction<T> | TransitionWithProps<T>,
+  fallback: TransitionFunction<T> = emptyTransition,
+): TransitionFunction<T> => {
+  if (!transition) return fallback;
   if (isTransitionWithProps(transition)) return transition.use;
   return transition;
 };
-export const toTransitionProps = <T extends TransitionProps>(transition?: TransitionFunction<T> | TransitionWithProps<T>): T | undefined => {
-  if (!transition) return;
+export const toTransitionProps = <T extends TransitionProps>(
+  transition?: TransitionFunction<T> | TransitionWithProps<T>,
+  fallback?: T,
+): T | undefined => {
+  if (!transition) return fallback;
   if (isTransitionWithProps(transition)) return transition.props;
 };
 

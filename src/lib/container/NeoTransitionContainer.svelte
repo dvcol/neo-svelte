@@ -16,7 +16,7 @@
   }: NeoTransitionContainerProps = $props();
 </script>
 
-<svelte:element this={tag} class="neo-transition-container" style:overflow {...rest}>
+<svelte:element this={tag} class:neo-transition-container={true} style:overflow {...rest}>
   {@render children?.()}
 </svelte:element>
 
@@ -24,6 +24,7 @@
   .neo-transition-container {
     display: grid;
     grid-template-areas: 'transition';
+    width: 100%;
 
     :global(> *) {
       grid-area: transition;

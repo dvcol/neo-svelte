@@ -1,9 +1,17 @@
-import { type Snippet } from 'svelte';
+import { getContext, setContext, type Snippet } from 'svelte';
 
 import type { NeoCardProps } from '~/cards/neo-card.model.js';
 import type { NeoTransitionContainerProps } from '~/container/NeoTransitionContainer.model.js';
 
 import { type NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
+
+export type NeoTabsCardContext = {
+  /**
+   * If `true`, pane transition will be animated.
+   * @default true
+   */
+  animate?: boolean;
+};
 
 export type NeoTabsCardProps<T = unknown> = {
   /**
@@ -11,19 +19,16 @@ export type NeoTabsCardProps<T = unknown> = {
    */
   children?: Snippet<[NeoTabsContext<T> | undefined]>;
 
-  // Styles
-  /**
-   * If `true`, pane transition will be animated.
-   * @default true
-   */
-  animate?: boolean;
-
   // Other props
   /**
    * Optional props to pass to the tab container if `animate` is `true`.
    * @see animate
    */
   containerProps?: NeoTransitionContainerProps;
-} & Omit<NeoCardProps, 'children'>;
+} & NeoTabsCardContext &
+  Omit<NeoCardProps, 'children'>;
 
 export const NeoTabsCardContextSymbol = Symbol('NeoTabsCardContext');
+
+export const setTabsCardContext = (context: NeoTabsCardContext): NeoTabsCardContext => setContext(NeoTabsCardContextSymbol, context);
+export const getTabsCardContext = (): NeoTabsCardContext | undefined => getContext<NeoTabsCardContext>(NeoTabsCardContextSymbol);

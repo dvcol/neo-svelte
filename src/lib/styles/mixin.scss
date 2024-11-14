@@ -107,7 +107,7 @@
 
 @mixin border-rotate(
   $background-color: var(--neo-background-color),
-  $border-color: var(--neo-border-color-hover),
+  $border-color: var(--neo-border-color-primary),
   $border-width: 1px,
   $speed: 3s,
   $easing: linear,
@@ -139,7 +139,7 @@
 
 @mixin border-progress(
   $background-color: var(--neo-background-color),
-  $border-color: var(--neo-border-color-hover),
+  $border-color: var(--neo-border-color-primary),
   $border-width: 1px,
   $transition: --neo-progress,
   $speed: 2s,
@@ -152,18 +152,25 @@
   transition: $transition $speed $easing;
 }
 
-@mixin skeleton($color: var(--neo-skeleton-color), $timing: 3s, $easing: var(--neo-transition-skeleton)) {
+@mixin skeleton(
+  $color: var(--neo-skeleton-color),
+  $timing: 3s,
+  $easing: var(--neo-transition-skeleton),
+  $delay: 1s,
+  $step: var(--neo-skeleton-color-step, 0.05)
+) {
   --neo-skeleton-color-start: #{$color};
-  --neo-skeleton-color-end: oklch(from #{$color} calc(l - 0.05) c h);
+  --neo-skeleton-color-end: oklch(from #{$color} calc(l - #{$step}) c h);
 
   color: var(--neo-skeleton-color-start);
   background-color: var(--neo-skeleton-color-start);
   border-color: var(--neo-skeleton-color-start);
   transition:
-    background-color 1s,
-    color 1s,
-    border-color 1s;
+    background-color $delay ease,
+    color $delay ease,
+    border-color $delay ease;
   animation: skeleton $timing $easing infinite;
+  animation-delay: $delay;
 
   &::before,
   &::after,

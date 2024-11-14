@@ -26,7 +26,6 @@
     checked = $bindable(false),
 
     // Styles
-    class: classNames,
     borderless,
     start,
     text,
@@ -123,7 +122,7 @@
   {href}
   {role}
   {tabindex}
-  class={['neo-button', classNames].filter(Boolean).join(' ')}
+  class:neo-button={true}
   class:pulse
   class:coalesce
   class:pressed
@@ -215,7 +214,7 @@
     }
 
     &.glass {
-      background-color: var(--neo-glass-background-color);
+      background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
       box-shadow: var(--neo-glass-box-shadow-raised-2);
       backdrop-filter: var(--neo-blur-4);
 
@@ -235,8 +234,8 @@
       }
 
       &:not(:hover, :active, &.pressed, &.skeleton) {
-        border-top-color: var(--neo-glass-border-color);
-        border-left-color: var(--neo-glass-border-color);
+        border-color: var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+          var(--neo-glass-left-border-color);
       }
 
       &.loading:active:not(.pressed),
@@ -374,7 +373,7 @@
     }
 
     &.rotate {
-      @include mixin.border-rotate;
+      @include mixin.border-rotate($background-color: var(--neo-btn-bg-color, var(--neo-background-color)));
     }
 
     .icon,
