@@ -1,39 +1,60 @@
 <script lang="ts">
-  import type { NeoCardProps } from '~/cards/neo-card.model.js';
+  import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
+  import NeoDivider from '~/divider/NeoDivider.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
-    children,
+    children: content,
+    header,
+    action,
+    footer,
+    media,
 
     // States
     ref = $bindable(),
     tag = 'div',
+    close, // TODO: Implement close button
 
     // Styles
     elevation = 2,
+    hover = 0,
     borderless,
-    glass,
     rounded,
-    hover,
+    glass,
+    segmented,
+    cover,
     start,
-
-    // Transition
-    in: inAction,
-    out: outAction,
-    transition: transitionAction,
+    horizontal, // TODO: Implement  horizontal layout
 
     // Flex
     justify,
     align,
     flex,
 
+    // Transition
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
+
     // Actions
     use,
 
+    // Events
+    onClose, // TODO: Implement close button
+
     // Other props
+    headerTag = 'div',
+    headerProps,
+    footerTag = 'div',
+    footerProps,
+    actionTag = 'div',
+    actionProps,
+    mediaTag = 'div',
+    mediaProps,
     ...rest
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
@@ -43,24 +64,33 @@
     return `var(--neo-blur-${Math.abs(Math.trunc(elevation) + 2)})`;
   });
 
-  const getShadow = (level: number) => {
-    let shadow = `var(--neo-${glass ? 'glass-' : ''}box-shadow-`;
-    if (!level) return `${shadow}flat`;
-    shadow += level < 0 ? 'inset' : 'raised';
-    return `${shadow}-${Math.trunc(Math.abs(level))}`;
-  };
-
-  const boxShadow = $derived.by(() => getShadow(elevation));
+  const hoverElevation = $derived(elevation + hover);
+  const boxShadow = $derived.by(() => computeShadowElevation(elevation, glass));
   const hoverShadow = $derived.by(() => {
     if (!hover) return boxShadow;
-    let level = elevation + hover;
+    let level = hoverElevation;
     if (level < -4) level = -4;
     if (level > 4) level = 4;
-    return getShadow(level);
+    return computeShadowElevation(level, glass);
   });
 
   const hoverFlat = $derived(boxShadow.endsWith('flat') && !hoverShadow.endsWith('flat'));
   const flatHover = $derived(hoverShadow.endsWith('flat') && !boxShadow.endsWith('flat'));
+
+  const segments = $derived([content, header, action, footer, media].filter(Boolean).length > 1);
+
+  const context: NeoCardContext = $derived({
+    elevation,
+    hover,
+    borderless,
+    rounded,
+    glass,
+    segmented,
+    cover,
+    start,
+    horizontal,
+    onClose,
+  });
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -71,11 +101,22 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
+{#snippet divider()}
+  {#if segments && typeof segmented === 'number'}
+    <div class="neo-card-divider">
+      <NeoDivider elevation={segmented} />
+    </div>
+  {/if}
+{/snippet}
+
 <svelte:element
   this={tag}
   bind:this={ref}
   class:neo-card={true}
   class:borderless
+  class:segmented={segmented === true}
+  class:segments
+  class:image={media && !segments}
   class:rounded
   class:hover
   class:start
@@ -94,16 +135,55 @@
   in:inFn={inProps}
   {...rest}
 >
-  {@render children?.()}
+  {#if media}
+    <svelte:element
+      this={mediaTag}
+      class="neo-card-segment neo-card-media"
+      class:cover
+      class:inset={elevation < 0 || hoverElevation < 0}
+      {...mediaProps}
+    >
+      {@render media?.(context)}
+    </svelte:element>
+  {/if}
+  {#if header}
+    <svelte:element this={headerTag} class="neo-card-segment neo-card-header" {...headerProps}>
+      {@render header?.(context)}
+    </svelte:element>
+  {/if}
+  {#if segments}
+    {@render divider()}
+    <div class="neo-card-segment neo-card-content">
+      {@render content?.(context)}
+    </div>
+  {:else}
+    {@render content?.(context)}
+  {/if}
+  {#if footer}
+    {@render divider()}
+    <svelte:element this={footerTag} class="neo-card-segment neo-card-footer" {...footerProps}>
+      {@render footer?.(context)}
+    </svelte:element>
+  {/if}
+  {#if action}
+    {@render divider()}
+    <svelte:element this={actionTag} class="neo-card-segment neo-card-action" {...actionProps}>
+      {@render action?.(context)}
+    </svelte:element>
+  {/if}
 </svelte:element>
 
 <style lang="scss">
   .neo-card {
+    --neo-card-full-spacing: var(--neo-card-spacing, 1.5rem);
+    --neo-card-half-spacing: calc(var(--neo-card-spacing, 1.5rem) / 2);
+
     display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     width: calc(100% - var(--neo-shadow-margin, 0.25rem) * 2);
     margin: var(--neo-shadow-margin, 0.25rem);
-    padding: 2rem;
+    padding: var(--neo-card-full-spacing);
     color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
     border: var(--neo-border-width, 1px) var(--neo-card-border-color, transparent) solid;
@@ -113,6 +193,7 @@
       color 0.3s ease,
       background-color 0.3s ease,
       border-color 0.3s ease,
+      border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
 
     &.hover:hover.flat-hover,
@@ -124,8 +205,96 @@
       box-shadow: var(--neo-hover-shadow-level, var(--neo-card-box-shadow));
     }
 
+    .neo-card-divider {
+      margin: 0.5rem calc(var(--neo-card-full-spacing) - 0.25rem);
+    }
+
+    .neo-card-media {
+      margin: var(--neo-card-full-spacing);
+      overflow: hidden;
+      border-radius: var(--neo-card-border-radius, var(--neo-border-radius-md));
+
+      &:not(:only-child) {
+        margin-bottom: var(--neo-card-half-spacing);
+      }
+
+      &.cover:not(.inset) {
+        padding: 0;
+
+        &:not(:only-child) {
+          margin: 0 0 var(--neo-card-half-spacing);
+        }
+
+        :global(.neo-skeleton-media) {
+          border-radius: 0;
+        }
+      }
+    }
+
+    &.image {
+      padding: 0;
+
+      .neo-card-media.cover:not(.inset) {
+        margin: 0;
+      }
+    }
+
+    .neo-card-segment:not(.neo-card-media) {
+      padding: var(--neo-card-half-spacing) var(--neo-card-full-spacing);
+
+      &:first-child {
+        padding: var(--neo-card-full-spacing) var(--neo-card-full-spacing) var(--neo-card-half-spacing);
+        border-top-left-radius: var(--neo-card-border-radius, var(--neo-border-radius));
+        border-top-right-radius: var(--neo-card-border-radius, var(--neo-border-radius));
+      }
+
+      &:last-child {
+        padding: var(--neo-card-half-spacing) var(--neo-card-full-spacing) var(--neo-card-full-spacing);
+        border-bottom-right-radius: var(--neo-card-border-radius, var(--neo-border-radius));
+        border-bottom-left-radius: var(--neo-card-border-radius, var(--neo-border-radius));
+      }
+    }
+
+    &.segments {
+      padding: 0;
+    }
+
+    &.segmented .neo-card-segment {
+      &.neo-card-media.neo-card-media {
+        margin: 0;
+      }
+
+      &:not(.neo-card-media) {
+        padding: var(--neo-card-full-spacing);
+
+        &:not(:last-child) {
+          border-bottom: var(--neo-border-width, 1px) solid var(--neo-card-border-color, var(--neo-border-color));
+        }
+      }
+    }
+
     &.rounded {
       border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+
+      .neo-card-segment:not(.neo-card-media) {
+        &:first-child {
+          border-top-left-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+          border-top-right-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+        }
+
+        &:last-child {
+          border-bottom-right-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+          border-bottom-left-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+        }
+      }
+
+      .neo-card-media.cover:not(.inset) {
+        border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+
+        &:not(:only-child) {
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0;
+        }
+      }
     }
 
     &.glass {

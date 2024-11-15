@@ -33,7 +33,7 @@
     {#if loading}
       {@render skeleton?.()}
     {:else}
-      <div in:inFn={inProps} out:outFn={outProps}>
+      <div class="neo-skeleton-container" in:inFn={inProps} out:outFn={outProps}>
         {@render content?.()}
       </div>
     {/if}

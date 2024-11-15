@@ -34,6 +34,10 @@ export type NeoSkeletonTextProps = {
    * Justify the text to fill the width of the container.
    */
   justify?: boolean;
+  /**
+   * Width of the element.
+   */
+  width?: CSSStyleDeclaration['width'];
 
   // Other props
   /**

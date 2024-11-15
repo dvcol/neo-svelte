@@ -237,6 +237,15 @@
 
     &.inset {
       box-shadow: var(--neo-box-shadow-inset-2);
+
+      &.shallow {
+        box-shadow: var(--neo-box-shadow-inset-1);
+
+        :global(.neo-button:active),
+        :global(.neo-button.pressed) {
+          box-shadow: var(--neo-box-shadow-inset-1);
+        }
+      }
     }
 
     &.rounded {

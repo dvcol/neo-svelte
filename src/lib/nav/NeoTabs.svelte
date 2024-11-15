@@ -244,8 +244,8 @@
 
       :global(.neo-tab::before) {
         position: absolute;
-        top: calc(0 - var(--neo-border-width, 1px));
-        left: calc(0 - var(--neo-border-width, 1px));
+        top: 0;
+        left: 0;
         z-index: var(--neo-z-index-in-front, 1);
         width: var(--neo-tab-width, 100%);
         height: var(--neo-tab-height, 100%);

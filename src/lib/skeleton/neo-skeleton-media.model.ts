@@ -22,6 +22,14 @@ export type NeoSkeletonMediaProps = {
    * Size of the media skeleton icon.
    */
   size?: CSSStyleDeclaration['width'];
+  /**
+   * Width of the skeleton.
+   */
+  width?: CSSStyleDeclaration['width'];
+  /**
+   * Height of the skeleton.
+   */
+  height?: CSSStyleDeclaration['height'];
 
   // Styles
   /**

@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { NeoTransitionContainerProps } from '~/container/NeoTransitionContainer.model.js';
+import type { NeoTransitionContainerProps } from '~/container/neo-transition-container.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 
 export type NeoSkeletonContainerProps = {

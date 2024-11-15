@@ -1,7 +1,7 @@
 import { getContext, setContext, type Snippet } from 'svelte';
 
 import type { NeoCardProps } from '~/cards/neo-card.model.js';
-import type { NeoTransitionContainerProps } from '~/container/NeoTransitionContainer.model.js';
+import type { NeoTransitionContainerProps } from '~/container/neo-transition-container.model.js';
 
 import { type NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 

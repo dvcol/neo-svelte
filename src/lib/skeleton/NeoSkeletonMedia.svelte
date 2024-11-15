@@ -19,6 +19,8 @@
     loading = true,
     type = 'empty',
     size = type === 'avatar' ? '70%' : '20%',
+    width,
+    height,
 
     // Styles
     rounded,
@@ -31,6 +33,7 @@
 
     // Other props
     containerProps,
+    ...rest
   }: NeoSkeletonMediaProps = $props();
 
   const MediaType: Component = $derived.by(() => {
@@ -53,7 +56,17 @@
 </script>
 
 <NeoSkeletonContainer {loading} in={inAction} out={outAction} {containerProps} {content}>
-  <div class="neo-skeleton-media" class:rounded class:circle style:aspect-ratio={ratio} in:inFn={inProps} out:outFn={outProps}>
+  <div
+    class:neo-skeleton-media={true}
+    class:rounded
+    class:circle
+    style:aspect-ratio={ratio}
+    style:width
+    style:height
+    in:inFn={inProps}
+    out:outFn={outProps}
+    {...rest}
+  >
     <span class="neo-skeleton-media-icon" style:--neo-skeleton-media-icon-size={size}>
       {#if media}
         {@render media?.()}

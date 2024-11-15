@@ -10,18 +10,23 @@
   import NeoCard from '~/cards/NeoCard.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
   import IconMinus from '~/icons/IconMinus.svelte';
+  import NeoSkeletonMedia from '~/skeleton/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
 
   let skeleton = $state(false);
   const options = $state<NeoCardProps>({
     elevation: 2,
     borderless: false,
+    rounded: true,
+    glass: false,
     hover: 0,
   });
 
   const onElevation = (value: number) => {
     const halfStep = (value > 0 && [-1, -0.5, 0, 0.5].includes(options.elevation)) || (value < 0 && [-0.5, 0, 0.5, 1].includes(options.elevation));
     options.elevation += halfStep ? Math.sign(value) * 0.5 : value;
+    if (options.elevation + options.hover < -4) options.hover += 1;
+    if (options.elevation + options.hover > 4) options.hover -= 1;
   };
 
   const resetElevation = () => {
@@ -35,12 +40,36 @@
     options.hover = 0;
   };
 
-  const columns: { label: string; props?: NeoCardProps }[] = [{ label: 'Default' }, { label: 'Glass', props: { glass: true } }];
+  const columns: { label: string; props?: NeoCardProps; hideContent?: boolean }[] = [
+    { label: 'Default' },
+    {
+      label: 'Header',
+      props: { header },
+    },
+    {
+      label: 'Footer',
+      props: { header, footer },
+    },
+    {
+      label: 'Action',
+      props: { header, footer, action },
+    },
+    { label: 'Only Image', props: { media }, hideContent: true },
+    { label: 'Only Cover', props: { media, cover: true }, hideContent: true },
+    { label: 'Image', props: { header, footer, action, media } },
+    { label: 'Cover', props: { header, footer, action, media, cover: true } },
+    { label: 'Segmented', props: { header, media, cover: true, footer, action, segmented: true } },
+    { label: 'Segmented inset', props: { header, media, cover: true, footer, action, segmented: -1 } },
+    { label: 'Segmented raised', props: { header, media, cover: true, footer, action, segmented: 1 } },
+    { label: 'Profile', props: { header, media, cover: true, footer, action } }, // TODO with avatar header digging into media
+  ];
 </script>
 
 <div class="row">
-  <NeoButtonGroup>
+  <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
   </NeoButtonGroup>
 
@@ -94,25 +123,53 @@
   </div>
 {/snippet}
 
-{#snippet group(props: NeoTabsProps = {})}
-  <div class="column">
-    <NeoCard style="min-width: 48.625rem; min-height: 30.875rem;" {...options} {...props}>
+{#snippet media()}
+  <NeoSkeletonMedia loading={skeleton} type="image" ratio="1.5">
+    <img src="https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Placeholder" />
+  </NeoSkeletonMedia>
+{/snippet}
+
+{#snippet header()}
+  <NeoSkeletonText loading={skeleton} title paragraphs="0">
+    <h2 style="margin: 0 0.25rem">NeoCard Header</h2>
+  </NeoSkeletonText>
+{/snippet}
+
+{#snippet footer()}
+  <NeoSkeletonText loading={skeleton} title paragraphs="0" width="40%">
+    <div>This is the footer</div>
+  </NeoSkeletonText>
+{/snippet}
+
+{#snippet action({ rounded, elevation })}
+  <NeoButtonGroup {skeleton} {rounded} shallow={Math.abs(elevation) < 2}>
+    <NeoButton>Left</NeoButton>
+    <NeoButton>Middle</NeoButton>
+    <NeoButton>Right</NeoButton>
+  </NeoButtonGroup>
+{/snippet}
+
+{#snippet group(props: NeoTabsProps = {}, hideContent = false)}
+  {#if hideContent}
+    <NeoCard style="width: 80ch" {...options} {...props} />
+  {:else}
+    <NeoCard style="width: 80ch" {...options} {...props}>
       <NeoSkeletonText loading={skeleton} paragraphs="2">
         {@render lorem()}
       </NeoSkeletonText>
     </NeoCard>
-  </div>
+  {/if}
 {/snippet}
 
 <div class="row">
-  {#each columns as { label, props }}
+  {#each columns as { label, props, hideContent }}
     <div class="column">
       <span class="label">{label}</span>
 
-      {#if props?.glass}
-        <SphereBackdrop>{@render group(props)}</SphereBackdrop>
+      {#if props?.glass || options.glass}
+        <SphereBackdrop>{@render group(props, hideContent)}</SphereBackdrop>
       {:else}
-        {@render group(props)}
+        {@render group(props, hideContent)}
       {/if}
     </div>
   {/each}
@@ -122,7 +179,9 @@
   @use 'src/lib/styles/common/flex' as flex;
 
   .column {
-    @include flex.column($center: true, $gap: var(--neo-gap-lg));
+    @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
+
+    align-self: flex-start;
   }
 
   .row {

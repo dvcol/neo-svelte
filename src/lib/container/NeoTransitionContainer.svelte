@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoTransitionContainerProps } from '~/container/NeoTransitionContainer.model.js';
+  import type { NeoTransitionContainerProps } from '~/container/neo-transition-container.model.js';
 
   const {
     // Snippets
@@ -16,7 +16,7 @@
   }: NeoTransitionContainerProps = $props();
 </script>
 
-<svelte:element this={tag} class:neo-transition-container={true} style:overflow {...rest}>
+<svelte:element this={tag} class:neo-transition-container={true} style:overflow-x={overflow} {...rest}>
   {@render children?.()}
 </svelte:element>
 

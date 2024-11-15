@@ -14,6 +14,7 @@
     alt,
     title,
     justify,
+    width,
 
     // State
     loading = true,
@@ -28,6 +29,7 @@
     titleProps,
     paragraphProps,
     containerProps,
+    ...rest
   }: NeoSkeletonTextProps = $props();
 
   const inFn = $derived(toTransition(inAction, fade));
@@ -37,7 +39,7 @@
 </script>
 
 <NeoSkeletonContainer {loading} in={inAction} out={outAction} {containerProps} {content}>
-  <div class="neo-skeleton-text" in:inFn={inProps} out:outFn={outProps}>
+  <div class:neo-skeleton-text={true} style:width in:inFn={inProps} out:outFn={outProps} {...rest}>
     {#if title}
       <div class:neo-skeleton-text-line={true} class:title class:alt {...titleProps}>&nbsp;</div>
     {/if}
