@@ -12,19 +12,19 @@
 
   const titleProps = { style: 'align-self: center; width: 12rem', class: 'test' };
 
-  type ContentProps = { minHeight?: string; minWidth?: string };
+  type ContentProps = { height?: string; width?: string };
   type Column = { type: 'text' | 'media'; label: string; props?: NeoSkeletonTextProps; content?: ContentProps };
   const columns: Column[] = [
     { type: 'text', label: 'Default' },
     { type: 'text', label: 'Title', props: { title: true, titleProps } },
-    { type: 'text', label: 'Paragraphs', props: { titleProps, paragraphs: 2 }, content: { minHeight: '25rem' } },
-    { type: 'text', label: 'Alt', props: { titleProps, alt: true }, content: { minHeight: '14rem' } },
-    { type: 'text', label: 'Alt Justify', props: { titleProps, alt: true, justify: true }, content: { minHeight: '14rem' } },
-    { type: 'media', label: 'Empty' },
-    { type: 'media', label: 'Rounded', props: { rounded: true } },
-    { type: 'media', label: 'Image', props: { type: 'image' } },
-    { type: 'media', label: 'Avatar', props: { type: 'avatar', circle: true }, content: { minHeight: '9rem', minWidth: '9rem' } },
-    { type: 'media', label: 'Video', props: { type: 'video' } },
+    { type: 'text', label: 'Paragraphs', props: { titleProps, paragraphs: 2 }, content: { height: '25rem' } },
+    { type: 'text', label: 'Alt', props: { titleProps, alt: true }, content: { height: '14rem' } },
+    { type: 'text', label: 'Alt Justify', props: { titleProps, alt: true, justify: true }, content: { height: '14rem' } },
+    { type: 'media', label: 'Video', props: { type: 'video' }, content: { width: '40rem' } },
+    { type: 'media', label: 'Image', props: { type: 'image' }, content: { width: '30rem' } },
+    { type: 'media', label: 'Empty', content: { width: '30rem' } },
+    { type: 'media', label: 'Rounded', props: { rounded: true }, content: { width: '30rem' } },
+    { type: 'media', label: 'Avatar', props: { type: 'avatar', circle: true }, content: { height: '9rem', width: '9rem' } },
   ];
 </script>
 
@@ -60,7 +60,7 @@
 {/snippet}
 
 {#snippet group({ type, props, content }: Column)}
-  <div class="column content" style:min-height={content?.minHeight} style:min-width={content?.minWidth}>
+  <div class="column" class:content={type === 'text'} style:height={content?.height} style:width={content?.width}>
     {#if type === 'text'}
       <NeoSkeletonText {...props} {...options}>
         {@render lorem(props)}

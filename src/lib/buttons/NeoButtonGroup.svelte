@@ -113,6 +113,7 @@
     transition:
       color 0.3s ease,
       background-color 0.3s ease,
+      border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
 
     &.nowrap {
@@ -239,6 +240,7 @@
     }
 
     &.rounded {
+      padding: 0.25rem 0.3125rem;
       border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
 
       :global(.neo-button) {

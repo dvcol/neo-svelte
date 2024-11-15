@@ -133,7 +133,7 @@
     in:inFn={inProps}
     {style}
   >
-    <NeoButtonGroup {...rest}>
+    <NeoButtonGroup tag="nav" role="tablist" {...rest}>
       {@render children?.(ctx)}
       {#if add}
         <div transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }}>
@@ -234,6 +234,7 @@
           color 0.6s ease-in,
           background-color 0.3s ease,
           border-color 0.3s ease,
+          border-radius 0.3s ease,
           backdrop-filter 0.3s ease;
       }
 

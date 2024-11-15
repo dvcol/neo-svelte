@@ -86,7 +86,7 @@
   {...tabProps}
   use:useFn={useProps}
 >
-  <NeoButton role="tab" toggle readonly checked={active} onclick={onClick} empty={!children} {...rest} {disabled}>
+  <NeoButton role="tab" aria-selected={active} toggle readonly checked={active} onclick={onClick} empty={!children} {...rest} {disabled}>
     {@render children?.({ active, tabId, value })}
     {#if closeable}
       <button

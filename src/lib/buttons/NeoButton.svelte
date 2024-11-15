@@ -188,6 +188,7 @@
       background-color 0.3s ease,
       border-color 0.3s ease,
       backdrop-filter 0.3s ease,
+      border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
 
     &.empty {
@@ -276,6 +277,7 @@
         background-color 0.3s ease,
         border-color 0.3s ease,
         backdrop-filter 0.3s ease,
+        border-radius 0.3s ease,
         box-shadow 0.15s ease-out;
 
       &.shallow {
@@ -300,6 +302,7 @@
         background-color 0.3s ease,
         border-color 0.3s ease,
         backdrop-filter 0.3s ease,
+        border-radius 0.3s ease,
         box-shadow 0.15s ease-out;
 
       &.pressed,
@@ -331,7 +334,7 @@
     &:hover:not(:active, &.pressed) {
       box-shadow: var(--neo-box-shadow-flat);
 
-      &:not(.glass, .flat:hover, .flat:focus-visible, .shallow:not(.flat)) {
+      &:not(.glass, .borderless, .flat:hover, .flat:focus-visible, .shallow:not(.flat)) {
         border-color: var(--neo-btn-border-color-hover, var(--neo-border-color));
       }
 

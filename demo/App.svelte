@@ -148,10 +148,6 @@
     }
   }
 
-  .view {
-    overflow: hidden;
-  }
-
   .container {
     @include flex.column($gap: var(--neo-gap-xl));
 

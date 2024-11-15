@@ -42,6 +42,8 @@
 {#if transition && show}
   <svelte:element
     this={tag}
+    role="tabpanel"
+    data-tab-id={tabId ?? (empty ? 'empty' : undefined)}
     bind:this={ref}
     class:neo-tab-pane={true}
     {...rest}
