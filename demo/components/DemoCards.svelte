@@ -20,6 +20,7 @@
     rounded: true,
     glass: false,
     hover: 0,
+    horizontal: false,
   });
 
   const onElevation = (value: number) => {
@@ -69,6 +70,7 @@
   <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.horizontal}>Horizontal</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
   </NeoButtonGroup>
@@ -105,22 +107,24 @@
 </div>
 
 {#snippet lorem()}
-  <div class="column">
-    <p>
-      Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin tincidunt
-      mauris eros ex pharetra imperdiet. Nibh facilisi ante vestibulum feugiat facilisi quam risus ex? Malesuada condimentum nulla odio facilisi
-      semper sodales. Dapibus est duis odio tincidunt elementum. Sodales scelerisque venenatis hac ridiculus scelerisque massa vitae. Hendrerit
-      blandit sed, ac cursus ante varius quam. Malesuada habitant curae diam pulvinar proin congue tristique dictum.
-    </p>
+  <NeoSkeletonText loading={skeleton} paragraphs="2" lines="7">
+    <div class="column">
+      <p>
+        Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin tincidunt
+        mauris eros ex pharetra imperdiet. Nibh facilisi ante vestibulum feugiat facilisi quam risus ex? Malesuada condimentum nulla odio facilisi
+        semper sodales. Dapibus est duis odio tincidunt elementum. Sodales scelerisque venenatis hac ridiculus scelerisque massa vitae. Hendrerit
+        blandit sed, ac cursus ante varius quam. Malesuada habitant curae diam pulvinar proin congue tristique dictum.
+      </p>
 
-    <p>
-      Dignissim quisque non fermentum ipsum; sapien dignissim lobortis. Quam montes lacus ipsum ac dolor class. Erat accumsan morbi fermentum
-      consectetur sollicitudin elit a. Primis tincidunt aenean malesuada eleifend nunc morbi consequat. Aenean malesuada sapien habitant feugiat
-      sapien consectetur torquent risus nascetur. Dui elit gravida sollicitudin nascetur suscipit facilisi est sodales? Vulputate rhoncus rhoncus
-      suspendisse amet nostra quisque eleifend tellus interdum? Volutpat nunc imperdiet sagittis, efficitur nibh eget maecenas. Finibus justo nascetur
-      parturient nascetur ac condimentum erat ultrices. Sociosqu nascetur quisque; elit iaculis libero quis.
-    </p>
-  </div>
+      <p>
+        Dignissim quisque non fermentum ipsum; sapien dignissim lobortis. Quam montes lacus ipsum ac dolor class. Erat accumsan morbi fermentum
+        consectetur sollicitudin elit a. Primis tincidunt aenean malesuada eleifend nunc morbi consequat. Aenean malesuada sapien habitant feugiat
+        sapien consectetur torquent risus nascetur. Dui elit gravida sollicitudin nascetur suscipit facilisi est sodales? Vulputate rhoncus rhoncus
+        suspendisse amet nostra quisque eleifend tellus interdum? Volutpat nunc imperdiet sagittis, efficitur nibh eget maecenas. Finibus justo
+        nascetur parturient nascetur ac condimentum erat ultrices. Sociosqu nascetur quisque; elit iaculis libero quis.
+      </p>
+    </div>
+  </NeoSkeletonText>
 {/snippet}
 
 {#snippet media()}
@@ -141,8 +145,8 @@
   </NeoSkeletonText>
 {/snippet}
 
-{#snippet action({ rounded, elevation })}
-  <NeoButtonGroup {skeleton} {rounded} shallow={Math.abs(elevation) < 2}>
+{#snippet action({ rounded, elevation, horizontal })}
+  <NeoButtonGroup {skeleton} {rounded} shallow={Math.abs(elevation) < 2} vertical={horizontal}>
     <NeoButton>Left</NeoButton>
     <NeoButton>Middle</NeoButton>
     <NeoButton>Right</NeoButton>
@@ -150,13 +154,12 @@
 {/snippet}
 
 {#snippet group(props: NeoTabsProps = {}, hideContent = false)}
+  {@const style = options.horizontal ? undefined : 'width: 80ch'}
   {#if hideContent}
-    <NeoCard style="width: 80ch" {...options} {...props} />
+    <NeoCard {style} {...options} {...props} />
   {:else}
-    <NeoCard style="width: 80ch" {...options} {...props}>
-      <NeoSkeletonText loading={skeleton} paragraphs="2">
-        {@render lorem()}
-      </NeoSkeletonText>
+    <NeoCard {style} {...options} {...props}>
+      {@render lorem()}
     </NeoCard>
   {/if}
 {/snippet}

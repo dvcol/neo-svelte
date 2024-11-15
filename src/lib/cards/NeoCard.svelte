@@ -28,7 +28,7 @@
     segmented,
     cover,
     start,
-    horizontal, // TODO: Implement  horizontal layout
+    horizontal,
 
     // Flex
     justify,
@@ -104,7 +104,7 @@
 {#snippet divider()}
   {#if segments && typeof segmented === 'number'}
     <div class="neo-card-divider">
-      <NeoDivider elevation={segmented} />
+      <NeoDivider vertical={horizontal} elevation={segmented} />
     </div>
   {/if}
 {/snippet}
@@ -113,6 +113,7 @@
   this={tag}
   bind:this={ref}
   class:neo-card={true}
+  class:horizontal
   class:borderless
   class:segmented={segmented === true}
   class:segments
@@ -181,7 +182,6 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    width: calc(100% - var(--neo-shadow-margin, 0.25rem) * 2);
     margin: var(--neo-shadow-margin, 0.25rem);
     padding: var(--neo-card-full-spacing);
     color: var(--neo-card-text-color, inherit);
@@ -209,20 +209,35 @@
       margin: 0.5rem calc(var(--neo-card-full-spacing) - 0.25rem);
     }
 
+    .neo-card-segment {
+      transition: border-radius 0.3s ease;
+
+      &:not(.neo-card-media) {
+        padding: var(--neo-card-half-spacing) var(--neo-card-full-spacing);
+
+        &:first-child {
+          padding: var(--neo-card-full-spacing) var(--neo-card-full-spacing) var(--neo-card-half-spacing);
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
+        }
+
+        &:last-child {
+          padding: var(--neo-card-half-spacing) var(--neo-card-full-spacing) var(--neo-card-full-spacing);
+          border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius));
+        }
+      }
+    }
+
     .neo-card-media {
       margin: var(--neo-card-full-spacing);
       overflow: hidden;
-      border-radius: var(--neo-card-border-radius, var(--neo-border-radius-md));
-
-      &:not(:only-child) {
-        margin-bottom: var(--neo-card-half-spacing);
-      }
+      border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
 
       &.cover:not(.inset) {
         padding: 0;
 
         &:not(:only-child) {
-          margin: 0 0 var(--neo-card-half-spacing);
+          margin: 0 0 var(--neo-card-full-spacing);
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
         }
 
         :global(.neo-skeleton-media) {
@@ -239,61 +254,17 @@
       }
     }
 
-    .neo-card-segment:not(.neo-card-media) {
-      padding: var(--neo-card-half-spacing) var(--neo-card-full-spacing);
-
-      &:first-child {
-        padding: var(--neo-card-full-spacing) var(--neo-card-full-spacing) var(--neo-card-half-spacing);
-        border-top-left-radius: var(--neo-card-border-radius, var(--neo-border-radius));
-        border-top-right-radius: var(--neo-card-border-radius, var(--neo-border-radius));
-      }
-
-      &:last-child {
-        padding: var(--neo-card-half-spacing) var(--neo-card-full-spacing) var(--neo-card-full-spacing);
-        border-bottom-right-radius: var(--neo-card-border-radius, var(--neo-border-radius));
-        border-bottom-left-radius: var(--neo-card-border-radius, var(--neo-border-radius));
-      }
-    }
-
     &.segments {
       padding: 0;
     }
 
-    &.segmented .neo-card-segment {
-      &.neo-card-media.neo-card-media {
-        margin: 0;
-      }
-
-      &:not(.neo-card-media) {
-        padding: var(--neo-card-full-spacing);
-
-        &:not(:last-child) {
-          border-bottom: var(--neo-border-width, 1px) solid var(--neo-card-border-color, var(--neo-border-color));
-        }
-      }
-    }
-
-    &.rounded {
-      border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
-
+    &.segmented {
       .neo-card-segment:not(.neo-card-media) {
-        &:first-child {
-          border-top-left-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
-          border-top-right-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
-        }
-
-        &:last-child {
-          border-bottom-right-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
-          border-bottom-left-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
-        }
+        padding: var(--neo-card-full-spacing);
       }
 
-      .neo-card-media.cover:not(.inset) {
-        border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
-
-        &:not(:only-child) {
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0;
-        }
+      .neo-card-segment:not(.neo-card-media, :last-child) {
+        border-bottom: var(--neo-border-width, 1px) solid var(--neo-card-border-color, var(--neo-border-color));
       }
     }
 
@@ -312,6 +283,71 @@
 
         &:not(.borderless) {
           border-color: var(--neo-btn-border-color, var(--neo-border-color));
+        }
+      }
+    }
+
+    &.horizontal {
+      flex-direction: row;
+
+      .neo-card-media.cover:not(.inset, :only-child) {
+        margin: 0 var(--neo-card-full-spacing) 0 0;
+        border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
+      }
+
+      .neo-card-segment:not(.neo-card-media) {
+        padding: var(--neo-card-full-spacing) var(--neo-card-half-spacing);
+
+        &:first-child {
+          padding: var(--neo-card-full-spacing) var(--neo-card-half-spacing) var(--neo-card-full-spacing) var(--neo-card-full-spacing);
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
+        }
+
+        &:last-child {
+          padding: var(--neo-card-full-spacing) var(--neo-card-full-spacing) var(--neo-card-full-spacing) var(--neo-card-half-spacing);
+          border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0;
+        }
+      }
+    }
+
+    &.rounded {
+      border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+
+      .neo-card-media {
+        border-radius: var(--neo-card-border-radius, var(--neo-border-radius-md));
+
+        &.cover:not(.inset) {
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+
+          &:not(:only-child) {
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0;
+          }
+        }
+      }
+
+      .neo-card-segment:not(.neo-card-media) {
+        &:first-child {
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0;
+        }
+
+        &:last-child {
+          border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg));
+        }
+      }
+
+      &.horizontal {
+        .neo-card-segment:not(.neo-card-media) {
+          &:first-child {
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg));
+          }
+
+          &:last-child {
+            border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0;
+          }
+        }
+
+        .neo-card-media.cover:not(.inset, :only-child) {
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg));
         }
       }
     }

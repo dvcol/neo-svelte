@@ -16,7 +16,7 @@
   }: NeoTransitionContainerProps = $props();
 </script>
 
-<svelte:element this={tag} class:neo-transition-container={true} style:overflow-x={overflow} {...rest}>
+<svelte:element this={tag} class:neo-transition-container={true} style:overflow {...rest}>
   {@render children?.()}
 </svelte:element>
 

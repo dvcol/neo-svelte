@@ -8,13 +8,35 @@ Neomorphic ui library for svelte 5
   - [ ] @media any-pointer:coarse any-hover:none
 - [ ] Card
   - [ ] @media any-pointer:coarse any-hover:none
-  - header/footer/actions
-  - separator (standalone too ?)
   - closable
-  - action
-  - images (standalone too ?)
-    - videos
-    - carousel
+- switch
+  - loading
+  - border loading
+  - skeleton
+  - radio
+  - checkbox
+- Inputs
+  - elevation
+  - validation
+  - loading
+  - skeleton
+  - Text Area
+  - select
+    - multiple
+  - auto-complete
+    - @ / # tags
+  - numbers
+    - animation ?
+  - passwords
+  - file picker
+    - drag & drop ?
+    - progress ?
+  - slider
+  - time/date
+  - floating label`
+- image
+  - videos
+  - carousel
 - avatar
   - badge
 - tags/pills
@@ -24,31 +46,6 @@ Neomorphic ui library for svelte 5
   - circle
   - border
   - background
-- switch
-    - loading
-    - border loading
-    - skeleton
-    - radio
-    - checkbox
-- Inputs
-    - elevation
-    - validation
-    - loading
-    - skeleton
-    - Text Area
-    - select
-        - multiple
-    - auto-complete
-        - @ / # tags
-    - numbers
-        - animation ?
-    - passwords
-    - file picker
-        - drag & drop ?
-        - progress ?
-    - slider
-    - time/date
-    - floating label`
 - accordion
   - summary
   - details (html semantic tags)
