@@ -14,10 +14,25 @@ export type NeoSkeletonContainerProps = {
    */
   content?: Snippet;
 
+  // States
+
   /**
    * Whether to show the skeleton.
    */
   loading?: boolean;
+
+  // Styles
+
+  /**
+   * Width of the container.
+   */
+  width?: CSSStyleDeclaration['width'];
+  /**
+   * Height of the container.
+   */
+  height?: CSSStyleDeclaration['height'];
+
+  // Other Props
 
   /**
    * Props for the transition container.

@@ -119,13 +119,6 @@
     :global(.neo-button .icon-close:focus-visible) {
       transition: none;
     }
-
-    &.slide {
-      :global(.neo-button:active .icon-close),
-      :global(.neo-button.pressed .icon-close) {
-        transition-delay: 0.3s;
-      }
-    }
   }
 
   .neo-tab-close {
@@ -151,21 +144,22 @@
       opacity: 0;
       transition:
         opacity 0.2s ease-in,
-        color 0.5s ease,
-        background-color 0.5s ease;
+        color 0.3s ease,
+        background-color 0.3s ease;
       pointer-events: none;
     }
 
     &:focus-visible :global(.icon-close) {
-      color: rgb(255 0 0 / 75%);
-      background-color: rgb(255 0 0 / 5%);
+      color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
+      background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
       opacity: 1;
+      transition: none;
     }
 
     &:hover :global(.icon-close) {
-      color: red;
-      background-color: rgb(255 0 0 / 10%);
-      visibility: visible;
+      color: var(--neo-close-color, rgb(255 0 0));
+      background-color: var(--neo-close-bg-color-hover, rgb(255 0 0 / 10%));
+      opacity: 1;
     }
 
     &.reverse :global(.icon-close) {

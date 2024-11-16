@@ -1,7 +1,7 @@
 <script lang="ts">
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
-  import type { NeoCardProps } from '~/cards/neo-card.model';
+  import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model';
 
   import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
@@ -20,7 +20,11 @@
     rounded: true,
     glass: false,
     hover: 0,
+    close: false,
     horizontal: false,
+    onClose: (e: MouseEvent) => {
+      console.info('onClose', e);
+    },
   });
 
   const onElevation = (value: number) => {
@@ -62,7 +66,9 @@
     { label: 'Segmented', props: { header, media, cover: true, footer, action, segmented: true } },
     { label: 'Segmented inset', props: { header, media, cover: true, footer, action, segmented: -1 } },
     { label: 'Segmented raised', props: { header, media, cover: true, footer, action, segmented: 1 } },
-    { label: 'Profile', props: { header, media, cover: true, footer, action } }, // TODO with avatar header digging into media
+    { label: 'Horizontal', props: { media, cover: true, horizontal: true } },
+    { label: 'Horizontal inset', props: { media, horizontal: true, segmented: -1 } },
+    { label: 'Horizontal raised', props: { header, action, horizontal: true, segmented: 1 } },
   ];
 </script>
 
@@ -70,7 +76,7 @@
   <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
-    <NeoButton toggle bind:checked={options.horizontal}>Horizontal</NeoButton>
+    <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
   </NeoButtonGroup>
@@ -106,8 +112,13 @@
   </NeoButtonGroup>
 </div>
 
-{#snippet lorem()}
-  <NeoSkeletonText loading={skeleton} paragraphs="2" lines="7">
+{#snippet lorem({ horizontal }: NeoCardProps)}
+  <NeoSkeletonText
+    loading={skeleton}
+    paragraphs="2"
+    width="80ch"
+    containerProps={{ style: horizontal ? 'min-height: 21.5rem; max-width: 50dvw' : 'min-height: 21.5rem' }}
+  >
     <div class="column">
       <p>
         Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin tincidunt
@@ -127,20 +138,31 @@
   </NeoSkeletonText>
 {/snippet}
 
-{#snippet media()}
-  <NeoSkeletonMedia loading={skeleton} type="image" ratio="1.5">
-    <img src="https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Placeholder" />
+{#snippet media({ horizontal }: NeoCardContext)}
+  <NeoSkeletonMedia
+    loading={skeleton}
+    type="image"
+    ratio="1.5"
+    width="calc(80ch + 3rem)"
+    containerProps={{ style: horizontal ? 'max-width: 30dvw' : undefined }}
+  >
+    <img
+      height="100%"
+      width="100%"
+      src="https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      alt="Placeholder"
+    />
   </NeoSkeletonMedia>
 {/snippet}
 
 {#snippet header()}
-  <NeoSkeletonText loading={skeleton} title paragraphs="0">
+  <NeoSkeletonText loading={skeleton} title paragraphs="0" width="8.125rem">
     <h2 style="margin: 0 0.25rem">NeoCard Header</h2>
   </NeoSkeletonText>
 {/snippet}
 
 {#snippet footer()}
-  <NeoSkeletonText loading={skeleton} title paragraphs="0" width="40%">
+  <NeoSkeletonText loading={skeleton} title paragraphs="0" width="8.125rem">
     <div>This is the footer</div>
   </NeoSkeletonText>
 {/snippet}
@@ -154,32 +176,41 @@
 {/snippet}
 
 {#snippet group(props: NeoTabsProps = {}, hideContent = false)}
-  {@const style = options.horizontal ? undefined : 'width: 80ch'}
   {#if hideContent}
-    <NeoCard {style} {...options} {...props} />
+    <NeoCard {...options} {...props} />
   {:else}
-    <NeoCard {style} {...options} {...props}>
-      {@render lorem()}
+    <NeoCard {...options} {...props}>
+      {@render lorem(props)}
     </NeoCard>
   {/if}
 {/snippet}
 
 <div class="row">
   {#each columns as { label, props, hideContent }}
-    <div class="column">
+    <div class="column content">
       <span class="label">{label}</span>
 
-      {#if props?.glass || options.glass}
-        <SphereBackdrop>{@render group(props, hideContent)}</SphereBackdrop>
-      {:else}
-        {@render group(props, hideContent)}
-      {/if}
+      <div class="column-item">
+        {#if props?.glass || options.glass}
+          <SphereBackdrop>{@render group(props, hideContent)}</SphereBackdrop>
+        {:else}
+          {@render group(props, hideContent)}
+        {/if}
+      </div>
     </div>
   {/each}
 </div>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  .content {
+    overflow: auto;
+  }
+
+  .column-item {
+    max-width: 100dvw;
+  }
 
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);

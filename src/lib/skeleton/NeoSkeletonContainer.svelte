@@ -14,6 +14,10 @@
     // State
     loading = true,
 
+    // Styles
+    width,
+    height,
+
     // Transition
     in: inAction,
     out: outAction,
@@ -29,11 +33,11 @@
 </script>
 
 {#if content}
-  <NeoTransitionContainer {...containerProps}>
+  <NeoTransitionContainer {width} {height} {...containerProps}>
     {#if loading}
       {@render skeleton?.()}
     {:else}
-      <div class="neo-skeleton-container" in:inFn={inProps} out:outFn={outProps}>
+      <div class="neo-skeleton-content-container" in:inFn={inProps} out:outFn={outProps}>
         {@render content?.()}
       </div>
     {/if}

@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
+  import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoDivider from '~/divider/NeoDivider.svelte';
+  import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
 
@@ -44,9 +46,11 @@
     use,
 
     // Events
-    onClose, // TODO: Implement close button
+    onClose,
 
     // Other props
+    contentTag = 'div',
+    contentProps,
     headerTag = 'div',
     headerProps,
     footerTag = 'div',
@@ -77,7 +81,7 @@
   const hoverFlat = $derived(boxShadow.endsWith('flat') && !hoverShadow.endsWith('flat'));
   const flatHover = $derived(hoverShadow.endsWith('flat') && !boxShadow.endsWith('flat'));
 
-  const segments = $derived([content, header, action, footer, media].filter(Boolean).length > 1);
+  const segments = $derived([content, header, action, footer, media, close].filter(Boolean).length > 1);
 
   const context: NeoCardContext = $derived({
     elevation,
@@ -89,6 +93,7 @@
     cover,
     start,
     horizontal,
+    close,
     onClose,
   });
 
@@ -100,6 +105,18 @@
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 </script>
+
+{#snippet closeBtn()}
+  {#if close}
+    <div class="neo-card-close">
+      <NeoButton rounded text onclick={onClose}>
+        {#snippet icon()}
+          <IconClose />
+        {/snippet}
+      </NeoButton>
+    </div>
+  {/if}
+{/snippet}
 
 {#snippet divider()}
   {#if segments && typeof segmented === 'number'}
@@ -139,7 +156,8 @@
   {#if media}
     <svelte:element
       this={mediaTag}
-      class="neo-card-segment neo-card-media"
+      class:neo-card-segment={true}
+      class:neo-card-media={true}
       class:cover
       class:inset={elevation < 0 || hoverElevation < 0}
       {...mediaProps}
@@ -147,28 +165,34 @@
       {@render media?.(context)}
     </svelte:element>
   {/if}
-  {#if header}
-    <svelte:element this={headerTag} class="neo-card-segment neo-card-header" {...headerProps}>
+  {#if header || (!horizontal && close)}
+    <svelte:element this={headerTag} class:neo-card-segment={true} class:neo-card-header={true} {...headerProps}>
       {@render header?.(context)}
+      {#if !horizontal}
+        {@render closeBtn()}
+      {/if}
     </svelte:element>
   {/if}
   {#if segments}
     {@render divider()}
-    <div class="neo-card-segment neo-card-content">
+    <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} {...contentProps}>
       {@render content?.(context)}
-    </div>
+    </svelte:element>
   {:else}
     {@render content?.(context)}
   {/if}
   {#if footer}
     {@render divider()}
-    <svelte:element this={footerTag} class="neo-card-segment neo-card-footer" {...footerProps}>
+    <svelte:element this={footerTag} class:neo-card-segment={true} class:neo-card-footer={true} {...footerProps}>
       {@render footer?.(context)}
     </svelte:element>
   {/if}
-  {#if action}
+  {#if action || (horizontal && close)}
     {@render divider()}
-    <svelte:element this={actionTag} class="neo-card-segment neo-card-action" {...actionProps}>
+    <svelte:element this={actionTag} class:neo-card-segment={true} class:neo-card-action={true} {...actionProps}>
+      {#if horizontal}
+        {@render closeBtn()}
+      {/if}
       {@render action?.(context)}
     </svelte:element>
   {/if}
@@ -182,6 +206,7 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    width: fit-content;
     margin: var(--neo-shadow-margin, 0.25rem);
     padding: var(--neo-card-full-spacing);
     color: var(--neo-card-text-color, inherit);
@@ -246,6 +271,20 @@
       }
     }
 
+    .neo-card-action,
+    .neo-card-header {
+      display: flex;
+      align-items: center;
+    }
+
+    .neo-card-close {
+      align-self: flex-start;
+      margin-left: auto;
+
+      --neo-btn-text-color-focused: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
+      --neo-btn-text-color-hover: var(--neo-close-color, rgb(255 0 0));
+    }
+
     &.image {
       padding: 0;
 
@@ -289,6 +328,15 @@
 
     &.horizontal {
       flex-direction: row;
+
+      .neo-card-action {
+        flex-direction: column;
+      }
+
+      .neo-card-close {
+        align-self: flex-end;
+        margin-bottom: auto;
+      }
 
       .neo-card-media.cover:not(.inset, :only-child) {
         margin: 0 var(--neo-card-full-spacing) 0 0;

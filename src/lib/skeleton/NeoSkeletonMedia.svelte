@@ -1,7 +1,6 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
 
-  import type { Component } from 'svelte';
   import type { NeoSkeletonMediaProps } from '~/skeleton/neo-skeleton-media.model.js';
 
   import IconAccount from '~/icons/IconAccount.svelte';
@@ -36,7 +35,7 @@
     ...rest
   }: NeoSkeletonMediaProps = $props();
 
-  const MediaType: Component = $derived.by(() => {
+  const MediaType = $derived.by(() => {
     switch (type) {
       case 'image':
         return IconImage;
@@ -55,7 +54,7 @@
   const outProps = $derived(toTransitionProps(outAction, { duration: 200 }));
 </script>
 
-<NeoSkeletonContainer {loading} in={inAction} out={outAction} {containerProps} {content}>
+<NeoSkeletonContainer {loading} in={inAction} out={outAction} {width} {height} {containerProps} {content}>
   <div
     class:neo-skeleton-media={true}
     class:rounded

@@ -38,6 +38,10 @@ export type NeoSkeletonTextProps = {
    * Width of the element.
    */
   width?: CSSStyleDeclaration['width'];
+  /**
+   * Height of the element.
+   */
+  height?: CSSStyleDeclaration['height'];
 
   // Other props
   /**

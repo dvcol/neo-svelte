@@ -214,6 +214,10 @@
       --neo-pulse-box-shadow-reverse: var(--neo-box-shadow-inset-0);
     }
 
+    &:hover {
+      color: var(--neo-btn-text-color-hover, inherit);
+    }
+
     &.glass {
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
       box-shadow: var(--neo-glass-box-shadow-raised-2);

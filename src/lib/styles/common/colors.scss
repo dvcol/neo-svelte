@@ -38,6 +38,10 @@
   --neo-purple-soft: oklch(from var(--neo-purple) calc(l + 0.4) c h);
   --neo-purple-soft-50: oklch(from var(--neo-purple-soft) l c h / 50%);
   --neo-purple-soft-80: oklch(from var(--neo-purple-soft) l c h / 80%);
+  --neo-red: oklch(62.8% 0.258 29.234deg);
+  --neo-red-5: oklch(from var(--neo-red) l c h / 5%);
+  --neo-red-10: oklch(from var(--neo-red) l c h / 10%);
+  --neo-red-75: oklch(from var(--neo-red) l c h / 75%);
 
   /** primary colors */
   --neo-color-primary: var(--neo-purple);
@@ -59,6 +63,10 @@
   --neo-shadow-color-dark: var(--neo-white-soft-dark);
   --neo-skeleton-color: var(--neo-grey-soft);
   --neo-skeleton-color-step: 0.1;
+  --neo-close-color: var(--neo-red);
+  --neo-close-color-focused: var(--neo-red-75);
+  --neo-close-bg-color-hover: var(--neo-red-10);
+  --neo-close-bg-color-focused: var(--neo-red-5);
 
   /** glass colors */
   --neo-glass-background-color: var(--neo-white-20);

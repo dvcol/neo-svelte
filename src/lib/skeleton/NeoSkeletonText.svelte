@@ -15,6 +15,7 @@
     title,
     justify,
     width,
+    height,
 
     // State
     loading = true,
@@ -38,8 +39,8 @@
   const outProps = $derived(toTransitionProps(outAction, { duration: 200 }));
 </script>
 
-<NeoSkeletonContainer {loading} in={inAction} out={outAction} {containerProps} {content}>
-  <div class:neo-skeleton-text={true} style:width in:inFn={inProps} out:outFn={outProps} {...rest}>
+<NeoSkeletonContainer {loading} in={inAction} out={outAction} {width} {height} {containerProps} {content}>
+  <div class:neo-skeleton-text={true} style:width style:height in:inFn={inProps} out:outFn={outProps} {...rest}>
     {#if title}
       <div class:neo-skeleton-text-line={true} class:title class:alt {...titleProps}>&nbsp;</div>
     {/if}

@@ -228,16 +228,6 @@
         box-shadow: var(--neo-box-shadow-flat) !important;
       }
 
-      :global(.neo-tab .neo-button:not([disabled]:not([disabled='false']))) {
-        transition:
-          opacity 0.3s ease,
-          color 0.6s ease-in,
-          background-color 0.3s ease,
-          border-color 0.3s ease,
-          border-radius 0.3s ease,
-          backdrop-filter 0.3s ease;
-      }
-
       :global(.neo-tab) {
         position: relative;
       }
