@@ -6,15 +6,14 @@ Neomorphic ui library for svelte 5
   - [ ] @media any-pointer:coarse any-hover:none
 - [x] Tabs
   - [ ] @media any-pointer:coarse any-hover:none
-- [ ] Card
+- [x] Card
   - [ ] @media any-pointer:coarse any-hover:none
-  - closable
 - switch
   - loading
   - border loading
   - skeleton
-  - radio
   - checkbox
+  - radio
 - Inputs
   - elevation
   - validation

@@ -105,7 +105,7 @@
     justify-content: center;
     box-sizing: border-box;
     width: fit-content;
-    margin: var(--neo-shadow-margin, 0.25rem);
+    margin: var(--neo-shadow-margin, 0.5rem);
     padding: 0.25rem;
     background-color: var(--neo-btn-bg-color, transparent);
     border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;
@@ -210,7 +210,7 @@
       );
     }
 
-    &.shallow:not(.inset) {
+    &.shallow:not(.inset, .skeleton) {
       --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-1);
       --neo-pulse-box-shadow: var(--neo-box-shadow-raised-1);
       --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-0);
@@ -235,7 +235,7 @@
       }
     }
 
-    &.inset {
+    &.inset:not(.skeleton) {
       box-shadow: var(--neo-box-shadow-inset-2);
 
       &.shallow {
