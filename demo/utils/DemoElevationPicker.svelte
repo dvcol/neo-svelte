@@ -7,7 +7,7 @@
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     label = 'Elevation',
-    reset = 2,
+    reset = 3,
     min = -4,
     max = 4,
     step = 1,
@@ -27,8 +27,8 @@
   /* eslint-enable prefer-const */
 
   const setElevation = (value: number, current: number = elevation) => {
-    if (onElevation) return onElevation(value * step, current);
     elevation += value * step;
+    onElevation?.(value * step, current);
   };
 
   const resetElevation = () => {

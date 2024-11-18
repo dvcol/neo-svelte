@@ -21,7 +21,7 @@
     touched = $bindable(false),
 
     // Styles
-    elevation = 2,
+    elevation = 3,
     hover = -1,
     rounded,
     glass,

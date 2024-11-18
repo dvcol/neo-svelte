@@ -14,8 +14,8 @@
 }
 
 @mixin pulse(
-  $box-shadow: var(--neo-pulse-box-shadow, var(--neo-box-shadow-raised-2)),
-  $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-box-shadow-inset-1)),
+  $box-shadow: var(--neo-pulse-box-shadow, var(--neo-box-shadow-raised-3)),
+  $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-box-shadow-inset-2)),
   $duration: var(--neo-pulse-duration, 6s),
   $delay: var(--neo-pulse-delay, 1s),
   $interval: var(--neo-pulse-interval, 3s),
@@ -60,8 +60,8 @@
 }
 
 @mixin coalesce(
-  $box-shadow: var(--neo-coalesce-box-shadow, var(--neo-box-shadow-raised-2)),
-  $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-inset-1)),
+  $box-shadow: var(--neo-coalesce-box-shadow, var(--neo-box-shadow-raised-3)),
+  $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-inset-2)),
   $duration: var(--neo-coalesce-duration, 6s),
   $delay: var(--neo-coalesce-delay, 1s),
   $interval: var(--neo-coalesce-interval, 3s),

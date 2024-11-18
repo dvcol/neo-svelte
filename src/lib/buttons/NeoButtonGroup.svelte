@@ -132,7 +132,7 @@
     }
 
     &:not(.text, .flat, .glass) {
-      box-shadow: var(--neo-box-shadow-raised-2);
+      box-shadow: var(--neo-box-shadow-raised-3);
     }
 
     &.start {
@@ -154,7 +154,7 @@
       backdrop-filter: var(--neo-blur-4);
 
       &:not(.text, .flat) {
-        box-shadow: var(--neo-glass-box-shadow-raised-2);
+        box-shadow: var(--neo-glass-box-shadow-raised-3);
       }
 
       :global(.neo-button) {
@@ -188,7 +188,7 @@
 
     :global(.neo-button.loading:active:not(.pressed)),
     :global(.neo-button:not(.flat, .text, :active, .pressed):hover) {
-      box-shadow: var(--neo-box-shadow-inset-1);
+      box-shadow: var(--neo-box-shadow-inset-2);
     }
 
     :global(.neo-button.pulse::after),
@@ -202,7 +202,7 @@
       @include mixin.pulse(
         $scaleX: var(--neo-btn-grp-scale-x, 1.2),
         $scaleY: var(--neo-btn-grp-scale-y, 2),
-        $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-box-shadow-raised-2))
+        $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-box-shadow-raised-3))
       );
     }
 
@@ -210,44 +210,44 @@
       @include mixin.coalesce(
         $scaleX: var(--neo-btn-grp-scale-x, 1.2),
         $scaleY: var(--neo-btn-grp-scale-y, 2),
-        $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-raised-2))
+        $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-raised-3))
       );
     }
 
     &.shallow:not(.inset, .skeleton) {
-      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-1);
-      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-1);
-      --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-0);
-      --neo-pulse-box-shadow-reverse: var(--neo-box-shadow-inset-0);
+      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-2);
+      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-2);
+      --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-1);
+      --neo-pulse-box-shadow-reverse: var(--neo-box-shadow-inset-1);
 
       &:not(.text, .flat, .glass) {
-        box-shadow: var(--neo-box-shadow-raised-1);
+        box-shadow: var(--neo-box-shadow-raised-2);
       }
 
       &.glass {
-        box-shadow: var(--neo-glass-box-shadow-raised-1);
+        box-shadow: var(--neo-glass-box-shadow-raised-2);
       }
 
       :global(.neo-button.loading:active:not(.pressed)),
       :global(.neo-button:not(.flat, .text, :active, .pressed):hover) {
-        box-shadow: var(--neo-box-shadow-inset-0);
+        box-shadow: var(--neo-box-shadow-inset-1);
       }
 
       :global(.neo-button:active),
       :global(.neo-button.pressed) {
-        box-shadow: var(--neo-box-shadow-inset-1);
+        box-shadow: var(--neo-box-shadow-inset-2);
       }
     }
 
     &.inset:not(.skeleton) {
-      box-shadow: var(--neo-box-shadow-inset-2);
+      box-shadow: var(--neo-box-shadow-inset-3);
 
       &.shallow {
-        box-shadow: var(--neo-box-shadow-inset-1);
+        box-shadow: var(--neo-box-shadow-inset-2);
 
         :global(.neo-button:active),
         :global(.neo-button.pressed) {
-          box-shadow: var(--neo-box-shadow-inset-1);
+          box-shadow: var(--neo-box-shadow-inset-2);
         }
       }
     }

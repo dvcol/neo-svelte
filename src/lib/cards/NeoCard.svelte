@@ -19,10 +19,10 @@
     // States
     ref = $bindable(),
     tag = 'div',
-    close, // TODO: Implement close button
+    close,
 
     // Styles
-    elevation = 2,
+    elevation = 3,
     hover = 0,
     borderless,
     rounded,

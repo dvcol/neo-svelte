@@ -18,13 +18,11 @@
     glass: false,
     loading: false,
     skeleton: false,
-    elevation: 2,
+    elevation: 3,
     hover: -1,
   });
 
-  const onElevation = (value: number) => {
-    const halfStep = (value > 0 && [-1, -0.5, 0, 0.5].includes(options.elevation)) || (value < 0 && [-0.5, 0, 0.5, 1].includes(options.elevation));
-    options.elevation += halfStep ? Math.sign(value) * 0.5 : value;
+  const onElevation = () => {
     if (options.elevation + options.hover < -4) options.hover += 1;
     if (options.elevation + options.hover > 4) options.hover -= 1;
   };
@@ -71,8 +69,8 @@
   <DemoElevationPicker
     label="Hover"
     reset={-1}
-    min={options.hover + options.elevation <= -4 ? options.hover : undefined}
-    max={options.hover + options.elevation >= 4 ? options.hover : undefined}
+    min={options.hover + options.elevation <= -5 ? options.hover : undefined}
+    max={options.hover + options.elevation >= 5 ? options.hover : undefined}
     bind:elevation={options.hover}
   />
 </div>

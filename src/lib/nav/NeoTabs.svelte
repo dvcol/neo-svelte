@@ -277,7 +277,7 @@
       }
 
       :global(.neo-tab.active::before) {
-        box-shadow: var(--neo-box-shadow-inset-2);
+        box-shadow: var(--neo-box-shadow-inset-3);
       }
 
       &.translate :global(.neo-tab.active::before) {
@@ -290,7 +290,7 @@
           max-width: var(--neo-tab-old-max-width);
           height: var(--neo-tab-old-height, var(--neo-tab-height, 100%));
           max-height: var(--neo-tab-old-max-height);
-          box-shadow: var(--neo-box-shadow-inset-2);
+          box-shadow: var(--neo-box-shadow-inset-3);
           transform: var(--neo-tabs-transform);
         }
 
@@ -299,7 +299,7 @@
           max-width: var(--neo-tab-max-width);
           height: var(--neo-tab-height, 100%);
           max-height: var(--neo-tab-max-height);
-          box-shadow: var(--neo-box-shadow-inset-2);
+          box-shadow: var(--neo-box-shadow-inset-3);
           transform: translate(0, 0);
         }
       }
@@ -310,12 +310,12 @@
         }
 
         100% {
-          box-shadow: var(--neo-box-shadow-inset-2);
+          box-shadow: var(--neo-box-shadow-inset-3);
         }
       }
 
       &.shallow {
-        --neo-box-shadow-inset-2: var(--neo-box-shadow-inset-1);
+        --neo-box-shadow-inset-3: var(--neo-box-shadow-inset-2);
       }
 
       &.rounded :global(.neo-button-group .neo-tab::before) {

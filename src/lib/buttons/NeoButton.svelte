@@ -180,7 +180,7 @@
     background-color: var(--neo-btn-bg-color, transparent);
     border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;
     border-radius: var(--neo-btn-border-radius, var(--neo-border-radius));
-    box-shadow: var(--neo-box-shadow-raised-2);
+    box-shadow: var(--neo-box-shadow-raised-3);
     cursor: pointer;
     transition:
       opacity 0.3s ease,
@@ -205,13 +205,13 @@
 
     &.flat,
     &.shallow {
-      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-1);
-      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-1);
+      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-2);
+      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-2);
     }
 
     &.shallow {
-      --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-0);
-      --neo-pulse-box-shadow-reverse: var(--neo-box-shadow-inset-0);
+      --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-1);
+      --neo-pulse-box-shadow-reverse: var(--neo-box-shadow-inset-1);
     }
 
     &:hover {
@@ -220,17 +220,17 @@
 
     &.glass {
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
-      box-shadow: var(--neo-glass-box-shadow-raised-2);
+      box-shadow: var(--neo-glass-box-shadow-raised-3);
       backdrop-filter: var(--neo-blur-4);
 
       &:focus-visible {
         background-color: var(--neo-glass-background-color-focus);
-        box-shadow: var(--neo-glass-box-shadow-raised-1);
+        box-shadow: var(--neo-glass-box-shadow-raised-2);
       }
 
       &.pressed,
       &:active {
-        box-shadow: var(--neo-glass-box-shadow-inset-2);
+        box-shadow: var(--neo-glass-box-shadow-inset-3);
         backdrop-filter: var(--neo-blur-2);
 
         &.shallow {
@@ -255,7 +255,7 @@
 
         &.shallow {
           border-color: transparent;
-          box-shadow: var(--neo-glass-box-shadow-raised-1);
+          box-shadow: var(--neo-glass-box-shadow-raised-2);
         }
       }
     }
@@ -263,7 +263,7 @@
     &.pressed,
     &:active {
       color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
-      box-shadow: var(--neo-box-shadow-inset-2);
+      box-shadow: var(--neo-box-shadow-inset-3);
       transition:
         opacity 0.3s ease,
         color 0.3s ease,
@@ -277,7 +277,7 @@
         box-shadow: var(--neo-box-shadow-flat);
 
         &.flat {
-          box-shadow: var(--neo-box-shadow-inset-1);
+          box-shadow: var(--neo-box-shadow-inset-2);
         }
 
         &:not(.flat, .glass, .loading) {
@@ -304,7 +304,7 @@
       }
 
       &:not(.pressed, :active) {
-        box-shadow: var(--neo-box-shadow-raised-1);
+        box-shadow: var(--neo-box-shadow-raised-2);
       }
     }
 
@@ -347,16 +347,16 @@
       }
 
       &.shallow:not(.flat, .glass) {
-        box-shadow: var(--neo-box-shadow-raised-1);
+        box-shadow: var(--neo-box-shadow-raised-2);
       }
     }
 
     &.flat.loading:active:not(.pressed),
     &.flat:hover:not(:active, &.pressed) {
-      box-shadow: var(--neo-box-shadow-inset-1);
+      box-shadow: var(--neo-box-shadow-inset-2);
 
       &.shallow {
-        box-shadow: var(--neo-box-shadow-inset-0);
+        box-shadow: var(--neo-box-shadow-inset-1);
       }
     }
 

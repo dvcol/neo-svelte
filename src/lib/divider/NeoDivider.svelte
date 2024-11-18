@@ -29,11 +29,11 @@
     height: max(4px, var(--neo-divider-height, 4px));
     margin: var(--neo-shadow-margin, 0.5rem);
     border-radius: var(--neo-border-radius-lg, 2rem);
-    box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-1));
+    box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
 
     &.inset {
       height: max(6px, var(--neo-divider-height, 6px));
-      box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-inset-1));
+      box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-inset-2));
     }
 
     &.vertical {
