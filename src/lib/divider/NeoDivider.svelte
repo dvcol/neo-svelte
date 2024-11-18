@@ -9,6 +9,8 @@
 </script>
 
 <div
+  role="separator"
+  aria-orientation={vertical ? 'vertical' : 'horizontal'}
   class:neo-divider={true}
   class:vertical
   class:inset={elevation < 0}

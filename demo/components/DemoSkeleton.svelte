@@ -59,7 +59,7 @@
   </div>
 {/snippet}
 
-{#snippet group({ type, props, content }: Column)}
+{#snippet skeleton({ type, props, content }: Column)}
   <div class="column" class:content={type === 'text'} style:height={content?.height} style:width={content?.width}>
     {#if type === 'text'}
       <NeoSkeletonText {...props} {...options}>
@@ -81,7 +81,7 @@
   {#each columns as col}
     <div class="column">
       <span class="label">{col.label}</span>
-      {@render group(col)}
+      {@render skeleton(col)}
     </div>
   {/each}
 </div>
@@ -101,10 +101,8 @@
   }
 
   .row {
-    @include flex.row($gap: var(--neo-gap-xl), $flex: 0 1 auto);
+    @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
-    align-items: center;
-    justify-content: center;
     margin: 2rem 0;
   }
 </style>

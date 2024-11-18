@@ -1,4 +1,5 @@
 <script lang="ts">
+  import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model';
@@ -8,8 +9,6 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
-  import IconAdd from '~/icons/IconAdd.svelte';
-  import IconMinus from '~/icons/IconMinus.svelte';
   import NeoSkeletonMedia from '~/skeleton/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
 
@@ -19,7 +18,7 @@
     borderless: false,
     rounded: true,
     glass: false,
-    hover: 0,
+    hover: -1,
     close: false,
     horizontal: false,
     onClose: (e: MouseEvent) => {
@@ -32,17 +31,6 @@
     options.elevation += halfStep ? Math.sign(value) * 0.5 : value;
     if (options.elevation + options.hover < -4) options.hover += 1;
     if (options.elevation + options.hover > 4) options.hover -= 1;
-  };
-
-  const resetElevation = () => {
-    options.elevation = 2;
-  };
-
-  const onHoverElevation = (value: number) => {
-    options.hover += value;
-  };
-  const resetHover = () => {
-    options.hover = 0;
   };
 
   const columns: { label: string; props?: NeoCardProps; hideContent?: boolean }[] = [
@@ -81,35 +69,14 @@
     <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
   </NeoButtonGroup>
 
-  <span class="label">Elevation</span>
-  <NeoButtonGroup rounded>
-    <NeoButton disabled={options.elevation <= -4} onclick={() => onElevation(-1)}>
-      {#snippet icon()}
-        <IconMinus />
-      {/snippet}
-    </NeoButton>
-    <NeoButton onclick={resetElevation}>{options.elevation}</NeoButton>
-    <NeoButton disabled={options.elevation >= 4} onclick={() => onElevation(1)}>
-      {#snippet icon()}
-        <IconAdd />
-      {/snippet}
-    </NeoButton>
-  </NeoButtonGroup>
-
-  <span class="label">Hover Elevation</span>
-  <NeoButtonGroup rounded>
-    <NeoButton disabled={options.hover + options.elevation <= -4} onclick={() => onHoverElevation(-1)}>
-      {#snippet icon()}
-        <IconMinus />
-      {/snippet}
-    </NeoButton>
-    <NeoButton onclick={resetHover}>{options.hover}</NeoButton>
-    <NeoButton disabled={options.hover + options.elevation >= 4} onclick={() => onHoverElevation(1)}>
-      {#snippet icon()}
-        <IconAdd />
-      {/snippet}
-    </NeoButton>
-  </NeoButtonGroup>
+  <DemoElevationPicker bind:elevation={options.elevation} {onElevation} />
+  <DemoElevationPicker
+    label="Hover"
+    reset={0}
+    min={options.hover + options.elevation <= -4 ? options.hover : undefined}
+    max={options.hover + options.elevation >= 4 ? options.hover : undefined}
+    bind:elevation={options.hover}
+  />
 </div>
 
 {#snippet lorem({ horizontal }: NeoCardProps)}
@@ -175,7 +142,7 @@
   </NeoButtonGroup>
 {/snippet}
 
-{#snippet group(props: NeoTabsProps = {}, hideContent = false)}
+{#snippet card(props: NeoTabsProps = {}, hideContent = false)}
   {#if hideContent}
     <NeoCard {...options} {...props} />
   {:else}
@@ -192,9 +159,9 @@
 
       <div class="column-item">
         {#if props?.glass || options.glass}
-          <SphereBackdrop>{@render group(props, hideContent)}</SphereBackdrop>
+          <SphereBackdrop>{@render card(props, hideContent)}</SphereBackdrop>
         {:else}
-          {@render group(props, hideContent)}
+          {@render card(props, hideContent)}
         {/if}
       </div>
     </div>
@@ -219,10 +186,8 @@
   }
 
   .row {
-    @include flex.row($gap: var(--neo-gap-xl), $flex: 0 1 auto);
+    @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
-    align-items: center;
-    justify-content: center;
     margin: 2rem 0;
   }
 </style>

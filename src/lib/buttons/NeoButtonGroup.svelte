@@ -147,8 +147,10 @@
 
     &.glass {
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
-      border-color: var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-        var(--neo-glass-left-border-color);
+      border-color: var(
+        --neo-btn-border-color,
+        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
+      );
       backdrop-filter: var(--neo-blur-4);
 
       &:not(.text, .flat) {
@@ -170,10 +172,12 @@
       border-color: transparent !important;
     }
 
+    :global(.neo-button:disabled:not(.skeleton)),
     :global(.neo-button[disabled]:not([disabled='false'], .skeleton)) {
       border-color: transparent !important;
     }
 
+    :global(.neo-button:disabled:not(.skeleton, .pressed)),
     :global(.neo-button[disabled]:not([disabled='false'], .skeleton, .pressed)) {
       box-shadow: var(--neo-box-shadow-flat) !important;
     }

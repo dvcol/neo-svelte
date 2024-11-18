@@ -5,7 +5,7 @@
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeShadowElevation } from '~/utils/shadow.utils.js';
+  import { computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -68,15 +68,9 @@
     return `var(--neo-blur-${Math.abs(Math.trunc(elevation) + 2)})`;
   });
 
-  const hoverElevation = $derived(elevation + hover);
   const boxShadow = $derived.by(() => computeShadowElevation(elevation, glass));
-  const hoverShadow = $derived.by(() => {
-    if (!hover) return boxShadow;
-    let level = hoverElevation;
-    if (level < -4) level = -4;
-    if (level > 4) level = 4;
-    return computeShadowElevation(level, glass);
-  });
+  const hoverElevation = $derived(elevation + hover);
+  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, glass) ?? boxShadow);
 
   const hoverFlat = $derived(boxShadow.endsWith('flat') && !hoverShadow.endsWith('flat'));
   const flatHover = $derived(hoverShadow.endsWith('flat') && !boxShadow.endsWith('flat'));
@@ -142,7 +136,7 @@
   class:flat-hover={flatHover}
   class:glass
   class:flat={!elevation}
-  style:--neo-hover-shadow-level={hoverShadow}
+  style:--neo-input-hover-shadow={hoverShadow}
   style:--neo-card-box-shadow={boxShadow}
   style:--neo-glass-blur={filter}
   style:justify-content={justify}
@@ -207,7 +201,7 @@
     flex-direction: column;
     box-sizing: border-box;
     width: fit-content;
-    margin: var(--neo-shadow-margin, 0.5rem);
+    margin: var(--neo-shadow-margin-lg, 1.5rem);
     padding: var(--neo-card-full-spacing);
     color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
@@ -227,7 +221,7 @@
     }
 
     &.hover:hover {
-      box-shadow: var(--neo-hover-shadow-level, var(--neo-card-box-shadow));
+      box-shadow: var(--neo-input-hover-shadow, var(--neo-card-box-shadow));
     }
 
     .neo-card-divider {
@@ -311,8 +305,10 @@
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
 
       background-color: var(--neo-card-bg-color, var(--neo-glass-background-color));
-      border-color: var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-        var(--neo-glass-left-border-color);
+      border-color: var(
+        --neo-card-border-color,
+        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
+      );
       backdrop-filter: var(--neo-glass-blur, var(--neo-blur-4));
     }
 

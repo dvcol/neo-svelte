@@ -239,8 +239,11 @@
       }
 
       &:not(:hover, :active, &.pressed, &.skeleton) {
-        border-color: var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-          var(--neo-glass-left-border-color);
+        border-color: var(
+          --neo-btn-border-color,
+          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+            var(--neo-glass-left-border-color)
+        );
       }
 
       &.loading:active:not(.pressed),
@@ -254,20 +257,6 @@
           border-color: transparent;
           box-shadow: var(--neo-glass-box-shadow-raised-1);
         }
-      }
-    }
-
-    &[disabled]:not([disabled='false'], .skeleton) {
-      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled)) !important;
-      cursor: not-allowed;
-      opacity: var(--neo-btn-opacity-disabled, var(--neo-opacity-disabled));
-
-      &:not(.pressed) {
-        box-shadow: var(--neo-box-shadow-flat);
-      }
-
-      &:not(.borderless) {
-        border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
       }
     }
 
@@ -330,6 +319,21 @@
         &:not(.borderless, .glass) {
           border-color: var(--neo-btn-border-color, var(--neo-border-color));
         }
+      }
+    }
+
+    &:disabled:not(.skeleton),
+    &[disabled]:not([disabled='false'], .skeleton) {
+      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled)) !important;
+      cursor: not-allowed;
+      opacity: var(--neo-btn-opacity-disabled, var(--neo-opacity-disabled));
+
+      &:not(.pressed) {
+        box-shadow: var(--neo-box-shadow-flat);
+      }
+
+      &:not(.borderless) {
+        border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
       }
     }
 

@@ -5,6 +5,7 @@
   --neo-white-10: oklch(from var(--neo-white) l c h / 10%);
   --neo-white-15: oklch(from var(--neo-white) l c h / 15%);
   --neo-white-20: oklch(from var(--neo-white) l c h / 20%);
+  --neo-white-30: oklch(from var(--neo-white) l c h / 30%);
   --neo-white-80: oklch(from var(--neo-white) l c h / 80%);
   --neo-white-soft-light: oklch(from var(--neo-white-soft) calc(l + 0.05) c h);
   --neo-white-soft-light-50: oklch(from var(--neo-white-soft-light) l c h / 50%);
@@ -21,43 +22,50 @@
   --neo-black-soft-dark-50: oklch(from var(--neo-black-soft-dark) l c h / 50%);
   --neo-grey: oklch(from var(--neo-black-soft) calc(l + 0.612) c h);
   --neo-grey-soft: oklch(from var(--neo-grey) calc(l - 0.15) c h);
+  --neo-grey-soft-5: oklch(from var(--neo-grey-soft) l c h / 5%);
   --neo-grey-soft-10: oklch(from var(--neo-grey-soft) l c h / 10%);
+  --neo-grey-soft-12: oklch(from var(--neo-grey-soft) l c h / 12%);
+  --neo-grey-soft-20: oklch(from var(--neo-grey-soft) l c h / 20%);
   --neo-grey-soft-30: oklch(from var(--neo-grey-soft) l c h / 30%);
   --neo-grey-soft-60: oklch(from var(--neo-grey-soft) l c h / 60%);
   --neo-grey-strong-light: oklch(from var(--neo-grey-strong) calc(l + 0.3) c h);
   --neo-grey-strong: oklch(from var(--neo-grey) calc(l - 0.4) c h);
   --neo-grey-strong-5: oklch(from var(--neo-grey-strong) l c h / 5%);
   --neo-grey-strong-8: oklch(from var(--neo-grey-strong) l c h / 8%);
+  --neo-grey-strong-10: oklch(from var(--neo-grey-strong) l c h / 10%);
   --neo-grey-strong-12: oklch(from var(--neo-grey-strong) l c h / 12%);
   --neo-grey-strong-20: oklch(from var(--neo-grey-strong) l c h / 20%);
+  --neo-grey-strong-60: oklch(from var(--neo-grey-strong) l c h / 60%);
   --neo-grey-strong-dark: oklch(from var(--neo-grey-strong) calc(l - 0.1) c h);
   --neo-grey-strong-dark-80: oklch(from var(--neo-grey-strong-dark) l c h / 80%);
-  --neo-purple: oklch(46.4% 0.305 269.594deg);
-  --neo-purple-50: oklch(from var(--neo-purple) l c h / 50%);
-  --neo-purple-80: oklch(from var(--neo-purple) l c h / 80%);
-  --neo-purple-soft: oklch(from var(--neo-purple) calc(l + 0.4) c h);
-  --neo-purple-soft-50: oklch(from var(--neo-purple-soft) l c h / 50%);
-  --neo-purple-soft-80: oklch(from var(--neo-purple-soft) l c h / 80%);
+  --neo-blue: oklch(50% 0.302 264.206deg);
+  --neo-blue-50: oklch(from var(--neo-blue) l c h / 50%);
+  --neo-blue-80: oklch(from var(--neo-blue) l c h / 80%);
+  --neo-blue-soft: oklch(from var(--neo-blue) calc(l + 0.4) c h);
+  --neo-blue-soft-50: oklch(from var(--neo-blue-soft) l c h / 50%);
+  --neo-blue-soft-80: oklch(from var(--neo-blue-soft) l c h / 80%);
   --neo-red: oklch(62.8% 0.258 29.234deg);
   --neo-red-5: oklch(from var(--neo-red) l c h / 5%);
   --neo-red-10: oklch(from var(--neo-red) l c h / 10%);
   --neo-red-75: oklch(from var(--neo-red) l c h / 75%);
 
   /** primary colors */
-  --neo-color-primary: var(--neo-purple);
+  --neo-color-primary: var(--neo-blue);
+  --neo-color-primary-50: var(--neo-blue-50);
+  --neo-color-primary-80: var(--neo-blue-80);
 
   /** semantic colors */
   --neo-text-color: var(--neo-grey-strong);
   --neo-text-color-active: color-mix(in srgb, currentcolor, white 10%);
-  --neo-text-color-focused: var(--neo-purple-80);
+  --neo-text-color-focused: var(--neo-color-primary-50);
   --neo-text-color-focused-active: color-mix(in srgb, var(--neo-text-color-focused), white 10%);
-  --neo-text-color-hover: color-mix(in srgb, currentcolor, var(--neo-color-primary) 50%);
+  --neo-text-color-hover: var(--neo-color-primary-80);
   --neo-text-color-hover-active: color-mix(in srgb, var(--neo-text-color-hover), white 20%);
-  --neo-text-color-disabled: var(--neo-text-color);
+  --neo-text-color-disabled: var(--neo-grey-strong-60);
   --neo-border-color: var(--neo-grey-strong-20);
-  --neo-border-color-focused: var(--neo-purple-50);
-  --neo-border-color-primary: var(--neo-purple-80);
-  --neo-border-color-disabled: var(--neo-border-color);
+  --neo-border-color-focused: var(--neo-color-primary-50);
+  --neo-border-color-primary: var(--neo-color-primary-80);
+  --neo-border-color-disabled: var(--neo-grey-strong-10);
   --neo-background-color: var(--neo-white-soft);
   --neo-shadow-color-light: var(--neo-white-soft-light);
   --neo-shadow-color-dark: var(--neo-white-soft-dark);
@@ -78,20 +86,22 @@
   --neo-glass-skeleton-color: var(--neo-grey-soft-60);
 
   /** dark primary colors */
-  --neo-dark-color-primary: var(--neo-purple-soft);
+  --neo-dark-color-primary: var(--neo-blue-soft);
+  --neo-dark-color-primary-50: var(--neo-blue-soft-50);
+  --neo-dark-color-primary-80: var(--neo-blue-soft-80);
 
   /** dark mode semantic colors */
   --neo-dark-text-color: var(--neo-white-80);
   --neo-dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
-  --neo-dark-text-color-focused: var(--neo-purple-soft-80);
+  --neo-dark-text-color-focused: var(--neo-dark-color-primary-50);
   --neo-dark-text-color-focused-active: color-mix(in srgb, var(--neo-dark-text-color-focused), black 10%);
-  --neo-dark-text-color-hover: color-mix(in srgb, currentcolor, var(--neo-dark-color-primary) 50%);
+  --neo-dark-text-color-hover: var(--neo-dark-color-primary-80);
   --neo-dark-text-color-hover-active: color-mix(in srgb, var(--neo-dark-text-color-hover), black 20%);
-  --neo-dark-text-color-disabled: var(--neo-white-soft-50);
+  --neo-dark-text-color-disabled: var(--neo-white-30);
   --neo-dark-border-color: var(--neo-grey-soft-10);
-  --neo-dark-border-color-focused: var(--neo-purple-soft-50);
-  --neo-dark-border-color-primary: var(--neo-purple-soft-80);
-  --neo-dark-border-color-disabled: var(--neo-dark-border-color);
+  --neo-dark-border-color-focused: var(--neo-dark-color-primary-50);
+  --neo-dark-border-color-primary: var(--neo-dark-color-primary-80);
+  --neo-dark-border-color-disabled: var(--neo-grey-soft-5);
   --neo-dark-background-color: var(--neo-black-soft);
   --neo-dark-shadow-color-light: var(--neo-black-soft-light);
   --neo-dark-shadow-color-dark: var(--neo-black-soft-dark);
@@ -118,6 +128,8 @@
   @mixin dark-theme {
     /** primary colors */
     --neo-color-primary: var(--neo-dark-color-primary);
+    --neo-color-primary-50: var(--neo-dark-color-primary-50);
+    --neo-color-primary-80: var(--neo-dark-color-primary-80);
 
     /** semantic colors */
     --neo-text-color: var(--neo-dark-text-color);
