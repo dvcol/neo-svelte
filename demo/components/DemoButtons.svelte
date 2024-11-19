@@ -14,7 +14,13 @@
 
   const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
 
-  const options = $state({ disabled: false, shallow: false, skeleton: false, loading: false, borderless: false });
+  const options = $state<NeoButtonProps>({
+    disabled: false,
+    shallow: false,
+    skeleton: false,
+    loading: false,
+    borderless: false,
+  });
 
   const loading = $derived.by(() => isLoading() || options.loading);
 

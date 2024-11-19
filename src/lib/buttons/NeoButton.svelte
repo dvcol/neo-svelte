@@ -17,7 +17,6 @@
     tag,
     href,
     loading,
-    loadingMode = 'spinner',
     skeleton,
     disabled,
     empty: only,
@@ -65,9 +64,6 @@
   let active = $state(false);
   const pressed = $derived(enter || active || checked);
   const empty = $derived(only || !children);
-
-  const rotate = $derived(['border', 'both'].includes(loadingMode) && loading);
-  const spinner = $derived(['spinner', 'both'].includes(loadingMode) && loading);
 
   let timeout: ReturnType<typeof setTimeout>;
   const onActive = () => {
@@ -134,7 +130,6 @@
   class:borderless={borderless || text}
   class:shallow
   class:rounded
-  class:rotate
   class:empty
   style:justify-content={justify}
   style:align-items={align}
@@ -149,9 +144,9 @@
   {...rest}
 >
   <span class="content" class:reverse>
-    {#if spinner || icon}
+    {#if loading || icon}
       <span class="icon" class:only={empty} transition:width={{ duration: 200 }}>
-        {#if spinner}
+        {#if loading}
           <IconCircleLoading />
         {:else}
           {@render icon?.()}
@@ -381,10 +376,6 @@
 
     &.coalesce {
       @include mixin.coalesce;
-    }
-
-    &.rotate {
-      @include mixin.border-rotate($background-color: var(--neo-btn-bg-color, var(--neo-background-color)));
     }
 
     .icon,

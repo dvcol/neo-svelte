@@ -29,11 +29,6 @@ export type NeoButtonProps = {
    */
   loading?: boolean;
   /**
-   * The loading mode to display when the button is loading.
-   * @default 'spinner'
-   */
-  loadingMode?: 'spinner' | 'border' | 'both';
-  /**
    * If true, the button will be disabled and a loading skeleton will be displayed instead of the text.
    */
   skeleton?: boolean;
