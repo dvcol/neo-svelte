@@ -132,10 +132,11 @@
   class:rounded
   class:hover
   class:start
+  class:raised={elevation > 3}
+  class:flat={!elevation}
   class:hover-flat={hoverFlat}
   class:flat-hover={flatHover}
   class:glass
-  class:flat={!elevation}
   style:--neo-input-hover-shadow={hoverShadow}
   style:--neo-card-box-shadow={boxShadow}
   style:--neo-glass-blur={filter}
@@ -201,7 +202,7 @@
     flex-direction: column;
     box-sizing: border-box;
     width: fit-content;
-    margin: var(--neo-shadow-margin-lg, 1.5rem);
+    margin: var(--neo-shadow-margin, 0.6rem);
     padding: var(--neo-card-full-spacing);
     color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
@@ -209,13 +210,18 @@
     border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-card-box-shadow, var(--neo-box-shadow-flat));
     transition:
+      margin 0.3s ease,
       color 0.3s ease,
       background-color 0.3s ease,
       border-color 0.3s ease,
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
 
-    &.hover:hover.flat-hover,
+    &.raised {
+      margin: var(--neo-shadow-margin-lg, 1.125rem);
+    }
+
+    &.hover.flat-hover:hover,
     &.flat:not(.borderless, .hover-flat:hover) {
       border-color: var(--neo-card-border-color, var(--neo-border-color));
     }
@@ -317,7 +323,7 @@
         box-shadow: var(--neo-box-shadow-flat);
 
         &:not(.borderless) {
-          border-color: var(--neo-btn-border-color, var(--neo-border-color));
+          border-color: var(--neo-card-border-color, var(--neo-border-color));
         }
       }
     }

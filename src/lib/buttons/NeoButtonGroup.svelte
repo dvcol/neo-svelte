@@ -105,7 +105,7 @@
     justify-content: center;
     box-sizing: border-box;
     width: fit-content;
-    margin: var(--neo-shadow-margin, 0.5rem);
+    margin: var(--neo-shadow-margin, 0.6rem);
     padding: 0.25rem;
     background-color: var(--neo-btn-bg-color, transparent);
     border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;

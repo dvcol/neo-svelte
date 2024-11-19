@@ -25,9 +25,9 @@
 
 <style lang="scss">
   .neo-divider {
-    width: calc(var(--neo-divider-width, 100%) - var(--neo-shadow-margin, 0.5rem) * 2);
+    width: calc(var(--neo-divider-width, 100%) - var(--neo-shadow-margin, 0.6rem) * 2);
     height: max(4px, var(--neo-divider-height, 4px));
-    margin: var(--neo-shadow-margin, 0.5rem);
+    margin: var(--neo-shadow-margin, 0.6rem);
     border-radius: var(--neo-border-radius-lg, 2rem);
     box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
 
@@ -38,7 +38,7 @@
 
     &.vertical {
       width: var(--neo-divider-height, 4px);
-      height: calc(var(--neo-divider-height, 100%) - var(--neo-shadow-margin, 0.5rem) * 2);
+      height: calc(var(--neo-divider-height, 100%) - var(--neo-shadow-margin, 0.6rem) * 2);
 
       &.inset {
         width: max(6px, var(--neo-divider-width, 6px));

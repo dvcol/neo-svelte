@@ -3,13 +3,14 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
   import IconMinus from '~/icons/IconMinus.svelte';
+  import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     label = 'Elevation',
-    reset = 3,
-    min = -4,
-    max = 4,
+    reset = DefaultShadowElevation,
+    min = MinShadowElevation,
+    max = MaxShadowElevation,
     step = 1,
     elevation = $bindable(reset),
     onElevation,

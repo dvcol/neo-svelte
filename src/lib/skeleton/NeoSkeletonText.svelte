@@ -45,13 +45,15 @@
       <div class:neo-skeleton-text-line={true} class:title class:alt {...titleProps}>&nbsp;</div>
     {/if}
 
-    {#each Array(Number(paragraphs)) as _}
-      <div class:neo-skeleton-text-paragraph={true} class:alt class:justify {...paragraphProps}>
-        {#each Array(Number(lines)) as __}
-          <div class="neo-skeleton-text-line" class:alt>&nbsp;</div>
-        {/each}
-      </div>
-    {/each}
+    {#if paragraphs && lines}
+      {#each Array(Number(paragraphs)) as _}
+        <div class:neo-skeleton-text-paragraph={true} class:alt class:justify {...paragraphProps}>
+          {#each Array(Number(lines)) as __}
+            <div class="neo-skeleton-text-line" class:alt>&nbsp;</div>
+          {/each}
+        </div>
+      {/each}
+    {/if}
   </div>
 </NeoSkeletonContainer>
 

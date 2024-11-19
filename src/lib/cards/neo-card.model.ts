@@ -11,11 +11,12 @@ export type NeoCardContext = {
 
   /**
    * Card elevation.
-   * @default 2
+   * @default 3
    */
   elevation?: NeoCardElevation;
   /**
    * Weather to increase/decrease the elevation when hovered.
+   * @default 0
    */
   hover?: number;
   /**
@@ -95,22 +96,27 @@ export type NeoCardProps = {
   tag?: keyof HTMLElementTagNameMap;
   /**
    * The HTML tag to use for the card content.
+   * @default 'div'
    */
   contentTag?: keyof HTMLElementTagNameMap;
   /**
    * The HTML tag to use for the card header.
+   * @default 'div'
    */
   headerTag?: keyof HTMLElementTagNameMap;
   /**
    * The HTML tag to use for the card action.
+   * @default 'div'
    */
   actionTag?: keyof HTMLElementTagNameMap;
   /**
    * The HTML tag to use for the card footer.
+   * @default 'div'
    */
   footerTag?: keyof HTMLElementTagNameMap;
   /**
    * The HTML tag to use for the card media.
+   * @default 'div'
    */
   mediaTag?: keyof HTMLElementTagNameMap;
 

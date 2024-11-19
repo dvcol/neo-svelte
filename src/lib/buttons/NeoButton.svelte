@@ -173,7 +173,7 @@
     justify-content: center;
     box-sizing: border-box;
     min-height: calc(var(--neo-btn-min-height, var(--neo-line-height)) + 0.5rem);
-    margin: var(--neo-shadow-margin, 0.5rem);
+    margin: var(--neo-shadow-margin, 0.6rem);
     padding: 0.25rem 0.75rem;
     color: var(--neo-btn-text-color, inherit);
     text-decoration: inherit;

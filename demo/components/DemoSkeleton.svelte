@@ -16,7 +16,7 @@
   type Column = { type: 'text' | 'media'; label: string; props?: NeoSkeletonTextProps; content?: ContentProps };
   const columns: Column[] = [
     { type: 'text', label: 'Default' },
-    { type: 'text', label: 'Title', props: { title: true, titleProps } },
+    { type: 'text', label: 'Title', props: { title: true, titleProps }, content: { height: '15rem' } },
     { type: 'text', label: 'Paragraphs', props: { titleProps, paragraphs: 2 }, content: { height: '25rem' } },
     { type: 'text', label: 'Alt', props: { titleProps, alt: true }, content: { height: '14rem' } },
     { type: 'text', label: 'Alt Justify', props: { titleProps, alt: true, justify: true }, content: { height: '14rem' } },

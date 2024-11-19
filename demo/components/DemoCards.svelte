@@ -11,10 +11,11 @@
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoSkeletonMedia from '~/skeleton/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
+  import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
   let skeleton = $state(false);
   const options = $state<NeoCardProps>({
-    elevation: 3,
+    elevation: DefaultShadowElevation,
     borderless: false,
     rounded: true,
     glass: false,
@@ -27,8 +28,8 @@
   });
 
   const onElevation = () => {
-    if (options.elevation + options.hover < -4) options.hover += 1;
-    if (options.elevation + options.hover > 4) options.hover -= 1;
+    if (options.elevation + options.hover < MinShadowElevation) options.hover += 1;
+    if (options.elevation + options.hover > MaxShadowElevation) options.hover -= 1;
   };
 
   const columns: { label: string; props?: NeoCardProps; hideContent?: boolean }[] = [
@@ -71,8 +72,8 @@
   <DemoElevationPicker
     label="Hover"
     reset={0}
-    min={options.hover + options.elevation <= -5 ? options.hover : undefined}
-    max={options.hover + options.elevation >= 5 ? options.hover : undefined}
+    min={options.hover + options.elevation <= MinShadowElevation ? options.hover : undefined}
+    max={options.hover + options.elevation >= MaxShadowElevation ? options.hover : undefined}
     bind:elevation={options.hover}
   />
 </div>
