@@ -9,6 +9,7 @@
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoInput from '~/input/NeoInput.svelte';
+  import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
   type ColumProps = NeoInputProps;
 
@@ -17,14 +18,19 @@
     rounded: false,
     glass: false,
     loading: false,
+    disabled: false,
+    readonly: false,
     skeleton: false,
-    elevation: 3,
+    elevation: DefaultShadowElevation,
+    dirtyOnInput: true,
+    validateOnInput: true,
+    clearable: false,
     hover: -1,
   });
 
   const onElevation = () => {
-    if (options.elevation + options.hover < -4) options.hover += 1;
-    if (options.elevation + options.hover > 4) options.hover -= 1;
+    if (options.elevation + options.hover < MinShadowElevation) options.hover += 1;
+    if (options.elevation + options.hover > MaxShadowElevation) options.hover -= 1;
   };
 
   let touched = $state(false);
@@ -46,11 +52,21 @@
     },
     {
       label: 'Prefix',
-      props: { label: 'Default', placeholder: 'Prefix', prefix, prefixProps: { onclick: () => alert('Prefix') } },
+      props: { label: 'Default', placeholder: 'Prefix', prefix },
     },
     {
       label: 'Suffix',
-      props: { label: 'Default', placeholder: 'Suffix', suffix },
+      props: { label: 'Default', placeholder: 'Suffix', suffix, suffixProps: { onclick: (e: MouseEvent) => console.info('suffix click', e) } },
+    },
+    {
+      label: 'Text',
+      props: {
+        label: 'Default',
+        placeholder: 'Text',
+        suffix: text,
+        prefix: text,
+        suffixProps: { onclick: (e: MouseEvent) => console.info('suffix click', e) },
+      },
     },
   ];
 </script>
@@ -61,6 +77,9 @@
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
+    <NeoButton toggle bind:checked={options.clearable}>Clearable</NeoButton>
+    <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
     <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     <NeoButton onclick={onClear}>Clear</NeoButton>
   </NeoButtonGroup>
@@ -69,11 +88,15 @@
   <DemoElevationPicker
     label="Hover"
     reset={-1}
-    min={options.hover + options.elevation <= -5 ? options.hover : undefined}
-    max={options.hover + options.elevation >= 5 ? options.hover : undefined}
+    min={options.hover + options.elevation <= MinShadowElevation ? options.hover : undefined}
+    max={options.hover + options.elevation >= MaxShadowElevation ? options.hover : undefined}
     bind:elevation={options.hover}
   />
 </div>
+
+{#snippet text()}
+  <span class="label">TEXT</span>
+{/snippet}
 
 {#snippet prefix()}
   <IconSearch />
