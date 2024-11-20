@@ -72,8 +72,8 @@
   <DemoElevationPicker
     label="Hover"
     reset={0}
-    min={options.hover + options.elevation <= MinShadowElevation ? options.hover : undefined}
-    max={options.hover + options.elevation >= MaxShadowElevation ? options.hover : undefined}
+    min={MinShadowElevation - options.elevation}
+    max={MaxShadowElevation - options.elevation}
     bind:elevation={options.hover}
   />
 </div>

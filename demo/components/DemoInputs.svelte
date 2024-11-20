@@ -24,7 +24,7 @@
     elevation: DefaultShadowElevation,
     dirtyOnInput: true,
     validateOnInput: true,
-    clearable: false,
+    clearable: true,
     hover: -1,
   });
 
@@ -45,27 +45,103 @@
     value = '';
   };
 
+  const onclick = (e: MouseEvent) => console.info('suffix click', e);
+
   const columns: { label: string; props?: ColumProps }[] = [
     {
       label: 'Default',
-      props: { label: 'Default', placeholder: 'Placeholder' },
+      props: {
+        placeholder: 'Placeholder',
+      },
     },
     {
       label: 'Prefix',
-      props: { label: 'Default', placeholder: 'Prefix', prefix },
+      props: {
+        placeholder: 'Placeholder',
+        prefix,
+      },
     },
     {
       label: 'Suffix',
-      props: { label: 'Default', placeholder: 'Suffix', suffix, suffixProps: { onclick: (e: MouseEvent) => console.info('suffix click', e) } },
+      props: {
+        placeholder: 'Placeholder',
+        suffix,
+        suffixProps: { onclick },
+      },
     },
     {
       label: 'Text',
       props: {
-        label: 'Default',
-        placeholder: 'Text',
+        placeholder: 'Placeholder',
         suffix: text,
         prefix: text,
-        suffixProps: { onclick: (e: MouseEvent) => console.info('suffix click', e) },
+        suffixProps: { onclick },
+      },
+    },
+
+    {
+      label: 'Label',
+      props: {
+        label,
+        placeholder: 'Placeholder',
+        prefix,
+        suffix,
+        suffixProps: { onclick },
+      },
+    },
+    {
+      label: 'Floating',
+      props: {
+        label: 'Floating',
+        placeholder: 'Placeholder',
+        floating: true,
+        prefix,
+        suffix,
+        suffixProps: { onclick },
+      },
+    },
+    {
+      label: 'Top',
+      props: {
+        label: 'Top',
+        placeholder: 'Placeholder',
+        suffix,
+        suffixProps: { onclick },
+      },
+    },
+    {
+      label: 'Left',
+      props: {
+        label: 'Left',
+        placeholder: 'Placeholder',
+      },
+    },
+    {
+      label: 'Right',
+      props: {
+        label: 'Right',
+        placeholder: 'Placeholder',
+      },
+    },
+    {
+      label: 'Message',
+      props: {
+        label: 'Message',
+        placeholder: 'Placeholder',
+      },
+    },
+    {
+      label: 'Valid',
+      props: {
+        label: 'Validation',
+        placeholder: 'Placeholder',
+      },
+    },
+    {
+      label: 'Invalid',
+      props: {
+        label: 'Validation',
+        placeholder: 'Placeholder',
       },
     },
   ];
@@ -88,22 +164,26 @@
   <DemoElevationPicker
     label="Hover"
     reset={-1}
-    min={options.hover + options.elevation <= MinShadowElevation ? options.hover : undefined}
-    max={options.hover + options.elevation >= MaxShadowElevation ? options.hover : undefined}
+    min={MinShadowElevation - options.elevation}
+    max={MaxShadowElevation - options.elevation}
     bind:elevation={options.hover}
   />
 </div>
+
+{#snippet label()}
+  <span style="color: lightseagreen">Custom label Snippet</span>
+{/snippet}
 
 {#snippet text()}
   <span class="label">TEXT</span>
 {/snippet}
 
 {#snippet prefix()}
-  <IconSearch />
+  <IconSearch style="min-width: 1.25rem; min-height:1.25rem" />
 {/snippet}
 
 {#snippet suffix()}
-  <IconFileUpload />
+  <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
 {/snippet}
 
 {#snippet input(props: ColumProps)}
@@ -118,13 +198,13 @@
 </div>
 
 <div class="row">
-  {#each columns as { label, props }}
+  {#each columns as column}
     <div class="column content">
-      <span class="label">{label}</span>
-      {#if props?.glass || options.glass}
-        <SphereBackdrop>{@render input(props)}</SphereBackdrop>
+      <span class="label">{column.label}</span>
+      {#if column.props?.glass || options.glass}
+        <SphereBackdrop>{@render input(column.props)}</SphereBackdrop>
       {:else}
-        {@render input(props)}
+        {@render input(column.props)}
       {/if}
     </div>
   {/each}
@@ -135,6 +215,10 @@
 
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
+
+    &.content {
+      flex: 1 0 20%;
+    }
   }
 
   .row {

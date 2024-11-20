@@ -8,31 +8,48 @@ Neomorphic ui library for svelte 5
   - [ ] @media any-pointer:coarse any-hover:none
 - [x] Card
   - [ ] @media any-pointer:coarse any-hover:none
+- Inputs
+  - validation
+  - floating label
+- Text Area
+  - lines
+  - auto-resize
+  - @ / # tags
+- auto-complete
+  - @ / # tags
+  - select
+- numbers
+  - animation ?
+  - currency
+  - percentage
+  - phone
+  - credit card
+  - pin
+- passwords
+- color picker
+- select
+  - multiple
+  - auto-complete
+    - @ / # tags
+- file picker
+  - drag & drop ?
+  - progress ?
+  - multiple
+- slider
+  - range
+  - steps/ticks
+  - labels
+- time/date/week
+  - range
 - switch
   - loading
   - border loading
   - skeleton
   - checkbox
+  - checkbox (square & round)
   - radio
-- Inputs
-  - elevation
-  - validation
-  - loading
-  - skeleton
-  - Text Area
-  - select
-    - multiple
-  - auto-complete
-    - @ / # tags
-  - numbers
-    - animation ?
-  - passwords
-  - file picker
-    - drag & drop ?
-    - progress ?
-  - slider
-  - time/date
-  - floating label`
+  - groups
+
 - image
   - videos
   - carousel
@@ -57,8 +74,8 @@ Neomorphic ui library for svelte 5
   - elipsis
 
 - Alerts
-    - notification
-    - simple message
+    - toast
+    - rich notification
 - Modal/dialog
 - drawer/panel
     - collapsible

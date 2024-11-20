@@ -47,6 +47,7 @@
   --neo-red: oklch(50% 0.302 26.206deg);
   --neo-red-5: oklch(from var(--neo-red) l c h / 5%);
   --neo-red-10: oklch(from var(--neo-red) l c h / 10%);
+  --neo-red-50: oklch(from var(--neo-red) l c h / 50%);
   --neo-red-75: oklch(from var(--neo-red) l c h / 75%);
   --neo-green: oklch(52% 0.177 142.495deg);
 
@@ -77,7 +78,8 @@
   --neo-skeleton-color: var(--neo-grey-soft);
   --neo-skeleton-color-step: 0.1;
   --neo-close-color: var(--neo-red);
-  --neo-close-color-focused: var(--neo-red-75);
+  --neo-close-color-hover: var(--neo-red-75);
+  --neo-close-color-focused: var(--neo-red-50);
   --neo-close-bg-color-hover: var(--neo-red-10);
   --neo-close-bg-color-focused: var(--neo-red-5);
 

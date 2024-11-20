@@ -16,6 +16,7 @@
     suffix,
 
     // States
+    id = `neo-input-${crypto.randomUUID()}`,
     ref = $bindable(),
     value = $bindable(''),
     valid = $bindable(undefined),
@@ -33,6 +34,7 @@
     rounded,
     glass,
     start,
+    floating,
     skeleton,
 
     // Transition
@@ -46,6 +48,7 @@
     // Events
     oninput,
     onfocus,
+    onblur,
     onmark,
     onclear,
     onchange,
@@ -107,9 +110,16 @@
     containerProps?.onmouseleave?.(e);
   };
 
+  let focused = $state(false);
   const onFocus = (e: FocusEvent) => {
+    focused = true;
     touched = true;
     onfocus?.(e);
+  };
+
+  const onBlur = (e: FocusEvent) => {
+    focused = false;
+    onblur?.(e);
   };
 
   const onInput = (e: InputEvent) => {
@@ -125,7 +135,8 @@
     onchange?.(e);
   };
 
-  const affix = $derived(loading !== undefined);
+  const affix = $derived(clearable || loading !== undefined);
+  const close = $derived(clearable && (focused || hovered) && value?.length && !rest?.disabled && !rest?.readonly);
 
   const context: NeoInputContext = $derived({
     // Ref
@@ -159,56 +170,22 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-<svelte:element
-  this={containerTag}
-  role="group"
-  class:neo-input-group={true}
-  class:borderless
-  class:rounded
-  class:glass
-  class:hover
-  class:start
-  class:disabled={rest?.disabled}
-  class:skeleton
-  class:raised={elevation > 3}
-  class:flat={!elevation}
-  class:hover-flat={hoverFlat}
-  class:flat-hover={flatHover}
-  data-touched={touched}
-  data-dirty={dirty}
-  data-valid={valid}
-  style:--neo-input-box-shadow={boxShadow}
-  style:--neo-input-hover-shadow={hoverShadow}
-  use:useFn={useProps}
-  out:outFn={outProps}
-  in:inFn={inProps}
-  onmouseenter={onMouseEnter}
-  onmouseleave={onMouseLeave}
-  {...containerProps}
->
+{#snippet before()}
   {#if prefix}
     <svelte:element this={prefixTag} class:neo-input-prefix={true} disabled={rest?.disabled} {...prefixProps}>
       {@render prefix(context)}
     </svelte:element>
   {/if}
-  <input
-    class:neo-input={true}
-    class:suffix={suffix || affix}
-    class:prefix
-    bind:this={ref}
-    bind:value
-    onfocus={onFocus}
-    oninput={onInput}
-    onchange={onChange}
-    {...rest}
-  />
+{/snippet}
+
+{#snippet after()}
   {#if affix}
     <span class="neo-input-affix" class:suffix>
       {#if loading}
         <span out:fade={{ duration: 200 }}>
-          <IconCircleLoading />
+          <IconCircleLoading width="var(--neo-line-height-sm, 1.25rem)" height="var(--neo-line-height-sm, 1.25rem)" />
         </span>
-      {:else if clearable && hovered && value?.length && !rest?.disabled && !rest?.readonly}
+      {:else if close}
         <button class="neo-input-clear" in:fade out:fade={{ duration: 200 }} onclick={() => clear()}>
           <IconClear class="icon-clear" frozen />
         </button>
@@ -224,10 +201,113 @@
       {@render suffix(context)}
     </svelte:element>
   {/if}
+{/snippet}
+
+{#snippet input()}
+  <input
+    {id}
+    bind:this={ref}
+    bind:value
+    class:neo-input={true}
+    class:suffix={suffix || affix}
+    class:prefix
+    onblur={onBlur}
+    onfocus={onFocus}
+    oninput={onInput}
+    onchange={onChange}
+    {...rest}
+  />
+{/snippet}
+
+<svelte:element
+  this={containerTag}
+  role="none"
+  class:neo-input-group={true}
+  class:borderless
+  class:rounded
+  class:glass
+  class:hover
+  class:start
+  class:skeleton
+  class:disabled={rest?.disabled}
+  class:raised={elevation > 3 || hover > 3}
+  class:inset={elevation < -3 || hover < -3}
+  class:flat={!elevation}
+  class:hover-flat={hoverFlat}
+  class:flat-hover={flatHover}
+  data-touched={touched}
+  data-dirty={dirty}
+  data-valid={valid}
+  style:--neo-input-box-shadow={boxShadow}
+  style:--neo-input-hover-shadow={hoverShadow}
+  use:useFn={useProps}
+  out:outFn={outProps}
+  in:inFn={inProps}
+  onmouseenter={onMouseEnter}
+  onmouseleave={onMouseLeave}
+  {...containerProps}
+>
+  {@render before()}
+  {#if label}
+    <div class="neo-input-label-container" class:placeholder={floating && !focused && !value?.length}>
+      <label for={id} class="neo-input-label" class:prefix class:rounded>
+        {#if typeof label === 'string'}
+          {label}
+        {:else}
+          {@render label()}
+        {/if}
+      </label>
+      <div class="neo-input-label-input">{@render input()}</div>
+    </div>
+  {:else}
+    {@render input()}
+  {/if}
+  {@render after()}
 </svelte:element>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+
+  .neo-input-label-container {
+    position: relative;
+    flex: 1 1 auto;
+    padding-top: calc(0.5rem + var(--neo-font-size-xs));
+
+    .neo-input-label {
+      position: absolute;
+      top: 0.3rem;
+      left: 0;
+      width: 100%;
+      padding: 0.1rem 0.75rem;
+      overflow: hidden;
+      font-size: var(--neo-font-size-xs);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      transition:
+        color 0.3s ease,
+        font-size 0.3s ease,
+        top 0.3s ease,
+        left 0.3s ease;
+      pointer-events: unset;
+
+      &.prefix {
+        padding-left: 0;
+      }
+    }
+
+    &.placeholder {
+      .neo-input-label {
+        top: calc(50% - 0.1rem - var(--neo-font-size-xs));
+        color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
+        font-size: var(--neo-font-size);
+        pointer-events: none;
+      }
+
+      ::placeholder {
+        opacity: 0;
+      }
+    }
+  }
 
   .neo-input-group,
   .neo-input,
@@ -253,8 +333,9 @@
   .neo-input {
     flex: 1 1 auto;
     height: 100%;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem;
     color: inherit;
+    text-overflow: ellipsis;
     background-color: transparent;
     border: none;
     border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
@@ -285,19 +366,14 @@
     }
 
     &-affix {
-      position: relative;
-      width: 2rem;
-      height: 2rem;
-      padding: 0.5rem;
+      width: calc(var(--neo-line-height) + 1rem);
+      height: calc(var(--neo-line-height) + 1rem);
+      padding: 0.75rem;
       border: none;
       border-left: var(--neo-border-width, 1px) var(--neo-input-suffix-border-color, transparent) solid;
 
-      > [inert] {
-        position: absolute;
-      }
-
       &.suffix {
-        width: 1.5rem;
+        width: calc(var(--neo-line-height) + 0.5rem);
         margin-right: -0.15rem;
         padding-right: 0;
       }
@@ -305,6 +381,7 @@
 
     &::placeholder {
       color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
+      transition: opacity 0.3s ease;
     }
 
     &:read-only {
@@ -366,7 +443,7 @@
 
   .neo-input-prefix,
   .neo-input-suffix {
-    padding: 0.5rem;
+    padding: 0.75rem;
 
     &:is(button, a) {
       @extend %neo-input-button;
@@ -385,6 +462,10 @@
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }
 
+    &.inset {
+      padding: var(--neo-shadow-padding, 0.6rem);
+    }
+
     &.hover.flat-hover:hover,
     &.hover.flat-hover:focus-within,
     &.flat:not(.borderless, .hover-flat:hover, .hover-flat:focus-within) {
@@ -399,8 +480,20 @@
     &.rounded {
       border-radius: var(--neo-border-radius-lg, 2rem);
 
+      .neo-input-label-container {
+        padding-left: 0.5rem;
+
+        .neo-input-label {
+          left: 0.5rem;
+
+          &:not(.prefix) {
+            left: 0.75rem;
+          }
+        }
+      }
+
       .neo-input {
-        padding: 0.5rem 1rem;
+        padding: 0.75rem 1rem;
         border-radius: var(--neo-border-radius-lg, 2rem);
 
         &.prefix {
@@ -408,7 +501,7 @@
         }
 
         &-prefix {
-          padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+          padding: 0.75rem 0.75rem 0.75rem 1rem;
         }
 
         &.suffix {
@@ -416,7 +509,12 @@
         }
 
         &-suffix {
-          padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+          padding: 0.75rem 1rem 0.75rem 0.75rem;
+        }
+
+        &-affix:not(.suffix) {
+          width: calc(var(--neo-line-height) + 1.25rem);
+          padding-right: 0.75rem;
         }
       }
     }

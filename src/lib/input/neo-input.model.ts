@@ -34,7 +34,16 @@ export type NeoInputState = {
 };
 
 export type NeoInputMethods = HTMLRefProps<HTMLInputElement> & {
+  /**
+   * Change the input state. If no value is provided, the state attributes will be unchanged.
+   * @param state
+   */
   mark: (state: NeoInputState) => unknown;
+  /**
+   * Clear the input. If a state is provided, the input state will be updated accordingly.
+   * If a partial state is provided, the input state will be reinitialized and the provided state will be merged.
+   * @param state
+   */
   clear: (state?: NeoInputState) => unknown;
 };
 
@@ -83,6 +92,7 @@ export type NeoInputProps = {
   label?: Snippet<[NeoInputContext]> | string; // Todo
   prefix?: Snippet<[NeoInputContext]>;
   suffix?: Snippet<[NeoInputContext]>;
+  message?: Snippet<[NeoInputContext]> | string; // Todo
 
   // States
   /**
@@ -114,10 +124,23 @@ export type NeoInputProps = {
   /**
    * Display the label as a placeholder inside the input when empty
    */
-  floating?: boolean; // Todo
+  floating?: boolean;
+  /**
+   * Label position.
+   * @default 'inside'
+   */
+  position?: 'inside' | 'top' | 'left' | 'right'; // Todo
 
   // Events
+  /**
+   * Callback when the input state is manually changed.
+   * @param state
+   */
   onmark?: (state: NeoInputState) => unknown;
+  /**
+   * Callback when the input is cleared.
+   * @param state
+   */
   onclear?: (state: NeoInputState) => unknown;
 
   // Other props
