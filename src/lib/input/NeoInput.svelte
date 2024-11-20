@@ -137,6 +137,15 @@
 
   const affix = $derived(clearable || loading !== undefined);
   const close = $derived(clearable && (focused || hovered) && value?.length && !rest?.disabled && !rest?.readonly);
+  const isFloating = $derived(floating && !focused && !value?.length);
+
+  let labelRef = $state<HTMLLabelElement>();
+  let labelHeight = $state();
+
+  $effect(() => {
+    if (!labelRef || !floating) return;
+    labelHeight = `${labelRef?.clientHeight ?? 0}px`;
+  });
 
   const context: NeoInputContext = $derived({
     // Ref
@@ -230,8 +239,8 @@
   class:start
   class:skeleton
   class:disabled={rest?.disabled}
-  class:raised={elevation > 3 || hover > 3}
-  class:inset={elevation < -3 || hover < -3}
+  class:raised={elevation > 3 || elevation + hover > 3}
+  class:inset={elevation < -3 || elevation + hover < -3}
   class:flat={!elevation}
   class:hover-flat={hoverFlat}
   class:flat-hover={flatHover}
@@ -249,8 +258,8 @@
 >
   {@render before()}
   {#if label}
-    <div class="neo-input-label-container" class:placeholder={floating && !focused && !value?.length}>
-      <label for={id} class="neo-input-label" class:prefix class:rounded>
+    <div class="neo-input-label-container" class:prefix class:placeholder={isFloating}>
+      <label bind:this={labelRef} for={id} class="neo-input-label" class:prefix class:rounded style:--neo-input-label-height={labelHeight}>
         {#if typeof label === 'string'}
           {label}
         {:else}
@@ -267,47 +276,6 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
-
-  .neo-input-label-container {
-    position: relative;
-    flex: 1 1 auto;
-    padding-top: calc(0.5rem + var(--neo-font-size-xs));
-
-    .neo-input-label {
-      position: absolute;
-      top: 0.3rem;
-      left: 0;
-      width: 100%;
-      padding: 0.1rem 0.75rem;
-      overflow: hidden;
-      font-size: var(--neo-font-size-xs);
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      transition:
-        color 0.3s ease,
-        font-size 0.3s ease,
-        top 0.3s ease,
-        left 0.3s ease;
-      pointer-events: unset;
-
-      &.prefix {
-        padding-left: 0;
-      }
-    }
-
-    &.placeholder {
-      .neo-input-label {
-        top: calc(50% - 0.1rem - var(--neo-font-size-xs));
-        color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
-        font-size: var(--neo-font-size);
-        pointer-events: none;
-      }
-
-      ::placeholder {
-        opacity: 0;
-      }
-    }
-  }
 
   .neo-input-group,
   .neo-input,
@@ -450,6 +418,46 @@
     }
   }
 
+  .neo-input-label-container {
+    flex: 1 1 auto;
+
+    .neo-input-label {
+      display: flex;
+      min-height: var(--neo-input-label-height);
+      padding: 0.5rem 1rem 0;
+      overflow: hidden;
+      font-size: var(--neo-font-size-xs);
+      text-wrap: stable;
+      text-overflow: ellipsis;
+      transition:
+        width 0.3s ease,
+        color 0.3s ease,
+        font-size 0.3s ease,
+        translate 0.3s ease;
+      will-change: width, color, font-size, translate;
+
+      &.prefix {
+        padding-left: 0.25rem;
+      }
+    }
+
+    .neo-input {
+      padding: 0.25rem 1rem 0.75rem;
+    }
+
+    &.placeholder {
+      .neo-input-label {
+        color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
+        font-size: var(--neo-font-size);
+        translate: 0 calc(50% + 0.75rem - var(--neo-input-label-height) / 2);
+      }
+
+      ::placeholder {
+        opacity: 0;
+      }
+    }
+  }
+
   .neo-input-group {
     margin: var(--neo-shadow-margin, 0.6rem);
     color: var(--neo-input-text-color, inherit);
@@ -463,7 +471,7 @@
     }
 
     &.inset {
-      padding: var(--neo-shadow-padding, 0.6rem);
+      padding: 0.25rem;
     }
 
     &.hover.flat-hover:hover,
@@ -479,18 +487,6 @@
 
     &.rounded {
       border-radius: var(--neo-border-radius-lg, 2rem);
-
-      .neo-input-label-container {
-        padding-left: 0.5rem;
-
-        .neo-input-label {
-          left: 0.5rem;
-
-          &:not(.prefix) {
-            left: 0.75rem;
-          }
-        }
-      }
 
       .neo-input {
         padding: 0.75rem 1rem;
@@ -515,6 +511,24 @@
         &-affix:not(.suffix) {
           width: calc(var(--neo-line-height) + 1.25rem);
           padding-right: 0.75rem;
+        }
+      }
+
+      .neo-input-label-container {
+        &:not(.prefix) {
+          padding-left: 0.75rem;
+        }
+
+        .neo-input-label {
+          padding: 0.5rem 1rem 0;
+
+          &.prefix {
+            padding-left: 0.125rem;
+          }
+        }
+
+        .neo-input {
+          padding: 0.25rem 1rem 0.75rem;
         }
       }
     }

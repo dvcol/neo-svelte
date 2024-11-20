@@ -80,19 +80,20 @@
     },
 
     {
-      label: 'Label',
+      label: 'Floating',
       props: {
-        label,
+        label: 'Floating',
         placeholder: 'Placeholder',
+        floating: true,
         prefix,
         suffix,
         suffixProps: { onclick },
       },
     },
     {
-      label: 'Floating',
+      label: 'Label',
       props: {
-        label: 'Floating',
+        label,
         placeholder: 'Placeholder',
         floating: true,
         prefix,
@@ -171,7 +172,10 @@
 </div>
 
 {#snippet label()}
-  <span style="color: lightseagreen">Custom label Snippet</span>
+  <div>
+    <div style="color: lightseagreen">Custom snippet label</div>
+    <div style="color: cadetblue">With multiple lines</div>
+  </div>
 {/snippet}
 
 {#snippet text()}
