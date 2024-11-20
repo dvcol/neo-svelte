@@ -9,6 +9,7 @@ export type NeoTabContextValue<T = unknown> = { index: number; value?: T; ref: H
 export type OnChange<T = unknown> = (tabId?: TabId, newValue?: NeoTabContextValue<T>, oldValue?: NeoTabContextValue) => unknown;
 export type OnClose<T = unknown> = (tabId?: TabId, value?: NeoTabContextValue<T>) => unknown;
 
+export type NeoTabsContainerProps = HTMLNeoBaseElement & HTMLActionProps;
 export type NeoTabsProps<T = unknown> = {
   // Snippets
 
@@ -60,9 +61,14 @@ export type NeoTabsProps<T = unknown> = {
   // Other props
 
   /**
+   * The HTML tag to use for the element.
+   * @default 'div'
+   */
+  containerTag?: keyof HTMLElementTagNameMap;
+  /**
    * Optional props to pass to the tabs container.
    */
-  tabsProps?: HTMLNeoBaseElement & HTMLActionProps;
+  containerProps?: NeoTabsContainerProps;
 } & NeoTabsContext &
   Omit<NeoButtonGroupProps, 'onchange' | 'children' | 'vertical' | 'ref'> &
   HTMLRefProps;

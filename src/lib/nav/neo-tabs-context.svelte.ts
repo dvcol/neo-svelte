@@ -52,6 +52,7 @@ type NeoTabContextCallbacks<T = unknown> = { onChange?: OnChange<T>; onClose?: O
 
 export class NeoTabContext<T = unknown> {
   readonly #tabs: Map<TabId, NeoTabContextValue<T>> = new SvelteMap();
+  readonly #panes: Map<TabId, TabId> = new SvelteMap();
   readonly #onChange?: OnChange<T>;
   readonly #onClose?: OnClose<T>;
   #active?: TabId = $state();
@@ -64,11 +65,11 @@ export class NeoTabContext<T = unknown> {
   }
 
   get value() {
-    return this.#getValue(this.active);
+    return this.getValue(this.active);
   }
 
   get previous() {
-    return this.#getValue(this.#previous);
+    return this.getValue(this.#previous);
   }
 
   get disabled() {
@@ -138,9 +139,14 @@ export class NeoTabContext<T = unknown> {
     this.#onClose = onClose;
   }
 
-  #getValue(tabId?: TabId) {
+  getValue(tabId?: TabId) {
     if (!tabId) return;
     return this.#tabs.get(tabId);
+  }
+
+  getPane(tabId?: TabId) {
+    if (!tabId) return;
+    return this.#panes.get(tabId);
   }
 
   onOption(options: NeoTabContextOptions) {
@@ -150,7 +156,7 @@ export class NeoTabContext<T = unknown> {
 
   #getPosition(tabId?: TabId) {
     if (!tabId) return;
-    const _ref = this.#getValue(tabId)?.ref;
+    const _ref = this.getValue(tabId)?.ref;
     const parent = _ref?.parentElement?.getBoundingClientRect();
     const rect = _ref?.getBoundingClientRect();
     if (!parent || !rect) return;
@@ -192,7 +198,7 @@ export class NeoTabContext<T = unknown> {
 
   register(tabId: TabId, value: Omit<NeoTabContextValue<T>, 'index'>) {
     if (this.#tabs.has(tabId)) {
-      return Logger.warn(`Tab ID '${String(tabId)}' already exists. Registration ignored.`, { existing: this.#getValue(tabId), ignored: value });
+      return Logger.warn(`Tab ID '${String(tabId)}' already exists. Tab registration ignored.`, { existing: this.getValue(tabId), ignored: value });
     }
     this.#tabs.set(tabId, { ...value, index: this.#tabs.size });
   }
@@ -200,6 +206,20 @@ export class NeoTabContext<T = unknown> {
   remove(tabId: TabId) {
     this.#tabs.delete(tabId);
     if (this.#active === tabId) this.onChange();
+  }
+
+  registerPane(tabId: TabId, panelId: TabId) {
+    if (this.#panes.has(tabId)) {
+      return Logger.warn(`Tab ID '${String(tabId)}' already exists. Pane registration ignored.`, {
+        existing: this.#panes.get(tabId),
+        ignored: panelId,
+      });
+    }
+    this.#panes.set(tabId, panelId);
+  }
+
+  removePane(tabId: TabId) {
+    this.#panes.delete(tabId);
   }
 }
 

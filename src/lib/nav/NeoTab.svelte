@@ -36,6 +36,7 @@
   /* eslint-enable prefer-const */
 
   const context = getTabContext();
+  const pane = $derived(context?.getPane(tabId));
   const active = $derived(context?.active === tabId);
   const disabled = $derived(rest.disabled || (rest.disabled !== false && context?.disabled));
   const closeable = $derived(close || (close !== false && context?.close));
@@ -86,7 +87,19 @@
   {...tabProps}
   use:useFn={useProps}
 >
-  <NeoButton role="tab" aria-selected={active} toggle readonly checked={active} onclick={onClick} empty={!children} {...rest} {disabled}>
+  <NeoButton
+    id={`neo-tab-${tabId}`}
+    role="tab"
+    aria-controls={pane}
+    aria-selected={active}
+    toggle
+    readonly
+    checked={active}
+    onclick={onClick}
+    empty={!children}
+    {...rest}
+    {disabled}
+  >
     {@render children?.({ active, tabId, value })}
     {#if closeable}
       <button

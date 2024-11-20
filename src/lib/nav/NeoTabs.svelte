@@ -22,7 +22,6 @@
 
     // States
     ref = $bindable(),
-    tag = 'div',
     active = $bindable(),
     disabled,
 
@@ -40,7 +39,8 @@
     onadd,
 
     // Other props
-    tabsProps,
+    containerTag = 'div',
+    containerProps,
     ...rest
   }: NeoTabsProps = $props();
   /* eslint-enable prefer-const */
@@ -73,7 +73,7 @@
     translate = transform(context.position);
   });
 
-  const style = $derived([tabsProps?.style, translate].filter(Boolean).join('; '));
+  const style = $derived([containerProps?.style, translate].filter(Boolean).join('; '));
 
   // reflect component active to context
   $effect(() => {
@@ -100,13 +100,13 @@
     });
   });
 
-  const inFn = $derived(toTransition(tabsProps?.in ?? tabsProps?.transition));
-  const inProps = $derived(toTransitionProps(tabsProps?.in ?? tabsProps?.transition));
-  const outFn = $derived(toTransition(tabsProps?.out ?? tabsProps?.transition));
-  const outProps = $derived(toTransitionProps(tabsProps?.out ?? tabsProps?.transition));
+  const inFn = $derived(toTransition(containerProps?.in ?? containerProps?.transition));
+  const inProps = $derived(toTransitionProps(containerProps?.in ?? containerProps?.transition));
+  const outFn = $derived(toTransition(containerProps?.out ?? containerProps?.transition));
+  const outProps = $derived(toTransitionProps(containerProps?.out ?? containerProps?.transition));
 
-  const useFn = $derived(toAction(tabsProps?.use));
-  const useProps = $derived(toActionProps(tabsProps?.use));
+  const useFn = $derived(toAction(containerProps?.use));
+  const useProps = $derived(toActionProps(containerProps?.use));
 </script>
 
 {#snippet icon()}
@@ -115,7 +115,7 @@
 
 {#snippet tabs(ctx: NeoTabsContext = context.state)}
   <svelte:element
-    this={tag}
+    this={containerTag}
     bind:this={ref}
     class:neo-tabs={true}
     class:add
@@ -127,13 +127,13 @@
     class:vertical={rest.vertical}
     class:rounded={rest.rounded}
     class:shallow={rest.shallow}
-    {...tabsProps}
+    {...containerProps}
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
     {style}
   >
-    <NeoButtonGroup tag="nav" role="tablist" {...rest}>
+    <NeoButtonGroup role="tablist" {...rest}>
       {@render children?.(ctx)}
       {#if add}
         <div transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }}>
