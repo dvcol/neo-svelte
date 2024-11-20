@@ -82,8 +82,8 @@
 </script>
 
 <div class="container">
-  <div class="row header">
-    <NeoTabs slide {active} onchange={onClick}>
+  <header class="row header">
+    <NeoTabs tag="nav" slide {active} onchange={onClick}>
       {#each routes as route}
         <NeoTab tabId={route}>{route}</NeoTab>
       {/each}
@@ -111,7 +111,7 @@
 
       <NeoButton toggle bind:checked={remember}>Remember</NeoButton>
     </NeoButtonGroup>
-  </div>
+  </header>
 
   <main class="column view" class:transition={transitioning}>
     <RouterView {router} {transition} {onChange} {onLoaded} />

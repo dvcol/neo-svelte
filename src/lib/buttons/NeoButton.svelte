@@ -293,6 +293,10 @@
         border-radius 0.3s ease,
         box-shadow 0.15s ease-out;
 
+      &:hover {
+        color: var(--neo-btn-text-color-focused-hover, var(--neo-text-color-focused));
+      }
+
       &.pressed,
       &:active {
         color: var(--neo-btn-text-color-focused-active, var(--neo-text-color-focused-active));

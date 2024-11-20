@@ -170,9 +170,11 @@
   {/if}
   {#if segments}
     {@render divider()}
-    <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} {...contentProps}>
-      {@render content?.(context)}
-    </svelte:element>
+    {#if content}
+      <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} {...contentProps}>
+        {@render content?.(context)}
+      </svelte:element>
+    {/if}
   {:else}
     {@render content?.(context)}
   {/if}
@@ -280,9 +282,22 @@
     .neo-card-close {
       align-self: flex-start;
       margin-left: auto;
+      opacity: 0;
+      transition: opacity 0.3s ease;
 
-      --neo-btn-text-color-focused: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
-      --neo-btn-text-color-hover: var(--neo-close-color, rgb(255 0 0));
+      --neo-btn-text-color-focused: var(--neo-close-color-focused, rgb(255 0 0 / 50%));
+      --neo-btn-text-color-focused-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
+      --neo-text-color-focused-active: var(--neo-close-color, rgb(255 0 0));
+      --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
+      --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
+    }
+
+    &:focus-within,
+    &:focus,
+    &:hover {
+      .neo-card-close {
+        opacity: 1;
+      }
     }
 
     &.image {
