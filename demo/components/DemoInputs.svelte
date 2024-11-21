@@ -21,6 +21,7 @@
     disabled: false,
     readonly: false,
     skeleton: false,
+    floating: false,
     elevation: DefaultShadowElevation,
     dirtyOnInput: true,
     validateOnInput: true,
@@ -80,23 +81,10 @@
     },
 
     {
-      label: 'Floating',
+      label: 'Inside',
       props: {
-        label: 'Floating',
+        label: 'Inside',
         placeholder: 'Placeholder',
-        floating: true,
-        prefix,
-        suffix,
-        suffixProps: { onclick },
-      },
-    },
-    {
-      label: 'Label',
-      props: {
-        label,
-        placeholder: 'Placeholder',
-        floating: true,
-        prefix,
         suffix,
         suffixProps: { onclick },
       },
@@ -105,6 +93,7 @@
       label: 'Top',
       props: {
         label: 'Top',
+        position: 'top',
         placeholder: 'Placeholder',
         suffix,
         suffixProps: { onclick },
@@ -114,34 +103,43 @@
       label: 'Left',
       props: {
         label: 'Left',
+        position: 'left',
         placeholder: 'Placeholder',
+        containerProps: { style: 'margin-left: 4rem;' },
       },
     },
     {
       label: 'Right',
       props: {
         label: 'Right',
+        position: 'right',
         placeholder: 'Placeholder',
+        containerProps: { style: 'margin-right: 4rem;' },
+      },
+    },
+    {
+      label: 'Custom Label',
+      props: {
+        label,
+        placeholder: 'Placeholder',
+        suffixProps: { onclick },
       },
     },
     {
       label: 'Message',
       props: {
-        label: 'Message',
         placeholder: 'Placeholder',
       },
     },
     {
       label: 'Valid',
       props: {
-        label: 'Validation',
         placeholder: 'Placeholder',
       },
     },
     {
       label: 'Invalid',
       props: {
-        label: 'Validation',
         placeholder: 'Placeholder',
       },
     },
@@ -153,6 +151,7 @@
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
+    <NeoButton toggle bind:checked={options.floating}>Floating</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.clearable}>Clearable</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>

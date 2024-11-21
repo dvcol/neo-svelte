@@ -249,6 +249,7 @@
       }
 
       &.line :global(.neo-tab.active::before) {
+        top: unset;
         bottom: 0;
         background-color: var(--neo-color-primary, var(--neo-text-color));
         box-shadow: var(--neo-box-shadow-flat);

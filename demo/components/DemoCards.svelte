@@ -171,7 +171,7 @@
   @use 'src/lib/styles/common/flex' as flex;
 
   .content {
-    overflow: auto;
+    overflow: unset;
   }
 
   .column-item {

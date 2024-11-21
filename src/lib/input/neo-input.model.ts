@@ -1,6 +1,5 @@
 // validation : https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/setCustomValidity
 // aria valid/invalid, etc;
-// aria-describedby for id (use rest.id && rest.label)
 // :user-invalid :user-valid
 //
 //
@@ -10,7 +9,6 @@
 // }
 
 import type { Snippet } from 'svelte';
-import type { NeoCardElevation } from '~/cards/neo-card.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation } from '~/utils/shadow.utils.js';
@@ -47,6 +45,7 @@ export type NeoInputMethods = HTMLRefProps<HTMLInputElement> & {
   clear: (state?: NeoInputState) => unknown;
 };
 
+export type NeoInputElevation = ShadowElevation;
 export type NeoInputContext = NeoInputState &
   NeoInputMethods & {
     // Styles
@@ -55,7 +54,7 @@ export type NeoInputContext = NeoInputState &
      * Input elevation.
      * @default 3
      */
-    elevation?: NeoCardElevation;
+    elevation?: NeoInputElevation;
     /**
      * Weather to increase/decrease the elevation when hovered/focused.
      * @default 0
@@ -85,7 +84,15 @@ export type NeoInputContext = NeoInputState &
     skeleton?: boolean;
   };
 
-export type NeoInputElevation = ShadowElevation;
+export const NeoInputLabelPosition = {
+  Inside: 'inside' as const,
+  Top: 'top' as const,
+  Left: 'left' as const,
+  Right: 'right' as const,
+} as const;
+
+export type NeoInputLabelPositions = (typeof NeoInputLabelPosition)[keyof typeof NeoInputLabelPosition];
+
 export type NeoInputProps = {
   // Snippets
 
@@ -127,9 +134,12 @@ export type NeoInputProps = {
   floating?: boolean;
   /**
    * Label position.
+   * When set to outside (`top`, `left`, `right`), the label will be displayed within the input container's margin.
+   * Make sure to set the container's margin appropriately to avoid collision or content shift.
+   *
    * @default 'inside'
    */
-  position?: 'inside' | 'top' | 'left' | 'right'; // Todo
+  position?: NeoInputLabelPositions;
 
   // Events
   /**

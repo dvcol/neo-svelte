@@ -56,7 +56,7 @@
   };
 
   $effect(() => {
-    waitForTick();
+    if (skip) waitForTick();
     untrack(() => {
       if (!ref) return;
       context?.register(tabId, { ref, value });

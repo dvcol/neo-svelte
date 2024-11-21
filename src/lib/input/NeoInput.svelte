@@ -1,10 +1,16 @@
 <script lang="ts">
+  import { wait } from '@dvcol/common-utils/common/promise';
   import { fade } from 'svelte/transition';
-
-  import type { NeoInputContext, NeoInputMethods, NeoInputProps, NeoInputState } from '~/input/neo-input.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
+  import {
+    type NeoInputContext,
+    NeoInputLabelPosition,
+    type NeoInputMethods,
+    type NeoInputProps,
+    type NeoInputState,
+  } from '~/input/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
 
@@ -16,7 +22,7 @@
     suffix,
 
     // States
-    id = `neo-input-${crypto.randomUUID()}`,
+    id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     value = $bindable(''),
     valid = $bindable(undefined),
@@ -26,6 +32,7 @@
     clearable,
     dirtyOnInput,
     validateOnInput,
+    position = NeoInputLabelPosition.Inside,
 
     // Styles
     elevation = 3,
@@ -65,33 +72,6 @@
   /* eslint-enable prefer-const */
 
   let initial = $state(value);
-
-  /**
-   * Change the state of the input
-   * @param state
-   */
-  export const mark: NeoInputMethods['mark'] = (state: NeoInputState) => {
-    if (state.touched !== undefined) touched = state.touched;
-    if (state.valid !== undefined) valid = state.valid;
-    if (state.dirty === undefined) return onmark?.({ touched, dirty, valid });
-    dirty = state.dirty;
-    if (!dirty) initial = value;
-    return onmark?.({ touched, dirty, valid });
-  };
-
-  /**
-   * Clear the input state
-   */
-  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState) => {
-    value = '';
-    ref?.focus();
-    if (!state) return onclear?.({ touched, dirty, valid });
-    initial = value;
-    touched = false;
-    dirty = false;
-    mark({ touched: false, dirty: false, ...state });
-    return onclear?.({ touched, dirty, valid });
-  };
 
   const filter = $derived.by(() => computeGlassFilter(elevation, glass));
   const boxShadow = $derived.by(() => computeShadowElevation(elevation, glass));
@@ -136,16 +116,61 @@
     onchange?.(e);
   };
 
+  /**
+   * Change the state of the input
+   * @param state
+   */
+  export const mark: NeoInputMethods['mark'] = (state: NeoInputState) => {
+    if (state.touched !== undefined) touched = state.touched;
+    if (state.valid !== undefined) valid = state.valid;
+    if (state.dirty === undefined) return onmark?.({ touched, dirty, valid });
+    dirty = state.dirty;
+    if (!dirty) initial = value;
+    return onmark?.({ touched, dirty, valid });
+  };
+
+  const focus = () => {
+    if (focused) return;
+    ref?.focus();
+  };
+
+  /**
+   * Clear the input state
+   */
+  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState) => {
+    value = '';
+    focus();
+    if (!state) return onclear?.({ touched, dirty, valid });
+    initial = value;
+    touched = false;
+    dirty = false;
+    mark({ touched: false, dirty: false, ...state });
+    return onclear?.({ touched, dirty, valid });
+  };
+
   const affix = $derived(clearable || loading !== undefined);
   const close = $derived(clearable && (focused || hovered) && value?.length && !rest?.disabled && !rest?.readonly);
-  const isFloating = $derived(floating && !focused && !value?.length);
+  const isFloating = $derived(floating && !focused && !value?.length && !rest?.disabled && !rest?.readonly);
 
   let labelRef = $state<HTMLLabelElement>();
   let labelHeight = $state();
+  let labelWidth = $state();
+
+  let first = $state(true);
+  // Skip enter transition on first render for floating label
+  const waitForTick = async () => {
+    if (!first) return;
+    await wait();
+    first = false;
+  };
 
   $effect(() => {
-    if (!labelRef || !floating) return;
+    if (first) waitForTick();
+    if (!labelRef) return;
+    if (position === NeoInputLabelPosition.Inside && !floating) return;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
+    if (![NeoInputLabelPosition.Left, NeoInputLabelPosition.Right].includes(position)) return;
+    labelWidth = `${labelRef?.clientWidth ?? 0}px`;
   });
 
   const context: NeoInputContext = $derived({
@@ -190,7 +215,7 @@
 
 {#snippet after()}
   {#if affix}
-    <span class="neo-input-affix" class:suffix>
+    <span class="neo-input-affix" class:suffix role="none" onclick={focus}>
       {#if loading}
         <span out:fade={{ duration: 200 }}>
           <IconCircleLoading width="var(--neo-line-height-sm, 1.25rem)" height="var(--neo-line-height-sm, 1.25rem)" />
@@ -200,7 +225,7 @@
           <IconClear class="icon-clear" frozen />
         </button>
       {:else}
-        <span in:fade={{ delay: 200 }}>
+        <span class="neo-input-affix-placeholder" in:fade={{ delay: 200 }}>
           <!--  placeholder   -->
         </span>
       {/if}
@@ -232,7 +257,9 @@
 <svelte:element
   this={containerTag}
   role="none"
+  data-position={position}
   class:neo-input-group={true}
+  class:read-only={rest?.readonly}
   class:borderless
   class:rounded
   class:glass
@@ -251,6 +278,8 @@
   style:--neo-input-glass-blur={filter}
   style:--neo-input-box-shadow={boxShadow}
   style:--neo-input-hover-shadow={hoverShadow}
+  style:--neo-input-label-height={labelHeight}
+  style:--neo-input-label-width={labelWidth}
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}
@@ -260,8 +289,8 @@
 >
   {@render before()}
   {#if label}
-    <div class="neo-input-label-container" class:prefix class:placeholder={isFloating}>
-      <label bind:this={labelRef} for={id} class="neo-input-label" class:prefix class:rounded style:--neo-input-label-height={labelHeight}>
+    <div class="neo-input-label-container" class:prefix class:floating={isFloating} role="none" onclick={focus}>
+      <label bind:this={labelRef} for={id} class="neo-input-label" class:first class:prefix class:rounded>
         {#if typeof label === 'string'}
           {label}
         {:else}
@@ -286,7 +315,6 @@
   .neo-input-prefix,
   .neo-input-suffix {
     display: inline-flex;
-    align-items: center;
     box-sizing: border-box;
     text-decoration: none;
     outline: none;
@@ -311,6 +339,12 @@
     border: none;
     border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
     outline: none;
+
+    &-prefix,
+    &-suffix,
+    &-affix {
+      align-items: center;
+    }
 
     &-prefix {
       color: var(--neo-input-prefix-color, inherit);
@@ -337,11 +371,22 @@
     }
 
     &-affix {
+      display: inline-grid;
+      grid-template-areas: 'affix';
       width: calc(var(--neo-line-height) + 1rem);
-      height: calc(var(--neo-line-height) + 1rem);
+      min-height: calc(var(--neo-line-height) + 1rem);
       padding: 0.75rem;
       border: none;
       border-left: var(--neo-border-width, 1px) var(--neo-input-suffix-border-color, transparent) solid;
+
+      > * {
+        grid-area: affix;
+      }
+
+      &-placeholder {
+        width: 100%;
+        height: 100%;
+      }
 
       &.suffix {
         width: calc(var(--neo-line-height) + 0.5rem);
@@ -356,7 +401,7 @@
     }
 
     &:read-only {
-      cursor: unset;
+      cursor: initial;
     }
 
     &:disabled {
@@ -391,6 +436,7 @@
   .neo-input-clear {
     @extend %neo-input-button;
 
+    margin: 0 0.0938rem;
     color: var(--neo-input-clear-color, inherit);
     background-color: var(--neo-background-color-darker);
     border: none;
@@ -427,31 +473,28 @@
     .neo-input-label {
       display: flex;
       min-height: var(--neo-input-label-height);
-      padding: 0.5rem 1rem 0;
+      padding: 0 0.75rem;
       overflow: hidden;
-      font-size: var(--neo-font-size-sm);
       text-wrap: stable;
       text-overflow: ellipsis;
+      cursor: inherit;
       transition:
-        width 0.3s ease,
+        padding 0.3s ease,
         color 0.3s ease,
         font-size 0.3s ease,
+        top 0.3s ease,
+        left 0.3s ease,
+        right 0.3s ease,
         translate 0.3s ease;
-      will-change: width, color, font-size, translate;
 
-      &.prefix {
-        padding-left: 0.15rem;
+      &.first {
+        transition: none;
       }
     }
 
-    .neo-input {
-      padding: 0.25rem 1rem 0.75rem;
-    }
-
-    &.placeholder {
+    &.floating {
       .neo-input-label {
         color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
-        font-size: var(--neo-font-size);
         translate: 0 calc(50% + 0.75rem - var(--neo-input-label-height) / 2);
       }
 
@@ -462,12 +505,18 @@
   }
 
   .neo-input-group {
+    position: relative;
     margin: var(--neo-shadow-margin, 0.6rem);
     color: var(--neo-input-text-color, inherit);
     background-color: var(--neo-input-bg-color, inherit);
     border: var(--neo-border-width, 1px) var(--neo-input-border-color, transparent) solid;
     border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
+    cursor: text;
+
+    &.read-only {
+      cursor: initial;
+    }
 
     &.borderless {
       border-color: transparent !important;
@@ -490,6 +539,15 @@
     &:focus-within,
     &.hover:hover {
       box-shadow: var(--neo-input-hover-shadow, var(--neo-box-shadow-flat));
+    }
+
+    &.disabled {
+      color: var(--neo-text-color-disabled);
+      cursor: not-allowed;
+
+      .neo-input-label {
+        cursor: not-allowed;
+      }
     }
 
     &.rounded {
@@ -527,17 +585,76 @@
         }
 
         .neo-input-label {
-          padding: 0.5rem 1rem 0;
-
-          &.prefix {
-            padding-left: 0;
-          }
-        }
-
-        .neo-input {
-          padding: 0.25rem 1rem 0.75rem;
+          padding: 0 1rem;
         }
       }
+    }
+
+    &[data-position='top'] {
+      --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-height, var(--neo-line-height)));
+
+      margin-top: var(--neo-input-margin-top);
+
+      .neo-input-label-container .neo-input-label {
+        position: absolute;
+        top: calc(0% - var(--neo-input-margin-top));
+      }
+    }
+
+    &[data-position='left'] {
+      --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-width, auto));
+
+      margin-left: var(--neo-input-margin-left);
+
+      .neo-input-label-container .neo-input-label {
+        position: absolute;
+        top: calc(50% - var(--neo-input-label-height) / 2);
+        left: calc(0% - var(--neo-input-margin-left));
+      }
+    }
+
+    &[data-position='right'] {
+      --neo-input-margin-right: calc(var(--shadow-margin, 0.6rem) + var(--neo-input-label-width, auto));
+
+      margin-right: var(--neo-input-margin-right);
+
+      .neo-input-label-container .neo-input-label {
+        position: absolute;
+        top: calc(50% - var(--neo-input-label-height) / 2);
+        right: calc(0% - var(--neo-input-margin-right));
+      }
+    }
+
+    &[data-position='inside'] .neo-input-label-container {
+      .neo-input {
+        padding: 0.25rem 1rem 0.75rem;
+      }
+
+      .neo-input-label {
+        padding: 0.5rem 1rem 0;
+
+        &.prefix {
+          padding-left: 0.15rem;
+        }
+      }
+
+      &:not(.floating) .neo-input-label {
+        font-size: var(--neo-font-size-sm);
+      }
+    }
+
+    &[data-position='top'] .neo-input-label-container.floating .neo-input-label,
+    &[data-position='left'] .neo-input-label-container.floating .neo-input-label,
+    &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
+      top: calc(50% - 0.75rem - var(--neo-input-label-height) / 2);
+    }
+
+    &[data-position='left'] .neo-input-label-container.floating .neo-input-label {
+      left: 0.75rem;
+    }
+
+    &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
+      right: calc(100% - var(--neo-input-label-width) - 0.75rem);
     }
 
     &.glass {
@@ -559,11 +676,6 @@
           border-color: var(--neo-input-border-color, var(--neo-border-color));
         }
       }
-    }
-
-    &.disabled {
-      color: var(--neo-text-color-disabled);
-      cursor: not-allowed;
     }
 
     &.skeleton {
