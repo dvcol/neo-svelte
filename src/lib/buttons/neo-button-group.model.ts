@@ -18,6 +18,10 @@ export type NeoButtonGroupContext = {
   // Styles
 
   /**
+   * If `true`, the group will never display a border.
+   */
+  borderless?: boolean;
+  /**
    * If true, the button group will start as flat on first render.
    * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
    */

@@ -216,7 +216,7 @@
     &.glass {
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
       box-shadow: var(--neo-glass-box-shadow-raised-3);
-      backdrop-filter: var(--neo-blur-4);
+      backdrop-filter: var(--neo-blur-4) var(--neo-saturate-2);
 
       &:focus-visible {
         background-color: var(--neo-glass-background-color-focus);
@@ -226,7 +226,7 @@
       &.pressed,
       &:active {
         box-shadow: var(--neo-glass-box-shadow-inset-3);
-        backdrop-filter: var(--neo-blur-2);
+        backdrop-filter: var(--neo-blur-2) var(--neo-saturate-3);
 
         &.shallow {
           box-shadow: var(--neo-glass-box-shadow-flat);
@@ -246,7 +246,7 @@
         background-color: var(--neo-glass-background-color-hover);
         border-color: var(--neo-btn-border-color-hover, var(--neo-glass-border-color-hover));
         box-shadow: var(--neo-box-shadow-flat);
-        backdrop-filter: var(--neo-blur-3);
+        backdrop-filter: var(--neo-blur-3) var(--neo-saturate-2);
 
         &.shallow {
           border-color: transparent;

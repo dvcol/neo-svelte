@@ -14,6 +14,7 @@
     skeleton,
 
     // Styles
+    borderless,
     start,
     text,
     flat,
@@ -57,6 +58,7 @@
   this={tag}
   bind:this={ref}
   class:neo-button-group={true}
+  class:borderless
   class:start
   class:text
   class:flat
@@ -127,6 +129,7 @@
       border-color: var(--neo-btn-border-color, var(--neo-border-color));
     }
 
+    &.borderless,
     &.text {
       border-color: transparent !important;
     }
@@ -139,7 +142,7 @@
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
 
-        &:not(.text, .glass) {
+        &:not(.text, .glass, .borderless) {
           border-color: var(--neo-btn-border-color, var(--neo-border-color));
         }
       }
@@ -151,7 +154,7 @@
         --neo-btn-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
-      backdrop-filter: var(--neo-blur-4);
+      backdrop-filter: var(--neo-blur-4) var(--neo-saturate-2);
 
       &:not(.text, .flat) {
         box-shadow: var(--neo-glass-box-shadow-raised-3);

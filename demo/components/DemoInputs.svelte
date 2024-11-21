@@ -15,7 +15,7 @@
 
   const options = $state<ColumProps>({
     borderless: false,
-    rounded: false,
+    rounded: true,
     glass: false,
     loading: false,
     disabled: false,
@@ -174,7 +174,6 @@
 {#snippet label()}
   <div>
     <div style="color: lightseagreen">Custom snippet label</div>
-    <div style="color: cadetblue">With multiple lines</div>
   </div>
 {/snippet}
 

@@ -6,8 +6,15 @@
   --neo-blur-2: blur(2px);
   --neo-blur-3: blur(3px);
   --neo-blur-4: blur(4px);
-  --neo-blur-5: blur(5px);
-  --neo-blur-6: blur(6px);
+  --neo-blur-5: blur(8px);
+
+  /* Saturation */
+  --neo-saturate: saturate(1);
+  --neo-saturate-1: saturate(1.125);
+  --neo-saturate-2: saturate(1.25);
+  --neo-saturate-3: saturate(1.5);
+  --neo-saturate-4: saturate(1.75);
+  --neo-saturate-5: saturate(2);
 
   @mixin shadows($direction: top-left) {
     /* Base shadows flat */

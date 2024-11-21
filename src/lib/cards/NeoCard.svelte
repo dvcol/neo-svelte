@@ -5,7 +5,7 @@
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
+  import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -63,10 +63,7 @@
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
 
-  const filter = $derived.by(() => {
-    if (!glass) return;
-    return `var(--neo-blur-${Math.abs(Math.trunc(elevation) + 2)})`;
-  });
+  const filter = $derived.by(() => computeGlassFilter(elevation, glass));
 
   const boxShadow = $derived.by(() => computeShadowElevation(elevation, glass));
   const hoverElevation = $derived(elevation + hover);
@@ -137,9 +134,9 @@
   class:hover-flat={hoverFlat}
   class:flat-hover={flatHover}
   class:glass
-  style:--neo-input-hover-shadow={hoverShadow}
+  style:--neo-card-hover-shadow={hoverShadow}
   style:--neo-card-box-shadow={boxShadow}
-  style:--neo-glass-blur={filter}
+  style:--neo-card-glass-blur={filter}
   style:justify-content={justify}
   style:align-items={align}
   style:flex
@@ -217,7 +214,12 @@
       background-color 0.3s ease,
       border-color 0.3s ease,
       border-radius 0.3s ease,
+      backdrop-filter 0.3s ease,
       box-shadow 0.3s ease-out;
+
+    &.borderless {
+      border-color: transparent !important;
+    }
 
     &.raised {
       margin: var(--neo-shadow-margin-lg, 1.125rem);
@@ -229,7 +231,7 @@
     }
 
     &.hover:hover {
-      box-shadow: var(--neo-input-hover-shadow, var(--neo-card-box-shadow));
+      box-shadow: var(--neo-card-hover-shadow, var(--neo-card-box-shadow));
     }
 
     .neo-card-divider {
@@ -330,7 +332,7 @@
         --neo-card-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
-      backdrop-filter: var(--neo-glass-blur, var(--neo-blur-4));
+      backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-4) var(--neo-saturate-2));
     }
 
     &.start {

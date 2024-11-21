@@ -18,3 +18,8 @@ export const computeHoverShadowElevation = (elevation: number | ShadowElevation,
   if (level > 4) level = 4;
   return computeShadowElevation(level, glass);
 };
+
+export const computeGlassFilter = (elevation: number | ShadowElevation, glass?: boolean) => {
+  if (!glass) return;
+  return `var(--neo-blur-${Math.min(Math.max(Math.abs(elevation + 2), 2), MaxShadowElevation)}) var(--neo-saturate-3)`;
+};
