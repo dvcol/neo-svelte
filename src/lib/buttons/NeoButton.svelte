@@ -5,6 +5,7 @@
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { enterDefaultTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -145,7 +146,7 @@
 >
   <span class="content" class:reverse>
     {#if loading || icon}
-      <span class="icon" class:only={empty} transition:width={{ duration: 200 }}>
+      <span class="icon" class:only={empty} transition:width={enterDefaultTransition}>
         {#if loading}
           <IconCircleLoading />
         {:else}
@@ -333,6 +334,12 @@
 
       &:not(.borderless) {
         border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
+      }
+
+      &::after,
+      &::before {
+        box-shadow: none;
+        animation-play-state: paused;
       }
     }
 

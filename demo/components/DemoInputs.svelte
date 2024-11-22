@@ -21,12 +21,13 @@
     disabled: false,
     readonly: false,
     skeleton: false,
-    floating: false,
+    floating: true,
     elevation: DefaultShadowElevation,
-    dirtyOnInput: true,
-    validateOnInput: true,
+    dirtyOnInput: false,
+    validateOnInput: false,
     clearable: true,
     hover: -1,
+    size: 30,
   });
 
   const onElevation = () => {
@@ -128,19 +129,38 @@
     {
       label: 'Message',
       props: {
+        label: 'Description',
+        position: 'top',
         placeholder: 'Placeholder',
+        message: 'This is a short description.',
       },
     },
     {
       label: 'Valid',
       props: {
+        label: 'No Restrictions',
         placeholder: 'Placeholder',
+        validation: true,
       },
     },
     {
       label: 'Invalid',
       props: {
+        label: 'Required',
+        required: true,
+        minLength: 5,
         placeholder: 'Placeholder',
+        validation: true,
+      },
+    },
+    {
+      label: 'Custom Error',
+      props: {
+        label: 'Required',
+        required: true,
+        minLength: 5,
+        placeholder: 'Placeholder',
+        error: 'Custom error: min length 5',
       },
     },
   ];
@@ -171,9 +191,7 @@
 </div>
 
 {#snippet label()}
-  <div>
-    <div style="color: lightseagreen">Custom snippet label</div>
-  </div>
+  <div style="color: var(--neo-color-primary)">Custom snippet label</div>
 {/snippet}
 
 {#snippet text()}

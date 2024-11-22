@@ -9,7 +9,7 @@
   import IconClose from '~/icons/IconClose.svelte';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
-  import { defaultTransitionDuration, enterTransition } from '~/utils/transition.utils.js';
+  import { defaultTransitionDuration, enterFreezeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -83,7 +83,7 @@
   class:neo-tab={true}
   class:active
   class:slide
-  transition:transition={enterTransition}
+  transition:transition={enterFreezeTransition}
   {...tabProps}
   use:useFn={useProps}
 >
@@ -104,6 +104,7 @@
     {#if closeable}
       <button
         class="neo-tab-close"
+        aria-label="close"
         class:reverse={rest.reverse}
         class:disabled
         transition:width={{ duration: skip ? 0 : defaultTransitionDuration }}

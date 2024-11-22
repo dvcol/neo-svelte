@@ -3,7 +3,7 @@
 
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
-  import type { TabId } from '~/nav/neo-tab.model.js';
+  import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
   import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -15,7 +15,7 @@
   import NeoTabsCard from '~/nav/NeoTabsCard.svelte';
   import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
 
-  const added = $state([
+  const added = $state<NeoTabProps>([
     { text: 'Button', tabId: 'button', close: false },
     { text: 'Icon', tabId: 'icon', close: false, icon },
     { text: 'Reversed', tabId: 'reversed', close: false, icon, reverse: true },
@@ -28,7 +28,10 @@
   };
 
   const onadd = () => {
-    added.push({ text: `Added ${randomHex(1)}-${added.length + 1}`, tabId: crypto.randomUUID() });
+    added.push({
+      text: `Added ${randomHex(1)}-${added.length + 1}`,
+      tabId: crypto.randomUUID(),
+    });
   };
 
   let active: unknown | undefined = $state();

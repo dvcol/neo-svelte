@@ -1,8 +1,3 @@
-// validation : https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/setCustomValidity
-// aria valid/invalid, etc;
-// :user-invalid :user-valid
-//
-//
 // TODO: movie this to dedicate input like Password, FilePicker, DatePicker & Number
 // &::-webkit-calendar-picker-indicator {
 //   display: none;
@@ -96,10 +91,26 @@ export type NeoInputLabelPositions = (typeof NeoInputLabelPosition)[keyof typeof
 export type NeoInputProps = {
   // Snippets
 
-  label?: Snippet<[NeoInputContext]> | string; // Todo
+  /**
+   * A snippet or a string to display as the input label.
+   */
+  label?: Snippet<[NeoInputContext]> | string;
+  /**
+   * A snippet to display as the input prefix.
+   */
   prefix?: Snippet<[NeoInputContext]>;
+  /**
+   * A snippet to display as the input suffix.
+   */
   suffix?: Snippet<[NeoInputContext]>;
-  message?: Snippet<[NeoInputContext]> | string; // Todo
+  /**
+   * A snippet or a string to display as the input info message.
+   */
+  message?: Snippet<[NeoInputContext]> | string;
+  /**
+   * A snippet or a string to display as the input error message.
+   */
+  error?: Snippet<[NeoInputContext]> | string;
 
   // States
   /**
@@ -123,13 +134,20 @@ export type NeoInputProps = {
   /**
    * Display a clear button to reset the input value.
    * If used in combination with `loading`, the clear button will be hidden while loading.
+   * @default true
    */
   clearable?: boolean;
+  /**
+   * If `true`, the input will display validation states.
+   * @default false
+   */
+  validation?: boolean;
 
   // Styles
 
   /**
    * Display the label as a placeholder inside the input when empty
+   * @default true
    */
   floating?: boolean;
   /**
@@ -156,23 +174,31 @@ export type NeoInputProps = {
   // Other props
 
   /**
+   * The HTML tag to use for the wrapper component (when message or error are shown).
+   */
+  wrapperTag?: keyof HTMLElementTagNameMap;
+  /**
    * The HTML tag to use for the container.
-   * @default 'div'
+   * @default div
    */
   containerTag?: keyof HTMLElementTagNameMap;
   /**
    * The HTML tag to use for the prefix.
-   * @default 'div'
+   * @default div
    */
   prefixTag?: keyof HTMLElementTagNameMap;
   /*
    * The HTML tag to use for the suffix.
-   * @default 'div'
+   * @default div
    */
   suffixTag?: keyof HTMLElementTagNameMap;
 
   /**
-   * The props to pass to the container.
+   * The props to pass to the wrapper component.
+   */
+  wrapperProps?: HTMLNeoBaseElement;
+  /**
+   * The props to pass to the input container.
    */
   containerProps?: HTMLNeoBaseElement;
   /**
@@ -183,6 +209,19 @@ export type NeoInputProps = {
    * The props to pass to the suffix.
    */
   suffixProps?: HTMLNeoBaseElement;
+  /**
+   * The props to pass to the label.
+   */
+  labelProps?: HTMLNeoBaseElement<HTMLLabelElement>;
+  /**
+   * The props to pass to the message and error components.
+   */
+  messageProps?: HTMLNeoBaseElement;
+
+  /**
+   * The ref to bind to the label.
+   */
+  labelRef?: HTMLRefProps<HTMLLabelElement>;
 } & NeoInputState &
   HTMLNeoBaseElement<HTMLInputElement> &
   HTMLActionProps;

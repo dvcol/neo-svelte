@@ -6,7 +6,7 @@
 
   import { useButtonState } from '../utils/use-button-state.svelte';
 
-  import type { TabId } from '~/nav/neo-tab.model';
+  import type { NeoTabProps, TabId } from '~/nav/neo-tab.model';
   import type { NeoTabContextValue, NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -22,7 +22,7 @@
   const { matches } = useWatchMedia('(max-width: 1550px)');
   const vertical = $derived.by(matches);
 
-  const added = $state([]);
+  const added = $state<NeoTabProps>([]);
   const onclose = (id: TabId) => {
     console.info('Close', id);
     const index = added.findIndex(tab => tab.tabId === id);
@@ -31,7 +31,11 @@
   };
   const onadd = () => {
     console.info('Add');
-    added.push({ text: `Added ${randomHex(2)}-${added.length + 1}`, tabId: crypto.randomUUID() });
+    added.push({
+      text: `Added ${randomHex(2)}-${added.length + 1}`,
+      tabId: crypto.randomUUID(),
+      value: added.length + 1,
+    });
   };
 
   let active: unknown | undefined = $state('button');
@@ -80,11 +84,6 @@
 {/snippet}
 
 <div class="row">
-  <span>Active: {active}</span>
-  <span>Value: {typeof value === 'object' ? JSON.stringify(value, undefined, 2) : value}</span>
-</div>
-
-<div class="row">
   <div class="column">
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
@@ -97,6 +96,11 @@
       <NeoButton onclick={onClear}>Clear</NeoButton>
     </NeoButtonGroup>
   </div>
+</div>
+
+<div class="values">
+  <span>Active: {active}</span>
+  <span>Value: {typeof value === 'object' ? JSON.stringify(value, undefined, 2) : value}</span>
 </div>
 
 <div class="row">
@@ -120,6 +124,7 @@
     @include flex.column($center: true, $gap: var(--neo-gap-lg));
   }
 
+  .values,
   .row {
     @include flex.row($gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
