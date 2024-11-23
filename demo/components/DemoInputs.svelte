@@ -252,45 +252,47 @@
 
 {@render validationState(validation)}
 
-<div class="row">
-  {#each columns as column}
-    <div class="column content">
-      <span class="label">{column.label}</span>
-      {#if column.props?.glass || options.glass}
-        <SphereBackdrop>{@render input(column.props, column.state)}</SphereBackdrop>
-      {:else}
-        {@render input(column.props, column.state)}
-      {/if}
-    </div>
-  {/each}
-</div>
-
-<div class="row">
-  {#each validationColumns as column}
-    <div class="column content">
-      <span class="label">{column.label}</span>
-      {@render validationState(column.state)}
-      {#if column.props?.glass || options.glass}
-        <SphereBackdrop>{@render input(column.props, column.state)}</SphereBackdrop>
-      {:else}
-        {@render input(column.props, column.state)}
-      {/if}
-    </div>
-  {/each}
-</div>
-
-<div class="row">
-  <div class="column content">
-    <span class="label">Password</span>
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoInputPassword {...options} />
-      </SphereBackdrop>
-    {:else}
-      <NeoInputPassword {...options} />
-    {/if}
+<form>
+  <div class="row">
+    {#each columns as column}
+      <div class="column content">
+        <span class="label">{column.label}</span>
+        {#if column.props?.glass || options.glass}
+          <SphereBackdrop>{@render input(column.props, column.state)}</SphereBackdrop>
+        {:else}
+          {@render input(column.props, column.state)}
+        {/if}
+      </div>
+    {/each}
   </div>
-</div>
+
+  <div class="row">
+    {#each validationColumns as column}
+      <div class="column content">
+        <span class="label">{column.label}</span>
+        {@render validationState(column.state)}
+        {#if column.props?.glass || options.glass}
+          <SphereBackdrop>{@render input(column.props, column.state)}</SphereBackdrop>
+        {:else}
+          {@render input(column.props, column.state)}
+        {/if}
+      </div>
+    {/each}
+  </div>
+
+  <div class="row">
+    <div class="column content">
+      <span class="label">Password</span>
+      {#if options.glass}
+        <SphereBackdrop>
+          <NeoInputPassword label="Password" auto-complete="current-password" {...options} />
+        </SphereBackdrop>
+      {:else}
+        <NeoInputPassword label="Password" auto-complete="current-password" {...options} />
+      {/if}
+    </div>
+  </div>
+</form>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;

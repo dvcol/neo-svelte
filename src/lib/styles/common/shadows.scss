@@ -1,5 +1,4 @@
-:root,
-:host {
+[neo-theme-root] {
   /* Blurs */
   --neo-blur-0: blur(0);
   --neo-blur-1: blur(1px);
@@ -292,15 +291,15 @@
 
   @include shadows;
 
-  &[source='bottom-right'] {
+  &[neo-source='bottom-right'] {
     @include shadows(bottom-right);
   }
 
-  &[source='top-right'] {
+  &[neo-source='top-right'] {
     @include shadows(top-right);
   }
 
-  &[source='bottom-left'] {
+  &[neo-source='bottom-left'] {
     @include shadows(bottom-left);
   }
 }

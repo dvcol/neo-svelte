@@ -5,7 +5,7 @@
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
   import NeoInput from '~/input/NeoInput.svelte';
 
-  const { type = 'password', ...rest }: NeoInputProps = $props();
+  const { type = 'password', placeholder = 'Enter your password', ...rest }: NeoInputProps = $props();
 
   let show = $state(false);
   const toggle = () => {
@@ -28,4 +28,4 @@
   {/if}
 {/snippet}
 
-<NeoInput type={_type} {suffix} suffixProps={_suffixProps} {...rest} />
+<NeoInput type={_type} {placeholder} {suffix} suffixProps={_suffixProps} {...rest} />

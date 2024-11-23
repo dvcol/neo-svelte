@@ -403,6 +403,7 @@
   .neo-input-suffix {
     display: flex;
     box-sizing: border-box;
+    font: inherit;
     text-decoration: none;
     outline: none;
     transition:
@@ -776,21 +777,21 @@
 
     &.validation {
       &[data-valid='false'] {
+        --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
+        --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
+
         .neo-input-affix-validation {
           color: var(--neo-input-validation-color-error, var(--neo-color-error));
         }
-
-        --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
-        --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
       }
 
       &[data-valid='true'] {
+        --neo-input-label-color: var(--neo-input-label-color-success, var(--neo-color-success));
+        --neo-input-floating-label-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
+
         .neo-input-affix-validation {
           color: var(--neo-input-validation-color-success, var(--neo-color-success));
         }
-
-        --neo-input-label-color: var(--neo-input-label-color-success, var(--neo-color-success));
-        --neo-input-floating-label-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
       }
     }
 

@@ -1,7 +1,4 @@
 <script lang="ts">
-  import '~/styles/reset.scss';
-  import '~/styles/theme.scss';
-
   import { wait } from '@dvcol/common-utils/common/promise';
 
   import { RouterView } from '@dvcol/svelte-simple-router/components';
@@ -14,13 +11,10 @@
   import type { Routes } from './router/routes.js';
   import type { TransitionProps } from '@dvcol/svelte-simple-router/models';
 
-  import NeoButton from '~/buttons/NeoButton.svelte';
-  import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import IconMoon from '~/icons/IconMoon.svelte';
-  import IconSun from '~/icons/IconSun.svelte';
-  import IconSunrise from '~/icons/IconSunrise.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
+  import NeoThemeProvider from '~/provider/NeoThemeProvider.svelte';
+  import NeoThemeSelector from '~/provider/NeoThemeSelector.svelte';
 
   const transition: TransitionProps = {
     in: fade,
@@ -53,70 +47,25 @@
     if (id === undefined || id === active) return;
     router.push({ name: id });
   };
-
-  const initial = localStorage.getItem('theme');
-  let dark = $state(initial ? initial === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
-  let source = $state(0);
-  let remember = $state(!!localStorage.getItem('theme'));
-
-  let angle = $state(0);
-  const sources = ['top-left', 'top-right', 'bottom-right', 'bottom-left'];
-  const onCycleSource = () => {
-    source = (source + 1) % sources.length;
-    angle += 90;
-  };
-
-  $effect(() => {
-    // TODO wrap this in a NeoThemeProvider
-    const theme = dark ? 'dark' : 'light';
-    document.documentElement.setAttribute('theme', theme);
-    document.documentElement.setAttribute('source', sources[source]);
-    if (remember) {
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-      localStorage.setItem('source', sources[source]);
-    } else {
-      localStorage.removeItem('theme');
-      localStorage.removeItem('source');
-    }
-  });
 </script>
 
-<div class="container">
-  <header class="row header">
-    <NeoTabs tag="nav" slide {active} onchange={onClick}>
-      {#each routes as route}
-        <NeoTab tabId={route}>{route}</NeoTab>
-      {/each}
-    </NeoTabs>
+<NeoThemeProvider>
+  <div class="container">
+    <header class="row header">
+      <NeoTabs rounded tag="nav" slide {active} onchange={onClick}>
+        {#each routes as route}
+          <NeoTab tabId={route}>{route}</NeoTab>
+        {/each}
+      </NeoTabs>
 
-    <NeoButtonGroup>
-      <NeoButton checked onclick={onCycleSource}>
-        {#snippet icon()}
-          <span class="source-icon" style:--neo-source-rotate={`${angle}deg`}>
-            <IconSunrise />
-          </span>
-        {/snippet}
-        <span>Source</span>
-      </NeoButton>
-      <NeoButton toggle bind:checked={dark}>
-        {#snippet icon()}
-          {#if dark}
-            <IconMoon />
-          {:else}
-            <IconSun />
-          {/if}
-        {/snippet}
-        <span>{dark ? 'Dark' : 'Light'}</span>
-      </NeoButton>
+      <NeoThemeSelector rounded />
+    </header>
 
-      <NeoButton toggle bind:checked={remember}>Remember</NeoButton>
-    </NeoButtonGroup>
-  </header>
-
-  <main class="column view" class:transition={transitioning}>
-    <RouterView {router} {transition} {onChange} {onLoaded} />
-  </main>
-</div>
+    <main class="column view" class:transition={transitioning}>
+      <RouterView {router} {transition} {onChange} {onLoaded} />
+    </main>
+  </div>
+</NeoThemeProvider>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
@@ -133,19 +82,6 @@
   .header {
     flex: 0 1 auto;
     padding: 1rem;
-
-    .source-icon {
-      overflow: hidden;
-      border-radius: var(--neo-border-radius-lg);
-      rotate: var(--neo-source-rotate, 0);
-      transition: rotate 0.5s ease;
-
-      :global(svg) {
-        width: 1.25rem;
-        height: 1.25rem;
-        translate: -30% -30%;
-      }
-    }
   }
 
   .container {

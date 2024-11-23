@@ -1,5 +1,4 @@
-:root,
-:host {
+[neo-theme-root] {
   /* ui color variables */
   --neo-white: oklch(100% 0 0deg);
   --neo-white-10: oklch(from var(--neo-white) l c h / 10%);
@@ -80,6 +79,7 @@
   --neo-text-color-hover: var(--neo-color-primary-80);
   --neo-text-color-hover-active: color-mix(in srgb, var(--neo-text-color-hover), white 20%);
   --neo-text-color-disabled: var(--neo-grey-strong-60);
+  --neo-text-highlight-color: var(--neo-grey-soft-30);
   --neo-border-color: var(--neo-grey-soft);
   --neo-border-color-focused: var(--neo-color-primary-50);
   --neo-border-color-primary: var(--neo-color-primary-80);
@@ -126,6 +126,7 @@
   --neo-dark-text-color-hover: var(--neo-dark-color-primary-80);
   --neo-dark-text-color-hover-active: color-mix(in srgb, var(--neo-dark-text-color-hover), black 20%);
   --neo-dark-text-color-disabled: var(--neo-white-soft-dark-80);
+  --neo-dark-text-highlight-color: var(--neo-grey-soft-20);
   --neo-dark-border-color: var(--neo-grey-dark);
   --neo-dark-border-color-focused: var(--neo-dark-color-primary-50);
   --neo-dark-border-color-primary: var(--neo-dark-color-primary-80);
@@ -152,14 +153,6 @@
   --neo-dark-glass-border-color-hover: var(--neo-dark-glass-background-color);
   --neo-dark-glass-skeleton-color: var(--neo-grey-dark-80);
 
-  /* touch highlight */
-  -webkit-tap-highlight-color: transparent;
-
-  /* cursor highlight */
-  *::selection {
-    background-color: var(--neo-grey-soft-30);
-  }
-
   @mixin dark-theme {
     /** primary colors */
     --neo-color-primary: var(--neo-dark-color-primary);
@@ -181,6 +174,7 @@
     --neo-text-color-hover: var(--neo-dark-text-color-hover);
     --neo-text-color-hover-active: var(--neo-dark-text-color-hover-active);
     --neo-text-color-disabled: var(--neo-dark-text-color-disabled);
+    --neo-text-highlight-color: var(--neo-dark-text-highlight-color);
     --neo-border-color: var(--neo-dark-border-color);
     --neo-border-color-focused: var(--neo-dark-border-color-focused);
     --neo-border-color-primary: var(--neo-dark-border-color-primary);
@@ -209,13 +203,13 @@
   }
 
   /* override semantic color if dark mode is enabled */
-  &:root[theme='dark'] {
+  &[neo-theme='dark'] {
     @include dark-theme;
   }
 
   /* apply dark mode if not overridden */
   @media (prefers-color-scheme: dark) {
-    &:not(:root[theme='light']) {
+    &:not([neo-theme='light']) {
       @include dark-theme;
     }
   }

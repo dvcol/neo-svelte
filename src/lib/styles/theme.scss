@@ -6,10 +6,17 @@
 @use 'src/lib/styles/common/utils';
 @use 'src/lib/styles/common/properties';
 
-:root,
-:host {
+[neo-theme-root] {
   color: var(--neo-text-color);
-  font-family: var(--neo-font-family);
+  font-family: var(--neo-font-family), sans-serif;
   line-height: var(--neo-line-height);
   background-color: var(--neo-background-color);
+
+  /* touch highlight */
+  -webkit-tap-highlight-color: transparent;
+
+  /* cursor highlight */
+  *::selection {
+    background-color: var(--neo-text-highlight-color);
+  }
 }
