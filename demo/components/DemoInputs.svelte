@@ -9,13 +9,28 @@
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoInput from '~/input/NeoInput.svelte';
+  import NeoInputPassword from '~/input/NeoInputPassword.svelte';
   import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
   type ColumProps = NeoInputProps;
 
+  class ValidationState {
+    touched = $state(false);
+    dirty = $state(false);
+    valid = $state(undefined);
+    value = $state('');
+
+    clear() {
+      this.touched = false;
+      this.dirty = false;
+      this.valid = undefined;
+      this.value = '';
+    }
+  }
+
   const options = $state<ColumProps>({
     borderless: false,
-    rounded: true,
+    rounded: false,
     glass: false,
     loading: false,
     disabled: false,
@@ -25,7 +40,7 @@
     elevation: DefaultShadowElevation,
     dirtyOnInput: false,
     validateOnInput: false,
-    clearable: true,
+    clearable: false,
     hover: -1,
     size: 30,
   });
@@ -35,26 +50,25 @@
     if (options.elevation + options.hover > MaxShadowElevation) options.hover -= 1;
   };
 
-  let touched = $state(false);
-  let dirty = $state(false);
-  let valid = $state(undefined);
-  let value = $state('');
+  const validation = new ValidationState();
+  const validState = new ValidationState();
+  const invalidState = new ValidationState();
 
   const onClear = () => {
-    touched = false;
-    dirty = false;
-    valid = undefined;
-    value = '';
+    validation.clear();
+    validState.clear();
+    invalidState.clear();
   };
 
   const onclick = (e: MouseEvent) => console.info('suffix click', e);
 
-  const columns: { label: string; props?: ColumProps }[] = [
+  const columns: { label: string; props?: ColumProps; state: ValidationState }[] = [
     {
       label: 'Default',
       props: {
         placeholder: 'Placeholder',
       },
+      state: validation,
     },
     {
       label: 'Prefix',
@@ -62,6 +76,7 @@
         placeholder: 'Placeholder',
         prefix,
       },
+      state: validation,
     },
     {
       label: 'Suffix',
@@ -70,6 +85,7 @@
         suffix,
         suffixProps: { onclick },
       },
+      state: validation,
     },
     {
       label: 'Text',
@@ -79,6 +95,7 @@
         prefix: text,
         suffixProps: { onclick },
       },
+      state: validation,
     },
 
     {
@@ -89,6 +106,7 @@
         suffix,
         suffixProps: { onclick },
       },
+      state: validation,
     },
     {
       label: 'Top',
@@ -99,6 +117,7 @@
         suffix,
         suffixProps: { onclick },
       },
+      state: validation,
     },
     {
       label: 'Left',
@@ -108,6 +127,7 @@
         placeholder: 'Placeholder',
         containerProps: { style: 'margin-left: 4rem;' },
       },
+      state: validation,
     },
     {
       label: 'Right',
@@ -117,6 +137,7 @@
         placeholder: 'Placeholder',
         containerProps: { style: 'margin-right: 4rem;' },
       },
+      state: validation,
     },
     {
       label: 'Custom Label',
@@ -125,6 +146,7 @@
         placeholder: 'Placeholder',
         suffixProps: { onclick },
       },
+      state: validation,
     },
     {
       label: 'Message',
@@ -134,24 +156,7 @@
         placeholder: 'Placeholder',
         message: 'This is a short description.',
       },
-    },
-    {
-      label: 'Valid',
-      props: {
-        label: 'No Restrictions',
-        placeholder: 'Placeholder',
-        validation: true,
-      },
-    },
-    {
-      label: 'Invalid',
-      props: {
-        label: 'Required',
-        required: true,
-        minLength: 5,
-        placeholder: 'Placeholder',
-        validation: true,
-      },
+      state: validation,
     },
     {
       label: 'Custom Error',
@@ -162,6 +167,32 @@
         placeholder: 'Placeholder',
         error: 'Custom error: min length 5',
       },
+      state: validation,
+    },
+  ];
+
+  const validationColumns: { label: string; props?: ColumProps; state: ValidationState }[] = [
+    {
+      label: 'Valid',
+      props: {
+        label: 'No Restrictions',
+        placeholder: 'Placeholder',
+        validation: true,
+        wrapperProps: { style: 'max-width: 18.75rem;' },
+      },
+      state: validState,
+    },
+    {
+      label: 'Invalid',
+      props: {
+        label: 'Required',
+        required: true,
+        minLength: 5,
+        placeholder: 'Placeholder',
+        validation: true,
+        wrapperProps: { style: 'max-width: 18.75rem;' },
+      },
+      state: invalidState,
     },
   ];
 </script>
@@ -206,28 +237,59 @@
   <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
 {/snippet}
 
-{#snippet input(props: ColumProps)}
-  <NeoInput bind:touched bind:dirty bind:valid bind:value {...options} {...props} />
+{#snippet input(props: ColumProps, _state: ValidationState)}
+  <NeoInput bind:touched={_state.touched} bind:dirty={_state.dirty} bind:valid={_state.valid} bind:value={_state.value} {...options} {...props} />
 {/snippet}
 
-<div class="row">
-  <span class="label">Touched: {touched}</span>
-  <span class="label">Dirty: {dirty}</span>
-  <span class="label">Valid: {valid}</span>
-  <span class="label">Value: {value}</span>
-</div>
+{#snippet validationState({ touched, dirty, valid, value }: ValidationState)}
+  <div class="row">
+    <span class="label">Touched: {touched}</span>
+    <span class="label">Dirty: {dirty}</span>
+    <span class="label">Valid: {valid}</span>
+    <span class="label">Value: {value}</span>
+  </div>
+{/snippet}
+
+{@render validationState(validation)}
 
 <div class="row">
   {#each columns as column}
     <div class="column content">
       <span class="label">{column.label}</span>
       {#if column.props?.glass || options.glass}
-        <SphereBackdrop>{@render input(column.props)}</SphereBackdrop>
+        <SphereBackdrop>{@render input(column.props, column.state)}</SphereBackdrop>
       {:else}
-        {@render input(column.props)}
+        {@render input(column.props, column.state)}
       {/if}
     </div>
   {/each}
+</div>
+
+<div class="row">
+  {#each validationColumns as column}
+    <div class="column content">
+      <span class="label">{column.label}</span>
+      {@render validationState(column.state)}
+      {#if column.props?.glass || options.glass}
+        <SphereBackdrop>{@render input(column.props, column.state)}</SphereBackdrop>
+      {:else}
+        {@render input(column.props, column.state)}
+      {/if}
+    </div>
+  {/each}
+</div>
+
+<div class="row">
+  <div class="column content">
+    <span class="label">Password</span>
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoInputPassword {...options} />
+      </SphereBackdrop>
+    {:else}
+      <NeoInputPassword {...options} />
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">

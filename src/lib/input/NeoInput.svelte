@@ -34,7 +34,7 @@
     dirty = $bindable(false),
     touched = $bindable(false),
     loading,
-    clearable = true,
+    clearable,
     dirtyOnInput,
     validateOnInput,
     position = NeoInputLabelPosition.Inside,

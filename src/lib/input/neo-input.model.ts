@@ -134,7 +134,7 @@ export type NeoInputProps = {
   /**
    * Display a clear button to reset the input value.
    * If used in combination with `loading`, the clear button will be hidden while loading.
-   * @default true
+   * @default false
    */
   clearable?: boolean;
   /**

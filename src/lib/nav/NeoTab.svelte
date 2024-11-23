@@ -104,7 +104,7 @@
     {#if closeable}
       <button
         class="neo-tab-close"
-        aria-label="close"
+        aria-label="Close tab"
         class:reverse={rest.reverse}
         class:disabled
         transition:width={{ duration: skip ? 0 : defaultTransitionDuration }}

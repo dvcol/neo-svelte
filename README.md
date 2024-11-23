@@ -2,84 +2,86 @@
 Neomorphic ui library for svelte 5
 
 ## TODO
+- [ ] @media any-pointer:coarse any-hover:none
 - [x] Buttons
-  - [ ] @media any-pointer:coarse any-hover:none
 - [x] Tabs
-  - [ ] @media any-pointer:coarse any-hover:none
 - [x] Card
-  - [ ] @media any-pointer:coarse any-hover:none
-- Inputs
-  - validation
-  - floating label
-- Text Area
-  - lines
-  - auto-resize
-  - @ / # tags
-- auto-complete
-  - @ / # tags
-  - select
-- numbers
-  - animation ?
-  - currency
-  - percentage
-  - phone
-  - credit card
-  - pin
-- passwords
-- color picker
-- select
-  - multiple
-  - auto-complete
-    - @ / # tags
-- file picker
-  - drag & drop ?
-  - progress ?
-  - multiple
-- slider
-  - range
-  - steps/ticks
-  - labels
-- time/date/week
-  - range
-- switch
-  - loading
-  - border loading
-  - skeleton
-  - checkbox
-  - checkbox (square & round)
-  - radio
-  - groups
+- [x] Inputs
+  - [x] Password
+  - [ ] Color picker
+- [ ] numbers
+  - [ ] animation ?
+  - [ ] currency
+  - [ ] percentage
+  - [ ] phone
+  - [ ] credit card
+  - [ ] pin
+- [ ] slider
+  - [ ] range
+  - [ ] steps/ticks
+  - [ ] labels
+- [ ] file picker
+  - [ ] drag & drop ?
+  - [ ] progress ?
+  - [ ] multiple
+- [ ] select
+- [ ] Text Area
+  - [ ] lines
+  - [ ] auto-resize
+  - [ ] @ / # tags
+- [ ] time/date/week
+  - [ ] range
+- [ ] switch
+  - [ ] loading
+  - [ ] border loading
+  - [ ] skeleton
+  - [ ] checkbox
+  - [ ] checkbox (square & round)
+  - [ ] radio
+  - [ ] groups
+- [ ] auto-complete
+  - [ ] @ / # tags
+  - [ ] select
+  - [ ] multiple
+  - [ ] auto-complete
+    - [ ] @ / # tags
 
-- image
-  - videos
-  - carousel
-- avatar
-  - badge
-- tags/pills
-    - badge
-- Progress/Loading
-  - bar
-  - circle
-  - border
-  - background
-- accordion
-  - summary
-  - details (html semantic tags)
+- [ ] image
+  - [ ] videos
+  - [ ] carousel
+- [ ] avatar
+  - [ ] badge
+- [ ] tags/pills
+    - [ ] badge
+- [ ] Progress/Loading
+  - [ ] bar
+  - [ ] circle
+  - [ ] border
+  - [ ] background
+- [ ] accordion
+  - [ ] summary
+  - [ ] details (html semantic tags)
 
-- tooltip
-  - popconfirm
-  - popselect
-- text
-  - elevation
-  - elipsis
+- [ ] tooltip
+  - [ ] popconfirm
+  - [ ] popselect
+- [ ] text
+  - [ ] elevation
+  - [ ] elipsis
 
-- Alerts
-    - toast
-    - rich notification
-- Modal/dialog
-- drawer/panel
-    - collapsible
-    - position
-    - backdrop
-    - click outside
-- scrollbar ?
+- [ ] Alerts
+    - [ ] toast
+    - [ ] rich notification
+- [ ] Modal/dialog
+- [ ] drawer/panel
+    - [ ] collapsible
+    - [ ] position
+    - [ ] backdrop
+    - [ ] click outside
+- [ ] scrollbar ?
+- [ ] container
+  - [ ] transition
+  - [ ] split/resizable
+  - [ ] flex
+  - [ ] grid
+  - [ ] masonry ?

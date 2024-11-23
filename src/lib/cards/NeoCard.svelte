@@ -100,7 +100,7 @@
 {#snippet closeBtn()}
   {#if close}
     <div class="neo-card-close">
-      <NeoButton aria-label="close" rounded text onclick={onClose}>
+      <NeoButton aria-label="Close card" rounded text onclick={onClose}>
         {#snippet icon()}
           <IconClose />
         {/snippet}
