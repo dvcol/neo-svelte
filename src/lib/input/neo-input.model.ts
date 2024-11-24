@@ -185,13 +185,18 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
   containerProps?: HTMLNeoBaseElement;
 
   /**
-   * The props to pass to the label.
+   * The HTML tag to use for the message and error components.
    */
-  labelProps?: HTMLNeoBaseElement<HTMLLabelElement>;
+  messageTag?: keyof HTMLElementTagNameMap;
   /**
    * The props to pass to the message and error components.
    */
   messageProps?: HTMLNeoBaseElement;
+
+  /**
+   * The props to pass to the label.
+   */
+  labelProps?: HTMLNeoBaseElement<HTMLLabelElement>;
 
   /**
    * The ref to bind to the label.
@@ -236,4 +241,4 @@ export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
   suffixProps?: HTMLNeoBaseElement;
 } & NeoCommonInputProps<T>;
 
-export type NeoInputTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement> = NeoCommonInputProps<T>;
+export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement> = NeoCommonInputProps<T>;

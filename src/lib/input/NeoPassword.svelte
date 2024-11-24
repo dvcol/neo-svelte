@@ -22,9 +22,9 @@
 
 {#snippet suffix()}
   {#if show}
-    <IconWatch />
+    <IconWatch width="1.75rem" height="1.75rem" />
   {:else}
-    <IconWatchOff />
+    <IconWatchOff width="1.75rem" height="1.75rem" />
   {/if}
 {/snippet}
 

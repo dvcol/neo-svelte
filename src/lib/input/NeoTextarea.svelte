@@ -6,12 +6,13 @@
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
   import IconConfirm from '~/icons/IconConfirm.svelte';
+  import NeoValidation from '~/input/NeoValidation.svelte';
   import {
     type NeoInputContext,
     NeoInputLabelPosition,
     type NeoInputMethods,
     type NeoInputState,
-    type NeoInputTextareaProps,
+    type NeoTextareaProps,
   } from '~/input/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
@@ -75,7 +76,7 @@
     messageProps,
     messageTag = 'div',
     ...rest
-  }: NeoInputTextareaProps = $props();
+  }: NeoTextareaProps = $props();
   /* eslint-enable prefer-const */
 
   let initial = $state(value);
@@ -200,7 +201,7 @@
   });
 
   const showMessage = $derived(message || errorMessage || error || validation);
-  const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-input-message-${crypto.randomUUID()}`) : undefined);
+  const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-textarea-message-${crypto.randomUUID()}`) : undefined);
 
   const context: NeoInputContext = $derived({
     // Ref
@@ -237,17 +238,17 @@
 {#snippet after()}
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
-    <span class="neo-input-affix" role="none" onclick={focus}>
+    <span class="neo-textarea-affix" role="none" onclick={focus}>
       {#if loading}
         <span out:fade={enterDefaultTransition}>
           <IconCircleLoading width="1.1875rem" height="1.1875rem" />
         </span>
       {:else if close}
-        <button class="neo-input-clear" aria-label="clear" in:fade out:fade={enterDefaultTransition} onclick={() => clear()}>
+        <button class="neo-textarea-clear" aria-label="clear" in:fade out:fade={enterDefaultTransition} onclick={() => clear()}>
           <IconClear width="1.1875rem" height="1.1875rem" />
         </button>
       {:else}
-        <span class="neo-input-affix-validation" in:fade={leaveDefaultTransition}>
+        <span class="neo-textarea-affix-validation" in:fade={leaveDefaultTransition}>
           {#if validation && valid === false}
             <IconAlert width="1.1875rem" height="1.1875rem" />
           {:else if validation && valid === true && touched}
@@ -259,14 +260,14 @@
   {/if}
 {/snippet}
 
-{#snippet input()}
+{#snippet textarea()}
   <textarea
     {id}
     aria-invalid={valid === undefined ? undefined : !valid}
     aria-describedby={messageId}
     bind:this={ref}
     bind:value
-    class:neo-input={true}
+    class:neo-textarea={true}
     class:affix
     onblur={onBlur}
     onfocus={onFocus}
@@ -279,7 +280,7 @@
   </textarea>
 {/snippet}
 
-{#snippet inputGroup()}
+{#snippet textareaGroup()}
   <svelte:element
     this={containerTag}
     role="none"
@@ -287,7 +288,7 @@
     data-touched={touched}
     data-dirty={dirty}
     data-valid={valid}
-    class:neo-input-group={true}
+    class:neo-textarea-group={true}
     class:read-only={rest?.readonly}
     class:borderless
     class:rounded
@@ -302,11 +303,11 @@
     class:flat={!elevation}
     class:hover-flat={hoverFlat}
     class:flat-hover={flatHover}
-    style:--neo-input-glass-blur={filter}
-    style:--neo-input-box-shadow={boxShadow}
-    style:--neo-input-hover-shadow={hoverShadow}
-    style:--neo-input-label-height={labelHeight}
-    style:--neo-input-label-width={labelWidth}
+    style:--neo-textarea-glass-blur={filter}
+    style:--neo-textarea-box-shadow={boxShadow}
+    style:--neo-textarea-hover-shadow={hoverShadow}
+    style:--neo-textarea-label-height={labelHeight}
+    style:--neo-textarea-label-width={labelWidth}
     out:outFn={outProps}
     in:inFn={inProps}
     onmouseenter={onMouseEnter}
@@ -314,63 +315,50 @@
     {...containerProps}
   >
     {#if label}
-      <div class="neo-input-label-container" class:floating={isFloating} role="none" onclick={focus}>
-        <label bind:this={labelRef} for={id} class:neo-input-label={true} class:first class:rounded class:required={rest.required} {...labelProps}>
+      <div class="neo-textarea-label-container" class:floating={isFloating} role="none" onclick={focus}>
+        <label bind:this={labelRef} for={id} class:neo-textarea-label={true} class:first class:rounded class:required={rest.required} {...labelProps}>
           {#if typeof label === 'string'}
             {label}
           {:else}
             {@render label()}
           {/if}
         </label>
-        {@render input()}
+        {@render textarea()}
       </div>
     {:else}
-      {@render input()}
+      {@render textarea()}
     {/if}
     {@render after()}
   </svelte:element>
 {/snippet}
 
 {#if showMessage}
-  <svelte:element this={wrapperTag} class:neo-input-group-wrapper={true} out:outFn={outProps} in:inFn={inProps} {...wrapperProps}>
-    {@render inputGroup()}
-    <div class="neo-input-message" class:rounded>
-      {#if errorMessage}
-        <svelte:element
-          this={messageTag}
-          id={messageId}
-          class:neo-input-error={true}
-          in:fade={enterDefaultTransition}
-          out:fade={leaveDefaultTransition}
-          {...messageProps}
-        >
-          {#if typeof errorMessage === 'string'}{errorMessage}{:else}{@render errorMessage(context)}{/if}
-        </svelte:element>
-      {:else if message}
-        <svelte:element
-          this={messageTag}
-          id={messageId}
-          class:neo-input-description={true}
-          in:fade={enterDefaultTransition}
-          out:fade={leaveDefaultTransition}
-          {...messageProps}
-        >
-          {#if typeof message === 'string'}{message}{:else}{@render message(context)}{/if}
-        </svelte:element>
-      {/if}
-    </div>
-  </svelte:element>
+  <NeoValidation
+    tag={wrapperTag}
+    error={errorMessage}
+    {context}
+    {message}
+    {messageId}
+    {messageTag}
+    {messageProps}
+    in={inAction}
+    out={outAction}
+    transiton={transitionAction}
+    {...wrapperProps}
+  >
+    {@render textareaGroup()}
+  </NeoValidation>
 {:else}
-  {@render inputGroup()}
+  {@render textareaGroup()}
 {/if}
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-input-group,
-  .neo-input,
-  .neo-input-clear,
-  .neo-input-affix {
+  .neo-textarea-group,
+  .neo-textarea,
+  .neo-textarea-clear,
+  .neo-textarea-affix {
     display: flex;
     box-sizing: border-box;
     font: inherit;
@@ -387,7 +375,7 @@
       box-shadow 0.3s ease-out;
   }
 
-  .neo-input {
+  .neo-textarea {
     flex: 1 1 auto;
     align-self: center;
     min-width: fit-content;
@@ -398,7 +386,7 @@
     text-overflow: ellipsis;
     background-color: transparent;
     border: none;
-    border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
+    border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
     outline: none;
 
     &.affix {
@@ -416,7 +404,7 @@
       min-height: calc(var(--neo-line-height) + 1rem);
       padding: 0.75rem;
       border: none;
-      border-left: var(--neo-border-width, 1px) var(--neo-input-affix-border-color, transparent) solid;
+      border-left: var(--neo-border-width, 1px) var(--neo-textarea-affix-border-color, transparent) solid;
 
       > * {
         grid-area: affix;
@@ -429,7 +417,7 @@
     }
 
     &::placeholder {
-      color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
+      color: var(--neo-textarea-placeholder-color, var(--neo-text-color-disabled));
       transition: opacity 0.3s ease;
     }
 
@@ -443,19 +431,19 @@
     }
   }
 
-  %neo-input-button {
+  %neo-textarea-button {
     cursor: pointer;
 
     &:focus-visible {
-      color: var(--neo-input-focus-color, var(--neo-text-color-focused));
+      color: var(--neo-textarea-focus-color, var(--neo-text-color-focused));
     }
 
     &:hover {
-      color: var(--neo-input-hover-color, var(--neo-text-color-hover));
+      color: var(--neo-textarea-hover-color, var(--neo-text-color-hover));
     }
 
     &:active {
-      color: var(--neo-input-active-color, var(--neo-text-color-hover-active));
+      color: var(--neo-textarea-active-color, var(--neo-text-color-hover-active));
       scale: 0.9;
     }
 
@@ -466,12 +454,12 @@
     }
   }
 
-  .neo-input-clear {
-    @extend %neo-input-button;
+  .neo-textarea-clear {
+    @extend %neo-textarea-button;
 
     align-items: center;
     justify-content: center;
-    color: var(--neo-input-clear-color, inherit);
+    color: var(--neo-textarea-clear-color, inherit);
     background-color: var(--neo-background-color-darker);
     border: none;
     border-radius: 50%;
@@ -493,18 +481,18 @@
     }
   }
 
-  .neo-input-label-container {
+  .neo-textarea-label-container {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
     width: 100%;
 
-    .neo-input-label {
+    .neo-textarea-label {
       display: flex;
-      min-height: var(--neo-input-label-height);
+      min-height: var(--neo-textarea-label-height);
       padding: 0 0.75rem;
       overflow: hidden;
-      color: var(--neo-input-label-color, inherit);
+      color: var(--neo-textarea-label-color, inherit);
       text-wrap: stable;
       text-overflow: ellipsis;
       cursor: inherit;
@@ -524,19 +512,19 @@
 
       &.required::after {
         margin-left: 0.1rem;
-        color: var(--neo-input-required-color, var(--neo-color-error-75));
+        color: var(--neo-textarea-required-color, var(--neo-color-error-75));
         font-size: var(--neo-font-size);
         content: '*';
       }
     }
 
     &.floating {
-      .neo-input-label {
-        color: var(--neo-input-floating-label-color, var(--neo-text-color-disabled));
-        translate: 0 calc(50% + 0.7rem - var(--neo-input-label-height) / 2);
+      .neo-textarea-label {
+        color: var(--neo-textarea-floating-label-color, var(--neo-text-color-disabled));
+        translate: 0 calc(50% + 0.7rem - var(--neo-textarea-label-height) / 2);
 
         &.required::after {
-          color: var(--neo-input-required-color, var(--neo-color-error-50));
+          color: var(--neo-textarea-required-color, var(--neo-color-error-50));
         }
       }
 
@@ -546,14 +534,14 @@
     }
   }
 
-  .neo-input-group {
+  .neo-textarea-group {
     position: relative;
     margin: var(--neo-shadow-margin, 0.6rem);
-    color: var(--neo-input-text-color, inherit);
-    background-color: var(--neo-input-bg-color, inherit);
-    border: var(--neo-border-width, 1px) var(--neo-input-border-color, transparent) solid;
-    border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
-    box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
+    color: var(--neo-textarea-text-color, inherit);
+    background-color: var(--neo-textarea-bg-color, inherit);
+    border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;
+    border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
+    box-shadow: var(--neo-textarea-box-shadow, var(--neo-box-shadow-flat));
     cursor: text;
 
     &.read-only {
@@ -575,23 +563,23 @@
     &.hover.flat-hover:hover,
     &.hover.flat-hover:focus-within,
     &.flat:not(.borderless, .hover-flat:hover, .hover-flat:focus-within) {
-      border-color: var(--neo-input-border-color, var(--neo-border-color));
+      border-color: var(--neo-textarea-border-color, var(--neo-border-color));
     }
 
     &:focus-within,
     &.hover:hover {
-      box-shadow: var(--neo-input-hover-shadow, var(--neo-box-shadow-flat));
+      box-shadow: var(--neo-textarea-hover-shadow, var(--neo-box-shadow-flat));
     }
 
     &.disabled {
       box-shadow: var(--neo-box-shadow-flat) !important;
-      opacity: var(--neo-input-opacity-disabled, var(--neo-opacity-disabled));
+      opacity: var(--neo-textarea-opacity-disabled, var(--neo-opacity-disabled));
 
       &:not(.borderless) {
         border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
       }
 
-      .neo-input-label {
+      .neo-textarea-label {
         color: unset;
       }
     }
@@ -599,7 +587,7 @@
     &.rounded {
       border-radius: var(--neo-border-radius-lg, 2rem);
 
-      .neo-input {
+      .neo-textarea {
         padding: 0.75rem 1rem;
         border-radius: var(--neo-border-radius-lg, 2rem);
 
@@ -612,106 +600,106 @@
         }
       }
 
-      .neo-input-label-container {
+      .neo-textarea-label-container {
         padding-left: 0.5rem;
 
-        .neo-input-label {
+        .neo-textarea-label {
           padding: 0 1rem;
         }
       }
     }
 
     &[data-position='top'] {
-      --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-height, var(--neo-line-height)));
+      --neo-textarea-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-textarea-label-height, var(--neo-line-height)));
 
-      margin-top: var(--neo-input-margin-top);
+      margin-top: var(--neo-textarea-margin-top);
 
-      .neo-input-label-container .neo-input-label {
+      .neo-textarea-label-container .neo-textarea-label {
         position: absolute;
-        top: calc(0% - var(--neo-input-margin-top));
+        top: calc(0% - var(--neo-textarea-margin-top));
       }
     }
 
     &[data-position='left'] {
-      --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-width, auto));
+      --neo-textarea-margin-left: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-textarea-label-width, auto));
 
-      margin-left: var(--neo-input-margin-left);
+      margin-left: var(--neo-textarea-margin-left);
 
-      .neo-input-label-container .neo-input-label {
+      .neo-textarea-label-container .neo-textarea-label {
         position: absolute;
         top: 0.75rem;
-        left: calc(0% - var(--neo-input-margin-left));
+        left: calc(0% - var(--neo-textarea-margin-left));
       }
     }
 
     &[data-position='right'] {
-      --neo-input-margin-right: calc(var(--shadow-margin, 0.6rem) + var(--neo-input-label-width, auto));
+      --neo-textarea-margin-right: calc(var(--shadow-margin, 0.6rem) + var(--neo-textarea-label-width, auto));
 
-      margin-right: var(--neo-input-margin-right);
+      margin-right: var(--neo-textarea-margin-right);
 
-      .neo-input-label-container .neo-input-label {
+      .neo-textarea-label-container .neo-textarea-label {
         position: absolute;
         top: 0.75rem;
-        right: calc(0% - var(--neo-input-margin-right));
+        right: calc(0% - var(--neo-textarea-margin-right));
       }
     }
 
-    &[data-position='inside'] .neo-input-label-container {
-      .neo-input {
+    &[data-position='inside'] .neo-textarea-label-container {
+      .neo-textarea {
         padding: 0 1rem 0.5rem;
       }
 
-      .neo-input-label {
+      .neo-textarea-label {
         padding: 0.75rem 1rem 0.2rem;
         line-height: var(--neo-line-height-xs, 1rem);
       }
 
-      &:not(.floating) .neo-input-label {
+      &:not(.floating) .neo-textarea-label {
         font-size: var(--neo-font-size-sm, 0.875rem);
       }
     }
 
-    &[data-position='top'] .neo-input-label-container.floating .neo-input-label,
-    &[data-position='left'] .neo-input-label-container.floating .neo-input-label,
-    &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
+    &[data-position='top'] .neo-textarea-label-container.floating .neo-textarea-label,
+    &[data-position='left'] .neo-textarea-label-container.floating .neo-textarea-label,
+    &[data-position='right'] .neo-textarea-label-container.floating .neo-textarea-label {
       top: 0;
     }
 
-    &[data-position='left'] .neo-input-label-container.floating .neo-input-label {
+    &[data-position='left'] .neo-textarea-label-container.floating .neo-textarea-label {
       left: 0.5rem;
     }
 
-    &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
-      right: calc(100% - var(--neo-input-label-width) - 0.5rem);
+    &[data-position='right'] .neo-textarea-label-container.floating .neo-textarea-label {
+      right: calc(100% - var(--neo-textarea-label-width) - 0.5rem);
     }
 
     &.glass {
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
 
-      background-color: var(--neo-input-bg-color, var(--neo-glass-background-color));
+      background-color: var(--neo-textarea-bg-color, var(--neo-glass-background-color));
       border-color: var(
-        --neo-input-border-color,
+        --neo-textarea-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
-      backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-4) var(--neo-saturate-2));
+      backdrop-filter: var(--neo-textarea-glass-blur, var(--neo-blur-4) var(--neo-saturate-2));
     }
 
     &.validation {
       &[data-valid='false'] {
-        --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
-        --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
+        --neo-textarea-label-color: var(--neo-textarea-label-color-error, var(--neo-color-error));
+        --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-error, var(--neo-color-error-50));
 
-        .neo-input-affix-validation {
-          color: var(--neo-input-validation-color-error, var(--neo-color-error));
+        .neo-textarea-affix-validation {
+          color: var(--neo-textarea-validation-color-error, var(--neo-color-error));
         }
       }
 
       &[data-valid='true'] {
-        --neo-input-label-color: var(--neo-input-label-color-success, var(--neo-color-success));
-        --neo-input-floating-label-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
+        --neo-textarea-label-color: var(--neo-textarea-label-color-success, var(--neo-color-success));
+        --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-success, var(--neo-color-success-50));
 
-        .neo-input-affix-validation {
-          color: var(--neo-input-validation-color-success, var(--neo-color-success));
+        .neo-textarea-affix-validation {
+          color: var(--neo-textarea-validation-color-success, var(--neo-color-success));
         }
       }
     }
@@ -721,7 +709,7 @@
         box-shadow: var(--neo-box-shadow-flat);
 
         &:not(.borderless) {
-          border-color: var(--neo-input-border-color, var(--neo-border-color));
+          border-color: var(--neo-textarea-border-color, var(--neo-border-color));
         }
       }
     }
@@ -734,37 +722,6 @@
 
       &.glass {
         --neo-skeleton-color: var(--neo-glass-skeleton-color);
-      }
-    }
-  }
-
-  .neo-input-group-wrapper {
-    .neo-input-message {
-      min-height: var(--neo-line-height-sm, 1.25rem);
-      margin: 0.25rem var(--neo-shadow-margin, 0.6rem) var(--neo-shadow-margin, 0.6rem);
-      font-size: var(--neo-font-size-sm, 0.875rem);
-      line-height: var(--neo-line-height-xs, 1rem);
-      transition:
-        color 0.3s ease,
-        padding 0.3s ease,
-        margin 0.3s ease;
-
-      .neo-input-error {
-        color: var(--neo-input-error-color, var(--neo-color-error));
-      }
-
-      .neo-input-error,
-      .neo-input-description {
-        padding: 0 0.75rem;
-      }
-
-      &.rounded {
-        margin: 0.25rem var(--neo-shadow-margin-lg, 1.125rem) var(--neo-shadow-margin-lg, 1.125rem);
-
-        .neo-input-error,
-        .neo-input-description {
-          padding: 0 1rem;
-        }
       }
     }
   }

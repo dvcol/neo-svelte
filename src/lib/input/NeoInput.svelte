@@ -6,6 +6,7 @@
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
   import IconConfirm from '~/icons/IconConfirm.svelte';
+  import NeoValidation from '~/input/NeoValidation.svelte';
   import {
     type NeoInputContext,
     NeoInputLabelPosition,
@@ -362,34 +363,21 @@
 {/snippet}
 
 {#if showMessage}
-  <svelte:element this={wrapperTag} class:neo-input-group-wrapper={true} out:outFn={outProps} in:inFn={inProps} {...wrapperProps}>
+  <NeoValidation
+    tag={wrapperTag}
+    error={errorMessage}
+    {context}
+    {message}
+    {messageId}
+    {messageTag}
+    {messageProps}
+    in={inAction}
+    out={outAction}
+    transiton={transitionAction}
+    {...wrapperProps}
+  >
     {@render inputGroup()}
-    <div class="neo-input-message" class:rounded>
-      {#if errorMessage}
-        <svelte:element
-          this={messageTag}
-          id={messageId}
-          class:neo-input-error={true}
-          in:fade={enterDefaultTransition}
-          out:fade={leaveDefaultTransition}
-          {...messageProps}
-        >
-          {#if typeof errorMessage === 'string'}{errorMessage}{:else}{@render errorMessage(context)}{/if}
-        </svelte:element>
-      {:else if message}
-        <svelte:element
-          this={messageTag}
-          id={messageId}
-          class:neo-input-description={true}
-          in:fade={enterDefaultTransition}
-          out:fade={leaveDefaultTransition}
-          {...messageProps}
-        >
-          {#if typeof message === 'string'}{message}{:else}{@render message(context)}{/if}
-        </svelte:element>
-      {/if}
-    </div>
-  </svelte:element>
+  </NeoValidation>
 {:else}
   {@render inputGroup()}
 {/if}
@@ -822,37 +810,6 @@
 
       &.glass {
         --neo-skeleton-color: var(--neo-glass-skeleton-color);
-      }
-    }
-  }
-
-  .neo-input-group-wrapper {
-    .neo-input-message {
-      min-height: var(--neo-line-height-sm, 1.25rem);
-      margin: 0.25rem var(--neo-shadow-margin, 0.6rem) var(--neo-shadow-margin, 0.6rem);
-      font-size: var(--neo-font-size-sm, 0.875rem);
-      line-height: var(--neo-line-height-xs, 1rem);
-      transition:
-        color 0.3s ease,
-        padding 0.3s ease,
-        margin 0.3s ease;
-
-      .neo-input-error {
-        color: var(--neo-input-error-color, var(--neo-color-error));
-      }
-
-      .neo-input-error,
-      .neo-input-description {
-        padding: 0 0.75rem;
-      }
-
-      &.rounded {
-        margin: 0.25rem var(--neo-shadow-margin-lg, 1.125rem) var(--neo-shadow-margin-lg, 1.125rem);
-
-        .neo-input-error,
-        .neo-input-description {
-          padding: 0 1rem;
-        }
       }
     }
   }
