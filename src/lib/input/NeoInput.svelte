@@ -454,7 +454,6 @@
     &-affix {
       display: inline-grid;
       grid-template-areas: 'affix';
-      align-items: center;
       min-width: 2.75rem;
       min-height: calc(var(--neo-line-height) + 1rem);
       padding: 0.75rem;
@@ -655,11 +654,11 @@
     }
 
     &.rounded {
-      border-radius: var(--neo-border-radius-lg, 2rem);
+      border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
 
       .neo-input {
         padding: 0.75rem 1rem;
-        border-radius: var(--neo-border-radius-lg, 2rem);
+        border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
 
         &.prefix {
           margin-left: -1.25rem;

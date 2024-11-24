@@ -49,6 +49,8 @@
 
   .sphere {
     position: relative;
+    display: flex;
+    flex-direction: column;
 
     &-before,
     &-after {

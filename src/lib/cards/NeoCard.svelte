@@ -193,6 +193,8 @@
 </svelte:element>
 
 <style lang="scss">
+  @use 'src/lib/styles/mixin' as mixin;
+
   .neo-card {
     --neo-card-full-spacing: var(--neo-card-spacing, 1.5rem);
     --neo-card-half-spacing: calc(var(--neo-card-spacing, 1.5rem) / 2);
@@ -418,5 +420,14 @@
         }
       }
     }
+  }
+
+  .neo-card,
+  .neo-card-media,
+  .neo-card-header,
+  .neo-card-content,
+  .neo-card-action,
+  .neo-card-footer {
+    @include mixin.scrollbar;
   }
 </style>

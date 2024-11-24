@@ -183,3 +183,43 @@
 
   @include animation.skeleton;
 }
+
+@mixin scrollbar(
+  $gutter: stable,
+  $width: var(--neo-scrollbar-width, 0.45rem),
+  $thumb-color: var(--neo-scrollbar-color),
+  $thumb-border-radius: var(--neo-border-radius),
+  $button-height: var(--neo-scrollbar-button-height, 2px)
+) {
+  scrollbar-gutter: $gutter;
+
+  &::-webkit-scrollbar {
+    width: $width;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-button {
+    height: $button-height;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $thumb-color;
+    border: none;
+    border-radius: $thumb-border-radius;
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+    background-clip: border-box;
+    border: none;
+    outline: none;
+  }
+
+  &::-webkit-resizer {
+    background: url('~/assets/neo-icon-resizer-bottom-right.svg') no-repeat bottom;
+    background-clip: border-box;
+  }
+}

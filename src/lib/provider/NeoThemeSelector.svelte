@@ -69,7 +69,7 @@
 <style lang="scss">
   .source-icon {
     overflow: hidden;
-    border-radius: var(--neo-border-radius-lg);
+    border-radius: var(--neo-theme-selector-border-radius, var(--neo-border-radius-lg));
     rotate: var(--neo-source-rotate, 0);
     transition: rotate 0.5s ease;
 

@@ -73,6 +73,9 @@
 
 <style lang="scss">
   .neo-validation-group-wrapper {
+    display: flex;
+    flex-direction: column;
+
     .neo-validation-message {
       min-height: var(--neo-line-height-sm, 1.25rem);
       margin: 0.25rem var(--neo-shadow-margin, 0.6rem) var(--neo-shadow-margin, 0.6rem);

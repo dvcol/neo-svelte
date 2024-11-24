@@ -65,13 +65,13 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: var(--neo-gap-lg);
+    gap: var(--neo-skeleton-gap, var(--neo-gap-lg));
   }
 
   .neo-skeleton-text-line {
     width: 100%;
     height: var(--neo-line-height-xs, 1rem);
-    border-radius: var(--neo-border-radius-lg);
+    border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-lg));
 
     @include mixin.skeleton;
 
@@ -143,7 +143,7 @@
     display: flex;
     flex: 0 1 auto;
     flex-direction: column;
-    gap: var(--neo-gap-xs);
+    gap: var(--neo-skeleton-paragraph-gap, var(--neo-gap-xs));
 
     &.alt {
       flex-flow: row wrap;

@@ -9,7 +9,8 @@
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoInput from '~/input/NeoInput.svelte';
-  import NeoInputPassword from '~/input/NeoInputPassword.svelte';
+  import NeoPassword from '~/input/NeoPassword.svelte';
+  import NeoTextArea from '~/input/NeoTextarea.svelte';
   import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
   type ColumProps = NeoInputProps;
@@ -62,13 +63,19 @@
 
   const onclick = (e: MouseEvent) => console.info('suffix click', e);
 
-  const columns: { label: string; props?: ColumProps; state: ValidationState }[] = [
+  const columns: {
+    label: string;
+    props?: ColumProps;
+    state: ValidationState;
+    textarea?: boolean;
+  }[] = [
     {
       label: 'Default',
       props: {
         placeholder: 'Placeholder',
       },
       state: validation,
+      textarea: true,
     },
     {
       label: 'Prefix',
@@ -86,6 +93,7 @@
         suffixProps: { onclick },
       },
       state: validation,
+      textarea: true,
     },
     {
       label: 'Text',
@@ -107,6 +115,7 @@
         suffixProps: { onclick },
       },
       state: validation,
+      textarea: true,
     },
     {
       label: 'Top',
@@ -118,6 +127,7 @@
         suffixProps: { onclick },
       },
       state: validation,
+      textarea: true,
     },
     {
       label: 'Left',
@@ -128,6 +138,7 @@
         containerProps: { style: 'margin-left: 4rem;' },
       },
       state: validation,
+      textarea: true,
     },
     {
       label: 'Right',
@@ -138,6 +149,7 @@
         containerProps: { style: 'margin-right: 4rem;' },
       },
       state: validation,
+      textarea: true,
     },
     {
       label: 'Custom Label',
@@ -147,6 +159,7 @@
         suffixProps: { onclick },
       },
       state: validation,
+      textarea: true,
     },
     {
       label: 'Message',
@@ -157,6 +170,7 @@
         message: 'This is a short description.',
       },
       state: validation,
+      textarea: true,
     },
     {
       label: 'Custom Error',
@@ -168,6 +182,7 @@
         error: 'Custom error: min length 5',
       },
       state: validation,
+      textarea: true,
     },
   ];
 
@@ -178,9 +193,10 @@
         label: 'No Restrictions',
         placeholder: 'Placeholder',
         validation: true,
-        wrapperProps: { style: 'max-width: 18.75rem;' },
+        wrapperProps: { style: 'max-width: 20.5rem' },
       },
       state: validState,
+      textarea: true,
     },
     {
       label: 'Invalid',
@@ -190,9 +206,10 @@
         minLength: 5,
         placeholder: 'Placeholder',
         validation: true,
-        wrapperProps: { style: 'max-width: 18.75rem;' },
+        wrapperProps: { style: 'max-width: 20.5rem' },
       },
       state: invalidState,
+      textarea: true,
     },
   ];
 </script>
@@ -237,8 +254,18 @@
   <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
 {/snippet}
 
-{#snippet input(props: ColumProps, _state: ValidationState)}
+{#snippet input(props: ColumProps, _state: ValidationState, _textareas: boolean)}
   <NeoInput bind:touched={_state.touched} bind:dirty={_state.dirty} bind:valid={_state.valid} bind:value={_state.value} {...options} {...props} />
+  {#if _textareas}
+    <NeoTextArea
+      bind:touched={_state.touched}
+      bind:dirty={_state.dirty}
+      bind:valid={_state.valid}
+      bind:value={_state.value}
+      {...options}
+      {...props}
+    />
+  {/if}
 {/snippet}
 
 {#snippet validationState({ touched, dirty, valid, value }: ValidationState)}
@@ -258,9 +285,11 @@
       <div class="column content">
         <span class="label">{column.label}</span>
         {#if column.props?.glass || options.glass}
-          <SphereBackdrop>{@render input(column.props, column.state)}</SphereBackdrop>
+          <SphereBackdrop>{@render input(column.props, column.state, column.textarea)}</SphereBackdrop>
         {:else}
-          {@render input(column.props, column.state)}
+          <div class="wrapper">
+            {@render input(column.props, column.state, column.textarea)}
+          </div>
         {/if}
       </div>
     {/each}
@@ -272,9 +301,11 @@
         <span class="label">{column.label}</span>
         {@render validationState(column.state)}
         {#if column.props?.glass || options.glass}
-          <SphereBackdrop>{@render input(column.props, column.state)}</SphereBackdrop>
+          <SphereBackdrop>{@render input(column.props, column.state, column.textarea)}</SphereBackdrop>
         {:else}
-          {@render input(column.props, column.state)}
+          <div class="wrapper">
+            {@render input(column.props, column.state, column.textarea)}
+          </div>
         {/if}
       </div>
     {/each}
@@ -285,10 +316,10 @@
       <span class="label">Password</span>
       {#if options.glass}
         <SphereBackdrop>
-          <NeoInputPassword label="Password" auto-complete="current-password" {...options} />
+          <NeoPassword label="Password" auto-complete="current-password" {...options} />
         </SphereBackdrop>
       {:else}
-        <NeoInputPassword label="Password" auto-complete="current-password" {...options} />
+        <NeoPassword label="Password" auto-complete="current-password" {...options} />
       {/if}
     </div>
   </div>
@@ -297,11 +328,23 @@
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
 
+  .label {
+    max-width: 80vw;
+    white-space: pre-line;
+    word-break: break-all;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
 
     &.content {
       flex: 1 0 20%;
+      max-width: 25%;
     }
   }
 
@@ -309,5 +352,12 @@
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     margin: 2rem 0;
+  }
+
+  @media (width < 1200px) {
+    .column.content {
+      flex: 1 0 40%;
+      max-width: 50%;
+    }
   }
 </style>

@@ -85,14 +85,14 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: var(--neo-gap-lg);
+    gap: var(--neo-skeleton-gap, var(--neo-gap-lg));
     width: 100%;
-    border-radius: var(--neo-border-radius);
+    border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius));
 
     @include mixin.skeleton;
 
     &.rounded {
-      border-radius: var(--neo-border-radius-lg);
+      border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-lg));
     }
 
     &.circle {

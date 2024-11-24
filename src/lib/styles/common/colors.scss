@@ -94,6 +94,7 @@
   --neo-close-color-focused: var(--neo-color-error-50);
   --neo-close-bg-color-hover: var(--neo-color-error-10);
   --neo-close-bg-color-focused: var(--neo-color-error-5);
+  --neo-scrollbar-color: var(--neo-grey-soft-60);
 
   /** glass colors */
   --neo-glass-background-color: var(--neo-white-soft-20);
@@ -141,6 +142,7 @@
   --neo-dark-close-color-focused: var(--neo-dark-color-error-50);
   --neo-dark-close-bg-color-hover: var(--neo-dark-color-error-10);
   --neo-dark-close-bg-color-focused: var(--neo-dark-color-error-5);
+  --neo-dark-scrollbar-color: var(--neo-grey-dark-80);
 
   /** dark mode glass colors */
   --neo-dark-glass-background-color: var(--neo-grey-strong-8);
@@ -189,6 +191,7 @@
     --neo-close-color-focused: var(--neo-dark-close-color-focused);
     --neo-close-bg-color-hover: var(--neo-dark-close-bg-color-hover);
     --neo-close-bg-color-focused: var(--neo-dark-close-bg-color-focused);
+    --neo-scrollbar-color: var(--neo-dark-scrollbar-color);
 
     /** glass colors */
     --neo-glass-background-color: var(--neo-dark-glass-background-color);

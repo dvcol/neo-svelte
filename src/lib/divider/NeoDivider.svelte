@@ -28,7 +28,7 @@
     width: calc(var(--neo-divider-width, 100%) - var(--neo-shadow-margin, 0.6rem) * 2);
     height: max(4px, var(--neo-divider-height, 4px));
     margin: var(--neo-shadow-margin, 0.6rem);
-    border-radius: var(--neo-border-radius-lg, 2rem);
+    border-radius: var(--neo-divider-border-radius, var(--neo-border-radius-lg));
     box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
 
     &.inset {

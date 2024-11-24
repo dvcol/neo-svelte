@@ -241,4 +241,14 @@ export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
   suffixProps?: HTMLNeoBaseElement;
 } & NeoCommonInputProps<T>;
 
-export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement> = NeoCommonInputProps<T>;
+export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement> = {
+  /**
+   * Automatically increments/decrements the textarea rows to fit the content.
+   *
+   * If `true`, the textarea will increment indefinitely and will not decrement.
+   * If an object is provided, the textarea will increment up to `max` rows and decrement to `min` rows.
+   *
+   * @default false
+   */
+  autoresize?: boolean | { min?: number; max?: number };
+} & NeoCommonInputProps<T>;

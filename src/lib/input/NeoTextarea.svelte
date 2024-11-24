@@ -22,11 +22,12 @@
   let {
     // Snippets
     label,
+    suffix,
     message,
     error,
 
     // States
-    id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-textarea-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     value = $bindable(''),
     valid = $bindable(undefined),
@@ -37,6 +38,7 @@
     dirtyOnInput,
     validateOnInput,
     position = NeoInputLabelPosition.Inside,
+    autoresize,
 
     // Styles
     elevation = 3,
@@ -69,6 +71,8 @@
     // Other props
     labelRef = $bindable(),
     labelProps,
+    suffixProps,
+    suffixTag = suffixProps?.onclick ? 'button' : 'span',
     containerProps,
     containerTag = 'div',
     wrapperProps,
@@ -119,9 +123,24 @@
     validationMessage = ref?.validationMessage;
   };
 
+  let rows = $state(suffix ? 3 : undefined);
+
   const onInput = (e: InputEvent) => {
     checkValidity({ dirty: dirtyOnInput, valid: validateOnInput });
     oninput?.(e);
+
+    if (!autoresize) return;
+
+    const { scrollHeight, clientHeight } = ref ?? {};
+    if (scrollHeight > clientHeight) {
+      const lineHeight = parseFloat(getComputedStyle(ref)?.lineHeight);
+      if (Number.isNaN(lineHeight)) return;
+      if (!rows) rows = 1;
+      rows += Math.floor((scrollHeight - clientHeight) / lineHeight);
+    }
+
+    // TODO - min / Max rows & auto decrement
+    // TODO - rework DemoINputs
   };
 
   const onChange = (e: InputEvent) => {
@@ -258,6 +277,13 @@
       {/if}
     </span>
   {/if}
+
+  <!--  Suffix  -->
+  {#if suffix}
+    <svelte:element this={suffixTag} class:neo-textarea-suffix={true} disabled={rest?.disabled} {...suffixProps}>
+      {@render suffix(context)}
+    </svelte:element>
+  {/if}
 {/snippet}
 
 {#snippet textarea()}
@@ -268,7 +294,8 @@
     bind:this={ref}
     bind:value
     class:neo-textarea={true}
-    class:affix
+    class:affix={affix || suffix}
+    {rows}
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -358,7 +385,8 @@
   .neo-textarea-group,
   .neo-textarea,
   .neo-textarea-clear,
-  .neo-textarea-affix {
+  .neo-textarea-affix,
+  .neo-textarea-suffix {
     display: flex;
     box-sizing: border-box;
     font: inherit;
@@ -375,10 +403,33 @@
       box-shadow 0.3s ease-out;
   }
 
+  %neo-textarea-button {
+    cursor: pointer;
+
+    &:focus-visible {
+      color: var(--neo-textarea-focus-color, var(--neo-text-color-focused));
+    }
+
+    &:hover {
+      color: var(--neo-textarea-hover-color, var(--neo-text-color-hover));
+    }
+
+    &:active {
+      color: var(--neo-textarea-active-color, var(--neo-text-color-hover-active));
+      scale: 0.9;
+    }
+
+    &:disabled {
+      color: var(--neo-text-color-disabled);
+      cursor: not-allowed;
+      scale: 1;
+    }
+  }
+
   .neo-textarea {
     flex: 1 1 auto;
     align-self: center;
-    min-width: fit-content;
+    min-width: 100%;
     max-width: 100%;
     min-height: fit-content;
     padding: 0.75rem;
@@ -393,18 +444,37 @@
       padding: 0.75rem 2.5rem 0.75rem 0.75rem;
     }
 
+    &-affix,
+    &-suffix {
+      align-items: center;
+      margin: 0.25rem;
+      padding: 0.5rem;
+    }
+
+    &-suffix {
+      position: absolute;
+      right: 0.125rem;
+      bottom: 0.125rem;
+      color: var(--neo-textarea-suffix-color, inherit);
+      background-color: var(--neo-textarea-suffix-bg-color, transparent);
+      border: none;
+      border-radius: var(--neo-textarea-suffix-border-radius, var(--neo-border-radius));
+
+      &:is(button, a) {
+        @extend %neo-textarea-button;
+      }
+    }
+
     &-affix {
       position: absolute;
       top: 0.125rem;
       right: 0.125rem;
       display: inline-grid;
       grid-template-areas: 'affix';
-      align-items: center;
-      min-width: 2.75rem;
-      min-height: calc(var(--neo-line-height) + 1rem);
-      padding: 0.75rem;
+      min-width: 2rem;
+      min-height: 2rem;
       border: none;
-      border-left: var(--neo-border-width, 1px) var(--neo-textarea-affix-border-color, transparent) solid;
+      border-radius: var(--neo-textarea-affix-border-radius, var(--neo-border-radius));
 
       > * {
         grid-area: affix;
@@ -428,29 +498,7 @@
     &:disabled {
       color: var(--neo-text-color-disabled);
       cursor: not-allowed;
-    }
-  }
-
-  %neo-textarea-button {
-    cursor: pointer;
-
-    &:focus-visible {
-      color: var(--neo-textarea-focus-color, var(--neo-text-color-focused));
-    }
-
-    &:hover {
-      color: var(--neo-textarea-hover-color, var(--neo-text-color-hover));
-    }
-
-    &:active {
-      color: var(--neo-textarea-active-color, var(--neo-text-color-hover-active));
-      scale: 0.9;
-    }
-
-    &:disabled {
-      color: var(--neo-text-color-disabled);
-      cursor: not-allowed;
-      scale: 1;
+      resize: none;
     }
   }
 
@@ -585,9 +633,11 @@
     }
 
     &.rounded {
-      border-radius: var(--neo-border-radius-lg, 2rem);
+      border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-lg));
 
       .neo-textarea {
+        --neo-scrollbar-button-height: 0.75rem;
+
         padding: 0.75rem 1rem;
         border-radius: var(--neo-border-radius-lg, 2rem);
 
@@ -595,6 +645,7 @@
           padding: 0.75rem 2.75rem 0.75rem 1rem;
         }
 
+        &-suffix,
         &-affix {
           right: 0.365rem;
         }
@@ -723,6 +774,10 @@
       &.glass {
         --neo-skeleton-color: var(--neo-glass-skeleton-color);
       }
+    }
+
+    .neo-textarea {
+      @include mixin.scrollbar;
     }
   }
 </style>
