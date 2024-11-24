@@ -3,7 +3,6 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import IconGithub from '~/icons/IconGithub.svelte';
   import IconMoon from '~/icons/IconMoon.svelte';
   import IconSave from '~/icons/IconSave.svelte';
   import IconSaveOff from '~/icons/IconSaveOff.svelte';
@@ -62,11 +61,6 @@
       {:else}
         <IconSaveOff />
       {/if}
-    {/snippet}
-  </NeoButton>
-  <NeoButton aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
-    {#snippet icon()}
-      <IconGithub />
     {/snippet}
   </NeoButton>
   {@render children?.(context.state)}

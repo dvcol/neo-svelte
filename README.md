@@ -10,6 +10,8 @@ Neomorphic ui library for svelte 5
   - [x] Password
   - [ ] Color picker
 - [ ] numbers
+  - [ } digits
+  - [ ] range
   - [ ] animation ?
   - [ ] currency
   - [ ] percentage

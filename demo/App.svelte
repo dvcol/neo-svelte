@@ -11,6 +11,8 @@
   import type { Routes } from './router/routes.js';
   import type { TransitionProps } from '@dvcol/svelte-simple-router/models';
 
+  import NeoButton from '~/buttons/NeoButton.svelte';
+  import IconGithub from '~/icons/IconGithub.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
   import NeoThemeProvider from '~/provider/NeoThemeProvider.svelte';
@@ -56,6 +58,12 @@
         {#each routes as route}
           <NeoTab tabId={route}>{route}</NeoTab>
         {/each}
+
+        <NeoButton aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
+          {#snippet icon()}
+            <IconGithub />
+          {/snippet}
+        </NeoButton>
       </NeoTabs>
 
       <NeoThemeSelector rounded />

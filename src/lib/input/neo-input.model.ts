@@ -26,7 +26,7 @@ export type NeoInputState = {
   valid?: boolean;
 };
 
-export type NeoInputMethods = HTMLRefProps<HTMLInputElement> & {
+export type NeoInputMethods<T extends HTMLElement> = HTMLRefProps<T> & {
   /**
    * Change the input state. If no value is provided, the state attributes will be unchanged.
    * @param state
@@ -41,8 +41,8 @@ export type NeoInputMethods = HTMLRefProps<HTMLInputElement> & {
 };
 
 export type NeoInputElevation = ShadowElevation;
-export type NeoInputContext = NeoInputState &
-  NeoInputMethods & {
+export type NeoInputContext<T extends HTMLElement> = NeoInputState &
+  NeoInputMethods<T> & {
     // Styles
 
     /**
@@ -88,29 +88,21 @@ export const NeoInputLabelPosition = {
 
 export type NeoInputLabelPositions = (typeof NeoInputLabelPosition)[keyof typeof NeoInputLabelPosition];
 
-export type NeoInputProps = {
+export type NeoCommonInputProps<T extends HTMLElement> = {
   // Snippets
 
   /**
    * A snippet or a string to display as the input label.
    */
-  label?: Snippet<[NeoInputContext]> | string;
-  /**
-   * A snippet to display as the input prefix.
-   */
-  prefix?: Snippet<[NeoInputContext]>;
-  /**
-   * A snippet to display as the input suffix.
-   */
-  suffix?: Snippet<[NeoInputContext]>;
+  label?: Snippet<[NeoInputContext<T>]> | string;
   /**
    * A snippet or a string to display as the input info message.
    */
-  message?: Snippet<[NeoInputContext]> | string;
+  message?: Snippet<[NeoInputContext<T>]> | string;
   /**
    * A snippet or a string to display as the input error message.
    */
-  error?: Snippet<[NeoInputContext]> | string;
+  error?: Snippet<[NeoInputContext<T>]> | string;
 
   // States
   /**
@@ -178,37 +170,20 @@ export type NeoInputProps = {
    */
   wrapperTag?: keyof HTMLElementTagNameMap;
   /**
+   * The props to pass to the wrapper component.
+   */
+  wrapperProps?: HTMLNeoBaseElement;
+
+  /**
    * The HTML tag to use for the container.
    * @default div
    */
   containerTag?: keyof HTMLElementTagNameMap;
   /**
-   * The HTML tag to use for the prefix.
-   * @default div
-   */
-  prefixTag?: keyof HTMLElementTagNameMap;
-  /*
-   * The HTML tag to use for the suffix.
-   * @default div
-   */
-  suffixTag?: keyof HTMLElementTagNameMap;
-
-  /**
-   * The props to pass to the wrapper component.
-   */
-  wrapperProps?: HTMLNeoBaseElement;
-  /**
    * The props to pass to the input container.
    */
   containerProps?: HTMLNeoBaseElement;
-  /**
-   * The props to pass to the prefix.
-   */
-  prefixProps?: HTMLNeoBaseElement;
-  /**
-   * The props to pass to the suffix.
-   */
-  suffixProps?: HTMLNeoBaseElement;
+
   /**
    * The props to pass to the label.
    */
@@ -223,5 +198,42 @@ export type NeoInputProps = {
    */
   labelRef?: HTMLRefProps<HTMLLabelElement>;
 } & NeoInputState &
-  HTMLNeoBaseElement<HTMLInputElement> &
+  HTMLNeoBaseElement<T> &
   HTMLActionProps;
+
+export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
+  // Snippets
+
+  /**
+   * A snippet to display as the input prefix.
+   */
+  prefix?: Snippet<[NeoInputContext<T>]>;
+  /**
+   * A snippet to display as the input suffix.
+   */
+  suffix?: Snippet<[NeoInputContext<T>]>;
+
+  // Other props
+
+  /**
+   * The HTML tag to use for the prefix.
+   * @default div
+   */
+  prefixTag?: keyof HTMLElementTagNameMap;
+  /**
+   * The props to pass to the prefix.
+   */
+  prefixProps?: HTMLNeoBaseElement;
+
+  /*
+   * The HTML tag to use for the suffix.
+   * @default div
+   */
+  suffixTag?: keyof HTMLElementTagNameMap;
+  /**
+   * The props to pass to the suffix.
+   */
+  suffixProps?: HTMLNeoBaseElement;
+} & NeoCommonInputProps<T>;
+
+export type NeoInputTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement> = NeoCommonInputProps<T>;

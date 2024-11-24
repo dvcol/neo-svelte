@@ -10,8 +10,8 @@
     type NeoInputContext,
     NeoInputLabelPosition,
     type NeoInputMethods,
-    type NeoInputProps,
     type NeoInputState,
+    type NeoInputTextareaProps,
   } from '~/input/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
@@ -21,8 +21,6 @@
   let {
     // Snippets
     label,
-    prefix,
-    suffix,
     message,
     error,
 
@@ -70,10 +68,6 @@
     // Other props
     labelRef = $bindable(),
     labelProps,
-    suffixProps,
-    suffixTag = suffixProps?.onclick ? 'button' : 'span',
-    prefixProps,
-    prefixTag = prefixProps?.onclick ? 'button' : 'span',
     containerProps,
     containerTag = 'div',
     wrapperProps,
@@ -81,7 +75,7 @@
     messageProps,
     messageTag = 'div',
     ...rest
-  }: NeoInputProps = $props();
+  }: NeoInputTextareaProps = $props();
   /* eslint-enable prefer-const */
 
   let initial = $state(value);
@@ -240,18 +234,10 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-{#snippet before()}
-  {#if prefix}
-    <svelte:element this={prefixTag} class:neo-input-prefix={true} disabled={rest?.disabled} {...prefixProps}>
-      {@render prefix(context)}
-    </svelte:element>
-  {/if}
-{/snippet}
-
 {#snippet after()}
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
-    <span class="neo-input-affix" class:suffix role="none" onclick={focus}>
+    <span class="neo-input-affix" role="none" onclick={focus}>
       {#if loading}
         <span out:fade={enterDefaultTransition}>
           <IconCircleLoading width="1.1875rem" height="1.1875rem" />
@@ -271,24 +257,17 @@
       {/if}
     </span>
   {/if}
-  <!--  Suffix  -->
-  {#if suffix}
-    <svelte:element this={suffixTag} class:neo-input-suffix={true} disabled={rest?.disabled} {...suffixProps}>
-      {@render suffix(context)}
-    </svelte:element>
-  {/if}
 {/snippet}
 
 {#snippet input()}
-  <input
+  <textarea
     {id}
     aria-invalid={valid === undefined ? undefined : !valid}
     aria-describedby={messageId}
     bind:this={ref}
     bind:value
     class:neo-input={true}
-    class:suffix={suffix || affix}
-    class:prefix
+    class:affix
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -296,7 +275,8 @@
     oninvalid={onInvalid}
     use:useFn={useProps}
     {...rest}
-  />
+  >
+  </textarea>
 {/snippet}
 
 {#snippet inputGroup()}
@@ -333,19 +313,9 @@
     onmouseleave={onMouseLeave}
     {...containerProps}
   >
-    {@render before()}
     {#if label}
-      <div class="neo-input-label-container" class:prefix class:floating={isFloating} role="none" onclick={focus}>
-        <label
-          bind:this={labelRef}
-          for={id}
-          class:neo-input-label={true}
-          class:first
-          class:prefix
-          class:rounded
-          class:required={rest.required}
-          {...labelProps}
-        >
+      <div class="neo-input-label-container" class:floating={isFloating} role="none" onclick={focus}>
+        <label bind:this={labelRef} for={id} class:neo-input-label={true} class:first class:rounded class:required={rest.required} {...labelProps}>
           {#if typeof label === 'string'}
             {label}
           {:else}
@@ -400,9 +370,7 @@
   .neo-input-group,
   .neo-input,
   .neo-input-clear,
-  .neo-input-affix,
-  .neo-input-prefix,
-  .neo-input-suffix {
+  .neo-input-affix {
     display: flex;
     box-sizing: border-box;
     font: inherit;
@@ -433,37 +401,14 @@
     border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
     outline: none;
 
-    &-prefix,
-    &-suffix,
-    &-affix {
-      align-items: center;
-    }
-
-    &-prefix {
-      color: var(--neo-input-prefix-color, inherit);
-      background-color: var(--neo-input-prefix-bg-color, transparent);
-      border: none;
-      border-right: var(--neo-border-width, 1px) var(--neo-input-prefix-border-color, transparent) solid;
-      border-radius: var(--neo-input-border-radius, var(--neo-border-radius)) 0 0 var(--neo-input-border-radius, var(--neo-border-radius));
-    }
-
-    &.prefix {
-      margin-left: -0.9rem;
-    }
-
-    &.suffix {
-      margin-right: -0.9rem;
-    }
-
-    &-suffix {
-      color: var(--neo-input-suffix-color, inherit);
-      background-color: var(--neo-input-suffix-bg-color, transparent);
-      border: none;
-      border-left: var(--neo-border-width, 1px) var(--neo-input-suffix-border-color, transparent) solid;
-      border-radius: 0 var(--neo-input-border-radius, var(--neo-border-radius)) var(--neo-input-border-radius, var(--neo-border-radius)) 0;
+    &.affix {
+      padding: 0.75rem 2.5rem 0.75rem 0.75rem;
     }
 
     &-affix {
+      position: absolute;
+      top: 0.125rem;
+      right: 0.125rem;
       display: inline-grid;
       grid-template-areas: 'affix';
       align-items: center;
@@ -471,7 +416,7 @@
       min-height: calc(var(--neo-line-height) + 1rem);
       padding: 0.75rem;
       border: none;
-      border-left: var(--neo-border-width, 1px) var(--neo-input-suffix-border-color, transparent) solid;
+      border-left: var(--neo-border-width, 1px) var(--neo-input-affix-border-color, transparent) solid;
 
       > * {
         grid-area: affix;
@@ -480,12 +425,6 @@
       &-validation {
         width: 100%;
         height: 100%;
-      }
-
-      &.suffix {
-        min-width: 2rem;
-        margin-right: -0.25rem;
-        padding-right: 0;
       }
     }
 
@@ -551,15 +490,6 @@
     &:disabled {
       color: var(--neo-text-color-disabled);
       cursor: not-allowed;
-    }
-  }
-
-  .neo-input-prefix,
-  .neo-input-suffix {
-    padding: 0.75rem;
-
-    &:is(button, a) {
-      @extend %neo-input-button;
     }
   }
 
@@ -673,31 +603,17 @@
         padding: 0.75rem 1rem;
         border-radius: var(--neo-border-radius-lg, 2rem);
 
-        &.prefix {
-          margin-left: -1.25rem;
+        &.affix {
+          padding: 0.75rem 2.75rem 0.75rem 1rem;
         }
 
-        &-prefix {
-          padding: 0.75rem 0.75rem 0.75rem 1rem;
-        }
-
-        &.suffix {
-          margin-right: -1.25rem;
-        }
-
-        &-suffix {
-          padding: 0.75rem 1rem 0.75rem 0.75rem;
-        }
-
-        &-affix:not(.suffix) {
-          margin-right: 0.25rem;
+        &-affix {
+          right: 0.365rem;
         }
       }
 
       .neo-input-label-container {
-        &:not(.prefix) {
-          padding-left: 0.5rem;
-        }
+        padding-left: 0.5rem;
 
         .neo-input-label {
           padding: 0 1rem;
@@ -723,7 +639,7 @@
 
       .neo-input-label-container .neo-input-label {
         position: absolute;
-        top: calc(50% - var(--neo-input-label-height) / 2);
+        top: 0.75rem;
         left: calc(0% - var(--neo-input-margin-left));
       }
     }
@@ -735,7 +651,7 @@
 
       .neo-input-label-container .neo-input-label {
         position: absolute;
-        top: calc(50% - var(--neo-input-label-height) / 2);
+        top: 0.75rem;
         right: calc(0% - var(--neo-input-margin-right));
       }
     }
@@ -748,10 +664,6 @@
       .neo-input-label {
         padding: 0.75rem 1rem 0.2rem;
         line-height: var(--neo-line-height-xs, 1rem);
-
-        &.prefix {
-          padding-left: 0.15rem;
-        }
       }
 
       &:not(.floating) .neo-input-label {
@@ -762,7 +674,7 @@
     &[data-position='top'] .neo-input-label-container.floating .neo-input-label,
     &[data-position='left'] .neo-input-label-container.floating .neo-input-label,
     &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
-      top: calc(50% - 0.65rem - var(--neo-input-label-height) / 2);
+      top: 0;
     }
 
     &[data-position='left'] .neo-input-label-container.floating .neo-input-label {
