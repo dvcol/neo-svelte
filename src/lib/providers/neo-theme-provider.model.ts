@@ -36,7 +36,7 @@ export type INeoThemeProviderContext = {
    */
   readonly source: NeoSources;
   /**
-   * If the theme and source are stored in local-storage
+   * If the reset, theme and source are stored in local-storage
    */
   readonly remember: boolean;
   /**
@@ -72,7 +72,7 @@ export type NeoThemeProviderProps = {
    */
   source?: NeoSources;
   /**
-   * To store the last used source & theme in local storage (if available)
+   * To store the last used reset & theme & source in local storage (if available)
    *
    * @default false
    */
@@ -97,4 +97,11 @@ export const getTheme = () => getSavedTheme() ?? getPreferTheme();
 export const getSavedSource = () => localStorage?.getItem(NeoSourceKey) as NeoSources | null;
 export const getSource = () => getSavedSource() ?? NeoSource.TopLeft;
 
-export const hasSaved = () => !!getSavedTheme() || !!getSavedSource();
+export const getSavedReset = () => localStorage?.getItem(NeoThemeReset);
+export const getReset = () => {
+  const reset = getSavedReset();
+  if (!reset) return;
+  return reset === 'true';
+};
+
+export const hasSaved = () => !!getSavedTheme() || !!getSavedSource() || !!getSavedReset();

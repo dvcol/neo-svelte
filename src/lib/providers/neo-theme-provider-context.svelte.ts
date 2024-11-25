@@ -1,6 +1,7 @@
-import { getContext, setContext } from 'svelte';
+import { getContext, setContext, untrack } from 'svelte';
 
 import {
+  getReset,
   getSource,
   getTheme,
   hasSaved,
@@ -16,7 +17,7 @@ import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorTheme
 type NeoThemeProviderRoot = INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root']);
 export type NeoThemeProviderContextState = Partial<Omit<INeoThemeProviderContext, 'root'>> & { root?: NeoThemeProviderRoot };
 export class NeoThemeProviderContext implements INeoThemeProviderContext {
-  #reset = $state<INeoThemeProviderContext['reset']>(true);
+  #reset = $state<INeoThemeProviderContext['reset']>(getReset());
   #theme = $state<INeoThemeProviderContext['theme']>(getTheme());
   #source = $state<INeoThemeProviderContext['source']>(getSource());
   #remember = $state<INeoThemeProviderContext['remember']>(hasSaved());
@@ -63,13 +64,15 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
   }
 
   update(partial: Partial<NeoThemeProviderContextState>) {
-    this.#reset = partial.reset ?? this.#reset;
-    this.#theme = partial.theme ?? this.#theme;
-    this.#source = partial.source ?? this.#source;
-    this.#remember = partial.remember ?? this.#remember;
-    this.#root = partial.root ?? this.#root;
+    untrack(() => {
+      if (partial.reset !== undefined) this.#reset = partial.reset;
+      if (partial.theme !== undefined) this.#theme = partial.theme;
+      if (partial.source !== undefined) this.#source = partial.source;
+      if (partial.remember !== undefined) this.#remember = partial.remember;
+      if (partial.root !== undefined) this.#root = partial.root;
 
-    this.sync();
+      this.sync();
+    });
   }
 
   sync() {
@@ -81,16 +84,20 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.root.setAttribute(NeoThemeKey, this.theme);
     this.root.setAttribute(NeoSourceKey, this.source);
 
+    if (this.reset) this.root.setAttribute(NeoThemeReset, '');
+    else this.root.removeAttribute(NeoThemeReset);
+
+    if (!localStorage) return;
+
     if (this.remember) {
+      localStorage.setItem(NeoThemeReset, Boolean(this.reset).toString());
       localStorage.setItem(NeoThemeKey, this.theme);
       localStorage.setItem(NeoSourceKey, this.source);
     } else {
+      localStorage.removeItem(NeoThemeReset);
       localStorage.removeItem(NeoThemeKey);
       localStorage.removeItem(NeoSourceKey);
     }
-
-    if (this.reset) this.root.setAttribute(NeoThemeReset, '');
-    else this.root.removeAttribute(NeoThemeReset);
   }
 
   destroy() {

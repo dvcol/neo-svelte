@@ -11,9 +11,9 @@
 
     // States
     reset,
-    theme = $bindable(),
-    source = $bindable(),
-    remember = $bindable(),
+    theme,
+    source,
+    remember,
     target,
   }: NeoThemeProviderProps = $props();
   /* eslint-enable prefer-const */
