@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/dvcol/neo-svelte/compare/v0.1.2...v0.1.3) (2024-11-25)
+
+
+### Bug Fixes
+
+* **theme:** makes remember by default ([55d1738](https://github.com/dvcol/neo-svelte/commit/55d1738062e7879f9524890766082b56d935a891))
+* **types:** correct props types & relative img path ([35bd74a](https://github.com/dvcol/neo-svelte/commit/35bd74a6046d07aeb9425a1191d7b3d178af3140))
+
 ### [0.1.2](https://github.com/dvcol/neo-svelte/compare/v0.1.1...v0.1.2) (2024-11-25)
 
 
