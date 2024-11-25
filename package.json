@@ -1,7 +1,7 @@
 {
   "name": "@dvcol/neo-svelte",
   "type": "module",
-  "version": "1.6.1",
+  "version": "0.1.0",
   "packageManager": "pnpm@9.12.3",
   "description": "Neomorphic ui library for svelte 5",
   "homepage": "https://github.com/dvcol/neo-svelte",
