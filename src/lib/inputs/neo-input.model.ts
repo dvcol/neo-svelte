@@ -31,7 +31,52 @@ export type NeoInputState = {
   value?: string;
 };
 
-export type NeoInputMethods<T extends HTMLElement> = HTMLRefProps<T> & {
+export type NeoInputStyles = {
+  // Styles
+
+  /**
+   * Input elevation.
+   * @default 3
+   */
+  elevation?: NeoInputElevation;
+  /**
+   * Weather to increase/decrease the elevation when hovered/focused.
+   * @default 0
+   */
+  hover?: number;
+  /**
+   * By default, inputs with no elevation will display a border.
+   * If this is `true`, the input will never display a border.
+   */
+  borderless?: boolean;
+  /**
+   * If true, the input will have a rounded border.
+   */
+  rounded?: boolean;
+  /**
+   * If true, the input will be displayed with a glass effect.
+   */
+  glass?: boolean;
+  /**
+   * If true, the input input start as flat on first render.
+   * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
+   */
+  start?: boolean;
+  /**
+   * If true, the input will be disabled and a loading skeleton will be displayed instead of the text.
+   */
+  skeleton?: boolean;
+  /**
+   * If true, the input will be disabled.
+   */
+  disabled?: boolean;
+  /**
+   * If true, the input will be readonly.
+   */
+  readonly?: boolean;
+};
+
+export type NeoInputMethods = {
   /**
    * Change the input state. If no value is provided, the state attributes will be unchanged.
    * @param state
@@ -46,51 +91,7 @@ export type NeoInputMethods<T extends HTMLElement> = HTMLRefProps<T> & {
 };
 
 export type NeoInputElevation = ShadowElevation;
-export type NeoInputContext<T extends HTMLElement = HTMLElement> = NeoInputState &
-  NeoInputMethods<T> & {
-    // Styles
-
-    /**
-     * Input elevation.
-     * @default 3
-     */
-    elevation?: NeoInputElevation;
-    /**
-     * Weather to increase/decrease the elevation when hovered/focused.
-     * @default 0
-     */
-    hover?: number;
-    /**
-     * By default, inputs with no elevation will display a border.
-     * If this is `true`, the input will never display a border.
-     */
-    borderless?: boolean;
-    /**
-     * If true, the input will have a rounded border.
-     */
-    rounded?: boolean;
-    /**
-     * If true, the input will be displayed with a glass effect.
-     */
-    glass?: boolean;
-    /**
-     * If true, the input input start as flat on first render.
-     * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
-     */
-    start?: boolean;
-    /**
-     * If true, the input will be disabled and a loading skeleton will be displayed instead of the text.
-     */
-    skeleton?: boolean;
-    /**
-     * If true, the input will be disabled.
-     */
-    disabled?: boolean;
-    /**
-     * If true, the input will be readonly.
-     */
-    readonly?: boolean;
-  };
+export type NeoInputContext<T extends HTMLElement = HTMLElement> = HTMLRefProps<T> & NeoInputState & NeoInputStyles & NeoInputMethods;
 
 export const NeoInputLabelPosition = {
   Inside: 'inside' as const,
@@ -229,7 +230,9 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
    * The ref to bind to the label.
    */
   labelRef?: HTMLLabelElement;
-} & NeoInputContext<T> &
+} & HTMLRefProps<T> &
+  NeoInputState &
+  NeoInputStyles &
   HTMLActionProps;
 
 export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {

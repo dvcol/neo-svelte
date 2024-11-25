@@ -6,7 +6,7 @@ import type { INeoThemeProviderContext } from '~/providers/neo-theme-provider.mo
 export type NeoThemeSelectorProps = {
   // Snippet
 
-  children: Snippet<[INeoThemeProviderContext]>;
+  children?: Snippet<[INeoThemeProviderContext]>;
 
   // State
 
