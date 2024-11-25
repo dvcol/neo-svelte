@@ -1,15 +1,13 @@
 import { getContext, setContext, untrack } from 'svelte';
 
 import {
+  getRemember,
   getReset,
   getSource,
   getTheme,
-  hasSaved,
   type INeoThemeProviderContext,
-  NeoSourceKey,
-  NeoThemeKey,
-  NeoThemeReset,
   NeoThemeRoot,
+  NeoThemeStorageKey,
 } from '~/providers/neo-theme-provider.model.js';
 
 import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorThemeTargetNotFound } from '~/utils/error.utils.js';
@@ -20,7 +18,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
   #reset = $state<INeoThemeProviderContext['reset']>(getReset());
   #theme = $state<INeoThemeProviderContext['theme']>(getTheme());
   #source = $state<INeoThemeProviderContext['source']>(getSource());
-  #remember = $state<INeoThemeProviderContext['remember']>(hasSaved());
+  #remember = $state<INeoThemeProviderContext['remember']>(getRemember());
   #root = $state<INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root'])>(document?.documentElement);
 
   get reset() {
@@ -81,22 +79,24 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
 
     this.root.setAttribute(NeoThemeRoot, '');
 
-    this.root.setAttribute(NeoThemeKey, this.theme);
-    this.root.setAttribute(NeoSourceKey, this.source);
+    this.root.setAttribute(NeoThemeStorageKey.Theme, this.theme);
+    this.root.setAttribute(NeoThemeStorageKey.Source, this.source);
 
-    if (this.reset) this.root.setAttribute(NeoThemeReset, '');
-    else this.root.removeAttribute(NeoThemeReset);
+    if (this.reset) this.root.setAttribute(NeoThemeStorageKey.Rest, '');
+    else this.root.removeAttribute(NeoThemeStorageKey.Reset);
 
     if (!localStorage) return;
 
+    localStorage.setItem(NeoThemeStorageKey.Remember, Boolean(this.remember).toString());
+
     if (this.remember) {
-      localStorage.setItem(NeoThemeReset, Boolean(this.reset).toString());
-      localStorage.setItem(NeoThemeKey, this.theme);
-      localStorage.setItem(NeoSourceKey, this.source);
+      localStorage.setItem(NeoThemeStorageKey.Reset, Boolean(this.reset).toString());
+      localStorage.setItem(NeoThemeStorageKey.Theme, this.theme);
+      localStorage.setItem(NeoThemeStorageKey.Source, this.source);
     } else {
-      localStorage.removeItem(NeoThemeReset);
-      localStorage.removeItem(NeoThemeKey);
-      localStorage.removeItem(NeoSourceKey);
+      localStorage.removeItem(NeoThemeStorageKey.Reset);
+      localStorage.removeItem(NeoThemeStorageKey.Theme);
+      localStorage.removeItem(NeoThemeStorageKey.Source);
     }
   }
 
@@ -105,9 +105,9 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     if (!('removeAttribute' in this.root)) return;
 
     this.root.removeAttribute(NeoThemeRoot);
-    this.root.removeAttribute(NeoThemeReset);
-    this.root.removeAttribute(NeoThemeKey);
-    this.root.removeAttribute(NeoSourceKey);
+    this.root.removeAttribute(NeoThemeStorageKey.Reset);
+    this.root.removeAttribute(NeoThemeStorageKey.Theme);
+    this.root.removeAttribute(NeoThemeStorageKey.Source);
   }
 }
 

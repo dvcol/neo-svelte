@@ -66,7 +66,7 @@
         </NeoButton>
       </NeoTabs>
 
-      <NeoThemeSelector rounded reset />
+      <NeoThemeSelector rounded reset remember />
     </header>
 
     <main class="column view" class:transition={transitioning}>

@@ -148,7 +148,7 @@
    * Change the state of the input
    * @param state
    */
-  export const mark: NeoInputMethods<HTMLTextAreaElement>['mark'] = (state: NeoInputState) => {
+  export const mark: NeoInputMethods['mark'] = (state: NeoInputState) => {
     if (state.touched !== undefined) touched = state.touched;
     if (state.valid !== undefined) valid = state.valid;
     if (state.dirty === undefined) return onmark?.({ touched, dirty, valid });
@@ -165,7 +165,7 @@
   /**
    * Clear the input state
    */
-  export const clear: NeoInputMethods<HTMLTextAreaElement>['clear'] = (state?: NeoInputState) => {
+  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState) => {
     value = '';
     focus();
     if (!state) {

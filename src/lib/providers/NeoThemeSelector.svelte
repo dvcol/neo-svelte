@@ -17,7 +17,7 @@
     children,
 
     // state
-    remember: showRemember = true,
+    remember: showRemember,
     source: showSource = true,
     theme: showTheme = true,
     reset: showReset,

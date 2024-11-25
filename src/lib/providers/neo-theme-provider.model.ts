@@ -74,7 +74,7 @@ export type NeoThemeProviderProps = {
   /**
    * To store the last used reset & theme & source in local storage (if available)
    *
-   * @default false
+   * @default true
    */
   remember?: boolean;
   /**
@@ -86,22 +86,31 @@ export type NeoThemeProviderProps = {
 };
 
 export const NeoThemeRoot = 'neo-theme-root';
-export const NeoThemeReset = 'neo-reset';
-export const NeoThemeKey = 'neo-theme';
-export const NeoSourceKey = 'neo-source';
 
-export const getSavedTheme = () => localStorage?.getItem(NeoThemeKey) as NeoThemes | null;
+export const NeoThemeStorageKey: Record<string, `neo-${keyof INeoThemeProviderContext}`> = {
+  Reset: 'neo-reset' as const,
+  Theme: 'neo-theme' as const,
+  Source: 'neo-source' as const,
+  Remember: 'neo-remember' as const,
+} as const;
+
+export type NeoThemeStorageKeys = (typeof NeoThemeStorageKey)[keyof typeof NeoThemeStorageKey];
+
+export const getSavedTheme = () => localStorage?.getItem(NeoThemeStorageKey.Theme) as NeoThemes | null;
 export const getPreferTheme = (): NeoThemes => (window.matchMedia('(prefers-color-scheme: dark)').matches ? NeoTheme.Dark : NeoTheme.Light);
 export const getTheme = () => getSavedTheme() ?? getPreferTheme();
 
-export const getSavedSource = () => localStorage?.getItem(NeoSourceKey) as NeoSources | null;
+export const getSavedSource = () => localStorage?.getItem(NeoThemeStorageKey.Source) as NeoSources | null;
 export const getSource = () => getSavedSource() ?? NeoSource.TopLeft;
 
-export const getSavedReset = () => localStorage?.getItem(NeoThemeReset);
-export const getReset = () => {
-  const reset = getSavedReset();
-  if (!reset) return;
-  return reset === 'true';
+const getBoolean = (str?: string | null, fallback: boolean = false): boolean => {
+  // If saved reset is always truthy as it is a string
+  if (!str) return fallback;
+  return str === 'true';
 };
 
-export const hasSaved = () => !!getSavedTheme() || !!getSavedSource() || !!getSavedReset();
+export const getSavedReset = () => localStorage?.getItem(NeoThemeStorageKey.Reset);
+export const getReset = () => getBoolean(getSavedReset(), true);
+
+export const getSavedRemember = () => localStorage?.getItem(NeoThemeStorageKey.Remember);
+export const getRemember = () => getBoolean(getSavedRemember(), true);
