@@ -2,6 +2,8 @@
   import { wait } from '@dvcol/common-utils/common/promise';
   import { fade } from 'svelte/transition';
 
+  import type { EventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
+
   import IconAlert from '~/icons/IconAlert.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
@@ -33,6 +35,8 @@
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
+    readonly,
+    disabled,
     loading,
     clearable,
     dirtyOnInput,
@@ -84,7 +88,7 @@
   /* eslint-enable prefer-const */
 
   let initial = $state(value);
-  let validationMessage = $state('');
+  let validationMessage: string | undefined = $state(ref?.validationMessage);
 
   const filter = $derived.by(() => computeGlassFilter(elevation, glass));
   const boxShadow = $derived.by(() => computeShadowElevation(elevation, glass));
@@ -94,24 +98,24 @@
   const flatHover = $derived(hoverShadow.endsWith('flat') && !boxShadow.endsWith('flat'));
 
   let hovered = $state(false);
-  const onMouseEnter = (e: MouseEvent) => {
+  const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
     hovered = true;
     containerProps?.onmouseenter?.(e);
   };
 
-  const onMouseLeave = (e: MouseEvent) => {
+  const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
     hovered = false;
     containerProps?.onmouseleave?.(e);
   };
 
   let focused = $state(false);
-  const onFocus = (e: FocusEvent) => {
+  const onFocus: FocusEventHandler<HTMLTextAreaElement> = e => {
     focused = true;
     touched = true;
     onfocus?.(e);
   };
 
-  const onBlur = (e: FocusEvent) => {
+  const onBlur: FocusEventHandler<HTMLTextAreaElement> = e => {
     focused = false;
     onblur?.(e);
   };
@@ -123,17 +127,17 @@
     validationMessage = ref?.validationMessage;
   };
 
-  const onInput = (e: InputEvent) => {
+  const onInput: FormEventHandler<HTMLTextAreaElement> = e => {
     checkValidity({ dirty: dirtyOnInput, valid: validateOnInput });
     oninput?.(e);
   };
 
-  const onChange = (e: InputEvent) => {
+  const onChange: FormEventHandler<HTMLTextAreaElement> = e => {
     checkValidity();
     onchange?.(e);
   };
 
-  const onInvalid = (e: InputEvent) => {
+  const onInvalid: EventHandler<Event, HTMLTextAreaElement> = e => {
     valid = false;
     validationMessage = ref?.validationMessage;
     e.preventDefault();
@@ -144,13 +148,13 @@
    * Change the state of the input
    * @param state
    */
-  export const mark: NeoInputMethods['mark'] = (state: NeoInputState) => {
+  export const mark: NeoInputMethods<HTMLTextAreaElement>['mark'] = (state: NeoInputState) => {
     if (state.touched !== undefined) touched = state.touched;
     if (state.valid !== undefined) valid = state.valid;
     if (state.dirty === undefined) return onmark?.({ touched, dirty, valid });
     dirty = state.dirty;
     if (!dirty) initial = value;
-    return onmark?.({ touched, dirty, valid });
+    return onmark?.({ touched, dirty, valid, value });
   };
 
   const focus = () => {
@@ -161,24 +165,24 @@
   /**
    * Clear the input state
    */
-  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState) => {
+  export const clear: NeoInputMethods<HTMLTextAreaElement>['clear'] = (state?: NeoInputState) => {
     value = '';
     focus();
     if (!state) {
       setTimeout(() => checkValidity());
-      return onclear?.({ touched, dirty, valid });
+      return onclear?.({ touched, dirty, valid, value });
     }
     initial = value;
     setTimeout(() => mark({ touched: false, dirty: false, ...state }));
-    return onclear?.({ touched, dirty, valid });
+    return onclear?.({ touched, dirty, valid, value });
   };
 
   const affix = $derived(clearable || loading !== undefined || validation);
-  const close = $derived(clearable && (focused || hovered) && value?.length && !rest?.disabled && !rest?.readonly);
-  const isFloating = $derived(floating && !focused && !value?.length && !rest?.disabled && !rest?.readonly);
+  const close = $derived(clearable && (focused || hovered) && value?.length && !disabled && !readonly);
+  const isFloating = $derived(floating && !focused && !value?.length && !disabled && !readonly);
 
-  let labelHeight = $state();
-  let labelWidth = $state();
+  let labelHeight = $state<string>();
+  let labelWidth = $state<string>();
 
   let first = $state(true);
   // Skip enter transition on first render for floating label
@@ -193,7 +197,7 @@
     if (!labelRef) return;
     if (position === NeoInputLabelPosition.Inside && !floating) return;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
-    if (![NeoInputLabelPosition.Left, NeoInputLabelPosition.Right].includes(position)) return;
+    if (position === NeoInputLabelPosition.Left || position === NeoInputLabelPosition.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
   });
 
@@ -204,6 +208,7 @@
   });
 
   const max = $derived.by(() => {
+    if (!ref) return;
     if (typeof autoResize === 'boolean' || !autoResize) return;
     if (!autoResize.max) return;
 
@@ -243,7 +248,7 @@
   const showMessage = $derived(message || errorMessage || error || validation);
   const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-textarea-message-${crypto.randomUUID()}`) : undefined);
 
-  const context: NeoInputContext = $derived({
+  const context = $derived<NeoInputContext<HTMLTextAreaElement>>({
     // Ref
     ref,
 
@@ -256,6 +261,8 @@
     touched,
     dirty,
     valid,
+    readonly,
+    disabled,
 
     // Styles
     elevation,
@@ -302,7 +309,7 @@
 
   <!--  Suffix  -->
   {#if suffix}
-    <svelte:element this={suffixTag} class:neo-textarea-suffix={true} disabled={rest?.disabled} {...suffixProps}>
+    <svelte:element this={suffixTag} class:neo-textarea-suffix={true} {disabled} {readonly} {...suffixProps}>
       {@render suffix(context)}
     </svelte:element>
   {/if}
@@ -311,6 +318,8 @@
 {#snippet textarea()}
   <textarea
     {id}
+    {disabled}
+    {readonly}
     aria-invalid={valid === undefined ? undefined : !valid}
     aria-describedby={messageId}
     bind:this={ref}
@@ -338,7 +347,7 @@
     data-dirty={dirty}
     data-valid={valid}
     class:neo-textarea-group={true}
-    class:read-only={rest?.readonly}
+    class:readonly
     class:borderless
     class:rounded
     class:glass
@@ -346,7 +355,7 @@
     class:start
     class:skeleton
     class:validation
-    class:disabled={rest?.disabled}
+    class:disabled
     class:raised={elevation > 3 || elevation + hover > 3}
     class:inset={elevation < -3 || elevation + hover < -3}
     class:flat={!elevation}
@@ -369,7 +378,7 @@
           {#if typeof label === 'string'}
             {label}
           {:else}
-            {@render label()}
+            {@render label(context)}
           {/if}
         </label>
         {@render textarea()}
@@ -392,7 +401,7 @@
     {messageProps}
     in={inAction}
     out={outAction}
-    transiton={transitionAction}
+    transition={transitionAction}
     {...wrapperProps}
   >
     {@render textareaGroup()}
@@ -614,7 +623,7 @@
     box-shadow: var(--neo-textarea-box-shadow, var(--neo-box-shadow-flat));
     cursor: text;
 
-    &.read-only {
+    &.readonly {
       cursor: initial;
     }
 

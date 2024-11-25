@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" generics="T extends HTMLElement">
   import { fade } from 'svelte/transition';
 
   import type { NeoValidationContext, NeoValidationProps } from '~/input/neo-validation.model.js';
@@ -27,10 +27,10 @@
     messageTag = 'div',
     messageId = messageProps?.id ?? `neo-validation-message-${crypto.randomUUID()}`,
     ...rest
-  }: NeoValidationProps = $props();
+  }: NeoValidationProps<T> = $props();
   /* eslint-enable prefer-const */
 
-  const innerContext = $derived<NeoValidationContext>({
+  const innerContext = $derived<NeoValidationContext<T>>({
     messageId,
     message,
     error,
@@ -54,7 +54,11 @@
         out:fade={leaveDefaultTransition}
         {...messageProps}
       >
-        {#if typeof error === 'string'}{error}{:else}{@render error(context)}{/if}
+        {#if typeof error === 'string'}
+          {error}
+        {:else}
+          {@render error(context)}
+        {/if}
       </svelte:element>
     {:else if message}
       <svelte:element
@@ -65,7 +69,11 @@
         out:fade={leaveDefaultTransition}
         {...messageProps}
       >
-        {#if typeof message === 'string'}{message}{:else}{@render message(context)}{/if}
+        {#if typeof message === 'string'}
+          {message}
+        {:else}
+          {@render message(context)}
+        {/if}
       </svelte:element>
     {/if}
   </div>

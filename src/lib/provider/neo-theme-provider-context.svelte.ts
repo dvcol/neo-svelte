@@ -12,6 +12,8 @@ import {
 
 import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorThemeTargetNotFound } from '~/utils/error.utils.js';
 
+type NeoThemeProviderRoot = INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root']);
+export type NeoThemeProviderContextState = Partial<Omit<INeoThemeProviderContext, 'root'>> & { root?: NeoThemeProviderRoot };
 export class NeoThemeProviderContext implements INeoThemeProviderContext {
   #theme = $state<INeoThemeProviderContext['theme']>(getTheme());
   #source = $state<INeoThemeProviderContext['source']>(getSource());
@@ -43,7 +45,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     };
   }
 
-  constructor({ theme, source, remember, root }: INeoThemeProviderContext) {
+  constructor({ theme, source, remember, root }: NeoThemeProviderContextState) {
     this.#theme = theme ?? this.theme;
     this.#source = source ?? this.source;
     this.#remember = remember ?? this.remember;
@@ -52,7 +54,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.sync();
   }
 
-  update(partial: Partial<INeoThemeProviderContext>) {
+  update(partial: Partial<NeoThemeProviderContextState>) {
     this.#theme = partial.theme ?? this.#theme;
     this.#source = partial.source ?? this.#source;
     this.#remember = partial.remember ?? this.#remember;
@@ -90,7 +92,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
 }
 
 const NeoContextKey = Symbol('NeoThemeProviderContext');
-export const setNeoThemeContext = (context: INeoThemeProviderContext) =>
+export const setNeoThemeContext = (context: NeoThemeProviderContextState) =>
   setContext<NeoThemeProviderContext>(NeoContextKey, new NeoThemeProviderContext(context));
 export const getNeoThemeContext = () => getContext<NeoThemeProviderContext>(NeoContextKey);
 

@@ -4,6 +4,7 @@
 // }
 
 import type { Snippet } from 'svelte';
+import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation } from '~/utils/shadow.utils.js';
@@ -45,7 +46,7 @@ export type NeoInputMethods<T extends HTMLElement> = HTMLRefProps<T> & {
 };
 
 export type NeoInputElevation = ShadowElevation;
-export type NeoInputContext<T extends HTMLElement> = NeoInputState &
+export type NeoInputContext<T extends HTMLElement = HTMLElement> = NeoInputState &
   NeoInputMethods<T> & {
     // Styles
 
@@ -81,6 +82,14 @@ export type NeoInputContext<T extends HTMLElement> = NeoInputState &
      * If true, the input will be disabled and a loading skeleton will be displayed instead of the text.
      */
     skeleton?: boolean;
+    /**
+     * If true, the input will be disabled.
+     */
+    disabled?: boolean;
+    /**
+     * If true, the input will be readonly.
+     */
+    readonly?: boolean;
   };
 
 export const NeoInputLabelPosition = {
@@ -107,6 +116,10 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
    * A snippet or a string to display as the input error message.
    */
   error?: Snippet<[NeoInputContext<T>]> | string;
+  /**
+   * A snippet to display as the input suffix.
+   */
+  suffix?: Snippet<[NeoInputContext<T>]>;
 
   // States
   /**
@@ -197,6 +210,16 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
    */
   messageProps?: HTMLNeoBaseElement;
 
+  /*
+   * The HTML tag to use for the suffix.
+   * @default div
+   */
+  suffixTag?: keyof HTMLElementTagNameMap;
+  /**
+   * The props to pass to the suffix.
+   */
+  suffixProps?: HTMLNeoBaseElement;
+
   /**
    * The props to pass to the label.
    */
@@ -205,9 +228,8 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
   /**
    * The ref to bind to the label.
    */
-  labelRef?: HTMLRefProps<HTMLLabelElement>;
-} & NeoInputState &
-  HTMLNeoBaseElement<T> &
+  labelRef?: HTMLLabelElement;
+} & NeoInputContext<T> &
   HTMLActionProps;
 
 export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
@@ -217,10 +239,6 @@ export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
    * A snippet to display as the input prefix.
    */
   prefix?: Snippet<[NeoInputContext<T>]>;
-  /**
-   * A snippet to display as the input suffix.
-   */
-  suffix?: Snippet<[NeoInputContext<T>]>;
 
   // Other props
 
@@ -233,17 +251,8 @@ export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
    * The props to pass to the prefix.
    */
   prefixProps?: HTMLNeoBaseElement;
-
-  /*
-   * The HTML tag to use for the suffix.
-   * @default div
-   */
-  suffixTag?: keyof HTMLElementTagNameMap;
-  /**
-   * The props to pass to the suffix.
-   */
-  suffixProps?: HTMLNeoBaseElement;
-} & NeoCommonInputProps<T>;
+} & NeoCommonInputProps<T> &
+  HTMLInputAttributes;
 
 export type NeoTextAreaResize = {
   /**
@@ -266,4 +275,5 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement
    * @default true
    */
   autoResize?: boolean | NeoTextAreaResize;
-} & NeoCommonInputProps<T>;
+} & NeoCommonInputProps<T> &
+  HTMLTextareaAttributes;

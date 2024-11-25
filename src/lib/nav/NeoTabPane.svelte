@@ -44,13 +44,16 @@
   const inProps = $derived(animated ? { [orientation]: `${-100 * direction}%`, duration: 600, delay: 100 } : undefined);
   const outProps = $derived(animated ? { [orientation]: `${100 * direction}%`, duration: 600 } : undefined);
 
-  const paneId = $derived(tabId ? `neo-tab-pane-${tabId}` : undefined);
+  const paneId = $derived(tabId ? `neo-tab-pane-${String(tabId)}` : undefined);
   $effect(() => {
     untrack(() => {
-      if (!tabId) return;
+      if (!tabId || !paneId) return;
       context?.registerPane(tabId, paneId);
     });
-    return () => context?.removePane(tabId);
+    return () => {
+      if (!tabId) return;
+      context?.removePane(tabId);
+    };
   });
 </script>
 
@@ -59,7 +62,7 @@
     this={tag}
     role="tabpanel"
     id={paneId}
-    aria-labelledby={tabId ? `neo-tab-${tabId}` : undefined}
+    aria-labelledby={tabId ? `neo-tab-${String(tabId)}` : undefined}
     data-tab-id={tabId ?? (empty ? 'empty' : undefined)}
     bind:this={ref}
     class:neo-tab-pane={true}

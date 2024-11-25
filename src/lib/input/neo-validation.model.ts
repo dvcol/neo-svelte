@@ -34,7 +34,7 @@ export type NeoValidationProps<T extends HTMLElement = HTMLElement> = {
   /**
    * The context to pass to the snippets.
    */
-  context?: NeoInputContext<T>;
+  context: NeoInputContext<T>;
 
   // Other props
 
@@ -46,6 +46,6 @@ export type NeoValidationProps<T extends HTMLElement = HTMLElement> = {
    * The props to pass to the message and error components.
    */
   messageProps?: HTMLNeoBaseElement;
-} & NeoValidationContext<T> &
-  HTMLNeoBaseElement &
-  HTMLTransitionProps;
+} & HTMLTransitionProps &
+  NeoValidationContext<T> &
+  HTMLNeoBaseElement;

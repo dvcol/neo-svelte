@@ -143,6 +143,9 @@
     ],
     "*.{css,scss,less,vue,svelte}": [
       "stylelint --fix"
+    ],
+    "*.{svelte}": [
+      "pnpm run check:svelte"
     ]
   }
 }
