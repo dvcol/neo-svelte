@@ -1,7 +1,4 @@
 <script lang="ts">
-  import '~/styles/reset.scss';
-  import '~/styles/theme.scss';
-
   import { onDestroy } from 'svelte';
 
   import { setNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
@@ -13,6 +10,7 @@
     children,
 
     // States
+    reset,
     theme = $bindable(),
     source = $bindable(),
     remember = $bindable(),
@@ -20,9 +18,14 @@
   }: NeoThemeProviderProps = $props();
   /* eslint-enable prefer-const */
 
-  const context = setNeoThemeContext({ theme, source, remember, root: target });
-  $effect(() => context.update({ theme, source, remember, root: target }));
+  const context = setNeoThemeContext({ reset, theme, source, remember, root: target });
+  $effect(() => context.update({ reset, theme, source, remember, root: target }));
   onDestroy(() => context.destroy());
 </script>
 
 {@render children?.(context.state)}
+
+<style lang="scss" global>
+  @use 'src/lib/styles/reset';
+  @use 'src/lib/styles/theme';
+</style>
