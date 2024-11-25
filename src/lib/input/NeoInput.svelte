@@ -218,6 +218,7 @@
     clear,
 
     // State
+    value,
     touched,
     dirty,
     valid,

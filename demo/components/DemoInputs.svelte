@@ -13,7 +13,13 @@
   import NeoTextArea from '~/input/NeoTextarea.svelte';
   import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
-  type ColumProps = NeoInputProps;
+  type ColumProps = {
+    label: string;
+    props?: NeoInputProps;
+    state: ValidationState;
+    textarea?: boolean;
+    input?: boolean;
+  };
 
   class ValidationState {
     touched = $state(false);
@@ -29,7 +35,7 @@
     }
   }
 
-  const options = $state<ColumProps>({
+  const options = $state<NeoInputProps>({
     borderless: false,
     rounded: false,
     glass: false,
@@ -63,12 +69,7 @@
 
   const onclick = (e: MouseEvent) => console.info('suffix click', e);
 
-  const columns: {
-    label: string;
-    props?: ColumProps;
-    state: ValidationState;
-    textarea?: boolean;
-  }[] = [
+  const columns: ColumProps[] = [
     {
       label: 'Default',
       props: {
@@ -76,6 +77,7 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
     {
       label: 'Prefix',
@@ -84,6 +86,7 @@
         prefix,
       },
       state: validation,
+      input: true,
     },
     {
       label: 'Suffix',
@@ -94,6 +97,7 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
     {
       label: 'Text',
@@ -104,6 +108,7 @@
         suffixProps: { onclick },
       },
       state: validation,
+      input: true,
     },
 
     {
@@ -116,6 +121,7 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
     {
       label: 'Top',
@@ -128,6 +134,7 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
     {
       label: 'Left',
@@ -139,6 +146,7 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
     {
       label: 'Right',
@@ -150,6 +158,7 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
     {
       label: 'Custom Label',
@@ -160,6 +169,7 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
     {
       label: 'Message',
@@ -171,7 +181,35 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
+    {
+      label: 'Minimum 5',
+      props: {
+        label: 'Minimum',
+        placeholder: 'Placeholder',
+        suffix,
+        suffixProps: { onclick },
+        autoResize: { min: 5 },
+      },
+      state: validation,
+      textarea: true,
+    },
+    {
+      label: 'Maximum 10',
+      props: {
+        label: 'Maximum',
+        placeholder: 'Placeholder',
+        suffix,
+        suffixProps: { onclick },
+        autoResize: { min: 3, max: 10 },
+      },
+      state: validation,
+      textarea: true,
+    },
+  ];
+
+  const validationColumns: { label: string; props?: ColumProps; state: ValidationState }[] = [
     {
       label: 'Custom Error',
       props: {
@@ -183,10 +221,8 @@
       },
       state: validation,
       textarea: true,
+      input: true,
     },
-  ];
-
-  const validationColumns: { label: string; props?: ColumProps; state: ValidationState }[] = [
     {
       label: 'Valid',
       props: {
@@ -197,6 +233,7 @@
       },
       state: validState,
       textarea: true,
+      input: true,
     },
     {
       label: 'Invalid',
@@ -210,6 +247,7 @@
       },
       state: invalidState,
       textarea: true,
+      input: true,
     },
   ];
 </script>
@@ -254,9 +292,11 @@
   <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
 {/snippet}
 
-{#snippet input(props: ColumProps, _state: ValidationState, _textareas: boolean)}
-  <NeoInput bind:touched={_state.touched} bind:dirty={_state.dirty} bind:valid={_state.valid} bind:value={_state.value} {...options} {...props} />
-  {#if _textareas}
+{#snippet input({ props, state: _state, textarea: _textarea, input: _input }: ColumProps)}
+  {#if _input}
+    <NeoInput bind:touched={_state.touched} bind:dirty={_state.dirty} bind:valid={_state.valid} bind:value={_state.value} {...options} {...props} />
+  {/if}
+  {#if _textarea}
     <NeoTextArea
       bind:touched={_state.touched}
       bind:dirty={_state.dirty}
@@ -268,12 +308,23 @@
   {/if}
 {/snippet}
 
+{#snippet group(column: ColumProps)}
+  {#if column.props?.glass || options.glass}
+    <SphereBackdrop>{@render input(column)}</SphereBackdrop>
+  {:else}
+    <div class="wrapper">
+      {@render input(column)}
+    </div>
+  {/if}
+{/snippet}
+
 {#snippet validationState({ touched, dirty, valid, value }: ValidationState)}
   <div class="row">
     <span class="label">Touched: {touched}</span>
     <span class="label">Dirty: {dirty}</span>
     <span class="label">Valid: {valid}</span>
-    <span class="label">Value: {value}</span>
+    <span class="label">Value:</span>
+    <span class="value">{value}</span>
   </div>
 {/snippet}
 
@@ -284,13 +335,7 @@
     {#each columns as column}
       <div class="column content">
         <span class="label">{column.label}</span>
-        {#if column.props?.glass || options.glass}
-          <SphereBackdrop>{@render input(column.props, column.state, column.textarea)}</SphereBackdrop>
-        {:else}
-          <div class="wrapper">
-            {@render input(column.props, column.state, column.textarea)}
-          </div>
-        {/if}
+        {@render group(column)}
       </div>
     {/each}
   </div>
@@ -300,13 +345,7 @@
       <div class="column content">
         <span class="label">{column.label}</span>
         {@render validationState(column.state)}
-        {#if column.props?.glass || options.glass}
-          <SphereBackdrop>{@render input(column.props, column.state, column.textarea)}</SphereBackdrop>
-        {:else}
-          <div class="wrapper">
-            {@render input(column.props, column.state, column.textarea)}
-          </div>
-        {/if}
+        {@render group(column)}
       </div>
     {/each}
   </div>
@@ -328,10 +367,20 @@
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
 
+  .value,
   .label {
     max-width: 80vw;
     white-space: pre-line;
     word-break: break-all;
+  }
+
+  .value {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    max-width: 20vw;
+    height: calc(var(--neo-line-height) * 3);
+    overflow: auto;
   }
 
   .wrapper {

@@ -38,7 +38,7 @@
     dirtyOnInput,
     validateOnInput,
     position = NeoInputLabelPosition.Inside,
-    autoresize,
+    autoResize = true,
 
     // Styles
     elevation = 3,
@@ -123,24 +123,9 @@
     validationMessage = ref?.validationMessage;
   };
 
-  let rows = $state(suffix ? 3 : undefined);
-
   const onInput = (e: InputEvent) => {
     checkValidity({ dirty: dirtyOnInput, valid: validateOnInput });
     oninput?.(e);
-
-    if (!autoresize) return;
-
-    const { scrollHeight, clientHeight } = ref ?? {};
-    if (scrollHeight > clientHeight) {
-      const lineHeight = parseFloat(getComputedStyle(ref)?.lineHeight);
-      if (Number.isNaN(lineHeight)) return;
-      if (!rows) rows = 1;
-      rows += Math.floor((scrollHeight - clientHeight) / lineHeight);
-    }
-
-    // TODO - min / Max rows & auto decrement
-    // TODO - rework DemoINputs
   };
 
   const onChange = (e: InputEvent) => {
@@ -212,6 +197,42 @@
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
   });
 
+  const rows = $derived.by(() => {
+    if (typeof autoResize === 'boolean' || !autoResize) return suffix ? 3 : undefined;
+    if (suffix) return Math.max(3, autoResize.min ?? 0);
+    return autoResize.min;
+  });
+
+  const max = $derived.by(() => {
+    if (typeof autoResize === 'boolean' || !autoResize) return;
+    if (!autoResize.max) return;
+
+    const lineHeight = Number.parseInt(getComputedStyle(ref).lineHeight, 10);
+    if (!lineHeight || Number.isNaN(lineHeight)) return;
+    return autoResize.max * lineHeight;
+  });
+
+  const resize = () => {
+    if (!autoResize || !ref) return;
+
+    const isScrolled = ref.scrollHeight && ref.scrollHeight > ref.clientHeight;
+    const hasMin = typeof autoResize !== 'boolean' && autoResize.min;
+    if (!isScrolled && !hasMin) return;
+
+    ref.style.height = '1px';
+    const { scrollHeight } = ref;
+
+    if (!scrollHeight) ref.style.height = '';
+    else if (max) ref.style.height = `${Math.min(max, scrollHeight)}px`;
+    else ref.style.height = `${scrollHeight}px`;
+  };
+
+  $effect(() => {
+    // eslint-disable-next-line no-unused-expressions -- used to trigger resize textarea on value change
+    value;
+    resize();
+  });
+
   const errorMessage = $derived.by(() => {
     if (valid || valid === undefined) return;
     if (error) return error;
@@ -231,6 +252,7 @@
     clear,
 
     // State
+    value,
     touched,
     dirty,
     valid,

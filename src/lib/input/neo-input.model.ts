@@ -24,6 +24,10 @@ export type NeoInputState = {
    * `true` if the input passes validation.
    */
   valid?: boolean;
+  /**
+   * The input/textarea value.
+   */
+  value?: string;
 };
 
 export type NeoInputMethods<T extends HTMLElement> = HTMLRefProps<T> & {
@@ -241,6 +245,17 @@ export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
   suffixProps?: HTMLNeoBaseElement;
 } & NeoCommonInputProps<T>;
 
+export type NeoTextAreaResize = {
+  /**
+   * The minimum number of rows the textarea can have.
+   * @default 1
+   */
+  min?: number;
+  /**
+   * The maximum number of rows the textarea can have.
+   */
+  max?: number;
+};
 export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement> = {
   /**
    * Automatically increments/decrements the textarea rows to fit the content.
@@ -248,7 +263,7 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement
    * If `true`, the textarea will increment indefinitely and will not decrement.
    * If an object is provided, the textarea will increment up to `max` rows and decrement to `min` rows.
    *
-   * @default false
+   * @default true
    */
-  autoresize?: boolean | { min?: number; max?: number };
+  autoResize?: boolean | NeoTextAreaResize;
 } & NeoCommonInputProps<T>;
