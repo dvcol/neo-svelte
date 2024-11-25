@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/dvcol/neo-svelte/compare/v0.1.1...v0.1.2) (2024-11-25)
+
+
+### Bug Fixes
+
+* **selector:** prevent $effect loop when provider props change ([2d9f6b1](https://github.com/dvcol/neo-svelte/commit/2d9f6b150ea69e6e66b111bf0b3ac4baea83c8d5))
+* **style:** bundle theme scss with component & make reset optional ([1712a25](https://github.com/dvcol/neo-svelte/commit/1712a25ad42b3528783f09da1f8cd9fecc54f20f))
+
 ### 0.1.1 (2024-11-25)
 
 
