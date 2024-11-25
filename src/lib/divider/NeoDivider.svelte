@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { NeoDivider } from '~/divider/neo-divider.model.js';
+  import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
 
-  const { elevation = -1, vertical = false, height, width, ...rest }: NeoDivider = $props();
+  const { elevation = -1, vertical = false, height, width, ...rest }: NeoDividerProps = $props();
 
   const boxShadow = $derived.by(() => computeShadowElevation(elevation));
 </script>

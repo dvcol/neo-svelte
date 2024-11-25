@@ -15,8 +15,8 @@
   import IconGithub from '~/icons/IconGithub.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
-  import NeoThemeProvider from '~/provider/NeoThemeProvider.svelte';
-  import NeoThemeSelector from '~/provider/NeoThemeSelector.svelte';
+  import NeoThemeProvider from '~/providers/NeoThemeProvider.svelte';
+  import NeoThemeSelector from '~/providers/NeoThemeSelector.svelte';
 
   const transition: TransitionProps = {
     in: fade,

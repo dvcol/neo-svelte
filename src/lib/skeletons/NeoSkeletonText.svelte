@@ -1,9 +1,9 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
 
-  import type { NeoSkeletonTextProps } from '~/skeleton/neo-skeleton-text.model.js';
+  import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 
-  import NeoSkeletonContainer from '~/skeleton/NeoSkeletonContainer.svelte';
+  import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';
 

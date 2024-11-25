@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { NeoInputContext } from '~/input/neo-input.model.js';
+import type { NeoInputContext } from '~/inputs/neo-input.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 

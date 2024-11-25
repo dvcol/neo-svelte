@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoTransitionContainerProps } from '~/container/neo-transition-container.model.js';
+  import type { NeoTransitionContainerProps } from '~/containers/neo-transition-container.model.js';
 
   const {
     // Snippets

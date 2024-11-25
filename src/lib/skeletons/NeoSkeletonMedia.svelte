@@ -1,12 +1,12 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
 
-  import type { NeoSkeletonMediaProps } from '~/skeleton/neo-skeleton-media.model.js';
+  import type { NeoSkeletonMediaProps } from '~/skeletons/neo-skeleton-media.model.js';
 
   import IconAccount from '~/icons/IconAccount.svelte';
   import IconImage from '~/icons/IconImage.svelte';
   import IconVideo from '~/icons/IconVideo.svelte';
-  import NeoSkeletonContainer from '~/skeleton/NeoSkeletonContainer.svelte';
+  import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';
 

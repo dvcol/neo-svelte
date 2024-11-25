@@ -8,7 +8,7 @@ import {
   NeoSourceKey,
   NeoThemeKey,
   NeoThemeRoot,
-} from '~/provider/neo-theme-provider.model.js';
+} from '~/providers/neo-theme-provider.model.js';
 
 import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorThemeTargetNotFound } from '~/utils/error.utils.js';
 

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { NeoInputProps } from '~/input/neo-input.model.js';
+  import type { NeoInputProps } from '~/inputs/neo-input.model.js';
 
   import IconWatch from '~/icons/IconWatch.svelte';
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
-  import NeoInput from '~/input/NeoInput.svelte';
+  import NeoInput from '~/inputs/NeoInput.svelte';
 
   const { type = 'password', placeholder = 'Enter your password', ...rest }: NeoInputProps = $props();
 

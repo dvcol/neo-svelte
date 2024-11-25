@@ -8,14 +8,14 @@
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
   import IconConfirm from '~/icons/IconConfirm.svelte';
-  import NeoValidation from '~/input/NeoValidation.svelte';
+  import NeoValidation from '~/inputs/NeoValidation.svelte';
   import {
     type NeoInputContext,
     NeoInputLabelPosition,
     type NeoInputMethods,
     type NeoInputProps,
     type NeoInputState,
-  } from '~/input/neo-input.model.js';
+  } from '~/inputs/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
   import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';

@@ -3,7 +3,7 @@ import type { TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-export type NeoTabPaneProps<T = unknown> = {
+export type NeoTabPanelProps<T = unknown> = {
   // Snippets
 
   /**

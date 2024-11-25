@@ -4,8 +4,8 @@
 
   import { onDestroy } from 'svelte';
 
-  import { setNeoThemeContext } from '~/provider/neo-theme-provider-context.svelte.js';
-  import { type NeoThemeProviderProps } from '~/provider/neo-theme-provider.model.js';
+  import { setNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
+  import { type NeoThemeProviderProps } from '~/providers/neo-theme-provider.model.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {

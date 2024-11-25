@@ -9,8 +9,8 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
-  import NeoSkeletonMedia from '~/skeleton/NeoSkeletonMedia.svelte';
-  import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
+  import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
+  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
   let skeleton = $state(false);

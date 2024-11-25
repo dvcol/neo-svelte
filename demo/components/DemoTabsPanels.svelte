@@ -10,10 +10,10 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
-  import NeoTabPane from '~/nav/NeoTabPane.svelte';
+  import NeoTabPanel from '~/nav/NeoTabPanel.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
   import NeoTabsCard from '~/nav/NeoTabsCard.svelte';
-  import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
+  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
 
   const added = $state<NeoTabProps>([
     { text: 'Button', tabId: 'button', close: false },
@@ -89,18 +89,18 @@
 
 {#snippet panes()}
   <NeoTabsCard {animate} class="panel">
-    <NeoTabPane empty>
+    <NeoTabPanel empty>
       <NeoSkeletonText alt justify loading={options.skeleton}>
         {@render content('Empty')}
       </NeoSkeletonText>
-    </NeoTabPane>
+    </NeoTabPanel>
 
     {#each added as { text, tabId } (tabId)}
-      <NeoTabPane {tabId}>
+      <NeoTabPanel {tabId}>
         <NeoSkeletonText alt justify loading={options.skeleton}>
           {@render content(text)}
         </NeoSkeletonText>
-      </NeoTabPane>
+      </NeoTabPanel>
     {/each}
   </NeoTabsCard>
 {/snippet}

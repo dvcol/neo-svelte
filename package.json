@@ -35,6 +35,38 @@
     ".": {
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
+    },
+    "./buttons": {
+      "types": "./dist/buttons/index.d.ts",
+      "svelte": "./dist/buttons/index.js"
+    },
+    "./cards": {
+      "types": "./dist/cards/index.d.ts",
+      "svelte": "./dist/cards/index.js"
+    },
+    "./containers": {
+      "types": "./dist/containers/index.d.ts",
+      "svelte": "./dist/containers/index.js"
+    },
+    "./divider": {
+      "types": "./dist/divider/index.d.ts",
+      "svelte": "./dist/divider/index.js"
+    },
+    "./inputs": {
+      "types": "./dist/inputs/index.d.ts",
+      "svelte": "./dist/inputs/index.js"
+    },
+    "./nav": {
+      "types": "./dist/nav/index.d.ts",
+      "svelte": "./dist/nav/index.js"
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts",
+      "svelte": "./dist/providers/index.js"
+    },
+    "./skeletons": {
+      "types": "./dist/skeletons/index.d.ts",
+      "svelte": "./dist/skeletons/index.js"
     }
   },
   "files": [

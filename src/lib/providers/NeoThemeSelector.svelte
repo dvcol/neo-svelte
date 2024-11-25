@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoThemeSelectorProps } from '~/provider/neo-theme-selector.model.js';
+  import type { NeoThemeSelectorProps } from '~/providers/neo-theme-selector.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -8,8 +8,8 @@
   import IconSaveOff from '~/icons/IconSaveOff.svelte';
   import IconSun from '~/icons/IconSun.svelte';
   import IconSunrise from '~/icons/IconSunrise.svelte';
-  import { useNeoThemeContext } from '~/provider/neo-theme-provider-context.svelte.js';
-  import { NeoSource, NeoTheme } from '~/provider/neo-theme-provider.model.js';
+  import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
+  import { NeoSource, NeoTheme } from '~/providers/neo-theme-provider.model.js';
 
   const { children, ...rest }: NeoThemeSelectorProps = $props();
 

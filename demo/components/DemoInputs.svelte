@@ -2,15 +2,15 @@
   import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
-  import type { NeoInputProps } from '~/input/neo-input.model';
+  import type { NeoInputProps } from '~/inputs/neo-input.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
-  import NeoInput from '~/input/NeoInput.svelte';
-  import NeoPassword from '~/input/NeoPassword.svelte';
-  import NeoTextArea from '~/input/NeoTextarea.svelte';
+  import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoPassword from '~/inputs/NeoPassword.svelte';
+  import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
   type ColumProps = {
@@ -60,6 +60,7 @@
   const validation = new ValidationState();
   const validState = new ValidationState();
   const invalidState = new ValidationState();
+  const customState = new ValidationState();
 
   const onClear = () => {
     validation.clear();
@@ -219,7 +220,7 @@
         placeholder: 'Placeholder',
         error: 'Custom error: min length 5',
       },
-      state: validation,
+      state: customState,
       textarea: true,
       input: true,
     },
@@ -318,13 +319,11 @@
   {/if}
 {/snippet}
 
-{#snippet validationState({ touched, dirty, valid, value }: ValidationState)}
+{#snippet validationState({ touched, dirty, valid }: ValidationState)}
   <div class="row">
-    <span class="label">Touched: {touched}</span>
-    <span class="label">Dirty: {dirty}</span>
-    <span class="label">Valid: {valid}</span>
-    <span class="label">Value:</span>
-    <span class="value">{value}</span>
+    <div class="label">Touched: {touched}</div>
+    <div class="label">Dirty: {dirty}</div>
+    <div class="label">Valid: {valid}</div>
   </div>
 {/snippet}
 
@@ -367,20 +366,10 @@
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
 
-  .value,
   .label {
     max-width: 80vw;
     white-space: pre-line;
     word-break: break-all;
-  }
-
-  .value {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-    max-width: 20vw;
-    height: calc(var(--neo-line-height) * 3);
-    overflow: auto;
   }
 
   .wrapper {

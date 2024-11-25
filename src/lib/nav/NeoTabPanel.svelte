@@ -2,7 +2,7 @@
   import { untrack } from 'svelte';
   import { fly } from 'svelte/transition';
 
-  import type { NeoTabPaneProps } from '~/nav/neo-tab-pane.model.js';
+  import type { NeoTabPanelProps } from '~/nav/neo-tab-panel.model.js';
 
   import { getTabsCardContext } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
@@ -24,7 +24,7 @@
 
     // Other props
     ...rest
-  }: NeoTabPaneProps = $props();
+  }: NeoTabPanelProps = $props();
   /* eslint-enable prefer-const */
 
   const context = getTabContext();
@@ -44,7 +44,7 @@
   const inProps = $derived(animated ? { [orientation]: `${-100 * direction}%`, duration: 600, delay: 100 } : undefined);
   const outProps = $derived(animated ? { [orientation]: `${100 * direction}%`, duration: 600 } : undefined);
 
-  const paneId = $derived(tabId ? `neo-tab-pane-${String(tabId)}` : undefined);
+  const paneId = $derived(tabId ? `neo-tab-panel-${String(tabId)}` : undefined);
   $effect(() => {
     untrack(() => {
       if (!tabId || !paneId) return;
@@ -65,7 +65,7 @@
     aria-labelledby={tabId ? `neo-tab-${String(tabId)}` : undefined}
     data-tab-id={tabId ?? (empty ? 'empty' : undefined)}
     bind:this={ref}
-    class:neo-tab-pane={true}
+    class:neo-tab-panel={true}
     {...rest}
     in:transition={inProps}
     out:transition={outProps}

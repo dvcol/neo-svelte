@@ -1,6 +1,6 @@
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-export type NeoDivider = {
+export type NeoDividerProps = {
   elevation?: number;
   vertical?: boolean;
   height?: CSSStyleDeclaration['height'];

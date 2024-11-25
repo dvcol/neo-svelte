@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { NeoSkeletonTextProps } from '~/skeleton/neo-skeleton-text.model.js';
+  import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import NeoSkeletonMedia from '~/skeleton/NeoSkeletonMedia.svelte';
-  import NeoSkeletonText from '~/skeleton/NeoSkeletonText.svelte';
+  import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
+  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
 
   const options = $state<NeoSkeletonTextProps>({
     loading: true,

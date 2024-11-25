@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { NeoSkeletonContainerProps } from '~/skeleton/neo-skeleton-container.model.js';
+import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoSkeletonTextProps = {

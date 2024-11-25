@@ -1,6 +1,6 @@
 <script lang="ts">
   import NeoCard from '~/cards/NeoCard.svelte';
-  import NeoTransitionContainer from '~/container/NeoTransitionContainer.svelte';
+  import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
   import { type NeoTabsCardProps, setTabsCardContext } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
