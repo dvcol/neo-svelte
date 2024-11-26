@@ -21,5 +21,5 @@ export const computeHoverShadowElevation = (elevation: number | ShadowElevation,
 
 export const computeGlassFilter = (elevation: number | ShadowElevation, glass?: boolean) => {
   if (!glass) return;
-  return `var(--neo-blur-${Math.min(Math.max(Math.abs(elevation + 2), 2), MaxShadowElevation)}) var(--neo-saturate-3)`;
+  return `var(--neo-blur-${Math.abs(elevation)}) var(--neo-saturate-3)`;
 };

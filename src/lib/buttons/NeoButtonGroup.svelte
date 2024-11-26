@@ -154,7 +154,7 @@
         --neo-btn-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
-      backdrop-filter: var(--neo-blur-4) var(--neo-saturate-2);
+      backdrop-filter: var(--neo-blur-2) var(--neo-saturate-3);
 
       &:not(.text, .flat) {
         box-shadow: var(--neo-glass-box-shadow-raised-3);
