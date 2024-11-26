@@ -82,7 +82,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.root.setAttribute(NeoThemeStorageKey.Theme, this.theme);
     this.root.setAttribute(NeoThemeStorageKey.Source, this.source);
 
-    if (this.reset) this.root.setAttribute(NeoThemeStorageKey.Rest, '');
+    if (this.reset) this.root.setAttribute(NeoThemeStorageKey.Reset, '');
     else this.root.removeAttribute(NeoThemeStorageKey.Reset);
 
     if (!localStorage) return;

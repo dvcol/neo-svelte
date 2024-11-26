@@ -1,22 +1,31 @@
-@use 'src/lib/styles/common/z-index';
-@use 'src/lib/styles/common/colors';
-@use 'src/lib/styles/common/typography';
-@use 'src/lib/styles/common/shadows';
-@use 'src/lib/styles/common/spacing';
-@use 'src/lib/styles/common/utils';
+@use 'src/lib/styles/common/z-index' as z-index;
+@use 'src/lib/styles/common/colors' as colors;
+@use 'src/lib/styles/common/typography' as typography;
+@use 'src/lib/styles/common/shadows' as shadows;
+@use 'src/lib/styles/common/spacing' as spacing;
+@use 'src/lib/styles/common/utils' as utils;
 @use 'src/lib/styles/common/properties';
 
-[neo-theme-root] {
-  color: var(--neo-text-color);
-  font-family: var(--neo-font-family), sans-serif;
-  line-height: var(--neo-line-height);
-  background-color: var(--neo-background-color);
+@mixin theme($root: neo-theme-root) {
+  [#{$root}] {
+    @include z-index.z-index;
+    @include colors.colors;
+    @include typography.typography;
+    @include shadows.shadows;
+    @include spacing.spacing;
+    @include utils.utils;
 
-  /* touch highlight */
-  -webkit-tap-highlight-color: transparent;
+    color: var(--neo-text-color);
+    font-family: var(--neo-font-family), sans-serif;
+    line-height: var(--neo-line-height);
+    background-color: var(--neo-background-color);
 
-  /* cursor highlight */
-  *::selection {
-    background-color: var(--neo-text-highlight-color);
+    /* touch highlight */
+    -webkit-tap-highlight-color: transparent;
+
+    /* cursor highlight */
+    *::selection {
+      background-color: var(--neo-text-highlight-color);
+    }
   }
 }

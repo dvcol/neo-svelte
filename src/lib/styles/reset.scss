@@ -1,4 +1,4 @@
-[neo-reset] {
+@mixin reset() {
   /*
     Use a more-intuitive box-sizing model.
   */
@@ -17,6 +17,7 @@
 
   /* Global defaults */
   :host,
+  &:root,
   html {
     /* Default to dark mode */
     color-scheme: dark light;
@@ -79,5 +80,11 @@
       scroll-behavior: smooth;
       scroll-padding-top: 3rem;
     }
+  }
+}
+
+@mixin nested($root: neo-reset) {
+  [#{$root}] {
+    @include reset;
   }
 }

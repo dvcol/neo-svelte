@@ -20,9 +20,17 @@ export type NeoTransitionContainerProps = {
   // Styles
 
   /**
+   * Overflow style (overflow-x).
+   */
+  overflow?: CSSStyleDeclaration['overflow'];
+  /**
    * Horizontal overflow style (overflow-x).
    */
-  overflow?: CSSStyleDeclaration['overflowX'];
+  overflowX?: CSSStyleDeclaration['overflowX'];
+  /**
+   * Vertical overflow style (overflow-x).
+   */
+  overflowY?: CSSStyleDeclaration['overflowY'];
   /**
    * Width of the container.
    */

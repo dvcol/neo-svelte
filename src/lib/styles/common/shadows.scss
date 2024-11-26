@@ -1,4 +1,4 @@
-[neo-theme-root] {
+@mixin shadows() {
   /* Blurs */
   --neo-blur-0: blur(0);
   --neo-blur-1: blur(3px);
@@ -15,291 +15,291 @@
   --neo-saturate-4: saturate(1.5);
   --neo-saturate-5: saturate(2);
 
-  @mixin shadows($direction: top-left) {
-    /* Base shadows flat */
-    $neo-shadow-flat:
-      0 0 0 0 var(--neo-shadow-color-dark),
-      0 0 0 0 var(--neo-shadow-color-light);
-    $neo-shadow-inset-flat:
-      inset 0 0 0 0 var(--neo-shadow-color-dark),
-      inset 0 0 0 0 var(--neo-shadow-color-light);
-
-    /* Base shadows raised top left */
-    $neo-shadow-raised-1: null;
-    $neo-shadow-raised-2: null;
-    $neo-shadow-raised-3: null;
-    $neo-shadow-raised-4: null;
-    $neo-shadow-raised-5: null;
-
-    /** Base shadows inset top left */
-    $neo-shadow-inset-1: null;
-    $neo-shadow-inset-2: null;
-    $neo-shadow-inset-3: null;
-    $neo-shadow-inset-4: null;
-    $neo-shadow-inset-5: null;
-
-    /** Glass shadows */
-    $neo-glass-shadow-raised-1: null;
-    $neo-glass-shadow-raised-2: null;
-    $neo-glass-shadow-raised-3: null;
-    $neo-glass-shadow-raised-4: null;
-    $neo-glass-shadow-raised-5: null;
-
-    /** glass border-color */
-    $neo-glass-top-border-color: null;
-    $neo-glass-right-border-color: null;
-    $neo-glass-bottom-border-color: null;
-    $neo-glass-left-border-color: null;
-
-    /* Box shadows top left */
-    @if $direction == top-left {
-      /* Base shadows raised top left */
-      $neo-shadow-raised-1:
-        0.08rem 0.08rem 0.2rem var(--neo-shadow-color-dark),
-        -0.08rem -0.08rem 0.1rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-2:
-        0.1rem 0.1rem 0.3rem var(--neo-shadow-color-dark),
-        -0.1rem -0.1rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-3:
-        0.3rem 0.3rem 0.3rem var(--neo-shadow-color-dark),
-        -0.2rem -0.2rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-4:
-        0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark),
-        -0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-5:
-        0.7rem 0.7rem 0.7rem var(--neo-shadow-color-dark),
-        -0.55rem -0.55rem 0.7rem var(--neo-shadow-color-light);
-
-      /** Base shadows inset top left */
-      $neo-shadow-inset-1:
-        inset 0.08rem 0.08rem 0.2rem var(--neo-shadow-color-dark),
-        inset -0.08rem -0.08rem 0.1rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-2:
-        inset 0.15rem 0.15rem 0.3rem var(--neo-shadow-color-dark),
-        inset -0.15rem -0.15rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-3:
-        inset 0.3rem 0.3rem 0.4rem var(--neo-shadow-color-dark),
-        inset -0.2rem -0.2rem 0.3rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-4:
-        inset 0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark),
-        inset -0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-5:
-        inset 0.8rem 0.8rem 0.7rem var(--neo-shadow-color-dark),
-        inset -0.6rem -0.6rem 0.8rem var(--neo-shadow-color-light);
-
-      /** Glass shadows */
-      $neo-glass-shadow-raised-1: 0.08rem 0.08rem 0.2rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-2: 0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-3: 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-4: 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-5: 0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color);
-
-      /** glass border-color */
-      $neo-glass-top-border-color: var(--neo-glass-border-color);
-      $neo-glass-right-border-color: transparent;
-      $neo-glass-left-border-color: var(--neo-glass-border-color);
-      $neo-glass-bottom-border-color: transparent;
-    }
-
-    /* Box shadows top right */
-    @else if $direction == top-right {
-      /* Box shadows raised */
-      $neo-shadow-raised-1:
-        -0.08rem 0.08rem 0.2rem var(--neo-shadow-color-dark),
-        0.08rem -0.08rem 0.1rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-2:
-        -0.1rem 0.1rem 0.3rem var(--neo-shadow-color-dark),
-        0.1rem -0.1rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-3:
-        -0.3rem 0.3rem 0.3rem var(--neo-shadow-color-dark),
-        0.2rem -0.2rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-4:
-        -0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark),
-        0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-5:
-        -0.7rem 0.7rem 0.7rem var(--neo-shadow-color-dark),
-        0.55rem -0.55rem 0.7rem var(--neo-shadow-color-light);
-
-      /* Box shadows inset */
-      $neo-shadow-inset-1:
-        inset -0.08rem 0.08rem 0.2rem var(--neo-shadow-color-dark),
-        inset 0.08rem -0.08rem 0.1rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-2:
-        inset -0.15rem 0.15rem 0.3rem var(--neo-shadow-color-dark),
-        inset 0.15rem -0.15rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-3:
-        inset -0.3rem 0.3rem 0.4rem var(--neo-shadow-color-dark),
-        inset 0.2rem -0.2rem 0.3rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-4:
-        inset -0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark),
-        inset 0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-5:
-        inset -0.8rem 0.8rem 0.7rem var(--neo-shadow-color-dark),
-        inset 0.6rem -0.6rem 0.8rem var(--neo-shadow-color-light);
-
-      /** Glass shadows */
-      $neo-glass-shadow-raised-1: -0.08rem 0.08rem 0.2rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-2: -0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-3: -0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-4: -0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-5: -0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color);
-
-      /** glass border-color */
-      $neo-glass-top-border-color: var(--neo-glass-border-color);
-      $neo-glass-right-border-color: var(--neo-glass-border-color);
-      $neo-glass-left-border-color: transparent;
-      $neo-glass-bottom-border-color: transparent;
-    }
-
-    /* Box shadows bottom right */
-    @else if $direction == bottom-right {
-      /* Box shadows raised */
-      $neo-shadow-raised-1:
-        -0.08rem -0.08rem 0.2rem var(--neo-shadow-color-dark),
-        0.08rem 0.08rem 0.1rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-2:
-        -0.1rem -0.1rem 0.3rem var(--neo-shadow-color-dark),
-        0.1rem 0.1rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-3:
-        -0.3rem -0.3rem 0.3rem var(--neo-shadow-color-dark),
-        0.2rem 0.2rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-4:
-        -0.5rem -0.5rem 0.6rem var(--neo-shadow-color-dark),
-        0.35rem 0.35rem 0.4rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-5:
-        -0.7rem -0.7rem 0.7rem var(--neo-shadow-color-dark),
-        0.55rem 0.55rem 0.7rem var(--neo-shadow-color-light);
-
-      /* Box shadows inset */
-      $neo-shadow-inset-1:
-        inset -0.08rem -0.08rem 0.2rem var(--neo-shadow-color-dark),
-        inset 0.08rem 0.08rem 0.1rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-2:
-        inset -0.15rem -0.15rem 0.3rem var(--neo-shadow-color-dark),
-        inset 0.15rem 0.15rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-3:
-        inset -0.3rem -0.3rem 0.4rem var(--neo-shadow-color-dark),
-        inset 0.2rem 0.2rem 0.3rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-4:
-        inset -0.5rem -0.5rem 0.6rem var(--neo-shadow-color-dark),
-        inset 0.35rem 0.35rem 0.4rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-5:
-        inset -0.8rem -0.8rem 0.7rem var(--neo-shadow-color-dark),
-        inset 0.6rem 0.6rem 0.8rem var(--neo-shadow-color-light);
-
-      /** Glass shadows */
-      $neo-glass-shadow-raised-1: -0.08rem -0.08rem 0.2rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-2: -0.1rem -0.1rem 0.3rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-3: -0.3rem -0.3rem 0.3rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-4: -0.5rem -0.5rem 0.6rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-5: -0.8rem -0.8rem 0.7rem var(--neo-glass-shadow-color);
-
-      /** glass border-color */
-      $neo-glass-top-border-color: transparent;
-      $neo-glass-right-border-color: var(--neo-glass-border-color);
-      $neo-glass-left-border-color: transparent;
-      $neo-glass-bottom-border-color: var(--neo-glass-border-color);
-    }
-
-    /* Box shadows bottom left */
-    @else if $direction == bottom-left {
-      /* Base shadows raised top left */
-      $neo-shadow-raised-1:
-        0.08rem -0.08rem 0.2rem var(--neo-shadow-color-dark),
-        -0.08rem 0.08rem 0.1rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-2:
-        0.1rem -0.1rem 0.3rem var(--neo-shadow-color-dark),
-        -0.1rem 0.1rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-3:
-        0.3rem -0.3rem 0.3rem var(--neo-shadow-color-dark),
-        -0.2rem 0.2rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-4:
-        0.5rem -0.5rem 0.6rem var(--neo-shadow-color-dark),
-        -0.35rem 0.35rem 0.4rem var(--neo-shadow-color-light);
-      $neo-shadow-raised-5:
-        0.7rem -0.7rem 0.7rem var(--neo-shadow-color-dark),
-        -0.55rem 0.55rem 0.7rem var(--neo-shadow-color-light);
-
-      /** Base shadows inset top left */
-      $neo-shadow-inset-1:
-        inset 0.08rem -0.08rem 0.2rem var(--neo-shadow-color-dark),
-        inset -0.08rem 0.08rem 0.1rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-2:
-        inset 0.15rem -0.15rem 0.3rem var(--neo-shadow-color-dark),
-        inset -0.15rem 0.15rem 0.2rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-3:
-        inset 0.3rem -0.3rem 0.4rem var(--neo-shadow-color-dark),
-        inset -0.2rem 0.2rem 0.3rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-4:
-        inset 0.5rem -0.5rem 0.6rem var(--neo-shadow-color-dark),
-        inset -0.35rem 0.35rem 0.4rem var(--neo-shadow-color-light);
-      $neo-shadow-inset-5:
-        inset 0.8rem -0.8rem 0.7rem var(--neo-shadow-color-dark),
-        inset -0.6rem 0.6rem 0.8rem var(--neo-shadow-color-light);
-
-      /** Glass shadows */
-      $neo-glass-shadow-raised-1: 0.08rem -0.08rem 0.2rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-2: 0.1rem -0.1rem 0.3rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-3: 0.3rem -0.3rem 0.3rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-4: 0.5rem -0.5rem 0.6rem var(--neo-glass-shadow-color);
-      $neo-glass-shadow-raised-5: 0.8rem -0.8rem 0.7rem var(--neo-glass-shadow-color);
-
-      /** glass border-color */
-      $neo-glass-top-border-color: transparent;
-      $neo-glass-right-border-color: transparent;
-      $neo-glass-left-border-color: var(--neo-glass-border-color);
-      $neo-glass-bottom-border-color: var(--neo-glass-border-color);
-    }
-
-    /** Base shadows flat */
-    --neo-box-shadow-flat: none;
-
-    /* Box shadows raised top left */
-    --neo-box-shadow-raised-1: #{$neo-shadow-raised-1}, #{$neo-shadow-inset-flat};
-    --neo-box-shadow-raised-2: #{$neo-shadow-raised-2}, #{$neo-shadow-inset-flat};
-    --neo-box-shadow-raised-3: #{$neo-shadow-raised-3}, #{$neo-shadow-inset-flat};
-    --neo-box-shadow-raised-4: #{$neo-shadow-raised-4}, #{$neo-shadow-inset-flat};
-    --neo-box-shadow-raised-5: #{$neo-shadow-raised-5}, #{$neo-shadow-inset-flat};
-
-    /** Base shadows inset top left */
-    --neo-box-shadow-inset-1: #{$neo-shadow-flat}, #{$neo-shadow-inset-1};
-    --neo-box-shadow-inset-2: #{$neo-shadow-flat}, #{$neo-shadow-inset-2};
-    --neo-box-shadow-inset-3: #{$neo-shadow-flat}, #{$neo-shadow-inset-3};
-    --neo-box-shadow-inset-4: #{$neo-shadow-flat}, #{$neo-shadow-inset-4};
-    --neo-box-shadow-inset-5: #{$neo-shadow-flat}, #{$neo-shadow-inset-5};
-
-    /* Glass box shadows raised */
-    --neo-glass-box-shadow-raised-1: #{$neo-glass-shadow-raised-1};
-    --neo-glass-box-shadow-raised-2: #{$neo-glass-shadow-raised-2};
-    --neo-glass-box-shadow-raised-3: #{$neo-glass-shadow-raised-3};
-    --neo-glass-box-shadow-raised-4: #{$neo-glass-shadow-raised-4};
-    --neo-glass-box-shadow-raised-5: #{$neo-glass-shadow-raised-5};
-
-    /* Glass box shadows inset */
-    --neo-glass-box-shadow-inset-1: var(--neo-box-shadow-inset-1);
-    --neo-glass-box-shadow-inset-2: var(--neo-box-shadow-inset-2);
-    --neo-glass-box-shadow-inset-3: var(--neo-box-shadow-inset-3);
-    --neo-glass-box-shadow-inset-4: var(--neo-box-shadow-inset-4);
-    --neo-glass-box-shadow-inset-5: var(--neo-box-shadow-inset-5);
-
-    /** glass border-color */
-    --neo-glass-top-border-color: #{$neo-glass-top-border-color};
-    --neo-glass-right-border-color: #{$neo-glass-right-border-color};
-    --neo-glass-left-border-color: #{$neo-glass-left-border-color};
-    --neo-glass-bottom-border-color: #{$neo-glass-bottom-border-color};
-  }
-
-  @include shadows;
+  @include box-shadows;
 
   &[neo-source='bottom-right'] {
-    @include shadows(bottom-right);
+    @include box-shadows(bottom-right);
   }
 
   &[neo-source='top-right'] {
-    @include shadows(top-right);
+    @include box-shadows(top-right);
   }
 
   &[neo-source='bottom-left'] {
-    @include shadows(bottom-left);
+    @include box-shadows(bottom-left);
   }
+}
+
+@mixin box-shadows($direction: top-left) {
+  /* Base shadows flat */
+  $neo-shadow-flat:
+    0 0 0 0 var(--neo-shadow-color-dark),
+    0 0 0 0 var(--neo-shadow-color-light);
+  $neo-shadow-inset-flat:
+    inset 0 0 0 0 var(--neo-shadow-color-dark),
+    inset 0 0 0 0 var(--neo-shadow-color-light);
+
+  /* Base shadows raised top left */
+  $neo-shadow-raised-1: null;
+  $neo-shadow-raised-2: null;
+  $neo-shadow-raised-3: null;
+  $neo-shadow-raised-4: null;
+  $neo-shadow-raised-5: null;
+
+  /** Base shadows inset top left */
+  $neo-shadow-inset-1: null;
+  $neo-shadow-inset-2: null;
+  $neo-shadow-inset-3: null;
+  $neo-shadow-inset-4: null;
+  $neo-shadow-inset-5: null;
+
+  /** Glass shadows */
+  $neo-glass-shadow-raised-1: null;
+  $neo-glass-shadow-raised-2: null;
+  $neo-glass-shadow-raised-3: null;
+  $neo-glass-shadow-raised-4: null;
+  $neo-glass-shadow-raised-5: null;
+
+  /** glass border-color */
+  $neo-glass-top-border-color: null;
+  $neo-glass-right-border-color: null;
+  $neo-glass-bottom-border-color: null;
+  $neo-glass-left-border-color: null;
+
+  /* Box shadows top left */
+  @if $direction == top-left {
+    /* Base shadows raised top left */
+    $neo-shadow-raised-1:
+      0.08rem 0.08rem 0.2rem var(--neo-shadow-color-dark),
+      -0.08rem -0.08rem 0.1rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-2:
+      0.1rem 0.1rem 0.3rem var(--neo-shadow-color-dark),
+      -0.1rem -0.1rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-3:
+      0.3rem 0.3rem 0.3rem var(--neo-shadow-color-dark),
+      -0.2rem -0.2rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-4:
+      0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark),
+      -0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-5:
+      0.7rem 0.7rem 0.7rem var(--neo-shadow-color-dark),
+      -0.55rem -0.55rem 0.7rem var(--neo-shadow-color-light);
+
+    /** Base shadows inset top left */
+    $neo-shadow-inset-1:
+      inset 0.08rem 0.08rem 0.2rem var(--neo-shadow-color-dark),
+      inset -0.08rem -0.08rem 0.1rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-2:
+      inset 0.15rem 0.15rem 0.3rem var(--neo-shadow-color-dark),
+      inset -0.15rem -0.15rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-3:
+      inset 0.3rem 0.3rem 0.4rem var(--neo-shadow-color-dark),
+      inset -0.2rem -0.2rem 0.3rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-4:
+      inset 0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark),
+      inset -0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-5:
+      inset 0.8rem 0.8rem 0.7rem var(--neo-shadow-color-dark),
+      inset -0.6rem -0.6rem 0.8rem var(--neo-shadow-color-light);
+
+    /** Glass shadows */
+    $neo-glass-shadow-raised-1: 0.08rem 0.08rem 0.2rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-2: 0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-3: 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-4: 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-5: 0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color);
+
+    /** glass border-color */
+    $neo-glass-top-border-color: var(--neo-glass-border-color);
+    $neo-glass-right-border-color: transparent;
+    $neo-glass-left-border-color: var(--neo-glass-border-color);
+    $neo-glass-bottom-border-color: transparent;
+  }
+
+  /* Box shadows top right */
+  @else if $direction == top-right {
+    /* Box shadows raised */
+    $neo-shadow-raised-1:
+      -0.08rem 0.08rem 0.2rem var(--neo-shadow-color-dark),
+      0.08rem -0.08rem 0.1rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-2:
+      -0.1rem 0.1rem 0.3rem var(--neo-shadow-color-dark),
+      0.1rem -0.1rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-3:
+      -0.3rem 0.3rem 0.3rem var(--neo-shadow-color-dark),
+      0.2rem -0.2rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-4:
+      -0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark),
+      0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-5:
+      -0.7rem 0.7rem 0.7rem var(--neo-shadow-color-dark),
+      0.55rem -0.55rem 0.7rem var(--neo-shadow-color-light);
+
+    /* Box shadows inset */
+    $neo-shadow-inset-1:
+      inset -0.08rem 0.08rem 0.2rem var(--neo-shadow-color-dark),
+      inset 0.08rem -0.08rem 0.1rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-2:
+      inset -0.15rem 0.15rem 0.3rem var(--neo-shadow-color-dark),
+      inset 0.15rem -0.15rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-3:
+      inset -0.3rem 0.3rem 0.4rem var(--neo-shadow-color-dark),
+      inset 0.2rem -0.2rem 0.3rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-4:
+      inset -0.5rem 0.5rem 0.6rem var(--neo-shadow-color-dark),
+      inset 0.35rem -0.35rem 0.4rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-5:
+      inset -0.8rem 0.8rem 0.7rem var(--neo-shadow-color-dark),
+      inset 0.6rem -0.6rem 0.8rem var(--neo-shadow-color-light);
+
+    /** Glass shadows */
+    $neo-glass-shadow-raised-1: -0.08rem 0.08rem 0.2rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-2: -0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-3: -0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-4: -0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-5: -0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color);
+
+    /** glass border-color */
+    $neo-glass-top-border-color: var(--neo-glass-border-color);
+    $neo-glass-right-border-color: var(--neo-glass-border-color);
+    $neo-glass-left-border-color: transparent;
+    $neo-glass-bottom-border-color: transparent;
+  }
+
+  /* Box shadows bottom right */
+  @else if $direction == bottom-right {
+    /* Box shadows raised */
+    $neo-shadow-raised-1:
+      -0.08rem -0.08rem 0.2rem var(--neo-shadow-color-dark),
+      0.08rem 0.08rem 0.1rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-2:
+      -0.1rem -0.1rem 0.3rem var(--neo-shadow-color-dark),
+      0.1rem 0.1rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-3:
+      -0.3rem -0.3rem 0.3rem var(--neo-shadow-color-dark),
+      0.2rem 0.2rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-4:
+      -0.5rem -0.5rem 0.6rem var(--neo-shadow-color-dark),
+      0.35rem 0.35rem 0.4rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-5:
+      -0.7rem -0.7rem 0.7rem var(--neo-shadow-color-dark),
+      0.55rem 0.55rem 0.7rem var(--neo-shadow-color-light);
+
+    /* Box shadows inset */
+    $neo-shadow-inset-1:
+      inset -0.08rem -0.08rem 0.2rem var(--neo-shadow-color-dark),
+      inset 0.08rem 0.08rem 0.1rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-2:
+      inset -0.15rem -0.15rem 0.3rem var(--neo-shadow-color-dark),
+      inset 0.15rem 0.15rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-3:
+      inset -0.3rem -0.3rem 0.4rem var(--neo-shadow-color-dark),
+      inset 0.2rem 0.2rem 0.3rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-4:
+      inset -0.5rem -0.5rem 0.6rem var(--neo-shadow-color-dark),
+      inset 0.35rem 0.35rem 0.4rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-5:
+      inset -0.8rem -0.8rem 0.7rem var(--neo-shadow-color-dark),
+      inset 0.6rem 0.6rem 0.8rem var(--neo-shadow-color-light);
+
+    /** Glass shadows */
+    $neo-glass-shadow-raised-1: -0.08rem -0.08rem 0.2rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-2: -0.1rem -0.1rem 0.3rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-3: -0.3rem -0.3rem 0.3rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-4: -0.5rem -0.5rem 0.6rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-5: -0.8rem -0.8rem 0.7rem var(--neo-glass-shadow-color);
+
+    /** glass border-color */
+    $neo-glass-top-border-color: transparent;
+    $neo-glass-right-border-color: var(--neo-glass-border-color);
+    $neo-glass-left-border-color: transparent;
+    $neo-glass-bottom-border-color: var(--neo-glass-border-color);
+  }
+
+  /* Box shadows bottom left */
+  @else if $direction == bottom-left {
+    /* Base shadows raised top left */
+    $neo-shadow-raised-1:
+      0.08rem -0.08rem 0.2rem var(--neo-shadow-color-dark),
+      -0.08rem 0.08rem 0.1rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-2:
+      0.1rem -0.1rem 0.3rem var(--neo-shadow-color-dark),
+      -0.1rem 0.1rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-3:
+      0.3rem -0.3rem 0.3rem var(--neo-shadow-color-dark),
+      -0.2rem 0.2rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-4:
+      0.5rem -0.5rem 0.6rem var(--neo-shadow-color-dark),
+      -0.35rem 0.35rem 0.4rem var(--neo-shadow-color-light);
+    $neo-shadow-raised-5:
+      0.7rem -0.7rem 0.7rem var(--neo-shadow-color-dark),
+      -0.55rem 0.55rem 0.7rem var(--neo-shadow-color-light);
+
+    /** Base shadows inset top left */
+    $neo-shadow-inset-1:
+      inset 0.08rem -0.08rem 0.2rem var(--neo-shadow-color-dark),
+      inset -0.08rem 0.08rem 0.1rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-2:
+      inset 0.15rem -0.15rem 0.3rem var(--neo-shadow-color-dark),
+      inset -0.15rem 0.15rem 0.2rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-3:
+      inset 0.3rem -0.3rem 0.4rem var(--neo-shadow-color-dark),
+      inset -0.2rem 0.2rem 0.3rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-4:
+      inset 0.5rem -0.5rem 0.6rem var(--neo-shadow-color-dark),
+      inset -0.35rem 0.35rem 0.4rem var(--neo-shadow-color-light);
+    $neo-shadow-inset-5:
+      inset 0.8rem -0.8rem 0.7rem var(--neo-shadow-color-dark),
+      inset -0.6rem 0.6rem 0.8rem var(--neo-shadow-color-light);
+
+    /** Glass shadows */
+    $neo-glass-shadow-raised-1: 0.08rem -0.08rem 0.2rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-2: 0.1rem -0.1rem 0.3rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-3: 0.3rem -0.3rem 0.3rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-4: 0.5rem -0.5rem 0.6rem var(--neo-glass-shadow-color);
+    $neo-glass-shadow-raised-5: 0.8rem -0.8rem 0.7rem var(--neo-glass-shadow-color);
+
+    /** glass border-color */
+    $neo-glass-top-border-color: transparent;
+    $neo-glass-right-border-color: transparent;
+    $neo-glass-left-border-color: var(--neo-glass-border-color);
+    $neo-glass-bottom-border-color: var(--neo-glass-border-color);
+  }
+
+  /** Base shadows flat */
+  --neo-box-shadow-flat: none;
+
+  /* Box shadows raised top left */
+  --neo-box-shadow-raised-1: #{$neo-shadow-raised-1}, #{$neo-shadow-inset-flat};
+  --neo-box-shadow-raised-2: #{$neo-shadow-raised-2}, #{$neo-shadow-inset-flat};
+  --neo-box-shadow-raised-3: #{$neo-shadow-raised-3}, #{$neo-shadow-inset-flat};
+  --neo-box-shadow-raised-4: #{$neo-shadow-raised-4}, #{$neo-shadow-inset-flat};
+  --neo-box-shadow-raised-5: #{$neo-shadow-raised-5}, #{$neo-shadow-inset-flat};
+
+  /** Base shadows inset top left */
+  --neo-box-shadow-inset-1: #{$neo-shadow-flat}, #{$neo-shadow-inset-1};
+  --neo-box-shadow-inset-2: #{$neo-shadow-flat}, #{$neo-shadow-inset-2};
+  --neo-box-shadow-inset-3: #{$neo-shadow-flat}, #{$neo-shadow-inset-3};
+  --neo-box-shadow-inset-4: #{$neo-shadow-flat}, #{$neo-shadow-inset-4};
+  --neo-box-shadow-inset-5: #{$neo-shadow-flat}, #{$neo-shadow-inset-5};
+
+  /* Glass box shadows raised */
+  --neo-glass-box-shadow-raised-1: #{$neo-glass-shadow-raised-1};
+  --neo-glass-box-shadow-raised-2: #{$neo-glass-shadow-raised-2};
+  --neo-glass-box-shadow-raised-3: #{$neo-glass-shadow-raised-3};
+  --neo-glass-box-shadow-raised-4: #{$neo-glass-shadow-raised-4};
+  --neo-glass-box-shadow-raised-5: #{$neo-glass-shadow-raised-5};
+
+  /* Glass box shadows inset */
+  --neo-glass-box-shadow-inset-1: var(--neo-box-shadow-inset-1);
+  --neo-glass-box-shadow-inset-2: var(--neo-box-shadow-inset-2);
+  --neo-glass-box-shadow-inset-3: var(--neo-box-shadow-inset-3);
+  --neo-glass-box-shadow-inset-4: var(--neo-box-shadow-inset-4);
+  --neo-glass-box-shadow-inset-5: var(--neo-box-shadow-inset-5);
+
+  /** glass border-color */
+  --neo-glass-top-border-color: #{$neo-glass-top-border-color};
+  --neo-glass-right-border-color: #{$neo-glass-right-border-color};
+  --neo-glass-left-border-color: #{$neo-glass-left-border-color};
+  --neo-glass-bottom-border-color: #{$neo-glass-bottom-border-color};
 }

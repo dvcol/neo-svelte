@@ -262,6 +262,7 @@
       margin: var(--neo-card-full-spacing);
       overflow: hidden;
       border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
+      scrollbar-gutter: auto;
 
       &.cover:not(.inset) {
         padding: 0;

@@ -1,4 +1,4 @@
-[neo-theme-root] {
+@mixin z-index() {
   --neo-z-index-behind: -1;
   --neo-z-index-default: 0;
   --neo-z-index-in-front: 1;

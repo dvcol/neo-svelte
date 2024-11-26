@@ -38,7 +38,7 @@
 
 <NeoCard bind:ref {elevation} {borderless} {glass} {...rest}>
   {#if animate}
-    <NeoTransitionContainer {...containerProps}>
+    <NeoTransitionContainer overflowX="hidden" {...containerProps}>
       {@render children?.(context?.state)}
     </NeoTransitionContainer>
   {:else}

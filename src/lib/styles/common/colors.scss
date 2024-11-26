@@ -1,4 +1,4 @@
-[neo-theme-root] {
+@mixin colors {
   /* ui color variables */
   --neo-white: oklch(100% 0 0deg);
   --neo-white-soft-light: oklch(from var(--neo-white-soft) calc(l + 0.05) c h);
@@ -11,29 +11,20 @@
   --neo-white-soft-dark-80: oklch(from var(--neo-white-soft-dark) l c h / 80%);
   --neo-black: oklch(0% 0 0deg);
   --neo-black-5: oklch(from var(--neo-black) l c h / 5%);
-  --neo-black-lighter-20: oklch(from var(--neo-black-lighter) l c h / 20%);
+  --neo-black-8: oklch(from var(--neo-black) l c h / 8%);
+  --neo-black-10: oklch(from var(--neo-black) l c h / 10%);
+  --neo-black-20: oklch(from var(--neo-black) l c h / 20%);
   --neo-black-lighter: oklch(from var(--neo-black-soft) calc(l + 0.1) c h);
   --neo-black-light: oklch(from var(--neo-black-soft) calc(l + 0.05) c h);
   --neo-black-soft: oklch(33% 0 264.416deg);
-  --neo-black-soft-10: oklch(from var(--neo-black-soft) l c h / 10%);
   --neo-black-soft-dark: oklch(from var(--neo-black-soft) calc(l - 0.05) c h);
-  --neo-black-soft-dark-50: oklch(from var(--neo-black-soft-dark) l c h / 50%);
   --neo-grey: oklch(from var(--neo-black-soft) calc(l + 0.612) c h);
   --neo-grey-soft: oklch(from var(--neo-grey) calc(l - 0.15) c h);
-  --neo-grey-soft-5: oklch(from var(--neo-grey-soft) l c h / 5%);
-  --neo-grey-soft-10: oklch(from var(--neo-grey-soft) l c h / 10%);
-  --neo-grey-soft-12: oklch(from var(--neo-grey-soft) l c h / 12%);
   --neo-grey-soft-20: oklch(from var(--neo-grey-soft) l c h / 20%);
   --neo-grey-soft-30: oklch(from var(--neo-grey-soft) l c h / 30%);
   --neo-grey-soft-60: oklch(from var(--neo-grey-soft) l c h / 60%);
   --neo-grey-strong: oklch(from var(--neo-grey) calc(l - 0.4) c h);
-  --neo-grey-strong-5: oklch(from var(--neo-grey-strong) l c h / 5%);
-  --neo-grey-strong-8: oklch(from var(--neo-grey-strong) l c h / 8%);
-  --neo-grey-strong-10: oklch(from var(--neo-grey-strong) l c h / 10%);
-  --neo-grey-strong-12: oklch(from var(--neo-grey-strong) l c h / 12%);
-  --neo-grey-strong-20: oklch(from var(--neo-grey-strong) l c h / 20%);
   --neo-grey-strong-60: oklch(from var(--neo-grey-strong) l c h / 60%);
-  --neo-grey-strong-80: oklch(from var(--neo-grey-strong) l c h / 80%);
   --neo-grey-dark: oklch(from var(--neo-grey-strong) calc(l - 0.1) c h);
   --neo-grey-dark-80: oklch(from var(--neo-grey-dark) l c h / 80%);
   --neo-blue: oklch(50% 0.302 264.206deg);
@@ -100,7 +91,7 @@
   --neo-glass-background-color: var(--neo-white-soft-5);
   --neo-glass-background-color-focus: var(--neo-white-soft-8);
   --neo-glass-background-color-hover: var(--neo-white-soft-10);
-  --neo-glass-shadow-color: var(--neo-black-soft-10);
+  --neo-glass-shadow-color: var(--neo-black-20);
   --neo-glass-border-color: var(--neo-white-soft-light-10);
   --neo-glass-border-color-hover: var(--neo-glass-background-color);
   --neo-glass-skeleton-color: var(--neo-grey-soft-60);
@@ -145,63 +136,13 @@
   --neo-dark-scrollbar-color: var(--neo-grey-dark-80);
 
   /** dark mode glass colors */
-  --neo-dark-glass-background-color: var(--neo-grey-strong-8);
-  --neo-dark-glass-background-color-focus: var(--neo-grey-strong-10);
-  --neo-dark-glass-background-color-hover: var(--neo-grey-strong-12);
-  --neo-dark-glass-shadow-color: var(--neo-black-soft-dark-50);
-  --neo-dark-glass-border-color: var(--neo-black-lighter-20);
+  --neo-dark-glass-background-color: var(--neo-black-5);
+  --neo-dark-glass-background-color-focus: var(--neo-black-8);
+  --neo-dark-glass-background-color-hover: var(--neo-black-10);
+  --neo-dark-glass-shadow-color: var(--neo-black-20);
+  --neo-dark-glass-border-color: var(--neo-white-soft-light-10);
   --neo-dark-glass-border-color-hover: var(--neo-dark-glass-background-color);
   --neo-dark-glass-skeleton-color: var(--neo-grey-dark-80);
-
-  @mixin dark-theme {
-    /** primary colors */
-    --neo-color-primary: var(--neo-dark-color-primary);
-    --neo-color-primary-50: var(--neo-dark-color-primary-50);
-    --neo-color-primary-80: var(--neo-dark-color-primary-80);
-    --neo-color-error: var(--neo-dark-color-error);
-    --neo-color-error-5: var(--neo-dark-color-error-5);
-    --neo-color-error-10: var(--neo-dark-color-error-10);
-    --neo-color-error-50: var(--neo-dark-color-error-50);
-    --neo-color-error-75: var(--neo-dark-color-error-75);
-    --neo-color-success: var(--neo-dark-color-success);
-    --neo-color-success-50: var(--neo-dark-color-success-50);
-
-    /** semantic colors */
-    --neo-text-color: var(--neo-dark-text-color);
-    --neo-text-color-active: var(--neo-dark-text-color-active);
-    --neo-text-color-focused: var(--neo-dark-text-color-focused);
-    --neo-text-color-focused-active: var(--neo-dark-text-color-focused-active);
-    --neo-text-color-hover: var(--neo-dark-text-color-hover);
-    --neo-text-color-hover-active: var(--neo-dark-text-color-hover-active);
-    --neo-text-color-disabled: var(--neo-dark-text-color-disabled);
-    --neo-text-highlight-color: var(--neo-dark-text-highlight-color);
-    --neo-border-color: var(--neo-dark-border-color);
-    --neo-border-color-focused: var(--neo-dark-border-color-focused);
-    --neo-border-color-primary: var(--neo-dark-border-color-primary);
-    --neo-border-color-disabled: var(--neo-dark-border-color-disabled);
-    --neo-background-color: var(--neo-dark-background-color);
-    --neo-background-color-lighter: var(--neo-dark-background-color-lighter);
-    --neo-background-color-darker: var(--neo-dark-background-color-darker);
-    --neo-shadow-color-light: var(--neo-dark-shadow-color-light);
-    --neo-shadow-color-dark: var(--neo-dark-shadow-color-dark);
-    --neo-skeleton-color: var(--neo-dark-skeleton-color);
-    --neo-skeleton-color-step: var(--neo-dark-skeleton-color-step);
-    --neo-close-color: var(--neo-dark-close-color);
-    --neo-close-color-hover: var(--neo-dark-close-color-hover);
-    --neo-close-color-focused: var(--neo-dark-close-color-focused);
-    --neo-close-bg-color-hover: var(--neo-dark-close-bg-color-hover);
-    --neo-close-bg-color-focused: var(--neo-dark-close-bg-color-focused);
-    --neo-scrollbar-color: var(--neo-dark-scrollbar-color);
-
-    /** glass colors */
-    --neo-glass-background-color: var(--neo-dark-glass-background-color);
-    --neo-glass-background-color-focus: var(--neo-dark-glass-background-color-focus);
-    --neo-glass-background-color-hover: var(--neo-dark-glass-background-color-hover);
-    --neo-glass-shadow-color: var(--neo-dark-glass-shadow-color);
-    --neo-glass-border-color: var(--neo-dark-glass-border-color);
-    --neo-glass-border-color-hover: var(--neo-dark-glass-border-color-hover);
-    --neo-glass-skeleton-color: var(--neo-dark-glass-skeleton-color);
-  }
 
   /* override semantic color if dark mode is enabled */
   &[neo-theme='dark'] {
@@ -214,4 +155,54 @@
       @include dark-theme;
     }
   }
+}
+
+@mixin dark-theme {
+  /** primary colors */
+  --neo-color-primary: var(--neo-dark-color-primary);
+  --neo-color-primary-50: var(--neo-dark-color-primary-50);
+  --neo-color-primary-80: var(--neo-dark-color-primary-80);
+  --neo-color-error: var(--neo-dark-color-error);
+  --neo-color-error-5: var(--neo-dark-color-error-5);
+  --neo-color-error-10: var(--neo-dark-color-error-10);
+  --neo-color-error-50: var(--neo-dark-color-error-50);
+  --neo-color-error-75: var(--neo-dark-color-error-75);
+  --neo-color-success: var(--neo-dark-color-success);
+  --neo-color-success-50: var(--neo-dark-color-success-50);
+
+  /** semantic colors */
+  --neo-text-color: var(--neo-dark-text-color);
+  --neo-text-color-active: var(--neo-dark-text-color-active);
+  --neo-text-color-focused: var(--neo-dark-text-color-focused);
+  --neo-text-color-focused-active: var(--neo-dark-text-color-focused-active);
+  --neo-text-color-hover: var(--neo-dark-text-color-hover);
+  --neo-text-color-hover-active: var(--neo-dark-text-color-hover-active);
+  --neo-text-color-disabled: var(--neo-dark-text-color-disabled);
+  --neo-text-highlight-color: var(--neo-dark-text-highlight-color);
+  --neo-border-color: var(--neo-dark-border-color);
+  --neo-border-color-focused: var(--neo-dark-border-color-focused);
+  --neo-border-color-primary: var(--neo-dark-border-color-primary);
+  --neo-border-color-disabled: var(--neo-dark-border-color-disabled);
+  --neo-background-color: var(--neo-dark-background-color);
+  --neo-background-color-lighter: var(--neo-dark-background-color-lighter);
+  --neo-background-color-darker: var(--neo-dark-background-color-darker);
+  --neo-shadow-color-light: var(--neo-dark-shadow-color-light);
+  --neo-shadow-color-dark: var(--neo-dark-shadow-color-dark);
+  --neo-skeleton-color: var(--neo-dark-skeleton-color);
+  --neo-skeleton-color-step: var(--neo-dark-skeleton-color-step);
+  --neo-close-color: var(--neo-dark-close-color);
+  --neo-close-color-hover: var(--neo-dark-close-color-hover);
+  --neo-close-color-focused: var(--neo-dark-close-color-focused);
+  --neo-close-bg-color-hover: var(--neo-dark-close-bg-color-hover);
+  --neo-close-bg-color-focused: var(--neo-dark-close-bg-color-focused);
+  --neo-scrollbar-color: var(--neo-dark-scrollbar-color);
+
+  /** glass colors */
+  --neo-glass-background-color: var(--neo-dark-glass-background-color);
+  --neo-glass-background-color-focus: var(--neo-dark-glass-background-color-focus);
+  --neo-glass-background-color-hover: var(--neo-dark-glass-background-color-hover);
+  --neo-glass-shadow-color: var(--neo-dark-glass-shadow-color);
+  --neo-glass-border-color: var(--neo-dark-glass-border-color);
+  --neo-glass-border-color-hover: var(--neo-dark-glass-border-color-hover);
+  --neo-glass-skeleton-color: var(--neo-dark-glass-skeleton-color);
 }

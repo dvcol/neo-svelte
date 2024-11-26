@@ -26,6 +26,12 @@
 {@render children?.(context.state)}
 
 <style lang="scss" global>
-  @use 'src/lib/styles/reset';
-  @use 'src/lib/styles/theme';
+  @use 'src/lib/styles/reset' as reset;
+  @use 'src/lib/styles/theme' as theme;
+
+  // Inject reset styles
+  @include reset.nested;
+
+  // Inject theme styles
+  @include theme.theme;
 </style>

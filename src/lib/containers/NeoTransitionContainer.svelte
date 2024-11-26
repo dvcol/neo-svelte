@@ -9,7 +9,9 @@
     tag = 'div',
 
     // Styles
-    overflow = 'hidden',
+    overflow,
+    overflowX,
+    overflowY,
     width,
     height,
 
@@ -18,7 +20,16 @@
   }: NeoTransitionContainerProps = $props();
 </script>
 
-<svelte:element this={tag} class:neo-transition-container={true} style:overflow-x={overflow} style:width style:height {...rest}>
+<svelte:element
+  this={tag}
+  class:neo-transition-container={true}
+  style:overflow
+  style:overflow-x={overflowX}
+  style:overflow-y={overflowY}
+  style:width
+  style:height
+  {...rest}
+>
   {@render children?.()}
 </svelte:element>
 
