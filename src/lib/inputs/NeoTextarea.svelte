@@ -197,7 +197,7 @@
     if (!labelRef) return;
     if (position === NeoInputLabelPosition.Inside && !floating) return;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
-    if (position === NeoInputLabelPosition.Left || position === NeoInputLabelPosition.Right) return;
+    if (position !== NeoInputLabelPosition.Left && position !== NeoInputLabelPosition.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
   });
 
@@ -288,12 +288,12 @@
   {#if affix}
     <span class="neo-textarea-affix" role="none" onclick={focus}>
       {#if loading}
-        <span out:fade={enterDefaultTransition}>
+        <span class="neo-textarea-loading" out:fade={enterDefaultTransition}>
           <IconCircleLoading width="1.1875rem" height="1.1875rem" />
         </span>
       {:else if close}
         <button class="neo-textarea-clear" aria-label="clear" in:fade out:fade={enterDefaultTransition} onclick={() => clear()}>
-          <IconClear width="1.1875rem" height="1.1875rem" />
+          <IconClear />
         </button>
       {:else}
         <span class="neo-textarea-affix-validation" in:fade={leaveDefaultTransition}>
@@ -415,6 +415,7 @@
 
   .neo-textarea-group,
   .neo-textarea,
+  .neo-textarea-loading,
   .neo-textarea-clear,
   .neo-textarea-affix,
   .neo-textarea-suffix {
@@ -538,11 +539,21 @@
 
     align-items: center;
     justify-content: center;
+    width: 1.1875rem;
+    height: 1.1875rem;
+    margin: 0;
+    padding: 0;
     color: var(--neo-textarea-clear-color, inherit);
     background-color: var(--neo-background-color-darker);
     border: none;
     border-radius: 50%;
     aspect-ratio: 1;
+
+    :global(svg) {
+      width: 100%;
+      height: 100%;
+      margin: 0.05rem;
+    }
 
     &:focus-visible {
       color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
@@ -616,6 +627,7 @@
   .neo-textarea-group {
     position: relative;
     margin: var(--neo-shadow-margin, 0.6rem);
+    padding: 0 0.2rem;
     color: var(--neo-textarea-text-color, inherit);
     background-color: var(--neo-textarea-bg-color, inherit);
     border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;

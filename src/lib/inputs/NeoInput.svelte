@@ -199,7 +199,7 @@
     if (!labelRef) return;
     if (position === NeoInputLabelPosition.Inside && !floating) return;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
-    if (position === NeoInputLabelPosition.Left || position === NeoInputLabelPosition.Right) return;
+    if (position !== NeoInputLabelPosition.Left && position !== NeoInputLabelPosition.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
   });
 
@@ -261,12 +261,12 @@
   {#if affix}
     <span class="neo-input-affix" class:suffix role="none" onclick={focus}>
       {#if loading}
-        <span out:fade={enterDefaultTransition}>
+        <span class="neo-input-loading" out:fade={enterDefaultTransition}>
           <IconCircleLoading width="1.1875rem" height="1.1875rem" />
         </span>
       {:else if close}
         <button class="neo-input-clear" aria-label="clear" in:fade out:fade={enterDefaultTransition} onclick={() => clear()}>
-          <IconClear width="1.1875rem" height="1.1875rem" />
+          <IconClear />
         </button>
       {:else}
         <span class="neo-input-affix-validation" in:fade={leaveDefaultTransition}>
@@ -396,6 +396,7 @@
 
   .neo-input-group,
   .neo-input,
+  .neo-input-loading,
   .neo-input-clear,
   .neo-input-affix,
   .neo-input-prefix,
@@ -445,7 +446,7 @@
     }
 
     &.prefix {
-      margin-left: -0.9rem;
+      margin-left: -0.7rem;
     }
 
     &.suffix {
@@ -480,7 +481,7 @@
 
       &.suffix {
         min-width: 2rem;
-        margin-right: -0.25rem;
+        margin-right: -0.05rem;
         padding-right: 0;
       }
     }
@@ -528,11 +529,21 @@
 
     align-items: center;
     justify-content: center;
+    width: 1.1875rem;
+    height: 1.1875rem;
+    margin: 0;
+    padding: 0;
     color: var(--neo-input-clear-color, inherit);
     background-color: var(--neo-background-color-darker);
     border: none;
     border-radius: 50%;
     aspect-ratio: 1;
+
+    :global(svg) {
+      width: 100%;
+      height: 100%;
+      margin: 0.05rem;
+    }
 
     &:focus-visible {
       color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
@@ -615,6 +626,7 @@
   .neo-input-group {
     position: relative;
     margin: var(--neo-shadow-margin, 0.6rem);
+    padding: 0 0.2rem;
     color: var(--neo-input-text-color, inherit);
     background-color: var(--neo-input-bg-color, inherit);
     border: var(--neo-border-width, 1px) var(--neo-input-border-color, transparent) solid;
@@ -670,7 +682,7 @@
         border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
 
         &.prefix {
-          margin-left: -1.25rem;
+          margin-left: -0.9rem;
         }
 
         &-prefix {
@@ -678,7 +690,7 @@
         }
 
         &.suffix {
-          margin-right: -1.25rem;
+          margin-right: -0.9rem;
         }
 
         &-suffix {
