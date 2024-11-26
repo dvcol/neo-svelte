@@ -2,19 +2,13 @@
 @use 'src/lib/styles/common/colors' as colors;
 @use 'src/lib/styles/common/typography' as typography;
 @use 'src/lib/styles/common/shadows' as shadows;
+@use 'src/lib/styles/common/filters' as filters;
 @use 'src/lib/styles/common/spacing' as spacing;
 @use 'src/lib/styles/common/utils' as utils;
 @use 'src/lib/styles/common/properties';
 
 @mixin theme($root: neo-theme-root) {
   [#{$root}] {
-    @include z-index.z-index;
-    @include colors.colors;
-    @include typography.typography;
-    @include shadows.shadows;
-    @include spacing.spacing;
-    @include utils.utils;
-
     color: var(--neo-text-color);
     font-family: var(--neo-font-family), sans-serif;
     line-height: var(--neo-line-height);
@@ -23,9 +17,29 @@
     /* touch highlight */
     -webkit-tap-highlight-color: transparent;
 
+    @include utils.utils;
+    @include z-index.z-index;
+    @include typography.typography;
+    @include spacing.spacing;
+    @include filters.filters;
+    @include colors.colors;
+    @include shadows.shadows;
+
     /* cursor highlight */
     *::selection {
       background-color: var(--neo-text-highlight-color);
+    }
+
+    /* override semantic color if dark mode is enabled */
+    &[neo-theme='dark'] {
+      @include colors.dark-theme;
+    }
+
+    /* apply dark mode if not overridden */
+    @media (prefers-color-scheme: dark) {
+      &:not([neo-theme='light']) {
+        @include colors.dark-theme;
+      }
     }
   }
 }

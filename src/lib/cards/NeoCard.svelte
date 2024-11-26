@@ -329,13 +329,14 @@
 
     &.glass {
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
+      --neo-border-color: var(--neo-glass-border-color);
 
       background-color: var(--neo-card-bg-color, var(--neo-glass-background-color));
       border-color: var(
         --neo-card-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
-      backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-4) var(--neo-saturate-2));
+      backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
     }
 
     &.start {

@@ -578,6 +578,7 @@
 
     .neo-input-label {
       display: flex;
+      box-sizing: border-box;
       min-height: var(--neo-input-label-height);
       padding: 0 0.75rem;
       overflow: hidden;
@@ -783,13 +784,14 @@
 
     &.glass {
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
+      --neo-border-color: var(--neo-glass-border-color);
 
       background-color: var(--neo-input-bg-color, var(--neo-glass-background-color));
       border-color: var(
         --neo-input-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
-      backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-4) var(--neo-saturate-2));
+      backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
     }
 
     &.validation {

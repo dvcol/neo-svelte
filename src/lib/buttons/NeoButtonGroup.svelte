@@ -134,7 +134,7 @@
       border-color: transparent !important;
     }
 
-    &:not(.text, .flat, .glass) {
+    &:not(.text, .flat) {
       box-shadow: var(--neo-box-shadow-raised-3);
     }
 
@@ -149,6 +149,8 @@
     }
 
     &.glass {
+      @include mixin.glass;
+
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
       border-color: var(
         --neo-btn-border-color,
@@ -156,17 +158,9 @@
       );
       backdrop-filter: var(--neo-blur-2) var(--neo-saturate-3);
 
-      &:not(.text, .flat) {
-        box-shadow: var(--neo-glass-box-shadow-raised-3);
-      }
-
       :global(.neo-button) {
         background-color: transparent;
         backdrop-filter: none;
-      }
-
-      :global(.neo-button:not(:active, .pressed)) {
-        box-shadow: var(--neo-glass-box-shadow-flat);
       }
     }
 
@@ -227,10 +221,6 @@
         box-shadow: var(--neo-box-shadow-raised-2);
       }
 
-      &.glass {
-        box-shadow: var(--neo-glass-box-shadow-raised-2);
-      }
-
       :global(.neo-button.loading:active:not(.pressed)),
       :global(.neo-button:not(.flat, .text, :active, .pressed):hover) {
         box-shadow: var(--neo-box-shadow-inset-1);
@@ -269,10 +259,6 @@
       pointer-events: none;
 
       @include mixin.skeleton;
-
-      &.glass {
-        --neo-skeleton-color: var(--neo-glass-skeleton-color);
-      }
     }
 
     &.vertical {
