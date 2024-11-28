@@ -225,15 +225,34 @@
 }
 
 @mixin glass() {
+  /** Box Shadows raised */
   --neo-box-shadow-raised-5: var(--neo-glass-box-shadow-raised-5);
   --neo-box-shadow-raised-4: var(--neo-glass-box-shadow-raised-4);
   --neo-box-shadow-raised-3: var(--neo-glass-box-shadow-raised-3);
   --neo-box-shadow-raised-2: var(--neo-glass-box-shadow-raised-2);
   --neo-box-shadow-raised-1: var(--neo-glass-box-shadow-raised-1);
+
+  /** Box Shadows inset */
   --neo-box-shadow-inset-1: var(--neo-glass-box-shadow-inset-1);
   --neo-box-shadow-inset-2: var(--neo-glass-box-shadow-inset-2);
   --neo-box-shadow-inset-3: var(--neo-glass-box-shadow-inset-3);
   --neo-box-shadow-inset-4: var(--neo-glass-box-shadow-inset-4);
   --neo-box-shadow-inset-5: var(--neo-glass-box-shadow-inset-5);
+
+  /** Box Shadows pressed */
+  --neo-box-shadow-pressed-1: var(--neo-glass-box-shadow-pressed-1);
+  --neo-box-shadow-pressed-2: var(--neo-glass-box-shadow-pressed-2);
+  --neo-box-shadow-pressed-3: var(--neo-glass-box-shadow-pressed-3);
+  --neo-box-shadow-pressed-4: var(--neo-glass-box-shadow-pressed-4);
+  --neo-box-shadow-pressed-5: var(--neo-glass-box-shadow-pressed-5);
+
+  /** Box Shadows convex */
+  --neo-box-shadow-convex-1: var(--neo-glass-box-shadow-convex-1);
+  --neo-box-shadow-convex-2: var(--neo-glass-box-shadow-convex-2);
+  --neo-box-shadow-convex-3: var(--neo-glass-box-shadow-convex-3);
+  --neo-box-shadow-convex-4: var(--neo-glass-box-shadow-convex-4);
+  --neo-box-shadow-convex-5: var(--neo-glass-box-shadow-convex-5);
+
+  /** Skeleton color */
   --neo-skeleton-color: var(--neo-glass-skeleton-color);
 }

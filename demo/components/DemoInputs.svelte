@@ -392,7 +392,7 @@
     margin: 2rem 0;
   }
 
-  @media (width < 1400px) {
+  @media (width < 1500px) {
     .column.content {
       flex: 1 0 40%;
       max-width: 50%;

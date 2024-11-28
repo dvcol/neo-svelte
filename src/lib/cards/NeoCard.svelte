@@ -5,7 +5,7 @@
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
+  import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation, isShadowFlat } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -65,12 +65,12 @@
 
   const filter = $derived.by(() => computeGlassFilter(elevation, glass));
 
-  const boxShadow = $derived.by(() => computeShadowElevation(elevation, glass));
+  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass }));
   const hoverElevation = $derived(elevation + hover);
-  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, glass) ?? boxShadow);
+  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
 
-  const hoverFlat = $derived(boxShadow.endsWith('flat') && !hoverShadow.endsWith('flat'));
-  const flatHover = $derived(hoverShadow.endsWith('flat') && !boxShadow.endsWith('flat'));
+  const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
+  const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
   const segments = $derived([content, header, action, footer, media, close].filter(Boolean).length > 1);
 

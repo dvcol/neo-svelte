@@ -17,7 +17,7 @@
     type NeoInputState,
   } from '~/inputs/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation } from '~/utils/shadow.utils.js';
+  import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation, isShadowFlat } from '~/utils/shadow.utils.js';
   import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -93,11 +93,11 @@
   let validationMessage: string | undefined = $state(ref?.validationMessage);
 
   const filter = $derived.by(() => computeGlassFilter(elevation, glass));
-  const boxShadow = $derived.by(() => computeShadowElevation(elevation, glass));
-  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, glass) ?? boxShadow);
+  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass }));
+  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
 
-  const hoverFlat = $derived(boxShadow.endsWith('flat') && !hoverShadow.endsWith('flat'));
-  const flatHover = $derived(hoverShadow.endsWith('flat') && !boxShadow.endsWith('flat'));
+  const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
+  const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
   let hovered = $state(false);
   const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
