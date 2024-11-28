@@ -16,10 +16,9 @@
 
   const options = $state<NeoButtonProps>({
     disabled: false,
-    shallow: false,
     skeleton: false,
     loading: false,
-    borderless: false,
+    inset: false,
   });
 
   const loading = $derived.by(() => isLoading() || options.loading);
@@ -52,10 +51,9 @@
 <div class="row">
   <div class="column">
     <NeoButtonGroup>
+      <NeoButton toggle bind:checked={options.inset}>Inset</NeoButton>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
       <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
-      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
-      <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     </NeoButtonGroup>
   </div>

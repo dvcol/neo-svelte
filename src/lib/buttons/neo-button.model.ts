@@ -53,10 +53,6 @@ export type NeoButtonProps = {
   // Styles
 
   /**
-   * If `true`, the button will never display a border.
-   */
-  borderless?: boolean;
-  /**
    * If true, the button will start as flat on first render.
    * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
    */
@@ -78,9 +74,9 @@ export type NeoButtonProps = {
    */
   rounded?: boolean;
   /**
-   * If true, the button will not depress past the initial plane.
+   * If true, the button will be inset instead of pressed when active.
    */
-  shallow?: boolean;
+  inset?: boolean;
   /**
    * If true, the flex direction of the button will be reversed.
    */

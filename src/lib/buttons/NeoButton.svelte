@@ -26,13 +26,12 @@
     checked = $bindable(false),
 
     // Styles
-    borderless,
     start,
     text,
     flat,
     glass,
-    shallow,
     rounded,
+    inset,
     reverse,
     coalesce,
     pulse,
@@ -128,8 +127,8 @@
   class:start
   class:glass
   class:flat={flat || text}
-  class:borderless={borderless || text}
-  class:shallow
+  class:text
+  class:inset
   class:rounded
   class:empty
   style:justify-content={justify}
@@ -196,23 +195,81 @@
       cursor: wait;
     }
 
-    &.borderless {
-      border-color: transparent !important;
-    }
-
-    &.flat,
-    &.shallow {
-      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-2);
-      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-2);
-    }
-
-    &.shallow {
-      --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-1);
-      --neo-pulse-box-shadow-reverse: var(--neo-box-shadow-inset-1);
+    &.inset {
+      --neo-box-shadow-pressed-2: var(--neo-box-shadow-inset-2);
+      --neo-box-shadow-pressed-3: var(--neo-box-shadow-inset-3);
+      --neo-glass-box-shadow-pressed-2: var(--neo-glass-box-shadow-inset-2);
+      --neo-glass-box-shadow-pressed-3: var(--neo-glass-box-shadow-inset-3);
     }
 
     &:hover {
       color: var(--neo-btn-text-color-hover, inherit);
+      box-shadow: var(--neo-box-shadow-raised-2);
+    }
+
+    &.pressed,
+    &:active:not(.loading) {
+      color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
+      box-shadow: var(--neo-box-shadow-pressed-2);
+      transition:
+        opacity 0.3s ease,
+        color 0.3s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        backdrop-filter 0.3s ease,
+        border-radius 0.3s ease,
+        box-shadow 0.15s ease-out;
+    }
+
+    &:focus-visible {
+      color: var(--neo-btn-text-color-focused, var(--neo-text-color-focused));
+      outline: none;
+      box-shadow: var(--neo-box-shadow-raised-2);
+      transition:
+        opacity 0.3s ease,
+        color 0s,
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        backdrop-filter 0.3s ease,
+        border-radius 0.3s ease,
+        box-shadow 0.15s ease-out;
+
+      &:hover {
+        color: var(--neo-btn-text-color-focused-hover, var(--neo-text-color-focused));
+      }
+
+      &.pressed,
+      &:active:not(.loading) {
+        color: var(--neo-btn-text-color-focused-active, var(--neo-text-color-focused-active));
+        box-shadow: var(--neo-box-shadow-pressed-2);
+      }
+    }
+
+    &.text {
+      border-color: transparent !important;
+    }
+
+    &.flat {
+      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-2);
+      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-2);
+
+      border-color: var(--neo-btn-border-color, var(--neo-border-color));
+      box-shadow: var(--neo-box-shadow-flat);
+
+      &:focus-visible {
+        border-color: var(--neo-btn-border-color-focused, var(--neo-border-color-focused));
+      }
+
+      &:hover {
+        border-color: transparent;
+        box-shadow: var(--neo-box-shadow-inset-1);
+      }
+
+      &.pressed,
+      &:active:not(.loading) {
+        border-color: transparent;
+        box-shadow: var(--neo-box-shadow-inset-3);
+      }
     }
 
     &.glass {
@@ -249,67 +306,7 @@
         background-color: var(--neo-glass-background-color-hover);
         border-color: var(--neo-btn-border-color-hover, var(--neo-glass-border-color-hover));
         backdrop-filter: var(--neo-blur-1) var(--neo-saturate-2);
-
-        &.shallow {
-          border-color: transparent;
-        }
       }
-    }
-
-    &.pressed,
-    &:active {
-      color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
-      box-shadow: var(--neo-box-shadow-inset-3);
-      transition:
-        opacity 0.3s ease,
-        color 0.3s ease,
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        backdrop-filter 0.3s ease,
-        border-radius 0.3s ease,
-        box-shadow 0.15s ease-out;
-
-      &.shallow {
-        box-shadow: var(--neo-box-shadow-flat);
-
-        &.flat {
-          box-shadow: var(--neo-box-shadow-inset-2);
-        }
-
-        &:not(.flat, .glass, .loading) {
-          border-color: var(--neo-btn-border-color, var(--neo-border-color));
-        }
-      }
-    }
-
-    &:focus-visible {
-      color: var(--neo-btn-text-color-focused, var(--neo-text-color-focused));
-      outline: none;
-      transition:
-        opacity 0.3s ease,
-        color 0s,
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        backdrop-filter 0.3s ease,
-        border-radius 0.3s ease,
-        box-shadow 0.15s ease-out;
-
-      &:hover {
-        color: var(--neo-btn-text-color-focused-hover, var(--neo-text-color-focused));
-      }
-
-      &.pressed,
-      &:active {
-        color: var(--neo-btn-text-color-focused-active, var(--neo-text-color-focused-active));
-      }
-
-      &:not(.pressed, :active, .glass) {
-        box-shadow: var(--neo-box-shadow-raised-2);
-      }
-    }
-
-    .flat:not(:active, :hover, &.pressed):focus-visible {
-      border-color: var(--neo-btn-border-color-focused, var(--neo-border-color-focused));
     }
 
     &.start {
@@ -325,6 +322,7 @@
     &:disabled:not(.skeleton),
     &[disabled]:not([disabled='false'], .skeleton) {
       color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled)) !important;
+      border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
       cursor: not-allowed;
       opacity: var(--neo-btn-opacity-disabled, var(--neo-opacity-disabled));
 
@@ -332,37 +330,10 @@
         box-shadow: var(--neo-box-shadow-flat);
       }
 
-      &:not(.borderless) {
-        border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
-      }
-
       &::after,
       &::before {
         box-shadow: none;
         animation-play-state: paused;
-      }
-    }
-
-    &.flat:not(:active, &.pressed),
-    &.loading:active:not(.pressed),
-    &:hover:not(:active, &.pressed) {
-      box-shadow: var(--neo-box-shadow-flat);
-
-      &:not(.glass, .borderless, .flat:hover, .flat:focus-visible, .shallow:not(.flat)) {
-        border-color: var(--neo-btn-border-color-hover, var(--neo-border-color));
-      }
-
-      &.shallow:not(.flat, .glass) {
-        box-shadow: var(--neo-box-shadow-raised-2);
-      }
-    }
-
-    &.flat.loading:active:not(.pressed),
-    &.flat:hover:not(:active, &.pressed) {
-      box-shadow: var(--neo-box-shadow-inset-2);
-
-      &.shallow {
-        box-shadow: var(--neo-box-shadow-inset-1);
       }
     }
 
