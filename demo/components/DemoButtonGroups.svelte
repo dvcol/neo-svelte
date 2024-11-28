@@ -15,7 +15,7 @@
 
   const { onClick, loading: loading$, onLoading } = useButtonState('DemoGroupClicked');
   const loading = $derived.by(loading$);
-  const options = $state({ shallow: false, skeleton: false, borderless: false });
+  const options = $state({ skeleton: false, borderless: false });
 
   const { matches } = useWatchMedia('(max-width: 1550px)');
   const vertical = $derived.by(matches);
@@ -25,7 +25,6 @@
     { label: 'Rounded', props: { rounded: true } },
     { label: 'Flat', props: { flat: true } },
     { label: 'Text', props: { text: true } },
-    { label: 'Inset', props: { inset: true } },
     { label: 'Glass', props: { glass: true } },
   ];
 </script>
@@ -54,7 +53,6 @@
 <div class="row">
   <div class="column">
     <NeoButtonGroup>
-      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
       <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     </NeoButtonGroup>

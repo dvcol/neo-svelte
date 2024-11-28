@@ -45,8 +45,6 @@
     close: true,
     add: true,
     slide: true,
-    inset: false,
-    shallow: false,
     toggle: true,
     before: false,
     skeleton: false,
@@ -61,8 +59,6 @@
   <div class="column">
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
-      <NeoButton toggle bind:checked={options.inset}>Inset</NeoButton>
-      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
       <NeoButton toggle bind:checked={options.before}>Before</NeoButton>
       <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
       <NeoButton toggle bind:checked={options.nowrap}>No Wrap</NeoButton>

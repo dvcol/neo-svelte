@@ -19,8 +19,6 @@
     text,
     flat,
     glass,
-    inset,
-    shallow,
     rounded,
     pulse,
     coalesce,
@@ -58,13 +56,10 @@
   this={tag}
   bind:this={ref}
   class:neo-button-group={true}
-  class:borderless
+  class:borderless={borderless || text}
   class:start
-  class:text
-  class:flat
+  class:flat={flat || text}
   class:glass
-  class:shallow
-  class:inset
   class:rounded
   class:pulse
   class:coalesce
@@ -129,12 +124,11 @@
       border-color: var(--neo-btn-border-color, var(--neo-border-color));
     }
 
-    &.borderless,
-    &.text {
+    &.borderless {
       border-color: transparent !important;
     }
 
-    &:not(.text, .flat) {
+    &:not(.flat) {
       box-shadow: var(--neo-box-shadow-raised-3);
     }
 
@@ -142,7 +136,7 @@
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
 
-        &:not(.text, .glass, .borderless) {
+        &:not(.glass, .borderless) {
           border-color: var(--neo-btn-border-color, var(--neo-border-color));
         }
       }
@@ -169,33 +163,26 @@
       border-color: transparent !important;
     }
 
-    :global(.neo-button:disabled:not(.skeleton)),
-    :global(.neo-button[disabled]:not([disabled='false'], .skeleton)) {
-      border-color: transparent !important;
-    }
-
-    :global(.neo-button:disabled:not(.skeleton, .pressed)),
-    :global(.neo-button[disabled]:not([disabled='false'], .skeleton, .pressed)) {
+    :global(.neo-button:disabled:not(.pressed)),
+    :global(.neo-button[disabled]:not([disabled='false'], .pressed)) {
       box-shadow: var(--neo-box-shadow-flat) !important;
     }
 
-    :global(.neo-button:not(:active, .pressed)) {
+    :global(.neo-button:not(:active:not(.loading), .pressed)) {
       box-shadow: var(--neo-box-shadow-flat);
     }
 
-    :global(.neo-button.loading:active:not(.pressed)),
-    :global(.neo-button:not(.flat, .text, :active, .pressed):hover) {
-      box-shadow: var(--neo-box-shadow-inset-2);
+    :global(.neo-button:not(.flat, :active:not(.loading), .pressed):hover) {
+      box-shadow: var(--neo-box-shadow-inset-1);
     }
 
-    :global(.neo-button.pulse::after),
-    :global(.neo-button.pulse::before),
-    :global(.neo-button.coalesce::after),
-    :global(.neo-button.coalesce::before) {
-      animation: none;
+    :global(.neo-button.pressed),
+    :global(.neo-button:active:not(.loading)) {
+      --neo-box-shadow-pressed-2: var(--neo-box-shadow-inset-3);
+      --neo-glass-box-shadow-pressed-2: var(--neo-glass-box-shadow-inset-3);
     }
 
-    &.pulse:not(.skeleton) {
+    &.pulse {
       @include mixin.pulse(
         $scaleX: var(--neo-btn-grp-scale-x, 1.2),
         $scaleY: var(--neo-btn-grp-scale-y, 2),
@@ -203,46 +190,12 @@
       );
     }
 
-    &.coalesce:not(.skeleton) {
+    &.coalesce {
       @include mixin.coalesce(
         $scaleX: var(--neo-btn-grp-scale-x, 1.2),
         $scaleY: var(--neo-btn-grp-scale-y, 2),
         $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-raised-3))
       );
-    }
-
-    &.shallow:not(.inset, .skeleton) {
-      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-2);
-      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-2);
-      --neo-coalesce-box-shadow-reverse: var(--neo-box-shadow-inset-1);
-      --neo-pulse-box-shadow-reverse: var(--neo-box-shadow-inset-1);
-
-      &:not(.text, .flat, .glass) {
-        box-shadow: var(--neo-box-shadow-raised-2);
-      }
-
-      :global(.neo-button.loading:active:not(.pressed)),
-      :global(.neo-button:not(.flat, .text, :active, .pressed):hover) {
-        box-shadow: var(--neo-box-shadow-inset-1);
-      }
-
-      :global(.neo-button:active),
-      :global(.neo-button.pressed) {
-        box-shadow: var(--neo-box-shadow-inset-2);
-      }
-    }
-
-    &.inset:not(.skeleton) {
-      box-shadow: var(--neo-box-shadow-inset-3);
-
-      &.shallow {
-        box-shadow: var(--neo-box-shadow-inset-2);
-
-        :global(.neo-button:active),
-        :global(.neo-button.pressed) {
-          box-shadow: var(--neo-box-shadow-inset-2);
-        }
-      }
     }
 
     &.rounded {

@@ -43,14 +43,6 @@ export type NeoButtonGroupContext = {
    */
   rounded?: boolean;
   /**
-   * If true, the button will not depress past the initial plane.
-   */
-  shallow?: boolean;
-  /**
-   * If true, the button group will be inset and the buttons flat.
-   */
-  inset?: boolean;
-  /**
    * If true, the button group will be surrounded by expanding waves.
    * The waves will reverse direction on hover or active states.
    */

@@ -27,8 +27,7 @@
 
   const elevation = $derived.by(() => {
     if (context?.flat) return 0;
-    if (context?.inset) return context?.shallow ? -1 : -2;
-    return context?.shallow ? 1 : 2;
+    return rest.elevation;
   });
 
   $effect.pre(() => {

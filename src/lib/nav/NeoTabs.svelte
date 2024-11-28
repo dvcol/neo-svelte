@@ -92,8 +92,6 @@
       add,
       close,
       glass: rest.glass,
-      inset: rest.inset,
-      shallow: rest.shallow,
       vertical: rest.vertical,
       flat: rest.flat,
       text: rest.text,
@@ -126,7 +124,6 @@
     class:text={rest.text}
     class:vertical={rest.vertical}
     class:rounded={rest.rounded}
-    class:shallow={rest.shallow}
     {...containerProps}
     use:useFn={useProps}
     out:outFn={outProps}
@@ -200,6 +197,7 @@
           --neo-tab-max-height: calc(var(--neo-tab-height, 100%) - 1rem);
 
           top: 0;
+          box-sizing: border-box;
           width: 2px;
           height: 0;
           max-height: var(--neo-tab-max-height);
@@ -313,10 +311,6 @@
         100% {
           box-shadow: var(--neo-box-shadow-inset-3);
         }
-      }
-
-      &.shallow {
-        --neo-box-shadow-inset-3: var(--neo-box-shadow-inset-2);
       }
 
       &.rounded :global(.neo-button-group .neo-tab::before) {

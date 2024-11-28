@@ -48,7 +48,7 @@
 
   const onClear = () => onChange();
 
-  const options = $state<NeoTabsProps>({ disabled: false, close: false, add: false, slide: true, shallow: false, toggle: false });
+  const options = $state<NeoTabsProps>({ disabled: false, close: false, add: false, slide: true, toggle: false });
 
   const columns: { label: string; props?: NeoTabsProps }[] = [
     { label: 'Default' },
@@ -56,7 +56,6 @@
     { label: 'Flat', props: { flat: true } },
     { label: 'Text', props: { text: true } },
     { label: 'Line', props: { text: true, line: true } },
-    { label: 'Inset', props: { inset: true, line: true } },
     { label: 'Glass', props: { glass: true } },
   ];
 </script>
@@ -87,7 +86,6 @@
   <div class="column">
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
-      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
       <NeoButton toggle bind:checked={options.add}>Add</NeoButton>
       <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
       <NeoButton toggle bind:checked={options.slide}>Slide</NeoButton>

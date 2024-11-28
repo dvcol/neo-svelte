@@ -127,7 +127,7 @@
   class:start
   class:glass
   class:flat={flat || text}
-  class:text
+  class:borderless={text}
   class:inset
   class:rounded
   class:empty
@@ -243,7 +243,7 @@
       }
     }
 
-    &.text {
+    &.borderless {
       border-color: transparent !important;
     }
 
@@ -295,13 +295,13 @@
         backdrop-filter: var(--neo-blur-0) var(--neo-saturate-2);
       }
 
-      &:disabled:not(.skeleton),
-      &[disabled]:not([disabled='false'], .skeleton) {
+      &:disabled,
+      &[disabled]:not([disabled='false']) {
         backdrop-filter: var(--neo-blur-1);
       }
 
       &.inset {
-        &:hover:not(&.pressed, &:active:not(.loading)) {
+        &:hover:not(&.pressed, &:active:not(.loading), &:disabled, &[disabled]:not([disabled='false'])) {
           border-color: var(--neo-btn-border-color-hover, var(--neo-glass-border-color-hover));
           box-shadow: var(--neo-box-shadow-flat);
         }
@@ -323,14 +323,14 @@
       }
     }
 
-    &:disabled:not(.skeleton),
-    &[disabled]:not([disabled='false'], .skeleton) {
-      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled)) !important;
-      border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
+    &:disabled:disabled,
+    &[disabled]:not([disabled='false']) {
+      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled));
       cursor: not-allowed;
       opacity: var(--neo-btn-opacity-disabled, var(--neo-opacity-disabled));
 
       &:not(.pressed) {
+        border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled));
         box-shadow: var(--neo-box-shadow-flat);
       }
 
