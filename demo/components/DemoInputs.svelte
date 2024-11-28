@@ -38,6 +38,7 @@
   const options = $state<NeoInputProps>({
     borderless: false,
     rounded: false,
+    pressed: false,
     glass: false,
     loading: false,
     disabled: false,
@@ -210,7 +211,7 @@
     },
   ];
 
-  const validationColumns: { label: string; props?: ColumProps; state: ValidationState }[] = [
+  const validationColumns: ColumProps[] = [
     {
       label: 'Custom Error',
       props: {
@@ -256,6 +257,7 @@
 <div class="row">
   <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={options.pressed}>Pressed</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={options.floating}>Floating</NeoButton>

@@ -48,6 +48,7 @@
     elevation = 3,
     hover = -1,
     borderless,
+    pressed,
     rounded,
     glass,
     start,
@@ -93,8 +94,8 @@
   let validationMessage: string | undefined = $state(ref?.validationMessage);
 
   const filter = $derived.by(() => computeGlassFilter(elevation, glass));
-  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass }));
-  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
+  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass, pressed }));
+  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass, pressed }) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
@@ -232,6 +233,7 @@
     // Styles
     elevation,
     hover,
+    pressed,
     borderless,
     rounded,
     glass,
@@ -319,6 +321,7 @@
     data-valid={valid}
     class:neo-input-group={true}
     class:readonly
+    class:pressed
     class:borderless
     class:rounded
     class:glass
@@ -643,6 +646,7 @@
       border-color: transparent !important;
     }
 
+    &.inset.pressed,
     &.raised {
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }

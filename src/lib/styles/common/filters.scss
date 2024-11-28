@@ -1,11 +1,11 @@
 @mixin filters() {
   /* Blurs */
   --neo-blur-0: blur(0);
-  --neo-blur-1: blur(2px);
-  --neo-blur-2: blur(4px);
-  --neo-blur-3: blur(6px);
-  --neo-blur-4: blur(8px);
-  --neo-blur-5: blur(12px);
+  --neo-blur-1: blur(4px);
+  --neo-blur-2: blur(6px);
+  --neo-blur-3: blur(8px);
+  --neo-blur-4: blur(12px);
+  --neo-blur-5: blur(16px);
 
   /* Saturation */
   --neo-saturate: saturate(1);

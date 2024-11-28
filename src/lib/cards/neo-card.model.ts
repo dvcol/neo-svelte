@@ -20,6 +20,14 @@ export type NeoCardContext = {
    */
   hover?: number;
   /**
+   * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
+   */
+  pressed?: boolean;
+  /**
+   * If true, positive elevation (> 0) will be displayed as convex instead of raised.
+   */
+  convex?: boolean;
+  /**
    * By default, cards with no elevation will display a border.
    * If this is `true`, the card will never display a border.
    */

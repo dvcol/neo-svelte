@@ -20,6 +20,8 @@
     rounded: true,
     glass: false,
     hover: 0,
+    pressed: false,
+    convex: false,
     close: false,
     horizontal: false,
     onClose: (e: MouseEvent) => {
@@ -62,6 +64,8 @@
 <div class="row">
   <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={options.convex}>Convex</NeoButton>
+    <NeoButton toggle bind:checked={options.pressed}>Pressed</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>

@@ -48,6 +48,7 @@
     elevation = 3,
     hover = -1,
     borderless,
+    pressed,
     rounded,
     glass,
     start,
@@ -91,8 +92,8 @@
   let validationMessage: string | undefined = $state(ref?.validationMessage);
 
   const filter = $derived.by(() => computeGlassFilter(elevation, glass));
-  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass }));
-  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
+  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass, pressed }));
+  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass, pressed }) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
@@ -267,6 +268,7 @@
     // Styles
     elevation,
     hover,
+    pressed,
     borderless,
     rounded,
     glass,
@@ -348,6 +350,7 @@
     data-valid={valid}
     class:neo-textarea-group={true}
     class:readonly
+    class:pressed
     class:borderless
     class:rounded
     class:glass
@@ -464,7 +467,7 @@
     min-width: 100%;
     max-width: 100%;
     min-height: fit-content;
-    padding: 0.75rem;
+    padding: 0.75rem 0.95rem;
     color: inherit;
     text-overflow: ellipsis;
     background-color: transparent;
@@ -473,7 +476,7 @@
     outline: none;
 
     &.affix {
-      padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+      padding: 0.75rem 2.7rem 0.75rem 0.95rem;
     }
 
     &-affix,
@@ -628,7 +631,6 @@
   .neo-textarea-group {
     position: relative;
     margin: var(--neo-shadow-margin, 0.6rem);
-    padding: 0 0.2rem;
     color: var(--neo-textarea-text-color, inherit);
     background-color: var(--neo-textarea-bg-color, inherit);
     border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;
@@ -644,6 +646,7 @@
       border-color: transparent !important;
     }
 
+    &.inset.pressed,
     &.raised {
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }
@@ -686,7 +689,7 @@
         border-radius: var(--neo-border-radius-lg, 2rem);
 
         &.affix {
-          padding: 0.75rem 2.75rem 0.75rem 1rem;
+          padding: 0.75rem 2.95rem 0.75rem 1.2rem;
         }
 
         &-suffix,

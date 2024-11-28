@@ -24,6 +24,8 @@
     // Styles
     elevation = 3,
     hover = 0,
+    pressed,
+    convex,
     borderless,
     rounded,
     glass,
@@ -65,9 +67,9 @@
 
   const filter = $derived.by(() => computeGlassFilter(elevation, glass));
 
-  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass }));
+  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass, pressed, convex }));
   const hoverElevation = $derived(elevation + hover);
-  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
+  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass, pressed, convex }) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
@@ -127,9 +129,12 @@
   class:segments
   class:image={media && !segments}
   class:rounded
+  class:pressed
+  class:convex
   class:hover
   class:start
-  class:raised={elevation > 3}
+  class:raised={elevation > 3 || hoverElevation > 3}
+  class:inset={elevation < -3 || hoverElevation < -3}
   class:flat={!elevation}
   class:hover-flat={hoverFlat}
   class:flat-hover={flatHover}
@@ -207,7 +212,7 @@
     padding: var(--neo-card-full-spacing);
     color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
-    border: var(--neo-border-width, 1px) var(--neo-card-border-color, transparent) solid;
+    border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
     border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-card-box-shadow, var(--neo-box-shadow-flat));
     transition:
@@ -223,7 +228,8 @@
       border-color: transparent !important;
     }
 
-    &.raised {
+    &.inset.pressed,
+    &.raised:not(.convex) {
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }
 

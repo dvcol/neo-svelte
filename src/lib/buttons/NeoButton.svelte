@@ -197,9 +197,7 @@
 
     &.inset {
       --neo-box-shadow-pressed-2: var(--neo-box-shadow-inset-2);
-      --neo-box-shadow-pressed-3: var(--neo-box-shadow-inset-3);
       --neo-glass-box-shadow-pressed-2: var(--neo-glass-box-shadow-inset-2);
-      --neo-glass-box-shadow-pressed-3: var(--neo-glass-box-shadow-inset-3);
     }
 
     &:hover {
@@ -276,6 +274,10 @@
       @include mixin.glass;
 
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
+      border-color: var(
+        --neo-btn-border-color,
+        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
+      );
       backdrop-filter: var(--neo-blur-2) var(--neo-saturate-3);
 
       &:focus-visible {
@@ -283,8 +285,13 @@
         backdrop-filter: var(--neo-blur-1) var(--neo-saturate-3);
       }
 
+      &:hover {
+        background-color: var(--neo-glass-background-color-hover);
+        backdrop-filter: var(--neo-blur-1) var(--neo-saturate-2);
+      }
+
       &.pressed,
-      &:active {
+      &:active:not(.loading) {
         backdrop-filter: var(--neo-blur-0) var(--neo-saturate-2);
       }
 
@@ -293,19 +300,16 @@
         backdrop-filter: var(--neo-blur-1);
       }
 
-      &:not(:hover, :active, &.pressed, &.skeleton) {
-        border-color: var(
-          --neo-btn-border-color,
-          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-            var(--neo-glass-left-border-color)
-        );
-      }
+      &.inset {
+        &:hover:not(&.pressed, &:active:not(.loading)) {
+          border-color: var(--neo-btn-border-color-hover, var(--neo-glass-border-color-hover));
+          box-shadow: var(--neo-box-shadow-flat);
+        }
 
-      &.loading:active:not(.pressed),
-      &:hover:not(:active, &.pressed) {
-        background-color: var(--neo-glass-background-color-hover);
-        border-color: var(--neo-btn-border-color-hover, var(--neo-glass-border-color-hover));
-        backdrop-filter: var(--neo-blur-1) var(--neo-saturate-2);
+        &.pressed,
+        &:active:not(.loading) {
+          border-color: transparent;
+        }
       }
     }
 

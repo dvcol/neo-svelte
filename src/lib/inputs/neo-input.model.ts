@@ -45,6 +45,10 @@ export type NeoInputStyles = {
    */
   hover?: number;
   /**
+   * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
+   */
+  pressed?: boolean;
+  /**
    * By default, inputs with no elevation will display a border.
    * If this is `true`, the input will never display a border.
    */
