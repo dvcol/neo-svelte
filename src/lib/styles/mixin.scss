@@ -106,25 +106,29 @@
 }
 
 @mixin border-rotate(
-  $background-color: var(--neo-background-color),
-  $border-color: var(--neo-border-color-primary),
-  $border-width: 1px,
-  $speed: 3s,
-  $easing: linear,
-  $transition: (
-    1s --neo-source-color,
-    1s --neo-target-color,
-  )
+  $source-color: var(--neo-rotate-source-color, transparent),
+  $target-color: var(--neo-rotate-target-color, var(--neo-color-primary-50)),
+  $border-width: var(--neo-border-width, 1px),
+  $speed: var(--neo-rotate-speed, 4s),
+  $easing: var(--neo-rotate-easing, linear)
 ) {
-  --neo-source-color: #{$background-color};
-  --neo-target-color: #{$border-color};
-
-  background:
-    linear-gradient($background-color, $background-color) padding-box,
-    conic-gradient(from var(--neo-angle), var(--neo-source-color), var(--neo-target-color)) border-box;
+  position: relative;
   border: $border-width solid transparent;
-  transition: $transition;
-  animation: $speed rotate $easing infinite;
+  border-radius: 2rem;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    padding: $border-width;
+    background: conic-gradient(from var(--neo-angle), #{$source-color} 20%, #{$target-color} 80%);
+    border-radius: inherit;
+    animation: $speed rotate $easing infinite;
+    content: '';
+    mask:
+      conic-gradient(black 0 0) content-box exclude,
+      conic-gradient(black 0 0);
+    pointer-events: none;
+  }
 
   &.filled {
     --neo-source-color: var(--neo-target-color);
@@ -138,18 +142,29 @@
 }
 
 @mixin border-progress(
-  $background-color: var(--neo-background-color),
-  $border-color: var(--neo-border-color-primary),
+  $border-color: var(--neo-progress-border-color, var(--neo-color-primary-50)),
   $border-width: 1px,
   $transition: --neo-progress,
-  $speed: 2s,
-  $easing: var(--neo-transition-bezier)
+  $speed: var(--neo-rotate-speed, 4s),
+  $easing: var(--neo-rotate-easing, linear)
 ) {
-  background:
-    linear-gradient($background-color, $background-color) padding-box,
-    conic-gradient($border-color, $border-color var(--neo-progress), transparent var(--neo-progress)) border-box;
+  position: relative;
   border: $border-width solid transparent;
-  transition: $transition $speed $easing;
+  border-radius: 2rem;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    padding: $border-width;
+    background: conic-gradient($border-color, $border-color var(--neo-progress), transparent var(--neo-progress));
+    border-radius: inherit;
+    transition: $transition $speed $easing;
+    content: '';
+    mask:
+      conic-gradient(black 0 0) content-box exclude,
+      conic-gradient(black 0 0);
+    pointer-events: none;
+  }
 }
 
 @mixin skeleton(
