@@ -5,7 +5,7 @@
 
   const { elevation = -1, vertical = false, height, width, ...rest }: NeoDividerProps = $props();
 
-  const boxShadow = $derived.by(() => computeShadowElevation(elevation));
+  const boxShadow = $derived(computeShadowElevation(elevation));
 </script>
 
 <div

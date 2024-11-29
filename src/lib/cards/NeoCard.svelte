@@ -5,7 +5,13 @@
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation, isShadowFlat } from '~/utils/shadow.utils.js';
+  import {
+    computeGlassFilter,
+    computeHoverShadowElevation,
+    computeShadowElevation,
+    DefaultShadowElevation,
+    isShadowFlat,
+  } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -22,7 +28,7 @@
     close,
 
     // Styles
-    elevation = 3,
+    elevation = DefaultShadowElevation,
     hover = 0,
     pressed,
     convex,
@@ -65,11 +71,11 @@
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
 
-  const filter = $derived.by(() => computeGlassFilter(elevation, glass));
+  const filter = $derived(computeGlassFilter(elevation, glass));
 
-  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass, pressed, convex }));
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }));
   const hoverElevation = $derived(elevation + hover);
-  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass, pressed, convex }) ?? boxShadow);
+  const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed, convex }) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));

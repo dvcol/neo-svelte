@@ -1,7 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
+export type NeoButtonGroupElevation = ShadowElevation;
 export type NeoButtonGroupContext = {
   // States
 
@@ -18,30 +20,30 @@ export type NeoButtonGroupContext = {
   // Styles
 
   /**
+   * Group elevation.
+   * @default 3
+   */
+  elevation?: NeoButtonGroupElevation;
+  /**
+   * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
+   */
+  pressed?: boolean;
+  /**
+   * If true, positive elevation (> 0) will be displayed as convex instead of raised.
+   */
+  convex?: boolean;
+  /**
    * If `true`, the group will never display a border.
    */
   borderless?: boolean;
   /**
-   * If true, the button group will start as flat on first render.
-   * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
+   * If true, the button group will have a rounded border.
    */
-  start?: boolean;
-  /**
-   * If true, only the button group content will be displayed.
-   */
-  text?: boolean;
-  /**
-   * If true, the button group will be displayed with no elevation.
-   */
-  flat?: boolean;
+  rounded?: boolean;
   /**
    * If true, the buttongroup  will be displayed with a glass effect.
    */
   glass?: boolean;
-  /**
-   * If true, the button group will have a rounded border.
-   */
-  rounded?: boolean;
   /**
    * If true, the button group will be surrounded by expanding waves.
    * The waves will reverse direction on hover or active states.
@@ -56,6 +58,11 @@ export type NeoButtonGroupContext = {
    * If true, the button group will be stacked vertically.
    */
   vertical?: boolean;
+  /**
+   * If true, the button group will start as flat on first render.
+   * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
+   */
+  start?: boolean;
 };
 
 export type NeoButtonGroupProps = {

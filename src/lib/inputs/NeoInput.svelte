@@ -17,7 +17,13 @@
     type NeoInputState,
   } from '~/inputs/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeGlassFilter, computeHoverShadowElevation, computeShadowElevation, isShadowFlat } from '~/utils/shadow.utils.js';
+  import {
+    computeGlassFilter,
+    computeHoverShadowElevation,
+    computeShadowElevation,
+    DefaultShadowElevation,
+    isShadowFlat,
+  } from '~/utils/shadow.utils.js';
   import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -45,7 +51,7 @@
     position = NeoInputLabelPosition.Inside,
 
     // Styles
-    elevation = 3,
+    elevation = DefaultShadowElevation,
     hover = -1,
     borderless,
     pressed,
@@ -93,9 +99,9 @@
   let initial = $state(value);
   let validationMessage: string | undefined = $state(ref?.validationMessage);
 
-  const filter = $derived.by(() => computeGlassFilter(elevation, glass));
-  const boxShadow = $derived.by(() => computeShadowElevation(elevation, { glass, pressed }));
-  const hoverShadow = $derived.by(() => computeHoverShadowElevation(elevation, hover, { glass, pressed }) ?? boxShadow);
+  const filter = $derived(computeGlassFilter(elevation, glass));
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }));
+  const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed }) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));

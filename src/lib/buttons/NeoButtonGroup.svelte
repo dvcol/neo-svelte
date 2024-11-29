@@ -2,6 +2,7 @@
   import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeGlassFilter, computeShadowElevation, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -14,10 +15,11 @@
     skeleton,
 
     // Styles
+    elevation = DefaultShadowElevation,
+    pressed,
+    convex,
     borderless,
     start,
-    text,
-    flat,
     glass,
     rounded,
     pulse,
@@ -43,6 +45,9 @@
   }: NeoButtonGroupProps = $props();
   /* eslint-enable prefer-const */
 
+  const filter = $derived(computeGlassFilter(elevation, glass));
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }));
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -56,9 +61,9 @@
   this={tag}
   bind:this={ref}
   class:neo-button-group={true}
-  class:borderless={borderless || text}
+  class:borderless
   class:start
-  class:flat={flat || text}
+  class:flat={!elevation}
   class:glass
   class:rounded
   class:pulse
@@ -66,6 +71,8 @@
   class:skeleton
   class:vertical
   class:nowrap
+  style:--neo-btn-group-box-shadow={boxShadow}
+  style:--neo-btn-group-glass-blur={filter}
   style:justify-content={justify}
   style:align-items={align}
   style:flex
@@ -79,14 +86,16 @@
     skeleton,
 
     // styles
-    start,
-    text,
-    flat,
-    glass,
+    elevation,
+    pressed,
+    convex,
+    borderless,
     rounded,
+    glass,
     pulse,
     coalesce,
     vertical,
+    start,
   })}
 </svelte:element>
 
@@ -107,6 +116,7 @@
     background-color: var(--neo-btn-bg-color, transparent);
     border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;
     border-radius: calc(var(--neo-btn-border-radius, var(--neo-border-radius)) + 0.25rem);
+    box-shadow: var(--neo-btn-group-box-shadow, var(--neo-box-shadow-flat));
     transition:
       color 0.3s ease,
       background-color 0.3s ease,
@@ -120,16 +130,12 @@
       white-space: nowrap;
     }
 
-    &.flat {
-      border-color: var(--neo-btn-border-color, var(--neo-border-color));
-    }
-
     &.borderless {
       border-color: transparent !important;
     }
 
-    &:not(.flat) {
-      box-shadow: var(--neo-box-shadow-raised-3);
+    &.flat:not(.borderless) {
+      border-color: var(--neo-btn-border-color, var(--neo-border-color));
     }
 
     &.start {
@@ -150,7 +156,7 @@
         --neo-btn-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
-      backdrop-filter: var(--neo-blur-2) var(--neo-saturate-3);
+      backdrop-filter: var(--neo-btn-group-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
 
       :global(.neo-button) {
         background-color: transparent;
