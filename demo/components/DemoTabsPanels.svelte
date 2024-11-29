@@ -111,7 +111,7 @@
 
 <div class="row">
   {#each columns as { label, props }}
-    <div class="column content">
+    <div class="column content" class:max={options.vertical}>
       <span class="label">{label}</span>
 
       {#if props?.glass}
@@ -129,6 +129,11 @@
   .content {
     flex: 0 1 37.5rem;
     max-width: 37.5rem;
+
+    &.max {
+      flex: 0 1 40rem;
+      max-width: unset;
+    }
   }
 
   :global(.panel) {

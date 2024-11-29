@@ -253,12 +253,9 @@
 
       :global(.neo-tab::before) {
         position: absolute;
-        top: 0;
-        left: 0;
+        inset: 0;
         z-index: var(--neo-z-index-in-front, 1);
         box-sizing: border-box;
-        width: var(--neo-tab-width, 100%);
-        height: var(--neo-tab-height, 100%);
         border: var(--neo-border-width, 1px) var(--neo-tab-border-color, transparent) solid;
         border-radius: var(--neo-tab-border-radius, var(--neo-border-radius));
         box-shadow: var(--neo-box-shadow-flat);

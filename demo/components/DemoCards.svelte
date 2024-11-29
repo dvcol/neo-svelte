@@ -138,7 +138,7 @@
 {/snippet}
 
 {#snippet action({ rounded, elevation, horizontal })}
-  <NeoButtonGroup {skeleton} {rounded} shallow={Math.abs(elevation) < 2} vertical={horizontal}>
+  <NeoButtonGroup pressed {skeleton} {rounded} elevation={elevation > 3 ? 3 : Math.abs(elevation)} vertical={horizontal}>
     <NeoButton>Left</NeoButton>
     <NeoButton>Middle</NeoButton>
     <NeoButton>Right</NeoButton>

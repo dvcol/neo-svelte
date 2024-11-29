@@ -9,7 +9,7 @@
     computeGlassFilter,
     computeHoverShadowElevation,
     computeShadowElevation,
-    DefaultShadowElevation,
+    getDefaultElevation,
     isShadowFlat,
   } from '~/utils/shadow.utils.js';
 
@@ -28,10 +28,10 @@
     close,
 
     // Styles
-    elevation = DefaultShadowElevation,
-    hover = 0,
     pressed,
     convex,
+    elevation = getDefaultElevation(pressed),
+    hover = 0,
     borderless,
     rounded,
     glass,

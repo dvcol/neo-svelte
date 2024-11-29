@@ -2,7 +2,7 @@
   import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeGlassFilter, computeShadowElevation, DefaultShadowElevation } from '~/utils/shadow.utils.js';
+  import { computeGlassFilter, computeShadowElevation, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -15,9 +15,9 @@
     skeleton,
 
     // Styles
-    elevation = DefaultShadowElevation,
     pressed,
     convex,
+    elevation = getDefaultElevation(pressed),
     borderless,
     start,
     glass,
