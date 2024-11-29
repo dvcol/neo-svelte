@@ -64,6 +64,8 @@
   class:borderless
   class:start
   class:flat={!elevation}
+  class:convex
+  class:inset={elevation < 0}
   class:glass
   class:rounded
   class:pulse
@@ -132,6 +134,11 @@
 
     &.borderless {
       border-color: transparent !important;
+    }
+
+    &.convex:not(.inset),
+    &.inset:not(.borderless) {
+      padding: 0.375rem;
     }
 
     &.flat:not(.borderless) {

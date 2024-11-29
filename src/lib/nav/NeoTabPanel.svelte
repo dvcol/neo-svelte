@@ -29,7 +29,7 @@
 
   const context = getTabContext();
   const active = $derived(context?.active === tabId);
-  const orientation = $derived(context?.vertical ? 'y' : 'x');
+  const orientation = $derived(context?.state?.vertical ? 'y' : 'x');
 
   const show = $derived(empty ? !context?.active : active);
 

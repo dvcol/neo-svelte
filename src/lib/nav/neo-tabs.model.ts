@@ -4,11 +4,13 @@ import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
 export type NeoTabContextValue<T = unknown> = { index: number; value?: T; ref: HTMLElement };
 export type OnChange<T = unknown> = (tabId?: TabId, newValue?: NeoTabContextValue<T>, oldValue?: NeoTabContextValue) => unknown;
 export type OnClose<T = unknown> = (tabId?: TabId, value?: NeoTabContextValue<T>) => unknown;
 
+export type NeoTabsSlideElevation = ShadowElevation;
 export type NeoTabsContainerProps = HTMLNeoBaseElement & HTMLActionProps;
 export type NeoTabsProps<T = unknown> = {
   // Snippets
@@ -42,6 +44,10 @@ export type NeoTabsProps<T = unknown> = {
    * @default false
    */
   before?: boolean;
+  /**
+   * Whether to animate the tab transition.
+   */
+  slideElevation?: NeoTabsSlideElevation;
 
   // Events
 

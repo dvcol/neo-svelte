@@ -22,20 +22,19 @@
   /* eslint-enable prefer-const */
 
   const context = getTabContext();
-  const glass = $derived(context?.glass);
-  const borderless = $derived(context?.text);
-
-  const elevation = $derived.by(() => {
-    if (context?.flat) return 0;
-    return rest.elevation;
-  });
+  const borderless = $derived(context?.state?.borderless);
+  const elevation = $derived(context?.state?.elevation);
+  const pressed = $derived(context?.state?.pressed);
+  const convex = $derived(context?.state?.convex);
+  const glass = $derived(context?.state?.glass);
+  const start = $derived(context?.state?.start);
 
   $effect.pre(() => {
     setTabsCardContext({ animate });
   });
 </script>
 
-<NeoCard bind:ref {elevation} {borderless} {glass} {...rest}>
+<NeoCard bind:ref {borderless} {elevation} {pressed} {convex} {glass} {start} {...rest}>
   {#if animate}
     <NeoTransitionContainer overflowX="hidden" {...containerProps}>
       {@render children?.(context?.state)}

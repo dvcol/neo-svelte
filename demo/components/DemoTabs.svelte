@@ -1,6 +1,5 @@
 <script lang="ts">
   import { randomHex } from '@dvcol/common-utils/common/crypto';
-  import { useWatchMedia } from '@dvcol/svelte-utils/media';
 
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
@@ -18,9 +17,6 @@
   const { onClick, loading: loading$, onLoading } = useButtonState('DemoTabsClicked');
   const loading = $derived.by(loading$);
   let skeleton = $state(false);
-
-  const { matches } = useWatchMedia('(max-width: 1550px)');
-  const vertical = $derived.by(matches);
 
   const added = $state<NeoTabProps>([]);
   const onclose = (id: TabId) => {
@@ -48,14 +44,24 @@
 
   const onClear = () => onChange();
 
-  const options = $state<NeoTabsProps>({ disabled: false, close: false, add: false, slide: true, toggle: false });
+  const options = $state<NeoTabsProps>({
+    disabled: false,
+    close: false,
+    add: false,
+    slide: true,
+    toggle: false,
+    line: false,
+    rounded: false,
+    vertical: false,
+  });
 
   const columns: { label: string; props?: NeoTabsProps }[] = [
     { label: 'Default' },
-    { label: 'Rounded', props: { rounded: true } },
-    { label: 'Flat', props: { flat: true } },
-    { label: 'Text', props: { text: true } },
-    { label: 'Line', props: { text: true, line: true } },
+    { label: 'Flat', props: { elevation: 0 } },
+    { label: 'Text', props: { elevation: 0, borderless: true } },
+    { label: 'Inset', props: { elevation: -2 } },
+    { label: 'Pressed', props: { elevation: -2, slideElevation: 2, pressed: true } },
+    { label: 'Convex', props: { elevation: 2, convex: true } },
     { label: 'Glass', props: { glass: true } },
   ];
 </script>
@@ -77,7 +83,7 @@
 {/snippet}
 
 {#snippet group(props: NeoTabsProps = {})}
-  <NeoTabs bind:active onchange={onChange} {vertical} {skeleton} {onclose} {onadd} {...options} {...props}>
+  <NeoTabs bind:active onchange={onChange} {skeleton} {onclose} {onadd} {...options} {...props}>
     {@render tabs()}
   </NeoTabs>
 {/snippet}
@@ -90,6 +96,9 @@
       <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
       <NeoButton toggle bind:checked={options.slide}>Slide</NeoButton>
       <NeoButton toggle bind:checked={options.toggle}>Toggle</NeoButton>
+      <NeoButton toggle bind:checked={options.line}>Line</NeoButton>
+      <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+      <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
       <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
       <NeoButton onclick={onClear}>Clear</NeoButton>
     </NeoButtonGroup>
@@ -101,7 +110,7 @@
   <span>Value: {typeof value === 'object' ? JSON.stringify(value, undefined, 2) : value}</span>
 </div>
 
-<div class="row">
+<div class="row" class:invert={!options.vertical}>
   {#each columns as { label, props }}
     <div class="column">
       <span class="label">{label}</span>
@@ -131,13 +140,11 @@
     margin: 2rem 0;
   }
 
-  @media (width > 1550px) {
+  .invert {
+    @include flex.column($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
+
     .column {
       @include flex.row($gap: var(--neo-gap-xxl));
-    }
-
-    .row {
-      @include flex.column($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
     }
 
     .label {

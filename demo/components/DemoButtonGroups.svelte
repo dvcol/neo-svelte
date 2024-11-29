@@ -1,30 +1,34 @@
 <script lang="ts">
   import { link } from '@dvcol/svelte-simple-router';
-  import { useWatchMedia } from '@dvcol/svelte-utils/media';
 
   import { Path } from '../router/routes.js';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import { useButtonState } from '../utils/use-button-state.svelte';
 
-  import type { NeoButtonGroupContext } from '~/buttons/neo-button-group.model';
+  import type { NeoButtonGroupContext, NeoButtonGroupProps } from '~/buttons/neo-button-group.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
+  import { DefaultShadowElevation } from '~/utils/shadow.utils';
 
   const { onClick, loading: loading$, onLoading } = useButtonState('DemoGroupClicked');
   const loading = $derived.by(loading$);
-  const options = $state({ skeleton: false, borderless: false });
-
-  const { matches } = useWatchMedia('(max-width: 1550px)');
-  const vertical = $derived.by(matches);
+  const options = $state<NeoButtonGroupProps>({
+    skeleton: false,
+    rounded: false,
+    vertical: false,
+    elevation: DefaultShadowElevation,
+  });
 
   const columns = [
     { label: 'Default' },
-    { label: 'Rounded', props: { rounded: true } },
-    { label: 'Flat', props: { flat: true } },
-    { label: 'Text', props: { text: true } },
+    { label: 'Flat', props: { elevation: 0 } },
+    { label: 'Text', props: { elevation: 0, borderless: true } },
+    { label: 'Inset', props: { elevation: -2 } },
+    { label: 'Pressed', props: { elevation: -2, pressed: true } },
+    { label: 'Convex', props: { elevation: 2, convex: true } },
     { label: 'Glass', props: { glass: true } },
   ];
 </script>
@@ -45,7 +49,7 @@
 {/snippet}
 
 {#snippet group(props: NeoButtonGroupContext = {})}
-  <NeoButtonGroup {...options} {vertical} {...props}>
+  <NeoButtonGroup {...options} {...props}>
     {@render buttons()}
   </NeoButtonGroup>
 {/snippet}
@@ -53,13 +57,14 @@
 <div class="row">
   <div class="column">
     <NeoButtonGroup>
-      <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
+      <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
+      <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     </NeoButtonGroup>
   </div>
 </div>
 
-<div class="row">
+<div class="row" class:invert={!options.vertical}>
   {#each columns as { label, props }}
     <div class="column">
       <span class="label">{label}</span>
@@ -104,13 +109,11 @@
     margin: 2rem 0;
   }
 
-  @media (width > 1550px) {
+  .invert {
+    @include flex.column($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
+
     .column {
       @include flex.row($gap: var(--neo-gap-xxl));
-    }
-
-    .row {
-      @include flex.column($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
     }
 
     .label {

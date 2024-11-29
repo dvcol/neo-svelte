@@ -38,10 +38,10 @@
   const context = getTabContext();
   const pane = $derived(context?.getPane(tabId)?.toString());
   const active = $derived(context?.active === tabId);
-  const disabled = $derived(rest.disabled || (rest.disabled !== false && context?.disabled));
-  const closeable = $derived(close || (close !== false && context?.close));
-  const transition = $derived(context?.vertical ? height : width);
-  const slide = $derived(context?.slide);
+  const disabled = $derived(rest.disabled || (rest.disabled !== false && context?.state?.disabled));
+  const closeable = $derived(close || (close !== false && context?.state?.close));
+  const transition = $derived(context?.state?.vertical ? height : width);
+  const slide = $derived(context?.state?.slide);
 
   const onClick: NeoTabProps['onclick'] = (e: MouseEvent) => {
     context?.onChange(tabId);

@@ -13,6 +13,7 @@
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -30,8 +31,9 @@
     toggle,
     close,
     add,
-    slide,
     line,
+    slide,
+    slideElevation = -2,
 
     // Events
     onchange,
@@ -91,12 +93,19 @@
       toggle,
       add,
       close,
+
+      // Groups
+      borderless: rest.borderless,
+      elevation: rest.elevation,
+      pressed: rest.pressed,
+      convex: rest.convex,
       glass: rest.glass,
+      start: rest.start,
       vertical: rest.vertical,
-      flat: rest.flat,
-      text: rest.text,
     });
   });
+
+  const slideShadow = $derived(computeShadowElevation(slideElevation, { glass: rest.glass }));
 
   const inFn = $derived(toTransition(containerProps?.in ?? containerProps?.transition));
   const inProps = $derived(toTransitionProps(containerProps?.in ?? containerProps?.transition));
@@ -116,14 +125,14 @@
     this={containerTag}
     bind:this={ref}
     class:neo-tabs={true}
+    class:inset={(rest?.elevation ?? 0) < 0}
     class:add
     class:line
     class:slide
     class:translate
-    class:flat={rest.flat}
-    class:text={rest.text}
     class:vertical={rest.vertical}
     class:rounded={rest.rounded}
+    style:--neo-tabs-slide-box-shadow={slideShadow}
     {...containerProps}
     use:useFn={useProps}
     out:outFn={outProps}
@@ -226,6 +235,18 @@
         box-shadow: var(--neo-box-shadow-flat) !important;
       }
 
+      :global(.neo-tab .neo-button:hover) {
+        color: var(--neo-tabs-text-color-hover, var(--neo-text-color-hover));
+        transition:
+          opacity 0.3s ease,
+          color 0.1s ease,
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          backdrop-filter 0.3s ease,
+          border-radius 0.3s ease,
+          box-shadow 0.15s ease-out;
+      }
+
       :global(.neo-tab) {
         position: relative;
       }
@@ -235,6 +256,7 @@
         top: 0;
         left: 0;
         z-index: var(--neo-z-index-in-front, 1);
+        box-sizing: border-box;
         width: var(--neo-tab-width, 100%);
         height: var(--neo-tab-height, 100%);
         border: var(--neo-border-width, 1px) var(--neo-tab-border-color, transparent) solid;
@@ -276,7 +298,7 @@
       }
 
       :global(.neo-tab.active::before) {
-        box-shadow: var(--neo-box-shadow-inset-3);
+        box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
       }
 
       &.translate :global(.neo-tab.active::before) {
@@ -289,7 +311,7 @@
           max-width: var(--neo-tab-old-max-width);
           height: var(--neo-tab-old-height, var(--neo-tab-height, 100%));
           max-height: var(--neo-tab-old-max-height);
-          box-shadow: var(--neo-box-shadow-inset-3);
+          box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
           transform: var(--neo-tabs-transform);
         }
 
@@ -298,7 +320,7 @@
           max-width: var(--neo-tab-max-width);
           height: var(--neo-tab-height, 100%);
           max-height: var(--neo-tab-max-height);
-          box-shadow: var(--neo-box-shadow-inset-3);
+          box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
           transform: translate(0, 0);
         }
       }

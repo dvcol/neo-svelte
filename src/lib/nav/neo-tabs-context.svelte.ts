@@ -34,7 +34,7 @@ type NeoTabContextOptions = {
    * Add a close button to each tab.
    */
   close?: boolean;
-} & Pick<NeoButtonGroupProps, 'vertical' | 'glass' | 'flat' | 'text'>;
+} & Pick<NeoButtonGroupProps, 'elevation' | 'pressed' | 'convex' | 'borderless' | 'glass' | 'start' | 'vertical'>;
 
 export type NeoTabsContext<T = unknown> = NeoTabContextOptions & {
   // States
@@ -72,40 +72,8 @@ export class NeoTabContext<T = unknown> {
     return this.getValue(this.#previous);
   }
 
-  get disabled() {
-    return this.#options?.disabled;
-  }
-
-  get slide() {
-    return this.#options?.slide;
-  }
-
-  get toggle() {
-    return this.#options?.toggle;
-  }
-
-  get close() {
-    return this.#options?.close;
-  }
-
-  get glass() {
-    return this.#options?.glass;
-  }
-
-  get vertical() {
-    return this.#options?.vertical;
-  }
-
   get position() {
     return this.#position;
-  }
-
-  get text() {
-    return this.#options?.text;
-  }
-
-  get flat() {
-    return this.text || this.#options?.flat;
   }
 
   get state(): NeoTabsContext {
@@ -113,14 +81,6 @@ export class NeoTabContext<T = unknown> {
       ...this.#options,
       active: this.active,
       value: this.value,
-      slide: this.slide,
-      close: this.close,
-      toggle: this.toggle,
-      glass: this.glass,
-      vertical: this.vertical,
-      disabled: this.disabled,
-      flat: this.flat,
-      text: this.text,
     };
   }
 
@@ -172,7 +132,7 @@ export class NeoTabContext<T = unknown> {
 
   onChange(tabId?: TabId, emit = true) {
     if (tabId === this.#active) {
-      if (this.#active && this.toggle) this.onChange();
+      if (this.#active && this.state?.toggle) this.onChange();
       return;
     }
     const current = this.value;
