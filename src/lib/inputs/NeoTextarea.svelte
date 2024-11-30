@@ -297,7 +297,7 @@
     <span class="neo-textarea-affix" role="none" onclick={focus}>
       {#if loading}
         <span class="neo-textarea-loading" out:fade={enterDefaultTransition}>
-          <IconCircleLoading width="1.1875rem" height="1.1875rem" />
+          <IconCircleLoading width="1.25rem" height="1.25rem" />
         </span>
       {:else if close}
         <button class="neo-textarea-clear" aria-label="clear" in:fade out:fade={enterDefaultTransition} onclick={() => clear()}>
@@ -306,9 +306,9 @@
       {:else}
         <span class="neo-textarea-affix-validation" in:fade={leaveDefaultTransition}>
           {#if validation && valid === false}
-            <IconAlert width="1.1875rem" height="1.1875rem" />
+            <IconAlert width="1.25rem" height="1.25rem" />
           {:else if validation && valid === true && touched}
-            <IconConfirm width="1.1875rem" height="1.1875rem" />
+            <IconConfirm width="1.25rem" height="1.25rem" />
           {/if}
         </span>
       {/if}
@@ -482,7 +482,7 @@
     outline: none;
 
     &.affix {
-      padding: 0.75rem 2.7rem 0.75rem 0.95rem;
+      padding: 0.75rem 2.25rem 0.75rem 0.95rem;
     }
 
     &-affix,
@@ -548,8 +548,8 @@
 
     align-items: center;
     justify-content: center;
-    width: 1.1875rem;
-    height: 1.1875rem;
+    width: 1.25rem;
+    height: 1.25rem;
     margin: 0;
     padding: 0;
     color: var(--neo-textarea-clear-color, inherit);
@@ -636,6 +636,7 @@
 
   .neo-textarea-group {
     position: relative;
+    min-width: min-content;
     margin: var(--neo-shadow-margin, 0.6rem);
     color: var(--neo-textarea-text-color, inherit);
     background-color: var(--neo-textarea-bg-color, inherit);
@@ -695,7 +696,7 @@
         border-radius: var(--neo-border-radius-lg, 2rem);
 
         &.affix {
-          padding: 0.75rem 2.95rem 0.75rem 1.2rem;
+          padding: 0.75rem 2.75rem 0.75rem 1.2rem;
         }
 
         &-suffix,
@@ -750,7 +751,7 @@
 
     &[data-position='inside'] .neo-textarea-label-container {
       .neo-textarea {
-        padding: 0 1rem 0.5rem;
+        padding-top: 0.25rem;
       }
 
       .neo-textarea-label {

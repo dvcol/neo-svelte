@@ -186,9 +186,10 @@
     return onclear?.({ touched, dirty, valid, value });
   };
 
+  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? value.length : value !== null));
   const affix = $derived(clearable || loading !== undefined || validation);
-  const close = $derived(clearable && (focused || hovered) && value?.length && !disabled && !readonly);
-  const isFloating = $derived(floating && !focused && !value?.length && !disabled && !readonly);
+  const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
+  const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
 
   let labelHeight = $state<string>();
   let labelWidth = $state<string>();
@@ -270,7 +271,7 @@
     <span class="neo-input-affix" class:suffix role="none" onclick={focus}>
       {#if loading}
         <span class="neo-input-loading" out:fade={enterDefaultTransition}>
-          <IconCircleLoading width="1.1875rem" height="1.1875rem" />
+          <IconCircleLoading width="1.25rem" height="1.25rem" />
         </span>
       {:else if close}
         <button class="neo-input-clear" aria-label="clear" in:fade out:fade={enterDefaultTransition} onclick={() => clear()}>
@@ -279,9 +280,9 @@
       {:else}
         <span class="neo-input-affix-validation" in:fade={leaveDefaultTransition}>
           {#if validation && valid === false}
-            <IconAlert width="1.1875rem" height="1.1875rem" />
+            <IconAlert width="1.25rem" height="1.25rem" />
           {:else if validation && valid === true && touched}
-            <IconConfirm width="1.1875rem" height="1.1875rem" />
+            <IconConfirm width="1.25rem" height="1.25rem" />
           {/if}
         </span>
       {/if}
@@ -429,7 +430,8 @@
   .neo-input {
     flex: 1 1 auto;
     align-self: center;
-    min-width: fit-content;
+    width: 100%;
+    min-width: 1ch;
     max-width: 100%;
     min-height: fit-content;
     padding: 0.75rem;
@@ -455,11 +457,11 @@
     }
 
     &.prefix {
-      margin-left: -0.7rem;
+      padding-left: 0;
     }
 
     &.suffix {
-      margin-right: -0.9rem;
+      padding-right: 0;
     }
 
     &-suffix {
@@ -473,7 +475,7 @@
     &-affix {
       display: inline-grid;
       grid-template-areas: 'affix';
-      min-width: 2.75rem;
+      min-width: 2.8125rem;
       min-height: calc(var(--neo-line-height) + 1rem);
       padding: 0.75rem;
       border: none;
@@ -484,14 +486,16 @@
       }
 
       &-validation {
+        display: inline-flex;
+        align-items: center;
         width: 100%;
         height: 100%;
       }
 
       &.suffix {
-        min-width: 2rem;
-        margin-right: -0.05rem;
+        min-width: 1.75rem;
         padding-right: 0;
+        padding-left: 0.5rem;
       }
     }
 
@@ -538,8 +542,8 @@
 
     align-items: center;
     justify-content: center;
-    width: 1.1875rem;
-    height: 1.1875rem;
+    width: 1.25rem;
+    height: 1.25rem;
     margin: 0;
     padding: 0;
     color: var(--neo-input-clear-color, inherit);
@@ -635,6 +639,7 @@
 
   .neo-input-group {
     position: relative;
+    min-width: min-content;
     margin: var(--neo-shadow-margin, 0.6rem);
     padding: 0 0.2rem;
     color: var(--neo-input-text-color, inherit);
@@ -693,7 +698,7 @@
         border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
 
         &.prefix {
-          margin-left: -0.9rem;
+          padding-left: 0;
         }
 
         &-prefix {
@@ -701,11 +706,7 @@
         }
 
         &.suffix {
-          margin-right: -0.9rem;
-        }
-
-        &-suffix {
-          padding: 0.75rem 1rem 0.75rem 0.75rem;
+          padding-right: 0;
         }
 
         &-affix:not(.suffix) {
@@ -762,6 +763,10 @@
     &[data-position='inside'] .neo-input-label-container {
       .neo-input {
         padding: 0 1rem 0.5rem;
+
+        &.suffix {
+          padding-right: 0;
+        }
       }
 
       .neo-input-label {
