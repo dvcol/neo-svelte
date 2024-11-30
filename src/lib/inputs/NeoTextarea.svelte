@@ -428,7 +428,7 @@
   .neo-textarea-clear,
   .neo-textarea-affix,
   .neo-textarea-suffix {
-    display: flex;
+    display: inline-flex;
     box-sizing: border-box;
     font: inherit;
     text-decoration: none;
@@ -581,13 +581,13 @@
   }
 
   .neo-textarea-label-container {
-    display: flex;
+    display: inline-flex;
     flex: 1 1 auto;
     flex-direction: column;
     width: 100%;
 
     .neo-textarea-label {
-      display: flex;
+      display: inline-flex;
       box-sizing: border-box;
       min-height: var(--neo-textarea-label-height);
       padding: 0 0.75rem;

@@ -32,7 +32,7 @@
     close,
     add,
     line,
-    slide,
+    slide = true,
     slideElevation = -2,
 
     // Events

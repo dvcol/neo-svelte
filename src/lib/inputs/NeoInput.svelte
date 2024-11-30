@@ -410,7 +410,7 @@
   .neo-input-affix,
   .neo-input-prefix,
   .neo-input-suffix {
-    display: flex;
+    display: inline-flex;
     box-sizing: border-box;
     font: inherit;
     text-decoration: none;
@@ -580,13 +580,13 @@
   }
 
   .neo-input-label-container {
-    display: flex;
+    display: inline-flex;
     flex: 1 1 auto;
     flex-direction: column;
     width: 100%;
 
     .neo-input-label {
-      display: flex;
+      display: inline-flex;
       box-sizing: border-box;
       min-height: var(--neo-input-label-height);
       padding: 0 0.75rem;

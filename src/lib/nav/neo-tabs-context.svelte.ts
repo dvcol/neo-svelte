@@ -20,6 +20,7 @@ type NeoTabContextOptions = {
   // Styles
   /**
    * Whether to animate the tab transition.
+   * @default true
    */
   slide?: boolean;
   /**
