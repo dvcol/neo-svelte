@@ -12,9 +12,9 @@
   role="separator"
   aria-orientation={vertical ? 'vertical' : 'horizontal'}
   class:neo-divider={true}
-  class:vertical
-  class:inset={elevation < 0}
-  class:flat={!elevation}
+  class:neo-vertical={vertical}
+  class:neo-inset={elevation < 0}
+  class:neo-flat={!elevation}
   style:--neo-divider-height={height}
   style:--neo-divider-width={width}
   style:--neo-divider-box-shadow={boxShadow}
@@ -31,21 +31,21 @@
     border-radius: var(--neo-divider-border-radius, var(--neo-border-radius-lg));
     box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
 
-    &.inset {
+    &.neo-inset {
       height: max(6px, var(--neo-divider-height, 6px));
       box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-inset-2));
     }
 
-    &.vertical {
+    &.neo-vertical {
       width: var(--neo-divider-height, 4px);
       height: calc(var(--neo-divider-height, 100%) - var(--neo-shadow-margin, 0.6rem) * 2);
 
-      &.inset {
+      &.neo-inset {
         width: max(6px, var(--neo-divider-width, 6px));
       }
     }
 
-    &.flat {
+    &.neo-flat {
       background-color: var(--neo-divider-color, var(--neo-border-color));
       box-shadow: none;
     }
