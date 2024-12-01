@@ -267,9 +267,9 @@
       this={beforeTag}
       bind:this={beforeRef}
       class:neo-input-before={true}
-      class:inside
-      class:inset={elevation < 0}
-      class:deep={elevation < -3}
+      class:neo-inside={inside}
+      class:neo-inset={elevation < 0}
+      class:neo-deep={elevation < -3}
       {disabled}
       {readonly}
       {...beforeProps}
@@ -282,7 +282,7 @@
 {#snippet suffix()}
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
-    <span class="neo-input-affix" class:after role="none" onclick={focus}>
+    <span class="neo-input-affix" class:neo-after={after} role="none" onclick={focus}>
       {#if loading}
         <span class="neo-input-loading" out:fade={enterDefaultTransition}>
           <IconCircleLoading width="1.25rem" height="1.25rem" />
@@ -307,9 +307,9 @@
     <svelte:element
       this={afterTag}
       class:neo-input-after={true}
-      class:inside
-      class:inset={elevation < 0}
-      class:deep={elevation < -3}
+      class:neo-inside={inside}
+      class:neo-inset={elevation < 0}
+      class:neo-deep={elevation < -3}
       {disabled}
       {readonly}
       {...afterProps}
@@ -329,8 +329,8 @@
     bind:this={ref}
     bind:value
     class:neo-input={true}
-    class:after={after || affix}
-    class:before
+    class:neo-after={after || affix}
+    class:neo-before={before}
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -350,21 +350,21 @@
     data-dirty={dirty}
     data-valid={valid}
     class:neo-input-group={true}
-    class:readonly
-    class:pressed
-    class:borderless
-    class:rounded
-    class:glass
-    class:hover
-    class:start
-    class:skeleton
-    class:validation
-    class:disabled
-    class:raised={elevation > 3 || elevation + hover > 3}
-    class:inset={elevation < -3 || elevation + hover < -3}
-    class:flat={!elevation}
-    class:hover-flat={hoverFlat}
-    class:flat-hover={flatHover}
+    class:neo-readonly={readonly}
+    class:neo-pressed={pressed}
+    class:neo-borderless={borderless}
+    class:neo-rounded={rounded}
+    class:neo-glass={glass}
+    class:neo-hover={hover}
+    class:neo-start={start}
+    class:neo-skeleton={skeleton}
+    class:neo-validation={validation}
+    class:neo-disabled={disabled}
+    class:neo-raised={elevation > 3 || elevation + hover > 3}
+    class:neo-inset={elevation < -3 || elevation + hover < -3}
+    class:neo-flat={!elevation}
+    class:neo-hover-flat={hoverFlat}
+    class:neo-flat-hover={flatHover}
     style:--neo-input-glass-blur={filter}
     style:--neo-input-box-shadow={boxShadow}
     style:--neo-input-hover-shadow={hoverShadow}
@@ -379,16 +379,16 @@
   >
     {@render prefix()}
     {#if label}
-      <div class="neo-input-label-container" class:before class:floating={isFloating} role="none" onclick={focus}>
+      <div class="neo-input-label-container" class:neo-before={before} class:neo-floating={isFloating} role="none" onclick={focus}>
         <label
           bind:this={labelRef}
           for={id}
           class:neo-input-label={true}
-          class:first
-          class:before
-          class:after
-          class:rounded
-          class:required={rest.required}
+          class:neo-first={first}
+          class:neo-before={before}
+          class:neo-after={after}
+          class:neo-rounded={rounded}
+          class:neo-required={rest.required}
           {...labelProps}
         >
           {#if typeof label === 'string'}
@@ -482,11 +482,11 @@
       border-radius: var(--neo-input-border-radius, var(--neo-border-radius)) 0 0 var(--neo-input-border-radius, var(--neo-border-radius));
     }
 
-    &.before {
+    &.neo-before {
       padding-left: 0;
     }
 
-    &.after {
+    &.neo-after {
       padding-right: 0;
     }
 
@@ -518,7 +518,7 @@
         height: 100%;
       }
 
-      &.after {
+      &.neo-after {
         min-width: 1.75rem;
         padding-right: 0;
         padding-left: 0.5rem;
@@ -608,7 +608,7 @@
       @extend %neo-input-button;
     }
 
-    &:has(:global(.neo-button:only-child)):not(.inside) {
+    &:has(:global(.neo-button:only-child)):not(.neo-inside) {
       padding: 0 0.3rem;
     }
 
@@ -618,11 +618,11 @@
       --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
     }
 
-    &.inset :global(.neo-button) {
+    &.neo-inset :global(.neo-button) {
       --neo-btn-margin: 0.5rem 0;
     }
 
-    &.deep :global(.neo-button) {
+    &.neo-deep :global(.neo-button) {
       --neo-btn-margin: 0.5rem 0.25rem;
     }
   }
@@ -653,19 +653,19 @@
         right 0.3s ease,
         translate 0.3s ease;
 
-      &.before {
+      &.neo-before {
         padding-left: 0;
       }
 
-      &.after {
+      &.neo-after {
         padding-right: 0;
       }
 
-      &.first {
+      &.neo-first {
         transition: none;
       }
 
-      &.required::after {
+      &.neo-required::after {
         margin-left: 0.1rem;
         color: var(--neo-input-required-color, var(--neo-color-error-75));
         font-size: var(--neo-font-size);
@@ -673,12 +673,12 @@
       }
     }
 
-    &.floating {
+    &.neo-floating {
       .neo-input-label {
         color: var(--neo-input-floating-label-color, var(--neo-text-color-disabled));
         translate: 0 calc(50% + 0.7rem - var(--neo-input-label-height) / 2);
 
-        &.required::after {
+        &.neo-required::after {
           color: var(--neo-input-required-color, var(--neo-color-error-50));
         }
       }
@@ -701,39 +701,39 @@
     box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
     cursor: text;
 
-    &.readonly {
+    &.neo-readonly {
       cursor: initial;
     }
 
-    &.borderless {
+    &.neo-borderless {
       border-color: transparent !important;
     }
 
-    &.inset.pressed,
-    &.raised {
+    &.neo-inset.neo-pressed,
+    &.neo-raised {
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }
 
-    &.inset {
+    &.neo-inset {
       padding: 0.25rem;
     }
 
-    &.hover.flat-hover:hover,
-    &.hover.flat-hover:focus-within,
-    &.flat:not(.borderless, .hover-flat:hover, .hover-flat:focus-within) {
+    &.neo-hover.neo-flat-hover:hover,
+    &.neo-hover.neo-flat-hover:focus-within,
+    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-within) {
       border-color: var(--neo-input-border-color, var(--neo-border-color));
     }
 
     &:focus-within,
-    &.hover:hover {
+    &.neo-hover:hover {
       box-shadow: var(--neo-input-hover-shadow, var(--neo-box-shadow-flat));
     }
 
-    &.disabled {
+    &.neo-disabled {
       box-shadow: var(--neo-box-shadow-flat) !important;
       opacity: var(--neo-input-opacity-disabled, var(--neo-opacity-disabled));
 
-      &:not(.borderless) {
+      &:not(.neo-borderless) {
         border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
       }
 
@@ -742,39 +742,39 @@
       }
     }
 
-    &.rounded {
+    &.neo-rounded {
       border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
 
       .neo-input {
         padding: 0.75rem 1rem;
         border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
 
-        &.before {
+        &.neo-before {
           padding-left: 0;
         }
 
-        &.after {
+        &.neo-after {
           padding-right: 0;
         }
 
-        &-affix:not(.after) {
+        &-affix:not(.neo-after) {
           margin-right: 0.25rem;
         }
       }
 
       .neo-input-label-container {
-        &:not(.before) {
+        &:not(.neo-before) {
           padding-left: 0.5rem;
         }
 
         .neo-input-label {
           padding: 0 1rem;
 
-          &.before {
+          &.neo-before {
             padding-left: 0;
           }
 
-          &.after {
+          &.neo-after {
             padding-right: 0;
           }
         }
@@ -791,7 +791,7 @@
         top: calc(50% - var(--neo-input-label-height) / 2);
         left: calc(0% - var(--neo-input-margin-left));
 
-        &.before {
+        &.neo-before {
           left: calc(0% - var(--neo-input-margin-left) - 0.75rem);
         }
       }
@@ -807,7 +807,7 @@
         top: calc(50% - var(--neo-input-label-height) / 2);
         right: calc(0% - var(--neo-input-margin-right));
 
-        &.before {
+        &.neo-before {
           right: calc(0% - var(--neo-input-margin-right) - 1rem);
         }
       }
@@ -817,11 +817,11 @@
       .neo-input {
         padding: 0 1rem 0.5rem;
 
-        &.before {
+        &.neo-before {
           padding-left: 0;
         }
 
-        &.after {
+        &.neo-after {
           padding-right: 0;
         }
       }
@@ -830,12 +830,12 @@
         padding: 0.75rem 1rem 0.2rem;
         line-height: var(--neo-line-height-xs, 1rem);
 
-        &.before {
+        &.neo-before {
           padding-left: 0;
         }
       }
 
-      &:not(.floating) .neo-input-label {
+      &:not(.neo-floating) .neo-input-label {
         font-size: var(--neo-font-size-sm, 0.875rem);
       }
     }
@@ -851,21 +851,21 @@
       }
     }
 
-    &[data-position='top'] .neo-input-label-container.floating .neo-input-label,
-    &[data-position='left'] .neo-input-label-container.floating .neo-input-label,
-    &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
+    &[data-position='top'] .neo-input-label-container.neo-floating .neo-input-label,
+    &[data-position='left'] .neo-input-label-container.neo-floating .neo-input-label,
+    &[data-position='right'] .neo-input-label-container.neo-floating .neo-input-label {
       top: calc(50% - 0.65rem - var(--neo-input-label-height) / 2);
     }
 
-    &[data-position='left'] .neo-input-label-container.floating .neo-input-label {
+    &[data-position='left'] .neo-input-label-container.neo-floating .neo-input-label {
       left: calc(0.25rem + var(--neo-input-before-width));
     }
 
-    &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
+    &[data-position='right'] .neo-input-label-container.neo-floating .neo-input-label {
       right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-before-width));
     }
 
-    &.glass {
+    &.neo-glass {
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
       --neo-border-color: var(--neo-glass-border-color);
 
@@ -877,7 +877,7 @@
       backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
     }
 
-    &.validation {
+    &.neo-validation {
       &[data-valid='false'] {
         --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
         --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
@@ -897,23 +897,23 @@
       }
     }
 
-    &.start {
+    &.neo-start {
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
 
-        &:not(.borderless) {
+        &:not(.neo-borderless) {
           border-color: var(--neo-input-border-color, var(--neo-border-color));
         }
       }
     }
 
-    &.skeleton {
+    &.neo-skeleton {
       box-shadow: var(--neo-box-shadow-flat);
       pointer-events: none;
 
       @include mixin.skeleton;
 
-      &.glass {
+      &.neo-glass {
         --neo-skeleton-color: var(--neo-glass-skeleton-color);
       }
     }
