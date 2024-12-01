@@ -61,18 +61,18 @@
   this={tag}
   bind:this={ref}
   class:neo-button-group={true}
-  class:borderless
-  class:start
-  class:flat={!elevation}
-  class:convex
-  class:inset={elevation < 0}
-  class:glass
-  class:rounded
-  class:pulse
-  class:coalesce
-  class:skeleton
-  class:vertical
-  class:nowrap
+  class:neo-borderless={borderless}
+  class:neo-start={start}
+  class:neo-flat={!elevation}
+  class:neo-convex={convex}
+  class:neo-inset={elevation < 0}
+  class:neo-glass={glass}
+  class:neo-rounded={rounded}
+  class:neo-pulse={pulse}
+  class:neo-coalesce={coalesce}
+  class:neo-skeleton={skeleton}
+  class:neo-vertical={vertical}
+  class:neo-nowrap={nowrap}
   style:--neo-btn-group-box-shadow={boxShadow}
   style:--neo-btn-group-glass-blur={filter}
   style:justify-content={justify}
@@ -125,37 +125,37 @@
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
 
-    &.nowrap {
+    &.neo-nowrap {
       flex-wrap: nowrap;
       justify-content: flex-start;
       overflow: auto;
       white-space: nowrap;
     }
 
-    &.borderless {
+    &.neo-borderless {
       border-color: transparent !important;
     }
 
-    &.convex:not(.inset),
-    &.inset:not(.borderless) {
+    &.neo-convex:not(.neo-inset),
+    &.neo-inset:not(.neo-borderless) {
       padding: 0.375rem;
     }
 
-    &.flat:not(.borderless) {
+    &.neo-flat:not(.neo-borderless) {
       border-color: var(--neo-btn-border-color, var(--neo-border-color));
     }
 
-    &.start {
+    &.neo-start {
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
 
-        &:not(.glass, .borderless) {
+        &:not(.neo-glass, .neo-borderless) {
           border-color: var(--neo-btn-border-color, var(--neo-border-color));
         }
       }
     }
 
-    &.glass {
+    &.neo-glass {
       @include mixin.glass;
 
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
@@ -176,26 +176,26 @@
       border-color: transparent !important;
     }
 
-    :global(.neo-button:disabled:not(.pressed)),
-    :global(.neo-button[disabled]:not([disabled='false'], .pressed)) {
+    :global(.neo-button:disabled:not(.neo-pressed)),
+    :global(.neo-button[disabled]:not([disabled='false'], .neo-pressed)) {
       box-shadow: var(--neo-box-shadow-flat) !important;
     }
 
-    :global(.neo-button:not(:active:not(.loading), .pressed)) {
+    :global(.neo-button:not(:active:not(.neo-loading), .neo-pressed)) {
       box-shadow: var(--neo-box-shadow-flat);
     }
 
-    :global(.neo-button:not(.flat, :active:not(.loading), .pressed):hover) {
+    :global(.neo-button:not(.neo-flat, :active:not(.neo-loading), .neo-pressed):hover) {
       box-shadow: var(--neo-box-shadow-inset-1);
     }
 
-    :global(.neo-button.pressed),
-    :global(.neo-button:active:not(.loading)) {
+    :global(.neo-button.neo-pressed),
+    :global(.neo-button:active:not(.neo-loading)) {
       --neo-box-shadow-pressed-2: var(--neo-box-shadow-inset-3);
       --neo-glass-box-shadow-pressed-2: var(--neo-glass-box-shadow-inset-3);
     }
 
-    &.pulse {
+    &.neo-pulse {
       @include mixin.pulse(
         $scaleX: var(--neo-btn-grp-scale-x, 1.2),
         $scaleY: var(--neo-btn-grp-scale-y, 2),
@@ -203,7 +203,7 @@
       );
     }
 
-    &.coalesce {
+    &.neo-coalesce {
       @include mixin.coalesce(
         $scaleX: var(--neo-btn-grp-scale-x, 1.2),
         $scaleY: var(--neo-btn-grp-scale-y, 2),
@@ -211,7 +211,7 @@
       );
     }
 
-    &.rounded {
+    &.neo-rounded {
       padding: 0.25rem 0.3125rem;
       border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
 
@@ -220,14 +220,14 @@
       }
     }
 
-    &.skeleton {
+    &.neo-skeleton {
       box-shadow: var(--neo-box-shadow-flat);
       pointer-events: none;
 
       @include mixin.skeleton;
     }
 
-    &.vertical {
+    &.neo-vertical {
       flex-direction: column;
 
       --neo-btn-grp-scale-x: 1.75;
@@ -237,7 +237,7 @@
         width: 100%;
       }
 
-      &.rounded {
+      &.neo-rounded {
         padding: 0.5rem;
       }
     }
