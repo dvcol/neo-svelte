@@ -44,7 +44,7 @@
 
 <svelte:element this={tag} class:neo-validation-group-wrapper={true} out:outFn={outProps} in:inFn={inProps} {...rest}>
   {@render children?.(innerContext)}
-  <div class="neo-validation-message" class:rounded={context?.rounded}>
+  <div class="neo-validation-message" class:neo-rounded={context?.rounded}>
     {#if error}
       <svelte:element
         this={messageTag}
@@ -103,7 +103,7 @@
         padding: 0 0.75rem;
       }
 
-      &.rounded {
+      &.neo-rounded {
         margin: 0.25rem var(--neo-shadow-margin-lg, 1.125rem) var(--neo-shadow-margin-lg, 1.125rem);
 
         .neo-validation-error,
