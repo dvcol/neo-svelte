@@ -9,6 +9,7 @@
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
@@ -85,7 +86,7 @@
       label: 'Prefix',
       props: {
         placeholder: 'Placeholder',
-        prefix,
+        before,
       },
       state: validation,
       input: true,
@@ -94,7 +95,7 @@
       label: 'Suffix',
       props: {
         placeholder: 'Placeholder',
-        suffix,
+        after,
         suffixProps: { onclick },
       },
       state: validation,
@@ -105,8 +106,8 @@
       label: 'Text',
       props: {
         placeholder: 'Placeholder',
-        suffix: text,
-        prefix: text,
+        after: text,
+        before: text,
         suffixProps: { onclick },
       },
       state: validation,
@@ -118,7 +119,7 @@
       props: {
         label: 'Inside',
         placeholder: 'Placeholder',
-        suffix,
+        after,
         suffixProps: { onclick },
       },
       state: validation,
@@ -131,7 +132,8 @@
         label: 'Top',
         position: 'top',
         placeholder: 'Placeholder',
-        suffix,
+        after,
+        before,
         suffixProps: { onclick },
       },
       state: validation,
@@ -141,6 +143,8 @@
     {
       label: 'Left',
       props: {
+        after,
+        before,
         label: 'Left',
         position: 'left',
         placeholder: 'Placeholder',
@@ -153,6 +157,8 @@
     {
       label: 'Right',
       props: {
+        after,
+        before,
         label: 'Right',
         position: 'right',
         placeholder: 'Placeholder',
@@ -190,7 +196,7 @@
       props: {
         label: 'Minimum',
         placeholder: 'Placeholder',
-        suffix,
+        after,
         suffixProps: { onclick },
         autoResize: { min: 5 },
       },
@@ -202,7 +208,7 @@
       props: {
         label: 'Maximum',
         placeholder: 'Placeholder',
-        suffix,
+        after,
         suffixProps: { onclick },
         autoResize: { min: 3, max: 10 },
       },
@@ -287,11 +293,11 @@
   <span class="label">TEXT</span>
 {/snippet}
 
-{#snippet prefix()}
+{#snippet before()}
   <IconSearch style="min-width: 1.25rem; min-height:1.25rem" />
 {/snippet}
 
-{#snippet suffix()}
+{#snippet after()}
   <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
 {/snippet}
 
@@ -360,6 +366,30 @@
         </SphereBackdrop>
       {:else}
         <NeoPassword label="Password" auto-complete="current-password" {...options} />
+      {/if}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column content">
+      <span class="label">Number</span>
+      {#if options.glass}
+        <SphereBackdrop>
+          <NeoNumberStep {...options} />
+        </SphereBackdrop>
+      {:else}
+        <NeoNumberStep {...options} />
+      {/if}
+    </div>
+
+    <div class="column content">
+      <span class="label">Min Max</span>
+      {#if options.glass}
+        <SphereBackdrop>
+          <NeoNumberStep min="-5" max="5" {...options} />
+        </SphereBackdrop>
+      {:else}
+        <NeoNumberStep min="-5" max="5" {...options} />
       {/if}
     </div>
   </div>

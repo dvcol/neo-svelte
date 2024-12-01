@@ -5,7 +5,23 @@
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
 
-  const { type = 'password', placeholder = 'Enter your password', ...rest }: NeoInputProps = $props();
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
+    // State
+    ref = $bindable(),
+    value = $bindable(''),
+    valid = $bindable(undefined),
+    dirty = $bindable(false),
+    touched = $bindable(false),
+    type = 'password',
+    placeholder = 'Enter your password',
+
+    // Other props
+    labelRef = $bindable(),
+    beforeRef = $bindable(),
+    ...rest
+  }: NeoInputProps = $props();
+  /* eslint-enable prefer-const */
 
   let show = $state(false);
   const toggle = () => {
@@ -13,14 +29,14 @@
   };
 
   const _type = $derived(show ? 'text' : type);
-  const _suffixProps = $derived({
+  const afterProps = $derived({
     onclick: toggle,
     'aria-label': 'Toggle password visibility',
-    ...rest.suffixProps,
+    ...rest.afterProps,
   });
 </script>
 
-{#snippet suffix()}
+{#snippet after()}
   {#if show}
     <IconWatch width="1.75rem" height="1.75rem" />
   {:else}
@@ -28,4 +44,17 @@
   {/if}
 {/snippet}
 
-<NeoInput type={_type} {placeholder} {suffix} suffixProps={_suffixProps} {...rest} />
+<NeoInput
+  bind:ref
+  bind:labelRef
+  bind:beforeRef
+  bind:value
+  bind:valid
+  bind:dirty
+  bind:touched
+  type={_type}
+  {placeholder}
+  {after}
+  {afterProps}
+  {...rest}
+/>

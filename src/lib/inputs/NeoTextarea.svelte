@@ -30,7 +30,7 @@
   let {
     // Snippets
     label,
-    suffix,
+    after,
     message,
     error,
 
@@ -82,8 +82,8 @@
     // Other props
     labelRef = $bindable(),
     labelProps,
-    suffixProps,
-    suffixTag = suffixProps?.onclick ? 'button' : 'span',
+    afterProps,
+    afterTag = afterProps?.onclick ? 'button' : 'span',
     containerProps,
     containerTag = 'div',
     wrapperProps,
@@ -209,8 +209,8 @@
   });
 
   const rows = $derived.by(() => {
-    if (typeof autoResize === 'boolean' || !autoResize) return suffix ? 3 : undefined;
-    if (suffix) return Math.max(3, autoResize.min ?? 0);
+    if (typeof autoResize === 'boolean' || !autoResize) return after ? 3 : undefined;
+    if (after) return Math.max(3, autoResize.min ?? 0);
     return autoResize.min;
   });
 
@@ -291,7 +291,7 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-{#snippet after()}
+{#snippet suffix()}
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
     <span class="neo-textarea-affix" role="none" onclick={focus}>
@@ -316,9 +316,9 @@
   {/if}
 
   <!--  Suffix  -->
-  {#if suffix}
-    <svelte:element this={suffixTag} class:neo-textarea-suffix={true} {disabled} {readonly} {...suffixProps}>
-      {@render suffix(context)}
+  {#if after}
+    <svelte:element this={afterTag} class:neo-textarea-after={true} {disabled} {readonly} {...afterProps}>
+      {@render after(context)}
     </svelte:element>
   {/if}
 {/snippet}
@@ -333,7 +333,7 @@
     bind:this={ref}
     bind:value
     class:neo-textarea={true}
-    class:affix={affix || suffix}
+    class:affix={affix || after}
     {rows}
     onblur={onBlur}
     onfocus={onFocus}
@@ -387,7 +387,7 @@
           bind:this={labelRef}
           for={id}
           class:neo-textarea-label={true}
-          class:affix={affix || suffix}
+          class:affix={affix || after}
           class:first
           class:rounded
           class:required={rest.required}
@@ -404,7 +404,7 @@
     {:else}
       {@render textarea()}
     {/if}
-    {@render after()}
+    {@render suffix()}
   </svelte:element>
 {/snippet}
 
@@ -436,7 +436,7 @@
   .neo-textarea-loading,
   .neo-textarea-clear,
   .neo-textarea-affix,
-  .neo-textarea-suffix {
+  .neo-textarea-after {
     display: inline-flex;
     box-sizing: border-box;
     font: inherit;
@@ -495,20 +495,20 @@
     }
 
     &-affix,
-    &-suffix {
+    &-after {
       align-items: center;
       margin: 0.25rem;
       padding: 0.5rem;
     }
 
-    &-suffix {
+    &-after {
       position: absolute;
       right: 0.125rem;
       bottom: 0.125rem;
-      color: var(--neo-textarea-suffix-color, inherit);
-      background-color: var(--neo-textarea-suffix-bg-color, transparent);
+      color: var(--neo-textarea-after-color, inherit);
+      background-color: var(--neo-textarea-after-bg-color, transparent);
       border: none;
-      border-radius: var(--neo-textarea-suffix-border-radius, var(--neo-border-radius));
+      border-radius: var(--neo-textarea-after-border-radius, var(--neo-border-radius));
 
       &:is(button, a) {
         @extend %neo-textarea-button;
@@ -712,7 +712,7 @@
           padding: 0.75rem 2.75rem 0.75rem 1.2rem;
         }
 
-        &-suffix,
+        &-after,
         &-affix {
           right: 0.365rem;
         }

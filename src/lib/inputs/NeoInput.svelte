@@ -30,8 +30,8 @@
   let {
     // Snippets
     label,
-    prefix,
-    suffix,
+    before,
+    after,
     message,
     error,
 
@@ -82,11 +82,11 @@
     // Other props
     labelRef = $bindable(),
     labelProps,
-    suffixProps,
-    suffixTag = suffixProps?.onclick ? 'button' : 'span',
-    prefixProps,
-    prefixRef = $bindable(),
-    prefixTag = prefixProps?.onclick ? 'button' : 'span',
+    afterProps,
+    afterTag = afterProps?.onclick ? 'button' : 'span',
+    beforeProps,
+    beforeRef = $bindable(),
+    beforeTag = beforeProps?.onclick ? 'button' : 'span',
     containerProps,
     containerTag = 'div',
     wrapperProps,
@@ -202,7 +202,7 @@
 
   let labelHeight = $state<string>();
   let labelWidth = $state<string>();
-  let prefixWidth = $state<string>();
+  let beforeWidth = $state<string>();
 
   $effect(() => {
     if (first) waitForTick();
@@ -211,7 +211,7 @@
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
     if (position !== NeoInputLabelPosition.Left && position !== NeoInputLabelPosition.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
-    prefixWidth = `${prefixRef?.clientWidth ?? 0}px`;
+    beforeWidth = `${beforeRef?.clientWidth ?? 0}px`;
   });
 
   const errorMessage = $derived.by(() => {
@@ -260,18 +260,18 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-{#snippet before()}
-  {#if prefix}
-    <svelte:element this={prefixTag} bind:this={prefixRef} class:neo-input-prefix={true} {disabled} {readonly} {...prefixProps}>
-      {@render prefix(context)}
+{#snippet prefix()}
+  {#if before}
+    <svelte:element this={beforeTag} bind:this={beforeRef} class:neo-input-before={true} {disabled} {readonly} {...beforeProps}>
+      {@render before(context)}
     </svelte:element>
   {/if}
 {/snippet}
 
-{#snippet after()}
+{#snippet suffix()}
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
-    <span class="neo-input-affix" class:suffix role="none" onclick={focus}>
+    <span class="neo-input-affix" class:after role="none" onclick={focus}>
       {#if loading}
         <span class="neo-input-loading" out:fade={enterDefaultTransition}>
           <IconCircleLoading width="1.25rem" height="1.25rem" />
@@ -292,9 +292,9 @@
     </span>
   {/if}
   <!--  Suffix  -->
-  {#if suffix}
-    <svelte:element this={suffixTag} class:neo-input-suffix={true} {disabled} {readonly} {...suffixProps}>
-      {@render suffix(context)}
+  {#if after}
+    <svelte:element this={afterTag} class:neo-input-after={true} {disabled} {readonly} {...afterProps}>
+      {@render after(context)}
     </svelte:element>
   {/if}
 {/snippet}
@@ -309,8 +309,8 @@
     bind:this={ref}
     bind:value
     class:neo-input={true}
-    class:suffix={suffix || affix}
-    class:prefix
+    class:after={after || affix}
+    class:before
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -350,23 +350,23 @@
     style:--neo-input-hover-shadow={hoverShadow}
     style:--neo-input-label-height={labelHeight}
     style:--neo-input-label-width={labelWidth}
-    style:--neo-input-prefix-width={prefixWidth}
+    style:--neo-input-before-width={beforeWidth}
     out:outFn={outProps}
     in:inFn={inProps}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
     {...containerProps}
   >
-    {@render before()}
+    {@render prefix()}
     {#if label}
-      <div class="neo-input-label-container" class:prefix class:floating={isFloating} role="none" onclick={focus}>
+      <div class="neo-input-label-container" class:before class:floating={isFloating} role="none" onclick={focus}>
         <label
           bind:this={labelRef}
           for={id}
           class:neo-input-label={true}
           class:first
-          class:prefix
-          class:suffix
+          class:before
+          class:after
           class:rounded
           class:required={rest.required}
           {...labelProps}
@@ -382,7 +382,7 @@
     {:else}
       {@render input()}
     {/if}
-    {@render after()}
+    {@render suffix()}
   </svelte:element>
 {/snippet}
 
@@ -414,8 +414,8 @@
   .neo-input-loading,
   .neo-input-clear,
   .neo-input-affix,
-  .neo-input-prefix,
-  .neo-input-suffix {
+  .neo-input-before,
+  .neo-input-after {
     display: inline-flex;
     box-sizing: border-box;
     font: inherit;
@@ -447,34 +447,34 @@
     border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
     outline: none;
 
-    &-prefix,
-    &-suffix,
+    &-before,
+    &-after,
     &-affix {
       align-items: center;
       min-width: max-content;
     }
 
-    &-prefix {
-      color: var(--neo-input-prefix-color, inherit);
-      background-color: var(--neo-input-prefix-bg-color, transparent);
+    &-before {
+      color: var(--neo-input-before-color, inherit);
+      background-color: var(--neo-input-before-bg-color, transparent);
       border: none;
-      border-right: var(--neo-border-width, 1px) var(--neo-input-prefix-border-color, transparent) solid;
+      border-right: var(--neo-border-width, 1px) var(--neo-input-before-border-color, transparent) solid;
       border-radius: var(--neo-input-border-radius, var(--neo-border-radius)) 0 0 var(--neo-input-border-radius, var(--neo-border-radius));
     }
 
-    &.prefix {
+    &.before {
       padding-left: 0;
     }
 
-    &.suffix {
+    &.after {
       padding-right: 0;
     }
 
-    &-suffix {
-      color: var(--neo-input-suffix-color, inherit);
-      background-color: var(--neo-input-suffix-bg-color, transparent);
+    &-after {
+      color: var(--neo-input-after-color, inherit);
+      background-color: var(--neo-input-after-bg-color, transparent);
       border: none;
-      border-left: var(--neo-border-width, 1px) var(--neo-input-suffix-border-color, transparent) solid;
+      border-left: var(--neo-border-width, 1px) var(--neo-input-after-border-color, transparent) solid;
       border-radius: 0 var(--neo-input-border-radius, var(--neo-border-radius)) var(--neo-input-border-radius, var(--neo-border-radius)) 0;
     }
 
@@ -485,7 +485,7 @@
       min-height: calc(var(--neo-line-height) + 1rem);
       padding: 0.75rem;
       border: none;
-      border-left: var(--neo-border-width, 1px) var(--neo-input-suffix-border-color, transparent) solid;
+      border-left: var(--neo-border-width, 1px) var(--neo-input-after-border-color, transparent) solid;
 
       > * {
         grid-area: affix;
@@ -498,7 +498,7 @@
         height: 100%;
       }
 
-      &.suffix {
+      &.after {
         min-width: 1.75rem;
         padding-right: 0;
         padding-left: 0.5rem;
@@ -580,8 +580,8 @@
     }
   }
 
-  .neo-input-prefix,
-  .neo-input-suffix {
+  .neo-input-before,
+  .neo-input-after {
     padding: 0.75rem;
 
     &:is(button, a) {
@@ -615,11 +615,11 @@
         right 0.3s ease,
         translate 0.3s ease;
 
-      &.prefix {
+      &.before {
         padding-left: 0;
       }
 
-      &.suffix {
+      &.after {
         padding-right: 0;
       }
 
@@ -711,36 +711,36 @@
         padding: 0.75rem 1rem;
         border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
 
-        &.prefix {
+        &.before {
           padding-left: 0;
         }
 
-        &-prefix {
+        &-before {
           padding: 0.75rem 0.75rem 0.75rem 1rem;
         }
 
-        &.suffix {
+        &.after {
           padding-right: 0;
         }
 
-        &-affix:not(.suffix) {
+        &-affix:not(.after) {
           margin-right: 0.25rem;
         }
       }
 
       .neo-input-label-container {
-        &:not(.prefix) {
+        &:not(.before) {
           padding-left: 0.5rem;
         }
 
         .neo-input-label {
           padding: 0 1rem;
 
-          &.prefix {
+          &.before {
             padding-left: 0;
           }
 
-          &.suffix {
+          &.after {
             padding-right: 0;
           }
         }
@@ -768,7 +768,7 @@
         top: calc(50% - var(--neo-input-label-height) / 2);
         left: calc(0% - var(--neo-input-margin-left));
 
-        &.prefix {
+        &.before {
           left: calc(0% - var(--neo-input-margin-left) - 0.75rem);
 
           &.rounded {
@@ -788,7 +788,7 @@
         top: calc(50% - var(--neo-input-label-height) / 2);
         right: calc(0% - var(--neo-input-margin-right));
 
-        &.prefix {
+        &.before {
           right: calc(0% - var(--neo-input-margin-right) - 1rem);
 
           &.rounded {
@@ -802,11 +802,11 @@
       .neo-input {
         padding: 0 1rem 0.5rem;
 
-        &.prefix {
+        &.before {
           padding-left: 0;
         }
 
-        &.suffix {
+        &.after {
           padding-right: 0;
         }
       }
@@ -815,7 +815,7 @@
         padding: 0.75rem 1rem 0.2rem;
         line-height: var(--neo-line-height-xs, 1rem);
 
-        &.prefix {
+        &.before {
           padding-left: 0;
         }
       }
@@ -832,11 +832,11 @@
     }
 
     &[data-position='left'] .neo-input-label-container.floating .neo-input-label {
-      left: calc(0.25rem + var(--neo-input-prefix-width));
+      left: calc(0.25rem + var(--neo-input-before-width));
     }
 
     &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
-      right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-prefix-width));
+      right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-before-width));
     }
 
     &.glass {

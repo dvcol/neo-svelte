@@ -124,7 +124,7 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
   /**
    * A snippet to display as the input suffix.
    */
-  suffix?: Snippet<[NeoInputContext<T>]>;
+  after?: Snippet<[NeoInputContext<T>]>;
 
   // States
   /**
@@ -219,11 +219,11 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
    * The HTML tag to use for the suffix.
    * @default div
    */
-  suffixTag?: keyof HTMLElementTagNameMap;
+  afterTag?: keyof HTMLElementTagNameMap;
   /**
    * The props to pass to the suffix.
    */
-  suffixProps?: HTMLNeoBaseElement;
+  afterProps?: HTMLNeoBaseElement;
 
   /**
    * The props to pass to the label.
@@ -245,7 +245,7 @@ export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
   /**
    * A snippet to display as the input prefix.
    */
-  prefix?: Snippet<[NeoInputContext<T>]>;
+  before?: Snippet<[NeoInputContext<T>]>;
 
   // Other props
 
@@ -253,16 +253,16 @@ export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
    * The HTML tag to use for the prefix.
    * @default div
    */
-  prefixTag?: keyof HTMLElementTagNameMap;
+  beforeTag?: keyof HTMLElementTagNameMap;
   /**
    * The props to pass to the prefix.
    */
-  prefixProps?: HTMLNeoBaseElement;
+  beforeProps?: HTMLNeoBaseElement;
 
   /**
    * The ref to bind to the prefix.
    */
-  prefixRef?: HTMLLabelElement;
+  beforeRef?: HTMLElement;
 } & NeoCommonInputProps<T> &
   HTMLInputAttributes;
 
