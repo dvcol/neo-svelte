@@ -122,6 +122,7 @@
   class:pulse
   class:coalesce
   class:pressed
+  class:toggle
   class:loading
   class:skeleton
   class:start
@@ -168,15 +169,15 @@
     justify-content: center;
     box-sizing: border-box;
     min-height: calc(var(--neo-btn-min-height, var(--neo-line-height)) + 0.5rem);
-    margin: var(--neo-shadow-margin, 0.6rem);
-    padding: 0.25rem 0.75rem;
+    margin: var(--neo-btn-margin, var(--neo-shadow-margin, 0.6rem));
+    padding: var(--neo-btn-padding, 0.25rem 0.75rem);
     color: var(--neo-btn-text-color, inherit);
     font: inherit;
     text-decoration: inherit;
     background-color: var(--neo-btn-bg-color, transparent);
     border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;
     border-radius: var(--neo-btn-border-radius, var(--neo-border-radius));
-    box-shadow: var(--neo-box-shadow-raised-3);
+    box-shadow: var(--neo-btn-box-shadow, var(--neo-box-shadow-raised-3));
     cursor: pointer;
     transition:
       opacity 0.3s ease,
@@ -188,7 +189,7 @@
       box-shadow 0.3s ease-out;
 
     &.empty {
-      padding: 0.5rem;
+      padding: var(--neo-btn-padding-empty, 0.5rem);
     }
 
     &.loading {
@@ -202,13 +203,13 @@
 
     &:hover {
       color: var(--neo-btn-text-color-hover, inherit);
-      box-shadow: var(--neo-box-shadow-raised-2);
+      box-shadow: var(--neo-btn-box-shadow-hover, var(--neo-box-shadow-raised-2));
     }
 
     &.pressed,
     &:active:not(.loading) {
       color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
-      box-shadow: var(--neo-box-shadow-pressed-2);
+      box-shadow: var(--neo-btn-box-shadow-active, var(--neo-box-shadow-pressed-2));
       transition:
         opacity 0.3s ease,
         color 0.3s ease,
@@ -222,7 +223,7 @@
     &:focus-visible {
       color: var(--neo-btn-text-color-focused, var(--neo-text-color-focused));
       outline: none;
-      box-shadow: var(--neo-box-shadow-raised-2);
+      box-shadow: var(--neo-btn-box-shadow-focus, var(--neo-box-shadow-raised-2));
       transition:
         opacity 0.3s ease,
         color 0s,
@@ -239,7 +240,7 @@
       &.pressed,
       &:active:not(.loading) {
         color: var(--neo-btn-text-color-focused-active, var(--neo-text-color-focused-active));
-        box-shadow: var(--neo-box-shadow-pressed-2);
+        box-shadow: var(--neo-btn-box-shadow-focus-active, var(--neo-box-shadow-pressed-2));
       }
     }
 
@@ -260,13 +261,17 @@
 
       &:hover {
         border-color: transparent;
-        box-shadow: var(--neo-box-shadow-inset-1);
+        box-shadow: var(--neo-btn-box-shadow-hover-flat, var(--neo-box-shadow-inset-1));
       }
 
       &.pressed,
       &:active:not(.loading) {
         border-color: transparent;
-        box-shadow: var(--neo-box-shadow-inset-3);
+        box-shadow: var(--neo-btn-box-shadow-active-flat, var(--neo-box-shadow-inset-3));
+
+        &.toggle {
+          box-shadow: var(--neo-btn-box-shadow-active-flat-toggle, var(--neo-box-shadow-inset-3));
+        }
       }
     }
 

@@ -18,6 +18,7 @@
     dirty = $bindable(false),
     touched = $bindable(false),
     type = 'number',
+    placeholder = '0',
 
     // Events
     onStepUp,
@@ -61,22 +62,32 @@
   };
 
   const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
+  const text = $derived(elevation >= 0 || !rest.pressed);
+  const style = $derived.by(() => {
+    if (text) return;
+    return `
+      --neo-btn-box-shadow: var(--neo-box-shadow-raised-${Math.min(Math.abs(elevation), 3)});
+      --neo-btn-box-shadow-hover: var(--neo-box-shadow-raised-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
+      --neo-btn-box-shadow-focus: var(--neo-box-shadow-raised-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
+      --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
+      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
+      `;
+  });
   const buttonProps = $derived<NeoButtonProps>({
     disabled: rest.disabled,
     rounded: rest.rounded,
     glass: rest.glass,
     start: rest.start,
-    text: elevation >= 0 || !rest.pressed,
+    text,
+    style,
     ...rest?.buttonProps,
   });
 
   const affix = $derived(rest.clearable || rest.loading !== undefined || rest.validation);
-
-  // TODO -- adjust raised to match pressed elevation
 </script>
 
 {#snippet before()}
-  <NeoButton aria-label="Decrement number input" title="Decrement number input" onclick={decrement} {...buttonProps}>
+  <NeoButton aria-label="Decrement number" title="Decrement number" onclick={decrement} {...buttonProps}>
     {#snippet icon()}
       <IconMinus width="1.25rem" height="1.25rem" />
     {/snippet}
@@ -84,15 +95,15 @@
 {/snippet}
 
 {#snippet after()}
-  <NeoButton aria-label="Increment number input" title="Increment number input" onclick={increment} {...buttonProps}>
+  <NeoButton aria-label="Increment number" title="Increment number" onclick={increment} {...buttonProps}>
     {#snippet icon()}
       <IconAdd width="1.25rem" height="1.25rem" />
     {/snippet}
   </NeoButton>
 {/snippet}
 
-<svelte:element this={numberTag} class:neo-number-step={true} class:inset={elevation < -3} class:label={rest.label} class:affix {...numberProps}>
-  <NeoInput bind:ref bind:labelRef bind:beforeRef bind:value bind:valid bind:dirty bind:touched {type} {before} {after} {...rest} />
+<svelte:element this={numberTag} class:neo-number-step={true} class:inset={elevation < 0} class:label={rest.label} class:affix {...numberProps}>
+  <NeoInput bind:ref bind:labelRef bind:beforeRef bind:value bind:valid bind:dirty bind:touched {type} {placeholder} {before} {after} {...rest} />
 </svelte:element>
 
 <style lang="scss">
@@ -111,17 +122,6 @@
       appearance: textfield;
     }
 
-    :global(.neo-input-before),
-    :global(.neo-input-after) {
-      --neo-shadow-margin: auto;
-
-      padding: 0 0.3rem !important;
-
-      :global(.neo-button) {
-        padding: 0.375rem;
-      }
-    }
-
     &:not(.label) {
       :global(.neo-input) {
         text-align: center;
@@ -131,13 +131,6 @@
         :global(.neo-input) {
           padding-left: 1.75rem;
         }
-      }
-    }
-
-    &.inset {
-      :global(.neo-input-before),
-      :global(.neo-input-after) {
-        --neo-shadow-margin: auto 0.25rem;
       }
     }
   }

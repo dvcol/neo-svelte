@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { NeoButtonProps } from '~/buttons/index.js';
 import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
+import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { INeoThemeProviderContext } from '~/providers/neo-theme-provider.model.js';
 
 export type NeoThemeSelectorProps = {

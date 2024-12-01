@@ -191,6 +191,7 @@
   const affix = $derived(clearable || loading !== undefined || validation);
   const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
   const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
+  const inside = $derived(position === NeoInputLabelPosition.Inside && label);
 
   let first = $state(true);
   // Skip enter transition on first render for floating label
@@ -262,7 +263,17 @@
 
 {#snippet prefix()}
   {#if before}
-    <svelte:element this={beforeTag} bind:this={beforeRef} class:neo-input-before={true} {disabled} {readonly} {...beforeProps}>
+    <svelte:element
+      this={beforeTag}
+      bind:this={beforeRef}
+      class:neo-input-before={true}
+      class:inside
+      class:inset={elevation < 0}
+      class:deep={elevation < -3}
+      {disabled}
+      {readonly}
+      {...beforeProps}
+    >
       {@render before(context)}
     </svelte:element>
   {/if}
@@ -293,7 +304,16 @@
   {/if}
   <!--  Suffix  -->
   {#if after}
-    <svelte:element this={afterTag} class:neo-input-after={true} {disabled} {readonly} {...afterProps}>
+    <svelte:element
+      this={afterTag}
+      class:neo-input-after={true}
+      class:inside
+      class:inset={elevation < 0}
+      class:deep={elevation < -3}
+      {disabled}
+      {readonly}
+      {...afterProps}
+    >
       {@render after(context)}
     </svelte:element>
   {/if}
@@ -587,6 +607,24 @@
     &:is(button, a) {
       @extend %neo-input-button;
     }
+
+    &:has(:global(.neo-button:only-child)):not(.inside) {
+      padding: 0 0.3rem;
+    }
+
+    :global(.neo-button) {
+      --neo-btn-padding: 0.5rem 0.75rem;
+      --neo-btn-margin: auto;
+      --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
+    }
+
+    &.inset :global(.neo-button) {
+      --neo-btn-margin: 0.5rem 0;
+    }
+
+    &.deep :global(.neo-button) {
+      --neo-btn-margin: 0.5rem 0.25rem;
+    }
   }
 
   .neo-input-label-container {
@@ -715,10 +753,6 @@
           padding-left: 0;
         }
 
-        &-before {
-          padding: 0.75rem 0.75rem 0.75rem 1rem;
-        }
-
         &.after {
           padding-right: 0;
         }
@@ -747,17 +781,6 @@
       }
     }
 
-    &[data-position='top'] {
-      --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-height, var(--neo-line-height)));
-
-      margin-top: var(--neo-input-margin-top);
-
-      .neo-input-label-container .neo-input-label {
-        position: absolute;
-        top: calc(0% - var(--neo-input-margin-top));
-      }
-    }
-
     &[data-position='left'] {
       --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-width, auto));
 
@@ -770,10 +793,6 @@
 
         &.before {
           left: calc(0% - var(--neo-input-margin-left) - 0.75rem);
-
-          &.rounded {
-            left: calc(0% - var(--neo-input-margin-left) - 0.5rem);
-          }
         }
       }
     }
@@ -790,10 +809,6 @@
 
         &.before {
           right: calc(0% - var(--neo-input-margin-right) - 1rem);
-
-          &.rounded {
-            right: calc(0% - var(--neo-input-margin-right) - 0.75rem);
-          }
         }
       }
     }
@@ -822,6 +837,17 @@
 
       &:not(.floating) .neo-input-label {
         font-size: var(--neo-font-size-sm, 0.875rem);
+      }
+    }
+
+    &[data-position='top'][data-position='top'] {
+      --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-height, var(--neo-line-height)));
+
+      margin-top: var(--neo-input-margin-top);
+
+      .neo-input-label-container .neo-input-label {
+        position: absolute;
+        top: calc(0% - var(--neo-input-margin-top));
       }
     }
 

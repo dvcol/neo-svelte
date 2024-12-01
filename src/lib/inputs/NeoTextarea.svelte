@@ -722,23 +722,12 @@
         padding-left: 0.5rem;
 
         .neo-textarea-label {
-          padding: 0 1rem;
+          padding: 0 1.25rem;
 
           &.affix {
             padding-right: 3.5rem; // 2.5rem + 1rem
           }
         }
-      }
-    }
-
-    &[data-position='top'] {
-      --neo-textarea-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-textarea-label-height, var(--neo-line-height)));
-
-      margin-top: var(--neo-textarea-margin-top);
-
-      .neo-textarea-label-container .neo-textarea-label {
-        position: absolute;
-        top: calc(0% - var(--neo-textarea-margin-top));
       }
     }
 
@@ -754,10 +743,10 @@
       }
 
       .neo-textarea-label-container:not(.floating) .neo-textarea-label.affix {
-        left: calc(2.5rem - var(--neo-textarea-margin-left));
+        left: calc(2.75rem - var(--neo-textarea-margin-left));
 
         &.rounded {
-          left: calc(2.75rem - var(--neo-textarea-margin-left));
+          left: calc(2.5rem - var(--neo-textarea-margin-left));
         }
       }
     }
@@ -771,6 +760,10 @@
         position: absolute;
         top: 0.75rem;
         right: calc(0% - var(--neo-textarea-margin-right));
+
+        &.rounded {
+          right: calc(-0.25rem - var(--neo-textarea-margin-right));
+        }
       }
     }
 
@@ -786,6 +779,17 @@
 
       &:not(.floating) .neo-textarea-label {
         font-size: var(--neo-font-size-sm, 0.875rem);
+      }
+    }
+
+    &[data-position='top'][data-position='top'] {
+      --neo-textarea-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-textarea-label-height, var(--neo-line-height)));
+
+      margin-top: var(--neo-textarea-margin-top);
+
+      .neo-textarea-label-container .neo-textarea-label {
+        position: absolute;
+        top: calc(0% - var(--neo-textarea-margin-top));
       }
     }
 
