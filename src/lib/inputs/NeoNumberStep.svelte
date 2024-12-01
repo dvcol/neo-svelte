@@ -102,7 +102,7 @@
   </NeoButton>
 {/snippet}
 
-<svelte:element this={numberTag} class:neo-number-step={true} class:inset={elevation < 0} class:label={rest.label} class:affix {...numberProps}>
+<svelte:element this={numberTag} class:neo-number-step={true} class:neo-label={rest.label} class:neo-affix={affix} {...numberProps}>
   <NeoInput bind:ref bind:labelRef bind:beforeRef bind:value bind:valid bind:dirty bind:touched {type} {placeholder} {before} {after} {...rest} />
 </svelte:element>
 
@@ -122,12 +122,12 @@
       appearance: textfield;
     }
 
-    &:not(.label) {
+    &:not(.neo-label) {
       :global(.neo-input) {
         text-align: center;
       }
 
-      &.affix {
+      &.neo-affix {
         :global(.neo-input) {
           padding-left: 1.75rem;
         }
