@@ -333,7 +333,7 @@
     bind:this={ref}
     bind:value
     class:neo-textarea={true}
-    class:affix={affix || after}
+    class:neo-affix={affix || after}
     {rows}
     onblur={onBlur}
     onfocus={onFocus}
@@ -355,21 +355,21 @@
     data-dirty={dirty}
     data-valid={valid}
     class:neo-textarea-group={true}
-    class:readonly
-    class:pressed
-    class:borderless
-    class:rounded
-    class:glass
-    class:hover
-    class:start
-    class:skeleton
-    class:validation
-    class:disabled
-    class:raised={elevation > 3 || elevation + hover > 3}
-    class:inset={elevation < -3 || elevation + hover < -3}
-    class:flat={!elevation}
-    class:hover-flat={hoverFlat}
-    class:flat-hover={flatHover}
+    class:neo-readonly={readonly}
+    class:neo-pressed={pressed}
+    class:neo-borderless={borderless}
+    class:neo-rounded={rounded}
+    class:neo-glass={glass}
+    class:neo-hover={hover}
+    class:neo-start={start}
+    class:neo-skeleton={skeleton}
+    class:neo-validation={validation}
+    class:neo-disabled={disabled}
+    class:neo-raised={elevation > 3 || elevation + hover > 3}
+    class:neo-inset={elevation < -3 || elevation + hover < -3}
+    class:neo-flat={!elevation}
+    class:neo-hover-flat={hoverFlat}
+    class:neo-flat-hover={flatHover}
     style:--neo-textarea-glass-blur={filter}
     style:--neo-textarea-box-shadow={boxShadow}
     style:--neo-textarea-hover-shadow={hoverShadow}
@@ -382,15 +382,15 @@
     {...containerProps}
   >
     {#if label}
-      <div class="neo-textarea-label-container" class:floating={isFloating} role="none" onclick={focus}>
+      <div class="neo-textarea-label-container" class:neo-floating={isFloating} role="none" onclick={focus}>
         <label
           bind:this={labelRef}
           for={id}
           class:neo-textarea-label={true}
-          class:affix={affix || after}
-          class:first
-          class:rounded
-          class:required={rest.required}
+          class:neo-affix={affix || after}
+          class:neo-first={first}
+          class:neo-rounded={rounded}
+          class:neo-required={rest.required}
           {...labelProps}
         >
           {#if typeof label === 'string'}
@@ -490,7 +490,7 @@
     border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
     outline: none;
 
-    &.affix {
+    &.neo-affix {
       padding: 0.75rem 2.25rem 0.75rem 0.95rem;
     }
 
@@ -615,15 +615,15 @@
         right 0.3s ease,
         translate 0.3s ease;
 
-      &.first {
+      &.neo-first {
         transition: none;
       }
 
-      &.affix {
+      &.neo-affix {
         padding-right: 3.25rem; // 2.5rem + 0.75rem
       }
 
-      &.required::after {
+      &.neo-required::after {
         margin-left: 0.1rem;
         color: var(--neo-textarea-required-color, var(--neo-color-error-75));
         font-size: var(--neo-font-size);
@@ -631,12 +631,12 @@
       }
     }
 
-    &.floating {
+    &.neo-floating {
       .neo-textarea-label {
         color: var(--neo-textarea-floating-label-color, var(--neo-text-color-disabled));
         translate: 0 calc(50% + 0.7rem - var(--neo-textarea-label-height) / 2);
 
-        &.required::after {
+        &.neo-required::after {
           color: var(--neo-textarea-required-color, var(--neo-color-error-50));
         }
       }
@@ -658,39 +658,39 @@
     box-shadow: var(--neo-textarea-box-shadow, var(--neo-box-shadow-flat));
     cursor: text;
 
-    &.readonly {
+    &.neo-readonly {
       cursor: initial;
     }
 
-    &.borderless {
+    &.neo-borderless {
       border-color: transparent !important;
     }
 
-    &.inset.pressed,
-    &.raised {
+    &.neo-inset.neo-pressed,
+    &.neo-raised {
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }
 
-    &.inset {
+    &.neo-inset {
       padding: 0.25rem;
     }
 
-    &.hover.flat-hover:hover,
-    &.hover.flat-hover:focus-within,
-    &.flat:not(.borderless, .hover-flat:hover, .hover-flat:focus-within) {
+    &.neo-hover.neo-flat-hover:hover,
+    &.neo-hover.neo-flat-hover:focus-within,
+    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-within) {
       border-color: var(--neo-textarea-border-color, var(--neo-border-color));
     }
 
     &:focus-within,
-    &.hover:hover {
+    &.neo-hover:hover {
       box-shadow: var(--neo-textarea-hover-shadow, var(--neo-box-shadow-flat));
     }
 
-    &.disabled {
+    &.neo-disabled {
       box-shadow: var(--neo-box-shadow-flat) !important;
       opacity: var(--neo-textarea-opacity-disabled, var(--neo-opacity-disabled));
 
-      &:not(.borderless) {
+      &:not(.neo-borderless) {
         border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
       }
 
@@ -699,7 +699,7 @@
       }
     }
 
-    &.rounded {
+    &.neo-rounded {
       border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-lg));
 
       .neo-textarea {
@@ -708,7 +708,7 @@
         padding: 0.75rem 1rem;
         border-radius: var(--neo-border-radius-lg, 2rem);
 
-        &.affix {
+        &.neo-affix {
           padding: 0.75rem 2.75rem 0.75rem 1.2rem;
         }
 
@@ -724,7 +724,7 @@
         .neo-textarea-label {
           padding: 0 1.25rem;
 
-          &.affix {
+          &.neo-affix {
             padding-right: 3.5rem; // 2.5rem + 1rem
           }
         }
@@ -742,10 +742,10 @@
         left: calc(0% - var(--neo-textarea-margin-left));
       }
 
-      .neo-textarea-label-container:not(.floating) .neo-textarea-label.affix {
+      .neo-textarea-label-container:not(.neo-floating) .neo-textarea-label.neo-affix {
         left: calc(2.75rem - var(--neo-textarea-margin-left));
 
-        &.rounded {
+        &.neo-rounded {
           left: calc(2.5rem - var(--neo-textarea-margin-left));
         }
       }
@@ -761,7 +761,7 @@
         top: 0.75rem;
         right: calc(0% - var(--neo-textarea-margin-right));
 
-        &.rounded {
+        &.neo-rounded {
           right: calc(-0.25rem - var(--neo-textarea-margin-right));
         }
       }
@@ -777,7 +777,7 @@
         line-height: var(--neo-line-height-xs, 1rem);
       }
 
-      &:not(.floating) .neo-textarea-label {
+      &:not(.neo-floating) .neo-textarea-label {
         font-size: var(--neo-font-size-sm, 0.875rem);
       }
     }
@@ -793,29 +793,29 @@
       }
     }
 
-    &[data-position='top'] .neo-textarea-label-container.floating .neo-textarea-label,
-    &[data-position='left'] .neo-textarea-label-container.floating .neo-textarea-label,
-    &[data-position='right'] .neo-textarea-label-container.floating .neo-textarea-label {
+    &[data-position='top'] .neo-textarea-label-container.neo-floating .neo-textarea-label,
+    &[data-position='left'] .neo-textarea-label-container.neo-floating .neo-textarea-label,
+    &[data-position='right'] .neo-textarea-label-container.neo-floating .neo-textarea-label {
       top: 0;
     }
 
-    &[data-position='left'] .neo-textarea-label-container.floating .neo-textarea-label {
+    &[data-position='left'] .neo-textarea-label-container.neo-floating .neo-textarea-label {
       left: 0;
 
-      &.rounded {
+      &.neo-rounded {
         left: 1rem;
       }
     }
 
-    &[data-position='right'] .neo-textarea-label-container.floating .neo-textarea-label {
+    &[data-position='right'] .neo-textarea-label-container.neo-floating .neo-textarea-label {
       right: calc(100% - var(--neo-textarea-label-width));
 
-      &.rounded {
+      &.neo-rounded {
         right: calc(100% - var(--neo-textarea-label-width) - 1rem);
       }
     }
 
-    &.glass {
+    &.neo-glass {
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
       --neo-border-color: var(--neo-glass-border-color);
 
@@ -827,7 +827,7 @@
       backdrop-filter: var(--neo-textarea-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
     }
 
-    &.validation {
+    &.neo-validation {
       &[data-valid='false'] {
         --neo-textarea-label-color: var(--neo-textarea-label-color-error, var(--neo-color-error));
         --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-error, var(--neo-color-error-50));
@@ -847,23 +847,23 @@
       }
     }
 
-    &.start {
+    &.neo-start {
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
 
-        &:not(.borderless) {
+        &:not(.neo-borderless) {
           border-color: var(--neo-textarea-border-color, var(--neo-border-color));
         }
       }
     }
 
-    &.skeleton {
+    &.neo-skeleton {
       box-shadow: var(--neo-box-shadow-flat);
       pointer-events: none;
 
       @include mixin.skeleton;
 
-      &.glass {
+      &.neo-glass {
         --neo-skeleton-color: var(--neo-glass-skeleton-color);
       }
     }
