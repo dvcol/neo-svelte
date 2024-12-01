@@ -129,22 +129,22 @@
   this={tag}
   bind:this={ref}
   class:neo-card={true}
-  class:horizontal
-  class:borderless
-  class:segmented={segmented === true}
-  class:segments
-  class:image={media && !segments}
-  class:rounded
-  class:pressed
-  class:convex
-  class:hover
-  class:start
-  class:raised={elevation > 3 || hoverElevation > 3}
-  class:inset={elevation < -3 || hoverElevation < -3}
-  class:flat={!elevation}
-  class:hover-flat={hoverFlat}
-  class:flat-hover={flatHover}
-  class:glass
+  class:neo-horizontal={horizontal}
+  class:neo-borderless={borderless}
+  class:neo-segmented={segmented === true}
+  class:neo-segments={segments}
+  class:neo-image={media && !segments}
+  class:neo-rounded={rounded}
+  class:neo-pressed={pressed}
+  class:neo-convex={convex}
+  class:neo-hover={hover}
+  class:neo-start={start}
+  class:neo-raised={elevation > 3 || hoverElevation > 3}
+  class:neo-inset={elevation < -3 || hoverElevation < -3}
+  class:neo-flat={!elevation}
+  class:neo-hover-flat={hoverFlat}
+  class:neo-flat-hover={flatHover}
+  class:neo-glass={glass}
   style:--neo-card-hover-shadow={hoverShadow}
   style:--neo-card-box-shadow={boxShadow}
   style:--neo-card-glass-blur={filter}
@@ -161,8 +161,8 @@
       this={mediaTag}
       class:neo-card-segment={true}
       class:neo-card-media={true}
-      class:cover
-      class:inset={elevation < 0 || hoverElevation < 0}
+      class:neo-cover={cover}
+      class:neo-inset={elevation < 0 || hoverElevation < 0}
       {...mediaProps}
     >
       {@render media?.(context)}
@@ -230,21 +230,21 @@
       backdrop-filter 0.3s ease,
       box-shadow 0.3s ease-out;
 
-    &.borderless {
+    &.neo-borderless {
       border-color: transparent !important;
     }
 
-    &.inset.pressed,
-    &.raised:not(.convex) {
+    &.neo-inset.neo-pressed,
+    &.neo-raised:not(.neo-convex) {
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }
 
-    &.hover.flat-hover:hover,
-    &.flat:not(.borderless, .hover-flat:hover) {
+    &.neo-hover.neo-flat-hover:hover,
+    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover) {
       border-color: var(--neo-card-border-color, var(--neo-border-color));
     }
 
-    &.hover:hover {
+    &.neo-hover:hover {
       box-shadow: var(--neo-card-hover-shadow, var(--neo-card-box-shadow));
     }
 
@@ -276,7 +276,7 @@
       border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
       scrollbar-gutter: auto;
 
-      &.cover:not(.inset) {
+      &.neo-cover:not(.neo-inset) {
         padding: 0;
 
         &:not(:only-child) {
@@ -317,19 +317,19 @@
       }
     }
 
-    &.image {
+    &.neo-image {
       padding: 0;
 
-      .neo-card-media.cover:not(.inset) {
+      .neo-card-media.neo-cover:not(.neo-inset) {
         margin: 0;
       }
     }
 
-    &.segments {
+    &.neo-segments {
       padding: 0;
     }
 
-    &.segmented {
+    &.neo-segmented {
       .neo-card-segment:not(.neo-card-media) {
         padding: var(--neo-card-full-spacing);
       }
@@ -339,7 +339,7 @@
       }
     }
 
-    &.glass {
+    &.neo-glass {
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
       --neo-border-color: var(--neo-glass-border-color);
 
@@ -351,17 +351,17 @@
       backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
     }
 
-    &.start {
+    &.neo-start {
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
 
-        &:not(.borderless) {
+        &:not(.neo-borderless) {
           border-color: var(--neo-card-border-color, var(--neo-border-color));
         }
       }
     }
 
-    &.horizontal {
+    &.neo-horizontal {
       flex-direction: row;
 
       .neo-card-action {
@@ -373,7 +373,7 @@
         margin-bottom: auto;
       }
 
-      .neo-card-media.cover:not(.inset, :only-child) {
+      .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
         margin: 0 var(--neo-card-full-spacing) 0 0;
         border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
       }
@@ -393,13 +393,13 @@
       }
     }
 
-    &.rounded {
+    &.neo-rounded {
       border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
 
       .neo-card-media {
         border-radius: var(--neo-card-border-radius, var(--neo-border-radius-md));
 
-        &.cover:not(.inset) {
+        &.neo-cover:not(.neo-inset) {
           border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
 
           &:not(:only-child) {
@@ -418,7 +418,7 @@
         }
       }
 
-      &.horizontal {
+      &.neo-horizontal {
         .neo-card-segment:not(.neo-card-media) {
           &:first-child {
             border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg));
@@ -429,7 +429,7 @@
           }
         }
 
-        .neo-card-media.cover:not(.inset, :only-child) {
+        .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
           border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg));
         }
       }
