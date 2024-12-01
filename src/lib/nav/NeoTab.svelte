@@ -81,8 +81,8 @@
   data-tab-id={tabId}
   data-active={active}
   class:neo-tab={true}
-  class:active
-  class:slide
+  class:neo-active={active}
+  class:neo-slide={slide}
   transition:transition={enterFreezeTransition}
   {...tabProps}
   use:useFn={useProps}
@@ -105,12 +105,12 @@
       <button
         class="neo-tab-close"
         aria-label="Close tab"
-        class:reverse={rest.reverse}
-        class:disabled
+        class:neo-reverse={rest.reverse}
+        class:neo-disabled={disabled}
         transition:width={{ duration: skip ? 0 : defaultTransitionDuration }}
         onclick={onClose}
       >
-        <IconClose class="icon-close" />
+        <IconClose class="neo-icon-close" />
       </button>
     {/if}
   </NeoButton>
@@ -124,13 +124,13 @@
     :global(.neo-button.pressed),
     :global(.neo-button:focus-visible),
     :global(.neo-button:hover) {
-      :global(.icon-close) {
+      :global(.neo-icon-close) {
         opacity: 1;
         pointer-events: auto;
       }
     }
 
-    :global(.neo-button .icon-close:focus-visible) {
+    :global(.neo-button .neo-icon-close:focus-visible) {
       transition: none;
     }
   }
@@ -145,12 +145,12 @@
     outline: inherit;
     cursor: pointer;
 
-    &.disabled {
+    &.neo-disabled {
       cursor: not-allowed;
       pointer-events: none;
     }
 
-    :global(.icon-close) {
+    :global(.neo-icon-close) {
       margin-right: var(--neo-tab-icon-gap-offset, -0.2rem);
       margin-left: var(--neo-tab-icon-gap, 0.3rem);
       padding: 0.1rem;
@@ -163,20 +163,20 @@
       pointer-events: none;
     }
 
-    &:focus-visible :global(.icon-close) {
+    &:focus-visible :global(.neo-icon-close) {
       color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
       background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
       opacity: 1;
       transition: none;
     }
 
-    &:hover :global(.icon-close) {
+    &:hover :global(.neo-icon-close) {
       color: var(--neo-close-color, rgb(255 0 0));
       background-color: var(--neo-close-bg-color-hover, rgb(255 0 0 / 10%));
       opacity: 1;
     }
 
-    &.reverse :global(.icon-close) {
+    &.neo-reverse :global(.neo-icon-close) {
       margin-right: var(--neo-tab-icon-gap, 0.3rem);
       margin-left: var(--neo-tab-icon-gap-offset, -0.2rem);
     }
