@@ -119,19 +119,19 @@
   {role}
   {tabindex}
   class:neo-button={true}
-  class:pulse
-  class:coalesce
-  class:pressed
-  class:toggle
-  class:loading
-  class:skeleton
-  class:start
-  class:glass
-  class:flat={flat || text}
-  class:borderless={text}
-  class:inset
-  class:rounded
-  class:empty
+  class:neo-pulse={pulse}
+  class:neo-coalesce={coalesce}
+  class:neo-pressed={pressed}
+  class:neo-toggle={toggle}
+  class:neo-loading={loading}
+  class:neo-skeleton={skeleton}
+  class:neo-start={start}
+  class:neo-glass={glass}
+  class:neo-flat={flat || text}
+  class:neo-borderless={text}
+  class:neo-inset={inset}
+  class:neo-rounded={rounded}
+  class:neo-empty={empty}
   style:justify-content={justify}
   style:align-items={align}
   style:flex
@@ -144,9 +144,9 @@
   disabled={disabled || skeleton}
   {...rest}
 >
-  <span class="content" class:reverse>
+  <span class="neo-content" class:neo-reverse={reverse}>
     {#if loading || icon}
-      <span class="icon" class:only={empty} transition:width={enterDefaultTransition}>
+      <span class="neo-icon" class:neo-only={empty} transition:width={enterDefaultTransition}>
         {#if loading}
           <IconCircleLoading />
         {:else}
@@ -188,15 +188,15 @@
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
 
-    &.empty {
+    &.neo-empty {
       padding: var(--neo-btn-padding-empty, 0.5rem);
     }
 
-    &.loading {
+    &.neo-loading {
       cursor: wait;
     }
 
-    &.inset {
+    &.neo-inset {
       --neo-box-shadow-pressed-2: var(--neo-box-shadow-inset-2);
       --neo-glass-box-shadow-pressed-2: var(--neo-glass-box-shadow-inset-2);
     }
@@ -206,8 +206,8 @@
       box-shadow: var(--neo-btn-box-shadow-hover, var(--neo-box-shadow-raised-2));
     }
 
-    &.pressed,
-    &:active:not(.loading) {
+    &.neo-pressed,
+    &:active:not(.neo-loading) {
       color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
       box-shadow: var(--neo-btn-box-shadow-active, var(--neo-box-shadow-pressed-2));
       transition:
@@ -237,18 +237,18 @@
         color: var(--neo-btn-text-color-focused-hover, var(--neo-text-color-focused));
       }
 
-      &.pressed,
-      &:active:not(.loading) {
+      &.neo-pressed,
+      &:active:not(.neo-loading) {
         color: var(--neo-btn-text-color-focused-active, var(--neo-text-color-focused-active));
         box-shadow: var(--neo-btn-box-shadow-focus-active, var(--neo-box-shadow-pressed-2));
       }
     }
 
-    &.borderless {
+    &.neo-borderless {
       border-color: transparent !important;
     }
 
-    &.flat {
+    &.neo-flat {
       --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-2);
       --neo-pulse-box-shadow: var(--neo-box-shadow-raised-2);
 
@@ -264,18 +264,18 @@
         box-shadow: var(--neo-btn-box-shadow-hover-flat, var(--neo-box-shadow-inset-1));
       }
 
-      &.pressed,
-      &:active:not(.loading) {
+      &.neo-pressed,
+      &:active:not(.neo-loading) {
         border-color: transparent;
         box-shadow: var(--neo-btn-box-shadow-active-flat, var(--neo-box-shadow-inset-3));
 
-        &.toggle {
+        &.neo-toggle {
           box-shadow: var(--neo-btn-box-shadow-active-flat-toggle, var(--neo-box-shadow-inset-3));
         }
       }
     }
 
-    &.glass {
+    &.neo-glass {
       @include mixin.glass;
 
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
@@ -295,8 +295,8 @@
         backdrop-filter: var(--neo-blur-1) var(--neo-saturate-2);
       }
 
-      &.pressed,
-      &:active:not(.loading) {
+      &.neo-pressed,
+      &:active:not(.neo-loading) {
         backdrop-filter: var(--neo-blur-0) var(--neo-saturate-2);
       }
 
@@ -305,24 +305,24 @@
         backdrop-filter: var(--neo-blur-1);
       }
 
-      &.inset {
-        &:hover:not(&.pressed, &:active:not(.loading), &:disabled, &[disabled]:not([disabled='false'])) {
+      &.neo-inset {
+        &:hover:not(&.neo-pressed, &:active:not(.neo-loading), &:disabled, &[disabled]:not([disabled='false'])) {
           border-color: var(--neo-btn-border-color-hover, var(--neo-glass-border-color-hover));
           box-shadow: var(--neo-box-shadow-flat);
         }
 
-        &.pressed,
-        &:active:not(.loading) {
+        &.neo-pressed,
+        &:active:not(.neo-loading) {
           border-color: transparent;
         }
       }
     }
 
-    &.start {
+    &.neo-start {
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
 
-        &:not(.borderless, .glass) {
+        &:not(.neo-borderless, .neo-glass) {
           border-color: var(--neo-btn-border-color, var(--neo-border-color));
         }
       }
@@ -334,7 +334,7 @@
       cursor: not-allowed;
       opacity: var(--neo-btn-opacity-disabled, var(--neo-opacity-disabled));
 
-      &:not(.pressed) {
+      &:not(.neo-pressed) {
         border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled));
         box-shadow: var(--neo-box-shadow-flat);
       }
@@ -346,44 +346,44 @@
       }
     }
 
-    &.skeleton {
+    &.neo-skeleton {
       box-shadow: var(--neo-box-shadow-flat) !important;
       pointer-events: none;
 
       @include mixin.skeleton;
     }
 
-    &.rounded {
+    &.neo-rounded {
       border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
     }
 
-    &.pulse {
+    &.neo-pulse {
       @include mixin.pulse;
     }
 
-    &.coalesce {
+    &.neo-coalesce {
       @include mixin.coalesce;
     }
 
-    .icon,
-    .content {
+    .neo-icon,
+    .neo-content {
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
 
-    .content {
+    .neo-content {
       height: 100%;
 
-      .icon:not(.only) {
+      .neo-icon:not(.neo-only) {
         margin-right: var(--neo-btn-icon-gap, 0.35rem);
         margin-left: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.35rem)));
       }
 
-      &.reverse {
+      &.neo-reverse {
         flex-direction: row-reverse;
 
-        .icon:not(.only) {
+        .neo-icon:not(.neo-only) {
           margin-right: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.35rem)));
           margin-left: var(--neo-btn-icon-gap, 0.35rem);
         }
