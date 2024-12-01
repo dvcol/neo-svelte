@@ -85,6 +85,7 @@
     suffixProps,
     suffixTag = suffixProps?.onclick ? 'button' : 'span',
     prefixProps,
+    prefixRef = $bindable(),
     prefixTag = prefixProps?.onclick ? 'button' : 'span',
     containerProps,
     containerTag = 'div',
@@ -186,13 +187,10 @@
     return onclear?.({ touched, dirty, valid, value });
   };
 
-  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? value.length : value !== null));
+  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
   const affix = $derived(clearable || loading !== undefined || validation);
   const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
   const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
-
-  let labelHeight = $state<string>();
-  let labelWidth = $state<string>();
 
   let first = $state(true);
   // Skip enter transition on first render for floating label
@@ -202,6 +200,10 @@
     first = false;
   };
 
+  let labelHeight = $state<string>();
+  let labelWidth = $state<string>();
+  let prefixWidth = $state<string>();
+
   $effect(() => {
     if (first) waitForTick();
     if (!labelRef) return;
@@ -209,6 +211,7 @@
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
     if (position !== NeoInputLabelPosition.Left && position !== NeoInputLabelPosition.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
+    prefixWidth = `${prefixRef?.clientWidth ?? 0}px`;
   });
 
   const errorMessage = $derived.by(() => {
@@ -259,7 +262,7 @@
 
 {#snippet before()}
   {#if prefix}
-    <svelte:element this={prefixTag} class:neo-input-prefix={true} {disabled} {readonly} {...prefixProps}>
+    <svelte:element this={prefixTag} bind:this={prefixRef} class:neo-input-prefix={true} {disabled} {readonly} {...prefixProps}>
       {@render prefix(context)}
     </svelte:element>
   {/if}
@@ -347,6 +350,7 @@
     style:--neo-input-hover-shadow={hoverShadow}
     style:--neo-input-label-height={labelHeight}
     style:--neo-input-label-width={labelWidth}
+    style:--neo-input-prefix-width={prefixWidth}
     out:outFn={outProps}
     in:inFn={inProps}
     onmouseenter={onMouseEnter}
@@ -362,6 +366,7 @@
           class:neo-input-label={true}
           class:first
           class:prefix
+          class:suffix
           class:rounded
           class:required={rest.required}
           {...labelProps}
@@ -446,6 +451,7 @@
     &-suffix,
     &-affix {
       align-items: center;
+      min-width: max-content;
     }
 
     &-prefix {
@@ -609,6 +615,14 @@
         right 0.3s ease,
         translate 0.3s ease;
 
+      &.prefix {
+        padding-left: 0;
+      }
+
+      &.suffix {
+        padding-right: 0;
+      }
+
       &.first {
         transition: none;
       }
@@ -721,6 +735,14 @@
 
         .neo-input-label {
           padding: 0 1rem;
+
+          &.prefix {
+            padding-left: 0;
+          }
+
+          &.suffix {
+            padding-right: 0;
+          }
         }
       }
     }
@@ -745,6 +767,14 @@
         position: absolute;
         top: calc(50% - var(--neo-input-label-height) / 2);
         left: calc(0% - var(--neo-input-margin-left));
+
+        &.prefix {
+          left: calc(0% - var(--neo-input-margin-left) - 0.75rem);
+
+          &.rounded {
+            left: calc(0% - var(--neo-input-margin-left) - 0.5rem);
+          }
+        }
       }
     }
 
@@ -757,12 +787,24 @@
         position: absolute;
         top: calc(50% - var(--neo-input-label-height) / 2);
         right: calc(0% - var(--neo-input-margin-right));
+
+        &.prefix {
+          right: calc(0% - var(--neo-input-margin-right) - 1rem);
+
+          &.rounded {
+            right: calc(0% - var(--neo-input-margin-right) - 0.75rem);
+          }
+        }
       }
     }
 
     &[data-position='inside'] .neo-input-label-container {
       .neo-input {
         padding: 0 1rem 0.5rem;
+
+        &.prefix {
+          padding-left: 0;
+        }
 
         &.suffix {
           padding-right: 0;
@@ -774,7 +816,7 @@
         line-height: var(--neo-line-height-xs, 1rem);
 
         &.prefix {
-          padding-left: 0.15rem;
+          padding-left: 0;
         }
       }
 
@@ -790,11 +832,11 @@
     }
 
     &[data-position='left'] .neo-input-label-container.floating .neo-input-label {
-      left: 0.5rem;
+      left: calc(0.25rem + var(--neo-input-prefix-width));
     }
 
     &[data-position='right'] .neo-input-label-container.floating .neo-input-label {
-      right: calc(100% - var(--neo-input-label-width) - 0.5rem);
+      right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-prefix-width));
     }
 
     &.glass {

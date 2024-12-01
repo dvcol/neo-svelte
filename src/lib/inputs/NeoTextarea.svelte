@@ -383,7 +383,16 @@
   >
     {#if label}
       <div class="neo-textarea-label-container" class:floating={isFloating} role="none" onclick={focus}>
-        <label bind:this={labelRef} for={id} class:neo-textarea-label={true} class:first class:rounded class:required={rest.required} {...labelProps}>
+        <label
+          bind:this={labelRef}
+          for={id}
+          class:neo-textarea-label={true}
+          class:affix={affix || suffix}
+          class:first
+          class:rounded
+          class:required={rest.required}
+          {...labelProps}
+        >
           {#if typeof label === 'string'}
             {label}
           {:else}
@@ -590,7 +599,7 @@
       display: inline-flex;
       box-sizing: border-box;
       min-height: var(--neo-textarea-label-height);
-      padding: 0 0.75rem;
+      padding: 0 1rem;
       overflow: hidden;
       color: var(--neo-textarea-label-color, inherit);
       text-wrap: stable;
@@ -608,6 +617,10 @@
 
       &.first {
         transition: none;
+      }
+
+      &.affix {
+        padding-right: 3.25rem; // 2.5rem + 0.75rem
       }
 
       &.required::after {
@@ -710,6 +723,10 @@
 
         .neo-textarea-label {
           padding: 0 1rem;
+
+          &.affix {
+            padding-right: 3.5rem; // 2.5rem + 1rem
+          }
         }
       }
     }
@@ -734,6 +751,14 @@
         position: absolute;
         top: 0.75rem;
         left: calc(0% - var(--neo-textarea-margin-left));
+      }
+
+      .neo-textarea-label-container:not(.floating) .neo-textarea-label.affix {
+        left: calc(2.5rem - var(--neo-textarea-margin-left));
+
+        &.rounded {
+          left: calc(2.75rem - var(--neo-textarea-margin-left));
+        }
       }
     }
 
@@ -771,11 +796,19 @@
     }
 
     &[data-position='left'] .neo-textarea-label-container.floating .neo-textarea-label {
-      left: 0.5rem;
+      left: 0;
+
+      &.rounded {
+        left: 1rem;
+      }
     }
 
     &[data-position='right'] .neo-textarea-label-container.floating .neo-textarea-label {
-      right: calc(100% - var(--neo-textarea-label-width) - 0.5rem);
+      right: calc(100% - var(--neo-textarea-label-width));
+
+      &.rounded {
+        right: calc(100% - var(--neo-textarea-label-width) - 1rem);
+      }
     }
 
     &.glass {
