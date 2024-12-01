@@ -125,13 +125,13 @@
     this={containerTag}
     bind:this={ref}
     class:neo-tabs={true}
-    class:inset={(rest?.elevation ?? 0) < 0}
-    class:add
-    class:line
-    class:slide
-    class:translate
-    class:vertical={rest.vertical}
-    class:rounded={rest.rounded}
+    class:neo-inset={(rest?.elevation ?? 0) < 0}
+    class:neo-add={add}
+    class:neo-line={line}
+    class:neo-slide={slide}
+    class:neo-translate={translate}
+    class:neo-vertical={rest.vertical}
+    class:neo-rounded={rest.rounded}
     style:--neo-tabs-slide-box-shadow={slideShadow}
     {...containerProps}
     use:useFn={useProps}
@@ -170,7 +170,7 @@
       min-width: 1rem;
     }
 
-    &.vertical {
+    &.neo-vertical {
       :global(.neo-tab) {
         position: relative;
         width: 100%;
@@ -181,24 +181,24 @@
         justify-content: flex-start;
       }
 
-      :global(.neo-tab-close .icon-close) {
+      :global(.neo-tab-close .neo-icon-close) {
         position: absolute;
         top: calc(50% - 0.5rem);
       }
 
-      :global(.neo-tab-close:not(.reverse) .icon-close) {
+      :global(.neo-tab-close:not(.neo-reverse) .neo-icon-close) {
         right: 0.75rem;
       }
 
-      :global(.neo-tab-close.reverse .icon-close) {
+      :global(.neo-tab-close.neo-reverse .neo-icon-close) {
         left: 0.75rem;
       }
 
-      &.add :global(.neo-button-group) {
+      &.neo-add :global(.neo-button-group) {
         padding-bottom: 0.5rem;
       }
 
-      &.line {
+      &.neo-line {
         :global(.neo-tab::before) {
           --neo-tab-width: 2px;
           --neo-tab-old-width: 2px;
@@ -217,17 +217,17 @@
           margin-block: 0.5rem;
         }
 
-        :global(.neo-tab.active::before) {
+        :global(.neo-tab.neo-active::before) {
           height: var(--neo-tab-height, 100%);
         }
       }
     }
 
-    &.add:not(.vertical) :global(.neo-button-group) {
+    &.neo-add:not(.neo-vertical) :global(.neo-button-group) {
       padding-right: 0.5rem;
     }
 
-    &.slide {
+    &.neo-slide {
       --neo-tab-width: 100%;
       --neo-tab-height: 100%;
 
@@ -265,14 +265,14 @@
         pointer-events: none;
       }
 
-      &.line :global(.neo-tab.active::before) {
+      &.neo-line :global(.neo-tab.neo-active::before) {
         top: unset;
         bottom: 0;
         background-color: var(--neo-color-primary, var(--neo-text-color));
         box-shadow: var(--neo-box-shadow-flat);
       }
 
-      &.line:not(.vertical) {
+      &.neo-line:not(.neo-vertical) {
         :global(.neo-tab::before) {
           --neo-tab-height: 2px;
           --neo-tab-old-height: 2px;
@@ -289,16 +289,16 @@
           margin-inline: 0.75rem;
         }
 
-        :global(.neo-tab.active::before) {
+        :global(.neo-tab.neo-active::before) {
           width: var(--neo-tab-width, 100%);
         }
       }
 
-      :global(.neo-tab.active::before) {
+      :global(.neo-tab.neo-active::before) {
         box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
       }
 
-      &.translate :global(.neo-tab.active::before) {
+      &.neo-translate :global(.neo-tab.neo-active::before) {
         animation: slide 0.6s var(--neo-transition-bezier) forwards;
       }
 
