@@ -56,7 +56,7 @@
   {#if showSource}
     <NeoButton aria-label="Cycle light source origin" title="Cycle light source origin" checked onclick={onCycleSource} {...sourceProps}>
       {#snippet icon()}
-        <span class="source-icon" style:--neo-source-rotate={`${angle}deg`}>
+        <span class="neo-source-icon" style:--neo-source-rotate={`${angle}deg`}>
           <IconSunrise />
         </span>
       {/snippet}
@@ -111,7 +111,7 @@
 </NeoButtonGroup>
 
 <style lang="scss">
-  .source-icon {
+  .neo-source-icon {
     overflow: hidden;
     border-radius: var(--neo-theme-selector-border-radius, var(--neo-border-radius-lg));
     rotate: var(--neo-source-rotate, 0);
