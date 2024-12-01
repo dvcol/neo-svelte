@@ -43,14 +43,14 @@
 <NeoSkeletonContainer {loading} in={inAction} out={outAction} {width} {height} {containerProps} {content}>
   <div class:neo-skeleton-text={true} style:width style:height in:inFn={inProps} out:outFn={outProps} {...rest}>
     {#if title}
-      <div class:neo-skeleton-text-line={true} class:title class:alt {...titleProps}>&nbsp;</div>
+      <div class:neo-skeleton-text-line={true} class:neo-title={title} class:neo-alt={alt} {...titleProps}>&nbsp;</div>
     {/if}
 
     {#if paragraphs && lines}
       {#each Array(Number(paragraphs)) as _}
-        <div class:neo-skeleton-text-paragraph={true} class:alt class:justify {...paragraphProps}>
+        <div class:neo-skeleton-text-paragraph={true} class:neo-alt={alt} class:neo-justify={justify} {...paragraphProps}>
           {#each Array(Number(lines)) as __}
-            <div class="neo-skeleton-text-line" class:alt>&nbsp;</div>
+            <div class="neo-skeleton-text-line" class:neo-alt={alt}>&nbsp;</div>
           {/each}
         </div>
       {/each}
@@ -108,7 +108,7 @@
       width: 100%;
     }
 
-    &.alt {
+    &.neo-alt {
       width: 20%;
 
       &:nth-child(even) {
@@ -133,7 +133,7 @@
       }
     }
 
-    &.title {
+    &.neo-title {
       width: 70%;
       height: var(--neo-line-height, 1.5rem);
     }
@@ -145,11 +145,11 @@
     flex-direction: column;
     gap: var(--neo-skeleton-paragraph-gap, var(--neo-gap-xs));
 
-    &.alt {
+    &.neo-alt {
       flex-flow: row wrap;
     }
 
-    &.justify {
+    &.neo-justify {
       .neo-skeleton-text-line {
         flex: 1 1 auto;
       }

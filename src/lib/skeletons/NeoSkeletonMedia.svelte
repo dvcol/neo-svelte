@@ -58,8 +58,8 @@
 <NeoSkeletonContainer {loading} in={inAction} out={outAction} {width} {height} {containerProps} {content}>
   <div
     class:neo-skeleton-media={true}
-    class:rounded
-    class:circle
+    class:neo-rounded={rounded}
+    class:neo-circle={circle}
     style:aspect-ratio={ratio}
     style:width
     style:height
@@ -91,11 +91,11 @@
 
     @include mixin.skeleton;
 
-    &.rounded {
+    &.neo-rounded {
       border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-lg));
     }
 
-    &.circle {
+    &.neo-circle {
       border-radius: 50%;
       aspect-ratio: 1 / 1;
     }
