@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
+
   import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
@@ -11,6 +13,7 @@
   import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoPassword from '~/inputs/NeoPassword.svelte';
+  import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
@@ -26,7 +29,24 @@
     touched = $state(false);
     dirty = $state(false);
     valid = $state(undefined);
-    value = $state('');
+    value = $state<string | number>('');
+
+    constructor({
+      touched = false,
+      dirty = false,
+      valid = undefined,
+      value = '',
+    }: {
+      touched?: boolean;
+      dirty?: boolean;
+      valid?: boolean;
+      value?: string | number;
+    } = {}) {
+      this.touched = touched;
+      this.dirty = dirty;
+      this.valid = valid;
+      this.value = value;
+    }
 
     clear() {
       this.touched = false;
@@ -64,10 +84,21 @@
   const invalidState = new ValidationState();
   const customState = new ValidationState();
 
+  const numberState = new ValidationState({ value: 0 });
+
+  const pinState = new ValidationState();
+  const pinStateSeparator = new ValidationState();
+  const pinPasswordState = new ValidationState();
+
   const onClear = () => {
     validation.clear();
     validState.clear();
     invalidState.clear();
+    customState.clear();
+
+    pinState.clear();
+    pinStateSeparator.clear();
+    pinPasswordState.clear();
   };
 
   const onclick = (e: MouseEvent) => console.info('suffix click', e);
@@ -329,11 +360,14 @@
   {/if}
 {/snippet}
 
-{#snippet validationState({ touched, dirty, valid }: ValidationState)}
+{#snippet validationState({ touched, dirty, valid, value }: ValidationState, show = false)}
   <div class="row">
     <div class="label">Touched: {touched}</div>
     <div class="label">Dirty: {dirty}</div>
     <div class="label">Valid: {valid}</div>
+    {#if show}
+      <div class="label">Value: {value}</div>
+    {/if}
   </div>
 {/snippet}
 
@@ -348,54 +382,153 @@
       </div>
     {/each}
   </div>
-
-  <div class="row">
-    {#each validationColumns as column}
-      <div class="column content">
-        <span class="label">{column.label}</span>
-        {@render validationState(column.state)}
-        {@render group(column)}
-      </div>
-    {/each}
-  </div>
-
-  <div class="row">
-    <div class="column content">
-      <span class="label">Password</span>
-      {#if options.glass}
-        <SphereBackdrop>
-          <NeoPassword label="Password" auto-complete="current-password" {...options} />
-        </SphereBackdrop>
-      {:else}
-        <NeoPassword label="Password" auto-complete="current-password" {...options} />
-      {/if}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="column content">
-      <span class="label">Number</span>
-      {#if options.glass}
-        <SphereBackdrop>
-          <NeoNumberStep {...options} />
-        </SphereBackdrop>
-      {:else}
-        <NeoNumberStep {...options} />
-      {/if}
-    </div>
-
-    <div class="column content">
-      <span class="label">Min Max</span>
-      {#if options.glass}
-        <SphereBackdrop>
-          <NeoNumberStep min="-5" max="5" {...options} />
-        </SphereBackdrop>
-      {:else}
-        <NeoNumberStep min="-5" max="5" {...options} />
-      {/if}
-    </div>
-  </div>
 </form>
+
+<!--  Password  -->
+<div class="row">
+  {#each validationColumns as column}
+    <div class="column content">
+      <span class="label">{column.label}</span>
+      {@render validationState(column.state)}
+      {@render group(column)}
+    </div>
+  {/each}
+</div>
+
+<div class="row">
+  <div class="column content">
+    <span class="label">Password</span>
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoPassword label="Password" autocomplete="current-password" {...options} />
+      </SphereBackdrop>
+    {:else}
+      <NeoPassword in={fade} label="Password" autocomplete="current-password" {...options} />
+    {/if}
+  </div>
+</div>
+
+<!-- Number inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Number</span>
+    {@render validationState(numberState)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoNumberStep
+          bind:touched={numberState.touched}
+          bind:dirty={numberState.dirty}
+          bind:valid={numberState.valid}
+          bind:value={numberState.value}
+          {...options}
+        />
+      </SphereBackdrop>
+    {:else}
+      <NeoNumberStep
+        bind:touched={numberState.touched}
+        bind:dirty={numberState.dirty}
+        bind:valid={numberState.valid}
+        bind:value={numberState.value}
+        {...options}
+      />
+    {/if}
+  </div>
+
+  <div class="column content">
+    <span class="label">Min Max</span>
+    {@render validationState(numberState)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoNumberStep
+          bind:touched={numberState.touched}
+          bind:dirty={numberState.dirty}
+          bind:valid={numberState.valid}
+          bind:value={numberState.value}
+          min="-5"
+          max="5"
+          {...options}
+        />
+      </SphereBackdrop>
+    {:else}
+      <NeoNumberStep
+        bind:touched={numberState.touched}
+        bind:dirty={numberState.dirty}
+        bind:valid={numberState.valid}
+        bind:value={numberState.value}
+        min="-5"
+        max="5"
+        {...options}
+      />
+    {/if}
+  </div>
+</div>
+
+<!-- Number inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Pin</span>
+    {@render validationState(pinState, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoPin bind:touched={pinState.touched} bind:dirty={pinState.dirty} bind:valid={pinState.valid} bind:value={pinState.value} {...options} />
+      </SphereBackdrop>
+    {:else}
+      <NeoPin bind:touched={pinState.touched} bind:dirty={pinState.dirty} bind:valid={pinState.valid} bind:value={pinState.value} {...options} />
+    {/if}
+  </div>
+
+  <div class="column content">
+    <span class="label">Pin Groups</span>
+    {@render validationState(pinStateSeparator, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoPin
+          groups={2}
+          bind:touched={pinStateSeparator.touched}
+          bind:dirty={pinStateSeparator.dirty}
+          bind:valid={pinStateSeparator.valid}
+          bind:value={pinStateSeparator.value}
+          {...options}
+        />
+      </SphereBackdrop>
+    {:else}
+      <NeoPin
+        groups={2}
+        bind:touched={pinStateSeparator.touched}
+        bind:dirty={pinStateSeparator.dirty}
+        bind:valid={pinStateSeparator.valid}
+        bind:value={pinStateSeparator.value}
+        {...options}
+      />
+    {/if}
+  </div>
+
+  <div class="column content">
+    <span class="label">Pin Password</span>
+    {@render validationState(pinPasswordState, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoPin
+          bind:touched={pinPasswordState.touched}
+          bind:dirty={pinPasswordState.dirty}
+          bind:valid={pinPasswordState.valid}
+          bind:value={pinPasswordState.value}
+          type="password"
+          {...options}
+        />
+      </SphereBackdrop>
+    {:else}
+      <NeoPin
+        bind:touched={pinPasswordState.touched}
+        bind:dirty={pinPasswordState.dirty}
+        bind:valid={pinPasswordState.valid}
+        bind:value={pinPasswordState.value}
+        type="password"
+        {...options}
+      />
+    {/if}
+  </div>
+</div>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
@@ -417,6 +550,17 @@
     &.content {
       flex: 1 0 20%;
       max-width: 25%;
+
+      :global(.neo-pin-container) {
+        container-type: inline-size;
+        width: 100%;
+      }
+
+      :global(.neo-pin-separator) {
+        @container (width > 500px) {
+          width: 100%;
+        }
+      }
     }
   }
 

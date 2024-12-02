@@ -8,6 +8,7 @@ Neomorphic ui library for svelte 5
 - [x] Card
 - [x] Inputs
   - [x] Password
+  - [ ] Pin
   - [ ] Color picker
 - [x] Text Area
   - [ ] @ / # tags
@@ -91,4 +92,3 @@ Neomorphic ui library for svelte 5
 
 # TODO (work in progress)
 
-- Re-name all modifier to be prefixed with `neo-` to avoid conflicts with other libraries
