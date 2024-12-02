@@ -14,7 +14,7 @@
   let {
     // State
     ref = $bindable(),
-    value = $bindable(''),
+    value = $bindable(0),
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
@@ -87,6 +87,10 @@
     text,
     style,
     ...rest?.buttonProps,
+    onblur: (e: FocusEvent & { currentTarget: EventTarget & any }) => {
+      ref?.validate?.();
+      rest?.buttonProps?.onblur?.(e);
+    },
   });
 
   const affix = $derived(rest.clearable || rest.loading !== undefined || rest.validation);
@@ -127,18 +131,16 @@
 
 <style lang="scss">
   .neo-number-step {
-    :global(.neo-input) {
+    :global(.neo-input[type='number']) {
+      /* Hide arrows -Firefox */
+      appearance: textfield;
+
       /* Hide arrows - Chrome, Safari, Edge, Opera */
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
         margin: 0;
         appearance: none;
       }
-    }
-
-    /* Hide arrows -Firefox */
-    :global(.neo-input[type='number']) {
-      appearance: textfield;
     }
 
     &:not(.neo-label) {

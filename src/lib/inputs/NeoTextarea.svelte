@@ -14,6 +14,7 @@
     NeoInputLabelPosition,
     type NeoInputMethods,
     type NeoInputState,
+    type NeoTextareaHTMLElement,
     type NeoTextareaProps,
   } from '~/inputs/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -37,7 +38,7 @@
     // States
     id = label ? `neo-textarea-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
-    value = $bindable(''),
+    value = $bindable(undefined),
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
@@ -127,20 +128,22 @@
     onblur?.(e);
   };
 
-  const checkValidity = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
+  const validate: NeoInputMethods['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
     if (update.dirty) dirty = value !== initial;
-    if (!update.valid) return;
+    if (!update.valid) return { touched, dirty, valid, value, initial };
     valid = ref?.checkValidity();
     validationMessage = ref?.validationMessage;
+    return { touched, dirty, valid, value };
   };
 
   const onInput: FormEventHandler<HTMLTextAreaElement> = e => {
-    checkValidity({ dirty: dirtyOnInput, valid: validateOnInput });
+    touched = true;
+    validate({ dirty: dirtyOnInput, valid: validateOnInput });
     oninput?.(e);
   };
 
   const onChange: FormEventHandler<HTMLTextAreaElement> = e => {
-    checkValidity();
+    validate();
     onchange?.(e);
   };
 
@@ -172,17 +175,32 @@
   /**
    * Clear the input state
    */
-  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState) => {
+  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState, event?: InputEvent) => {
     value = '';
     focus();
     if (!state) {
-      setTimeout(() => checkValidity());
-      return onclear?.({ touched, dirty, valid, value });
+      setTimeout(() => validate());
+      return onclear?.({ touched, dirty, valid, value }, event);
     }
     initial = value;
     setTimeout(() => mark({ touched: false, dirty: false, ...state }));
-    return onclear?.({ touched, dirty, valid, value });
+    return onclear?.({ touched, dirty, valid, value }, event);
   };
+
+  /**
+   * Change the value of the input
+   */
+  export const change: NeoInputMethods['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
+    if (event) ref?.dispatchEvent(event);
+    value = _value;
+    focus();
+    return validate();
+  };
+
+  $effect(() => {
+    if (!ref) return;
+    Object.assign(ref, { mark, clear, change, validate });
+  });
 
   const affix = $derived(clearable || loading !== undefined || validation);
   const close = $derived(clearable && (focused || hovered) && value?.length && !disabled && !readonly);
@@ -255,13 +273,15 @@
   const showMessage = $derived(message || errorMessage || error || validation);
   const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-textarea-message-${crypto.randomUUID()}`) : undefined);
 
-  const context = $derived<NeoInputContext<HTMLTextAreaElement>>({
+  const context = $derived<NeoInputContext<NeoTextareaHTMLElement>>({
     // Ref
     ref,
 
     // Methods
     mark,
     clear,
+    change,
+    validate,
 
     // State
     value,

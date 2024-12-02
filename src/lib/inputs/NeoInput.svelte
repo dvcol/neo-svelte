@@ -11,6 +11,7 @@
   import NeoValidation from '~/inputs/NeoValidation.svelte';
   import {
     type NeoInputContext,
+    type NeoInputHTMLElement,
     NeoInputLabelPosition,
     type NeoInputMethods,
     type NeoInputProps,
@@ -38,7 +39,7 @@
     // States
     id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
-    value = $bindable(''),
+    value = $bindable(undefined),
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
@@ -130,20 +131,23 @@
     onblur?.(e);
   };
 
-  const checkValidity = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
+  const validate: NeoInputMethods['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
     if (update.dirty) dirty = value !== initial;
-    if (!update.valid) return;
+    if (!update.valid) return { touched, dirty, valid, value, initial };
     valid = ref?.checkValidity();
     validationMessage = ref?.validationMessage;
+    return { touched, dirty, valid, value, initial };
   };
 
   const onInput: FormEventHandler<HTMLInputElement> = e => {
-    checkValidity({ dirty: dirtyOnInput, valid: validateOnInput });
+    touched = true;
+    validate({ dirty: dirtyOnInput, valid: validateOnInput });
     oninput?.(e);
+    console.info('onInput', { touched, dirty, valid, value, initial });
   };
 
   const onChange: FormEventHandler<HTMLInputElement> = e => {
-    checkValidity();
+    validate();
     onchange?.(e);
   };
 
@@ -161,10 +165,10 @@
   export const mark: NeoInputMethods['mark'] = (state: NeoInputState) => {
     if (state.touched !== undefined) touched = state.touched;
     if (state.valid !== undefined) valid = state.valid;
-    if (state.dirty === undefined) return onmark?.({ touched, dirty, valid, value });
+    if (state.dirty === undefined) return onmark?.({ touched, dirty, valid, value, initial });
     dirty = state.dirty;
     if (!dirty) initial = value;
-    return onmark?.({ touched, dirty, valid, value });
+    return onmark?.({ touched, dirty, valid, value, initial });
   };
 
   const focus = () => {
@@ -175,17 +179,33 @@
   /**
    * Clear the input state
    */
-  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState) => {
+  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState, event?: InputEvent) => {
+    if (event) ref?.dispatchEvent(event);
     value = '';
     focus();
     if (!state) {
-      setTimeout(() => checkValidity());
-      return onclear?.({ touched, dirty, valid, value });
+      setTimeout(() => validate());
+      return onclear?.({ touched, dirty, valid, value, initial }, event);
     }
     initial = value;
     setTimeout(() => mark({ touched: false, dirty: false, ...state }));
-    return onclear?.({ touched, dirty, valid, value });
+    return onclear?.({ touched, dirty, valid, value, initial }, event);
   };
+
+  /**
+   * Change the value of the input
+   */
+  export const change: NeoInputMethods['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
+    if (event) ref?.dispatchEvent(event);
+    value = _value;
+    focus();
+    return validate();
+  };
+
+  $effect(() => {
+    if (!ref) return;
+    Object.assign(ref, { mark, clear, change, validate });
+  });
 
   const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
   const affix = $derived(clearable || loading !== undefined || validation);
@@ -225,15 +245,18 @@
   const showMessage = $derived(message || errorMessage || error || validation);
   const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-input-message-${crypto.randomUUID()}`) : undefined);
 
-  const context = $derived<NeoInputContext<HTMLInputElement>>({
+  const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
     // Ref
     ref,
 
     // Methods
     mark,
     clear,
+    change,
+    validate,
 
     // State
+    initial,
     value,
     touched,
     dirty,

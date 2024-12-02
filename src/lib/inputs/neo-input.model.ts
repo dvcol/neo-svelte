@@ -29,6 +29,10 @@ export type NeoInputState = {
    * The input/textarea value.
    */
   value?: string;
+  /**
+   * The initial input/textarea value.
+   */
+  initial?: string;
 };
 
 export type NeoInputStyles = {
@@ -90,8 +94,20 @@ export type NeoInputMethods = {
    * Clear the input. If a state is provided, the input state will be updated accordingly.
    * If a partial state is provided, the input state will be reinitialized and the provided state will be merged.
    * @param state
+   * @param event
    */
-  clear: (state?: NeoInputState) => unknown;
+  clear: (state?: NeoInputState, event?: InputEvent) => unknown;
+  /**
+   * Change the input value.
+   * @param value
+   * @param event
+   */
+  change: (value: HTMLInputElement['value'], event?: InputEvent) => NeoInputState;
+  /**
+   * Check the input validity.
+   * @param update whether to check the input dirty and/or valid state.
+   */
+  validate: (update?: { dirty?: boolean; valid?: boolean }) => NeoInputState;
 };
 
 export type NeoInputElevation = ShadowElevation;
@@ -182,8 +198,9 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
   /**
    * Callback when the input is cleared.
    * @param state
+   * @param event
    */
-  onclear?: (state: NeoInputState) => unknown;
+  onclear?: (state: NeoInputState, event?: InputEvent) => unknown;
 
   // Other props
 
@@ -239,7 +256,7 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
   NeoInputStyles &
   HTMLActionProps;
 
-export type NeoInputProps<T extends HTMLInputElement = HTMLInputElement> = {
+export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
   // Snippets
 
   /**
@@ -277,7 +294,8 @@ export type NeoTextAreaResize = {
    */
   max?: number;
 };
-export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement> = {
+
+export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElement> = {
   /**
    * Automatically increments/decrements the textarea rows to fit the content.
    *
@@ -289,3 +307,6 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement
   autoResize?: boolean | NeoTextAreaResize;
 } & NeoCommonInputProps<T> &
   HTMLTextareaAttributes;
+
+export type NeoInputHTMLElement = HTMLInputElement & Partial<NeoInputMethods>;
+export type NeoTextareaHTMLElement = HTMLTextAreaElement & Partial<NeoInputMethods>;
