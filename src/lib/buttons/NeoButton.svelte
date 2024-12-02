@@ -283,26 +283,26 @@
         --neo-btn-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
-      backdrop-filter: var(--neo-blur-2) var(--neo-saturate-3);
+      backdrop-filter: var(--neo-btn-backdrop-filter, var(--neo-blur-2) var(--neo-saturate-3));
 
       &:focus-visible {
-        background-color: var(--neo-glass-background-color-focus);
-        backdrop-filter: var(--neo-blur-1) var(--neo-saturate-3);
+        background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color-focus));
+        backdrop-filter: var(--neo-btn-backdrop-filter-focus, var(--neo-blur-1) var(--neo-saturate-3));
       }
 
       &:hover {
-        background-color: var(--neo-glass-background-color-hover);
-        backdrop-filter: var(--neo-blur-1) var(--neo-saturate-2);
+        background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color-hover));
+        backdrop-filter: var(--neo-btn-backdrop-filter-hover, var(--neo-blur-1) var(--neo-saturate-2));
       }
 
       &.neo-pressed,
       &:active:not(.neo-loading) {
-        backdrop-filter: var(--neo-blur-0) var(--neo-saturate-2);
+        backdrop-filter: var(--neo-btn-backdrop-filter-active, var(--neo-blur-0) var(--neo-saturate-2));
       }
 
       &:disabled,
       &[disabled]:not([disabled='false']) {
-        backdrop-filter: var(--neo-blur-1);
+        backdrop-filter: var(--neo-btn-backdrop-filter-disabled, var(--neo-blur-1));
       }
 
       &.neo-inset {

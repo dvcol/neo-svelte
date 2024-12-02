@@ -616,6 +616,8 @@
       --neo-btn-padding: 0.5rem 0.75rem;
       --neo-btn-margin: auto;
       --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
+      --neo-btn-bg-color: transparent;
+      --neo-btn-backdrop-filter: none;
     }
 
     &.neo-inset :global(.neo-button) {
@@ -734,7 +736,7 @@
       opacity: var(--neo-input-opacity-disabled, var(--neo-opacity-disabled));
 
       &:not(.neo-borderless) {
-        border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
+        border-color: var(--neo-input-border-color-disabled, var(--neo-border-color-disabled)) !important;
       }
 
       .neo-input-label {

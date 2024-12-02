@@ -7,6 +7,7 @@
   import IconAdd from '~/icons/IconAdd.svelte';
   import IconMinus from '~/icons/IconMinus.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
+  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -19,6 +20,11 @@
     touched = $bindable(false),
     type = 'number',
     placeholder = '0',
+
+    // Transition
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
 
     // Events
     onStepUp,
@@ -84,6 +90,11 @@
   });
 
   const affix = $derived(rest.clearable || rest.loading !== undefined || rest.validation);
+
+  const inFn = $derived(toTransition(inAction ?? transitionAction));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
+  const outFn = $derived(toTransition(outAction ?? transitionAction));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
 </script>
 
 {#snippet before()}
@@ -102,7 +113,15 @@
   </NeoButton>
 {/snippet}
 
-<svelte:element this={numberTag} class:neo-number-step={true} class:neo-label={rest.label} class:neo-affix={affix} {...numberProps}>
+<svelte:element
+  this={numberTag}
+  class:neo-number-step={true}
+  class:neo-label={rest.label}
+  class:neo-affix={affix}
+  out:outFn={outProps}
+  in:inFn={inProps}
+  {...numberProps}
+>
   <NeoInput bind:ref bind:labelRef bind:beforeRef bind:value bind:valid bind:dirty bind:touched {type} {placeholder} {before} {after} {...rest} />
 </svelte:element>
 

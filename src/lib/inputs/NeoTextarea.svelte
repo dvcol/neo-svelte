@@ -691,7 +691,7 @@
       opacity: var(--neo-textarea-opacity-disabled, var(--neo-opacity-disabled));
 
       &:not(.neo-borderless) {
-        border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled)) !important;
+        border-color: var(--neo-input-border-color-disabled, var(--neo-border-color-disabled)) !important;
       }
 
       .neo-textarea-label {
