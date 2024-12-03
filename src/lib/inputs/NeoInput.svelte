@@ -1,13 +1,9 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
-  import { fade } from 'svelte/transition';
 
   import type { EventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
 
-  import IconAlert from '~/icons/IconAlert.svelte';
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
-  import IconClear from '~/icons/IconClear.svelte';
-  import IconConfirm from '~/icons/IconConfirm.svelte';
+  import NeoAffix from '~/inputs/NeoAffix.svelte';
   import NeoValidation from '~/inputs/NeoValidation.svelte';
   import {
     type NeoInputContext,
@@ -25,7 +21,6 @@
     DefaultShadowElevation,
     isShadowFlat,
   } from '~/utils/shadow.utils.js';
-  import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -304,25 +299,14 @@
 {#snippet suffix()}
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
-    <span class="neo-input-affix" class:neo-after={after} role="none" onclick={focus}>
-      {#if loading}
-        <span class="neo-input-loading" out:fade={enterDefaultTransition}>
-          <IconCircleLoading width="1.25rem" height="1.25rem" />
-        </span>
-      {:else if close}
-        <button class="neo-input-clear" aria-label="clear" in:fade out:fade={enterDefaultTransition} onclick={() => clear()}>
-          <IconClear />
-        </button>
-      {:else}
-        <span class="neo-input-affix-validation" in:fade={leaveDefaultTransition}>
-          {#if validation && valid === false}
-            <IconAlert width="1.25rem" height="1.25rem" />
-          {:else if validation && valid === true && touched}
-            <IconConfirm width="1.25rem" height="1.25rem" />
-          {/if}
-        </span>
-      {/if}
-    </span>
+    <NeoAffix
+      class={after ? 'neo-after' : undefined}
+      {loading}
+      {close}
+      valid={validation ? valid : undefined}
+      closeProps={{ onclick: () => clear() }}
+      onclick={() => focus()}
+    />
   {/if}
   <!--  Suffix  -->
   {#if after}
@@ -454,9 +438,6 @@
 
   .neo-input-group,
   .neo-input,
-  .neo-input-loading,
-  .neo-input-clear,
-  .neo-input-affix,
   .neo-input-before,
   .neo-input-after {
     display: inline-flex;
@@ -490,27 +471,12 @@
     border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
     outline: none;
 
-    &-before,
-    &-after,
-    &-affix {
-      align-items: center;
-      min-width: max-content;
-    }
-
     &-before {
       color: var(--neo-input-before-color, inherit);
       background-color: var(--neo-input-before-bg-color, transparent);
       border: none;
       border-right: var(--neo-border-width, 1px) var(--neo-input-before-border-color, transparent) solid;
       border-radius: var(--neo-input-border-radius, var(--neo-border-radius)) 0 0 var(--neo-input-border-radius, var(--neo-border-radius));
-    }
-
-    &.neo-before {
-      padding-left: 0;
-    }
-
-    &.neo-after {
-      padding-right: 0;
     }
 
     &-after {
@@ -521,31 +487,62 @@
       border-radius: 0 var(--neo-input-border-radius, var(--neo-border-radius)) var(--neo-input-border-radius, var(--neo-border-radius)) 0;
     }
 
-    &-affix {
-      display: inline-grid;
-      grid-template-areas: 'affix';
-      min-width: 2.8125rem;
-      min-height: calc(var(--neo-line-height) + 1rem);
+    &-before,
+    &-after {
+      align-items: center;
+      min-width: max-content;
       padding: 0.75rem;
-      border: none;
-      border-left: var(--neo-border-width, 1px) var(--neo-input-after-border-color, transparent) solid;
 
-      > * {
-        grid-area: affix;
+      &:is(button, a) {
+        cursor: pointer;
+
+        &:focus-visible {
+          color: var(--neo-input-focus-color, var(--neo-text-color-focused));
+        }
+
+        &:hover {
+          color: var(--neo-input-hover-color, var(--neo-text-color-hover));
+        }
+
+        &:active {
+          color: var(--neo-input-active-color, var(--neo-text-color-hover-active));
+          scale: 0.9;
+        }
+
+        &:disabled {
+          color: var(--neo-text-color-disabled);
+          cursor: not-allowed;
+          scale: 1;
+        }
       }
 
-      &-validation {
-        display: inline-flex;
-        align-items: center;
-        width: 100%;
-        height: 100%;
+      &:has(:global(.neo-button:only-child)):not(.neo-inside) {
+        padding: 0 0.3rem;
       }
 
-      &.neo-after {
-        min-width: 1.75rem;
-        padding-right: 0;
-        padding-left: 0.5rem;
+      :global(.neo-button) {
+        --neo-btn-padding: 0.5rem 0.75rem;
+        --neo-btn-margin: auto;
+        --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
+        --neo-btn-bg-color: transparent;
+        --neo-btn-backdrop-filter: none;
       }
+
+      &.neo-inset :global(.neo-button) {
+        --neo-btn-margin: 0.5rem 0;
+      }
+
+      &.neo-deep :global(.neo-button) {
+        --neo-btn-margin: 0.5rem 0.25rem;
+      }
+    }
+
+    &.neo-before {
+      padding-left: 0;
+    }
+
+    &.neo-after {
+      padding-right: 0;
     }
 
     &::placeholder {
@@ -560,95 +557,6 @@
     &:disabled {
       color: var(--neo-text-color-disabled);
       cursor: not-allowed;
-    }
-  }
-
-  %neo-input-button {
-    cursor: pointer;
-
-    &:focus-visible {
-      color: var(--neo-input-focus-color, var(--neo-text-color-focused));
-    }
-
-    &:hover {
-      color: var(--neo-input-hover-color, var(--neo-text-color-hover));
-    }
-
-    &:active {
-      color: var(--neo-input-active-color, var(--neo-text-color-hover-active));
-      scale: 0.9;
-    }
-
-    &:disabled {
-      color: var(--neo-text-color-disabled);
-      cursor: not-allowed;
-      scale: 1;
-    }
-  }
-
-  .neo-input-clear {
-    @extend %neo-input-button;
-
-    align-items: center;
-    justify-content: center;
-    width: 1.25rem;
-    height: 1.25rem;
-    margin: 0;
-    padding: 0;
-    color: var(--neo-input-clear-color, inherit);
-    background-color: var(--neo-background-color-darker);
-    border: none;
-    border-radius: 50%;
-    aspect-ratio: 1;
-
-    :global(svg) {
-      width: 100%;
-      height: 100%;
-      margin: 0.05rem;
-    }
-
-    &:focus-visible {
-      color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
-      background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
-    }
-
-    &:hover {
-      color: var(--neo-color-warning, rgb(255 0 0 / 75%));
-      background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
-    }
-
-    &:disabled {
-      color: var(--neo-text-color-disabled);
-      cursor: not-allowed;
-    }
-  }
-
-  .neo-input-before,
-  .neo-input-after {
-    padding: 0.75rem;
-
-    &:is(button, a) {
-      @extend %neo-input-button;
-    }
-
-    &:has(:global(.neo-button:only-child)):not(.neo-inside) {
-      padding: 0 0.3rem;
-    }
-
-    :global(.neo-button) {
-      --neo-btn-padding: 0.5rem 0.75rem;
-      --neo-btn-margin: auto;
-      --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
-      --neo-btn-bg-color: transparent;
-      --neo-btn-backdrop-filter: none;
-    }
-
-    &.neo-inset :global(.neo-button) {
-      --neo-btn-margin: 0.5rem 0;
-    }
-
-    &.neo-deep :global(.neo-button) {
-      --neo-btn-margin: 0.5rem 0.25rem;
     }
   }
 
@@ -767,8 +675,18 @@
       }
     }
 
+    :global(.neo-affix-container.neo-after) {
+      min-width: 1.75rem;
+      padding-right: 0;
+      padding-left: 0.5rem;
+    }
+
     &.neo-rounded {
       border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
+
+      :global(.neo-affix-container:not(.neo-after)) {
+        margin-right: 0.25rem;
+      }
 
       .neo-input {
         padding: 0.75rem 1rem;
@@ -780,10 +698,6 @@
 
         &.neo-after {
           padding-right: 0;
-        }
-
-        &-affix:not(.neo-after) {
-          margin-right: 0.25rem;
         }
       }
 
@@ -906,19 +820,11 @@
       &[data-valid='false'] {
         --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
         --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
-
-        .neo-input-affix-validation {
-          color: var(--neo-input-validation-color-error, var(--neo-color-error));
-        }
       }
 
       &[data-valid='true'] {
         --neo-input-label-color: var(--neo-input-label-color-success, var(--neo-color-success));
         --neo-input-floating-label-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
-
-        .neo-input-affix-validation {
-          color: var(--neo-input-validation-color-success, var(--neo-color-success));
-        }
       }
     }
 

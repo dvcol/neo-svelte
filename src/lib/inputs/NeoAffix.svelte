@@ -10,19 +10,21 @@
   import { leaveDefaultTransition } from '~/utils/transition.utils.js';
 
   const { loading, close, valid, closeProps, ...rest }: NeoAffixProps = $props();
+
+  const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveDefaultTransition);
 </script>
 
-<span class="neo-affix-container" role="none" {...rest}>
+<span class:neo-affix-container={true} role="none" {...rest}>
   {#if loading}
-    <span class="neo-affix-loading" out:fade={leaveDefaultTransition}>
+    <span class="neo-affix-loading" out:fade={leave}>
       <IconCircleLoading width="1.25rem" height="1.25rem" />
     </span>
   {:else if close}
-    <button class="neo-affix-clear" aria-label="clear" in:fade out:fade={leaveDefaultTransition} {...closeProps}>
+    <button class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
       <IconClear />
     </button>
   {:else}
-    <span class="neo-affix-validation" data-valid={valid} in:fade={leaveDefaultTransition}>
+    <span class="neo-affix-validation" data-valid={valid} in:fade={leave}>
       {#if valid !== undefined}
         {#if valid}
           <IconAlert width="1.25rem" height="1.25rem" />
@@ -89,7 +91,8 @@
       :global(svg) {
         width: 100%;
         height: 100%;
-        margin: 0.05rem;
+        margin: -0.05rem;
+        padding: 0.05rem;
       }
 
       &:focus-visible {
