@@ -671,7 +671,7 @@
   .neo-textarea-group {
     position: relative;
     min-width: min-content;
-    margin: var(--neo-shadow-margin, 0.6rem);
+    margin: var(--neo-shadow-margin, 0.625rem);
     color: var(--neo-textarea-text-color, inherit);
     background-color: var(--neo-textarea-bg-color, inherit);
     border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;
@@ -753,7 +753,7 @@
     }
 
     &[data-position='left'] {
-      --neo-textarea-margin-left: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-textarea-label-width, auto));
+      --neo-textarea-margin-left: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
 
       margin-left: var(--neo-textarea-margin-left);
 
@@ -773,7 +773,7 @@
     }
 
     &[data-position='right'] {
-      --neo-textarea-margin-right: calc(var(--shadow-margin, 0.6rem) + var(--neo-textarea-label-width, auto));
+      --neo-textarea-margin-right: calc(var(--shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
 
       margin-right: var(--neo-textarea-margin-right);
 
@@ -794,7 +794,7 @@
       }
 
       .neo-textarea-label {
-        padding: 0.75rem 1rem 0.2rem;
+        padding: 0.75rem 1rem 0.1875rem;
         line-height: var(--neo-line-height-xs, 1rem);
       }
 
@@ -804,7 +804,7 @@
     }
 
     &[data-position='top'][data-position='top'] {
-      --neo-textarea-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-textarea-label-height, var(--neo-line-height)));
+      --neo-textarea-margin-top: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-height, var(--neo-line-height)));
 
       margin-top: var(--neo-textarea-margin-top);
 

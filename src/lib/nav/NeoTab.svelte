@@ -136,7 +136,7 @@
   }
 
   .neo-tab-close {
-    width: calc(1rem + var(--neo-tab-icon-gap, 0.3rem) + var(--neo-tab-icon-gap-offset, -0.2rem));
+    width: calc(1rem + var(--neo-tab-icon-gap, 0.3rem) + var(--neo-tab-icon-gap-offset, -0.1875rem));
     padding: 0;
     color: inherit;
     font: inherit;
@@ -151,7 +151,7 @@
     }
 
     :global(.neo-icon-close) {
-      margin-right: var(--neo-tab-icon-gap-offset, -0.2rem);
+      margin-right: var(--neo-tab-icon-gap-offset, -0.1875rem);
       margin-left: var(--neo-tab-icon-gap, 0.3rem);
       padding: 0.1rem;
       border-radius: 50%;
@@ -178,7 +178,7 @@
 
     &.neo-reverse :global(.neo-icon-close) {
       margin-right: var(--neo-tab-icon-gap, 0.3rem);
-      margin-left: var(--neo-tab-icon-gap-offset, -0.2rem);
+      margin-left: var(--neo-tab-icon-gap-offset, -0.1875rem);
     }
   }
 </style>

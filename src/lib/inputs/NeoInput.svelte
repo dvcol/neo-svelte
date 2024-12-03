@@ -717,8 +717,8 @@
   .neo-input-group {
     position: relative;
     min-width: min-content;
-    margin: var(--neo-shadow-margin, 0.6rem);
-    padding: 0 0.2rem;
+    margin: var(--neo-shadow-margin, 0.625rem);
+    padding: 0 0.1875rem;
     color: var(--neo-input-text-color, inherit);
     background-color: var(--neo-input-bg-color, inherit);
     border: var(--neo-border-width, 1px) var(--neo-input-border-color, transparent) solid;
@@ -807,7 +807,7 @@
     }
 
     &[data-position='left'] {
-      --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-width, auto));
+      --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-input-label-width, auto));
 
       margin-left: var(--neo-input-margin-left);
 
@@ -823,7 +823,7 @@
     }
 
     &[data-position='right'] {
-      --neo-input-margin-right: calc(var(--shadow-margin, 0.6rem) + var(--neo-input-label-width, auto));
+      --neo-input-margin-right: calc(var(--shadow-margin, 0.625rem) + var(--neo-input-label-width, auto));
 
       margin-right: var(--neo-input-margin-right);
 
@@ -852,7 +852,7 @@
       }
 
       .neo-input-label {
-        padding: 0.75rem 1rem 0.2rem;
+        padding: 0.75rem 1rem 0.1875rem;
         line-height: var(--neo-line-height-xs, 1rem);
 
         &.neo-before {
@@ -866,7 +866,7 @@
     }
 
     &[data-position='top'][data-position='top'] {
-      --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.6rem) + var(--neo-input-label-height, var(--neo-line-height)));
+      --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-input-label-height, var(--neo-line-height)));
 
       margin-top: var(--neo-input-margin-top);
 
