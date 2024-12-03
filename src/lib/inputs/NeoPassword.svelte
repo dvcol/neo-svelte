@@ -1,14 +1,18 @@
-<script lang="ts">
+<script lang="ts" generics="T extends boolean = false">
   import type { NeoPasswordProps } from '~/inputs/neo-password.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconWatch from '~/icons/IconWatch.svelte';
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoPin from '~/inputs/NeoPin.svelte';
   import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Styles
+    pin,
+
     // State
     ref = $bindable(),
     value = $bindable(''),
@@ -16,14 +20,13 @@
     dirty = $bindable(false),
     touched = $bindable(false),
     type = 'password',
-    placeholder = 'Enter your password',
+    placeholder = pin ? undefined : 'Enter your password',
 
     // Other props
     labelRef = $bindable(),
-    beforeRef = $bindable(),
     buttonProps,
     ...rest
-  }: NeoPasswordProps = $props();
+  }: NeoPasswordProps<T> = $props();
   /* eslint-enable prefer-const */
 
   let show = $state(false);
@@ -31,7 +34,7 @@
   const _type = $derived(show ? 'text' : type);
 
   const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
-  const text = $derived(elevation >= 0 || !rest.pressed);
+  const text = $derived(elevation >= 0 || !rest.pressed || pin);
   const style = $derived.by(() => {
     if (text) return;
     return `
@@ -53,6 +56,7 @@
     style,
     ...buttonProps,
     toggle: true,
+    class: ['neo-password-toggle', buttonProps?.class].filter(Boolean).join(' '),
   });
 </script>
 
@@ -68,4 +72,8 @@
   </NeoButton>
 {/snippet}
 
-<NeoInput bind:ref bind:labelRef bind:beforeRef bind:value bind:valid bind:dirty bind:touched type={_type} {placeholder} {after} {...rest} />
+{#if pin}
+  <NeoPin bind:ref bind:labelRef bind:value bind:valid bind:dirty bind:touched type={_type} {placeholder} {after} {...rest} />
+{:else}
+  <NeoInput bind:ref bind:labelRef bind:value bind:valid bind:dirty bind:touched type={_type} {placeholder} {after} {...rest} />
+{/if}

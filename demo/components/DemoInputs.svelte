@@ -512,7 +512,8 @@
     {@render validationState(pinPasswordState, true)}
     {#if options.glass}
       <SphereBackdrop>
-        <NeoPin
+        <NeoPassword
+          pin
           bind:touched={pinPasswordState.touched}
           bind:dirty={pinPasswordState.dirty}
           bind:valid={pinPasswordState.valid}
@@ -522,7 +523,10 @@
         />
       </SphereBackdrop>
     {:else}
-      <NeoPin
+      <NeoPassword
+        pin
+        required
+        validation
         bind:touched={pinPasswordState.touched}
         bind:dirty={pinPasswordState.dirty}
         bind:valid={pinPasswordState.valid}

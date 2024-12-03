@@ -9,6 +9,7 @@
   import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoValidation from '~/inputs/NeoValidation.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
   import { doubleBind } from '~/utils/utils.svelte.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -27,7 +28,6 @@
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
-    password, // TODO password
     loading,
     clearable,
 
@@ -63,7 +63,7 @@
     oninvalid,
 
     // Other props
-    labelRef, // TODO
+    labelRef = $bindable(), // TODO
     labelProps, // TODO
     afterProps,
     afterTag = 'div',
@@ -109,7 +109,6 @@
         _count = _j;
         return true;
       });
-      console.info(_group, _count);
     } else {
       _group = j < count - 1 ? i : i + 1;
       _count = j < count - 1 ? j + 1 : 0;
@@ -290,12 +289,6 @@
     oninvalid?.(e);
   };
 
-  const show = $state(false);
-  const inputType = $derived.by(() => {
-    if (show) return 'text';
-    return password ? 'password' : 'text';
-  });
-
   const errorMessage = $derived.by(() => {
     if (valid || valid === undefined) return;
     if (error) return error;
@@ -318,6 +311,8 @@
   const close = $derived(clearable && (focused || hovered) && hasValue && !rest.disabled && !rest.readonly);
   const showMessage = $derived(message || errorMessage || error || validation);
   const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-input-message-${crypto.randomUUID()}`) : undefined);
+
+  const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
 
   const context = $derived<NeoPinContext>({
     // Ref
@@ -350,6 +345,10 @@
     this={containerTag}
     role="none"
     class:neo-pin-container={true}
+    class:neo-deep={elevation < -3}
+    class:neo-raised={elevation > 3}
+    class:neo-pressed={rest.pressed}
+    class:neo-after={after}
     data-touched={touched}
     data-dirty={dirty}
     data-valid={valid}
@@ -372,7 +371,7 @@
         bind:this={ref}
         aria-hidden="true"
         hidden
-        type={inputType}
+        type="text"
         tabindex="-1"
         {step}
         {min}
@@ -398,8 +397,8 @@
               {step}
               {min}
               {max}
+              type="text"
               {...rest}
-              type={inputType}
               oninput={() => onInput(i, j)}
               onkeydown={e => onKeydown(e, i, j)}
               onpaste={e => onPaste(e, i, j)}
@@ -469,33 +468,6 @@
     align-items: center;
   }
 
-  .neo-pin-container {
-    margin: var(--neo-shadow-margin, 0.625rem);
-
-    :global(.neo-input) {
-      width: 2rem;
-      padding: 0.5rem;
-      text-align: center;
-    }
-
-    :global(.neo-input[type='number']) {
-      /* Hide arrows -Firefox */
-      appearance: textfield;
-
-      /* Hide arrows - Chrome, Safari, Edge, Opera */
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        margin: 0;
-        appearance: none;
-      }
-    }
-
-    :global(.neo-input-group.neo-rounded .neo-input) {
-      width: 2.25rem;
-      padding: 0.5rem;
-    }
-  }
-
   .neo-pin-group-wrapper,
   .neo-pin-group {
     flex-wrap: wrap;
@@ -518,15 +490,72 @@
     margin: var(--neo-shadow-margin);
   }
 
-  .neo-pin-after {
-    --neo-affix-padding: 0.75rem 0.75rem 0.75rem 0;
-  }
-
   .neo-vertical {
     flex-direction: column;
+  }
 
-    .neo-pin-affix {
-      margin-right: 0;
+  .neo-pin-container {
+    margin: var(--neo-shadow-margin, 0.625rem);
+
+    :global(.neo-input) {
+      width: 2.125rem;
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    :global(.neo-input[type='number']) {
+      /* Hide arrows -Firefox */
+      appearance: textfield;
+
+      /* Hide arrows - Chrome, Safari, Edge, Opera */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        margin: 0;
+        appearance: none;
+      }
+    }
+
+    :global(.neo-input-group.neo-rounded .neo-input) {
+      width: 2.25rem;
+      padding: 0.5rem;
+    }
+
+    :global(.neo-input[type='password']:not(:placeholder-shown)) {
+      -webkit-text-stroke-width: 0.1em;
+      letter-spacing: 0;
+    }
+
+    .neo-pin-after {
+      --neo-affix-padding: 0.75rem 0;
+
+      :global(.neo-password-toggle) {
+        min-width: 2.25rem;
+        min-height: 2.25rem;
+        margin: 0.125rem 0;
+      }
+    }
+
+    &.neo-raised .neo-pin-after,
+    &.neo-deep.neo-pressed .neo-pin-after {
+      --neo-affix-padding: var(--neo-shadow-margin-lg, 1.125rem) 0;
+
+      :global(.neo-password-toggle) {
+        margin: 0.625rem 0;
+      }
+    }
+
+    &.neo-deep {
+      :global(.neo-input) {
+        aspect-ratio: 1;
+      }
+    }
+
+    &.neo-after:not(.neo-vertical) .neo-pin-after {
+      gap: 1.125rem;
+    }
+
+    &.neo-raised.neo-after:not(.neo-vertical) .neo-pin-after {
+      gap: 1.5rem;
     }
   }
 </style>

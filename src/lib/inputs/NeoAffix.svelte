@@ -27,9 +27,9 @@
     <span class="neo-affix-validation" data-valid={valid} in:fade={leave}>
       {#if valid !== undefined}
         {#if valid}
-          <IconAlert width="1.25rem" height="1.25rem" />
-        {:else}
           <IconConfirm width="1.25rem" height="1.25rem" />
+        {:else}
+          <IconAlert width="1.25rem" height="1.25rem" />
         {/if}
       {/if}
     </span>

@@ -81,7 +81,6 @@
     afterProps,
     afterTag = afterProps?.onclick ? 'button' : 'span',
     beforeProps,
-    beforeRef = $bindable(),
     beforeTag = beforeProps?.onclick ? 'button' : 'span',
     containerProps,
     containerTag = 'div',
@@ -217,6 +216,8 @@
 
   let labelHeight = $state<string>();
   let labelWidth = $state<string>();
+
+  let beforeRef = $state<HTMLElement>();
   let beforeWidth = $state<string>();
 
   $effect(() => {
@@ -557,6 +558,11 @@
     &:disabled {
       color: var(--neo-text-color-disabled);
       cursor: not-allowed;
+    }
+
+    &[type='password']:not(:placeholder-shown) {
+      -webkit-text-stroke-width: 0.15em;
+      letter-spacing: 0.2em;
     }
   }
 

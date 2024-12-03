@@ -33,7 +33,6 @@
 
     // Other props
     labelRef = $bindable(),
-    beforeRef = $bindable(),
     containerTag = 'div',
     containerProps,
     ...rest
@@ -137,7 +136,7 @@
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}
 >
-  <NeoInput bind:ref bind:labelRef bind:beforeRef bind:value bind:valid bind:dirty bind:touched {type} {placeholder} {before} {after} {...rest} />
+  <NeoInput bind:ref bind:labelRef bind:value bind:valid bind:dirty bind:touched {type} {placeholder} {before} {after} {...rest} />
 </svelte:element>
 
 <style lang="scss">

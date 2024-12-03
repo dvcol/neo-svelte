@@ -252,11 +252,6 @@ export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
    * The props to pass to the prefix.
    */
   beforeProps?: HTMLNeoBaseElement;
-
-  /**
-   * The ref to bind to the prefix.
-   */
-  beforeRef?: HTMLElement;
 } & NeoCommonInputProps<T> &
   HTMLInputAttributes;
 
