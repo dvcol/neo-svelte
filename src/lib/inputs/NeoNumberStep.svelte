@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { FocusEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import type { NeoNumberStepProps } from '~/inputs/neo-number-step.model.js';
@@ -33,8 +34,8 @@
     // Other props
     labelRef = $bindable(),
     beforeRef = $bindable(),
-    numberTag = 'div',
-    numberProps,
+    containerTag = 'div',
+    containerProps,
     ...rest
   }: NeoNumberStepProps = $props();
   /* eslint-enable prefer-const */
@@ -87,11 +88,19 @@
     text,
     style,
     ...rest?.buttonProps,
-    onblur: (e: FocusEvent & { currentTarget: EventTarget & any }) => {
-      ref?.validate?.();
-      rest?.buttonProps?.onblur?.(e);
-    },
   });
+
+  let timeout: ReturnType<typeof setTimeout>;
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    clearTimeout(timeout);
+    containerProps?.onfocusin?.(e);
+  };
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    timeout = setTimeout(() => {
+      ref?.validate?.();
+      containerProps?.onfocusout?.(e);
+    }, 0);
+  };
 
   const affix = $derived(rest.clearable || rest.loading !== undefined || rest.validation);
 
@@ -118,13 +127,15 @@
 {/snippet}
 
 <svelte:element
-  this={numberTag}
+  this={containerTag}
   class:neo-number-step={true}
   class:neo-label={rest.label}
   class:neo-affix={affix}
   out:outFn={outProps}
   in:inFn={inProps}
-  {...numberProps}
+  {...containerProps}
+  onfocusin={onFocusIn}
+  onfocusout={onFocusOut}
 >
   <NeoInput bind:ref bind:labelRef bind:beforeRef bind:value bind:valid bind:dirty bind:touched {type} {placeholder} {before} {after} {...rest} />
 </svelte:element>
