@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { type Snippet } from 'svelte';
+  import type { EventHandler, FocusEventHandler } from 'svelte/elements';
+  import type { NeoInputHTMLElement } from '~/inputs/neo-input.model.js';
 
-  import type { NeoInputHTMLElement, NeoInputProps } from '~/inputs/neo-input.model.js';
+  import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
 
   import IconMinus from '~/icons/IconMinus.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoValidation from '~/inputs/NeoValidation.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { doubleBind } from '~/utils/utils.svelte.js';
 
@@ -12,23 +14,21 @@
   let {
     // Snippets
     label, // Todo
-    before, // Todo
     after, // Todo
-    message, // Todo
-    error, // Todo
+    message,
+    error,
     icon,
 
     // State
-    ref = $bindable(), // Todo
-    value = $bindable(''), // Todo override inner value
-    valid = $bindable(undefined), // Todo Validation
-    dirty = $bindable(false), // Todo Validation
-    touched = $bindable(false), // Todo Validation
-    loading,
+    ref = $bindable(),
+    value = $bindable(''),
+    valid = $bindable(undefined),
+    dirty = $bindable(false),
+    touched = $bindable(false),
+    copy, // TODO copy
+    password, // TODO password
+    loading, // TODO loading
     clearable, // TODO extra button
-    dirtyOnInput, // Todo Validation
-    validateOnInput, // Todo Validation
-    position,
 
     // Validation
     step = 1,
@@ -38,14 +38,14 @@
     pattern,
     minlength = 6,
     maxlength,
+    dirtyOnInput,
+    validateOnInput,
 
     // Styles
     groups = 1,
     count = 4,
     separator,
-
-    validation, // Todo Validation
-    floating, // TODO label
+    validation,
 
     // Transition
     in: inAction,
@@ -55,31 +55,24 @@
     // Actions
     use,
 
-    // Events // Todo
+    // Events
     oninput,
-    onfocus,
-    onblur,
-    onmark,
-    onclear,
     onchange,
     oninvalid,
 
     // Other props
-    labelRef,
-    labelProps,
-    afterProps,
-    afterTag,
-    beforeProps,
-    beforeRef,
-    beforeTag,
+    labelRef, // TODO
+    labelProps, // TODO
+    afterProps, // TODO
+    afterTag, // TODO
     containerProps,
-    containerTag,
+    containerTag = 'div',
     wrapperProps,
     wrapperTag,
     messageProps,
     messageTag,
     ...rest
-  }: { groups?: number; count?: number; separator?: boolean | string; icon?: Snippet } & NeoInputProps = $props();
+  }: NeoPinProps = $props();
   /* eslint-enable prefer-const */
 
   const refs = $state<NeoInputHTMLElement[][]>(Array(Number(groups)).fill([]));
@@ -87,11 +80,15 @@
   const touches = $state<boolean[][]>(Array(Number(groups)).fill(Array(Number(count)).fill(false)));
   const dirtiness = $state<boolean[][]>(Array(Number(groups)).fill(Array(Number(count)).fill(false)));
 
-  // TODO - clearable
-  // TODO - loading
-  // TODO - copy
+  const initial = $state(value);
+  let validationMessage: string | undefined = $state(ref?.validationMessage);
 
-  // TODO - password
+  const validate = () => {
+    dirty = value !== initial;
+    valid = ref?.checkValidity();
+    validationMessage = ref?.validationMessage;
+    return { touched, dirty, valid, value, initial };
+  };
 
   const focus = (i: number, j: number, options: { previous?: boolean; select?: boolean } = {}) => {
     let _group: number;
@@ -205,6 +202,16 @@
     inner: () => mergedValues,
     output: () => {
       value = mergedValues;
+
+      if (validateOnInput) validate();
+
+      const event: InputEvent & { currentTarget: any } = new InputEvent('input', {
+        bubbles: true,
+        cancelable: false,
+        data: value,
+        inputType: 'insertText',
+      });
+      oninput?.(event);
     },
   });
 
@@ -230,8 +237,72 @@
     },
     inner: () => mergedDirty,
     output: () => {
+      if (!dirtyOnInput) return;
       dirty = mergedDirty;
     },
+  });
+
+  let changed = value;
+  let timeout: ReturnType<typeof setTimeout>;
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    clearTimeout(timeout);
+    containerProps?.onfocusin?.(e);
+  };
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    timeout = setTimeout(() => {
+      containerProps?.onfocusout?.(e);
+
+      if (changed === value) return;
+      validate();
+      dirty = mergedDirty;
+
+      const event: InputEvent & { currentTarget: any } = new InputEvent('change', {
+        bubbles: true,
+        cancelable: false,
+        data: value,
+        inputType: 'insertText',
+      });
+      onchange?.(event);
+      changed = value;
+    }, 0);
+  };
+
+  const onInvalid: EventHandler<Event, HTMLInputElement> = e => {
+    valid = false;
+    validationMessage = ref?.validationMessage;
+    e.preventDefault();
+    oninvalid?.(e);
+  };
+
+  const show = $state(false);
+  const inputType = $derived.by(() => {
+    if (show) return 'text';
+    return password ? 'password' : 'text';
+  });
+
+  const errorMessage = $derived.by(() => {
+    if (valid || valid === undefined) return;
+    if (error) return error;
+    if (!validation) return;
+    return error ?? validationMessage;
+  });
+
+  const showMessage = $derived(message || errorMessage || error || validation);
+  const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-input-message-${crypto.randomUUID()}`) : undefined);
+
+  const context = $derived<NeoPinContext>({
+    // Ref
+    ref,
+
+    // State
+    initial,
+    value,
+    touched,
+    dirty,
+    valid,
+
+    // Methods
+    clear,
   });
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
@@ -243,51 +314,93 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-<div
-  class="neo-pin-container"
-  data-touched={touched}
-  data-dirty={dirty}
-  data-valid={valid}
-  use:useFn={useProps}
-  out:outFn={outProps}
-  in:inFn={inProps}
->
-  <input aria-hidden="true" type="hidden" tabindex="-1" {step} {min} {max} {required} {minlength} {maxlength} {pattern} bind:value />
-  {#each Array(Number(groups)) as _, i}
-    <div class="neo-pin-group">
-      {#each Array(Number(count)) as __, j}
-        <NeoInput
-          bind:ref={refs[i][j]}
-          bind:value={values[i][j]}
-          bind:dirty={dirtiness[i][j]}
-          bind:touched={touches[i][j]}
-          size={1}
-          maxlength={1}
-          minlength={1}
-          {step}
-          {min}
-          {max}
-          {...rest}
-          type="text"
-          oninput={() => onInput(i, j)}
-          onkeydown={e => onKeydown(e, i, j)}
-          onpaste={e => onPaste(e, i, j)}
-        />
-      {/each}
-    </div>
-    {#if i < groups - 1}
-      <div class="neo-pin-separator">
-        {#if icon}
-          {@render icon()}
-        {:else if typeof separator === 'string'}
-          {separator}
-        {:else}
-          <IconMinus />
-        {/if}
+{#snippet group()}
+  <svelte:element
+    this={containerTag}
+    class:neo-pin-container={true}
+    data-touched={touched}
+    data-dirty={dirty}
+    data-valid={valid}
+    use:useFn={useProps}
+    out:outFn={outProps}
+    in:inFn={inProps}
+    {...containerProps}
+    onfocusin={onFocusIn}
+    onfocusout={onFocusOut}
+  >
+    <input
+      bind:this={ref}
+      aria-hidden="true"
+      hidden
+      type={inputType}
+      tabindex="-1"
+      {step}
+      {min}
+      {max}
+      {required}
+      {minlength}
+      {maxlength}
+      {pattern}
+      bind:value
+      oninvalid={onInvalid}
+    />
+    {#each Array(Number(groups)) as _, i}
+      <div class="neo-pin-group">
+        {#each Array(Number(count)) as __, j}
+          <NeoInput
+            bind:ref={refs[i][j]}
+            bind:value={values[i][j]}
+            bind:dirty={dirtiness[i][j]}
+            bind:touched={touches[i][j]}
+            size={1}
+            maxlength={1}
+            minlength={1}
+            {step}
+            {min}
+            {max}
+            {...rest}
+            type={inputType}
+            oninput={() => onInput(i, j)}
+            onkeydown={e => onKeydown(e, i, j)}
+            onpaste={e => onPaste(e, i, j)}
+          />
+        {/each}
       </div>
-    {/if}
-  {/each}
-</div>
+      {#if i < groups - 1}
+        <div class="neo-pin-separator">
+          {#if icon}
+            {@render icon()}
+          {:else if typeof separator === 'string'}
+            {separator}
+          {:else}
+            <IconMinus />
+          {/if}
+        </div>
+      {/if}
+    {/each}
+  </svelte:element>
+{/snippet}
+
+{#if showMessage}
+  <NeoValidation
+    tag={wrapperTag}
+    error={errorMessage}
+    rounded={rest.rounded}
+    {context}
+    {message}
+    {messageId}
+    {messageTag}
+    {messageProps}
+    in={inAction}
+    out={outAction}
+    transition={transitionAction}
+    {...wrapperProps}
+  >
+    {@render group()}
+  </NeoValidation>
+{:else}
+  {@render group()}
+{/if}
 
 <style lang="scss">
   .neo-pin-container,
@@ -296,10 +409,11 @@
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
   }
 
   .neo-pin-container {
+    margin: var(--neo-shadow-margin, 0.6rem);
+
     :global(.neo-input) {
       width: 2rem;
       padding: 0.5rem;
@@ -322,6 +436,11 @@
       width: 2.25rem;
       padding: 0.5rem;
     }
+  }
+
+  .neo-pin-separator,
+  .neo-pin-group {
+    justify-content: center;
   }
 
   .neo-pin-separator {

@@ -143,7 +143,6 @@
     touched = true;
     validate({ dirty: dirtyOnInput, valid: validateOnInput });
     oninput?.(e);
-    console.info('onInput', { touched, dirty, valid, value, initial });
   };
 
   const onChange: FormEventHandler<HTMLInputElement> = e => {
@@ -433,6 +432,7 @@
   <NeoValidation
     tag={wrapperTag}
     error={errorMessage}
+    {rounded}
     {context}
     {message}
     {messageId}

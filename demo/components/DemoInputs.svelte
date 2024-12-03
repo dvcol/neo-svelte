@@ -96,6 +96,8 @@
     invalidState.clear();
     customState.clear();
 
+    numberState.clear();
+
     pinState.clear();
     pinStateSeparator.clear();
     pinPasswordState.clear();
@@ -494,6 +496,8 @@
     {:else}
       <NeoPin
         groups={2}
+        required
+        validation
         bind:touched={pinStateSeparator.touched}
         bind:dirty={pinStateSeparator.dirty}
         bind:valid={pinStateSeparator.valid}
@@ -551,13 +555,17 @@
       flex: 1 0 20%;
       max-width: 25%;
 
+      :global(.sphere),
+      :global(.neo-validation-group-wrapper),
       :global(.neo-pin-container) {
-        container-type: inline-size;
+        justify-content: center;
         width: 100%;
+        text-align: center;
+        container-type: inline-size;
       }
 
       :global(.neo-pin-separator) {
-        @container (width > 500px) {
+        @container (width > 460px) {
           width: 100%;
         }
       }

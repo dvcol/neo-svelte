@@ -5,35 +5,12 @@
 
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
+import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/neo-validation.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
-export type NeoInputState = {
-  /**
-   * `true` if the input has been focused.
-   */
-  touched?: boolean;
-  /**
-   * `true` if the input content has been modified and defers from the initial state.
-   * If `dirtyOnChange` is `true`, the input will always be considered dirty once it has been modified.
-   *
-   * @see dirtyOnChange
-   */
-  dirty?: boolean;
-  /**
-   * `true` if the input passes validation.
-   */
-  valid?: boolean;
-  /**
-   * The input/textarea value.
-   */
-  value?: string;
-  /**
-   * The initial input/textarea value.
-   */
-  initial?: string;
-};
+export type NeoInputState = NeoValidationState<string>;
 
 export type NeoInputStyles = {
   // Styles
@@ -111,7 +88,7 @@ export type NeoInputMethods = {
 };
 
 export type NeoInputElevation = ShadowElevation;
-export type NeoInputContext<T extends HTMLElement = HTMLElement> = HTMLRefProps<T> & NeoInputState & NeoInputStyles & NeoInputMethods;
+export type NeoInputContext<T extends HTMLElement = HTMLElement> = NeoValidationFieldContext<T, string> & Partial<NeoInputStyles & NeoInputMethods>;
 
 export const NeoInputLabelPosition = {
   Inside: 'inside' as const,

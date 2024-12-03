@@ -432,6 +432,7 @@
   <NeoValidation
     tag={wrapperTag}
     error={errorMessage}
+    {rounded}
     {context}
     {message}
     {messageId}
