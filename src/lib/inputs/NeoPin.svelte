@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { EventHandler, FocusEventHandler } from 'svelte/elements';
+  import type { EventHandler, FocusEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoInputHTMLElement } from '~/inputs/neo-input.model.js';
 
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
 
   import IconMinus from '~/icons/IconMinus.svelte';
+  import NeoAffix from '~/inputs/NeoAffix.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoValidation from '~/inputs/NeoValidation.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -14,7 +15,8 @@
   let {
     // Snippets
     label, // Todo
-    after, // Todo
+    before,
+    after,
     message,
     error,
     icon,
@@ -25,10 +27,9 @@
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
-    copy, // TODO copy
     password, // TODO password
-    loading, // TODO loading
-    clearable, // TODO extra button
+    loading,
+    clearable,
 
     // Validation
     step = 1,
@@ -46,6 +47,7 @@
     count = 4,
     separator,
     validation,
+    vertical = groups > 1,
 
     // Transition
     in: inAction,
@@ -63,8 +65,10 @@
     // Other props
     labelRef, // TODO
     labelProps, // TODO
-    afterProps, // TODO
-    afterTag, // TODO
+    afterProps,
+    afterTag = 'div',
+    beforeProps,
+    beforeTag = 'div',
     containerProps,
     containerTag = 'div',
     wrapperProps,
@@ -90,13 +94,22 @@
     return { touched, dirty, valid, value, initial };
   };
 
-  const focus = (i: number, j: number, options: { previous?: boolean; select?: boolean } = {}) => {
-    let _group: number;
-    let _count: number;
+  const focus = (i = 0, j = 0, options: { previous?: boolean; last?: boolean; select?: boolean } = {}) => {
+    let _group = i;
+    let _count = j;
 
     if (options?.previous) {
       _group = j ? i : i - 1;
       _count = j ? j - 1 : count - 1;
+    } else if (options.last) {
+      values.findIndex((group, _i) => {
+        const _j = group.findIndex(val => !val.length);
+        if (_j === -1) return false;
+        _group = _i;
+        _count = _j;
+        return true;
+      });
+      console.info(_group, _count);
     } else {
       _group = j < count - 1 ? i : i + 1;
       _count = j < count - 1 ? j + 1 : 0;
@@ -243,13 +256,16 @@
   });
 
   let changed = value;
+  let focused = $state(false);
   let timeout: ReturnType<typeof setTimeout>;
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
+    focused = true;
     containerProps?.onfocusin?.(e);
   };
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     timeout = setTimeout(() => {
+      focused = false;
       containerProps?.onfocusout?.(e);
 
       if (changed === value) return;
@@ -287,6 +303,19 @@
     return error ?? validationMessage;
   });
 
+  let hovered = $state(false);
+  const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
+    hovered = true;
+    containerProps?.onmouseenter?.(e);
+  };
+  const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
+    hovered = false;
+    containerProps?.onmouseleave?.(e);
+  };
+
+  const affix = $derived(clearable || loading !== undefined || validation);
+  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
+  const close = $derived(clearable && (focused || hovered) && hasValue && !rest.disabled && !rest.readonly);
   const showMessage = $derived(message || errorMessage || error || validation);
   const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-input-message-${crypto.randomUUID()}`) : undefined);
 
@@ -300,6 +329,8 @@
     touched,
     dirty,
     valid,
+    disabled: rest.disabled,
+    readonly: rest.readonly,
 
     // Methods
     clear,
@@ -317,6 +348,7 @@
 {#snippet group()}
   <svelte:element
     this={containerTag}
+    role="none"
     class:neo-pin-container={true}
     data-touched={touched}
     data-dirty={dirty}
@@ -327,57 +359,81 @@
     {...containerProps}
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
+    onmouseenter={onMouseEnter}
+    onmouseleave={onMouseLeave}
   >
-    <input
-      bind:this={ref}
-      aria-hidden="true"
-      hidden
-      type={inputType}
-      tabindex="-1"
-      {step}
-      {min}
-      {max}
-      {required}
-      {minlength}
-      {maxlength}
-      {pattern}
-      bind:value
-      oninvalid={onInvalid}
-    />
-    {#each Array(Number(groups)) as _, i}
-      <div class="neo-pin-group">
-        {#each Array(Number(count)) as __, j}
-          <NeoInput
-            bind:ref={refs[i][j]}
-            bind:value={values[i][j]}
-            bind:dirty={dirtiness[i][j]}
-            bind:touched={touches[i][j]}
-            size={1}
-            maxlength={1}
-            minlength={1}
-            {step}
-            {min}
-            {max}
-            {...rest}
-            type={inputType}
-            oninput={() => onInput(i, j)}
-            onkeydown={e => onKeydown(e, i, j)}
-            onpaste={e => onPaste(e, i, j)}
-          />
-        {/each}
-      </div>
-      {#if i < groups - 1}
-        <div class="neo-pin-separator">
-          {#if icon}
-            {@render icon()}
-          {:else if typeof separator === 'string'}
-            {separator}
-          {:else}
-            <IconMinus />
-          {/if}
+    {#if before}
+      <svelte:element this={beforeTag} class:neo-pin-before={true} class:neo-vertical={vertical} {...beforeProps}>
+        {@render before(context)}
+      </svelte:element>
+    {/if}
+    <div class="neo-pin-group-wrapper" class:neo-vertical={vertical}>
+      <input
+        bind:this={ref}
+        aria-hidden="true"
+        hidden
+        type={inputType}
+        tabindex="-1"
+        {step}
+        {min}
+        {max}
+        {required}
+        {minlength}
+        {maxlength}
+        {pattern}
+        bind:value
+        oninvalid={onInvalid}
+      />
+      {#each Array(Number(groups)) as _, i}
+        <div class="neo-pin-group">
+          {#each Array(Number(count)) as __, j}
+            <NeoInput
+              bind:ref={refs[i][j]}
+              bind:value={values[i][j]}
+              bind:dirty={dirtiness[i][j]}
+              bind:touched={touches[i][j]}
+              size={1}
+              maxlength={1}
+              minlength={1}
+              {step}
+              {min}
+              {max}
+              {...rest}
+              type={inputType}
+              oninput={() => onInput(i, j)}
+              onkeydown={e => onKeydown(e, i, j)}
+              onpaste={e => onPaste(e, i, j)}
+            />
+          {/each}
         </div>
-      {/if}
-    {/each}
+        {#if i < groups - 1}
+          <div class="neo-pin-separator">
+            {#if icon}
+              {@render icon()}
+            {:else if typeof separator === 'string'}
+              {separator}
+            {:else}
+              <IconMinus />
+            {/if}
+          </div>
+        {/if}
+      {/each}
+    </div>
+    {#if affix || after}
+      <svelte:element this={afterTag} class:neo-pin-after={true} class:neo-vertical={vertical} {...afterProps}>
+        <!--  Affix (loafing, clear, placeholder) -->
+        {#if affix}
+          <NeoAffix
+            {loading}
+            {close}
+            valid={validation ? valid : undefined}
+            closeProps={{ onclick: () => clear() }}
+            onclick={() => focus(0, 0, { last: true })}
+          />
+        {/if}
+        {@render after?.(context)}
+      </svelte:element>
+    {/if}
   </svelte:element>
 {/snippet}
 
@@ -404,15 +460,17 @@
 
 <style lang="scss">
   .neo-pin-container,
+  .neo-pin-group-wrapper,
   .neo-pin-group,
-  .neo-pin-separator {
+  .neo-pin-separator,
+  .neo-pin-before,
+  .neo-pin-after {
     display: inline-flex;
-    flex-wrap: wrap;
     align-items: center;
   }
 
   .neo-pin-container {
-    margin: var(--neo-shadow-margin, 0.6rem);
+    margin: var(--neo-shadow-margin, 0.625rem);
 
     :global(.neo-input) {
       width: 2rem;
@@ -438,12 +496,37 @@
     }
   }
 
-  .neo-pin-separator,
+  .neo-pin-group-wrapper,
   .neo-pin-group {
+    flex-wrap: wrap;
     justify-content: center;
   }
 
   .neo-pin-separator {
+    justify-content: center;
     min-width: 2rem;
+  }
+
+  .neo-pin-spacer {
+    flex: 1 1 auto;
+  }
+
+  .neo-pin-before,
+  .neo-pin-after {
+    align-self: stretch;
+    justify-content: space-between;
+    margin: var(--neo-shadow-margin);
+  }
+
+  .neo-pin-after {
+    --neo-affix-padding: 0.75rem 0.75rem 0.75rem 0;
+  }
+
+  .neo-vertical {
+    flex-direction: column;
+
+    .neo-pin-affix {
+      margin-right: 0;
+    }
   }
 </style>

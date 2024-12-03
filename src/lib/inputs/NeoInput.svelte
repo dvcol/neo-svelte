@@ -395,9 +395,9 @@
     style:--neo-input-before-width={beforeWidth}
     out:outFn={outProps}
     in:inFn={inProps}
+    {...containerProps}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
-    {...containerProps}
   >
     {@render prefix()}
     {#if label}

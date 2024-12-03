@@ -554,21 +554,6 @@
     &.content {
       flex: 1 0 20%;
       max-width: 25%;
-
-      :global(.sphere),
-      :global(.neo-validation-group-wrapper),
-      :global(.neo-pin-container) {
-        justify-content: center;
-        width: 100%;
-        text-align: center;
-        container-type: inline-size;
-      }
-
-      :global(.neo-pin-separator) {
-        @container (width > 460px) {
-          width: 100%;
-        }
-      }
     }
   }
 

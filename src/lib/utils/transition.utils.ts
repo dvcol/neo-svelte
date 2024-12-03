@@ -9,4 +9,4 @@ export const enterFreezeTransition: TransitionProps = {
 };
 
 export const enterDefaultTransition: TransitionProps = { duration: 200 };
-export const leaveDefaultTransition: TransitionProps = { delay: 200, duration: 200 };
+export const leaveDefaultTransition: TransitionProps = { delay: 200, duration: 100 };

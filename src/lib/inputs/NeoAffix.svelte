@@ -1,9 +1,7 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
 
-  import type { HTMLButtonAttributes } from 'svelte/elements';
-
-  import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+  import type { NeoAffixProps } from '~/inputs/neo-affix.model.js';
 
   import IconAlert from '~/icons/IconAlert.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -11,18 +9,7 @@
   import IconConfirm from '~/icons/IconConfirm.svelte';
   import { leaveDefaultTransition } from '~/utils/transition.utils.js';
 
-  const {
-    loading,
-    close,
-    valid,
-    closeProps,
-    ...rest
-  }: {
-    loading?: boolean;
-    close?: boolean;
-    valid?: boolean;
-    closeProps?: HTMLButtonAttributes;
-  } & HTMLNeoBaseElement<HTMLSpanElement> = $props();
+  const { loading, close, valid, closeProps, ...rest }: NeoAffixProps = $props();
 </script>
 
 <span class="neo-affix-container" role="none" {...rest}>
