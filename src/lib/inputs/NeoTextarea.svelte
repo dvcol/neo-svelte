@@ -4,6 +4,7 @@
   import type { EventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
 
   import NeoAffix from '~/inputs/NeoAffix.svelte';
+  import NeoLabel from '~/inputs/NeoLabel.svelte';
   import NeoValidation from '~/inputs/NeoValidation.svelte';
   import {
     type NeoInputContext,
@@ -343,6 +344,14 @@
   </textarea>
 {/snippet}
 
+{#snippet labelGroup()}
+  {#if typeof label === 'string'}
+    {label}
+  {:else if label}
+    {@render label(context)}
+  {/if}
+{/snippet}
+
 {#snippet textareaGroup()}
   <svelte:element
     this={containerTag}
@@ -379,25 +388,46 @@
     {...containerProps}
   >
     {#if label}
-      <div class="neo-textarea-label-container" class:neo-floating={isFloating} role="none" onclick={focus}>
-        <label
-          bind:this={labelRef}
-          for={id}
-          class:neo-textarea-label={true}
-          class:neo-affix={affix || after}
-          class:neo-first={first}
-          class:neo-rounded={rounded}
-          class:neo-required={rest.required}
-          {...labelProps}
-        >
-          {#if typeof label === 'string'}
-            {label}
-          {:else}
-            {@render label(context)}
-          {/if}
-        </label>
+      <NeoLabel
+        {id}
+        bind:ref={labelRef}
+        containerProps={{
+          class: [
+            affix || after ? 'neo-affix' : undefined,
+            first ? 'neo-first' : undefined,
+            rounded ? 'neo-rounded' : undefined,
+            isFloating ? 'neo-floating' : undefined,
+          ]
+            .filter(Boolean)
+            .join(' '),
+          onclick: focus,
+        }}
+        label={labelGroup}
+        required={rest.required}
+        {disabled}
+        {...labelProps}
+      >
         {@render textarea()}
-      </div>
+      </NeoLabel>
+      <!--      <div class="neo-textarea-label-container" class:neo-floating={isFloating} role="none" onclick={focus}>-->
+      <!--        <label-->
+      <!--          bind:this={labelRef}-->
+      <!--          for={id}-->
+      <!--          class:neo-textarea-label={true}-->
+      <!--          class:neo-affix={affix || after}-->
+      <!--          class:neo-first={first}-->
+      <!--          class:neo-rounded={rounded}-->
+      <!--          class:neo-required={rest.required}-->
+      <!--          {...labelProps}-->
+      <!--        >-->
+      <!--          {#if typeof label === 'string'}-->
+      <!--            {label}-->
+      <!--          {:else}-->
+      <!--            {@render label(context)}-->
+      <!--          {/if}-->
+      <!--        </label>-->
+      <!--        {@render textarea()}-->
+      <!--      </div>-->
     {:else}
       {@render textarea()}
     {/if}
@@ -518,68 +548,11 @@
     }
   }
 
-  .neo-textarea-label-container {
-    display: inline-flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    width: 100%;
-
-    .neo-textarea-label {
-      display: inline-flex;
-      box-sizing: border-box;
-      min-height: var(--neo-textarea-label-height);
-      padding: 0 1rem;
-      overflow: hidden;
-      color: var(--neo-textarea-label-color, inherit);
-      text-wrap: stable;
-      text-overflow: ellipsis;
-      cursor: inherit;
-      transition:
-        padding 0.3s ease,
-        color 0.3s ease,
-        font-size 0.3s ease,
-        line-height 0.3s ease,
-        top 0.3s ease,
-        left 0.3s ease,
-        right 0.3s ease,
-        translate 0.3s ease;
-
-      &.neo-first {
-        transition: none;
-      }
-
-      &.neo-affix {
-        padding-right: 3.25rem; // 2.5rem + 0.75rem
-      }
-
-      &.neo-required::after {
-        margin-left: 0.1rem;
-        color: var(--neo-textarea-required-color, var(--neo-color-error-75));
-        font-size: var(--neo-font-size);
-        content: '*';
-      }
-    }
-
-    &.neo-floating {
-      .neo-textarea-label {
-        color: var(--neo-textarea-floating-label-color, var(--neo-text-color-disabled));
-        translate: 0 calc(50% + 0.7rem - var(--neo-textarea-label-height) / 2);
-
-        &.neo-required::after {
-          color: var(--neo-textarea-required-color, var(--neo-color-error-50));
-        }
-      }
-
-      ::placeholder {
-        opacity: 0;
-      }
-    }
-  }
-
   .neo-textarea-group {
     position: relative;
     min-width: min-content;
     margin: var(--neo-shadow-margin, 0.625rem);
+    padding: 0 0.1875rem;
     color: var(--neo-textarea-text-color, inherit);
     background-color: var(--neo-textarea-bg-color, inherit);
     border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;
@@ -622,10 +595,6 @@
       &:not(.neo-borderless) {
         border-color: var(--neo-input-border-color-disabled, var(--neo-border-color-disabled)) !important;
       }
-
-      .neo-textarea-label {
-        color: unset;
-      }
     }
 
     :global(.neo-affix-container) {
@@ -636,6 +605,48 @@
       padding: 0.5rem;
       border: none;
       border-radius: var(--neo-textarea-affix-border-radius, var(--neo-border-radius));
+    }
+
+    :global(.neo-label-container) {
+      width: 100%;
+
+      :global(.neo-label) {
+        --neo-label-padding: 0 1rem;
+        --neo-label-margin: 0;
+        --neo-label-color: var(--neo-textarea-label-color, inherit);
+
+        min-height: var(--neo-textarea-label-height);
+        transition:
+          padding 0.3s ease,
+          color 0.3s ease,
+          font-size 0.3s ease,
+          line-height 0.3s ease,
+          top 0.3s ease,
+          left 0.3s ease,
+          right 0.3s ease,
+          translate 0.3s ease;
+      }
+    }
+
+    :global(.neo-label-container.neo-first .neo-label) {
+      transition: none;
+    }
+
+    :global(.neo-label-container.neo-affix .neo-label) {
+      padding-right: 3.25rem; // 2.5rem + 0.75rem
+    }
+
+    :global(.neo-label-container.neo-floating) {
+      :global(.neo-label) {
+        --neo-label-color: var(--neo-textarea-floating-label-color, var(--neo-text-color-disabled));
+        --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
+
+        translate: 0 calc(50% + 0.7rem - var(--neo-textarea-label-height) / 2);
+      }
+
+      :global(::placeholder) {
+        opacity: 0;
+      }
     }
 
     &.neo-rounded {
@@ -660,16 +671,12 @@
         }
       }
 
-      .neo-textarea-label-container {
-        padding-left: 0.5rem;
+      :global(.neo-label-container .neo-label) {
+        padding: 0 1.25rem;
+      }
 
-        .neo-textarea-label {
-          padding: 0 1.25rem;
-
-          &.neo-affix {
-            padding-right: 3.5rem; // 2.5rem + 1rem
-          }
-        }
+      :global(.neo-label-container.neo-affix .neo-label) {
+        padding-right: 3.5rem; // 2.5rem + 1rem
       }
     }
 
@@ -678,18 +685,22 @@
 
       margin-left: var(--neo-textarea-margin-left);
 
-      .neo-textarea-label-container .neo-textarea-label {
+      :global(.neo-label-container .neo-label) {
         position: absolute;
         top: 0.75rem;
         left: calc(0% - var(--neo-textarea-margin-left));
       }
 
-      .neo-textarea-label-container:not(.neo-floating) .neo-textarea-label.neo-affix {
-        left: calc(2.75rem - var(--neo-textarea-margin-left));
+      :global(.neo-label-container.neo-affix:not(.neo-floating) .neo-label) {
+        left: calc(2.5rem - var(--neo-textarea-margin-left));
+      }
 
-        &.neo-rounded {
-          left: calc(2.5rem - var(--neo-textarea-margin-left));
-        }
+      :global(.neo-label-container.neo-affix:not(.neo-floating).neo-rounded .neo-label) {
+        left: calc(2.25rem - var(--neo-textarea-margin-left));
+      }
+
+      :global(.neo-label-container.neo-floating .neo-label) {
+        left: 0;
       }
     }
 
@@ -698,28 +709,40 @@
 
       margin-right: var(--neo-textarea-margin-right);
 
-      .neo-textarea-label-container .neo-textarea-label {
+      :global(.neo-label-container .neo-label) {
         position: absolute;
         top: 0.75rem;
-        right: calc(0% - var(--neo-textarea-margin-right));
+        right: calc(0.25rem - var(--neo-textarea-margin-right));
+      }
 
-        &.neo-rounded {
-          right: calc(-0.25rem - var(--neo-textarea-margin-right));
-        }
+      :global(.neo-label-container:not(.neo-floating).neo-rounded .neo-label) {
+        right: calc(0% - var(--neo-textarea-margin-right));
+      }
+
+      :global(.neo-label-container.neo-floating .neo-label) {
+        right: calc(100% - var(--neo-textarea-label-width));
+      }
+
+      :global(.neo-label-container.neo-floating.neo-rounded .neo-label) {
+        right: calc(100% - 0.5rem - var(--neo-textarea-label-width));
       }
     }
 
-    &[data-position='inside'] .neo-textarea-label-container {
-      .neo-textarea {
+    &[data-position='inside'] {
+      :global(.neo-label-container .neo-textarea) {
         padding-top: 0.25rem;
       }
 
-      .neo-textarea-label {
+      :global(.neo-label-container .neo-label) {
         padding: 0.75rem 1rem 0.1875rem;
         line-height: var(--neo-line-height-xs, 1rem);
       }
 
-      &:not(.neo-floating) .neo-textarea-label {
+      :global(.neo-label-container.neo-rounded .neo-label) {
+        padding: 0.75rem 1rem 0.1875rem 1.25rem;
+      }
+
+      :global(.neo-label-container:not(.neo-floating) .neo-label) {
         font-size: var(--neo-font-size-sm, 0.875rem);
       }
     }
@@ -729,32 +752,16 @@
 
       margin-top: var(--neo-textarea-margin-top);
 
-      .neo-textarea-label-container .neo-textarea-label {
+      :global(.neo-label-container .neo-label) {
         position: absolute;
         top: calc(0% - var(--neo-textarea-margin-top));
       }
     }
 
-    &[data-position='top'] .neo-textarea-label-container.neo-floating .neo-textarea-label,
-    &[data-position='left'] .neo-textarea-label-container.neo-floating .neo-textarea-label,
-    &[data-position='right'] .neo-textarea-label-container.neo-floating .neo-textarea-label {
+    &[data-position='top'] :global(.neo-label-container.neo-floating .neo-label),
+    &[data-position='left'] :global(.neo-label-container.neo-floating .neo-label),
+    &[data-position='right'] :global(.neo-label-container.neo-floating .neo-label) {
       top: 0;
-    }
-
-    &[data-position='left'] .neo-textarea-label-container.neo-floating .neo-textarea-label {
-      left: 0;
-
-      &.neo-rounded {
-        left: 1rem;
-      }
-    }
-
-    &[data-position='right'] .neo-textarea-label-container.neo-floating .neo-textarea-label {
-      right: calc(100% - var(--neo-textarea-label-width));
-
-      &.neo-rounded {
-        right: calc(100% - var(--neo-textarea-label-width) - 1rem);
-      }
     }
 
     &.neo-glass {
@@ -773,11 +780,13 @@
       &[data-valid='false'] {
         --neo-textarea-label-color: var(--neo-textarea-label-color-error, var(--neo-color-error));
         --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-error, var(--neo-color-error-50));
+        --neo-label-disabled-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
       }
 
       &[data-valid='true'] {
         --neo-textarea-label-color: var(--neo-textarea-label-color-success, var(--neo-color-success));
         --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-success, var(--neo-color-success-50));
+        --neo-label-disabled-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
       }
     }
 

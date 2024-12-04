@@ -619,6 +619,9 @@
 
     :global(.neo-label-container) {
       width: 100%;
+      transition:
+        padding 0.3s ease,
+        margin 0.3s ease;
 
       :global(.neo-label) {
         --neo-label-padding: 0 0.75rem;
@@ -636,6 +639,10 @@
           right 0.3s ease,
           translate 0.3s ease;
       }
+    }
+
+    :global(.neo-label-container.neo-rounded:not(.neo-before)) {
+      padding-left: 0.25rem;
     }
 
     :global(.neo-label-container.neo-first .neo-label) {
@@ -698,10 +705,6 @@
         }
       }
 
-      :global(.neo-label-container:not(.neo-before)) {
-        padding-left: 0.5rem;
-      }
-
       :global(.neo-label-container .neo-label) {
         padding: 0 1rem;
       }
@@ -727,7 +730,11 @@
       }
 
       :global(.neo-label-container.neo-before .neo-label) {
-        left: calc(0% - var(--neo-input-margin-left) - 0.75rem);
+        left: calc(0% - var(--neo-input-margin-left) - var(--neo-shadow-margin, 0.625rem));
+      }
+
+      :global(.neo-label-container.neo-floating .neo-label) {
+        left: calc(0.25rem + var(--neo-input-before-width));
       }
     }
 
@@ -743,7 +750,11 @@
       }
 
       :global(.neo-label-container.neo-before .neo-label) {
-        right: calc(0% - var(--neo-input-margin-right) - 1rem);
+        right: calc(0% - var(--neo-input-margin-right) - var(--neo-shadow-margin, 0.625rem));
+      }
+
+      :global(.neo-label-container.neo-floating .neo-label) {
+        right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-before-width));
       }
     }
 
@@ -789,14 +800,6 @@
     &[data-position='left'] :global(.neo-label-container.neo-floating .neo-label),
     &[data-position='right'] :global(.neo-label-container.neo-floating .neo-label) {
       top: calc(50% - 0.75rem - var(--neo-input-label-height) / 2);
-    }
-
-    &[data-position='left'] :global(.neo-label-container.neo-floating .neo-label) {
-      left: calc(0.25rem + var(--neo-input-before-width));
-    }
-
-    &[data-position='right'] :global(.neo-label-container.neo-floating .neo-label) {
-      right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-before-width));
     }
 
     &.neo-glass {
