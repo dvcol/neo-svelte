@@ -472,10 +472,24 @@
     {@render validationState(pinState, true)}
     {#if options.glass}
       <SphereBackdrop>
-        <NeoPin bind:touched={pinState.touched} bind:dirty={pinState.dirty} bind:valid={pinState.valid} bind:value={pinState.value} {...options} />
+        <NeoPin
+          label="Pin Default"
+          bind:touched={pinState.touched}
+          bind:dirty={pinState.dirty}
+          bind:valid={pinState.valid}
+          bind:value={pinState.value}
+          {...options}
+        />
       </SphereBackdrop>
     {:else}
-      <NeoPin bind:touched={pinState.touched} bind:dirty={pinState.dirty} bind:valid={pinState.valid} bind:value={pinState.value} {...options} />
+      <NeoPin
+        label="Pin Default"
+        bind:touched={pinState.touched}
+        bind:dirty={pinState.dirty}
+        bind:valid={pinState.valid}
+        bind:value={pinState.value}
+        {...options}
+      />
     {/if}
   </div>
 
@@ -485,7 +499,10 @@
     {#if options.glass}
       <SphereBackdrop>
         <NeoPin
+          label="Pin Validation"
           groups={2}
+          required
+          validation
           bind:touched={pinStateSeparator.touched}
           bind:dirty={pinStateSeparator.dirty}
           bind:valid={pinStateSeparator.valid}
@@ -495,6 +512,7 @@
       </SphereBackdrop>
     {:else}
       <NeoPin
+        label="Pin Validation"
         groups={2}
         required
         validation
@@ -513,7 +531,9 @@
     {#if options.glass}
       <SphereBackdrop>
         <NeoPassword
-          pin
+          label="Pin Password"
+          required
+          validation
           bind:touched={pinPasswordState.touched}
           bind:dirty={pinPasswordState.dirty}
           bind:valid={pinPasswordState.valid}
@@ -524,6 +544,7 @@
       </SphereBackdrop>
     {:else}
       <NeoPassword
+        label="Pin Password"
         pin
         required
         validation

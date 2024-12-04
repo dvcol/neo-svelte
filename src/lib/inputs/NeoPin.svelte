@@ -7,6 +7,7 @@
   import IconMinus from '~/icons/IconMinus.svelte';
   import NeoAffix from '~/inputs/NeoAffix.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoLabel from '~/inputs/NeoLabel.svelte';
   import NeoValidation from '~/inputs/NeoValidation.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
@@ -15,7 +16,7 @@
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
-    label, // Todo
+    label,
     before,
     after,
     message,
@@ -23,6 +24,7 @@
     icon,
 
     // State
+    id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     value = $bindable(''),
     valid = $bindable(undefined),
@@ -63,8 +65,8 @@
     oninvalid,
 
     // Other props
-    labelRef = $bindable(), // TODO
-    labelProps, // TODO
+    labelRef = $bindable(),
+    labelProps,
     afterProps,
     afterTag = 'div',
     beforeProps,
@@ -369,7 +371,10 @@
     <div class="neo-pin-group-wrapper" class:neo-vertical={vertical}>
       <input
         bind:this={ref}
+        {id}
         aria-hidden="true"
+        aria-invalid={valid === undefined ? undefined : !valid}
+        aria-describedby={messageId}
         hidden
         type="text"
         tabindex="-1"
@@ -436,25 +441,53 @@
   </svelte:element>
 {/snippet}
 
-{#if showMessage}
-  <NeoValidation
-    tag={wrapperTag}
-    error={errorMessage}
-    rounded={rest.rounded}
-    {context}
-    {message}
-    {messageId}
-    {messageTag}
-    {messageProps}
-    in={inAction}
-    out={outAction}
-    transition={transitionAction}
-    {...wrapperProps}
-  >
+{#snippet validationGroup()}
+  {#if showMessage}
+    <NeoValidation
+      tag={wrapperTag}
+      error={errorMessage}
+      rounded={rest.rounded}
+      {context}
+      {message}
+      {messageId}
+      {messageTag}
+      {messageProps}
+      in={inAction}
+      out={outAction}
+      transition={transitionAction}
+      {...wrapperProps}
+    >
+      {@render group()}
+    </NeoValidation>
+  {:else}
     {@render group()}
-  </NeoValidation>
+  {/if}
+{/snippet}
+
+{#snippet labelGroup()}
+  {#if typeof label === 'string'}
+    {label}
+  {:else if label}
+    {@render label(context)}
+  {/if}
+{/snippet}
+
+{#if label}
+  <NeoLabel
+    {id}
+    bind:ref={labelRef}
+    {required}
+    label={labelGroup}
+    {...labelProps}
+    onclick={e => {
+      focus(0, 0, { last: true });
+      labelProps?.onclick?.(e);
+    }}
+  >
+    {@render validationGroup()}
+  </NeoLabel>
 {:else}
-  {@render group()}
+  {@render validationGroup()}
 {/if}
 
 <style lang="scss">
