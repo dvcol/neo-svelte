@@ -19,7 +19,8 @@
     computeGlassFilter,
     computeHoverShadowElevation,
     computeShadowElevation,
-    DefaultShadowElevation,
+    getDefaultElevation,
+    getDefaultHoverElevation,
     isShadowFlat,
   } from '~/utils/shadow.utils.js';
 
@@ -48,8 +49,6 @@
     position = NeoInputLabelPosition.Inside,
 
     // Styles
-    elevation = DefaultShadowElevation,
-    hover = -1,
     borderless,
     pressed,
     rounded,
@@ -58,6 +57,8 @@
     floating = true,
     skeleton,
     validation,
+    elevation = getDefaultElevation(pressed),
+    hover = getDefaultHoverElevation(pressed),
 
     // Transition
     in: inAction,
@@ -551,10 +552,14 @@
 
     &.neo-before {
       padding-left: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
 
     &.neo-after {
       padding-right: 0;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
     &::placeholder {
@@ -698,10 +703,14 @@
 
         &.neo-before {
           padding-left: 0;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
         }
 
         &.neo-after {
           padding-right: 0;
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
         }
       }
 
@@ -755,6 +764,10 @@
 
       :global(.neo-label-container.neo-floating .neo-label) {
         right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-before-width));
+      }
+
+      :global(.neo-label-container.neo-floating.neo-rounded:not(.neo-before) .neo-label) {
+        right: calc(100% - var(--neo-input-label-width) - 0.75rem - var(--neo-input-before-width));
       }
     }
 

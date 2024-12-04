@@ -74,7 +74,7 @@
     }, 150);
   };
 
-  const onClick = (e: MouseEvent) => {
+  const onClick: NeoButtonProps['onclick'] = e => {
     if (loading || disabled) return;
     if (toggle) {
       if (!readonly) checked = !checked;
@@ -87,13 +87,13 @@
     onActive();
   };
 
-  const onKeydownEnter = (e: KeyboardEvent) => {
+  const onKeydownEnter: NeoButtonProps['onkeydown'] = e => {
     if (loading || disabled) return;
     if (e.key === 'Enter') enter = true;
     onkeydown?.(e);
   };
 
-  const onKeyUpEnter = (e: KeyboardEvent) => {
+  const onKeyUpEnter: NeoButtonProps['onkeydown'] = e => {
     if (e.key === 'Enter') enter = false;
     if (loading || disabled) return;
     onkeyup?.(e);

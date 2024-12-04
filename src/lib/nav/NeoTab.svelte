@@ -43,7 +43,7 @@
   const transition = $derived(context?.state?.vertical ? height : width);
   const slide = $derived(context?.state?.slide);
 
-  const onClick: NeoTabProps['onclick'] = (e: MouseEvent) => {
+  const onClick: NeoTabProps['onclick'] = e => {
     context?.onChange(tabId);
     onclick?.(e);
   };

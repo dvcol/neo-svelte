@@ -19,7 +19,8 @@
     computeGlassFilter,
     computeHoverShadowElevation,
     computeShadowElevation,
-    DefaultShadowElevation,
+    getDefaultElevation,
+    getDefaultHoverElevation,
     isShadowFlat,
   } from '~/utils/shadow.utils.js';
 
@@ -48,8 +49,6 @@
     autoResize = true,
 
     // Styles
-    elevation = DefaultShadowElevation,
-    hover = -1,
     borderless,
     pressed,
     rounded,
@@ -58,6 +57,8 @@
     floating = true,
     skeleton,
     validation,
+    elevation = getDefaultElevation(pressed),
+    hover = getDefaultHoverElevation(pressed),
 
     // Transition
     in: inAction,
@@ -552,7 +553,6 @@
     position: relative;
     min-width: min-content;
     margin: var(--neo-shadow-margin, 0.625rem);
-    padding: 0 0.1875rem;
     color: var(--neo-textarea-text-color, inherit);
     background-color: var(--neo-textarea-bg-color, inherit);
     border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;

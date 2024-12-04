@@ -1,4 +1,5 @@
 <script lang="ts" generics="T extends boolean = false">
+  import type { NeoButtonProps } from '~/buttons/index.js';
   import type { NeoPasswordProps } from '~/inputs/neo-password.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -6,7 +7,7 @@
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
-  import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
+  import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -15,7 +16,7 @@
 
     // State
     ref = $bindable(),
-    value = $bindable(''),
+    value = $bindable(undefined),
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
@@ -33,19 +34,10 @@
 
   const _type = $derived(show ? 'text' : type);
 
-  const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
+  const elevation = $derived(rest?.elevation ?? getDefaultElevation(rest?.pressed));
   const text = $derived(elevation >= 0 || !rest.pressed || pin);
-  const style = $derived.by(() => {
-    if (text) return;
-    return `
-      --neo-btn-box-shadow: var(--neo-box-shadow-raised-${Math.min(Math.abs(elevation), 3)});
-      --neo-btn-box-shadow-hover: var(--neo-box-shadow-raised-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-focus: var(--neo-box-shadow-raised-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      `;
-  });
-  const afterProps = $derived({
+  const style = $derived(computeButtonShadows(elevation, text));
+  const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle password visibility',
     title: 'Toggle password visibility',
     disabled: rest.disabled,

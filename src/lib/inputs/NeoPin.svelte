@@ -4,6 +4,8 @@
 
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
 
+  import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
   import IconMinus from '~/icons/IconMinus.svelte';
   import NeoAffix from '~/inputs/NeoAffix.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
@@ -219,7 +221,7 @@
 
       if (validateOnInput) validate();
 
-      const event: InputEvent & { currentTarget: any } = new InputEvent('input', {
+      const event: SvelteEvent<InputEvent, any> = new InputEvent('input', {
         bubbles: true,
         cancelable: false,
         data: value,
@@ -273,7 +275,7 @@
       validate();
       dirty = mergedDirty;
 
-      const event: InputEvent & { currentTarget: any } = new InputEvent('change', {
+      const event: SvelteEvent<InputEvent, any> = new InputEvent('change', {
         bubbles: true,
         cancelable: false,
         data: value,

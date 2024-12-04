@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { sentenceCase } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
   import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
@@ -10,12 +11,19 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
+  import NeoDateTime from '~/inputs/NeoDateTime.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
-  import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
+  import {
+    DefaultShadowElevation,
+    getDefaultElevation,
+    getDefaultHoverElevation,
+    MaxShadowElevation,
+    MinShadowElevation,
+  } from '~/utils/shadow.utils.js';
 
   type ColumProps = {
     label: string;
@@ -73,6 +81,11 @@
     hover: -1,
     size: 30,
   });
+
+  const onPressed = () => {
+    options.elevation = getDefaultElevation(options.pressed);
+    options.hover = getDefaultHoverElevation(options.pressed);
+  };
 
   const onElevation = () => {
     if (options.elevation + options.hover < MinShadowElevation) options.hover += 1;
@@ -298,7 +311,7 @@
 <div class="row">
   <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
-    <NeoButton toggle bind:checked={options.pressed}>Pressed</NeoButton>
+    <NeoButton toggle bind:checked={options.pressed} onclick={onPressed}>Pressed</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={options.floating}>Floating</NeoButton>
@@ -557,6 +570,53 @@
       />
     {/if}
   </div>
+</div>
+
+<!-- Color Picker inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Color Picker</span>
+    {@render validationState(pinState, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoInput type="color" {...options} />
+      </SphereBackdrop>
+    {:else}
+      <NeoInput type="color" {...options} />
+    {/if}
+  </div>
+</div>
+
+<!-- File Picker inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Date Picker</span>
+    {@render validationState(pinState, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoInput type="file" {...options} />
+      </SphereBackdrop>
+    {:else}
+      <NeoInput type="file" {...options} />
+    {/if}
+  </div>
+</div>
+
+<!-- Date/Time Picker inputs -->
+<div class="row">
+  {#each ['date', 'datetime-local', 'time', 'week', 'month'] as type}
+    <div class="column content">
+      <span class="label">{sentenceCase(type)} Picker</span>
+      {@render validationState(pinState, true)}
+      {#if options.glass}
+        <SphereBackdrop>
+          <NeoDateTime {type} {...options} />
+        </SphereBackdrop>
+      {:else}
+        <NeoDateTime {type} {...options} />
+      {/if}
+    </div>
+  {/each}
 </div>
 
 <style lang="scss">

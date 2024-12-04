@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
-import type { HTMLFlexProps, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 
 export type NeoButtonProps = {
   // Snippets
@@ -104,17 +104,17 @@ export type NeoButtonProps = {
    * @param e
    * @param checked
    */
-  onclick?: (e: MouseEvent, checked?: boolean) => unknown;
+  onclick?: (e: SvelteEvent<MouseEvent>, checked?: boolean) => unknown;
   /**
    * Callback function to be called when a key is pressed.
    * @param e
    */
-  onkeydown?: (e: KeyboardEvent) => unknown;
+  onkeydown?: (e: SvelteEvent<KeyboardEvent>) => unknown;
   /**
    * Callback function to be called when a key is released.
    * @param e
    */
-  onkeyup?: (e: KeyboardEvent) => unknown;
+  onkeyup?: (e: SvelteEvent<KeyboardEvent>) => unknown;
 } & Partial<Omit<HTMLButtonAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
   Partial<Omit<HTMLAnchorAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
   HTMLFlexProps &
