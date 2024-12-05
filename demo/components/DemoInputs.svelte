@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { sentenceCase } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
   import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
@@ -306,6 +305,60 @@
       input: true,
     },
   ];
+
+  // ['date', 'datetime-local', 'time', 'week', 'month']
+  const dateColumns: ColumProps[] = [
+    {
+      label: 'Date',
+      props: {
+        label: 'Date Picker',
+        type: 'date',
+        required: true,
+      },
+      state: new ValidationState(),
+      input: true,
+    },
+    {
+      label: 'Date Time',
+      props: {
+        label: 'Date Time Picker',
+        type: 'datetime-local',
+        required: true,
+      },
+      state: new ValidationState(),
+      input: true,
+    },
+    {
+      label: 'Time',
+      props: {
+        label: 'Time Picker',
+        type: 'time',
+        required: true,
+      },
+      state: new ValidationState(),
+      input: true,
+    },
+    {
+      label: 'Week',
+      props: {
+        label: 'Week Picker',
+        type: 'week',
+        required: true,
+      },
+      state: new ValidationState(),
+      input: true,
+    },
+    {
+      label: 'Month',
+      props: {
+        label: 'Month Picker',
+        type: 'month',
+        required: true,
+      },
+      state: new ValidationState(),
+      input: true,
+    },
+  ];
 </script>
 
 <div class="row">
@@ -604,16 +657,30 @@
 
 <!-- Date/Time Picker inputs -->
 <div class="row">
-  {#each ['date', 'datetime-local', 'time', 'week', 'month'] as type}
+  {#each dateColumns as column}
     <div class="column content">
-      <span class="label">{sentenceCase(type)} Picker</span>
-      {@render validationState(pinState, true)}
+      <span class="label">{column.label}</span>
+      {@render validationState(column.state, true)}
       {#if options.glass}
         <SphereBackdrop>
-          <NeoDateTime {type} {...options} />
+          <NeoDateTime
+            bind:touched={column.state.touched}
+            bind:dirty={column.state.dirty}
+            bind:valid={column.state.valid}
+            bind:value={column.state.value}
+            {...column.props}
+            {...options}
+          />
         </SphereBackdrop>
       {:else}
-        <NeoDateTime {type} {...options} />
+        <NeoDateTime
+          bind:touched={column.state.touched}
+          bind:dirty={column.state.dirty}
+          bind:valid={column.state.valid}
+          bind:value={column.state.value}
+          {...column.props}
+          {...options}
+        />
       {/if}
     </div>
   {/each}

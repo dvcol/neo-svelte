@@ -39,6 +39,8 @@
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
     readonly,
     disabled,
     loading,
@@ -102,7 +104,6 @@
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
-  let hovered = $state(false);
   const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
     hovered = true;
     containerProps?.onmouseenter?.(e);
@@ -113,7 +114,6 @@
     containerProps?.onmouseleave?.(e);
   };
 
-  let focused = $state(false);
   const onFocus: FocusEventHandler<HTMLTextAreaElement> = e => {
     focused = true;
     touched = true;
@@ -200,7 +200,7 @@
   });
 
   const affix = $derived(clearable || loading !== undefined || validation);
-  const close = $derived(clearable && (focused || hovered) && value?.length && !disabled && !readonly);
+  const close = $derived(clearable && (focused || hovered) && !!value?.length && !disabled && !readonly);
   const isFloating = $derived(floating && !focused && !value?.length && !disabled && !readonly);
 
   let labelHeight = $state<string>();
@@ -642,6 +642,10 @@
         --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
 
         translate: 0 calc(50% + 0.7rem - var(--neo-textarea-label-height) / 2);
+      }
+
+      :global(.neo-input) {
+        color: var(--neo-input-floating-text-color, transparent);
       }
 
       :global(::placeholder) {

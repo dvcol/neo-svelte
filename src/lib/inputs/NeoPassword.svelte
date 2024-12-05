@@ -20,6 +20,8 @@
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
     type = 'password',
     placeholder = pin ? undefined : 'Enter your password',
 
@@ -65,7 +67,33 @@
 {/snippet}
 
 {#if pin}
-  <NeoPin bind:ref bind:labelRef bind:value bind:valid bind:dirty bind:touched type={_type} {placeholder} {after} {...rest} />
+  <NeoPin
+    bind:ref
+    bind:labelRef
+    bind:value
+    bind:valid
+    bind:dirty
+    bind:touched
+    bind:hovered
+    bind:focused
+    type={_type}
+    {placeholder}
+    {after}
+    {...rest}
+  />
 {:else}
-  <NeoInput bind:ref bind:labelRef bind:value bind:valid bind:dirty bind:touched type={_type} {placeholder} {after} {...rest} />
+  <NeoInput
+    bind:ref
+    bind:labelRef
+    bind:value
+    bind:valid
+    bind:dirty
+    bind:touched
+    bind:hovered
+    bind:focused
+    type={_type}
+    {placeholder}
+    {after}
+    {...rest}
+  />
 {/if}

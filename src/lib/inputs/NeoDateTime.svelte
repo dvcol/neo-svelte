@@ -11,12 +11,15 @@
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // State
+    type = 'date',
     ref = $bindable(),
-    value = $bindable(undefined),
+    value = $bindable(),
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
-    type = 'date',
+    hovered = $bindable(false),
+    focused = $bindable(false),
+    placeholder = 'Select a date',
 
     // Other props
     labelRef = $bindable(),
@@ -26,7 +29,9 @@
   /* eslint-enable prefer-const */
 
   const onclick: NeoButtonProps['onclick'] = e => {
-    ref?.showPicker();
+    ref?.focus?.();
+    ref?.click?.();
+    ref?.showPicker?.();
     buttonProps?.onclick?.(e);
   };
 
@@ -55,15 +60,38 @@
   </NeoButton>
 {/snippet}
 
-<div class="neo-date-time">
-  <NeoInput bind:ref bind:labelRef bind:value bind:valid bind:dirty bind:touched {type} {after} {...rest} />
+<div class="neo-date-time" class:neo-picker={ref?.showPicker}>
+  <NeoInput
+    bind:ref
+    bind:labelRef
+    bind:value
+    bind:valid
+    bind:dirty
+    bind:touched
+    bind:hovered
+    bind:focused
+    {type}
+    {placeholder}
+    after={ref?.showPicker ? after : undefined}
+    {...rest}
+  />
 </div>
 
 <style lang="scss">
   .neo-date-time {
-    :global(.neo-input::-webkit-calendar-picker-indicator) {
-      display: none; /* Hide the default date icon in WebKit browsers */
-      appearance: none; /* Hide the default date icon in Firefox */
+    &.neo-picker {
+      :global(.neo-input::-webkit-calendar-picker-indicator) {
+        display: none; /* Hide the default date icon in WebKit browsers */
+        appearance: none; /* Hide the default date icon in Firefox */
+      }
+    }
+
+    :global(.neo-input::-webkit-datetime-edit-day-field:focus),
+    :global(.neo-input::-webkit-datetime-edit-month-field:focus),
+    :global(.neo-input::-webkit-datetime-edit-year-field:focus) {
+      color: var(--neo-date-time-text-color, var(--neo-text-color));
+      background-color: var(--neo-date-time-text-highlight-color, var(--neo-text-highlight-color));
+      outline: none;
     }
   }
 </style>

@@ -19,6 +19,8 @@
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
     type = 'number',
     placeholder = '0',
 
@@ -136,7 +138,21 @@
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}
 >
-  <NeoInput bind:ref bind:labelRef bind:value bind:valid bind:dirty bind:touched {type} {placeholder} {before} {after} {...rest} />
+  <NeoInput
+    bind:ref
+    bind:labelRef
+    bind:value
+    bind:valid
+    bind:dirty
+    bind:touched
+    bind:hovered
+    bind:focused
+    {type}
+    {placeholder}
+    {before}
+    {after}
+    {...rest}
+  />
 </svelte:element>
 
 <style lang="scss">

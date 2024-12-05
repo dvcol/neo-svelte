@@ -139,6 +139,14 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
    */
   loading?: boolean;
   /**
+   * If the input is currently hovered.
+   */
+  hovered?: boolean;
+  /**
+   * If the input is currently focused.
+   */
+  focused?: boolean;
+  /**
    * Display a clear button to reset the input value.
    * If used in combination with `loading`, the clear button will be hidden while loading.
    * @default false

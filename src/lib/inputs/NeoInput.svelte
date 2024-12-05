@@ -40,6 +40,8 @@
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
     disabled,
     readonly,
     loading,
@@ -104,7 +106,6 @@
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
-  let hovered = $state(false);
   const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
     hovered = true;
     containerProps?.onmouseenter?.(e);
@@ -115,7 +116,6 @@
     containerProps?.onmouseleave?.(e);
   };
 
-  let focused = $state(false);
   const onFocus: FocusEventHandler<HTMLInputElement> = e => {
     focused = true;
     touched = true;
@@ -542,11 +542,11 @@
       }
 
       &.neo-inset :global(.neo-button) {
-        --neo-btn-margin: 0.5rem 0;
+        --neo-btn-margin: auto 0;
       }
 
       &.neo-deep :global(.neo-button) {
-        --neo-btn-margin: 0.5rem 0.25rem;
+        --neo-btn-margin: auto 0.25rem;
       }
     }
 
@@ -668,6 +668,10 @@
         --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
 
         translate: 0 calc(50% + 0.7rem - var(--neo-input-label-height) / 2);
+      }
+
+      :global(.neo-input) {
+        color: var(--neo-input-floating-text-color, transparent);
       }
 
       :global(::placeholder) {

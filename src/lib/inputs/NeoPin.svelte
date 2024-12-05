@@ -32,6 +32,8 @@
     valid = $bindable(undefined),
     dirty = $bindable(false),
     touched = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
     loading,
     clearable,
 
@@ -259,7 +261,6 @@
   });
 
   let changed = value;
-  let focused = $state(false);
   let timeout: ReturnType<typeof setTimeout>;
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
@@ -300,7 +301,6 @@
     return error ?? validationMessage;
   });
 
-  let hovered = $state(false);
   const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
     hovered = true;
     containerProps?.onmouseenter?.(e);
