@@ -46,7 +46,9 @@
     loading,
     clearable,
     dirtyOnInput,
+    dirtyOnBlur,
     validateOnInput,
+    validateOnBlur,
     position = NeoInputLabelPosition.Inside,
     autoResize = true,
 
@@ -104,6 +106,14 @@
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
+  const validate: NeoInputMethods['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
+    if (update.dirty) dirty = value !== initial;
+    if (!update.valid) return { touched, dirty, valid, value, initial };
+    valid = ref?.checkValidity();
+    validationMessage = ref?.validationMessage;
+    return { touched, dirty, valid, value };
+  };
+
   const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
     hovered = true;
     containerProps?.onmouseenter?.(e);
@@ -122,15 +132,8 @@
 
   const onBlur: FocusEventHandler<HTMLTextAreaElement> = e => {
     focused = false;
+    validate({ dirty: dirtyOnBlur, valid: validateOnBlur });
     onblur?.(e);
-  };
-
-  const validate: NeoInputMethods['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
-    if (update.dirty) dirty = value !== initial;
-    if (!update.valid) return { touched, dirty, valid, value, initial };
-    valid = ref?.checkValidity();
-    validationMessage = ref?.validationMessage;
-    return { touched, dirty, valid, value };
   };
 
   const onInput: FormEventHandler<HTMLTextAreaElement> = e => {

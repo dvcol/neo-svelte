@@ -12,6 +12,7 @@
   import NeoLabel from '~/inputs/NeoLabel.svelte';
   import NeoValidation from '~/inputs/NeoValidation.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { ArrowPrefix } from '~/utils/regex.utils.js';
   import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
   import { doubleBind } from '~/utils/utils.svelte.js';
 
@@ -150,7 +151,7 @@
   };
 
   const onKeydown = (e: KeyboardEvent, i: number, j: number) => {
-    if (/^Arrow/.test(e.key)) return arrow(e, i, j);
+    if (ArrowPrefix.test(e.key)) return arrow(e, i, j);
 
     if (e.key !== 'Backspace') return;
     if (!j && !i) return;

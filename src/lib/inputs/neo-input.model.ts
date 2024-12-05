@@ -127,11 +127,21 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
    */
   dirtyOnInput?: boolean;
   /**
+   * If `true`, the input dirty state will update on blur events.
+   * @default false
+   */
+  dirtyOnBlur?: boolean;
+  /**
    * If `true`, the input will check for validity on input events.
    * If `false`, the input will only check for validity on change events.
    * @default false
    */
   validateOnInput?: boolean;
+  /**
+   * If `true`, the input will check for validity on blur events.
+   * @default false
+   */
+  validateOnBlur?: boolean;
   /**
    * Display a loading spinner inside the input.
    * If defined, some space will be reserved for the spinner.

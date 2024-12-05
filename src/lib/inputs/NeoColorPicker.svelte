@@ -1,0 +1,138 @@
+<script lang="ts">
+  import type { FormEventHandler } from 'svelte/elements';
+  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+
+  import type { NeoColorPickerProps } from '~/inputs/neo-color-picker.model.js';
+
+  import NeoButton from '~/buttons/NeoButton.svelte';
+  import IconPaint from '~/icons/IconPaint.svelte';
+  import NeoInput from '~/inputs/NeoInput.svelte';
+  import { HexColorRegexString } from '~/utils/regex.utils.js';
+  import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
+
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
+    // State
+    ref = $bindable(),
+    value = $bindable(),
+    valid = $bindable(undefined),
+    dirty = $bindable(false),
+    touched = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
+    placeholder = 'Pick a color',
+    pattern = HexColorRegexString,
+    minlength = 7,
+    maxlength = 7,
+
+    // Other props
+    labelRef = $bindable(),
+    buttonProps,
+    pickerRef = $bindable(),
+    pickerProps,
+    ...rest
+  }: NeoColorPickerProps = $props();
+  /* eslint-enable prefer-const */
+
+  const onclick: NeoButtonProps['onclick'] = e => {
+    pickerRef?.focus?.();
+    pickerRef?.click?.();
+    pickerRef?.showPicker?.();
+    buttonProps?.onclick?.(e);
+  };
+
+  const elevation = $derived(rest?.elevation ?? getDefaultElevation(rest?.pressed));
+  const text = $derived(elevation >= 0 || !rest.pressed);
+  const style = $derived(computeButtonShadows(elevation, text));
+  const afterProps = $derived<NeoButtonProps>({
+    'aria-label': 'Toggle picker',
+    title: 'Toggle picker',
+    skeleton: rest.skeleton,
+    disabled: rest.disabled,
+    rounded: rest.rounded,
+    glass: rest.glass,
+    start: rest.start,
+    text,
+    style,
+    ...buttonProps,
+    onclick,
+  });
+
+  const oninput: FormEventHandler<HTMLInputElement> = e => {
+    ref?.dispatchEvent(new InputEvent(e.type, e));
+    pickerProps?.oninput?.(e);
+  };
+
+  const onchange: FormEventHandler<HTMLInputElement> = e => {
+    ref?.dispatchEvent(new InputEvent(e.type, e));
+    pickerProps?.onchange?.(e);
+  };
+</script>
+
+{#snippet before()}
+  <input
+    class:neo-color-picker={true}
+    class:neo-rounded={rest.rounded}
+    bind:this={pickerRef}
+    bind:value
+    type="color"
+    {oninput}
+    {onchange}
+    {...pickerProps}
+  />
+{/snippet}
+
+{#snippet after()}
+  <NeoButton {...afterProps}>
+    {#snippet icon()}
+      <IconPaint width="1.25rem" height="1.25rem" />
+    {/snippet}
+  </NeoButton>
+{/snippet}
+
+<NeoInput
+  bind:ref
+  bind:labelRef
+  bind:value
+  bind:valid
+  bind:dirty
+  bind:touched
+  bind:hovered
+  bind:focused
+  type="text"
+  {placeholder}
+  {before}
+  {after}
+  {pattern}
+  {minlength}
+  {maxlength}
+  {...rest}
+/>
+
+<style lang="scss">
+  .neo-color-picker {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: var(--neo-border-radius-sm);
+    appearance: none;
+
+    &.neo-rounded {
+      border-radius: var(--neo-border-radius-md);
+    }
+
+    &::-moz-color-swatch {
+      border: none;
+    }
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+      border-radius: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+    }
+  }
+</style>

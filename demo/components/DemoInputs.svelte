@@ -10,6 +10,7 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
+  import NeoColorPicker from '~/inputs/NeoColorPicker.svelte';
   import NeoDateTime from '~/inputs/NeoDateTime.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
@@ -625,36 +626,6 @@
   </div>
 </div>
 
-<!-- Color Picker inputs -->
-<div class="row">
-  <div class="column content">
-    <span class="label">Color Picker</span>
-    {@render validationState(pinState, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoInput type="color" {...options} />
-      </SphereBackdrop>
-    {:else}
-      <NeoInput type="color" {...options} />
-    {/if}
-  </div>
-</div>
-
-<!-- File Picker inputs -->
-<div class="row">
-  <div class="column content">
-    <span class="label">Date Picker</span>
-    {@render validationState(pinState, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoInput type="file" {...options} />
-      </SphereBackdrop>
-    {:else}
-      <NeoInput type="file" {...options} />
-    {/if}
-  </div>
-</div>
-
 <!-- Date/Time Picker inputs -->
 <div class="row">
   {#each dateColumns as column}
@@ -684,6 +655,36 @@
       {/if}
     </div>
   {/each}
+</div>
+
+<!-- Color Picker inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Color Picker</span>
+    {@render validationState(pinState, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoColorPicker {...options} size="10" />
+      </SphereBackdrop>
+    {:else}
+      <NeoColorPicker {...options} size="10" />
+    {/if}
+  </div>
+</div>
+
+<!-- File Picker inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Date Picker</span>
+    {@render validationState(pinState, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoInput type="file" {...options} />
+      </SphereBackdrop>
+    {:else}
+      <NeoInput type="file" {...options} />
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">

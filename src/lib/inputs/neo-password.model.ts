@@ -8,7 +8,7 @@ export type NeoPasswordProps<T extends boolean = false> = {
    */
   pin?: T;
   /**
-   * Button properties to pass to the increment and decrement buttons.
+   * Button properties to pass to the show/hide password button.
    */
   buttonProps?: NeoButtonProps;
 } & NeoInputProps &
