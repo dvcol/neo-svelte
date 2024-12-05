@@ -7,10 +7,13 @@ import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/neo-validation.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
-export type NeoInputState = NeoValidationState<string>;
+export type NeoInputValue<T extends HTMLInputElement | HTMLTextAreaElement> = T extends HTMLTextAreaElement
+  ? HTMLTextareaAttributes['value']
+  : HTMLInputAttributes['value'];
+export type NeoInputState<T extends HTMLInputElement | HTMLTextAreaElement> = NeoValidationState<NeoInputValue<T>>;
 
 export type NeoInputStyles = {
   // Styles
@@ -61,34 +64,35 @@ export type NeoInputStyles = {
   readonly?: boolean;
 };
 
-export type NeoInputMethods = {
+export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement> = {
   /**
    * Change the input state. If no value is provided, the state attributes will be unchanged.
    * @param state
    */
-  mark: (state: NeoInputState) => unknown;
+  mark: (state: NeoInputState<T>) => unknown;
   /**
    * Clear the input. If a state is provided, the input state will be updated accordingly.
    * If a partial state is provided, the input state will be reinitialized and the provided state will be merged.
    * @param state
    * @param event
    */
-  clear: (state?: NeoInputState, event?: InputEvent) => unknown;
+  clear: (state?: NeoInputState<T>, event?: InputEvent | SvelteEvent<InputEvent>) => unknown;
   /**
    * Change the input value.
    * @param value
    * @param event
    */
-  change: (value: HTMLInputElement['value'], event?: InputEvent) => NeoInputState;
+  change: (value: HTMLInputElement['value'], event?: InputEvent | SvelteEvent<InputEvent>) => NeoInputState<T>;
   /**
    * Check the input validity.
    * @param update whether to check the input dirty and/or valid state.
    */
-  validate: (update?: { dirty?: boolean; valid?: boolean }) => NeoInputState;
+  validate: (update?: { dirty?: boolean; valid?: boolean }) => NeoInputState<T>;
 };
 
 export type NeoInputElevation = ShadowElevation;
-export type NeoInputContext<T extends HTMLElement = HTMLElement> = NeoValidationFieldContext<T, string> & Partial<NeoInputStyles & NeoInputMethods>;
+export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement> = NeoValidationFieldContext<T, NeoInputValue<T>> &
+  Partial<NeoInputStyles & NeoInputMethods<T>>;
 
 export const NeoInputLabelPosition = {
   Inside: 'inside' as const,
@@ -99,7 +103,7 @@ export const NeoInputLabelPosition = {
 
 export type NeoInputLabelPositions = (typeof NeoInputLabelPosition)[keyof typeof NeoInputLabelPosition];
 
-export type NeoCommonInputProps<T extends HTMLElement> = {
+export type NeoCommonInputProps<T extends HTMLInputElement | HTMLTextAreaElement> = {
   // Snippets
 
   /**
@@ -189,13 +193,13 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
    * Callback when the input state is manually changed.
    * @param state
    */
-  onmark?: (state: NeoInputState) => unknown;
+  onmark?: (state: NeoInputState<T>) => unknown;
   /**
    * Callback when the input is cleared.
    * @param state
    * @param event
    */
-  onclear?: (state: NeoInputState, event?: InputEvent) => unknown;
+  onclear?: (state: NeoInputState<T>, event?: InputEvent) => unknown;
 
   // Other props
 
@@ -247,7 +251,7 @@ export type NeoCommonInputProps<T extends HTMLElement> = {
    */
   labelRef?: HTMLLabelElement;
 } & HTMLRefProps<T> &
-  NeoInputState &
+  NeoInputState<T> &
   NeoInputStyles &
   HTMLActionProps;
 
@@ -258,6 +262,12 @@ export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
    * A snippet to display as the input prefix.
    */
   before?: Snippet<[NeoInputContext<T>]>;
+
+  // State
+  /**
+   * Fall back value when the input value is cleared.
+   */
+  defaultValue: HTMLInputAttributes['value'];
 
   // Other props
 
@@ -287,6 +297,10 @@ export type NeoTextAreaResize = {
 
 export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElement> = {
   /**
+   * Fall back value when the textarea value is cleared.
+   */
+  defaultValue: HTMLTextareaAttributes['value'];
+  /**
    * Automatically increments/decrements the textarea rows to fit the content.
    *
    * If `true`, the textarea will increment indefinitely and will not decrement.
@@ -298,5 +312,5 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
 } & NeoCommonInputProps<T> &
   HTMLTextareaAttributes;
 
-export type NeoInputHTMLElement = HTMLInputElement & Partial<NeoInputMethods>;
-export type NeoTextareaHTMLElement = HTMLTextAreaElement & Partial<NeoInputMethods>;
+export type NeoInputHTMLElement<T extends HTMLInputElement = HTMLInputElement> = T & Partial<NeoInputMethods<T>>;
+export type NeoTextareaHTMLElement<T extends HTMLTextAreaElement = HTMLTextAreaElement> = T & Partial<NeoInputMethods<T>>;

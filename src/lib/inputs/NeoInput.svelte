@@ -3,6 +3,8 @@
 
   import type { EventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
 
+  import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
   import NeoAffix from '~/inputs/NeoAffix.svelte';
   import NeoLabel from '~/inputs/NeoLabel.svelte';
   import NeoValidation from '~/inputs/NeoValidation.svelte';
@@ -108,7 +110,7 @@
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
-  const validate: NeoInputMethods['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
+  const validate: NeoInputMethods<HTMLInputElement>['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
     if (update.dirty) dirty = value !== initial;
     if (!update.valid) return { touched, dirty, valid, value, initial };
     valid = ref?.checkValidity();
@@ -160,7 +162,7 @@
    * Change the state of the input
    * @param state
    */
-  export const mark: NeoInputMethods['mark'] = (state: NeoInputState) => {
+  export const mark: NeoInputMethods<HTMLInputElement>['mark'] = (state: NeoInputState<HTMLInputElement>) => {
     if (state.touched !== undefined) touched = state.touched;
     if (state.valid !== undefined) valid = state.valid;
     if (state.dirty === undefined) return onmark?.({ touched, dirty, valid, value, initial });
@@ -177,23 +179,24 @@
   /**
    * Clear the input state
    */
-  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState, event?: InputEvent) => {
+  export const clear: NeoInputMethods<HTMLInputElement>['clear'] = (
+    state?: NeoInputState<HTMLInputElement>,
+    event?: InputEvent | SvelteEvent<InputEvent>,
+  ) => {
     if (event) ref?.dispatchEvent(event);
-    value = '';
+    value = rest?.defaultValue ?? '';
     focus();
-    if (!state) {
-      setTimeout(() => validate());
-      return onclear?.({ touched, dirty, valid, value, initial }, event);
-    }
-    initial = value;
-    setTimeout(() => mark({ touched: false, dirty: false, ...state }));
-    return onclear?.({ touched, dirty, valid, value, initial }, event);
+    setTimeout(() => (state ? mark({ touched: false, dirty: false, ...state }) : validate()));
+    onclear?.({ touched, dirty, valid, value, initial }, event);
+    if (event) return ref?.dispatchEvent(event);
+    const _event: InputEventInit = { bubbles: true, cancelable: false, data: value, inputType: 'clear' };
+    oninput?.(new InputEvent('input', _event) as SvelteEvent<InputEvent, any>);
   };
 
   /**
    * Change the value of the input
    */
-  export const change: NeoInputMethods['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
+  export const change: NeoInputMethods<HTMLInputElement>['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
     if (event) ref?.dispatchEvent(event);
     value = _value;
     focus();
@@ -205,8 +208,8 @@
     Object.assign(ref, { mark, clear, change, validate });
   });
 
-  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
   const affix = $derived(clearable || loading !== undefined || validation);
+  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
   const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
   const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
   const inside = $derived(position === NeoInputLabelPosition.Inside && label);
@@ -333,25 +336,33 @@
 {/snippet}
 
 {#snippet input()}
-  <input
-    {id}
-    {disabled}
-    {readonly}
-    aria-invalid={valid === undefined ? undefined : !valid}
-    aria-describedby={messageId}
-    bind:this={ref}
-    bind:value
-    class:neo-input={true}
-    class:neo-after={after || affix}
-    class:neo-before={before}
-    onblur={onBlur}
-    onfocus={onFocus}
-    oninput={onInput}
-    onchange={onChange}
-    oninvalid={onInvalid}
-    use:useFn={useProps}
-    {...rest}
-  />
+  {#if rest.type === 'file'}
+    // Files binding
+  {:else if rest.type === 'radio'}
+    // group binding // checked binding
+  {:else if rest.type === 'checkbox'}
+    // checked binding // indeterminate binding
+  {:else}
+    <input
+      aria-invalid={valid === undefined ? undefined : !valid}
+      aria-describedby={messageId}
+      {id}
+      {disabled}
+      {readonly}
+      bind:this={ref}
+      bind:value
+      class:neo-input={true}
+      class:neo-after={after || affix}
+      class:neo-before={before}
+      onblur={onBlur}
+      onfocus={onFocus}
+      oninput={onInput}
+      onchange={onChange}
+      oninvalid={onInvalid}
+      use:useFn={useProps}
+      {...rest}
+    />
+  {/if}
 {/snippet}
 
 {#snippet labelGroup()}

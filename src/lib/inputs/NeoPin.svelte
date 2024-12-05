@@ -30,7 +30,7 @@
     id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     value = $bindable(''),
-    valid = $bindable(undefined),
+    valid = $bindable(),
     dirty = $bindable(false),
     touched = $bindable(false),
     hovered = $bindable(false),
@@ -110,7 +110,7 @@
       _count = j ? j - 1 : count - 1;
     } else if (options.last) {
       values.findIndex((group, _i) => {
-        const _j = group.findIndex(val => !val.length);
+        const _j = group.findIndex(val => !val?.length);
         if (_j === -1) return false;
         _group = _i;
         _count = _j;

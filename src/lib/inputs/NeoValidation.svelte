@@ -1,4 +1,4 @@
-<script lang="ts" generics="T extends HTMLElement, V extends string | number | boolean">
+<script lang="ts" generics="T extends HTMLElement, V extends any">
   import { fade } from 'svelte/transition';
 
   import type { NeoValidationContext, NeoValidationProps } from '~/inputs/neo-validation.model.js';

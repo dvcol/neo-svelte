@@ -9,14 +9,15 @@
   import IconMinus from '~/icons/IconMinus.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
+  import { computeButtonShadows, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // State
+    defaultValue = 0,
     ref = $bindable(),
-    value = $bindable(0),
-    valid = $bindable(undefined),
+    value = $bindable(defaultValue),
+    valid = $bindable(),
     dirty = $bindable(false),
     touched = $bindable(false),
     hovered = $bindable(false),
@@ -71,17 +72,9 @@
 
   const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
   const text = $derived(elevation >= 0 || !rest.pressed);
-  const style = $derived.by(() => {
-    if (text) return;
-    return `
-      --neo-btn-box-shadow: var(--neo-box-shadow-raised-${Math.min(Math.abs(elevation), 3)});
-      --neo-btn-box-shadow-hover: var(--neo-box-shadow-raised-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-focus: var(--neo-box-shadow-raised-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      `;
-  });
+  const style = $derived(computeButtonShadows(elevation, text));
   const buttonProps = $derived<NeoButtonProps>({
+    skeleton: rest.skeleton,
     disabled: rest.disabled,
     rounded: rest.rounded,
     glass: rest.glass,
@@ -151,6 +144,7 @@
     {placeholder}
     {before}
     {after}
+    {defaultValue}
     {...rest}
   />
 </svelte:element>

@@ -3,6 +3,8 @@
 
   import type { EventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
 
+  import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
   import NeoAffix from '~/inputs/NeoAffix.svelte';
   import NeoLabel from '~/inputs/NeoLabel.svelte';
   import NeoValidation from '~/inputs/NeoValidation.svelte';
@@ -35,8 +37,8 @@
     // States
     id = label ? `neo-textarea-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
-    value = $bindable(undefined),
-    valid = $bindable(undefined),
+    value = $bindable(),
+    valid = $bindable(),
     dirty = $bindable(false),
     touched = $bindable(false),
     hovered = $bindable(false),
@@ -106,7 +108,9 @@
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
-  const validate: NeoInputMethods['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
+  const validate: NeoInputMethods<HTMLTextAreaElement>['validate'] = (
+    update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true },
+  ) => {
     if (update.dirty) dirty = value !== initial;
     if (!update.valid) return { touched, dirty, valid, value, initial };
     valid = ref?.checkValidity();
@@ -158,7 +162,7 @@
    * Change the state of the input
    * @param state
    */
-  export const mark: NeoInputMethods['mark'] = (state: NeoInputState) => {
+  export const mark: NeoInputMethods<HTMLTextAreaElement>['mark'] = (state: NeoInputState<HTMLTextAreaElement>) => {
     if (state.touched !== undefined) touched = state.touched;
     if (state.valid !== undefined) valid = state.valid;
     if (state.dirty === undefined) return onmark?.({ touched, dirty, valid });
@@ -175,22 +179,24 @@
   /**
    * Clear the input state
    */
-  export const clear: NeoInputMethods['clear'] = (state?: NeoInputState, event?: InputEvent) => {
-    value = '';
+  export const clear: NeoInputMethods<HTMLTextAreaElement>['clear'] = (
+    state?: NeoInputState<HTMLTextAreaElement>,
+    event?: InputEvent | SvelteEvent<InputEvent>,
+  ) => {
+    if (event) ref?.dispatchEvent(event);
+    value = rest?.defaultValue ?? '';
     focus();
-    if (!state) {
-      setTimeout(() => validate());
-      return onclear?.({ touched, dirty, valid, value }, event);
-    }
-    initial = value;
-    setTimeout(() => mark({ touched: false, dirty: false, ...state }));
-    return onclear?.({ touched, dirty, valid, value }, event);
+    setTimeout(() => (state ? mark({ touched: false, dirty: false, ...state }) : validate()));
+    onclear?.({ touched, dirty, valid, value, initial }, event);
+    if (event) return ref?.dispatchEvent(event);
+    const _event: InputEventInit = { bubbles: true, cancelable: false, data: value as InputEventInit['data'], inputType: 'clear' };
+    oninput?.(new InputEvent('input', _event) as SvelteEvent<InputEvent, HTMLTextAreaElement>);
   };
 
   /**
    * Change the value of the input
    */
-  export const change: NeoInputMethods['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
+  export const change: NeoInputMethods<HTMLTextAreaElement>['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
     if (event) ref?.dispatchEvent(event);
     value = _value;
     focus();
@@ -203,8 +209,9 @@
   });
 
   const affix = $derived(clearable || loading !== undefined || validation);
-  const close = $derived(clearable && (focused || hovered) && !!value?.length && !disabled && !readonly);
-  const isFloating = $derived(floating && !focused && !value?.length && !disabled && !readonly);
+  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
+  const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
+  const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
 
   let labelHeight = $state<string>();
   let labelWidth = $state<string>();
@@ -413,25 +420,6 @@
       >
         {@render textarea()}
       </NeoLabel>
-      <!--      <div class="neo-textarea-label-container" class:neo-floating={isFloating} role="none" onclick={focus}>-->
-      <!--        <label-->
-      <!--          bind:this={labelRef}-->
-      <!--          for={id}-->
-      <!--          class:neo-textarea-label={true}-->
-      <!--          class:neo-affix={affix || after}-->
-      <!--          class:neo-first={first}-->
-      <!--          class:neo-rounded={rounded}-->
-      <!--          class:neo-required={rest.required}-->
-      <!--          {...labelProps}-->
-      <!--        >-->
-      <!--          {#if typeof label === 'string'}-->
-      <!--            {label}-->
-      <!--          {:else}-->
-      <!--            {@render label(context)}-->
-      <!--          {/if}-->
-      <!--        </label>-->
-      <!--        {@render textarea()}-->
-      <!--      </div>-->
     {:else}
       {@render textarea()}
     {/if}

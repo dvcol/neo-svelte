@@ -16,8 +16,8 @@
 
     // State
     ref = $bindable(),
-    value = $bindable(undefined),
-    valid = $bindable(undefined),
+    value = $bindable(),
+    valid = $bindable(),
     dirty = $bindable(false),
     touched = $bindable(false),
     hovered = $bindable(false),

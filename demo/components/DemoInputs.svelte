@@ -37,7 +37,7 @@
     touched = $state(false);
     dirty = $state(false);
     valid = $state(undefined);
-    value = $state<string | number>('');
+    value = $state<string | number>();
 
     constructor({
       touched = false,
