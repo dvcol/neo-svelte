@@ -12,6 +12,7 @@
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoColorPicker from '~/inputs/NeoColorPicker.svelte';
   import NeoDateTime from '~/inputs/NeoDateTime.svelte';
+  import NeoFilePicker from '~/inputs/NeoFilePicker.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoPassword from '~/inputs/NeoPassword.svelte';
@@ -80,6 +81,8 @@
     clearable: false,
     hover: -1,
     size: 30,
+    onchange: (e: Event) => console.info('change', e),
+    oninput: (e: Event) => console.info('input', e),
   });
 
   const onPressed = () => {
@@ -679,10 +682,10 @@
     {@render validationState(pinState, true)}
     {#if options.glass}
       <SphereBackdrop>
-        <NeoInput type="file" {...options} />
+        <NeoFilePicker {...options} />
       </SphereBackdrop>
     {:else}
-      <NeoInput type="file" {...options} />
+      <NeoFilePicker {...options} />
     {/if}
   </div>
 </div>

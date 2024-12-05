@@ -281,7 +281,10 @@ export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
    */
   beforeProps?: HTMLNeoBaseElement;
 } & NeoCommonInputProps<T> &
-  HTMLInputAttributes;
+  HTMLInputAttributes & {
+    files?: HTMLInputAttributes['bind:files'];
+    group?: HTMLInputAttributes['bind:group'];
+  };
 
 export type NeoTextAreaResize = {
   /**

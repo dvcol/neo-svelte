@@ -38,8 +38,12 @@
     // States
     id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
-    value = $bindable(undefined),
-    valid = $bindable(undefined),
+    files = $bindable(), // type="file"
+    value = $bindable(),
+    group = $bindable(), // type="radio"
+    checked = $bindable(), // type="checkbox"
+    indeterminate = $bindable(), // type="checkbox"
+    valid = $bindable(),
     dirty = $bindable(false),
     touched = $bindable(false),
     hovered = $bindable(false),
