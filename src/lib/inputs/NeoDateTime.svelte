@@ -1,8 +1,8 @@
 <script lang="ts">
-  import NeoButton from '../buttons/NeoButton.svelte';
-
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
+
+  import NeoButton from '~/buttons/NeoButton.svelte';
 
   import IconCalendar from '~/icons/IconCalendar.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
@@ -41,6 +41,7 @@
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle picker',
     title: 'Toggle picker',
+    skeleton: rest.skeleton,
     disabled: rest.disabled,
     rounded: rest.rounded,
     glass: rest.glass,

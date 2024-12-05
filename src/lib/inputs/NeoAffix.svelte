@@ -9,12 +9,12 @@
   import IconConfirm from '~/icons/IconConfirm.svelte';
   import { leaveDefaultTransition } from '~/utils/transition.utils.js';
 
-  const { loading, close, valid, closeProps, ...rest }: NeoAffixProps = $props();
+  const { loading, close, valid, skeleton, closeProps, ...rest }: NeoAffixProps = $props();
 
   const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveDefaultTransition);
 </script>
 
-<span class:neo-affix-container={true} role="none" {...rest}>
+<span class:neo-affix-container={true} class:neo-skeleton={skeleton} role="none" {...rest}>
   {#if loading}
     <span class="neo-affix-loading" out:fade={leave}>
       <IconCircleLoading width="1.25rem" height="1.25rem" />
@@ -37,6 +37,8 @@
 </span>
 
 <style lang="scss">
+  @use 'src/lib/styles/mixin' as mixin;
+
   .neo-affix-validation,
   .neo-affix-loading,
   .neo-affix-clear {
@@ -115,6 +117,12 @@
         cursor: not-allowed;
         scale: 1;
       }
+    }
+
+    &.neo-skeleton > * {
+      border-radius: 50%;
+
+      @include mixin.skeleton;
     }
   }
 </style>

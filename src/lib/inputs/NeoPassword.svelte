@@ -42,6 +42,7 @@
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle password visibility',
     title: 'Toggle password visibility',
+    skeleton: rest.skeleton,
     disabled: rest.disabled,
     rounded: rest.rounded,
     glass: rest.glass,

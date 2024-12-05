@@ -433,6 +433,7 @@
             {loading}
             {close}
             valid={validation ? valid : undefined}
+            skeleton={rest.skeleton}
             closeProps={{ onclick: () => clear() }}
             onclick={() => focus(0, 0, { last: true })}
           />

@@ -311,7 +311,7 @@
 {#snippet suffix()}
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
-    <NeoAffix {loading} {close} valid={validation ? valid : undefined} closeProps={{ onclick: () => clear() }} onclick={() => focus()} />
+    <NeoAffix {loading} {close} {skeleton} valid={validation ? valid : undefined} closeProps={{ onclick: () => clear() }} onclick={() => focus()} />
   {/if}
 
   <!--  Suffix  -->

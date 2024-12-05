@@ -306,6 +306,7 @@
       class={after ? 'neo-after' : undefined}
       {loading}
       {close}
+      {skeleton}
       valid={validation ? valid : undefined}
       closeProps={{ onclick: () => clear() }}
       onclick={() => focus()}
