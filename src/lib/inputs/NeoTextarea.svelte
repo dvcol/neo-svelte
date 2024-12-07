@@ -1,6 +1,8 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
 
+  import { tick } from 'svelte';
+
   import type { EventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -179,14 +181,15 @@
   /**
    * Clear the input state
    */
-  export const clear: NeoInputMethods<HTMLTextAreaElement>['clear'] = (
+  export const clear: NeoInputMethods<HTMLTextAreaElement>['clear'] = async (
     state?: NeoInputState<HTMLTextAreaElement>,
     event?: InputEvent | SvelteEvent<InputEvent>,
   ) => {
-    if (event) ref?.dispatchEvent(event);
     value = rest?.defaultValue ?? '';
+    await tick();
     focus();
-    setTimeout(() => (state ? mark({ touched: false, dirty: false, ...state }) : validate()));
+    if (state) mark({ touched: false, dirty: false, ...state });
+    else validate();
     onclear?.({ touched, dirty, valid, value, initial }, event);
     if (event) return ref?.dispatchEvent(event);
     const _event: InputEventInit = { bubbles: true, cancelable: false, data: value as InputEventInit['data'], inputType: 'clear' };

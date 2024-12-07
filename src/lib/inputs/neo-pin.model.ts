@@ -36,7 +36,7 @@ export type NeoPinState = {
 export type NeoPinProps = NeoPinState & Omit<NeoInputProps, 'floating' | 'position'>;
 
 export type NeoPinMethods = {
-  clear: () => void;
+  clear: () => Promise<void>;
 };
 
 export type NeoPinContext = NeoValidationFieldContext<NeoInputHTMLElement, string> &

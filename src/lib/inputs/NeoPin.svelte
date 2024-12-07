@@ -173,7 +173,10 @@
     );
   };
 
-  const clear = () => refs?.forEach(group => group?.forEach(input => input?.clear?.()));
+  const clear = async () => {
+    await Promise.all(refs?.map(group => group?.map(input => input?.clear?.())));
+    focus(0, 0, { last: true });
+  };
 
   const paste = (data: string, i = 0, j = 0) => {
     let _group = i;

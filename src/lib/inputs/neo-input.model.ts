@@ -81,10 +81,12 @@ export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement> = 
   /**
    * Clear the input. If a state is provided, the input state will be updated accordingly.
    * If a partial state is provided, the input state will be reinitialized and the provided state will be merged.
+   *
+   * Note: Clearing the input will trigger `onclear` and `oninput` events, but not `onchange`.
    * @param state
    * @param event
    */
-  clear: (state?: NeoInputState<T>, event?: InputEvent | SvelteEvent<InputEvent>) => unknown;
+  clear: (state?: NeoInputState<T>, event?: InputEvent | SvelteEvent<InputEvent>) => Promise<unknown>;
   /**
    * Change the input value.
    * @param value

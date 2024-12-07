@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { tick } from 'svelte';
+
   import type { EventHandler, FocusEventHandler, FormEventHandler } from 'svelte/elements';
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -82,14 +84,15 @@
   /**
    * Clear the input state
    */
-  export const clear: NeoInputMethods<HTMLInputElement>['clear'] = (
+  export const clear: NeoInputMethods<HTMLInputElement>['clear'] = async (
     state?: NeoInputState<HTMLInputElement>,
     event?: InputEvent | SvelteEvent<InputEvent>,
   ) => {
-    if (event) ref?.dispatchEvent(event);
     value = rest?.defaultValue ?? '';
+    await tick();
     focus();
-    setTimeout(() => (state ? mark({ touched: false, dirty: false, ...state }) : validate()));
+    if (state) mark({ touched: false, dirty: false, ...state });
+    else validate();
     onclear?.({ touched, dirty, valid, value, initial }, event);
     if (event) return ref?.dispatchEvent(event);
     const _event: InputEventInit = { bubbles: true, cancelable: false, data: value, inputType: 'clear' };
@@ -100,9 +103,9 @@
    * Change the value of the input
    */
   export const change: NeoInputMethods<HTMLInputElement>['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
-    if (event) ref?.dispatchEvent(event);
     value = _value;
     focus();
+    if (event) ref?.dispatchEvent(event);
     return validate();
   };
 
