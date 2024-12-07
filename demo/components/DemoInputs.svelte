@@ -4,6 +4,8 @@
   import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model';
+  import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model';
   import type { NeoInputProps } from '~/inputs/neo-input.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -18,6 +20,7 @@
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
+
   import {
     DefaultShadowElevation,
     getDefaultElevation,
@@ -26,35 +29,35 @@
     MinShadowElevation,
   } from '~/utils/shadow.utils.js';
 
-  type ColumProps = {
+  type ColumProps<T = NeoInputProps> = {
     label: string;
-    props?: NeoInputProps;
+    props?: T;
     state: ValidationState;
     textarea?: boolean;
     input?: boolean;
   };
 
-  class ValidationState {
-    touched = $state(false);
-    dirty = $state(false);
-    valid = $state(undefined);
-    value = $state<string | number>();
+  type InputState = Pick<NeoInputProps, 'touched' | 'dirty' | 'valid' | 'value' | 'group' | 'checked' | 'indeterminate' | 'files'>;
 
-    constructor({
-      touched = false,
-      dirty = false,
-      valid = undefined,
-      value = '',
-    }: {
-      touched?: boolean;
-      dirty?: boolean;
-      valid?: boolean;
-      value?: string | number;
-    } = {}) {
+  class ValidationState implements InputState {
+    touched = $state<boolean>(false);
+    dirty = $state<boolean>(false);
+    valid = $state<boolean>();
+    value = $state<string | number>();
+    group = $state<string>();
+    checked = $state<boolean>();
+    indeterminate = $state<boolean>();
+    files = $state<FileList>();
+
+    constructor({ touched = false, dirty = false, valid, value = '', group, checked, indeterminate, files }: Partial<InputState> = {}) {
       this.touched = touched;
       this.dirty = dirty;
       this.valid = valid;
       this.value = value;
+      this.group = group;
+      this.checked = checked;
+      this.indeterminate = indeterminate;
+      this.files = files;
     }
 
     clear() {
@@ -62,6 +65,10 @@
       this.dirty = false;
       this.valid = undefined;
       this.value = '';
+      this.group = '';
+      this.checked = false;
+      this.indeterminate = false;
+      this.files = new FileList();
     }
   }
 
@@ -81,8 +88,8 @@
     clearable: false,
     hover: -1,
     size: 30,
-    onchange: (e: Event) => console.info('change', e),
-    oninput: (e: Event) => console.info('input', e),
+    onchange: (...args: any[]) => console.info('change', ...args),
+    oninput: (...args: any[]) => console.info('input', ...args),
   });
 
   const onPressed = () => {
@@ -106,6 +113,9 @@
   const pinStateSeparator = new ValidationState();
   const pinPasswordState = new ValidationState();
 
+  const fileState = new ValidationState();
+  const multipleFileState = new ValidationState();
+
   const onClear = () => {
     validation.clear();
     validState.clear();
@@ -117,6 +127,9 @@
     pinState.clear();
     pinStateSeparator.clear();
     pinPasswordState.clear();
+
+    fileState.clear();
+    multipleFileState.clear();
   };
 
   const onclick = (e: MouseEvent) => console.info('suffix click', e);
@@ -311,7 +324,7 @@
   ];
 
   // ['date', 'datetime-local', 'time', 'week', 'month']
-  const dateColumns: ColumProps[] = [
+  const dateColumns: ColumProps<NeoDateTimeProps>[] = [
     {
       label: 'Date',
       props: {
@@ -360,6 +373,43 @@
         required: true,
       },
       state: new ValidationState(),
+      input: true,
+    },
+  ];
+
+  const fileColumns: ColumProps<NeoFilePickerProps>[] = [
+    {
+      label: 'File',
+      props: {
+        label: 'File Picker',
+        type: 'file',
+        required: true,
+      },
+      state: fileState,
+      input: true,
+    },
+    {
+      label: 'Multiple File',
+      props: {
+        label: 'Multiple File',
+        type: 'file',
+        required: true,
+        multiple: true,
+      },
+      state: multipleFileState,
+      input: true,
+    },
+    {
+      label: 'Expanded',
+      props: {
+        label: 'Drag & Drop',
+        type: 'file',
+        required: true,
+        multiple: true,
+        expanded: true,
+        drop: true,
+      },
+      state: multipleFileState,
       input: true,
     },
   ];
@@ -642,8 +692,8 @@
             bind:dirty={column.state.dirty}
             bind:valid={column.state.valid}
             bind:value={column.state.value}
-            {...column.props}
             {...options}
+            {...column.props}
           />
         </SphereBackdrop>
       {:else}
@@ -652,8 +702,8 @@
           bind:dirty={column.state.dirty}
           bind:valid={column.state.valid}
           bind:value={column.state.value}
-          {...column.props}
           {...options}
+          {...column.props}
         />
       {/if}
     </div>
@@ -677,17 +727,33 @@
 
 <!-- File Picker inputs -->
 <div class="row">
-  <div class="column content">
-    <span class="label">Date Picker</span>
-    {@render validationState(pinState, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoFilePicker {...options} />
-      </SphereBackdrop>
-    {:else}
-      <NeoFilePicker {...options} />
-    {/if}
-  </div>
+  {#each fileColumns as column}
+    <div class="column content">
+      <span class="label">Date Picker</span>
+      {@render validationState(pinState, true)}
+      {#if options.glass}
+        <SphereBackdrop>
+          <NeoFilePicker
+            bind:touched={column.state.touched}
+            bind:dirty={column.state.dirty}
+            bind:valid={column.state.valid}
+            bind:files={column.state.files}
+            {...options}
+            {...column.props}
+          />
+        </SphereBackdrop>
+      {:else}
+        <NeoFilePicker
+          bind:touched={column.state.touched}
+          bind:dirty={column.state.dirty}
+          bind:valid={column.state.valid}
+          bind:files={column.state.files}
+          {...options}
+          {...column.props}
+        />
+      {/if}
+    </div>
+  {/each}
 </div>
 
 <style lang="scss">
