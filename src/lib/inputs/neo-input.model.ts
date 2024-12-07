@@ -6,13 +6,21 @@
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/neo-validation.model.js';
-import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
 export type NeoInputValue<T extends HTMLInputElement | HTMLTextAreaElement> = T extends HTMLTextAreaElement
   ? HTMLTextareaAttributes['value']
   : HTMLInputAttributes['value'];
+
+type NeoInputHTMLAttributes<T extends HTMLInputElement | HTMLTextAreaElement> = T extends HTMLTextAreaElement
+  ? HTMLTextareaAttributes
+  : HTMLInputAttributes & {
+      files?: HTMLInputAttributes['bind:files'];
+      group?: HTMLInputAttributes['bind:group'];
+    };
+
 export type NeoInputState<T extends HTMLInputElement | HTMLTextAreaElement> = NeoValidationState<NeoInputValue<T>>;
 
 export type NeoInputStyles = {
@@ -103,27 +111,28 @@ export const NeoInputLabelPosition = {
 
 export type NeoInputLabelPositions = (typeof NeoInputLabelPosition)[keyof typeof NeoInputLabelPosition];
 
-export type NeoCommonInputProps<T extends HTMLInputElement | HTMLTextAreaElement> = {
-  // Snippets
-
+export type BaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement = HTMLInputElement> = {
+  // Styles
   /**
-   * A snippet or a string to display as the input label.
+   * If `true`, the input will have no left padding/border radius.
    */
-  label?: Snippet<[NeoInputContext<T>]> | string;
+  after?: boolean;
   /**
-   * A snippet or a string to display as the input info message.
+   * If `true`, the input will have no right padding/border radius.
    */
-  message?: Snippet<[NeoInputContext<T>]> | string;
-  /**
-   * A snippet or a string to display as the input error message.
-   */
-  error?: Snippet<[NeoInputContext<T>]> | string;
-  /**
-   * A snippet to display as the input suffix.
-   */
-  after?: Snippet<[NeoInputContext<T>]>;
+  before?: boolean;
 
   // States
+  /**
+   * If the input is currently focused.
+   */
+  focused?: boolean;
+  /**
+   * Fall back value when the input value is cleared.
+   */
+  defaultValue: HTMLInputAttributes['value'];
+
+  // Validation
   /**
    * If `true`, the input dirty state will update on input events.
    * If `false`, the input dirty state will only update on change events.
@@ -147,6 +156,49 @@ export type NeoCommonInputProps<T extends HTMLInputElement | HTMLTextAreaElement
    */
   validateOnBlur?: boolean;
   /**
+   * Reflect the input validation message.
+   */
+  validationMessage?: T['validationMessage'];
+
+  // Events
+  /**
+   * Callback when the input state is manually changed.
+   * @param state
+   */
+  onmark?: (state: NeoInputState<T>) => unknown;
+  /**
+   * Callback when the input is cleared.
+   * @param state
+   * @param event
+   */
+  onclear?: (state: NeoInputState<T>, event?: InputEvent) => unknown;
+} & HTMLUseProps &
+  HTMLRefProps<T> &
+  NeoInputState<T> &
+  NeoInputHTMLAttributes<T>;
+
+export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement> = {
+  // Snippets
+
+  /**
+   * A snippet or a string to display as the input label.
+   */
+  label?: Snippet<[NeoInputContext<T>]> | string;
+  /**
+   * A snippet or a string to display as the input info message.
+   */
+  message?: Snippet<[NeoInputContext<T>]> | string;
+  /**
+   * A snippet or a string to display as the input error message.
+   */
+  error?: Snippet<[NeoInputContext<T>]> | string;
+  /**
+   * A snippet to display as the input suffix.
+   */
+  after?: Snippet<[NeoInputContext<T>]>;
+
+  // States
+  /**
    * Display a loading spinner inside the input.
    * If defined, some space will be reserved for the spinner.
    * Set to `undefined` when not loading to regain the space.
@@ -156,10 +208,6 @@ export type NeoCommonInputProps<T extends HTMLInputElement | HTMLTextAreaElement
    * If the input is currently hovered.
    */
   hovered?: boolean;
-  /**
-   * If the input is currently focused.
-   */
-  focused?: boolean;
   /**
    * Display a clear button to reset the input value.
    * If used in combination with `loading`, the clear button will be hidden while loading.
@@ -187,19 +235,6 @@ export type NeoCommonInputProps<T extends HTMLInputElement | HTMLTextAreaElement
    * @default 'inside'
    */
   position?: NeoInputLabelPositions;
-
-  // Events
-  /**
-   * Callback when the input state is manually changed.
-   * @param state
-   */
-  onmark?: (state: NeoInputState<T>) => unknown;
-  /**
-   * Callback when the input is cleared.
-   * @param state
-   * @param event
-   */
-  onclear?: (state: NeoInputState<T>, event?: InputEvent) => unknown;
 
   // Other props
 
@@ -250,10 +285,9 @@ export type NeoCommonInputProps<T extends HTMLInputElement | HTMLTextAreaElement
    * The ref to bind to the label.
    */
   labelRef?: HTMLLabelElement;
-} & HTMLRefProps<T> &
-  NeoInputState<T> &
+} & Omit<BaseInputProps<T>, 'after' | 'before'> &
   NeoInputStyles &
-  HTMLActionProps;
+  HTMLTransitionProps;
 
 export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
   // Snippets
@@ -262,12 +296,6 @@ export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
    * A snippet to display as the input prefix.
    */
   before?: Snippet<[NeoInputContext<T>]>;
-
-  // State
-  /**
-   * Fall back value when the input value is cleared.
-   */
-  defaultValue: HTMLInputAttributes['value'];
 
   // Other props
 
@@ -280,7 +308,7 @@ export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
    * The props to pass to the prefix.
    */
   beforeProps?: HTMLNeoBaseElement;
-} & NeoCommonInputProps<T> &
+} & NeoInputGroupProps<T> &
   HTMLInputAttributes & {
     files?: HTMLInputAttributes['bind:files'];
     group?: HTMLInputAttributes['bind:group'];
@@ -312,7 +340,7 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
    * @default true
    */
   autoResize?: boolean | NeoTextAreaResize;
-} & NeoCommonInputProps<T> &
+} & NeoInputGroupProps<T> &
   HTMLTextareaAttributes;
 
 export type NeoInputHTMLElement<T extends HTMLInputElement = HTMLInputElement> = T & Partial<NeoInputMethods<T>>;

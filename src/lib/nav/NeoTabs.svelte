@@ -332,7 +332,7 @@
         }
       }
 
-      &.rounded :global(.neo-button-group .neo-tab::before) {
+      &.neo-rounded :global(.neo-button-group .neo-tab::before) {
         border-radius: var(--neo-tab-border-radius, var(--neo-border-radius-lg));
       }
     }

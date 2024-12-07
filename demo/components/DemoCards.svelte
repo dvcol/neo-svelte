@@ -11,7 +11,7 @@
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
-  import { DefaultShadowElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
+  import { DefaultShadowElevation, getDefaultElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
   let skeleton = $state(false);
   const options = $state<NeoCardProps>({
@@ -28,6 +28,10 @@
       console.info('onClose', e);
     },
   });
+
+  const onPressed = () => {
+    options.elevation = getDefaultElevation(options.pressed);
+  };
 
   const onElevation = () => {
     if (options.elevation + options.hover < MinShadowElevation) options.hover += 1;
@@ -65,7 +69,7 @@
   <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={options.convex}>Convex</NeoButton>
-    <NeoButton toggle bind:checked={options.pressed}>Pressed</NeoButton>
+    <NeoButton toggle bind:checked={options.pressed} onclick={onPressed}>Pressed</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
