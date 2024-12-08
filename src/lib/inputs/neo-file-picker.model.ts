@@ -24,6 +24,15 @@ export type NeoFilePickerContext<Multiple extends boolean = boolean> = {
    */
   multiple?: Multiple;
   /**
+   * Whether the file picker should append to the current files.
+   * If false, the current files will be replaced.
+   *
+   * Only applies when multiple is true.
+   *
+   * @see multiple
+   */
+  append?: boolean;
+  /**
    * The current files in the file picker.
    */
   files?: FileList;

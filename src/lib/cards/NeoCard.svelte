@@ -214,7 +214,7 @@
     flex-direction: column;
     box-sizing: border-box;
     width: fit-content;
-    margin: var(--neo-shadow-margin, 0.625rem);
+    margin: var(--neo-card-margin, var(--neo-shadow-margin, 0.625rem));
     padding: var(--neo-card-full-spacing);
     color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);

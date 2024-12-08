@@ -1,10 +1,13 @@
 <script lang="ts">
+  import { tick } from 'svelte';
+
   import NeoButton from '../buttons/NeoButton.svelte';
 
   import type { DragEventHandler, FormEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
 
+  import NeoCard from '~/cards/NeoCard.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
   import { type SvelteEvent } from '~/utils/html-element.utils.js';
@@ -21,6 +24,7 @@
     hovered = $bindable(false),
     focused = $bindable(false),
     placeholder = 'Choose a file',
+    append,
 
     multiple,
     expanded = $bindable(false),
@@ -64,39 +68,45 @@
   });
 
   type FileEvent = SvelteEvent<InputEvent, HTMLInputElement>;
-  const getValue = (e: FileEvent): [FileEvent, null | FileList | File] => {
-    if (!e?.currentTarget?.files) return [e, null];
-    if (multiple) return [e, e.currentTarget.files];
-    return [e, e.currentTarget.files[0]];
+  const getValue = (e: FileEvent): null | FileList | File => {
+    if (!e?.currentTarget?.files) return null;
+    if (multiple) return e.currentTarget.files;
+    return e.currentTarget.files[0];
   };
 
-  const mirrorInput: FormEventHandler<HTMLInputElement> = e => {
-    oninput?.(...getValue(e as FileEvent));
-  };
+  const mirror = (e: FileEvent, cb?: NeoFilePickerProps['oninput'] | NeoFilePickerProps['onchange']) => cb?.(e, getValue(e));
+  const mirrorInput: FormEventHandler<HTMLInputElement> = e => mirror(e as FileEvent, oninput);
+  const mirrorChange: FormEventHandler<HTMLInputElement> = e => mirror(e as FileEvent, onchange);
 
-  const mirrorChange: FormEventHandler<HTMLInputElement> = e => {
-    onchange?.(...getValue(e as FileEvent));
-  };
-
-  const onDrop: DragEventHandler<HTMLDivElement> = e => {
-    console.info('ondrop', e);
+  const onDrop: DragEventHandler<HTMLDivElement> = async e => {
+    dragging = false;
     e.preventDefault();
-
-    if (e.dataTransfer?.items) {
-      // Use DataTransferItemList interface to access the file(s)
-      [...e.dataTransfer.items].forEach((item, i) => {
-        // If dropped items aren't files, reject them
-        if (item.kind === 'file') {
-          const file = item.getAsFile();
-          if (!file) return;
-          console.info(`… file[${i}].name = ${file.name}`);
+    if (!e.dataTransfer?.files?.length) return;
+    if (multiple && append) {
+      const list = new DataTransfer();
+      if (files?.length) {
+        for (let i = 0; i < files.length; i += 1) {
+          list.items.add(files[i]);
         }
-      });
-    } else if (e.dataTransfer?.files) {
-      // Use DataTransfer interface to access the file(s)
+      }
+      for (let i = 0; i < e.dataTransfer.files.length; i += 1) {
+        list.items.add(e.dataTransfer.files[i]);
+      }
+      files = list.files;
+    } else {
       files = e.dataTransfer.files;
     }
-    dragging = false;
+    console.info('files', files);
+    await tick();
+    if (!ref) return;
+    const init: InputEventInit = {
+      bubbles: true,
+      cancelable: false,
+      data: multiple ? `${files.length} Files` : files[0]?.name,
+      inputType: 'insertFromDrop',
+    };
+    ref.dispatchEvent(new InputEvent('input', init));
+    ref.dispatchEvent(new InputEvent('change', init));
   };
 
   let dragRef = $state<HTMLDivElement>();
@@ -123,8 +133,6 @@
 
   // TODO expanded
   // TODO animated idle drag over/select
-  // TODO animated loading progress
-  // TODO animated success/failure
   // TODO show accepted file types
 </script>
 
@@ -156,13 +164,14 @@
   />
 {/snippet}
 
-<svelte:element this={containerTag} class:neo-file-picker={true} class:neo-dragging={dragging} {...containerProps}>
+<svelte:element this={containerTag} class:neo-file-picker={true} {...containerProps}>
   {#if drop}
     <!-- Drag & drop -->
     <div
       bind:this={dragRef}
       role={drop ? 'region' : undefined}
       class="neo-file-picker-drop-container"
+      class:neo-dragging={dragging}
       ondrop={onDrop}
       ondragover={onDragOver}
       ondragenter={onDragEnter}
@@ -170,14 +179,9 @@
       style:min-width={dragWith}
       style:min-height={dragHeight}
     >
-      {#if expanded}
-        <!--   TODO: expanded view-->
-        {@render input()}
-      {:else if dragging}
-        <div class="neo-file-picker-drag-container">Drop files here</div>
-      {:else}
-        {@render input()}
-      {/if}
+      <NeoCard borderless elevation={0} flex="1 1 auto">
+        <div>{@render input()}</div>
+      </NeoCard>
     </div>
   {:else}
     <!-- No drop support -->
@@ -193,15 +197,16 @@
       display: none;
     }
 
-    &-drop-container :global(> *) {
-      pointer-events: none;
-    }
+    &-drop-container {
+      --neo-card-spacing: 0;
 
-    &-drop-container,
-    &-drag-container {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
+      &.neo-dragging :global(> *) {
+        pointer-events: none;
+      }
     }
   }
 </style>

@@ -68,7 +68,7 @@
       this.group = '';
       this.checked = false;
       this.indeterminate = false;
-      this.files = new FileList();
+      this.files = undefined;
     }
   }
 
@@ -407,6 +407,7 @@
         required: true,
         multiple: true,
         expanded: true,
+        append: true,
         drop: true,
       },
       state: multipleFileState,
