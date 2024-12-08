@@ -367,6 +367,7 @@
     text-decoration: none;
     outline: none;
     transition:
+      opacity 0.3s ease,
       color 0.3s ease,
       margin 0.3s ease,
       padding 0.3s ease,
@@ -506,6 +507,7 @@
       :global(.neo-label-container) {
         width: 100%;
         transition:
+          opacity 0.3s ease,
           padding 0.3s ease,
           margin 0.3s ease;
 
@@ -516,6 +518,7 @@
 
           min-height: var(--neo-input-label-height);
           transition:
+            opacity 0.3s ease,
             padding 0.3s ease,
             color 0.3s ease,
             font-size 0.3s ease,

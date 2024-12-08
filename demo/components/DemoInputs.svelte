@@ -115,6 +115,7 @@
 
   const fileState = new ValidationState();
   const multipleFileState = new ValidationState();
+  const expandedFileState = new ValidationState();
 
   const onClear = () => {
     validation.clear();
@@ -130,6 +131,7 @@
 
     fileState.clear();
     multipleFileState.clear();
+    expandedFileState.clear();
   };
 
   const onclick = (e: MouseEvent) => console.info('suffix click', e);
@@ -382,8 +384,10 @@
       label: 'File',
       props: {
         label: 'File Picker',
+        // position: 'top',
         type: 'file',
         required: true,
+        validation: true,
       },
       state: fileState,
       input: true,
@@ -394,6 +398,7 @@
         label: 'Multiple File',
         type: 'file',
         required: true,
+        validation: true,
         multiple: true,
       },
       state: multipleFileState,
@@ -405,12 +410,13 @@
         label: 'Drag & Drop',
         type: 'file',
         required: true,
+        validation: true,
         multiple: true,
         expanded: true,
         append: true,
         drop: true,
       },
-      state: multipleFileState,
+      state: expandedFileState,
       input: true,
     },
   ];
