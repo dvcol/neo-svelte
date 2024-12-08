@@ -134,8 +134,6 @@
     expandedFileState.clear();
   };
 
-  const onclick = (e: MouseEvent) => console.info('suffix click', e);
-
   const columns: ColumProps[] = [
     {
       label: 'Default',
@@ -160,7 +158,6 @@
       props: {
         placeholder: 'Placeholder',
         after,
-        afterProps: { onclick },
       },
       state: validation,
       textarea: true,
@@ -172,7 +169,6 @@
         placeholder: 'Placeholder',
         after: text,
         before: text,
-        afterProps: { onclick },
       },
       state: validation,
       input: true,
@@ -184,7 +180,6 @@
         label: 'Inside',
         placeholder: 'Placeholder',
         after,
-        afterProps: { onclick },
       },
       state: validation,
       textarea: true,
@@ -198,7 +193,6 @@
         placeholder: 'Placeholder',
         after,
         before,
-        afterProps: { onclick },
       },
       state: validation,
       textarea: true,
@@ -209,7 +203,7 @@
       props: {
         after,
         before,
-        afterProps: { onclick },
+
         label: 'Left',
         position: 'left',
         placeholder: 'Placeholder',
@@ -224,7 +218,7 @@
       props: {
         after,
         before,
-        afterProps: { onclick },
+
         label: 'Right',
         position: 'right',
         placeholder: 'Placeholder',
@@ -239,7 +233,6 @@
       props: {
         label,
         placeholder: 'Placeholder',
-        afterProps: { onclick },
       },
       state: validation,
       textarea: true,
@@ -263,7 +256,7 @@
         label: 'Minimum',
         placeholder: 'Placeholder',
         after,
-        afterProps: { onclick },
+
         autoResize: { min: 5 },
       },
       state: validation,
@@ -275,7 +268,7 @@
         label: 'Maximum',
         placeholder: 'Placeholder',
         after,
-        afterProps: { onclick },
+
         autoResize: { min: 3, max: 10 },
       },
       state: validation,
@@ -460,7 +453,11 @@
 {/snippet}
 
 {#snippet after()}
-  <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
+  <NeoButton text rounded={options.rounded} disabled={options.disabled} readonly={options.readonly}>
+    {#snippet icon()}
+      <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
+    {/snippet}
+  </NeoButton>
 {/snippet}
 
 {#snippet input({ props, state: _state, textarea: _textarea, input: _input }: ColumProps)}

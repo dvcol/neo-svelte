@@ -33,7 +33,7 @@
   };
 
   const resetElevation = () => {
-    elevation = reset;
+    elevation = Math.max(Math.min(reset, max), min);
     onReset?.();
   };
 </script>

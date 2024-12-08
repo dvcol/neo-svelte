@@ -526,6 +526,18 @@
           scale: 1;
         }
       }
+
+      &:has(:global(.neo-button:only-child)) {
+        padding: 0;
+      }
+
+      :global(.neo-button) {
+        --neo-btn-padding-empty: 0.4375rem;
+        --neo-btn-margin: auto;
+        --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
+        --neo-btn-bg-color: transparent;
+        --neo-btn-backdrop-filter: none;
+      }
     }
 
     &::placeholder {
