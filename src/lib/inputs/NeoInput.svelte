@@ -194,6 +194,7 @@
       bind:this={beforeRef}
       class:neo-input-before={true}
       class:neo-inside={inside}
+      class:neo-pressed={pressed}
       class:neo-inset={elevation < 0}
       class:neo-deep={elevation < -3}
       {disabled}
@@ -224,6 +225,7 @@
       this={afterTag}
       class:neo-input-after={true}
       class:neo-inside={inside}
+      class:neo-pressed={pressed}
       class:neo-inset={elevation < 0}
       class:neo-deep={elevation < -3}
       {disabled}
@@ -438,6 +440,11 @@
 
       &.neo-inset :global(.neo-button) {
         --neo-btn-margin: auto 0;
+        --neo-btn-padding-empty: 0.375rem;
+      }
+
+      &.neo-inset.neo-pressed :global(.neo-button) {
+        --neo-input-icon-scale: 1;
       }
 
       &.neo-deep :global(.neo-button) {

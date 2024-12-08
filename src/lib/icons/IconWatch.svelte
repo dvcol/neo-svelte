@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" style:scale={$$props.scale} {...$$props}>
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...$$props} style:scale={$$props.scale} scale={undefined}>
   <circle cx="12" cy="12" r="0" fill="currentColor">
     <animate attributeName="r" dur="6s" keyTimes="0;0.03;0.97;1" repeatCount="indefinite" values="0;3;3;0" />
   </circle>
@@ -7,7 +7,7 @@
     stroke="currentColor"
     stroke-linecap="round"
     stroke-linejoin="round"
-    stroke-width="1.5"
+    stroke-width={$$props.stroke ?? 1.5}
     d="M4 12c1.38 -0.77 4.42 -1.3 8 -1.3c3.58 0 6.62 0.53 8 1.3c-1.38 0.77 -4.42 1.3 -8 1.3c-3.58 0 -6.62 -0.53 -8 -1.3Z"
   >
     <animate

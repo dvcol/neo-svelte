@@ -88,7 +88,7 @@
   use:useFn={useProps}
 >
   <NeoButton
-    id={`neo-tab-${String(tabId)}`}
+    id="neo-tab-{String(tabId)}"
     role="tab"
     aria-controls={pane}
     aria-selected={active}

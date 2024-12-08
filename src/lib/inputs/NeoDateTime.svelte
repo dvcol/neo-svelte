@@ -56,7 +56,7 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon()}
-      <IconCalendar width="1.25rem" height="1.25rem" scale="1.125" />
+      <IconCalendar width="1.25rem" height="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
     {/snippet}
   </NeoButton>
 {/snippet}

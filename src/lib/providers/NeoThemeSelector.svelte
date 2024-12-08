@@ -56,7 +56,7 @@
   {#if showSource}
     <NeoButton aria-label="Cycle light source origin" title="Cycle light source origin" checked onclick={onCycleSource} {...sourceProps}>
       {#snippet icon()}
-        <span class="neo-source-icon" style:--neo-source-rotate={`${angle}deg`}>
+        <span class="neo-source-icon" style:--neo-source-rotate="{angle}deg">
           <IconSunrise />
         </span>
       {/snippet}
@@ -65,8 +65,8 @@
   {/if}
   {#if showTheme}
     <NeoButton
-      aria-label={`Toggle ${dark ? 'light' : 'dark'} theme`}
-      title={`Toggle ${dark ? 'light' : 'dark'} theme`}
+      aria-label="Toggle {dark ? 'light' : 'dark'} theme"
+      title="Toggle {dark ? 'light' : 'dark'} theme"
       toggle
       checked={dark}
       onclick={onTheme}
@@ -84,8 +84,8 @@
   {/if}
   {#if showReset}
     <NeoButton
-      aria-label={`Toggle ${reset ? 'off' : 'on'} style reset`}
-      title={`Toggle ${reset ? 'off' : 'on'} style reset`}
+      aria-label="Toggle {reset ? 'off' : 'on'} style reset"
+      title="Toggle {reset ? 'off' : 'on'} style reset"
       toggle
       checked={reset}
       onclick={onReset}

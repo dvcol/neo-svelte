@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style:scale={$$props.scale} {...$$props}>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" {...$$props} style:scale={$$props.scale} scale={undefined}>
   <path
     fill="currentColor"
     fill-opacity="0"
@@ -7,7 +7,7 @@
     stroke-dashoffset="28"
     stroke-linecap="round"
     stroke-linejoin="round"
-    stroke-width="2"
+    stroke-width={$$props.stroke ?? 1.5}
     d="M12 3c0 0 7 6 7 12c0 2 -1 6 -7 6M12 3c0 0 -7 6 -7 12c0 2 1 6 7 6"
   >
     <animate fill="freeze" attributeName="fill-opacity" begin="0.6s" dur="0.15s" values="0;0.3" />

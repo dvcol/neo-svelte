@@ -724,10 +724,10 @@
     {@render validationState(pinState, true)}
     {#if options.glass}
       <SphereBackdrop>
-        <NeoColorPicker {...options} size="10" />
+        <NeoColorPicker label="Color Picker" {...options} size="10" />
       </SphereBackdrop>
     {:else}
-      <NeoColorPicker {...options} size="10" />
+      <NeoColorPicker label="Color Picker" {...options} size="10" />
     {/if}
   </div>
 </div>

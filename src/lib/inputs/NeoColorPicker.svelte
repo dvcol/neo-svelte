@@ -73,6 +73,7 @@
   <input
     class:neo-color-picker={true}
     class:neo-rounded={rest.rounded}
+    class:neo-label={rest.label}
     bind:this={pickerRef}
     bind:value
     type="color"
@@ -85,7 +86,7 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon()}
-      <IconPaint width="1.25rem" height="1.25rem" scale="1.125" />
+      <IconPaint width="1.25rem" height="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
     {/snippet}
   </NeoButton>
 {/snippet}
@@ -112,14 +113,20 @@
 <style lang="scss">
   .neo-color-picker {
     box-sizing: border-box;
+    height: 100%;
     margin: 0;
     padding: 0;
     border: none;
     border-radius: var(--neo-border-radius-sm);
+    transition: border-radius 0.3s ease;
     appearance: none;
 
     &.neo-rounded {
       border-radius: var(--neo-border-radius-md);
+
+      &.neo-label {
+        border-radius: var(--neo-border-radius-lg);
+      }
     }
 
     &::-moz-color-swatch {
