@@ -66,15 +66,14 @@
   /** semantic colors */
   --neo-text-color: var(--neo-grey-strong);
   --neo-text-color-active: color-mix(in srgb, currentcolor, white 10%);
-  --neo-text-color-focused: var(--neo-color-primary-50);
+  --neo-text-color-focused: color-mix(in srgb, var(--neo-text-color), var(--neo-color-primary) 50%);
   --neo-text-color-focused-active: color-mix(in srgb, var(--neo-text-color-focused), white 10%);
-  --neo-text-color-hover: var(--neo-color-primary-80);
+  --neo-text-color-hover: color-mix(in srgb, var(--neo-text-color), var(--neo-color-primary) 70%);
   --neo-text-color-hover-active: color-mix(in srgb, var(--neo-text-color-hover), white 20%);
   --neo-text-color-disabled: var(--neo-grey-strong-60);
   --neo-text-highlight-color: var(--neo-grey-soft-30);
   --neo-border-color: var(--neo-grey-soft);
-  --neo-border-color-focused: var(--neo-color-primary-50);
-  --neo-border-color-primary: var(--neo-color-primary-80);
+  --neo-border-color-focused: color-mix(in srgb, var(--neo-border-color), var(--neo-color-primary) 50%);
   --neo-border-color-disabled: var(--neo-grey-soft-60);
   --neo-background-color: var(--neo-white-soft);
   --neo-background-color-lighter: color-mix(in srgb, var(--neo-background-color), white 5%);
@@ -115,15 +114,14 @@
   /** dark mode semantic colors */
   --neo-dark-text-color: var(--neo-white-soft-dark);
   --neo-dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
-  --neo-dark-text-color-focused: var(--neo-dark-color-primary-50);
+  --neo-dark-text-color-focused: color-mix(in srgb, var(--neo-dark-text-color), var(--neo-dark-color-primary) 40%);
   --neo-dark-text-color-focused-active: color-mix(in srgb, var(--neo-dark-text-color-focused), black 10%);
-  --neo-dark-text-color-hover: var(--neo-dark-color-primary-80);
+  --neo-dark-text-color-hover: color-mix(in srgb, var(--neo-dark-text-color), var(--neo-dark-color-primary) 80%);
   --neo-dark-text-color-hover-active: color-mix(in srgb, var(--neo-dark-text-color-hover), black 20%);
   --neo-dark-text-color-disabled: var(--neo-white-soft-dark-80);
   --neo-dark-text-highlight-color: var(--neo-grey-soft-20);
   --neo-dark-border-color: var(--neo-grey-dark);
-  --neo-dark-border-color-focused: var(--neo-dark-color-primary-50);
-  --neo-dark-border-color-primary: var(--neo-dark-color-primary-80);
+  --neo-dark-border-color-focused: color-mix(in srgb, var(--neo-dark-border-color), var(--neo-dark-color-primary) 40%);
   --neo-dark-border-color-disabled: var(--neo-grey-dark-80);
   --neo-dark-background-color: var(--neo-black-soft);
   --neo-dark-background-color-lighter: color-mix(in srgb, var(--neo-background-color), black 5%);
@@ -174,7 +172,6 @@
   --neo-text-highlight-color: var(--neo-dark-text-highlight-color);
   --neo-border-color: var(--neo-dark-border-color);
   --neo-border-color-focused: var(--neo-dark-border-color-focused);
-  --neo-border-color-primary: var(--neo-dark-border-color-primary);
   --neo-border-color-disabled: var(--neo-dark-border-color-disabled);
   --neo-background-color: var(--neo-dark-background-color);
   --neo-background-color-lighter: var(--neo-dark-background-color-lighter);
