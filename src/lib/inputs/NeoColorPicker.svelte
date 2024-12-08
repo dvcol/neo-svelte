@@ -85,7 +85,7 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon()}
-      <IconPaint width="1.25rem" height="1.25rem" />
+      <IconPaint width="1.25rem" height="1.25rem" scale="1.125" />
     {/snippet}
   </NeoButton>
 {/snippet}

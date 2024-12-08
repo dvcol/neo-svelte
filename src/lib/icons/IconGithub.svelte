@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...$$props}>
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" style:scale={$$props.scale} {...$$props}>
   <mask id="lineMdGithubLoop0" width="24" height="24" x="0" y="0">
     <g fill="#fff">
       <ellipse cx="9.5" cy="9" rx="1.5" ry="1" />

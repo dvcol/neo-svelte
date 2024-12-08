@@ -56,7 +56,7 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon()}
-      <IconCalendar width="1.25rem" height="1.25rem" />
+      <IconCalendar width="1.25rem" height="1.25rem" scale="1.125" />
     {/snippet}
   </NeoButton>
 {/snippet}
@@ -87,7 +87,12 @@
       }
     }
 
+    :global(.neo-input::-webkit-datetime-edit-text:focus),
+    :global(.neo-input::-webkit-datetime-edit-fields-wrapper:focus),
+    :global(.neo-input::-webkit-datetime-edit-hour-field:focus),
+    :global(.neo-input::-webkit-datetime-edit-minute-field:focus),
     :global(.neo-input::-webkit-datetime-edit-day-field:focus),
+    :global(.neo-input::-webkit-datetime-edit-week-field:focus),
     :global(.neo-input::-webkit-datetime-edit-month-field:focus),
     :global(.neo-input::-webkit-datetime-edit-year-field:focus) {
       color: var(--neo-date-time-text-color, var(--neo-text-color));

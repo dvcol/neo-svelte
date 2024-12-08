@@ -59,9 +59,9 @@
   <NeoButton bind:checked={show} {...afterProps}>
     {#snippet icon()}
       {#if show}
-        <IconWatchOff width="1.25rem" height="1.25rem" />
+        <IconWatchOff width="1.25rem" height="1.25rem" scale="1.125" />
       {:else}
-        <IconWatch width="1.25rem" height="1.25rem" />
+        <IconWatch width="1.25rem" height="1.25rem" scale="1.125" />
       {/if}
     {/snippet}
   </NeoButton>
