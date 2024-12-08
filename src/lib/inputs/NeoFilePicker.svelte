@@ -26,12 +26,16 @@
     placeholder = 'Choose a file',
     append,
 
+    pressed,
+    elevation = getDefaultElevation(pressed),
+
     validation, // TODO - wrap validation
 
     multiple,
     expanded = $bindable(false),
     dragging = $bindable(false),
     drop = true,
+    dropText = `Drop${multiple ? ' ' : ' a '}File${multiple ? 's' : ''} here`,
 
     // Events
     oninput,
@@ -52,8 +56,7 @@
     buttonProps?.onclick?.(e);
   };
 
-  const elevation = $derived(rest?.elevation ?? getDefaultElevation(rest?.pressed));
-  const text = $derived(elevation >= 0 || !rest.pressed);
+  const text = $derived(elevation >= 0 || !pressed);
   const style = $derived(computeButtonShadows(elevation, text));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle picker',
@@ -139,11 +142,13 @@
       inputMargin = { top: marginTop, left: marginLeft, right: marginRight, bottom: marginBottom };
     }
     dragging = true;
+    hovered = true;
     console.info('onDragEnter', e);
   };
 
   const onDragLeave: DragEventHandler<HTMLDivElement> = e => {
     e.preventDefault();
+    hovered = false;
     dragging = false;
     console.info('onDragLeave', e);
   };
@@ -159,7 +164,7 @@
       {#if drop && dragging}
         <IconDownload width="1.25rem" height="1.25rem" scale="1.5" />
       {:else}
-        <IconFileUpload width="1.25rem" height="1.25rem" scale="1.125" />
+        <IconFileUpload width="1.25rem" height="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}
     {/snippet}
   </NeoButton>
@@ -179,6 +184,8 @@
     {placeholder}
     {multiple}
     {after}
+    {elevation}
+    {pressed}
     {...rest}
     oninput={mirrorInput}
     onchange={mirrorChange}
@@ -193,6 +200,7 @@
       role={drop ? 'region' : undefined}
       class="neo-drop-container"
       class:neo-dragging={dragging}
+      class:neo-pressed={pressed}
       ondrop={onDrop}
       ondragover={onDragOver}
       ondragenter={onDragEnter}
@@ -208,7 +216,7 @@
         style:--neo-input-drag-margin-right={inputMargin.right}
         style:--neo-input-drag-margin-bottom={inputMargin.bottom}
       >
-        Drop Files here
+        {dropText}
       </div>
       {@render input()}
     </div>
@@ -234,7 +242,7 @@
     }
 
     .neo-drop-container {
-      --neo-card-spacing: 0;
+      --neo-drop-spacing: 0.375rem;
 
       position: relative;
       display: inline-flex;
@@ -245,23 +253,32 @@
         position: absolute;
         display: inline-flex;
         align-items: center;
-        margin: calc(0.25rem + var(--neo-input-drag-margin-top)) calc(0.25rem + var(--neo-input-drag-margin-right))
-          calc(0.25rem + var(--neo-input-drag-margin-bottom)) calc(0.25rem + var(--neo-input-drag-margin-left));
+        margin: calc(var(--neo-drop-spacing) + var(--neo-input-drag-margin-top)) calc(var(--neo-drop-spacing) + var(--neo-input-drag-margin-right))
+          calc(var(--neo-drop-spacing) + var(--neo-input-drag-margin-bottom)) calc(var(--neo-drop-spacing) + var(--neo-input-drag-margin-left));
         padding: 0.75rem 1rem;
-        border-radius: var(--neo-border-radius-sm);
-        box-shadow: var(--neo-box-shadow-flat);
+        border-radius: var(--neo-border-radius);
         opacity: 0;
-        transition:
-          opacity 0.3s ease,
-          box-shadow 0.3s ease;
+        transition: opacity 0.3s ease;
         pointer-events: none;
         inset: 0;
       }
 
       &.neo-dragging {
         .neo-drop-overlay {
-          box-shadow: var(--neo-box-shadow-inset-1);
+          box-shadow: var(--neo-drop-inset);
           opacity: 1;
+        }
+
+        :global(.neo-input-group) {
+          --neo-box-shadow-raised-1: var(--neo-box-shadow-pressed-1);
+          --neo-box-shadow-raised-2: var(--neo-box-shadow-pressed-2);
+          --neo-box-shadow-raised-3: var(--neo-box-shadow-pressed-3);
+          --neo-box-shadow-raised-4: var(--neo-box-shadow-pressed-4);
+          --neo-box-shadow-raised-5: var(--neo-box-shadow-pressed-4);
+        }
+
+        :global(.neo-input-after .neo-button) {
+          --neo-btn-box-shadow: var(--neo-box-shadow-flat) !important;
         }
 
         :global(> *) {

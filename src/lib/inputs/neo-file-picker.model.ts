@@ -49,6 +49,12 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    */
   children?: Snippet<[NeoFilePickerContext]>;
 
+  // Styles
+  /**
+   * The text to display on the drop area placeholder.
+   */
+  dropText?: string;
+
   // Events
   /**
    * On input event handler.

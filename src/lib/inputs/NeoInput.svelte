@@ -284,6 +284,7 @@
     class:neo-rounded={rounded}
     class:neo-glass={glass}
     class:neo-hover={hover}
+    class:neo-hovered={hovered}
     class:neo-start={start}
     class:neo-skeleton={skeleton}
     class:neo-validation={validation}
@@ -500,14 +501,16 @@
         padding: 0.25rem;
       }
 
+      &.neo-hover.neo-flat-hover.neo-hovered,
       &.neo-hover.neo-flat-hover:hover,
       &.neo-hover.neo-flat-hover:focus-within,
-      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-within) {
+      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
         border-color: var(--neo-input-border-color, var(--neo-border-color));
       }
 
       &:focus-within,
-      &.neo-hover:hover {
+      &.neo-hover:hover,
+      &.neo-hover.neo-hovered {
         box-shadow: var(--neo-input-hover-shadow, var(--neo-box-shadow-flat));
       }
 
