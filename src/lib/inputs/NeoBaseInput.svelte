@@ -5,7 +5,7 @@
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import { type BaseInputProps, type NeoInputMethods, type NeoInputState } from '~/inputs/neo-input.model.js';
+  import { type NeoBaseInputProps, type NeoInputMethods, type NeoInputState } from '~/inputs/neo-input.model.js';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -52,7 +52,7 @@
     onmark,
 
     ...rest
-  }: BaseInputProps = $props();
+  }: NeoBaseInputProps = $props();
   /* eslint-enable prefer-const */
 
   const validate: NeoInputMethods<HTMLInputElement>['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {

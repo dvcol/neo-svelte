@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoCardProps } from '~/cards/neo-card.model.js';
 import type { NeoInputProps } from '~/inputs/neo-input.model.js';
 import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
@@ -54,6 +55,12 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    * The text to display on the drop area placeholder.
    */
   dropText?: string;
+  /**
+   * The maximum height of the file picker file list in expanded state.
+   *
+   * @see expanded
+   */
+  expandHeight?: string;
 
   // Events
   /**
@@ -76,5 +83,10 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    * Button properties to pass to the picker button.
    */
   buttonProps?: NeoButtonProps;
+  /**
+   * Card properties to pass to the card in expanded state.
+   * @see expanded
+   */
+  cardProps?: NeoCardProps;
 } & NeoFilePickerContext<Multiple> &
   Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange'>;

@@ -20,6 +20,10 @@ export type NeoCardContext = {
    */
   hover?: number;
   /**
+   * If the card is currently hovered.
+   */
+  hovered?: boolean;
+  /**
    * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
    */
   pressed?: boolean;

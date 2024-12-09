@@ -479,7 +479,7 @@
       padding: 0 0.1875rem;
       color: var(--neo-input-text-color, inherit);
       background-color: var(--neo-input-bg-color, inherit);
-      border: var(--neo-border-width, 1px) var(--neo-input-border-color, transparent) solid;
+      border: var(--neo-input-border-width, var(--neo-border-width, 1px)) var(--neo-input-border-color, transparent) solid;
       border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
       box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
       cursor: var(--neo-input-cursor, text);

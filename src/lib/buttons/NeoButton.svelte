@@ -252,6 +252,7 @@
       --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-2);
       --neo-pulse-box-shadow: var(--neo-box-shadow-raised-2);
 
+      margin: var(--neo-btn-margin, 0);
       border-color: var(--neo-btn-border-color, var(--neo-border-color));
       box-shadow: var(--neo-box-shadow-flat);
 

@@ -779,7 +779,7 @@
 
     &.content {
       flex: 1 0 20%;
-      max-width: 25%;
+      max-width: min(25%, 30rem);
     }
   }
 
@@ -792,7 +792,7 @@
   @media (width < 1500px) {
     .column.content {
       flex: 1 0 40%;
-      max-width: 50%;
+      max-width: min(50%, 30rem);
     }
   }
 </style>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { MouseEventHandler } from 'svelte/elements';
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -24,6 +25,7 @@
 
     // States
     ref = $bindable(),
+    hovered = $bindable(false),
     tag = 'div',
     close,
 
@@ -55,6 +57,8 @@
 
     // Events
     onClose,
+    onmouseenter,
+    onmouseleave,
 
     // Other props
     contentTag = 'div',
@@ -82,9 +86,20 @@
 
   const segments = $derived([content, header, action, footer, media, close].filter(Boolean).length > 1);
 
+  const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
+    hovered = true;
+    onmouseenter?.(e);
+  };
+
+  const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
+    hovered = false;
+    onmouseleave?.(e);
+  };
+
   const context: NeoCardContext = $derived({
     elevation,
     hover,
+    hovered,
     borderless,
     rounded,
     glass,
@@ -127,6 +142,7 @@
 
 <svelte:element
   this={tag}
+  role="none"
   bind:this={ref}
   class:neo-card={true}
   class:neo-horizontal={horizontal}
@@ -138,6 +154,7 @@
   class:neo-pressed={pressed}
   class:neo-convex={convex}
   class:neo-hover={hover}
+  class:neo-hovered={hovered}
   class:neo-start={start}
   class:neo-raised={elevation > 3 || hoverElevation > 3}
   class:neo-inset={elevation < -3 || hoverElevation < -3}
@@ -155,6 +172,8 @@
   out:outFn={outProps}
   in:inFn={inProps}
   {...rest}
+  onmouseenter={onMouseEnter}
+  onmouseleave={onMouseLeave}
 >
   {#if media}
     <svelte:element
@@ -230,6 +249,10 @@
       backdrop-filter 0.3s ease,
       box-shadow 0.3s ease-out;
 
+    &-content {
+      flex: 1 1 auto;
+    }
+
     &.neo-borderless {
       border-color: transparent !important;
     }
@@ -239,12 +262,14 @@
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }
 
+    &.neo-hover.neo-flat-hover.neo-hovered,
     &.neo-hover.neo-flat-hover:hover,
-    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover) {
+    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered) {
       border-color: var(--neo-card-border-color, var(--neo-border-color));
     }
 
-    &.neo-hover:hover {
+    &.neo-hover:hover,
+    &.neo-hover.neo-hovered {
       box-shadow: var(--neo-card-hover-shadow, var(--neo-card-box-shadow));
     }
 

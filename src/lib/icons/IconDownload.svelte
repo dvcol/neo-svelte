@@ -11,7 +11,7 @@
       <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="20;0" />
     </path>
     <path stroke-dasharray="14" stroke-dashoffset="14" d="M6 19h12">
-      <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.2s" values="14;0" />
+      <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.2s" values="-14;0" />
     </path>
   </g>
 </svg>

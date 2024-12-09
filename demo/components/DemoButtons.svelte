@@ -61,7 +61,7 @@
 
 <div class="row">
   {#each columns as { label, props }}
-    <div class="column">
+    <div class="column content">
       <span class="label">{label}</span>
       {@render buttons(props)}
     </div>
@@ -107,6 +107,11 @@
 
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg));
+
+    &.content {
+      justify-content: space-between;
+      width: 100%;
+    }
   }
 
   .row {

@@ -13,6 +13,7 @@
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toStyle } from '~/utils/props.utils.js';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -75,7 +76,7 @@
     translate = transform(context.position);
   });
 
-  const style = $derived([containerProps?.style, translate].filter(Boolean).join('; '));
+  const style = $derived(toStyle(containerProps?.style, translate));
 
   // reflect component active to context
   $effect(() => {

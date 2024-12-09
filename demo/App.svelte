@@ -61,7 +61,7 @@
 
         <NeoButton aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
           {#snippet icon()}
-            <IconGithub />
+            <IconGithub stroke="2" scale="1.125" />
           {/snippet}
         </NeoButton>
       </NeoTabs>
