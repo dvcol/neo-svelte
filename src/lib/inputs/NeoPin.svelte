@@ -27,7 +27,7 @@
     icon,
 
     // State
-    id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-pin-input-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     value = $bindable(''),
     valid = $bindable(),
@@ -227,7 +227,7 @@
 
       if (validateOnInput) validate();
 
-      const event: SvelteEvent<InputEvent, any> = new InputEvent('input', {
+      const event: SvelteEvent<InputEvent> = new InputEvent('input', {
         bubbles: true,
         cancelable: false,
         data: value,
@@ -280,7 +280,7 @@
       validate();
       dirty = mergedDirty;
 
-      const event: SvelteEvent<InputEvent, any> = new InputEvent('change', {
+      const event: SvelteEvent<InputEvent> = new InputEvent('change', {
         bubbles: true,
         cancelable: false,
         data: value,

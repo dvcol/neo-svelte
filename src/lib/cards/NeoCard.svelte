@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { MouseEventHandler } from 'svelte/elements';
+  import type { FocusEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -26,6 +26,7 @@
     // States
     ref = $bindable(),
     hovered = $bindable(false),
+    focused = $bindable(false),
     tag = 'div',
     close,
     disabled,
@@ -59,6 +60,8 @@
 
     // Events
     onClose,
+    onfocusin,
+    onfocusout,
     onmouseenter,
     onmouseleave,
 
@@ -73,6 +76,7 @@
     actionProps,
     mediaTag = 'div',
     mediaProps,
+    closeProps,
     ...rest
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
@@ -96,6 +100,16 @@
   const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
     hovered = false;
     onmouseleave?.(e);
+  };
+
+  const onFocusIn: FocusEventHandler<HTMLInputElement> = e => {
+    focused = true;
+    onfocusin?.(e);
+  };
+
+  const onFocusOut: FocusEventHandler<HTMLInputElement> = e => {
+    focused = false;
+    onfocusout?.(e);
   };
 
   const context: NeoCardContext = $derived({
@@ -127,7 +141,7 @@
 {#snippet closeBtn()}
   {#if close}
     <div class="neo-card-close">
-      <NeoButton aria-label="Close card" rounded text onclick={onClose}>
+      <NeoButton aria-label="Close card" rounded text onclick={onClose} {...closeProps}>
         {#snippet icon()}
           <IconClose />
         {/snippet}
@@ -180,6 +194,8 @@
   {...rest}
   onmouseenter={onMouseEnter}
   onmouseleave={onMouseLeave}
+  onfocusin={onFocusIn}
+  onfocusout={onFocusOut}
 >
   {#if media}
     <svelte:element
@@ -279,10 +295,12 @@
 
     &.neo-hover.neo-flat-hover.neo-hovered,
     &.neo-hover.neo-flat-hover:hover,
-    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered) {
+    &.neo-hover.neo-flat-hover:focus-within,
+    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
       border-color: var(--neo-card-border-color, var(--neo-border-color));
     }
 
+    &:focus-within,
     &.neo-hover:hover,
     &.neo-hover.neo-hovered {
       box-shadow: var(--neo-card-hover-shadow, var(--neo-card-box-shadow));

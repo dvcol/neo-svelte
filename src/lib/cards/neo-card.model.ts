@@ -15,7 +15,7 @@ export type NeoCardContext = {
    */
   elevation?: NeoCardElevation;
   /**
-   * Weather to increase/decrease the elevation when hovered.
+   * Weather to increase/decrease the elevation when hovered/focused.
    * @default 0
    */
   hover?: number;
@@ -23,6 +23,10 @@ export type NeoCardContext = {
    * If the card is currently hovered.
    */
   hovered?: boolean;
+  /**
+   * If the card has focus within.
+   */
+  focused?: boolean;
   /**
    * If true, the card will be displayed as a flat card and hover will be ignored.
    */
@@ -160,6 +164,10 @@ export type NeoCardProps = {
    * Props for the card media.
    */
   mediaProps?: HTMLNeoBaseElement;
+  /**
+   * Props for the close button.
+   */
+  closeProps?: NeoButtonProps;
 } & NeoCardContext &
   HTMLNeoBaseElement &
   HTMLFlexProps &

@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+import type { MouseEventHandler } from 'svelte/elements';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoCardProps } from '~/cards/neo-card.model.js';
 import type { NeoInputProps } from '~/inputs/neo-input.model.js';
@@ -6,20 +7,10 @@ import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
 export type NeoFilePickerContext<Multiple extends boolean = boolean> = {
   /**
-   * If the file picker is in an expanded state.
-   * @see expand
-   * @see drop
-   */
-  expanded?: boolean;
-  /**
    * If the file picker is in a dragging state.
    * @see drop
    */
   dragging?: boolean;
-  /**
-   * Whether the file picker should accept dropped files.
-   */
-  drop?: boolean;
   /**
    * Whether the file picker should accept multiple files.
    */
@@ -49,16 +40,39 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    * The snippet to render when the file picker is in an expanded state (overrides default).
    */
   children?: Snippet<[NeoFilePickerContext]>;
+  /**
+   * A snippet or a string to display as the input label.
+   */
+  label?: Snippet | string;
+
+  // States
+  /**
+   * If the file picker is in an expanded state.
+   * @see expand
+   * @see drop
+   */
+  expanded?: boolean;
+  /**
+   * Whether the file picker should accept dropped files.
+   */
+  drop?: boolean;
 
   // Styles
   /**
    * The text to display on the drop area placeholder.
    */
-  dropText?: string;
+  dropText?: NeoInputProps['placeholder'];
   /**
-   * The maximum height of the file picker file list in expanded state.
+   * The text to display on the expanded header.
+   *
+   * @default Number of files.
+   */
+  expandText?: string;
+  /**
+   * The maximum height of the file list in expanded state.
    *
    * @see expanded
+   * @default 20rem
    */
   expandHeight?: string;
 
@@ -87,6 +101,72 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    * Card properties to pass to the card in expanded state.
    * @see expanded
    */
-  cardProps?: NeoCardProps;
+  cardProps?: Omit<NeoCardProps, 'children'> & Pick<NeoFilePickerCardProps, 'editButtonProps' | 'removeButtonProps'>;
 } & NeoFilePickerContext<Multiple> &
-  Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange'>;
+  Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange' | 'label'>;
+
+export type NeoFilePickerCardProps = Omit<NeoCardProps, 'children'> & {
+  // States
+  /**
+   * If the is currently in a dragging state.
+   */
+  dragging?: boolean;
+  /**
+   * Header text to display in the card.
+   */
+  detailText?: string;
+
+  // Styles
+  /**
+   * The maximum height of the file card list in expanded state.
+   *
+   * @see expanded
+   * @default 20rem
+   */
+  maxHeight?: string;
+
+  // Events
+  /**
+   * Callback when the affix close button is clicked.
+   */
+  onClear?: MouseEventHandler<HTMLButtonElement>;
+  /**
+   * Callback when the footer edit button is clicked.
+   */
+  onEdit?: MouseEventHandler<HTMLDivElement>;
+  /**
+   * Callback when the list remove item button is clicked.
+   * @param index
+   * @param e
+   */
+  onRemove?: (index: number, e: SvelteEvent<MouseEvent>) => void;
+
+  // Other props
+  /**
+   * Button properties to pass to the add files button.
+   */
+  addButtonProps?: NeoButtonProps;
+  /**
+   * Button properties to pass to the edit files button.
+   */
+  editButtonProps?: NeoButtonProps;
+  /**
+   * Button properties to pass to the remove files button.
+   */
+  removeButtonProps?: NeoButtonProps;
+} & Pick<
+    NeoFilePickerProps,
+    | 'files'
+    | 'valid'
+    | 'clearable'
+    | 'placeholder'
+    | 'dropText'
+    | 'loading'
+    | 'multiple'
+    | 'append'
+    | 'children'
+    | 'label'
+    | 'labelProps'
+    | 'labelRef'
+    | 'required'
+  >;

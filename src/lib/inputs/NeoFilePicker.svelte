@@ -1,7 +1,5 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { flip } from 'svelte/animate';
-  import { fade } from 'svelte/transition';
 
   import type { DragEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
@@ -10,27 +8,24 @@
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import NeoCard from '~/cards/NeoCard.svelte';
-  import IconAdd from '~/icons/IconAdd.svelte';
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
-  import IconClear from '~/icons/IconClear.svelte';
   import IconDownload from '~/icons/IconDownload.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
-  import IconPencil from '~/icons/IconPencil.svelte';
-  import NeoAffix from '~/inputs/NeoAffix.svelte';
+  import NeoFilePickerCard from '~/inputs/NeoFilePickerCard.svelte';
   import NeoInput from '~/inputs/NeoInput.svelte';
 
   import { toClass } from '~/utils/props.utils.js';
   import { computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
-  import { enterDefaultTransition, leaveDefaultFadeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
-    label,
+    label, // TODO - label for card
+    error, // TODO - validation error for card
+    message, // TODO - validation message for card
 
     // States
+    id = label ? `neo-file-picker-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     files = $bindable(),
     valid = $bindable(), // TODO - wrap validation
@@ -41,7 +36,7 @@
     placeholder = 'Choose a file',
 
     loading,
-    clearable, // TODO - clearable
+    clearable,
     validation, // TODO - wrap validation
     skeleton,
     disabled,
@@ -59,7 +54,8 @@
     dragging = $bindable(false),
     drop = true,
     dropText = `Drop${multiple ? ' ' : ' a '}File${multiple ? 's' : ''} here`,
-    expandHeight = '300px',
+    expandText,
+    expandHeight,
 
     // Events
     oninput,
@@ -67,24 +63,24 @@
 
     // Other props
     labelRef = $bindable(),
+    labelProps,
     cardProps,
     buttonProps,
+    messageTag = 'div',
+    messageProps,
     containerTag = 'div',
     containerProps,
     ...rest
   }: NeoFilePickerProps = $props();
   /* eslint-enable prefer-const */
 
-  // TODO - mask scroll
-  // TODO - children
   // TODO - validation
-
-  $inspect(valid).with((...args) => console.log('valid', ...args));
+  // TODO clear & mark
+  // TODO label for card
 
   const text = $derived(elevation >= 0 || !pressed);
   const style = $derived(computeButtonShadows(elevation, text));
   const isDragging = $derived(drop && dragging && !disabled);
-  const close = $derived(clearable && !!files?.length && (hovered || focused));
 
   let dragRef = $state<HTMLDivElement>();
   let dragWith = $state<string | number>();
@@ -114,7 +110,7 @@
     // rest.onclear?.(); // TODO clear & mark
   };
 
-  const onclick: NeoButtonProps['onclick'] = e => {
+  const onclick = (e: SvelteEvent<MouseEvent>) => {
     if (disabled || skeleton) return;
     e?.stopPropagation();
     ref?.focus?.();
@@ -123,8 +119,8 @@
   };
 
   const afterProps = $derived<NeoButtonProps>({
-    'aria-label': 'Toggle picker',
-    title: 'Toggle picker',
+    'aria-label': 'Add files',
+    title: 'Add files',
     skeleton,
     disabled,
     rounded: expanded || rounded,
@@ -135,24 +131,6 @@
     ...buttonProps,
     class: toClass('neo-file-picker-button', buttonProps?.class),
     onclick,
-  });
-
-  const expandProps = $derived.by(() => {
-    if (!drop || !expanded) return;
-    return {
-      elevation,
-      hover,
-      hovered,
-      disabled,
-      skeleton,
-      pressed,
-      rounded,
-      glass: rest.glass,
-      start: rest.start,
-      flex: '1 1 auto',
-      ...cardProps,
-      class: toClass('neo-file-picker-card', cardProps?.class),
-    };
   });
 
   type FileEvent = SvelteEvent<InputEvent, HTMLInputElement>;
@@ -231,7 +209,7 @@
     dragging = false;
   };
 
-  const removeFile = async (i: number, e?: MouseEvent) => {
+  const removeFile = async (i: number, e?: SvelteEvent<MouseEvent>) => {
     e?.preventDefault();
     e?.stopPropagation();
     if (!ref) return;
@@ -263,6 +241,11 @@
   props: Partial<NeoInputProps> | undefined = {
     // Snippets
     label,
+    labelProps,
+    error,
+    message,
+    messageTag,
+    messageProps,
     after,
 
     // States
@@ -290,6 +273,7 @@
     bind:focused
     bind:labelRef
     type="file"
+    {id}
     {multiple}
     {...props}
     {...rest}
@@ -307,85 +291,38 @@
 {/snippet}
 
 {#snippet card(props: Partial<NeoInputProps>)}
-  <NeoCard out={leaveDefaultFadeTransition} {...expandProps}>
-    {#if files?.length}
-      <div class="neo-expanded-count">
-        <span>{files.length} Files</span>
-        <NeoAffix
-          {loading}
-          valid={validation ? valid : undefined}
-          {close}
-          {skeleton}
-          {disabled}
-          closeProps={{
-            onclick: onClear,
-          }}
-        />
-      </div>
-      <div class="neo-expanded-list" class:neo-rounded={rounded}>
-        {#each files as file, i (file)}
-          <div class="neo-file" transition:fade={{ duration: 200 }} animate:flip={{ duration: 200, delay: 100 }}>
-            <span class="neo-file-name" title={file.name}>{file.name}</span>
-            {#if clearable}
-              <span class="neo-file-remove">
-                <NeoButton
-                  text
-                  rounded
-                  {disabled}
-                  onclickcapture={e => removeFile(i, e)}
-                  class="neo-file-remove-button"
-                  title="Remove file"
-                  aria-label="Remove file"
-                >
-                  {#snippet icon()}
-                    <IconClear width="1rem" height="1rem" scale="1.5" stroke="1" />
-                  {/snippet}
-                </NeoButton>
-              </span>
-            {/if}
-          </div>
-        {/each}
-      </div>
-      <div class="neo-expanded-edit">
-        <span>{placeholder}</span>
-        <NeoButton {disabled} rounded text {onclick} title="Edit files" aria-label="Edit files">
-          {#snippet icon()}
-            <IconPencil width="1.25rem" height="1.25rem" scale="1" />
-          {/snippet}
-        </NeoButton>
-      </div>
-    {:else}
-      <div
-        role="none"
-        class="neo-expanded-empty"
-        class:neo-rounded={rounded}
-        class:neo-disabled={disabled}
-        {onclick}
-        in:fade={enterDefaultTransition}
-      >
-        <div class="neo-expanded-button">
-          <NeoButton {...afterProps}>
-            {#snippet icon()}
-              {#if isDragging}
-                <IconDownload width="2.5rem" height="2.5rem" scale="1.25" stroke="0.5" />
-              {:else if loading}
-                <IconCircleLoading width="2.5rem" height="2.5rem" scale="1" />
-              {:else}
-                <IconAdd width="2.5rem" height="2.5rem" scale="1" stroke="0.5" />
-              {/if}
-            {/snippet}
-          </NeoButton>
-        </div>
-        <div class="neo-expanded-placeholder" style:min-width="max({dropText.length ?? 0}ch,{placeholder?.length ?? 0}ch)">
-          {#if isDragging}
-            <span class="neo-expanded-placeholder-drop">{dropText}</span>
-          {:else}
-            <span class="neo-expanded-placeholder-select">{placeholder}</span>
-          {/if}
-        </div>
-      </div>
-    {/if}
-  </NeoCard>
+  <NeoFilePickerCard
+    bind:hovered
+    bind:focused
+    dragging={isDragging}
+    {multiple}
+    {append}
+    {children}
+    {files}
+    {valid}
+    {clearable}
+    {placeholder}
+    {dropText}
+    {loading}
+    {skeleton}
+    {disabled}
+    {rounded}
+    {pressed}
+    {elevation}
+    {hover}
+    glass={rest.glass}
+    start={rest.start}
+    required={rest.required}
+    maxHeight={expandHeight}
+    detailText={expandText}
+    {label}
+    labelProps={{ id, ...labelProps }}
+    {...cardProps}
+    {onClear}
+    onRemove={removeFile}
+    onEdit={onclick}
+    addButtonProps={afterProps}
+  />
   <div class="neo-expanded-input">
     {@render input(props)}
   </div>
@@ -407,7 +344,6 @@
     ondragleave={onDragLeave}
     style:--neo-file-picker-expanded-min-width={dragWith}
     style:--neo-file-picker-expanded-min-height={dragHeight}
-    style:--neo-file-picker-expanded-max-height={expandHeight}
     style:--neo-file-picker-drag-margin-top={contentMargin.top}
     style:--neo-file-picker-drag-margin-left={contentMargin.left}
     style:--neo-file-picker-drag-margin-right={contentMargin.right}
@@ -431,11 +367,6 @@
   {/if}
 </svelte:element>
 
-<div>
-  hover: {hovered}
-  focused: {focused}
-</div>
-
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
 
@@ -456,7 +387,6 @@
     &.neo-expanded {
       display: inline-flex;
       flex: 1 1 auto;
-      width: 100%;
     }
 
     .neo-drop-container {
@@ -508,102 +438,11 @@
           visibility: hidden;
           pointer-events: none;
         }
-
-        &-placeholder,
-        &-button {
-          align-self: center;
-          width: fit-content;
-        }
-
-        &-placeholder {
-          text-align: center;
-        }
-
-        &-empty {
-          position: relative;
-          display: inline-flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          box-sizing: border-box;
-          width: 100%;
-          height: 100%;
-          padding: 1rem;
-          cursor: pointer;
-          transition: color 0.3s ease;
-
-          &::before {
-            position: absolute;
-            margin: -0.5rem;
-            border: var(--neo-border-width) dashed var(--neo-grey-soft);
-            border-radius: var(--neo-border-radius);
-            transition: margin 0.3s ease;
-            content: '';
-            inset: 0;
-          }
-
-          &.neo-rounded::before {
-            border-radius: var(--neo-border-radius-md);
-          }
-
-          &.neo-disabled {
-            cursor: no-drop;
-          }
-        }
-
-        &-list {
-          position: relative;
-          display: inline-flex;
-          flex: 1 1 auto;
-          flex-direction: column;
-          gap: var(--neo-gap-xxs);
-          max-height: var(--neo-file-picker-expanded-max-height);
-          margin-right: 1.125rem;
-          padding: var(--neo-shadow-margin, 0.625rem);
-          overflow: auto;
-          border-radius: var(--neo-border-radius);
-          box-shadow: var(--neo-box-shadow-inset-1);
-
-          &.neo-rounded {
-            --neo-scrollbar-button-height: 0.375rem;
-
-            border-radius: var(--neo-border-radius-md);
-          }
-
-          .neo-file {
-            display: inline-flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: color 0.3s ease;
-
-            &-name {
-              display: -webkit-box;
-              overflow: hidden;
-              -webkit-line-clamp: 2;
-              line-clamp: 2;
-              -webkit-box-orient: vertical;
-            }
-
-            &-remove {
-              flex: 0 0 auto;
-            }
-
-            &:hover {
-              color: var(--neo-text-color-highlight);
-            }
-          }
-        }
-
-        &-edit,
-        &-count {
-          display: inline-flex;
-          align-items: center;
-          justify-content: space-between;
-        }
       }
 
       :global(.neo-file-picker-card) {
-        gap: var(--neo-gap-sm);
+        gap: var(--neo-gap);
+        width: 100%;
         height: calc(
           100% - var(--neo-file-picker-drag-margin-top, var(--neo-shadow-margin, 0.625rem)) - var(
               --neo-file-picker-drag-margin-bottom,
@@ -615,10 +454,6 @@
       &.neo-dragging:not(.neo-skeleton) {
         .neo-drop-overlay {
           opacity: 1;
-        }
-
-        .neo-expanded-empty::before {
-          margin: -0.25rem;
         }
 
         :global(.neo-file-picker-card),
@@ -647,10 +482,6 @@
           opacity: 0;
         }
       }
-    }
-
-    .neo-expanded-list {
-      @include mixin.scrollbar($gutter: stable both-edges);
     }
   }
 </style>

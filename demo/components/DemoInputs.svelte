@@ -407,6 +407,7 @@
         expanded: true,
         append: true,
         drop: true,
+        containerProps: { style: 'min-width: min(25rem, 100%)' },
       },
       state: expandedFileState,
       input: true,

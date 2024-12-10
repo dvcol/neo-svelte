@@ -239,6 +239,11 @@
   }
 }
 
+@mixin fade-scroll($fade-height: 1rem) {
+  mask-image: linear-gradient(to top, transparent, transparent $fade-height, black $fade-height, black calc(100% - #{$fade-height}), transparent),
+    linear-gradient(to bottom, transparent, transparent $fade-height, black $fade-height, black calc(100% - #{$fade-height}), transparent);
+}
+
 @mixin glass() {
   /** Box Shadows raised */
   --neo-box-shadow-raised-5: var(--neo-glass-box-shadow-raised-5);
