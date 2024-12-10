@@ -109,8 +109,8 @@
     @include flex.column($center: true, $gap: var(--neo-gap-lg));
 
     &.content {
+      align-self: flex-start;
       justify-content: space-between;
-      width: 100%;
     }
   }
 
@@ -125,6 +125,10 @@
   @media (width > 1550px) {
     .column {
       @include flex.row($gap: var(--neo-gap-xl));
+
+      &.content {
+        width: 100%;
+      }
     }
 
     .row {

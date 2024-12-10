@@ -12,6 +12,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
+  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
   import IconDownload from '~/icons/IconDownload.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
@@ -42,6 +43,8 @@
     loading,
     clearable, // TODO - clearable
 
+    disabled,
+    readonly,
     rounded,
     pressed,
     elevation = getDefaultElevation(pressed),
@@ -76,6 +79,7 @@
 
   const text = $derived(elevation >= 0 || !pressed);
   const style = $derived(computeButtonShadows(elevation, text));
+  const isDragging = $derived(drop && dragging && !disabled);
 
   let dragRef = $state<HTMLDivElement>();
   let dragWith = $state<string | number>();
@@ -100,6 +104,7 @@
   };
 
   const onclick: NeoButtonProps['onclick'] = e => {
+    if (disabled) return;
     e?.stopPropagation();
     ref?.focus?.();
     ref?.click?.();
@@ -110,7 +115,7 @@
     'aria-label': 'Toggle picker',
     title: 'Toggle picker',
     skeleton: rest.skeleton,
-    disabled: rest.disabled,
+    disabled,
     rounded: expanded || rounded,
     glass: rest.glass,
     start: rest.start,
@@ -127,6 +132,7 @@
       elevation,
       hover,
       hovered,
+      disabled,
       pressed,
       rounded,
       glass: rest.glass,
@@ -184,6 +190,7 @@
   const onDrop: DragEventHandler<HTMLDivElement> = async e => {
     dragging = false;
     e.preventDefault();
+    if (disabled) return;
     if (!e.dataTransfer?.files?.length) return;
     if (multiple && append) {
       files = mergeLists(files, e.dataTransfer.files);
@@ -231,7 +238,7 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon()}
-      {#if drop && dragging}
+      {#if isDragging}
         <IconDownload width="1.25rem" height="1.25rem" scale="1.5" stroke="1" />
       {:else}
         <IconFileUpload width="1.25rem" height="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
@@ -240,7 +247,21 @@
   </NeoButton>
 {/snippet}
 
-{#snippet input(props: Partial<NeoInputProps>)}
+{#snippet input(
+  props: Partial<NeoInputProps> | undefined = {
+    label,
+    after,
+    loading,
+    clearable,
+    placeholder,
+    elevation,
+    hover,
+    pressed,
+    rounded,
+    disabled,
+    readonly,
+  },
+)}
   <NeoInput
     bind:ref
     bind:labelRef
@@ -260,7 +281,7 @@
   />
 {/snippet}
 
-{#snippet overlay(props: Partial<NeoInputProps>)}
+{#snippet overlay(props: Partial<NeoInputProps> | undefined)}
   <div bind:this={overlayRef} class="neo-drop-overlay">
     {dropText}
   </div>
@@ -274,22 +295,23 @@
         <span>{files.length} Files</span>
         <NeoAffix {loading} valid={validation ? valid : undefined} skeleton={rest.skeleton} />
       </div>
-      <div class="neo-expanded-list">
+      <div class="neo-expanded-list" class:neo-rounded={rounded}>
         {#each files as file, i (file.name)}
-          <div class="neo-file" transition:fade={{ duration: 300 }} animate:flip={{ duration: 300, delay: 300 }}>
-            <span class="neo-file-name">{file.name}</span>
+          <div class="neo-file" transition:fade={{ duration: 200 }} animate:flip={{ duration: 200, delay: 100 }}>
+            <span class="neo-file-name" title={file.name}>{file.name}</span>
             {#if clearable}
               <span class="neo-file-remove">
                 <NeoButton
                   text
                   rounded
+                  {disabled}
                   onclickcapture={e => removeFile(i, e)}
                   class="neo-file-remove-button"
                   title="Remove file"
                   aria-label="Remove file"
                 >
                   {#snippet icon()}
-                    <IconClear width="1.25rem" height="1.25rem" scale="1.5" stroke="1" />
+                    <IconClear width="1rem" height="1rem" scale="1.5" stroke="1" />
                   {/snippet}
                 </NeoButton>
               </span>
@@ -298,19 +320,29 @@
         {/each}
       </div>
       <div class="neo-expanded-edit">
-        <NeoButton rounded text onclick={() => ref?.click()} title="Edit files" aria-label="Edit files">
+        <span>{placeholder}</span>
+        <NeoButton {disabled} rounded text {onclick} title="Edit files" aria-label="Edit files">
           {#snippet icon()}
             <IconPencil width="1.25rem" height="1.25rem" scale="1" />
           {/snippet}
         </NeoButton>
       </div>
     {:else}
-      <div role="none" class="neo-expanded-empty" class:neo-rounded={rounded} onclick={() => ref?.click?.()} in:fade={enterDefaultTransition}>
+      <div
+        role="none"
+        class="neo-expanded-empty"
+        class:neo-rounded={rounded}
+        class:neo-disabled={disabled}
+        {onclick}
+        in:fade={enterDefaultTransition}
+      >
         <div class="neo-expanded-button">
           <NeoButton {...afterProps}>
             {#snippet icon()}
-              {#if drop && dragging}
+              {#if isDragging}
                 <IconDownload width="2.5rem" height="2.5rem" scale="1.25" stroke="0.5" />
+              {:else if loading}
+                <IconCircleLoading width="2.5rem" height="2.5rem" scale="1" />
               {:else}
                 <IconAdd width="2.5rem" height="2.5rem" scale="1" stroke="0.5" />
               {/if}
@@ -318,7 +350,7 @@
           </NeoButton>
         </div>
         <div class="neo-expanded-placeholder" style:min-width="max({dropText.length ?? 0}ch,{placeholder?.length ?? 0}ch)">
-          {#if dragging}
+          {#if isDragging}
             <span class="neo-expanded-placeholder-drop">{dropText}</span>
           {:else}
             <span class="neo-expanded-placeholder-select">{placeholder}</span>
@@ -333,13 +365,13 @@
 {/snippet}
 
 <!-- Drag & drop -->
-{#snippet drag(props: Partial<NeoInputProps>)}
+{#snippet drag(props: Partial<NeoInputProps> | undefined)}
   <div
     bind:this={dragRef}
     role="region"
     class="neo-drop-container"
     class:neo-expanded={expanded}
-    class:neo-dragging={dragging}
+    class:neo-dragging={isDragging}
     class:neo-pressed={pressed}
     ondrop={onDrop}
     ondragover={onDragOver}
@@ -364,10 +396,10 @@
 <svelte:element this={containerTag} class:neo-file-picker={true} class:neo-expanded={expanded} {...containerProps}>
   {#if drop}
     <!-- Drop support -->
-    {@render drag({ label, after, loading, clearable, placeholder, elevation, hover, pressed, rounded })}
+    {@render drag(undefined)}
   {:else}
     <!-- No drop support -->
-    {@render input({ label, after, loading, clearable, placeholder, elevation, hover, pressed, rounded })}
+    {@render input()}
   {/if}
 </svelte:element>
 
@@ -462,6 +494,7 @@
           height: 100%;
           padding: 1rem;
           cursor: pointer;
+          transition: color 0.3s ease;
 
           &::before {
             position: absolute;
@@ -476,16 +509,30 @@
           &.neo-rounded::before {
             border-radius: var(--neo-border-radius-md);
           }
+
+          &.neo-disabled {
+            cursor: no-drop;
+          }
         }
 
         &-list {
+          position: relative;
           display: inline-flex;
           flex: 1 1 auto;
           flex-direction: column;
           gap: var(--neo-gap-xxs);
           max-height: var(--neo-file-picker-expanded-max-height);
           margin-right: 1.125rem;
+          padding: var(--neo-shadow-margin, 0.625rem);
           overflow: auto;
+          border-radius: var(--neo-border-radius);
+          box-shadow: var(--neo-box-shadow-inset-1);
+
+          &.neo-rounded {
+            --neo-scrollbar-button-height: 0.375rem;
+
+            border-radius: var(--neo-border-radius-md);
+          }
 
           .neo-file {
             display: inline-flex;
@@ -493,20 +540,29 @@
             justify-content: space-between;
             transition: color 0.3s ease;
 
+            &-name {
+              display: -webkit-box;
+              overflow: hidden;
+              -webkit-line-clamp: 2;
+              line-clamp: 2;
+              -webkit-box-orient: vertical;
+            }
+
+            &-remove {
+              flex: 0 0 auto;
+            }
+
             &:hover {
               color: var(--neo-text-color-highlight);
             }
           }
         }
 
+        &-edit,
         &-count {
           display: inline-flex;
           align-items: center;
           justify-content: space-between;
-        }
-
-        &-edit {
-          margin-left: auto;
         }
       }
 

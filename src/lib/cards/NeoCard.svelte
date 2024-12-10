@@ -28,6 +28,7 @@
     hovered = $bindable(false),
     tag = 'div',
     close,
+    disabled,
 
     // Styles
     pressed,
@@ -100,6 +101,7 @@
     elevation,
     hover,
     hovered,
+    disabled,
     borderless,
     rounded,
     glass,
@@ -151,6 +153,7 @@
   class:neo-segments={segments}
   class:neo-image={media && !segments}
   class:neo-rounded={rounded}
+  class:neo-disabled={disabled}
   class:neo-pressed={pressed}
   class:neo-convex={convex}
   class:neo-hover={hover}
@@ -255,6 +258,15 @@
 
     &.neo-borderless {
       border-color: transparent !important;
+    }
+
+    &.neo-disabled {
+      box-shadow: var(--neo-box-shadow-flat) !important;
+      opacity: var(--neo-card-opacity-disabled, var(--neo-opacity-disabled));
+
+      &:not(.neo-borderless) {
+        border-color: var(--neo-card-border-color-disabled, var(--neo-border-color-disabled)) !important;
+      }
     }
 
     &.neo-inset.neo-pressed,

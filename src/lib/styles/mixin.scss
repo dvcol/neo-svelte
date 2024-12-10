@@ -201,7 +201,7 @@
 
 @mixin scrollbar(
   $gutter: stable,
-  $width: var(--neo-scrollbar-width, 0.45rem),
+  $width: var(--neo-scrollbar-width, 0.375rem),
   $thumb-color: var(--neo-scrollbar-color),
   $thumb-border-radius: var(--neo-border-radius),
   $button-height: var(--neo-scrollbar-button-height, 2px)
