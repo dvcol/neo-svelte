@@ -109,7 +109,7 @@
   const inside = $derived(position === NeoInputLabelPosition.Inside && label);
 
   const onClear = () => {
-    if (focused || disabled || readonly) return;
+    if (disabled || readonly) return;
     ref?.clear?.();
   };
   const onFocus = () => {
@@ -213,6 +213,7 @@
       class={after ? 'neo-after' : undefined}
       {loading}
       {close}
+      {disabled}
       {skeleton}
       valid={validation ? valid : undefined}
       closeProps={{ onclick: onClear }}

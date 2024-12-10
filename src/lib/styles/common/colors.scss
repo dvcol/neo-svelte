@@ -43,7 +43,7 @@
   --neo-red-light-75: oklch(from var(--neo-red-light) l c h / 75%);
   --neo-red: oklch(50% 0.302 26.206deg);
   --neo-red-5: oklch(from var(--neo-red) l c h / 5%);
-  --neo-red-10: oklch(from var(--neo-red) l c h / 10%);
+  --neo-red-7: oklch(from var(--neo-red) l c h / 7%);
   --neo-red-50: oklch(from var(--neo-red) l c h / 50%);
   --neo-red-75: oklch(from var(--neo-red) l c h / 75%);
   --neo-green-light: oklch(from var(--neo-green) calc(l + 0.25) c h);
@@ -57,7 +57,7 @@
   --neo-color-primary-80: var(--neo-blue-80);
   --neo-color-error: var(--neo-red);
   --neo-color-error-5: var(--neo-red-5);
-  --neo-color-error-10: var(--neo-red-10);
+  --neo-color-error-7: var(--neo-red-7);
   --neo-color-error-50: var(--neo-red-50);
   --neo-color-error-75: var(--neo-red-75);
   --neo-color-success: var(--neo-green);
@@ -86,7 +86,7 @@
   --neo-close-color: var(--neo-color-error);
   --neo-close-color-hover: var(--neo-color-error-75);
   --neo-close-color-focused: var(--neo-color-error-50);
-  --neo-close-bg-color-hover: var(--neo-color-error-10);
+  --neo-close-bg-color-hover: var(--neo-color-error-7);
   --neo-close-bg-color-focused: var(--neo-color-error-5);
   --neo-scrollbar-color: var(--neo-grey-soft-60);
 
@@ -157,7 +157,7 @@
   --neo-color-primary-80: var(--neo-dark-color-primary-80);
   --neo-color-error: var(--neo-dark-color-error);
   --neo-color-error-5: var(--neo-dark-color-error-5);
-  --neo-color-error-10: var(--neo-dark-color-error-10);
+  --neo-color-error-7: var(--neo-dark-color-error-10);
   --neo-color-error-50: var(--neo-dark-color-error-50);
   --neo-color-error-75: var(--neo-dark-color-error-75);
   --neo-color-success: var(--neo-dark-color-success);

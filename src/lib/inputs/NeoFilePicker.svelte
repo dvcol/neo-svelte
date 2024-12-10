@@ -3,7 +3,7 @@
   import { flip } from 'svelte/animate';
   import { fade } from 'svelte/transition';
 
-  import type { DragEventHandler, FormEventHandler } from 'svelte/elements';
+  import type { DragEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { NeoInputProps } from '~/inputs/neo-input.model.js';
@@ -30,28 +30,29 @@
     children,
     label,
 
-    // State
+    // States
     ref = $bindable(),
     files = $bindable(),
-    valid = $bindable(),
-    dirty = $bindable(false),
-    touched = $bindable(false),
-    hovered = $bindable(false),
-    focused = $bindable(false),
+    valid = $bindable(), // TODO - wrap validation
+    dirty = $bindable(false), // TODO - wrap validation
+    touched = $bindable(false), // TODO - wrap validation
+    hovered = $bindable(false), // TODO - wrap validation
+    focused = $bindable(false), // TODO - wrap validation
     placeholder = 'Choose a file',
 
     loading,
     clearable, // TODO - clearable
-
+    validation, // TODO - wrap validation
+    skeleton,
     disabled,
     readonly,
     rounded,
     pressed,
+
     elevation = getDefaultElevation(pressed),
     hover = getDefaultHoverElevation(pressed),
 
-    validation, // TODO - wrap validation
-
+    // File picker
     append,
     multiple,
     expanded = $bindable(false),
@@ -76,10 +77,14 @@
 
   // TODO - mask scroll
   // TODO - children
+  // TODO - validation
+
+  $inspect(valid).with((...args) => console.log('valid', ...args));
 
   const text = $derived(elevation >= 0 || !pressed);
   const style = $derived(computeButtonShadows(elevation, text));
   const isDragging = $derived(drop && dragging && !disabled);
+  const close = $derived(clearable && !!files?.length && (hovered || focused));
 
   let dragRef = $state<HTMLDivElement>();
   let dragWith = $state<string | number>();
@@ -103,8 +108,14 @@
     updateMargin(expanded ? dragRef?.firstElementChild : overlayRef?.nextElementSibling);
   };
 
+  const onClear: MouseEventHandler<HTMLButtonElement> = e => {
+    e?.stopPropagation();
+    files = undefined;
+    // rest.onclear?.(); // TODO clear & mark
+  };
+
   const onclick: NeoButtonProps['onclick'] = e => {
-    if (disabled) return;
+    if (disabled || skeleton) return;
     e?.stopPropagation();
     ref?.focus?.();
     ref?.click?.();
@@ -114,7 +125,7 @@
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle picker',
     title: 'Toggle picker',
-    skeleton: rest.skeleton,
+    skeleton,
     disabled,
     rounded: expanded || rounded,
     glass: rest.glass,
@@ -133,6 +144,7 @@
       hover,
       hovered,
       disabled,
+      skeleton,
       pressed,
       rounded,
       glass: rest.glass,
@@ -190,7 +202,7 @@
   const onDrop: DragEventHandler<HTMLDivElement> = async e => {
     dragging = false;
     e.preventDefault();
-    if (disabled) return;
+    if (disabled || skeleton) return;
     if (!e.dataTransfer?.files?.length) return;
     if (multiple && append) {
       files = mergeLists(files, e.dataTransfer.files);
@@ -249,28 +261,34 @@
 
 {#snippet input(
   props: Partial<NeoInputProps> | undefined = {
+    // Snippets
     label,
     after,
+
+    // States
+    placeholder,
+
     loading,
     clearable,
-    placeholder,
-    elevation,
-    hover,
-    pressed,
-    rounded,
+    skeleton,
     disabled,
     readonly,
+    rounded,
+    pressed,
+
+    elevation,
+    hover,
   },
 )}
   <NeoInput
     bind:ref
-    bind:labelRef
     bind:files
     bind:valid
     bind:dirty
     bind:touched
     bind:hovered
     bind:focused
+    bind:labelRef
     type="file"
     {multiple}
     {...props}
@@ -293,10 +311,19 @@
     {#if files?.length}
       <div class="neo-expanded-count">
         <span>{files.length} Files</span>
-        <NeoAffix {loading} valid={validation ? valid : undefined} skeleton={rest.skeleton} />
+        <NeoAffix
+          {loading}
+          valid={validation ? valid : undefined}
+          {close}
+          {skeleton}
+          {disabled}
+          closeProps={{
+            onclick: onClear,
+          }}
+        />
       </div>
       <div class="neo-expanded-list" class:neo-rounded={rounded}>
-        {#each files as file, i (file.name)}
+        {#each files as file, i (file)}
           <div class="neo-file" transition:fade={{ duration: 200 }} animate:flip={{ duration: 200, delay: 100 }}>
             <span class="neo-file-name" title={file.name}>{file.name}</span>
             {#if clearable}
@@ -373,6 +400,7 @@
     class:neo-expanded={expanded}
     class:neo-dragging={isDragging}
     class:neo-pressed={pressed}
+    class:neo-skeleton={skeleton}
     ondrop={onDrop}
     ondragover={onDragOver}
     ondragenter={onDragEnter}
@@ -402,6 +430,11 @@
     {@render input()}
   {/if}
 </svelte:element>
+
+<div>
+  hover: {hovered}
+  focused: {focused}
+</div>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
@@ -433,6 +466,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      box-sizing: border-box;
       min-width: var(--neo-file-picker-expanded-min-width, 0);
       min-height: var(--neo-file-picker-expanded-min-height, 0);
       padding: 0.5rem;
@@ -445,6 +479,7 @@
         z-index: var(--neo-z-index-in-front, 1);
         display: inline-flex;
         align-items: center;
+        box-sizing: border-box;
         margin: calc(var(--neo-drop-spacing) + var(--neo-file-picker-drag-margin-top))
           calc(var(--neo-drop-spacing) + var(--neo-file-picker-drag-margin-right))
           calc(var(--neo-drop-spacing) + var(--neo-file-picker-drag-margin-bottom))
@@ -490,6 +525,7 @@
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          box-sizing: border-box;
           width: 100%;
           height: 100%;
           padding: 1rem;
@@ -576,7 +612,7 @@
         );
       }
 
-      &.neo-dragging {
+      &.neo-dragging:not(.neo-skeleton) {
         .neo-drop-overlay {
           opacity: 1;
         }

@@ -9,7 +9,7 @@
   import IconConfirm from '~/icons/IconConfirm.svelte';
   import { leaveDefaultTransition } from '~/utils/transition.utils.js';
 
-  const { loading, close, valid, skeleton, closeProps, ...rest }: NeoAffixProps = $props();
+  const { loading, close, valid, skeleton, disabled, closeProps, ...rest }: NeoAffixProps = $props();
 
   const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveDefaultTransition);
 </script>
@@ -19,8 +19,8 @@
     <span class="neo-affix-loading" out:fade={leave}>
       <IconCircleLoading width="1.25rem" height="1.25rem" />
     </span>
-  {:else if close}
-    <button class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
+  {:else if close && !disabled}
+    <button {disabled} class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
       <IconClear />
     </button>
   {:else}
@@ -89,6 +89,10 @@
       border-radius: 50%;
       aspect-ratio: 1;
       cursor: pointer;
+      transition:
+        opacity 0.2s ease-in,
+        color 0.3s ease,
+        background-color 0.3s ease;
 
       :global(svg) {
         width: 100%;
@@ -98,13 +102,13 @@
       }
 
       &:focus-visible {
-        color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
+        color: var(--neo-close-color-focused, rgb(255 0 0 / 50%));
         background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
       }
 
       &:hover {
-        color: var(--neo-color-warning, rgb(255 0 0 / 75%));
-        background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
+        color: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
+        background-color: var(--neo-close-bg-color-hover, rgb(255 0 0 / 7%));
       }
 
       &:active {

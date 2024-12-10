@@ -63,6 +63,10 @@ export type NeoCardContext = {
    */
   start?: boolean;
   /**
+   * If true, the card will be disabled and a loading skeleton will be displayed instead of the text.
+   */
+  skeleton?: boolean;
+  /**
    * If true, the card will be displayed as a horizontal card.
    */
   horizontal?: boolean;

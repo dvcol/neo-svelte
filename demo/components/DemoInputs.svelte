@@ -377,7 +377,6 @@
       label: 'File',
       props: {
         label: 'File Picker',
-        // position: 'top',
         type: 'file',
         required: true,
         validation: true,

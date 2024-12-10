@@ -41,6 +41,7 @@
     segmented,
     cover,
     start,
+    skeleton,
     horizontal,
 
     // Flex
@@ -108,6 +109,7 @@
     segmented,
     cover,
     start,
+    skeleton,
     horizontal,
     close,
     onClose,
@@ -154,6 +156,7 @@
   class:neo-image={media && !segments}
   class:neo-rounded={rounded}
   class:neo-disabled={disabled}
+  class:neo-skeleton={skeleton}
   class:neo-pressed={pressed}
   class:neo-convex={convex}
   class:neo-hover={hover}
@@ -469,6 +472,17 @@
         .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
           border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg));
         }
+      }
+    }
+
+    &.neo-skeleton {
+      box-shadow: var(--neo-box-shadow-flat);
+      pointer-events: none;
+
+      @include mixin.skeleton;
+
+      &.neo-glass {
+        --neo-skeleton-color: var(--neo-glass-skeleton-color);
       }
     }
   }

@@ -136,6 +136,7 @@
   }
 
   .neo-tab-close {
+    display: inline-flex;
     width: calc(1rem + var(--neo-tab-icon-gap, 0.3rem) + var(--neo-tab-icon-gap-offset, -0.1875rem));
     padding: 0;
     color: inherit;

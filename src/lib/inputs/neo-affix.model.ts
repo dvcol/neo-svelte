@@ -19,6 +19,10 @@ export type NeoAffixProps = {
    */
   skeleton?: boolean;
   /**
+   * Display a disabled state
+   */
+  disabled?: boolean;
+  /**
    * Props for the close button
    */
   closeProps?: HTMLButtonAttributes;
