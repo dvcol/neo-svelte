@@ -86,7 +86,13 @@
   }: NeoInputProps = $props();
   /* eslint-enable prefer-const */
 
-  let initial = $state(value);
+  const getValue = () => {
+    if (rest?.type === 'file') return files;
+    if (rest?.type === 'checkbox') return checked;
+    return value;
+  };
+
+  let initial = $state(getValue());
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
   const filter = $derived(computeGlassFilter(elevation, glass));
@@ -106,8 +112,15 @@
     containerProps?.onmouseleave?.(e);
   };
 
+  const typedValue = $derived(getValue());
+  const hasValue = $derived.by(() => {
+    if (rest?.type === 'file') return !!files?.length;
+    if (rest?.type === 'checkbox') return checked !== undefined;
+    if (typeof value === 'string') return !!value.length;
+    return value !== undefined && value !== null;
+  });
+
   const affix = $derived(clearable || loading !== undefined || validation);
-  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
   const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
   const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
   const inside = $derived(position === NeoInputLabelPosition.Inside && label);
@@ -160,7 +173,7 @@
 
     // State
     initial,
-    value,
+    value: typedValue,
     touched,
     dirty,
     valid,

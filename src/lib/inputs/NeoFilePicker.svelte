@@ -3,6 +3,7 @@
 
   import type { DragEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+  import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
@@ -30,6 +31,7 @@
     id = label ? `neo-file-picker-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     files = $bindable(),
+    value = $bindable(),
     valid = $bindable(),
     dirty = $bindable(false),
     touched = $bindable(false),
@@ -232,7 +234,34 @@
   let messageId = $state(`neo-file-picker-message-${crypto.randomUUID()}`);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
-  const context = {};
+  const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
+    // Ref
+    ref,
+
+    // Methods
+    mark: ref?.mark,
+    clear: ref?.clear,
+    change: ref?.change,
+    validate: ref?.validate,
+
+    // State
+    value: files,
+    touched,
+    dirty,
+    valid,
+    readonly,
+    disabled,
+
+    // Styles
+    elevation,
+    hover,
+    pressed,
+    borderless: rest.borderless,
+    rounded,
+    glass: rest.glass,
+    start: rest.start,
+    skeleton,
+  });
 </script>
 
 {#snippet upload()}
@@ -251,6 +280,7 @@
   <NeoInput
     bind:ref
     bind:files
+    bind:value
     bind:valid
     bind:dirty
     bind:touched
@@ -335,6 +365,7 @@
     <NeoBaseInput
       bind:ref
       bind:files
+      bind:value
       bind:valid
       bind:dirty
       bind:touched

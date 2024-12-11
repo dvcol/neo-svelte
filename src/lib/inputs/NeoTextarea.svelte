@@ -15,6 +15,7 @@
     NeoInputLabelPosition,
     type NeoInputMethods,
     type NeoInputState,
+    type NeoInputValue,
     type NeoTextareaHTMLElement,
     type NeoTextareaProps,
   } from '~/inputs/common/neo-input.model.js';
@@ -200,7 +201,7 @@
   /**
    * Change the value of the input
    */
-  export const change: NeoInputMethods<HTMLTextAreaElement>['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
+  export const change: NeoInputMethods<HTMLTextAreaElement>['change'] = (_value: NeoInputValue<HTMLTextAreaElement>, event?: InputEvent) => {
     if (event) ref?.dispatchEvent(event);
     value = _value;
     focus();

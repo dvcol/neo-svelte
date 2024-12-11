@@ -5,7 +5,7 @@
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import { type NeoBaseInputProps, type NeoInputMethods, type NeoInputState } from '~/inputs/common/neo-input.model.js';
+  import { type NeoBaseInputProps, type NeoInputMethods, type NeoInputState, type NeoInputValue } from '~/inputs/common/neo-input.model.js';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -16,11 +16,11 @@
 
     files = $bindable(), // type="file"
     value = $bindable(),
-    initial = $bindable(),
     group = $bindable(), // type="radio"
     checked = $bindable(), // type="checkbox"
     indeterminate = $bindable(), // type="checkbox"
 
+    initial = $bindable(),
     touched = $bindable(false),
     valid = $bindable(),
     dirty = $bindable(false),
@@ -51,16 +51,25 @@
     onclear,
     onmark,
 
+    // Other props
     ...rest
   }: NeoBaseInputProps = $props();
   /* eslint-enable prefer-const */
 
+  const typedValue = $derived.by(() => {
+    if (rest.type === 'checkbox') return checked;
+    if (rest.type === 'file') return files;
+    return value;
+  });
+
+  const currentState = $derived<NeoInputState<HTMLInputElement>>({ touched, dirty, valid, value: typedValue, initial });
+
   const validate: NeoInputMethods<HTMLInputElement>['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
-    if (update.dirty) dirty = value !== initial;
-    if (!update.valid) return { touched, dirty, valid, value, initial };
+    if (update.dirty) dirty = typedValue !== initial;
+    if (!update.valid) return { ...currentState };
     valid = ref?.checkValidity();
     validationMessage = ref?.validationMessage;
-    return { touched, dirty, valid, value, initial };
+    return { ...currentState };
   };
 
   /**
@@ -70,10 +79,10 @@
   export const mark: NeoInputMethods<HTMLInputElement>['mark'] = (state: NeoInputState<HTMLInputElement>) => {
     if (state.touched !== undefined) touched = state.touched;
     if (state.valid !== undefined) valid = state.valid;
-    if (state.dirty === undefined) return onmark?.({ touched, dirty, valid, value, initial });
+    if (state.dirty === undefined) return onmark?.({ ...currentState });
     dirty = state.dirty;
-    if (!dirty) initial = value;
-    return onmark?.({ touched, dirty, valid, value, initial });
+    if (!dirty) initial = typedValue;
+    return onmark?.({ ...currentState });
   };
 
   const focus = () => {
@@ -88,13 +97,18 @@
     state?: NeoInputState<HTMLInputElement>,
     event?: InputEvent | SvelteEvent<InputEvent>,
   ) => {
-    value = rest?.defaultValue ?? '';
-    if (rest.type === 'file') files = undefined;
+    if (rest.type === 'checkbox') {
+      checked = false;
+      indeterminate = false;
+    } else {
+      value = rest?.defaultValue ?? '';
+      if (rest.type === 'file') files = undefined;
+    }
     await tick();
     focus();
     if (state) mark({ touched: false, dirty: false, ...state });
     else validate();
-    onclear?.({ touched, dirty, valid, value, initial }, event);
+    onclear?.({ ...currentState }, event);
     if (event) return ref?.dispatchEvent(event);
     const _event: InputEventInit = { bubbles: true, cancelable: false, data: value, inputType: 'clear' };
     oninput?.(new InputEvent('input', _event) as SvelteEvent<InputEvent, any>);
@@ -103,8 +117,12 @@
   /**
    * Change the value of the input
    */
-  export const change: NeoInputMethods<HTMLInputElement>['change'] = (_value: HTMLInputElement['value'], event?: InputEvent) => {
-    value = _value;
+  export const change: NeoInputMethods<HTMLInputElement>['change'] = (_value: NeoInputValue<HTMLInputElement>, event?: InputEvent) => {
+    if (rest.type === 'checkbox') {
+      checked = !!_value;
+    } else {
+      value = _value?.toString();
+    }
     focus();
     if (event) ref?.dispatchEvent(event);
     return validate();
@@ -180,8 +198,8 @@
     {id}
     {disabled}
     {readonly}
+    {value}
     bind:this={ref}
-    bind:value
     bind:group
     bind:checked
     bind:indeterminate

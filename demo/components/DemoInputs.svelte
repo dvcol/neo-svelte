@@ -762,6 +762,7 @@
             bind:touched={column.state.touched}
             bind:dirty={column.state.dirty}
             bind:valid={column.state.valid}
+            bind:value={column.state.value}
             bind:files={column.state.files}
             {...options}
             {...column.props}
@@ -772,6 +773,7 @@
           bind:touched={column.state.touched}
           bind:dirty={column.state.dirty}
           bind:valid={column.state.valid}
+          bind:value={column.state.value}
           bind:files={column.state.files}
           {...options}
           {...column.props}

@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { FocusEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
-
   import type { NeoNumberStepProps } from '~/inputs/neo-number-step.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';

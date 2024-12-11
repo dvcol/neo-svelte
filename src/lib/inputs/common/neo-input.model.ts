@@ -13,7 +13,7 @@ import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
 export type NeoInputValue<T extends HTMLInputElement | HTMLTextAreaElement> = T extends HTMLTextAreaElement
   ? HTMLTextareaAttributes['value']
-  : HTMLInputAttributes['value'];
+  : HTMLInputAttributes['value'] | HTMLInputAttributes['checked'] | HTMLInputAttributes['bind:files'];
 
 type NeoInputHTMLAttributes<T extends HTMLInputElement | HTMLTextAreaElement> = T extends HTMLTextAreaElement
   ? HTMLTextareaAttributes
@@ -93,7 +93,7 @@ export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement> = 
    * @param value
    * @param event
    */
-  change: (value: HTMLInputElement['value'], event?: InputEvent | SvelteEvent<InputEvent>) => NeoInputState<T>;
+  change: (value: NeoInputValue<T>, event?: InputEvent | SvelteEvent<InputEvent>) => NeoInputState<T>;
   /**
    * Check the input validity.
    * @param update whether to check the input dirty and/or valid state.

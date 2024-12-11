@@ -15,6 +15,17 @@ Neomorphic ui library for svelte 5
     - [ ] groups
 - [x] Text Area
   - [ ] @ / # tags
+- [x] file picker
+  - [x] drag & drop
+  - [x] multiple
+- [ ] numbers
+  - [x] digits
+  - [ ] range
+  - [ ] phone
+  - [ ] credit card
+  - [x] pin
+- [x] time/date/week
+  - [ ] range
 - [ ] switch
   - [ ] loading
   - [ ] border loading
@@ -26,17 +37,6 @@ Neomorphic ui library for svelte 5
 - [ ] select
 - [ ] table
 - [ ] pagination
-- [ ] numbers
-  - [x] digits
-  - [ ] range
-  - [ ] phone
-  - [ ] credit card
-  - [x] pin
-- [x] file picker
-  - [x] drag & drop
-  - [x] multiple
-- [x] time/date/week
-  - [ ] range
 - [ ] auto-complete
   - [ ] @ / # tags
   - [ ] select
