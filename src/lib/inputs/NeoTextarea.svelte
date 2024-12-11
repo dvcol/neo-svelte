@@ -8,8 +8,8 @@
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
+  import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import NeoValidation from '~/inputs/common/NeoValidation.svelte';
   import {
     type NeoInputContext,
     NeoInputLabelPosition,
@@ -273,15 +273,8 @@
     resize();
   });
 
-  const errorMessage = $derived.by(() => {
-    if (valid || valid === undefined) return;
-    if (error) return error;
-    if (!validation) return;
-    return error ?? validationMessage;
-  });
-
-  const showMessage = $derived(message || errorMessage || error || validation);
-  const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-textarea-message-${crypto.randomUUID()}`) : undefined);
+  let visible = $state(false);
+  let messageId = $state(`neo-textarea-message-${crypto.randomUUID()}`);
 
   const context = $derived<NeoInputContext<NeoTextareaHTMLElement>>({
     // Ref
@@ -349,7 +342,7 @@
     {disabled}
     {readonly}
     aria-invalid={valid === undefined ? undefined : !valid}
-    aria-describedby={messageId}
+    aria-describedby={visible ? messageId : undefined}
     bind:this={ref}
     bind:value
     class:neo-textarea={true}
@@ -412,7 +405,7 @@
   >
     {#if label}
       <NeoLabel
-        {id}
+        for={id}
         bind:ref={labelRef}
         containerProps={{
           class: [
@@ -439,26 +432,26 @@
   </svelte:element>
 {/snippet}
 
-{#if showMessage}
-  <NeoValidation
-    tag={wrapperTag}
-    error={errorMessage}
-    {rounded}
-    {context}
-    {message}
-    {messageId}
-    {messageTag}
-    {messageProps}
-    in={inAction}
-    out={outAction}
-    transition={transitionAction}
-    {...wrapperProps}
-  >
-    {@render textareaGroup()}
-  </NeoValidation>
-{:else}
+<NeoInputValidation
+  tag={wrapperTag}
+  bind:visible
+  bind:messageId
+  {valid}
+  {validation}
+  {validationMessage}
+  {error}
+  {rounded}
+  {context}
+  {message}
+  {messageTag}
+  {messageProps}
+  in={inAction}
+  out={outAction}
+  transition={transitionAction}
+  {...wrapperProps}
+>
   {@render textareaGroup()}
-{/if}
+</NeoInputValidation>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;

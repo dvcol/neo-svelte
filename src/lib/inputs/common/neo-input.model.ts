@@ -5,6 +5,7 @@
 
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
+import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
@@ -281,7 +282,7 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement>
   /**
    * The props to pass to the label.
    */
-  labelProps?: HTMLNeoBaseElement<HTMLLabelElement>;
+  labelProps?: NeoLabelProps;
 
   /**
    * The ref to bind to the label.

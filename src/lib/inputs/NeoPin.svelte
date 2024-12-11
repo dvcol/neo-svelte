@@ -7,8 +7,8 @@
   import IconMinus from '~/icons/IconMinus.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import NeoValidation from '~/inputs/common/NeoValidation.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { ArrowPrefix } from '~/utils/regex.utils.js';
   import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
@@ -296,13 +296,6 @@
     oninvalid?.(e);
   };
 
-  const errorMessage = $derived.by(() => {
-    if (valid || valid === undefined) return;
-    if (error) return error;
-    if (!validation) return;
-    return error ?? validationMessage;
-  });
-
   const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
     hovered = true;
     containerProps?.onmouseenter?.(e);
@@ -315,8 +308,9 @@
   const affix = $derived(clearable || loading !== undefined || validation);
   const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
   const close = $derived(clearable && (focused || hovered) && hasValue && !rest.disabled && !rest.readonly);
-  const showMessage = $derived(message || errorMessage || error || validation);
-  const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-input-message-${crypto.randomUUID()}`) : undefined);
+
+  let visible = $state(false);
+  let messageId = $state(`neo-pin-message-${crypto.randomUUID()}`);
 
   const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
 
@@ -378,7 +372,7 @@
         {id}
         aria-hidden="true"
         aria-invalid={valid === undefined ? undefined : !valid}
-        aria-describedby={messageId}
+        aria-describedby={visible ? messageId : undefined}
         hidden
         type="text"
         tabindex="-1"
@@ -448,26 +442,26 @@
 {/snippet}
 
 {#snippet validationGroup()}
-  {#if showMessage}
-    <NeoValidation
-      tag={wrapperTag}
-      error={errorMessage}
-      rounded={rest.rounded}
-      {context}
-      {message}
-      {messageId}
-      {messageTag}
-      {messageProps}
-      in={inAction}
-      out={outAction}
-      transition={transitionAction}
-      {...wrapperProps}
-    >
-      {@render group()}
-    </NeoValidation>
-  {:else}
+  <NeoInputValidation
+    tag={wrapperTag}
+    bind:visible
+    bind:messageId
+    {valid}
+    {validation}
+    {validationMessage}
+    {error}
+    rounded={rest.rounded}
+    {context}
+    {message}
+    {messageTag}
+    {messageProps}
+    in={inAction}
+    out={outAction}
+    transition={transitionAction}
+    {...wrapperProps}
+  >
     {@render group()}
-  {/if}
+  </NeoInputValidation>
 {/snippet}
 
 {#snippet labelGroup()}
@@ -480,7 +474,7 @@
 
 {#if label}
   <NeoLabel
-    {id}
+    for={id}
     bind:ref={labelRef}
     {required}
     label={labelGroup}

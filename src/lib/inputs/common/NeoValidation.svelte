@@ -25,7 +25,7 @@
     // Other props
     messageProps,
     messageTag = 'div',
-    messageId = messageProps?.id ?? `neo-validation-message-${crypto.randomUUID()}`,
+    messageId = $bindable(messageProps?.id ?? `neo-validation-message-${crypto.randomUUID()}`),
     ...rest
   }: NeoValidationProps<T, V> = $props();
   /* eslint-enable prefer-const */

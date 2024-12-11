@@ -7,9 +7,10 @@
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
+  import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import NeoValidation from '~/inputs/common/NeoValidation.svelte';
   import { NeoInputLabelPosition } from '~/inputs/common/neo-input.model.js';
+
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import {
     computeGlassFilter,
@@ -143,15 +144,8 @@
     beforeWidth = `${beforeRef?.clientWidth ?? 0}px`;
   });
 
-  const errorMessage = $derived.by(() => {
-    if (valid || valid === undefined) return;
-    if (error) return error;
-    if (!validation) return;
-    return error ?? validationMessage;
-  });
-
-  const showMessage = $derived(message || errorMessage || error || validation);
-  const messageId = $derived(showMessage ? (messageProps?.id ?? `neo-input-message-${crypto.randomUUID()}`) : undefined);
+  let visible = $state(false);
+  let messageId = $state(`neo-textarea-message-${crypto.randomUUID()}`);
 
   const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
     // Ref
@@ -242,7 +236,8 @@
 
 {#snippet input()}
   <NeoBaseInput
-    aria-describedby={messageId}
+    aria-invalid={valid === undefined ? undefined : !valid}
+    aria-describedby={visible ? messageId : undefined}
     bind:ref
     bind:files
     bind:initial
@@ -312,7 +307,7 @@
     {@render prefix()}
     {#if label}
       <NeoLabel
-        {id}
+        for={id}
         bind:ref={labelRef}
         containerProps={{
           class: [
@@ -340,26 +335,26 @@
   </svelte:element>
 {/snippet}
 
-{#if showMessage}
-  <NeoValidation
-    tag={wrapperTag}
-    error={errorMessage}
-    {rounded}
-    {context}
-    {message}
-    {messageId}
-    {messageTag}
-    {messageProps}
-    in={inAction}
-    out={outAction}
-    transition={transitionAction}
-    {...wrapperProps}
-  >
-    {@render inputGroup()}
-  </NeoValidation>
-{:else}
+<NeoInputValidation
+  tag={wrapperTag}
+  bind:visible
+  bind:messageId
+  {valid}
+  {validation}
+  {validationMessage}
+  {error}
+  {rounded}
+  {context}
+  {message}
+  {messageTag}
+  {messageProps}
+  in={inAction}
+  out={outAction}
+  transition={transitionAction}
+  {...wrapperProps}
+>
   {@render inputGroup()}
-{/if}
+</NeoInputValidation>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
