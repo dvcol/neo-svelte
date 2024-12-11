@@ -1,5 +1,5 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
-import type { NeoInputProps } from '~/inputs/neo-input.model.js';
+import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoPinState } from '~/inputs/neo-pin.model.js';
 
 export type NeoPasswordProps<T extends boolean = false> = {

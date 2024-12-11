@@ -3,15 +3,15 @@
 
   import type { DragEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+  import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
-  import type { NeoInputProps } from '~/inputs/neo-input.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconDownload from '~/icons/IconDownload.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import NeoFilePickerCard from '~/inputs/NeoFilePickerCard.svelte';
-  import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
 
   import { toClass } from '~/utils/props.utils.js';
   import { computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';

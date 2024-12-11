@@ -1,6 +1,6 @@
 <script lang="ts">
   /* eslint-disable prefer-const -- necessary for binding checked */
-  import type { NeoLabelProps } from '~/inputs/neo-label.model.js';
+  import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 
   let {
     // Snippets

@@ -12,8 +12,8 @@
   import IconDownload from '~/icons/IconDownload.svelte';
   import IconPencil from '~/icons/IconPencil.svelte';
 
-  import NeoAffix from '~/inputs/NeoAffix.svelte';
-  import NeoLabel from '~/inputs/NeoLabel.svelte';
+  import NeoAffix from '~/inputs/common/NeoAffix.svelte';
+  import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toClass } from '~/utils/props.utils.js';
   import { enterDefaultTransition, leaveDefaultFadeTransition } from '~/utils/transition.utils.js';
 

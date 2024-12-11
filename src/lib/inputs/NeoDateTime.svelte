@@ -5,7 +5,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
 
   import IconCalendar from '~/icons/IconCalendar.svelte';
-  import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */

@@ -4,9 +4,9 @@
   import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import type { NeoInputProps } from '~/inputs/common/neo-input.model';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model';
-  import type { NeoInputProps } from '~/inputs/neo-input.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -15,11 +15,11 @@
   import NeoColorPicker from '~/inputs/NeoColorPicker.svelte';
   import NeoDateTime from '~/inputs/NeoDateTime.svelte';
   import NeoFilePicker from '~/inputs/NeoFilePicker.svelte';
-  import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
 
   import {
     DefaultShadowElevation,

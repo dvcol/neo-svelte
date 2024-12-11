@@ -1,16 +1,14 @@
 <script lang="ts">
   import type { EventHandler, FocusEventHandler, MouseEventHandler } from 'svelte/elements';
-  import type { NeoInputHTMLElement } from '~/inputs/neo-input.model.js';
-
+  import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
-
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import IconMinus from '~/icons/IconMinus.svelte';
-  import NeoAffix from '~/inputs/NeoAffix.svelte';
-  import NeoInput from '~/inputs/NeoInput.svelte';
-  import NeoLabel from '~/inputs/NeoLabel.svelte';
-  import NeoValidation from '~/inputs/NeoValidation.svelte';
+  import NeoAffix from '~/inputs/common/NeoAffix.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import NeoValidation from '~/inputs/common/NeoValidation.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { ArrowPrefix } from '~/utils/regex.utils.js';
   import { DefaultShadowElevation } from '~/utils/shadow.utils.js';

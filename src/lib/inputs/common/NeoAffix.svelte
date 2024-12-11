@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
 
-  import type { NeoAffixProps } from '~/inputs/neo-affix.model.js';
+  import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 
   import IconAlert from '~/icons/IconAlert.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';

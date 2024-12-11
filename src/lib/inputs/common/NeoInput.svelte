@@ -3,11 +3,13 @@
 
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import NeoAffix from '~/inputs/NeoAffix.svelte';
-  import NeoBaseInput from '~/inputs/NeoBaseInput.svelte';
-  import NeoLabel from '~/inputs/NeoLabel.svelte';
-  import NeoValidation from '~/inputs/NeoValidation.svelte';
-  import { type NeoInputContext, type NeoInputHTMLElement, NeoInputLabelPosition, type NeoInputProps } from '~/inputs/neo-input.model.js';
+  import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
+
+  import NeoAffix from '~/inputs/common/NeoAffix.svelte';
+  import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
+  import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import NeoValidation from '~/inputs/common/NeoValidation.svelte';
+  import { NeoInputLabelPosition } from '~/inputs/common/neo-input.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import {
     computeGlassFilter,

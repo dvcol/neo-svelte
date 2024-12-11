@@ -1,7 +1,7 @@
 <script lang="ts" generics="T extends HTMLElement, V extends any">
   import { fade } from 'svelte/transition';
 
-  import type { NeoValidationContext, NeoValidationProps } from '~/inputs/neo-validation.model.js';
+  import type { NeoValidationContext, NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
 
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';

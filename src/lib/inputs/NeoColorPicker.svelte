@@ -6,7 +6,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconPaint from '~/icons/IconPaint.svelte';
-  import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { HexColorRegexString } from '~/utils/regex.utils.js';
   import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
 

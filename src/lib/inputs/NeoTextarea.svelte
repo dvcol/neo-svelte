@@ -7,9 +7,9 @@
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import NeoAffix from '~/inputs/NeoAffix.svelte';
-  import NeoLabel from '~/inputs/NeoLabel.svelte';
-  import NeoValidation from '~/inputs/NeoValidation.svelte';
+  import NeoAffix from '~/inputs/common/NeoAffix.svelte';
+  import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import NeoValidation from '~/inputs/common/NeoValidation.svelte';
   import {
     type NeoInputContext,
     NeoInputLabelPosition,
@@ -17,7 +17,7 @@
     type NeoInputState,
     type NeoTextareaHTMLElement,
     type NeoTextareaProps,
-  } from '~/inputs/neo-input.model.js';
+  } from '~/inputs/common/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import {
     computeGlassFilter,

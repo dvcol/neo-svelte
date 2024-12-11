@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { NeoInputHTMLElement, NeoInputProps } from '~/inputs/neo-input.model.js';
-import type { NeoValidationFieldContext } from '~/inputs/neo-validation.model.js';
+import type { NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
+import type { NeoValidationFieldContext } from '~/inputs/common/neo-validation.model.js';
 
 export type NeoPinState = {
   // Snippets

@@ -5,8 +5,8 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconWatch from '~/icons/IconWatch.svelte';
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
-  import NeoInput from '~/inputs/NeoInput.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { toClass } from '~/utils/props.utils.js';
   import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
 

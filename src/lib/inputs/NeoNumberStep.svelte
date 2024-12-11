@@ -7,7 +7,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
   import IconMinus from '~/icons/IconMinus.svelte';
-  import NeoInput from '~/inputs/NeoInput.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeButtonShadows, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 

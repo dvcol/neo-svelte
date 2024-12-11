@@ -5,7 +5,7 @@
 
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
-import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/neo-validation.model.js';
+import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { ShadowElevation } from '~/utils/shadow.utils.js';

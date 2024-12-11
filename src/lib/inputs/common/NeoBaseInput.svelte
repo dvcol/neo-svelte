@@ -5,7 +5,7 @@
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import { type NeoBaseInputProps, type NeoInputMethods, type NeoInputState } from '~/inputs/neo-input.model.js';
+  import { type NeoBaseInputProps, type NeoInputMethods, type NeoInputState } from '~/inputs/common/neo-input.model.js';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
