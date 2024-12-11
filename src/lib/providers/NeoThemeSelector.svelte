@@ -8,7 +8,7 @@
   import IconSave from '~/icons/IconSave.svelte';
   import IconSaveOff from '~/icons/IconSaveOff.svelte';
   import IconSun from '~/icons/IconSun.svelte';
-  import IconSunrise from '~/icons/IconSunrise.svelte';
+  import IconSunFull from '~/icons/IconSunFull.svelte';
   import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
   import { NeoSource, NeoTheme } from '~/providers/neo-theme-provider.model.js';
 
@@ -57,7 +57,7 @@
     <NeoButton aria-label="Cycle light source origin" title="Cycle light source origin" checked onclick={onCycleSource} {...sourceProps}>
       {#snippet icon()}
         <span class="neo-source-icon" style:--neo-source-rotate="{angle}deg">
-          <IconSunrise />
+          <IconSunFull />
         </span>
       {/snippet}
       <span>Source</span>

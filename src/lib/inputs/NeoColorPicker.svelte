@@ -113,33 +113,40 @@
 <style lang="scss">
   .neo-color-picker {
     box-sizing: border-box;
+    min-width: 3rem;
     height: 100%;
+    min-height: 2.25rem;
     margin: 0;
     padding: 0;
     border: none;
     border-radius: var(--neo-border-radius-sm);
     transition: border-radius 0.3s ease;
     appearance: none;
-
-    &.neo-rounded {
-      border-radius: var(--neo-border-radius-md);
-
-      &.neo-label {
-        border-radius: var(--neo-border-radius-lg);
-      }
-    }
-
-    &::-moz-color-swatch {
-      border: none;
-    }
+    aspect-ratio: 4/3;
 
     &::-webkit-color-swatch-wrapper {
       padding: 0;
-      border-radius: 0;
     }
 
+    &::-webkit-color-swatch-wrapper,
     &::-webkit-color-swatch {
       border: none;
+    }
+
+    &::-webkit-color-swatch-wrapper,
+    &::-webkit-color-swatch,
+    &::-moz-color-swatch {
+      border-radius: var(--neo-border-radius-sm);
+    }
+
+    &.neo-rounded {
+      border-radius: var(--neo-border-radius-lg);
+
+      &::-webkit-color-swatch-wrapper,
+      &::-webkit-color-swatch,
+      &::-moz-color-swatch {
+        border-radius: var(--neo-border-radius-lg);
+      }
     }
   }
 </style>

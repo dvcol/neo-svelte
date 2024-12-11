@@ -36,7 +36,7 @@
     append,
     placeholder,
     dropText = placeholder,
-    detailText = `${files?.length} file${files?.length !== 1 ? 's' : ''}`,
+    detailText,
 
     required,
     loading,
@@ -63,6 +63,8 @@
   }: NeoFilePickerCardProps = $props();
   /* eslint-enable prefer-const */
 
+  const detail = $derived(detailText || `${files?.length} file${files?.length !== 1 ? 's' : ''}`);
+
   const close = $derived(clearable && !!files?.length && (hovered || focused));
 </script>
 
@@ -88,7 +90,7 @@
       })}
     {:else if files?.length}
       <div class="neo-expanded-count">
-        <span>{detailText}</span>
+        <span>{detail}</span>
         <NeoAffix
           {loading}
           {valid}

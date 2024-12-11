@@ -89,6 +89,7 @@
     event?: InputEvent | SvelteEvent<InputEvent>,
   ) => {
     value = rest?.defaultValue ?? '';
+    if (rest.type === 'file') files = undefined;
     await tick();
     focus();
     if (state) mark({ touched: false, dirty: false, ...state });
@@ -128,6 +129,7 @@
   };
 
   const onChange: FormEventHandler<HTMLInputElement> = e => {
+    touched = true;
     validate();
     onchange?.(e);
   };

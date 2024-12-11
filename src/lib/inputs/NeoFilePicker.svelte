@@ -75,7 +75,6 @@
   /* eslint-enable prefer-const */
 
   // TODO - validation
-  // TODO clear & mark
   // TODO label for card
 
   const text = $derived(elevation >= 0 || !pressed);
@@ -106,8 +105,7 @@
 
   const onClear: MouseEventHandler<HTMLButtonElement> = e => {
     e?.stopPropagation();
-    files = undefined;
-    // rest.onclear?.(); // TODO clear & mark
+    ref?.clear?.();
   };
 
   const onclick = (e: SvelteEvent<MouseEvent>) => {
@@ -258,6 +256,7 @@
     readonly,
     rounded,
     pressed,
+    validation,
 
     elevation,
     hover,

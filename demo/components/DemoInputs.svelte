@@ -113,26 +113,31 @@
   const pinStateSeparator = new ValidationState();
   const pinPasswordState = new ValidationState();
 
+  const colorState = new ValidationState();
+
   const fileState = new ValidationState();
   const multipleFileState = new ValidationState();
   const expandedFileState = new ValidationState();
 
-  const onClear = () => {
-    validation.clear();
-    validState.clear();
-    invalidState.clear();
-    customState.clear();
+  const onClear = () =>
+    [
+      validation,
+      validState,
+      invalidState,
+      customState,
 
-    numberState.clear();
+      numberState,
 
-    pinState.clear();
-    pinStateSeparator.clear();
-    pinPasswordState.clear();
+      pinState,
+      pinStateSeparator,
+      pinPasswordState,
 
-    fileState.clear();
-    multipleFileState.clear();
-    expandedFileState.clear();
-  };
+      colorState,
+
+      fileState,
+      multipleFileState,
+      expandedFileState,
+    ].forEach(state => state.clear());
 
   const columns: ColumProps[] = [
     {
@@ -486,13 +491,13 @@
   {/if}
 {/snippet}
 
-{#snippet validationState({ touched, dirty, valid, value }: ValidationState, show = false)}
+{#snippet validationState({ touched, dirty, valid, value, files }: ValidationState, show = false)}
   <div class="row">
     <div class="label">Touched: {touched}</div>
     <div class="label">Dirty: {dirty}</div>
     <div class="label">Valid: {valid}</div>
     {#if show}
-      <div class="label">Value: {value}</div>
+      <div class="label">Value: {value || files?.length}</div>
     {/if}
   </div>
 {/snippet}
@@ -718,13 +723,29 @@
 <div class="row">
   <div class="column content">
     <span class="label">Color Picker</span>
-    {@render validationState(pinState, true)}
+    {@render validationState(colorState, true)}
     {#if options.glass}
       <SphereBackdrop>
-        <NeoColorPicker label="Color Picker" {...options} size="10" />
+        <NeoColorPicker
+          bind:touched={colorState.touched}
+          bind:dirty={colorState.dirty}
+          bind:valid={colorState.valid}
+          bind:value={colorState.value}
+          label="Color Picker"
+          {...options}
+          size="10"
+        />
       </SphereBackdrop>
     {:else}
-      <NeoColorPicker label="Color Picker" {...options} size="10" />
+      <NeoColorPicker
+        bind:touched={colorState.touched}
+        bind:dirty={colorState.dirty}
+        bind:valid={colorState.valid}
+        bind:value={colorState.value}
+        label="Color Picker"
+        {...options}
+        size="10"
+      />
     {/if}
   </div>
 </div>
@@ -734,7 +755,7 @@
   {#each fileColumns as column}
     <div class="column content">
       <span class="label">Date Picker</span>
-      {@render validationState(pinState, true)}
+      {@render validationState(column.state, true)}
       {#if options.glass}
         <SphereBackdrop>
           <NeoFilePicker

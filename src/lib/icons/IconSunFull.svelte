@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...$$props} style:scale={$$props.scale} scale={undefined}>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width={$$props.stroke ?? 1.5}>
-    <circle cx="12" cy="32" r="6" fill="currentColor">
-      <animate fill="freeze" attributeName="cy" dur="0.6s" values="32;12" />
+    <circle cx="12" cy="12" r="6" fill="currentColor" opacity="1">
+      <animate attributeName="r" dur="0.6s" values="2;6" />
+      <animate attributeName="opacity" dur="0.4s" values="0.6;1" />
     </circle>
     <g>
       <path stroke-dasharray="2" stroke-dashoffset="2" d="M12 19v1M19 12h1M12 5v-1M5 12h-1">

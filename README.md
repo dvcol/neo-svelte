@@ -9,17 +9,16 @@ Neomorphic ui library for svelte 5
 - [x] Inputs
   - [x] Password
   - [x] Pin
-  - [ ] Color picker
+  - [x] Color picker
+  - [ ] checkbox
+  - [ ] radio
+    - [ ] groups
 - [x] Text Area
   - [ ] @ / # tags
 - [ ] switch
   - [ ] loading
   - [ ] border loading
   - [ ] skeleton
-  - [ ] checkbox
-  - [ ] checkbox (square & round)
-  - [ ] radio
-  - [ ] groups
 - [ ] slider
   - [ ] range
   - [ ] steps/ticks
@@ -28,19 +27,15 @@ Neomorphic ui library for svelte 5
 - [ ] table
 - [ ] pagination
 - [ ] numbers
-  - [ ] digits
+  - [x] digits
   - [ ] range
-  - [ ] animation ?
-  - [ ] currency
-  - [ ] percentage
   - [ ] phone
   - [ ] credit card
-  - [ ] pin
-- [ ] file picker
-  - [ ] drag & drop ?
-  - [ ] progress ?
-  - [ ] multiple
-- [ ] time/date/week
+  - [x] pin
+- [x] file picker
+  - [x] drag & drop
+  - [x] multiple
+- [x] time/date/week
   - [ ] range
 - [ ] auto-complete
   - [ ] @ / # tags
@@ -83,7 +78,7 @@ Neomorphic ui library for svelte 5
     - [ ] click outside
 - [ ] scrollbar ?
 - [ ] container
-  - [ ] transition
+  - [x] transition
   - [ ] split/resizable
   - [ ] flex
   - [ ] grid
