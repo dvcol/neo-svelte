@@ -35,6 +35,7 @@
     after,
     message,
     error,
+    children,
 
     // States
     id = label ? `neo-textarea-${crypto.randomUUID()}` : undefined,
@@ -429,6 +430,7 @@
       {@render textarea()}
     {/if}
     {@render suffix()}
+    {@render children?.(context)}
   </svelte:element>
 {/snippet}
 

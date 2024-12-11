@@ -199,6 +199,10 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement>
    * A snippet to display as the input suffix.
    */
   after?: Snippet<[NeoInputContext<T>]>;
+  /**
+   * Element(s) to render inside the input-group (after the input).
+   */
+  children?: Snippet<[NeoInputContext<T>]>;
 
   // States
   /**

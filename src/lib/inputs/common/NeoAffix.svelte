@@ -9,27 +9,27 @@
   import IconConfirm from '~/icons/IconConfirm.svelte';
   import { leaveDefaultTransition } from '~/utils/transition.utils.js';
 
-  const { loading, close, valid, skeleton, disabled, closeProps, ...rest }: NeoAffixProps = $props();
+  const { loading, close, valid, skeleton, disabled, size = '1.25rem', closeProps, ...rest }: NeoAffixProps = $props();
 
   const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveDefaultTransition);
 </script>
 
-<span class:neo-affix-container={true} class:neo-skeleton={skeleton} role="none" {...rest}>
+<span class:neo-affix-container={true} class:neo-skeleton={skeleton} style:--neo-affix-size={size} role="none" {...rest}>
   {#if loading}
     <span class="neo-affix-loading" out:fade={leave}>
-      <IconCircleLoading width="1.25rem" height="1.25rem" />
+      <IconCircleLoading width={size} height={size} />
     </span>
   {:else if close && !disabled}
     <button {disabled} class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
-      <IconClear />
+      <IconClear width={size} height={size} />
     </button>
   {:else}
     <span class="neo-affix-validation" data-valid={valid} in:fade={leave}>
       {#if valid !== undefined}
         {#if valid}
-          <IconConfirm width="1.25rem" height="1.25rem" />
+          <IconConfirm width={size} height={size} />
         {:else}
-          <IconAlert width="1.25rem" height="1.25rem" />
+          <IconAlert width={size} height={size} />
         {/if}
       {/if}
     </span>
@@ -44,8 +44,8 @@
   .neo-affix-clear {
     display: inline-flex;
     box-sizing: border-box;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: var(--neo-affix-size, 1.25rem);
+    height: var(--neo-affix-size, 1.25rem);
     font: inherit;
     text-decoration: none;
     outline: none;

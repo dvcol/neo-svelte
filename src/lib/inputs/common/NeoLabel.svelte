@@ -8,7 +8,6 @@
     label,
 
     // States
-    id,
     ref = $bindable(),
     required,
     disabled,
@@ -22,7 +21,7 @@
 </script>
 
 <svelte:element this={containerTag} class:neo-label-container={true} {...containerProps}>
-  <label bind:this={ref} for={id} class:neo-label={true} class:neo-disabled={disabled} class:neo-required={required} {...rest}>
+  <label bind:this={ref} class:neo-label={true} class:neo-disabled={disabled} class:neo-required={required} {...rest}>
     {#if typeof label === 'string'}
       {label}
     {:else}

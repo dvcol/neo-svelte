@@ -3,7 +3,6 @@
 
   import type { DragEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
-  import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
@@ -11,8 +10,9 @@
   import IconDownload from '~/icons/IconDownload.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import NeoFilePickerCard from '~/inputs/NeoFilePickerCard.svelte';
+  import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-
+  import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import { toClass } from '~/utils/props.utils.js';
   import { computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
 
@@ -20,24 +20,26 @@
   let {
     // Snippets
     children,
-    label, // TODO - label for card
-    error, // TODO - validation error for card
-    message, // TODO - validation message for card
+    label,
+    error,
+    message,
+    after,
+    before,
 
     // States
     id = label ? `neo-file-picker-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     files = $bindable(),
-    valid = $bindable(), // TODO - wrap validation
-    dirty = $bindable(false), // TODO - wrap validation
-    touched = $bindable(false), // TODO - wrap validation
-    hovered = $bindable(false), // TODO - wrap validation
-    focused = $bindable(false), // TODO - wrap validation
+    valid = $bindable(),
+    dirty = $bindable(false),
+    touched = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
     placeholder = 'Choose a file',
 
     loading,
     clearable,
-    validation, // TODO - wrap validation
+    validation,
     skeleton,
     disabled,
     readonly,
@@ -61,6 +63,11 @@
     oninput,
     onchange,
 
+    // Actions
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
+
     // Other props
     labelRef = $bindable(),
     labelProps,
@@ -70,12 +77,11 @@
     messageProps,
     containerTag = 'div',
     containerProps,
+    wrapperTag = 'div',
+    wrapperProps,
     ...rest
   }: NeoFilePickerProps = $props();
   /* eslint-enable prefer-const */
-
-  // TODO - validation
-  // TODO label for card
 
   const text = $derived(elevation >= 0 || !pressed);
   const style = $derived(computeButtonShadows(elevation, text));
@@ -95,12 +101,12 @@
   };
 
   const updateDragState = async (target: Element | null | undefined = dragRef) => {
-    if (!drop) return;
+    if (!drop || !expanded) return;
 
     dragWith = target ? `${target.clientWidth}px` : 0;
     dragHeight = target ? `${target.clientHeight}px` : 0;
 
-    updateMargin(expanded ? dragRef?.firstElementChild : overlayRef?.nextElementSibling);
+    updateMargin(dragRef?.firstElementChild);
   };
 
   const onClear: MouseEventHandler<HTMLButtonElement> = e => {
@@ -221,9 +227,15 @@
     } else files = undefined;
     return emitChange();
   };
+
+  let visible = $state(false);
+  let messageId = $state(`neo-file-picker-message-${crypto.randomUUID()}`);
+  let validationMessage = $state<string>(ref?.validationMessage ?? '');
+
+  const context = {};
 </script>
 
-{#snippet after()}
+{#snippet upload()}
   <NeoButton {...afterProps}>
     {#snippet icon()}
       {#if isDragging}
@@ -235,33 +247,7 @@
   </NeoButton>
 {/snippet}
 
-{#snippet input(
-  props: Partial<NeoInputProps> | undefined = {
-    // Snippets
-    label,
-    labelProps,
-    error,
-    message,
-    messageTag,
-    messageProps,
-    after,
-
-    // States
-    placeholder,
-
-    loading,
-    clearable,
-    skeleton,
-    disabled,
-    readonly,
-    rounded,
-    pressed,
-    validation,
-
-    elevation,
-    hover,
-  },
-)}
+{#snippet input()}
   <NeoInput
     bind:ref
     bind:files
@@ -273,32 +259,55 @@
     bind:labelRef
     type="file"
     {id}
+    {label}
+    {labelProps}
+    {error}
+    {message}
+    {messageTag}
+    {messageProps}
+    after={after ?? upload}
+    {before}
+    {placeholder}
+    {loading}
+    {clearable}
+    {skeleton}
+    {disabled}
+    {readonly}
+    {rounded}
+    {pressed}
+    {validation}
+    {wrapperTag}
+    {wrapperProps}
+    {elevation}
+    {hover}
     {multiple}
-    {...props}
+    in={inAction}
+    out={outAction}
+    transition={transitionAction}
     {...rest}
     oninput={mirrorInput}
     onchange={mirrorChange}
     containerProps={{ class: 'neo-file-picker-input-group' }}
-  />
+  >
+    {#if drop}
+      <div bind:this={overlayRef} class="neo-drop-overlay">
+        {dropText}
+      </div>
+    {/if}
+  </NeoInput>
 {/snippet}
 
-{#snippet overlay(props: Partial<NeoInputProps> | undefined)}
-  <div bind:this={overlayRef} class="neo-drop-overlay">
-    {dropText}
-  </div>
-  {@render input(props)}
-{/snippet}
-
-{#snippet card(props: Partial<NeoInputProps>)}
+{#snippet card()}
   <NeoFilePickerCard
     bind:hovered
     bind:focused
+    bind:labelRef
     dragging={isDragging}
     {multiple}
     {append}
     {children}
     {files}
-    {valid}
+    valid={validation ? valid : undefined}
     {clearable}
     {placeholder}
     {dropText}
@@ -315,7 +324,7 @@
     maxHeight={expandHeight}
     detailText={expandText}
     {label}
-    labelProps={{ id, ...labelProps }}
+    labelProps={{ for: id, ...labelProps }}
     {...cardProps}
     {onClear}
     onRemove={removeFile}
@@ -323,12 +332,29 @@
     addButtonProps={afterProps}
   />
   <div class="neo-expanded-input">
-    {@render input(props)}
+    <NeoBaseInput
+      bind:ref
+      bind:files
+      bind:valid
+      bind:dirty
+      bind:touched
+      bind:validationMessage
+      type="file"
+      aria-describedby={visible ? messageId : undefined}
+      {id}
+      {multiple}
+      {...rest}
+      hidden
+      aria-hidden
+      tabindex={-1}
+      oninput={mirrorInput}
+      onchange={mirrorChange}
+    />
   </div>
 {/snippet}
 
 <!-- Drag & drop -->
-{#snippet drag(props: Partial<NeoInputProps> | undefined)}
+{#snippet drag()}
   <div
     bind:this={dragRef}
     role="region"
@@ -344,22 +370,43 @@
     style:--neo-file-picker-expanded-min-width={dragWith}
     style:--neo-file-picker-expanded-min-height={dragHeight}
     style:--neo-file-picker-drag-margin-top={contentMargin.top}
-    style:--neo-file-picker-drag-margin-left={contentMargin.left}
-    style:--neo-file-picker-drag-margin-right={contentMargin.right}
     style:--neo-file-picker-drag-margin-bottom={contentMargin.bottom}
   >
     {#if expanded}
-      {@render card({ hidden: true, 'aria-hidden': true, tabindex: -1 })}
+      {@render card()}
     {:else}
-      {@render overlay(props)}
+      {@render input()}
     {/if}
   </div>
 {/snippet}
 
 <svelte:element this={containerTag} class:neo-file-picker={true} class:neo-expanded={expanded} {...containerProps}>
-  {#if drop}
+  {#if drop && expanded}
+    <!-- Expanded picker -->
+    <NeoInputValidation
+      tag={wrapperTag}
+      bind:visible
+      bind:messageId
+      {valid}
+      {validation}
+      {validationMessage}
+      {error}
+      {rounded}
+      {context}
+      {message}
+      {messageTag}
+      {messageProps}
+      in={inAction}
+      out={outAction}
+      transition={transitionAction}
+      {...wrapperProps}
+      class={toClass('neo-file-picker-validation', wrapperProps?.class)}
+    >
+      {@render drag()}
+    </NeoInputValidation>
+  {:else if drop}
     <!-- Drop support -->
-    {@render drag(undefined)}
+    {@render drag()}
   {:else}
     <!-- No drop support -->
     {@render input()}
@@ -398,7 +445,7 @@
       box-sizing: border-box;
       min-width: var(--neo-file-picker-expanded-min-width, 0);
       min-height: var(--neo-file-picker-expanded-min-height, 0);
-      padding: 0.5rem;
+      padding: 0.75rem;
       transition:
         min-width 0.3s ease,
         min-height 0.3s ease;
@@ -409,10 +456,6 @@
         display: inline-flex;
         align-items: center;
         box-sizing: border-box;
-        margin: calc(var(--neo-drop-spacing) + var(--neo-file-picker-drag-margin-top))
-          calc(var(--neo-drop-spacing) + var(--neo-file-picker-drag-margin-right))
-          calc(var(--neo-drop-spacing) + var(--neo-file-picker-drag-margin-bottom))
-          calc(var(--neo-drop-spacing) + var(--neo-file-picker-drag-margin-left));
         padding: 0.75rem 1rem;
         border-radius: var(--neo-border-radius);
         opacity: 0;
@@ -477,10 +520,14 @@
           pointer-events: none;
         }
 
-        :global(> *.neo-input-group > *:not(.neo-input-after)) {
+        :global(*.neo-file-picker-input-group > *:not(.neo-input-after, .neo-drop-overlay)) {
           opacity: 0;
         }
       }
+    }
+
+    :global(.neo-file-picker-validation) {
+      width: 100%;
     }
   }
 </style>

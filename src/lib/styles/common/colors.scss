@@ -65,6 +65,7 @@
 
   /** semantic colors */
   --neo-text-color: var(--neo-grey-strong);
+  --neo-text-color-secondary: color-mix(in srgb, var(--neo-text-color), white 20%);
   --neo-text-color-highlight: color-mix(in srgb, currentcolor, black 50%);
   --neo-text-color-active: color-mix(in srgb, currentcolor, white 10%);
   --neo-text-color-focused: color-mix(in srgb, var(--neo-text-color), var(--neo-color-primary) 50%);
@@ -114,6 +115,7 @@
 
   /** dark mode semantic colors */
   --neo-dark-text-color: var(--neo-white-soft-dark);
+  --neo-dark-text-color-secondary: color-mix(in srgb, var(--neo-text-color), black 20%);
   --neo-dark-text-color-highlight: color-mix(in srgb, currentcolor, white 80%);
   --neo-dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
   --neo-dark-text-color-focused: color-mix(in srgb, var(--neo-dark-text-color), var(--neo-dark-color-primary) 40%);
@@ -165,6 +167,7 @@
 
   /** semantic colors */
   --neo-text-color: var(--neo-dark-text-color);
+  --neo-text-color-secondary: var(--neo-dark-text-color-secondary);
   --neo-text-color-highlight: var(--neo-dark-text-color-highlight);
   --neo-text-color-active: var(--neo-dark-text-color-active);
   --neo-text-color-focused: var(--neo-dark-text-color-focused);

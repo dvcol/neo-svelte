@@ -23,6 +23,10 @@ export type NeoAffixProps = {
    */
   disabled?: boolean;
   /**
+   * The size of the inner svg
+   */
+  size?: string;
+  /**
    * Props for the close button
    */
   closeProps?: HTMLButtonAttributes;

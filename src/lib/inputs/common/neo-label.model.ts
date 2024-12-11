@@ -14,7 +14,13 @@ export type NeoLabelProps = {
   label?: Snippet | string;
 
   // States
+  /**
+   * If `true`, the label will be displayed a required asterisk.
+   */
   required?: boolean | null;
+  /**
+   * If `true`, the label will be displayed as disabled.
+   */
   disabled?: boolean | null;
 
   // Other props

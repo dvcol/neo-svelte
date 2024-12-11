@@ -11,7 +11,6 @@
   import IconClear from '~/icons/IconClear.svelte';
   import IconDownload from '~/icons/IconDownload.svelte';
   import IconPencil from '~/icons/IconPencil.svelte';
-
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toClass } from '~/utils/props.utils.js';
@@ -63,122 +62,124 @@
   }: NeoFilePickerCardProps = $props();
   /* eslint-enable prefer-const */
 
-  const detail = $derived(detailText || `${files?.length} file${files?.length !== 1 ? 's' : ''}`);
+  const detail = $derived(detailText || `${files?.length ?? 0} file${files?.length !== 1 ? 's' : ''}`);
 
   const close = $derived(clearable && !!files?.length && (hovered || focused));
 </script>
 
-{#snippet card()}
-  <NeoCard
-    bind:ref
-    bind:hovered
-    bind:focused
-    {rounded}
-    {disabled}
-    {skeleton}
-    out={leaveDefaultFadeTransition}
-    flex="1 1 auto"
-    {...rest}
-    class={toClass('neo-file-picker-card', rest?.class)}
-  >
-    {#if children}
-      {@render children({
-        dragging,
-        multiple,
-        append,
-        files,
-      })}
-    {:else if files?.length}
-      <div class="neo-expanded-count">
-        <span>{detail}</span>
-        <NeoAffix
-          {loading}
-          {valid}
-          {close}
-          {skeleton}
-          {disabled}
-          closeProps={{
-            onclick: onClear,
-          }}
-        />
+{#snippet labelGroup()}
+  <div class="neo-expanded-count" class:neo-label={label}>
+    <NeoLabel bind:ref={labelRef} {label} {disabled} onclick={e => e.preventDefault()} {...labelProps}>
+      <span class="neo-expanded-detail">{detail}</span>
+    </NeoLabel>
+
+    <NeoAffix
+      {loading}
+      {valid}
+      {close}
+      {skeleton}
+      {disabled}
+      size="1.375rem"
+      closeProps={{
+        onclick: onClear,
+      }}
+    />
+  </div>
+{/snippet}
+
+<NeoCard
+  bind:ref
+  bind:hovered
+  bind:focused
+  {rounded}
+  {disabled}
+  {skeleton}
+  out={leaveDefaultFadeTransition}
+  flex="1 1 auto"
+  {...rest}
+  class={toClass('neo-file-picker-card', rest?.class)}
+>
+  {#if children}
+    {@render children({
+      dragging,
+      multiple,
+      append,
+      files,
+    })}
+  {:else if files?.length}
+    {@render labelGroup()}
+    <div class="neo-expanded-list" class:neo-rounded={rounded} style:--neo-file-picker-card-max-height={maxHeight}>
+      <div class="neo-expanded-scroll">
+        {#each files as file, i (file)}
+          <div class="neo-file" transition:fade={{ duration: 200 }} animate:flip={{ duration: 200, delay: 100 }}>
+            <span class="neo-file-name" title={file.name}>{file.name}</span>
+            {#if clearable}
+              <span class="neo-file-remove">
+                <NeoButton
+                  text
+                  rounded
+                  {disabled}
+                  onclickcapture={e => onRemove?.(i, e)}
+                  title="Remove file"
+                  aria-label="Remove file"
+                  {...removeButtonProps}
+                  class={toClass('neo-file-remove-button', removeButtonProps?.class)}
+                >
+                  {#snippet icon()}
+                    <IconClear width="1rem" height="1rem" scale="1.5" stroke="1" />
+                  {/snippet}
+                </NeoButton>
+              </span>
+            {/if}
+          </div>
+        {/each}
       </div>
-      <div class="neo-expanded-list" class:neo-rounded={rounded} style:--neo-file-picker-card-max-height={maxHeight}>
-        <div class="neo-expanded-scroll">
-          {#each files as file, i (file)}
-            <div class="neo-file" transition:fade={{ duration: 200 }} animate:flip={{ duration: 200, delay: 100 }}>
-              <span class="neo-file-name" title={file.name}>{file.name}</span>
-              {#if clearable}
-                <span class="neo-file-remove">
-                  <NeoButton
-                    text
-                    rounded
-                    {disabled}
-                    onclickcapture={e => onRemove?.(i, e)}
-                    title="Remove file"
-                    aria-label="Remove file"
-                    {...removeButtonProps}
-                    class={toClass('neo-file-remove-button', removeButtonProps?.class)}
-                  >
-                    {#snippet icon()}
-                      <IconClear width="1rem" height="1rem" scale="1.5" stroke="1" />
-                    {/snippet}
-                  </NeoButton>
-                </span>
-              {/if}
-            </div>
-          {/each}
-        </div>
-      </div>
-      <div class="neo-expanded-edit">
-        <span>{placeholder}</span>
-        <NeoButton {disabled} rounded text onclick={onEdit} title="Edit files" aria-label="Edit files" {...editButtonProps}>
+    </div>
+    <div class="neo-expanded-edit">
+      <span>{placeholder}</span>
+      <NeoButton {disabled} rounded text onclick={onEdit} title="Edit files" aria-label="Edit files" {...editButtonProps}>
+        {#snippet icon()}
+          <IconPencil width="1.25rem" height="1.25rem" scale="1" />
+        {/snippet}
+      </NeoButton>
+    </div>
+  {:else}
+    {#if label}
+      {@render labelGroup()}
+    {/if}
+    <div
+      role="none"
+      class="neo-expanded-empty"
+      class:neo-dragging={dragging}
+      class:neo-rounded={rounded}
+      class:neo-disabled={disabled}
+      class:neo-label={label}
+      onclick={onEdit}
+      in:fade={enterDefaultTransition}
+    >
+      <div class="neo-expanded-button">
+        <NeoButton aria-label="Add files" title="Add files" text rounded {skeleton} {disabled} onclick={onEdit} {...addButtonProps}>
           {#snippet icon()}
-            <IconPencil width="1.25rem" height="1.25rem" scale="1" />
+            {#if dragging}
+              <IconDownload width="2.5rem" height="2.5rem" scale="1.25" stroke="0.5" />
+            {:else if loading}
+              <IconCircleLoading width="2.5rem" height="2.5rem" scale="1" />
+            {:else}
+              <IconAdd width="2.5rem" height="2.5rem" scale="1" stroke="0.5" />
+            {/if}
           {/snippet}
         </NeoButton>
       </div>
-    {:else}
-      <div
-        role="none"
-        class="neo-expanded-empty"
-        class:neo-dragging={dragging}
-        class:neo-rounded={rounded}
-        class:neo-disabled={disabled}
-        onclick={onEdit}
-        in:fade={enterDefaultTransition}
-      >
-        <div class="neo-expanded-button">
-          <NeoButton aria-label="Add files" title="Add files" text rounded {skeleton} {disabled} onclick={onEdit} {...addButtonProps}>
-            {#snippet icon()}
-              {#if dragging}
-                <IconDownload width="2.5rem" height="2.5rem" scale="1.25" stroke="0.5" />
-              {:else if loading}
-                <IconCircleLoading width="2.5rem" height="2.5rem" scale="1" />
-              {:else}
-                <IconAdd width="2.5rem" height="2.5rem" scale="1" stroke="0.5" />
-              {/if}
-            {/snippet}
-          </NeoButton>
-        </div>
-        <div class="neo-expanded-placeholder" style:min-width="max({dropText?.length ?? 0}ch,{placeholder?.length ?? 0}ch)">
-          {#if dragging}
-            <span class="neo-expanded-placeholder-drop">{dropText}</span>
-          {:else}
-            <span class="neo-expanded-placeholder-select">{placeholder}</span>
-          {/if}
-        </div>
+      <div class="neo-expanded-placeholder" style:min-width="max({dropText?.length ?? 0}ch,{placeholder?.length ?? 0}ch)">
+        {#if dragging}
+          <span class="neo-expanded-placeholder-drop">{dropText}</span>
+        {:else}
+          <span class="neo-expanded-placeholder-select">{placeholder}</span>
+        {/if}
       </div>
-    {/if}
-  </NeoCard>
-{/snippet}
-
-{#if label}
-  <NeoLabel bind:ref={labelRef} {label} {disabled} {...labelProps}>
-    {@render card()}
-  </NeoLabel>
-{:else}
-  {@render card()}
-{/if}
+    </div>
+  {/if}
+</NeoCard>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
@@ -233,6 +234,10 @@
       &.neo-dragging::before {
         margin: -0.25rem;
       }
+
+      &.neo-label {
+        margin-top: 0.25rem;
+      }
     }
 
     &-edit,
@@ -240,6 +245,25 @@
       display: inline-flex;
       align-items: center;
       justify-content: space-between;
+    }
+
+    &-edit {
+      margin-top: 0.25rem;
+    }
+
+    &-count {
+      --neo-label-margin: 0;
+      --neo-label-padding: 0;
+
+      &.neo-label {
+        margin-bottom: 0.5rem;
+
+        .neo-expanded-detail {
+          color: var(--neo-text-color-secondary);
+          font-size: var(--neo-font-size-sm);
+          line-height: var(--neo-line-height-sm);
+        }
+      }
     }
 
     &-list {

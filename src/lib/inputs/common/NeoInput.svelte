@@ -29,6 +29,7 @@
     after,
     message,
     error,
+    children,
 
     // States
     id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
@@ -332,6 +333,7 @@
       {@render input()}
     {/if}
     {@render suffix()}
+    {@render children?.(context)}
   </svelte:element>
 {/snippet}
 
