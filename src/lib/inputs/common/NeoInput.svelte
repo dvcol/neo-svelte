@@ -148,14 +148,16 @@
   let beforeRef = $state<HTMLElement>();
   let beforeWidth = $state<string>();
 
-  $effect(() => {
-    if (first) waitForTick();
+  const updateRefs = () => {
     if (!labelRef) return;
-    if (position === NeoInputLabelPosition.Inside && !floating) return;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
-    if (position !== NeoInputLabelPosition.Left && position !== NeoInputLabelPosition.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
     beforeWidth = `${beforeRef?.clientWidth ?? 0}px`;
+  };
+
+  $effect(() => {
+    if (first) waitForTick();
+    updateRefs();
   });
 
   let visible = $state(false);
@@ -379,6 +381,7 @@
   .neo-input-after {
     display: inline-flex;
     box-sizing: border-box;
+    min-width: min-content;
     font: inherit;
     text-decoration: none;
     outline: none;
@@ -447,6 +450,7 @@
       :global(.neo-button) {
         --neo-btn-padding: 0.5rem 0.75rem;
         --neo-btn-margin: auto;
+        --neo-btn-min-width: 2.375rem;
         --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
         --neo-btn-bg-color: transparent;
         --neo-btn-backdrop-filter: none;
@@ -466,28 +470,11 @@
       }
     }
 
-    &::placeholder {
-      color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
-      transition: opacity 0.3s ease;
-    }
-
-    &:read-only {
-      cursor: inherit;
-    }
-
-    &:disabled {
-      color: var(--neo-text-color-disabled);
-      cursor: not-allowed;
-    }
-
-    &[type='password']:not(:placeholder-shown) {
-      -webkit-text-stroke-width: 0.15em;
-      letter-spacing: 0.2em;
-    }
-
     &-group {
+      --neo-input-min-width: var(--neo-input-label-width);
+      --neo-input-min-height: var(--neo-input-label-height);
+
       position: relative;
-      min-width: min-content;
       margin: var(--neo-shadow-margin, 0.625rem);
       padding: 0 0.1875rem;
       color: var(--neo-input-text-color, inherit);
@@ -573,8 +560,6 @@
         :global(.neo-label) {
           --neo-label-color: var(--neo-input-floating-label-color, var(--neo-text-color-disabled));
           --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
-
-          translate: 0 calc(50% + 0.7rem - var(--neo-input-label-height) / 2);
         }
 
         :global(.neo-input) {
@@ -687,6 +672,10 @@
           padding-left: 0;
         }
 
+        :global(.neo-label-container.neo-floating .neo-label) {
+          translate: 0 calc(50% - ((0.75rem - 0.1875rem) / 2));
+        }
+
         :global(.neo-label-container:not(.neo-floating) .neo-label) {
           font-size: var(--neo-font-size-sm, 0.875rem);
         }
@@ -706,7 +695,7 @@
       &[data-position='top'] :global(.neo-label-container.neo-floating .neo-label),
       &[data-position='left'] :global(.neo-label-container.neo-floating .neo-label),
       &[data-position='right'] :global(.neo-label-container.neo-floating .neo-label) {
-        top: calc(50% - 0.75rem - var(--neo-input-label-height) / 2);
+        top: calc(50% - var(--neo-input-label-height) / 2);
       }
 
       &.neo-glass {

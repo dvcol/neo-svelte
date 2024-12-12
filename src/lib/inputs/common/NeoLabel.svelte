@@ -2,6 +2,8 @@
   /* eslint-disable prefer-const -- necessary for binding checked */
   import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
+
   let {
     // Snippets
     children,
@@ -12,16 +14,22 @@
     required,
     disabled,
 
+    // Actions
+    use,
+
     // Other props
     containerTag = 'div',
     containerProps,
     ...rest
   }: NeoLabelProps = $props();
   /* eslint-enable prefer-const */
+
+  const useFn = $derived(toAction(use));
+  const useProps = $derived(toActionProps(use));
 </script>
 
 <svelte:element this={containerTag} class:neo-label-container={true} {...containerProps}>
-  <label bind:this={ref} class:neo-label={true} class:neo-disabled={disabled} class:neo-required={required} {...rest}>
+  <label bind:this={ref} class:neo-label={true} class:neo-disabled={disabled} class:neo-required={required} use:useFn={useProps} {...rest}>
     {#if typeof label === 'string'}
       {label}
     {:else}
@@ -39,6 +47,7 @@
 
     .neo-label {
       display: inline-flex;
+      align-items: center;
       box-sizing: border-box;
       margin: var(--neo-label-margin, var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem) 0);
       padding: var(--neo-label-padding, 0 0.75rem);

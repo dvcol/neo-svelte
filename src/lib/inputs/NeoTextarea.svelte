@@ -654,7 +654,7 @@
         --neo-label-color: var(--neo-textarea-floating-label-color, var(--neo-text-color-disabled));
         --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
 
-        translate: 0 calc(50% + 0.7rem - var(--neo-textarea-label-height) / 2);
+        translate: 0 calc(50% + 0.75rem - var(--neo-textarea-label-height) / 2);
       }
 
       :global(.neo-input) {

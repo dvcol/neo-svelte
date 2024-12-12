@@ -168,6 +168,7 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+    min-width: var(--neo-btn-min-width);
     min-height: calc(var(--neo-btn-min-height, var(--neo-line-height)) + 0.5rem);
     margin: var(--neo-btn-margin, var(--neo-shadow-margin, 0.625rem));
     padding: var(--neo-btn-padding, 0.25rem 0.75rem);

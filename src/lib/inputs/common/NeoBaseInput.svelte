@@ -244,10 +244,10 @@
     align-self: center;
     box-sizing: border-box;
     width: 100%;
-    min-width: 1ch;
+    min-width: var(--neo-input-min-width, 1ch);
     max-width: 100%;
-    min-height: fit-content;
-    padding: 0.75rem;
+    min-height: var(--neo-input-min-height, fit-content);
+    padding: var(--neo-input-padding, 0.75rem);
     color: inherit;
     font: inherit;
     text-decoration: none;
@@ -295,6 +295,11 @@
     &[type='password']:not(:placeholder-shown) {
       letter-spacing: 0.2em;
       -webkit-text-stroke-width: 0.15em;
+
+      @supports (-webkit-touch-callout: none) {
+        font: small-caption;
+        font-size: var(--neo-font-size-xs, 0.75rem);
+      }
     }
   }
 </style>

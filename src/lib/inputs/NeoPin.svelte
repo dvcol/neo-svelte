@@ -556,6 +556,11 @@
     :global(.neo-input[type='password']:not(:placeholder-shown)) {
       -webkit-text-stroke-width: 0.1em;
       letter-spacing: 0;
+
+      @supports (-webkit-touch-callout: none) {
+        font: small-caption;
+        font-size: var(--neo-font-size, 1rem);
+      }
     }
 
     .neo-pin-after {

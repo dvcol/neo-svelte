@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLLabelAttributes } from 'svelte/elements';
+import type { HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoLabelProps = {
@@ -34,4 +35,5 @@ export type NeoLabelProps = {
    */
   containerProps?: HTMLNeoBaseElement;
 } & HTMLRefProps<HTMLLabelElement> &
-  HTMLLabelAttributes;
+  HTMLLabelAttributes &
+  HTMLUseProps;
