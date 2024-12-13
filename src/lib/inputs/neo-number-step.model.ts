@@ -22,4 +22,8 @@ export type NeoNumberStepProps = NeoInputProps & {
    * Button properties to pass to the increment and decrement buttons.
    */
   buttonProps?: NeoButtonProps;
+  /**
+   * Input Group properties to pass to the input group container.
+   */
+  groupProps?: NeoInputProps['containerProps'];
 };

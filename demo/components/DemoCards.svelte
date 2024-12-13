@@ -88,6 +88,7 @@
     oninput={onElevation}
     nullable={false}
     floating={false}
+    groupProps={{ style: 'margin-left: 4rem' }}
   />
   <NeoNumberStep
     label="Hover"
@@ -100,6 +101,7 @@
     rounded={options.rounded}
     nullable={false}
     floating={false}
+    groupProps={{ style: 'margin-left: 4rem' }}
   />
 </div>
 

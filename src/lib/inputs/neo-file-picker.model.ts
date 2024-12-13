@@ -102,6 +102,10 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    * @see expanded
    */
   cardProps?: Omit<NeoCardProps, 'children'> & Pick<NeoFilePickerCardProps, 'editButtonProps' | 'removeButtonProps'>;
+  /**
+   * Input Group properties to pass to the input group container.
+   */
+  groupProps?: NeoInputProps['containerProps'];
 } & NeoFilePickerContext<Multiple> &
   Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange' | 'label'>;
 

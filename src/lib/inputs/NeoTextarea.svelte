@@ -730,7 +730,7 @@
     }
 
     &[data-position='right'] {
-      --neo-textarea-margin-right: calc(var(--shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
+      --neo-textarea-margin-right: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
 
       margin-right: var(--neo-textarea-margin-right);
 

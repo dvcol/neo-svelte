@@ -39,6 +39,8 @@
 
     // Other props
     labelRef = $bindable(),
+    buttonProps,
+    groupProps,
     containerTag = 'div',
     containerProps,
     ...rest
@@ -76,7 +78,7 @@
   const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
   const text = $derived(elevation >= 0 || !rest.pressed);
   const style = $derived(computeButtonShadows(elevation, text));
-  const buttonProps = $derived<NeoButtonProps>({
+  const buttonsProps = $derived<NeoButtonProps>({
     skeleton: rest.skeleton,
     disabled: rest.disabled,
     rounded: rest.rounded,
@@ -84,7 +86,7 @@
     start: rest.start,
     text,
     style,
-    ...rest?.buttonProps,
+    ...buttonProps,
   });
 
   let timeout: ReturnType<typeof setTimeout>;
@@ -108,7 +110,7 @@
 </script>
 
 {#snippet before()}
-  <NeoButton aria-label="Decrement number" title="Decrement number" onclick={decrement} {...buttonProps}>
+  <NeoButton aria-label="Decrement number" title="Decrement number" onclick={decrement} {...buttonsProps}>
     {#snippet icon()}
       <IconMinus width="1.25rem" height="1.25rem" />
     {/snippet}
@@ -116,7 +118,7 @@
 {/snippet}
 
 {#snippet after()}
-  <NeoButton aria-label="Increment number" title="Increment number" onclick={increment} {...buttonProps}>
+  <NeoButton aria-label="Increment number" title="Increment number" onclick={increment} {...buttonsProps}>
     {#snippet icon()}
       <IconAdd width="1.25rem" height="1.25rem" />
     {/snippet}
@@ -150,6 +152,7 @@
     {after}
     {label}
     {defaultValue}
+    containerProps={groupProps}
     {...rest}
   />
 </svelte:element>

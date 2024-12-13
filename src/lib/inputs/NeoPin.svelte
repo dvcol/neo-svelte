@@ -80,6 +80,7 @@
     wrapperTag,
     messageProps,
     messageTag,
+    groupProps,
     ...rest
   }: NeoPinProps = $props();
   /* eslint-enable prefer-const */
@@ -401,6 +402,7 @@
               {min}
               {max}
               type="text"
+              containerProps={groupProps}
               {...rest}
               oninput={() => onInput(i, j)}
               onkeydown={e => onKeydown(e, i, j)}

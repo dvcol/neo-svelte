@@ -75,6 +75,7 @@
     labelProps,
     cardProps,
     buttonProps,
+    groupProps,
     messageTag = 'div',
     messageProps,
     containerTag = 'div',
@@ -317,7 +318,7 @@
     {...rest}
     oninput={mirrorInput}
     onchange={mirrorChange}
-    containerProps={{ class: 'neo-file-picker-input-group' }}
+    containerProps={{ ...groupProps, class: toClass('neo-file-picker-input-group', groupProps?.class) }}
   >
     {#if drop}
       <div bind:this={overlayRef} class="neo-drop-overlay">

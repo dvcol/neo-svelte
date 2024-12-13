@@ -33,7 +33,13 @@ export type NeoPinState = {
   // Other props
 };
 
-export type NeoPinProps = NeoPinState & Omit<NeoInputProps, 'floating' | 'position'>;
+export type NeoPinProps = NeoPinState &
+  Omit<NeoInputProps, 'floating' | 'position'> & {
+    /**
+     * Input Group properties to pass to the input group container.
+     */
+    groupProps?: NeoInputProps['containerProps'];
+  };
 
 export type NeoPinMethods = {
   clear: () => Promise<void>;

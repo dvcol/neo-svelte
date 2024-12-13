@@ -453,7 +453,7 @@
       }
 
       &:has(:global(.neo-button:only-child)):not(.neo-inside) {
-        padding: 0 0.3rem;
+        padding: 0 0.125rem;
       }
 
       :global(.neo-button) {
@@ -613,7 +613,7 @@
       }
 
       &[data-position='left'] {
-        --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-input-label-width, auto));
+        --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.625rem) * 2 + var(--neo-input-label-width, auto));
 
         margin-left: var(--neo-input-margin-left);
 
@@ -624,7 +624,7 @@
         }
 
         :global(.neo-label-container.neo-before .neo-label) {
-          left: calc(0% - var(--neo-input-margin-left) - var(--neo-shadow-margin, 0.625rem));
+          left: calc(0% - var(--neo-input-margin-left));
         }
 
         :global(.neo-label-container.neo-floating .neo-label) {
@@ -633,7 +633,7 @@
       }
 
       &[data-position='right'] {
-        --neo-input-margin-right: calc(var(--shadow-margin, 0.625rem) + var(--neo-input-label-width, auto));
+        --neo-input-margin-right: calc(var(--neo-shadow-margin, 0.625rem) * 2 + var(--neo-input-label-width, auto));
 
         margin-right: var(--neo-input-margin-right);
 
@@ -644,7 +644,7 @@
         }
 
         :global(.neo-label-container.neo-before .neo-label) {
-          right: calc(0% - var(--neo-input-margin-right) - var(--neo-shadow-margin, 0.625rem));
+          right: calc(0% - var(--neo-input-margin-right));
         }
 
         :global(.neo-label-container.neo-floating .neo-label) {
