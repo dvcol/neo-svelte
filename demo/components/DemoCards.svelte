@@ -1,5 +1,4 @@
 <script lang="ts">
-  import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model';
@@ -9,6 +8,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
+  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { DefaultShadowElevation, getDefaultElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
@@ -76,13 +76,30 @@
     <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
   </NeoButtonGroup>
 
-  <DemoElevationPicker bind:elevation={options.elevation} {onElevation} />
-  <DemoElevationPicker
+  <NeoNumberStep
+    label="Elevation"
+    position="left"
+    center
+    bind:value={options.elevation}
+    min={MinShadowElevation}
+    max={MaxShadowElevation}
+    defaultValue={DefaultShadowElevation}
+    rounded={options.rounded}
+    oninput={onElevation}
+    nullable={false}
+    floating={false}
+  />
+  <NeoNumberStep
     label="Hover"
-    reset={0}
+    position="left"
+    center
+    bind:value={options.hover}
     min={MinShadowElevation - options.elevation}
     max={MaxShadowElevation - options.elevation}
-    bind:elevation={options.hover}
+    defaultValue={0}
+    rounded={options.rounded}
+    nullable={false}
+    floating={false}
   />
 </div>
 

@@ -2,6 +2,11 @@ import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
 export type NeoNumberStepProps = NeoInputProps & {
+  // States
+  /**
+   * Center the input value.
+   */
+  center?: boolean;
   // Events
   /**
    * Event handler for the step-up button.

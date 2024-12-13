@@ -72,8 +72,10 @@
     // Other props
     labelRef = $bindable(),
     labelProps,
+    afterRef = $bindable(),
     afterProps,
     afterTag = afterProps?.onclick ? 'button' : 'span',
+    beforeRef = $bindable(),
     beforeProps,
     beforeTag = beforeProps?.onclick ? 'button' : 'span',
     containerProps,
@@ -142,17 +144,19 @@
     first = false;
   };
 
-  let labelHeight = $state<string>();
-  let labelWidth = $state<string>();
-
-  let beforeRef = $state<HTMLElement>();
+  let affixRef = $state<HTMLElement>();
+  let affixWidth = $state<string>();
+  let afterWidth = $state<string>();
   let beforeWidth = $state<string>();
+  let labelWidth = $state<string>();
+  let labelHeight = $state<string>();
 
   const updateRefs = () => {
-    if (!labelRef) return;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
     beforeWidth = `${beforeRef?.clientWidth ?? 0}px`;
+    afterWidth = `${afterRef?.clientWidth ?? 0}px`;
+    affixWidth = `${affixRef?.clientWidth ?? 0}px`;
   };
 
   $effect(() => {
@@ -222,6 +226,7 @@
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
     <NeoAffix
+      bind:ref={affixRef}
       class={after ? 'neo-after' : undefined}
       {loading}
       {close}
@@ -236,6 +241,7 @@
   {#if after}
     <svelte:element
       this={afterTag}
+      bind:this={afterRef}
       class:neo-input-after={true}
       class:neo-inside={inside}
       class:neo-pressed={pressed}
@@ -299,6 +305,7 @@
     class:neo-glass={glass}
     class:neo-hover={hover}
     class:neo-hovered={hovered}
+    class:neo-floating={floating}
     class:neo-start={start}
     class:neo-skeleton={skeleton}
     class:neo-validation={validation}
@@ -314,6 +321,8 @@
     style:--neo-input-label-height={labelHeight}
     style:--neo-input-label-width={labelWidth}
     style:--neo-input-before-width={beforeWidth}
+    style:--neo-input-after-width={afterWidth}
+    style:--neo-input-affix-width={affixWidth}
     out:outFn={outProps}
     in:inFn={inProps}
     {...containerProps}
@@ -471,9 +480,6 @@
     }
 
     &-group {
-      --neo-input-min-width: var(--neo-input-label-width);
-      --neo-input-min-height: var(--neo-input-label-height);
-
       position: relative;
       margin: var(--neo-shadow-margin, 0.625rem);
       padding: 0 0.1875rem;
@@ -690,12 +696,25 @@
           position: absolute;
           top: calc(0% - var(--neo-input-margin-top));
         }
+
+        &:not(.neo-floating) :global(.neo-label-container .neo-label) {
+          left: 0;
+          padding: var(--neo-label-padding, 0 1rem);
+        }
       }
 
-      &[data-position='top'] :global(.neo-label-container.neo-floating .neo-label),
-      &[data-position='left'] :global(.neo-label-container.neo-floating .neo-label),
-      &[data-position='right'] :global(.neo-label-container.neo-floating .neo-label) {
-        top: calc(50% - var(--neo-input-label-height) / 2);
+      &[data-position='top'],
+      &[data-position='left'],
+      &[data-position='right'] {
+        :global(.neo-label-container.neo-floating .neo-label) {
+          top: calc(50% - var(--neo-input-label-height) / 2);
+        }
+
+        &.neo-floating {
+          --neo-input-min-width: var(--neo-input-label-width);
+          --neo-input-min-height: var(--neo-input-label-height);
+          --neo-label-max-width: calc(100% - var(--neo-input-after-width) - var(--neo-input-before-width) - var(--neo-input-affix-width));
+        }
       }
 
       &.neo-glass {

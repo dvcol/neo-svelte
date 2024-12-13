@@ -41,6 +41,7 @@
     // States
     id = label ? `neo-textarea-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
+
     value = $bindable(),
     valid = $bindable(),
     dirty = $bindable(false),
@@ -51,6 +52,8 @@
     disabled,
     loading,
     clearable,
+    nullable = true,
+
     dirtyOnInput,
     dirtyOnBlur,
     validateOnInput,
@@ -90,6 +93,7 @@
     // Other props
     labelRef = $bindable(),
     labelProps,
+    afterRef = $bindable(),
     afterProps,
     afterTag = afterProps?.onclick ? 'button' : 'span',
     containerProps,
@@ -151,7 +155,11 @@
   };
 
   const onChange: FormEventHandler<HTMLTextAreaElement> = e => {
+    touched = true;
     validate();
+    if (value === undefined || (typeof value === 'string' && !value.length)) {
+      value = rest?.defaultValue ?? '';
+    }
     onchange?.(e);
   };
 
@@ -187,7 +195,7 @@
     state?: NeoInputState<HTMLTextAreaElement>,
     event?: InputEvent | SvelteEvent<InputEvent>,
   ) => {
-    value = rest?.defaultValue ?? '';
+    value = nullable ? '' : (rest?.defaultValue ?? '');
     await tick();
     focus();
     if (state) mark({ touched: false, dirty: false, ...state });
@@ -332,7 +340,7 @@
 
   <!--  Suffix  -->
   {#if after}
-    <svelte:element this={afterTag} class:neo-textarea-after={true} {disabled} {readonly} {...afterProps}>
+    <svelte:element this={afterTag} bind:this={afterRef} class:neo-textarea-after={true} {disabled} {readonly} {...afterProps}>
       {@render after(context)}
     </svelte:element>
   {/if}

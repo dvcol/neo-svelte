@@ -27,6 +27,7 @@
     focused = $bindable(false),
     disabled,
     readonly,
+    nullable = true,
 
     dirtyOnInput,
     dirtyOnBlur,
@@ -61,6 +62,29 @@
     if (rest.type === 'file') return files;
     return value;
   });
+  const hasValue = () => {
+    if (rest?.type === 'file') return !!files?.length;
+    if (rest?.type === 'checkbox') return checked !== undefined;
+    if (typeof value === 'string') return !!value.length;
+    return value !== undefined && value !== null;
+  };
+  const fallback = () => {
+    if (nullable) return value;
+    if (rest?.defaultValue === undefined) return value;
+    if (rest.type && ['file', 'checkbox'].includes(rest.type)) return value;
+    if (hasValue()) return value;
+    return rest?.defaultValue;
+  };
+
+  const reset = () => {
+    if (rest.type === 'checkbox') {
+      checked = rest?.defaultValue ?? false;
+      indeterminate = false;
+      return;
+    }
+    value = nullable ? '' : (rest?.defaultValue ?? '');
+    if (rest.type === 'file') files = undefined;
+  };
 
   const currentState = $derived<NeoInputState<HTMLInputElement>>({ touched, dirty, valid, value: typedValue, initial });
 
@@ -97,13 +121,7 @@
     state?: NeoInputState<HTMLInputElement>,
     event?: InputEvent | SvelteEvent<InputEvent>,
   ) => {
-    if (rest.type === 'checkbox') {
-      checked = false;
-      indeterminate = false;
-    } else {
-      value = rest?.defaultValue ?? '';
-      if (rest.type === 'file') files = undefined;
-    }
+    reset();
     await tick();
     focus();
     if (state) mark({ touched: false, dirty: false, ...state });
@@ -149,6 +167,7 @@
   const onChange: FormEventHandler<HTMLInputElement> = e => {
     touched = true;
     validate();
+    value = fallback();
     onchange?.(e);
   };
 

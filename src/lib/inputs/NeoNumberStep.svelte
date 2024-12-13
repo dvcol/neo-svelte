@@ -12,6 +12,9 @@
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
+    label,
+
     // State
     defaultValue = 0,
     ref = $bindable(),
@@ -23,6 +26,7 @@
     focused = $bindable(false),
     type = 'number',
     placeholder = '0',
+    center = !label,
 
     // Transition
     in: inAction,
@@ -122,7 +126,8 @@
 <svelte:element
   this={containerTag}
   class:neo-number-step={true}
-  class:neo-label={rest.label}
+  class:neo-label={label}
+  class:neo-center={center}
   class:neo-affix={affix}
   out:outFn={outProps}
   in:inFn={inProps}
@@ -143,6 +148,7 @@
     {placeholder}
     {before}
     {after}
+    {label}
     {defaultValue}
     {...rest}
   />
@@ -162,14 +168,14 @@
       }
     }
 
-    &:not(.neo-label) {
+    &.neo-center {
       :global(.neo-input) {
         text-align: center;
       }
 
       &.neo-affix {
-        :global(.neo-input) {
-          padding-left: 1.75rem;
+        :global(.neo-input-before) {
+          margin-right: 1.75rem;
         }
       }
     }

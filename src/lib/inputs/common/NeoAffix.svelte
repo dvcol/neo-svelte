@@ -9,12 +9,29 @@
   import IconConfirm from '~/icons/IconConfirm.svelte';
   import { leaveDefaultTransition } from '~/utils/transition.utils.js';
 
-  const { loading, close, valid, skeleton, disabled, size = '1.25rem', closeProps, ...rest }: NeoAffixProps = $props();
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
+    // States
+    ref = $bindable(),
+    loading,
+    close,
+    valid,
+    skeleton,
+    disabled,
+
+    // Styles
+    size = '1.25rem',
+
+    // Other props
+    closeProps,
+    ...rest
+  }: NeoAffixProps = $props();
+  /* eslint-enable prefer-const */
 
   const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveDefaultTransition);
 </script>
 
-<span class:neo-affix-container={true} class:neo-skeleton={skeleton} style:--neo-affix-size={size} role="none" {...rest}>
+<span bind:this={ref} class:neo-affix-container={true} class:neo-skeleton={skeleton} style:--neo-affix-size={size} role="none" {...rest}>
   {#if loading}
     <span class="neo-affix-loading" out:fade={leave}>
       <IconCircleLoading width={size} height={size} />

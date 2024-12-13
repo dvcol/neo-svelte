@@ -131,6 +131,14 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement =
    */
   focused?: boolean;
   /**
+   * If false, and a default value is provided, the input will be set to the default value when cleared.
+   *
+   * Note: This does not apply to checkboxes, radios, and file inputs.
+   *
+   * @default true
+   */
+  nullable?: boolean;
+  /**
    * Fall back value when the input value is cleared.
    */
   defaultValue: HTMLInputAttributes['value'];
@@ -282,12 +290,15 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement>
    * The props to pass to the suffix.
    */
   afterProps?: HTMLNeoBaseElement;
+  /**
+   * The ref to bind to the suffix.
+   */
+  afterRef?: HTMLElement;
 
   /**
    * The props to pass to the label.
    */
   labelProps?: NeoLabelProps;
-
   /**
    * The ref to bind to the label.
    */
@@ -315,6 +326,10 @@ export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
    * The props to pass to the prefix.
    */
   beforeProps?: HTMLNeoBaseElement;
+  /**
+   * The ref to bind to the prefix.
+   */
+  beforeRef?: HTMLElement;
 } & NeoInputGroupProps<T> &
   HTMLInputAttributes & {
     files?: HTMLInputAttributes['bind:files'];

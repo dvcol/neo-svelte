@@ -1,7 +1,6 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
 
-  import DemoElevationPicker from '../utils/DemoElevationPicker.svelte';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import type { NeoInputProps } from '~/inputs/common/neo-input.model';
@@ -23,6 +22,7 @@
 
   import {
     DefaultShadowElevation,
+    DefaultShadowHoverElevation,
     getDefaultElevation,
     getDefaultHoverElevation,
     MaxShadowElevation,
@@ -37,9 +37,10 @@
     input?: boolean;
   };
 
-  type InputState = Pick<NeoInputProps, 'touched' | 'dirty' | 'valid' | 'value' | 'group' | 'checked' | 'indeterminate' | 'files'>;
+  type InputState = Pick<NeoInputProps, 'type' | 'touched' | 'dirty' | 'valid' | 'value' | 'group' | 'checked' | 'indeterminate' | 'files'>;
 
   class ValidationState implements InputState {
+    type = $state<string>('text');
     touched = $state<boolean>(false);
     dirty = $state<boolean>(false);
     valid = $state<boolean>();
@@ -49,7 +50,8 @@
     indeterminate = $state<boolean>();
     files = $state<FileList>();
 
-    constructor({ touched = false, dirty = false, valid, value = '', group, checked, indeterminate, files }: Partial<InputState> = {}) {
+    constructor({ type, touched = false, dirty = false, valid, value = '', group, checked, indeterminate, files }: Partial<InputState> = {}) {
+      this.type = type;
       this.touched = touched;
       this.dirty = dirty;
       this.valid = valid;
@@ -86,6 +88,7 @@
     dirtyOnInput: false,
     validateOnInput: false,
     clearable: false,
+    nullable: true,
     hover: -1,
     size: 30,
     onchange: (...args: any[]) => console.info('change', ...args),
@@ -107,17 +110,19 @@
   const invalidState = new ValidationState();
   const customState = new ValidationState();
 
-  const numberState = new ValidationState({ value: 0 });
+  const numberState = new ValidationState({ type: 'number', value: 0 });
 
   const pinState = new ValidationState();
   const pinStateSeparator = new ValidationState();
   const pinPasswordState = new ValidationState();
 
-  const colorState = new ValidationState();
+  const colorState = new ValidationState({ type: 'color' });
 
-  const fileState = new ValidationState();
-  const multipleFileState = new ValidationState();
-  const expandedFileState = new ValidationState();
+  const fileState = new ValidationState({ type: 'file' });
+  const multipleFileState = new ValidationState({ type: 'file' });
+  const expandedFileState = new ValidationState({ type: 'file' });
+
+  const checkboxState = new ValidationState({ type: 'checkbox' });
 
   const onClear = () =>
     [
@@ -137,6 +142,8 @@
       fileState,
       multipleFileState,
       expandedFileState,
+
+      checkboxState,
     ].forEach(state => state.clear());
 
   const columns: ColumProps[] = [
@@ -144,6 +151,7 @@
       label: 'Default',
       props: {
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
       },
       state: validation,
       textarea: true,
@@ -153,6 +161,7 @@
       label: 'Prefix',
       props: {
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         before,
       },
       state: validation,
@@ -162,6 +171,7 @@
       label: 'Suffix',
       props: {
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         after,
       },
       state: validation,
@@ -172,6 +182,7 @@
       label: 'Text',
       props: {
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         after: text,
         before: text,
       },
@@ -184,6 +195,7 @@
       props: {
         label: 'Inside',
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         after,
       },
       state: validation,
@@ -196,6 +208,7 @@
         label: 'Top',
         position: 'top',
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         after,
         before,
       },
@@ -212,6 +225,7 @@
         label: 'Left',
         position: 'left',
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         containerProps: { style: 'margin-left: 4rem;' },
       },
       state: validation,
@@ -227,6 +241,7 @@
         label: 'Right',
         position: 'right',
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         containerProps: { style: 'margin-right: 4rem;' },
       },
       state: validation,
@@ -238,6 +253,7 @@
       props: {
         label,
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
       },
       state: validation,
       textarea: true,
@@ -249,6 +265,7 @@
         label: 'Description',
         position: 'top',
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         message: 'This is a short description.',
       },
       state: validation,
@@ -260,6 +277,7 @@
       props: {
         label: 'Minimum',
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         after,
 
         autoResize: { min: 5 },
@@ -272,6 +290,7 @@
       props: {
         label: 'Maximum',
         placeholder: 'Placeholder',
+        defaultValue: 'Fallback',
         after,
 
         autoResize: { min: 3, max: 10 },
@@ -429,19 +448,37 @@
     <NeoButton toggle bind:checked={options.floating}>Floating</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.clearable}>Clearable</NeoButton>
+    <NeoButton toggle bind:checked={options.nullable}>Nullable</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
     <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
     <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     <NeoButton onclick={onClear}>Clear</NeoButton>
   </NeoButtonGroup>
 
-  <DemoElevationPicker bind:elevation={options.elevation} {onElevation} />
-  <DemoElevationPicker
+  <NeoNumberStep
+    label="Elevation"
+    position="left"
+    center
+    bind:value={options.elevation}
+    min={MinShadowElevation}
+    max={MaxShadowElevation}
+    defaultValue={DefaultShadowElevation}
+    rounded={options.rounded}
+    oninput={onElevation}
+    nullable={false}
+    floating={false}
+  />
+  <NeoNumberStep
     label="Hover"
-    reset={-1}
+    position="left"
+    center
+    bind:value={options.hover}
     min={MinShadowElevation - options.elevation}
     max={MaxShadowElevation - options.elevation}
-    bind:elevation={options.hover}
+    defaultValue={DefaultShadowHoverElevation}
+    rounded={options.rounded}
+    nullable={false}
+    floating={false}
   />
 </div>
 
@@ -450,7 +487,7 @@
 {/snippet}
 
 {#snippet text()}
-  <span class="label">TEXT</span>
+  <span class="label" style="min-width: 2.625rem">TEXT</span>
 {/snippet}
 
 {#snippet before()}
@@ -491,13 +528,20 @@
   {/if}
 {/snippet}
 
-{#snippet validationState({ touched, dirty, valid, value, files }: ValidationState, show = false)}
+{#snippet validationState({ type, touched, dirty, valid, value, files, checked, indeterminate }: ValidationState, show = false)}
   <div class="row">
     <div class="label">Touched: {touched}</div>
     <div class="label">Dirty: {dirty}</div>
     <div class="label">Valid: {valid}</div>
     {#if show}
-      <div class="label">Value: {value || files?.length}</div>
+      {#if type === 'file'}
+        <div class="label">Files: {files?.length}</div>
+      {:else if type === 'checkbox'}
+        <div class="label">Checked: {checked}</div>
+        <div class="label">Indeterminate: {indeterminate}</div>
+      {:else}
+        <div class="label">Value: {value}</div>
+      {/if}
     {/if}
   </div>
 {/snippet}
@@ -815,7 +859,7 @@
   @media (width < 1500px) {
     .column.content {
       flex: 1 0 40%;
-      max-width: min(50%, 30rem);
+      max-width: min(100%, 30rem);
     }
   }
 </style>

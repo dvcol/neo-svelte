@@ -49,6 +49,7 @@
       display: inline-flex;
       align-items: center;
       box-sizing: border-box;
+      max-width: var(--neo-label-max-width);
       margin: var(--neo-label-margin, var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem) 0);
       padding: var(--neo-label-padding, 0 0.75rem);
       overflow: hidden;

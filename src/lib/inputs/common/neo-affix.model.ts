@@ -1,5 +1,5 @@
 import type { HTMLButtonAttributes } from 'svelte/elements';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoAffixProps = {
   /**
@@ -30,4 +30,5 @@ export type NeoAffixProps = {
    * Props for the close button
    */
   closeProps?: HTMLButtonAttributes;
-} & HTMLNeoBaseElement<HTMLSpanElement>;
+} & HTMLNeoBaseElement<HTMLSpanElement> &
+  HTMLRefProps<HTMLSpanElement>;
