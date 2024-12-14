@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-export type NeoValidationValue = string | string[] | number | boolean | FileList | any;
+export type NeoValidationValue = string | string[] | number | boolean | boolean[] | FileList | any;
 export type NeoValidationState<T extends NeoValidationValue = NeoValidationValue> = {
   /**
    * `true` if the input has been focused.

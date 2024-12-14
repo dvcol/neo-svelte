@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition';
-
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import type { NeoInputProps } from '~/inputs/common/neo-input.model';
@@ -18,6 +16,7 @@
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
+  import NeoRadio from '~/inputs/NeoRadio.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
 
@@ -45,8 +44,8 @@
     touched = $state<boolean>(false);
     dirty = $state<boolean>(false);
     valid = $state<boolean>();
-    value = $state<string | number>();
-    group = $state<string>();
+    value = $state<any>();
+    group = $state<any | any[]>();
     checked = $state<boolean>(false);
     indeterminate = $state<boolean>(false);
     files = $state<FileList>();
@@ -124,6 +123,9 @@
   const expandedFileState = new ValidationState({ type: 'file' });
 
   const checkboxState = new ValidationState({ type: 'checkbox', indeterminate: true });
+  const checkboxGroupState = new ValidationState({ type: 'checkbox' });
+
+  const radioState = new ValidationState({ type: 'radio' });
 
   const onClear = () =>
     [
@@ -145,6 +147,9 @@
       expandedFileState,
 
       checkboxState,
+      checkboxGroupState,
+
+      radioState,
     ].forEach(state => state.clear());
 
   const columns: ColumProps[] = [
@@ -422,7 +427,7 @@
       input: true,
     },
     {
-      label: 'Expanded',
+      label: 'Expanded Picker',
       props: {
         label: 'Drag & Drop',
         type: 'file',
@@ -521,17 +526,13 @@
   {/if}
 {/snippet}
 
-{#snippet group(column: ColumProps)}
-  {#if column.props?.glass || options.glass}
-    <SphereBackdrop>{@render input(column)}</SphereBackdrop>
-  {:else}
-    <div class="wrapper">
-      {@render input(column)}
-    </div>
-  {/if}
+{#snippet inputGroup(column: ColumProps)}
+  <SphereBackdrop glass={column.props?.glass || options.glass}>
+    {@render input(column)}
+  </SphereBackdrop>
 {/snippet}
 
-{#snippet validationState({ type, touched, dirty, valid, value, files, checked, indeterminate }: ValidationState, show = false)}
+{#snippet validationState({ type, touched, dirty, valid, value, files, checked, group, indeterminate }: ValidationState, show = false)}
   <div class="row">
     <div class="label">Touched: {touched}</div>
     <div class="label">Dirty: {dirty}</div>
@@ -540,8 +541,11 @@
       {#if type === 'file'}
         <div class="label">Files: {files?.length}</div>
       {:else if type === 'checkbox'}
+        <div class="label">Group: {group}</div>
         <div class="label">Checked: {checked}</div>
         <div class="label">Indeterminate: {indeterminate}</div>
+      {:else if type === 'radio'}
+        <div class="label">Group: {group}</div>
       {:else}
         <div class="label">Value: {value}</div>
       {/if}
@@ -556,7 +560,7 @@
     {#each columns as column}
       <div class="column content">
         <span class="label">{column.label}</span>
-        {@render group(column)}
+        {@render inputGroup(column)}
       </div>
     {/each}
   </div>
@@ -568,7 +572,7 @@
     <div class="column content">
       <span class="label">{column.label}</span>
       {@render validationState(column.state)}
-      {@render group(column)}
+      {@render inputGroup(column)}
     </div>
   {/each}
 </div>
@@ -576,13 +580,9 @@
 <div class="row">
   <div class="column content">
     <span class="label">Password</span>
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoPassword label="Password" autocomplete="current-password" {...options} />
-      </SphereBackdrop>
-    {:else}
-      <NeoPassword in={fade} label="Password" autocomplete="current-password" {...options} />
-    {/if}
+    <SphereBackdrop glass={options.glass}>
+      <NeoPassword label="Password" autocomplete="current-password" {...options} />
+    </SphereBackdrop>
   </div>
 </div>
 
@@ -591,17 +591,7 @@
   <div class="column content">
     <span class="label">Number</span>
     {@render validationState(numberState)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoNumberStep
-          bind:touched={numberState.touched}
-          bind:dirty={numberState.dirty}
-          bind:valid={numberState.valid}
-          bind:value={numberState.value}
-          {...options}
-        />
-      </SphereBackdrop>
-    {:else}
+    <SphereBackdrop glass={options.glass}>
       <NeoNumberStep
         bind:touched={numberState.touched}
         bind:dirty={numberState.dirty}
@@ -609,25 +599,13 @@
         bind:value={numberState.value}
         {...options}
       />
-    {/if}
+    </SphereBackdrop>
   </div>
 
   <div class="column content">
     <span class="label">Min Max</span>
     {@render validationState(numberState)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoNumberStep
-          bind:touched={numberState.touched}
-          bind:dirty={numberState.dirty}
-          bind:valid={numberState.valid}
-          bind:value={numberState.value}
-          min="-5"
-          max="5"
-          {...options}
-        />
-      </SphereBackdrop>
-    {:else}
+    <SphereBackdrop glass={options.glass}>
       <NeoNumberStep
         bind:touched={numberState.touched}
         bind:dirty={numberState.dirty}
@@ -637,7 +615,7 @@
         max="5"
         {...options}
       />
-    {/if}
+    </SphereBackdrop>
   </div>
 </div>
 
@@ -646,18 +624,7 @@
   <div class="column content">
     <span class="label">Pin</span>
     {@render validationState(pinState, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoPin
-          label="Pin Default"
-          bind:touched={pinState.touched}
-          bind:dirty={pinState.dirty}
-          bind:valid={pinState.valid}
-          bind:value={pinState.value}
-          {...options}
-        />
-      </SphereBackdrop>
-    {:else}
+    <SphereBackdrop glass={options.glass}>
       <NeoPin
         label="Pin Default"
         bind:touched={pinState.touched}
@@ -666,27 +633,13 @@
         bind:value={pinState.value}
         {...options}
       />
-    {/if}
+    </SphereBackdrop>
   </div>
 
   <div class="column content">
     <span class="label">Pin Groups</span>
     {@render validationState(pinStateSeparator, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoPin
-          label="Pin Validation"
-          groups={2}
-          required
-          validation
-          bind:touched={pinStateSeparator.touched}
-          bind:dirty={pinStateSeparator.dirty}
-          bind:valid={pinStateSeparator.valid}
-          bind:value={pinStateSeparator.value}
-          {...options}
-        />
-      </SphereBackdrop>
-    {:else}
+    <SphereBackdrop glass={options.glass}>
       <NeoPin
         label="Pin Validation"
         groups={2}
@@ -698,30 +651,15 @@
         bind:value={pinStateSeparator.value}
         {...options}
       />
-    {/if}
+    </SphereBackdrop>
   </div>
 
   <div class="column content">
     <span class="label">Pin Password</span>
     {@render validationState(pinPasswordState, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoPassword
-          label="Pin Password"
-          required
-          validation
-          bind:touched={pinPasswordState.touched}
-          bind:dirty={pinPasswordState.dirty}
-          bind:valid={pinPasswordState.valid}
-          bind:value={pinPasswordState.value}
-          type="password"
-          {...options}
-        />
-      </SphereBackdrop>
-    {:else}
+    <SphereBackdrop glass={options.glass}>
       <NeoPassword
         label="Pin Password"
-        pin
         required
         validation
         bind:touched={pinPasswordState.touched}
@@ -731,7 +669,7 @@
         type="password"
         {...options}
       />
-    {/if}
+    </SphereBackdrop>
   </div>
 </div>
 
@@ -741,18 +679,7 @@
     <div class="column content">
       <span class="label">{column.label}</span>
       {@render validationState(column.state, true)}
-      {#if options.glass}
-        <SphereBackdrop>
-          <NeoDateTime
-            bind:touched={column.state.touched}
-            bind:dirty={column.state.dirty}
-            bind:valid={column.state.valid}
-            bind:value={column.state.value}
-            {...options}
-            {...column.props}
-          />
-        </SphereBackdrop>
-      {:else}
+      <SphereBackdrop glass={options.glass}>
         <NeoDateTime
           bind:touched={column.state.touched}
           bind:dirty={column.state.dirty}
@@ -761,7 +688,7 @@
           {...options}
           {...column.props}
         />
-      {/if}
+      </SphereBackdrop>
     </div>
   {/each}
 </div>
@@ -771,19 +698,7 @@
   <div class="column content">
     <span class="label">Color Picker</span>
     {@render validationState(colorState, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoColorPicker
-          bind:touched={colorState.touched}
-          bind:dirty={colorState.dirty}
-          bind:valid={colorState.valid}
-          bind:value={colorState.value}
-          label="Color Picker"
-          {...options}
-          size="10"
-        />
-      </SphereBackdrop>
-    {:else}
+    <SphereBackdrop glass={options.glass}>
       <NeoColorPicker
         bind:touched={colorState.touched}
         bind:dirty={colorState.dirty}
@@ -793,7 +708,7 @@
         {...options}
         size="10"
       />
-    {/if}
+    </SphereBackdrop>
   </div>
 </div>
 
@@ -801,21 +716,9 @@
 <div class="row">
   {#each fileColumns as column}
     <div class="column content">
-      <span class="label">Date Picker</span>
+      <span class="label">{column.label}</span>
       {@render validationState(column.state, true)}
-      {#if options.glass}
-        <SphereBackdrop>
-          <NeoFilePicker
-            bind:touched={column.state.touched}
-            bind:dirty={column.state.dirty}
-            bind:valid={column.state.valid}
-            bind:value={column.state.value}
-            bind:files={column.state.files}
-            {...options}
-            {...column.props}
-          />
-        </SphereBackdrop>
-      {:else}
+      <SphereBackdrop glass={options.glass}>
         <NeoFilePicker
           bind:touched={column.state.touched}
           bind:dirty={column.state.dirty}
@@ -825,7 +728,7 @@
           {...options}
           {...column.props}
         />
-      {/if}
+      </SphereBackdrop>
     </div>
   {/each}
 </div>
@@ -835,28 +738,11 @@
   <div class="column content">
     <span class="label">Checkbox</span>
     {@render validationState(checkboxState, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoCheckbox
-          bind:touched={checkboxState.touched}
-          bind:dirty={checkboxState.dirty}
-          bind:valid={checkboxState.valid}
-          bind:value={checkboxState.value}
-          bind:checked={checkboxState.checked}
-          bind:indeterminate={checkboxState.indeterminate}
-          label="Checkbox"
-          required
-          validation
-          wrapperProps={{ style: 'min-width: 20rem' }}
-          {...options}
-        />
-      </SphereBackdrop>
-    {:else}
+    <SphereBackdrop glass={options.glass}>
       <NeoCheckbox
         bind:touched={checkboxState.touched}
         bind:dirty={checkboxState.dirty}
         bind:valid={checkboxState.valid}
-        bind:value={checkboxState.value}
         bind:checked={checkboxState.checked}
         bind:indeterminate={checkboxState.indeterminate}
         label="Checkbox"
@@ -865,33 +751,18 @@
         wrapperProps={{ style: 'min-width: 20rem' }}
         {...options}
       />
-    {/if}
+    </SphereBackdrop>
   </div>
 
   <div class="column content">
     <span class="label">Flat Checkbox</span>
     {@render validationState(checkboxState, true)}
-    {#if options.glass}
-      <SphereBackdrop>
-        <NeoCheckbox
-          bind:touched={checkboxState.touched}
-          bind:dirty={checkboxState.dirty}
-          bind:valid={checkboxState.valid}
-          bind:value={checkboxState.value}
-          bind:checked={checkboxState.checked}
-          bind:indeterminate={checkboxState.indeterminate}
-          label="Flat Checkbox"
-          validation
-          {...options}
-          elevation={0}
-        />
-      </SphereBackdrop>
-    {:else}
+
+    <SphereBackdrop glass={options.glass}>
       <NeoCheckbox
         bind:touched={checkboxState.touched}
         bind:dirty={checkboxState.dirty}
         bind:valid={checkboxState.valid}
-        bind:value={checkboxState.value}
         bind:checked={checkboxState.checked}
         bind:indeterminate={checkboxState.indeterminate}
         label="Flat Checkbox"
@@ -899,7 +770,34 @@
         {...options}
         elevation={0}
       />
-    {/if}
+    </SphereBackdrop>
+  </div>
+
+  <div class="column content">
+    <span class="label">Checkbox Group</span>
+    <div class="label">Group: {checkboxGroupState.group}</div>
+    <SphereBackdrop glass={options.glass}>
+      <div class="column" style:gap="0.5rem">
+        <NeoCheckbox label="Checkbox 1" value="Checkbox 1" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
+        <NeoCheckbox label="Checkbox 2" value="Checkbox 2" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
+        <NeoCheckbox label="Checkbox 3" value="Checkbox 3" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
+      </div>
+    </SphereBackdrop>
+  </div>
+</div>
+
+<!-- Radio inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Radio Group</span>
+    <div class="label">Group: {radioState.group}</div>
+    <SphereBackdrop glass={options.glass}>
+      <div class="column" style:gap="0.5rem">
+        <NeoRadio label="Radio 1" value="Radio 1" name="radio-group" bind:group={radioState.group} {...options} />
+        <NeoRadio label="Radio 2" value="Radio 2" name="radio-group" bind:group={radioState.group} {...options} />
+        <NeoRadio label="Radio 3" value="Radio 3" name="radio-group" bind:group={radioState.group} {...options} />
+      </div>
+    </SphereBackdrop>
   </div>
 </div>
 
@@ -910,11 +808,6 @@
     max-width: 80vw;
     white-space: pre-line;
     word-break: break-all;
-  }
-
-  .wrapper {
-    display: flex;
-    flex-direction: column;
   }
 
   .column {

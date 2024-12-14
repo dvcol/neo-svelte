@@ -141,7 +141,11 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement =
   /**
    * Fall back value when the input value is cleared.
    */
-  defaultValue: HTMLInputAttributes['value'];
+  defaultValue?: HTMLInputAttributes['value'];
+  /**
+   * Fall back checked state when the input value is cleared.
+   */
+  defaultChecked?: HTMLInputAttributes['checked'];
 
   // Validation
   /**

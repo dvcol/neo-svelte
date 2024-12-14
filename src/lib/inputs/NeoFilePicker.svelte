@@ -227,7 +227,7 @@
         if (i !== j) transfer.items.add(files[j]);
       }
       files = transfer.files;
-    } else files = undefined;
+    } else files = new DataTransfer().files;
     return emitChange();
   };
 

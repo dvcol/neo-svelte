@@ -24,7 +24,7 @@
     type = 'checkbox',
     id = label ? `neo-checkbox-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
-    value = $bindable(),
+    group = $bindable(),
     checked = $bindable(false),
     indeterminate = $bindable(false),
     valid = $bindable(),
@@ -39,7 +39,7 @@
     // Styles
     start,
     glass,
-    rounded = true,
+    rounded,
     skeleton,
 
     elevation = 2,
@@ -94,8 +94,6 @@
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass }, { max: 2, min: -2 }));
   const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
-
-  // TODO override onchange & oninput in all inputs to emit value in second argument
 </script>
 
 <NeoInputValidation
@@ -140,7 +138,7 @@
           {id}
           bind:ref
           bind:initial
-          bind:value
+          bind:group
           bind:checked
           bind:indeterminate
           bind:valid
@@ -162,7 +160,7 @@
       {:else if checked}
         <IconCheckbox circle={rounded} checked />
       {:else}
-        <IconCheckbox circle={rounded} />
+        <IconCheckbox circle={rounded} enter={touched} />
       {/if}
     </button>
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
@@ -208,7 +206,7 @@
     box-sizing: border-box;
     min-width: fit-content;
     margin: 0 0 0.125rem;
-    padding: 0.0625rem;
+    padding: 0.125rem;
     color: inherit;
     text-decoration: none;
     background: transparent;

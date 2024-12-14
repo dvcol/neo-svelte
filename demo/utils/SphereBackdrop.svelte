@@ -3,7 +3,7 @@
 
   import type { Snippet } from 'svelte';
 
-  const { children }: { children: Snippet } = $props();
+  const { glass, children }: { glass?: boolean; children: Snippet } = $props();
 
   let ref = $state<HTMLElement | null>(null);
 
@@ -22,11 +22,15 @@
   });
 </script>
 
-<div bind:this={ref} class="sphere">
-  <div class="sphere-before" style={`--translate:${width}; --translate-y:${height}`}></div>
+{#if glass}
+  <div bind:this={ref} class="sphere">
+    <div class="sphere-before" style={`--translate:${width}; --translate-y:${height}`}></div>
+    {@render children?.()}
+    <div class="sphere-after" style={`--translate:-${width}; --translate-y:-${height}`}></div>
+  </div>
+{:else}
   {@render children?.()}
-  <div class="sphere-after" style={`--translate:-${width}; --translate-y:-${height}`}></div>
-</div>
+{/if}
 
 <style lang="scss">
   @keyframes sphere {

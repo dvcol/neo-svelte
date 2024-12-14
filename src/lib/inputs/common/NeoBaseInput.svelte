@@ -57,33 +57,35 @@
   }: NeoBaseInputProps = $props();
   /* eslint-enable prefer-const */
 
-  const typedValue = $derived.by(() => {
-    if (rest.type === 'checkbox') return checked;
+  const getValue = () => {
     if (rest.type === 'file') return files;
+    if (rest.type === 'checkbox' || rest.type === 'radio') return checked;
     return value;
-  });
+  };
+
+  const typedValue = $derived(getValue());
   const hasValue = () => {
     if (rest?.type === 'file') return !!files?.length;
-    if (rest?.type === 'checkbox') return checked !== undefined;
+    if (rest?.type === 'checkbox' || rest.type === 'radio') return checked !== undefined;
     if (typeof value === 'string') return !!value.length;
     return value !== undefined && value !== null;
   };
   const fallback = () => {
     if (nullable) return value;
     if (rest?.defaultValue === undefined) return value;
-    if (rest.type && ['file', 'checkbox'].includes(rest.type)) return value;
+    if (rest.type && ['file', 'checkbox', 'radio'].includes(rest.type)) return value;
     if (hasValue()) return value;
     return rest?.defaultValue;
   };
 
   const reset = () => {
-    if (rest.type === 'checkbox') {
-      checked = rest?.defaultValue ?? false;
-      indeterminate = false;
+    if (rest.type === 'checkbox' || rest.type === 'radio') {
+      checked = rest?.defaultChecked ?? rest?.defaultValue ?? false;
+      if (rest.type === 'checkbox') indeterminate = false;
       return;
     }
     value = nullable ? '' : (rest?.defaultValue ?? '');
-    if (rest.type === 'file') files = undefined;
+    if (rest.type === 'file') files = new DataTransfer().files;
   };
 
   const currentState = $derived<NeoInputState<HTMLInputElement>>({ touched, dirty, valid, value: typedValue, initial });
@@ -133,10 +135,10 @@
   };
 
   /**
-   * Change the value of the input
+   * Change the state of the input
    */
   export const change: NeoInputMethods<HTMLInputElement>['change'] = (_value: NeoInputValue<HTMLInputElement>, event?: InputEvent) => {
-    if (rest.type === 'checkbox') {
+    if (rest.type === 'checkbox' || rest.type === 'radio') {
       checked = !!_value;
     } else {
       value = _value?.toString();
@@ -183,6 +185,12 @@
     Object.assign(ref, { mark, clear, change, validate });
   });
 
+  $effect(() => {
+    if (group === undefined) return;
+    checked = !!ref?.checked;
+    console.info('checked', { checked, group });
+  });
+
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 </script>
@@ -221,6 +229,27 @@
     bind:this={ref}
     bind:group
     bind:checked
+    bind:indeterminate
+    class:neo-input={true}
+    class:neo-after={after}
+    class:neo-before={before}
+    onblur={onBlur}
+    onfocus={onFocus}
+    oninput={onInput}
+    onchange={onChange}
+    oninvalid={onInvalid}
+    use:useFn={useProps}
+    {...rest}
+  />
+{:else if rest.type === 'radio'}
+  <input
+    type="radio"
+    {id}
+    {disabled}
+    {readonly}
+    {value}
+    bind:this={ref}
+    bind:group
     bind:indeterminate
     class:neo-input={true}
     class:neo-after={after}

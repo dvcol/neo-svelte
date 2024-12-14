@@ -490,7 +490,7 @@
   .neo-textarea {
     flex: 1 1 auto;
     align-self: center;
-    min-width: 100%;
+    min-width: fit-content;
     max-width: 100%;
     min-height: fit-content;
     padding: 0.75rem 0.95rem;

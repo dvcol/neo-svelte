@@ -90,7 +90,7 @@
 
   const getValue = () => {
     if (rest?.type === 'file') return files;
-    if (rest?.type === 'checkbox') return checked;
+    if (rest?.type === 'checkbox' || rest?.type === 'radio') return checked;
     return value;
   };
 
@@ -117,7 +117,7 @@
   const typedValue = $derived(getValue());
   const hasValue = $derived.by(() => {
     if (rest?.type === 'file') return !!files?.length;
-    if (rest?.type === 'checkbox') return checked !== undefined;
+    if (rest?.type === 'checkbox' || rest?.type === 'radio') return checked !== undefined;
     if (typeof value === 'string') return !!value.length;
     return value !== undefined && value !== null;
   });

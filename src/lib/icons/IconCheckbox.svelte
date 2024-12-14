@@ -2,7 +2,7 @@
   const {
     box = 1.25,
     check = 2,
-    scale = 1.5,
+    scale = 1.6,
     border = false,
     circle = false,
     draw = false,
@@ -77,9 +77,9 @@
         <animate
           fill="freeze"
           attributeName="stroke-dashoffset"
-          begin={!checked || !draw ? 0 : '0.6s'}
+          begin={!checked || !draw || !enter ? 0 : '0.6s'}
           dur={enter ? '0.2s' : 0}
-          values={checked ? '14;0' : '0;14'}
+          values={checked || !enter ? '14;0' : '0;14'}
         />
       </path>
     {/if}
