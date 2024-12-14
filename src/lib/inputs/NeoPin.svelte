@@ -369,6 +369,7 @@
     {/if}
     <div class="neo-pin-group-wrapper" class:neo-vertical={vertical}>
       <input
+        class="neo-pin-hidden"
         bind:this={ref}
         {id}
         aria-hidden="true"
@@ -501,6 +502,10 @@
   .neo-pin-after {
     display: inline-flex;
     align-items: center;
+  }
+
+  .neo-pin-hidden {
+    display: none;
   }
 
   .neo-pin-group-wrapper,

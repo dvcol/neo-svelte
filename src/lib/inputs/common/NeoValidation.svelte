@@ -86,7 +86,7 @@
 
     .neo-validation-message {
       min-height: var(--neo-line-height-sm, 1.25rem);
-      margin: 0.25rem var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem);
+      margin: var(--neo-validation-margin, 0.25rem var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem));
       font-size: var(--neo-font-size-sm, 0.875rem);
       line-height: var(--neo-line-height-xs, 1rem);
       transition:

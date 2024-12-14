@@ -11,6 +11,7 @@
 
     // States
     ref = $bindable(),
+    valid,
     required,
     disabled,
 
@@ -29,7 +30,16 @@
 </script>
 
 <svelte:element this={containerTag} class:neo-label-container={true} {...containerProps}>
-  <label bind:this={ref} class:neo-label={true} class:neo-disabled={disabled} class:neo-required={required} use:useFn={useProps} {...rest}>
+  <label
+    bind:this={ref}
+    class:neo-label={true}
+    class:neo-disabled={disabled}
+    class:neo-valid={valid === true}
+    class:neo-invalid={valid === false}
+    class:neo-required={required}
+    use:useFn={useProps}
+    {...rest}
+  >
     {#if typeof label === 'string'}
       {label}
     {:else}
@@ -65,8 +75,24 @@
         content: '*';
       }
 
+      &.neo-invalid {
+        color: var(--neo-label-color-error, var(--neo-color-error));
+      }
+
+      &.neo-valid {
+        color: var(--neo-label-color-success, var(--neo-color-success));
+      }
+
       &.neo-disabled {
         color: var(--neo-label-disabled-color, var(--neo-color-disabled));
+
+        &.neo-invalid {
+          color: var(--neo-input-color-error-disabled, var(--neo-color-error-50));
+        }
+
+        &.neo-valid {
+          color: var(--neo-label-color-success-disabled, var(--neo-color-success-50));
+        }
 
         &::after {
           color: var(--neo-label-disabled-color, var(--neo-color-error-50));

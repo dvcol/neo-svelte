@@ -16,6 +16,11 @@ export type NeoLabelProps = {
 
   // States
   /**
+   * If `true` or `false`, the label will be displayed as valid or invalid.
+   * If any other value (undefined, null, etc.), the label will be displayed as normal.
+   */
+  valid?: boolean;
+  /**
    * If `true`, the label will be displayed a required asterisk.
    */
   required?: boolean | null;

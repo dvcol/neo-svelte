@@ -157,7 +157,7 @@
   const onChange: FormEventHandler<HTMLTextAreaElement> = e => {
     touched = true;
     validate();
-    if (value === undefined || (typeof value === 'string' && !value.length)) {
+    if (!nullable && (value === undefined || (typeof value === 'string' && !value.length))) {
       value = rest?.defaultValue ?? '';
     }
     onchange?.(e);
@@ -393,6 +393,7 @@
     class:neo-glass={glass}
     class:neo-hover={hover}
     class:neo-hovered={hovered}
+    class:neo-floating={floating}
     class:neo-start={start}
     class:neo-skeleton={skeleton}
     class:neo-validation={validation}
@@ -830,10 +831,6 @@
       pointer-events: none;
 
       @include mixin.skeleton;
-
-      &.neo-glass {
-        --neo-skeleton-color: var(--neo-glass-skeleton-color);
-      }
     }
 
     .neo-textarea {

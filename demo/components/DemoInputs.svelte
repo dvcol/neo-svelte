@@ -11,6 +11,7 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
+  import NeoCheckbox from '~/inputs/NeoCheckbox.svelte';
   import NeoColorPicker from '~/inputs/NeoColorPicker.svelte';
   import NeoDateTime from '~/inputs/NeoDateTime.svelte';
   import NeoFilePicker from '~/inputs/NeoFilePicker.svelte';
@@ -46,8 +47,8 @@
     valid = $state<boolean>();
     value = $state<string | number>();
     group = $state<string>();
-    checked = $state<boolean>();
-    indeterminate = $state<boolean>();
+    checked = $state<boolean>(false);
+    indeterminate = $state<boolean>(false);
     files = $state<FileList>();
 
     constructor({ type, touched = false, dirty = false, valid, value = '', group, checked, indeterminate, files }: Partial<InputState> = {}) {
@@ -57,8 +58,8 @@
       this.valid = valid;
       this.value = value;
       this.group = group;
-      this.checked = checked;
-      this.indeterminate = indeterminate;
+      this.checked = checked ?? false;
+      this.indeterminate = indeterminate ?? false;
       this.files = files;
     }
 
@@ -122,7 +123,7 @@
   const multipleFileState = new ValidationState({ type: 'file' });
   const expandedFileState = new ValidationState({ type: 'file' });
 
-  const checkboxState = new ValidationState({ type: 'checkbox' });
+  const checkboxState = new ValidationState({ type: 'checkbox', indeterminate: true });
 
   const onClear = () =>
     [
@@ -827,6 +828,79 @@
       {/if}
     </div>
   {/each}
+</div>
+
+<!-- Checkbox inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Checkbox</span>
+    {@render validationState(checkboxState, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoCheckbox
+          bind:touched={checkboxState.touched}
+          bind:dirty={checkboxState.dirty}
+          bind:valid={checkboxState.valid}
+          bind:value={checkboxState.value}
+          bind:checked={checkboxState.checked}
+          bind:indeterminate={checkboxState.indeterminate}
+          label="Checkbox"
+          required
+          validation
+          wrapperProps={{ style: 'min-width: 20rem' }}
+          {...options}
+        />
+      </SphereBackdrop>
+    {:else}
+      <NeoCheckbox
+        bind:touched={checkboxState.touched}
+        bind:dirty={checkboxState.dirty}
+        bind:valid={checkboxState.valid}
+        bind:value={checkboxState.value}
+        bind:checked={checkboxState.checked}
+        bind:indeterminate={checkboxState.indeterminate}
+        label="Checkbox"
+        required
+        validation
+        wrapperProps={{ style: 'min-width: 20rem' }}
+        {...options}
+      />
+    {/if}
+  </div>
+
+  <div class="column content">
+    <span class="label">Flat Checkbox</span>
+    {@render validationState(checkboxState, true)}
+    {#if options.glass}
+      <SphereBackdrop>
+        <NeoCheckbox
+          bind:touched={checkboxState.touched}
+          bind:dirty={checkboxState.dirty}
+          bind:valid={checkboxState.valid}
+          bind:value={checkboxState.value}
+          bind:checked={checkboxState.checked}
+          bind:indeterminate={checkboxState.indeterminate}
+          label="Flat Checkbox"
+          validation
+          flat
+          {...options}
+        />
+      </SphereBackdrop>
+    {:else}
+      <NeoCheckbox
+        bind:touched={checkboxState.touched}
+        bind:dirty={checkboxState.dirty}
+        bind:valid={checkboxState.valid}
+        bind:value={checkboxState.value}
+        bind:checked={checkboxState.checked}
+        bind:indeterminate={checkboxState.indeterminate}
+        label="Flat Checkbox"
+        validation
+        flat
+        {...options}
+      />
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">

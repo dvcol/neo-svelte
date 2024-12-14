@@ -114,7 +114,7 @@ export const NeoInputLabelPosition = {
 
 export type NeoInputLabelPositions = (typeof NeoInputLabelPosition)[keyof typeof NeoInputLabelPosition];
 
-export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement = HTMLInputElement> = {
+export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement = NeoInputHTMLElement> = {
   // Styles
   /**
    * If `true`, the input will have no left padding/border radius.

@@ -362,7 +362,7 @@
     onEdit={onclick}
     addButtonProps={afterProps}
   />
-  <div class="neo-expanded-input">
+  <span class="neo-expanded-input">
     <NeoBaseInput
       bind:ref
       bind:files
@@ -372,6 +372,7 @@
       bind:touched
       bind:validationMessage
       type="file"
+      aria-invalid={valid === undefined ? undefined : !valid}
       aria-describedby={visible ? messageId : undefined}
       {id}
       {multiple}
@@ -382,7 +383,7 @@
       oninput={mirrorInput}
       onchange={mirrorChange}
     />
-  </div>
+  </span>
 {/snippet}
 
 <!-- Drag & drop -->
@@ -500,18 +501,8 @@
         width: 100%;
       }
 
-      .neo-expanded {
-        &-input :global(.neo-input-group),
-        &-input :global(.neo-input),
-        &-input {
-          width: 0;
-          height: 0;
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-          visibility: hidden;
-          pointer-events: none;
-        }
+      .neo-expanded-input {
+        display: none;
       }
 
       :global(.neo-file-picker-card) {

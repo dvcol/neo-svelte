@@ -1,0 +1,282 @@
+<script lang="ts">
+  import { fade } from 'svelte/transition';
+
+  import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
+  import type { NeoCheckboxProps } from '~/inputs/neo-checkbox.model.js';
+
+  import IconCheckbox from '~/icons/IconCheckbox.svelte';
+  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
+  import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
+  import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
+  import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import { toStyle } from '~/utils/props.utils.js';
+  import { enterDefaultTransition } from '~/utils/transition.utils.js';
+
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
+    // Snippets
+    label,
+    message,
+    error,
+
+    // State
+    type = 'checkbox',
+    id = label ? `neo-checkbox-${crypto.randomUUID()}` : undefined,
+    ref = $bindable(),
+    value = $bindable(),
+    checked = $bindable(false),
+    indeterminate = $bindable(false),
+    valid = $bindable(),
+    dirty = $bindable(false),
+    touched = $bindable(false),
+    focused = $bindable(false),
+    disabled,
+    required,
+    loading,
+    validation,
+
+    // Styles
+    flat,
+    start,
+    glass,
+    rounded = true,
+    skeleton,
+
+    // Actions
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
+
+    // Other props
+    labelRef = $bindable(),
+    labelProps,
+    messageTag = 'div',
+    messageProps,
+    containerTag = 'div',
+    containerProps,
+    wrapperTag = 'div',
+    wrapperProps,
+    ...rest
+  }: NeoCheckboxProps = $props();
+  /* eslint-enable prefer-const */
+
+  let initial = $state(checked);
+  let validationMessage = $state<string>(ref?.validationMessage ?? '');
+
+  let visible = $state(false);
+  let messageId = $state(`neo-checkbox-message-${crypto.randomUUID()}`);
+  const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
+    // Ref
+    ref,
+
+    // Methods
+    mark: ref?.mark,
+    clear: ref?.clear,
+    change: ref?.change,
+    validate: ref?.validate,
+
+    // State
+    value: checked,
+    touched,
+    dirty,
+    valid,
+    readonly: rest.readonly,
+    disabled,
+
+    // Styles
+    rounded,
+    glass,
+    start,
+    skeleton,
+  });
+
+  // TODO override onchange & oninput in all inputs to emit value in second argument
+</script>
+
+<NeoInputValidation
+  tag={wrapperTag}
+  bind:visible
+  bind:messageId
+  {valid}
+  {validation}
+  {validationMessage}
+  {error}
+  {rounded}
+  {context}
+  {message}
+  {messageTag}
+  {messageProps}
+  in={inAction}
+  out={outAction}
+  transition={transitionAction}
+  {...wrapperProps}
+  style={toStyle('--neo-validation-padding: 0', wrapperProps?.style)}
+>
+  <svelte:element this={containerTag} class:neo-checkbox-container={true} class:neo-rounded={rounded} class:neo-flat={flat} {...containerProps}>
+    <button
+      class="neo-checkbox-button"
+      role="checkbox"
+      aria-checked={indeterminate ? 'mixed' : checked}
+      class:neo-checked={checked || indeterminate}
+      class:neo-rounded={rounded}
+      class:neo-flat={flat}
+      class:neo-start={start}
+      class:neo-glass={glass}
+      class:neo-disabled={disabled}
+      class:neo-skeleton={skeleton}
+      onclick={() => ref?.click()}
+    >
+      <span class="neo-checkbox-input">
+        <NeoBaseInput
+          aria-invalid={valid === undefined ? undefined : !valid}
+          aria-describedby={visible ? messageId : undefined}
+          {id}
+          bind:ref
+          bind:initial
+          bind:value
+          bind:checked
+          bind:indeterminate
+          bind:valid
+          bind:dirty
+          bind:touched
+          bind:focused
+          bind:validationMessage
+          {type}
+          {disabled}
+          {required}
+          {...rest}
+          hidden
+          aria-hidden
+          tabindex={-1}
+        />
+      </span>
+      {#if indeterminate}
+        <IconCheckbox border={flat || disabled} circle={rounded} indeterminate />
+      {:else if checked}
+        <IconCheckbox border={flat || disabled} circle={rounded} checked />
+      {:else}
+        <IconCheckbox border={flat || disabled} circle={rounded} />
+      {/if}
+    </button>
+    <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
+    {#if loading !== undefined}
+      <span class="neo-checkbox-suffix">
+        {#if loading}
+          <span class="neo-checkbox-loading" out:fade={enterDefaultTransition}>
+            <IconCircleLoading width="1rem" height="1rem" />
+          </span>
+        {/if}
+      </span>
+    {/if}
+  </svelte:element>
+</NeoInputValidation>
+
+<style lang="scss">
+  @use 'src/lib/styles/mixin' as mixin;
+
+  .neo-checkbox-container {
+    --neo-label-margin: 0 0 0 0.75rem;
+    --neo-label-padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0;
+    padding: calc(0.375rem + var(--neo-checkbox-border-width, var(--neo-border-width-md, 2px))) 0.5rem 0.375rem;
+    border-radius: var(--neo-border-radius);
+    transition:
+      box-shadow 0.3s ease,
+      border-radius 0.3s ease;
+
+    &.neo-rounded {
+      border-radius: var(--neo-border-radius-lg);
+    }
+
+    &.neo-flat {
+      --neo-label-margin: 0 0 0 0.5rem;
+    }
+  }
+
+  .neo-checkbox-button {
+    box-sizing: border-box;
+    min-width: fit-content;
+    margin: 0 0 var(--neo-checkbox-border-width, var(--neo-border-width-md, 2px)) 0;
+    padding: 0.125rem;
+    color: inherit;
+    text-decoration: none;
+    background: transparent;
+    border: var(--neo-checkbox-border-width, var(--neo-border-width-md, 2px)) var(--neo-checkbox-border-color, transparent) solid;
+    border-radius: var(--neo-border-radius-sm);
+    outline: none;
+    box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-3));
+    cursor: pointer;
+    transition:
+      outline 0.3s ease,
+      color 0.3s ease,
+      box-shadow 0.3s ease,
+      border-radius 0.3s ease;
+
+    &.neo-checked {
+      box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-3));
+    }
+
+    &:focus-within,
+    &:hover {
+      box-shadow: var(--neo-checkbox-hover-shadow, var(--neo-box-shadow-raised-2));
+
+      &.neo-checked {
+        box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
+      }
+    }
+
+    &.neo-flat {
+      box-shadow: var(--neo-box-shadow-flat);
+    }
+
+    &.neo-disabled {
+      color: var(--neo-text-color-disabled);
+      box-shadow: var(--neo-box-shadow-flat);
+      cursor: not-allowed;
+      opacity: var(--neo-card-opacity-disabled, var(--neo-opacity-disabled));
+    }
+
+    &.neo-rounded {
+      border-radius: 50%;
+    }
+
+    .neo-checkbox-input {
+      display: none;
+    }
+
+    &.neo-glass {
+      @include mixin.glass;
+
+      background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
+      border-color: var(
+        --neo-checkbox-border-color,
+        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
+      );
+      border-width: var(--neo-border-width, 1px);
+      backdrop-filter: var(--neo-checkbox-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+    }
+
+    &.neo-start {
+      @starting-style {
+        box-shadow: var(--neo-box-shadow-flat);
+      }
+    }
+
+    &.neo-skeleton {
+      box-shadow: var(--neo-box-shadow-flat);
+      pointer-events: none;
+
+      @include mixin.skeleton;
+    }
+  }
+
+  .neo-checkbox-suffix {
+    width: 1rem;
+    height: 1rem;
+    margin-left: 0.5rem;
+  }
+</style>

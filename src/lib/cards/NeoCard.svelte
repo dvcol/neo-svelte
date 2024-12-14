@@ -498,10 +498,6 @@
       pointer-events: none;
 
       @include mixin.skeleton;
-
-      &.neo-glass {
-        --neo-skeleton-color: var(--neo-glass-skeleton-color);
-      }
     }
   }
 
