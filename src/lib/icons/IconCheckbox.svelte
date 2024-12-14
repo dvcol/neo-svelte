@@ -2,7 +2,7 @@
   const {
     box = 1.25,
     check = 2,
-    scale = 1.75,
+    scale = 1.5,
     border = false,
     circle = false,
     draw = false,

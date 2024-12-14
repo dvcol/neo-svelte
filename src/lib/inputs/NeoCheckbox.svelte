@@ -10,6 +10,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toStyle } from '~/utils/props.utils.js';
+  import { computeShadowElevation } from '~/utils/shadow.utils.js';
   import { enterDefaultTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -36,11 +37,12 @@
     validation,
 
     // Styles
-    flat,
     start,
     glass,
     rounded = true,
     skeleton,
+
+    elevation = 2,
 
     // Actions
     in: inAction,
@@ -90,6 +92,9 @@
     skeleton,
   });
 
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass }, { max: 2, min: -2 }));
+  const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
+
   // TODO override onchange & oninput in all inputs to emit value in second argument
 </script>
 
@@ -112,18 +117,20 @@
   {...wrapperProps}
   style={toStyle('--neo-validation-padding: 0', wrapperProps?.style)}
 >
-  <svelte:element this={containerTag} class:neo-checkbox-container={true} class:neo-rounded={rounded} class:neo-flat={flat} {...containerProps}>
+  <svelte:element this={containerTag} class:neo-checkbox-container={true} class:neo-rounded={rounded} class:neo-flat={!elevation} {...containerProps}>
     <button
       class="neo-checkbox-button"
       role="checkbox"
       aria-checked={indeterminate ? 'mixed' : checked}
       class:neo-checked={checked || indeterminate}
       class:neo-rounded={rounded}
-      class:neo-flat={flat}
       class:neo-start={start}
       class:neo-glass={glass}
       class:neo-disabled={disabled}
       class:neo-skeleton={skeleton}
+      class:neo-flat={!elevation}
+      style:--neo-checkbox-box-shadow={boxShadow}
+      style:--neo-checkbox-checked-shadow={checkedShadow}
       onclick={() => ref?.click()}
     >
       <span class="neo-checkbox-input">
@@ -151,11 +158,11 @@
         />
       </span>
       {#if indeterminate}
-        <IconCheckbox border={flat || disabled} circle={rounded} indeterminate />
+        <IconCheckbox circle={rounded} indeterminate />
       {:else if checked}
-        <IconCheckbox border={flat || disabled} circle={rounded} checked />
+        <IconCheckbox circle={rounded} checked />
       {:else}
-        <IconCheckbox border={flat || disabled} circle={rounded} />
+        <IconCheckbox circle={rounded} />
       {/if}
     </button>
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
@@ -193,44 +200,38 @@
     }
 
     &.neo-flat {
-      --neo-label-margin: 0 0 0 0.5rem;
+      --neo-label-margin: 0 0 0 0.625rem;
     }
   }
 
   .neo-checkbox-button {
     box-sizing: border-box;
     min-width: fit-content;
-    margin: 0 0 var(--neo-checkbox-border-width, var(--neo-border-width-md, 2px)) 0;
-    padding: 0.125rem;
+    margin: 0 0 0.125rem;
+    padding: 0.0625rem;
     color: inherit;
     text-decoration: none;
     background: transparent;
     border: var(--neo-checkbox-border-width, var(--neo-border-width-md, 2px)) var(--neo-checkbox-border-color, transparent) solid;
     border-radius: var(--neo-border-radius-sm);
     outline: none;
-    box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-3));
+    box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-2));
     cursor: pointer;
     transition:
       outline 0.3s ease,
       color 0.3s ease,
       box-shadow 0.3s ease,
-      border-radius 0.3s ease;
-
-    &.neo-checked {
-      box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-3));
-    }
-
-    &:focus-within,
-    &:hover {
-      box-shadow: var(--neo-checkbox-hover-shadow, var(--neo-box-shadow-raised-2));
-
-      &.neo-checked {
-        box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
-      }
-    }
+      border-radius 0.3s ease,
+      border-color 0.3s ease;
 
     &.neo-flat {
-      box-shadow: var(--neo-box-shadow-flat);
+      border-color: var(--neo-input-border-color, var(--neo-border-color));
+      border-width: var(--neo-border-width, 1px);
+    }
+
+    &:focus-visible,
+    &.neo-checked {
+      box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
     }
 
     &.neo-disabled {
@@ -277,6 +278,7 @@
   .neo-checkbox-suffix {
     width: 1rem;
     height: 1rem;
+    margin-bottom: 0.125rem;
     margin-left: 0.5rem;
   }
 </style>

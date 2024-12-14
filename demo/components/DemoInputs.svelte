@@ -882,8 +882,8 @@
           bind:indeterminate={checkboxState.indeterminate}
           label="Flat Checkbox"
           validation
-          flat
           {...options}
+          elevation={0}
         />
       </SphereBackdrop>
     {:else}
@@ -896,8 +896,8 @@
         bind:indeterminate={checkboxState.indeterminate}
         label="Flat Checkbox"
         validation
-        flat
         {...options}
+        elevation={0}
       />
     {/if}
   </div>

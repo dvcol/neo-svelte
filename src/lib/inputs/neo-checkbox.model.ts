@@ -7,6 +7,7 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     NeoInputProps,
     | 'start'
     | 'glass'
+    | 'elevation'
     | 'rounded'
     | 'readonly'
     | 'loading'
@@ -24,9 +25,4 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     | 'wrapperProps'
   > &
   Pick<NeoLabelProps, 'label'> &
-  Pick<NeoValidationProps, 'error' | 'message' | 'messageTag' | 'messageProps'> & {
-    /**
-     * Whether the checkbox is raised or flat.
-     */
-    flat?: boolean;
-  };
+  Pick<NeoValidationProps, 'error' | 'message' | 'messageTag' | 'messageProps'>;
