@@ -19,6 +19,7 @@
     skeleton: false,
     loading: false,
     inset: false,
+    glass: false,
   });
 
   const loading = $derived.by(() => isLoading() || options.loading);
@@ -36,21 +37,42 @@
 {/snippet}
 
 {#snippet buttons(opts: NeoButtonProps = {})}
-  <NeoButton {...opts} {...options} onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
-  <NeoButton {...opts} {...options} onclick={onClick}>Button</NeoButton>
-  <NeoButton {...opts} {...options} toggle onclick={onClick}>Toggle</NeoButton>
-  <NeoButton {...opts} {...options} disabled onclick={onClick}>Disabled</NeoButton>
-  <NeoButton {...opts} {...options} {loading} onclick={onLoading}>Loading</NeoButton>
-  <NeoButton {...opts} {...options} {loading} onclick={onLoading} {icon} />
-  <NeoButton {...opts} {...options} onclick={onClick} {icon}>Icon</NeoButton>
-  <NeoButton {...opts} {...options} reverse onclick={onClick} {icon}>Reversed</NeoButton>
-  <NeoButton {...opts} {...options} {loading} pulse onclick={onLoading}>Pulse</NeoButton>
-  <NeoButton {...opts} {...options} coalesce onclick={onClick}>Coalesce</NeoButton>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} onclick={onClick}>Button</NeoButton>
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} toggle onclick={onClick}>Toggle</NeoButton>
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} disabled onclick={onClick}>Disabled</NeoButton>
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} {loading} onclick={onLoading}>Loading</NeoButton>
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} {loading} onclick={onLoading} {icon} />
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} onclick={onClick} {icon}>Icon</NeoButton>
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} reverse onclick={onClick} {icon}>Reversed</NeoButton>
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} {loading} pulse onclick={onLoading}>Pulse</NeoButton>
+  </SphereBackdrop>
+  <SphereBackdrop glass={options.glass}>
+    <NeoButton {...opts} {...options} coalesce onclick={onClick}>Coalesce</NeoButton>
+  </SphereBackdrop>
 {/snippet}
 
 <div class="row">
   <div class="column">
     <NeoButtonGroup>
+      <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
       <NeoButton toggle bind:checked={options.inset}>Inset</NeoButton>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
       <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
@@ -66,40 +88,6 @@
       {@render buttons(props)}
     </div>
   {/each}
-
-  <div class="column">
-    <span class="label">Glass</span>
-    <SphereBackdrop>
-      <NeoButton glass {...options} onclick={onClick} href={`${Path.ButtonGroups}`} use={link}>Anchor</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} onclick={onClick}>Button</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} toggle onclick={onClick}>Toggle</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} disabled onclick={onClick}>Disabled</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} {loading} onclick={onLoading}>Loading</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} {loading} onclick={onLoading} {icon} />
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} onclick={onClick} {icon}>Icon</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} reverse onclick={onClick} {icon}>Reversed</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} {loading} pulse onclick={onLoading}>Pulse</NeoButton>
-    </SphereBackdrop>
-    <SphereBackdrop>
-      <NeoButton glass {...options} coalesce onclick={onClick}>Coalesce</NeoButton>
-    </SphereBackdrop>
-  </div>
 </div>
 
 <style lang="scss">

@@ -53,6 +53,7 @@
     line: false,
     rounded: false,
     vertical: false,
+    glass: false,
   });
 
   const columns: { label: string; props?: NeoTabsProps }[] = [
@@ -62,7 +63,6 @@
     { label: 'Inset', props: { elevation: -2 } },
     { label: 'Pressed', props: { elevation: -2, slideElevation: 2, pressed: true } },
     { label: 'Convex', props: { elevation: 2, convex: true } },
-    { label: 'Glass', props: { glass: true } },
   ];
 </script>
 
@@ -91,6 +91,7 @@
 <div class="row">
   <div class="column">
     <NeoButtonGroup>
+      <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
       <NeoButton toggle bind:checked={options.add}>Add</NeoButton>
       <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
@@ -114,12 +115,9 @@
   {#each columns as { label, props }}
     <div class="column">
       <span class="label">{label}</span>
-
-      {#if props?.glass}
-        <SphereBackdrop>{@render group(props)}</SphereBackdrop>
-      {:else}
+      <SphereBackdrop glass={options.glass}>
         {@render group(props)}
-      {/if}
+      </SphereBackdrop>
     </div>
   {/each}
 </div>

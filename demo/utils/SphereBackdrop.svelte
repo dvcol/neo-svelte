@@ -3,7 +3,7 @@
 
   import type { Snippet } from 'svelte';
 
-  const { glass, children }: { glass?: boolean; children: Snippet } = $props();
+  const { glass = true, row = false, children }: { glass?: boolean; row?: boolean; children: Snippet } = $props();
 
   let ref = $state<HTMLElement | null>(null);
 
@@ -23,10 +23,10 @@
 </script>
 
 {#if glass}
-  <div bind:this={ref} class="sphere">
-    <div class="sphere-before" style={`--translate:${width}; --translate-y:${height}`}></div>
+  <div bind:this={ref} class="neo-sphere" class:neo-sphere-row={row}>
+    <div class="neo-sphere-before" style={`--translate:${width}; --translate-y:${height}`}></div>
     {@render children?.()}
-    <div class="sphere-after" style={`--translate:-${width}; --translate-y:-${height}`}></div>
+    <div class="neo-sphere-after" style={`--translate:-${width}; --translate-y:-${height}`}></div>
   </div>
 {:else}
   {@render children?.()}
@@ -51,10 +51,14 @@
     }
   }
 
-  .sphere {
+  .neo-sphere {
     position: relative;
     display: flex;
     flex-direction: column;
+
+    &-row {
+      flex-direction: row;
+    }
 
     &-before,
     &-after {

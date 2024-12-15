@@ -10,15 +10,14 @@ Neomorphic ui library for svelte 5
   - [x] Password
   - [x] Pin
   - [x] Color picker
-  - [ ] checkbox
-  - [ ] radio
-    - [ ] groups
+  - [x] checkbox
+  - [x] radio
 - [x] Text Area
   - [ ] @ / # tags
 - [x] file picker
   - [x] drag & drop
   - [x] multiple
-- [ ] numbers
+- [x] numbers
   - [x] digits
   - [ ] range
   - [ ] phone

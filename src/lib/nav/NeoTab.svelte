@@ -8,7 +8,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
-  import { toAction, toActionProps } from '~/utils/action.utils.js';
+  import { emptyTransition, toAction, toActionProps } from '~/utils/action.utils.js';
   import { defaultTransitionDuration, enterFreezeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -40,7 +40,10 @@
   const active = $derived(context?.active === tabId);
   const disabled = $derived(rest.disabled || (rest.disabled !== false && context?.state?.disabled));
   const closeable = $derived(close || (close !== false && context?.state?.close));
-  const transition = $derived(context?.state?.vertical ? height : width);
+  const transition = $derived.by(() => {
+    if (!closeable && !context?.state?.add) return emptyTransition;
+    return context?.state?.vertical ? height : width;
+  });
   const slide = $derived(context?.state?.slide);
 
   const onClick: NeoTabProps['onclick'] = e => {

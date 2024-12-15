@@ -169,6 +169,10 @@
         background-color: transparent;
         backdrop-filter: none;
       }
+
+      &.neo-flat {
+        border-color: var(--neo-btn-border-color, var(--neo-glass-border-color));
+      }
     }
 
     :global(.neo-button) {

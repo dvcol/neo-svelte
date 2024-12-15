@@ -161,7 +161,7 @@
 {/snippet}
 
 {#snippet action({ rounded, elevation, horizontal })}
-  <NeoButtonGroup pressed {skeleton} {rounded} elevation={elevation > 3 ? 3 : Math.abs(elevation)} vertical={horizontal}>
+  <NeoButtonGroup pressed {skeleton} {rounded} elevation={elevation > 3 ? 3 : Math.abs(elevation)} vertical={horizontal} glass={options.glass}>
     <NeoButton>Left</NeoButton>
     <NeoButton>Middle</NeoButton>
     <NeoButton>Right</NeoButton>
@@ -184,11 +184,9 @@
       <span class="label">{label}</span>
 
       <div class="column-item">
-        {#if props?.glass || options.glass}
-          <SphereBackdrop>{@render card(props, hideContent)}</SphereBackdrop>
-        {:else}
+        <SphereBackdrop glass={props?.glass || options.glass}>
           {@render card(props, hideContent)}
-        {/if}
+        </SphereBackdrop>
       </div>
     </div>
   {/each}
