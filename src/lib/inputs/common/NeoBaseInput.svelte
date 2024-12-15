@@ -75,7 +75,8 @@
     if (rest?.defaultValue === undefined) return value;
     if (rest.type && ['file', 'checkbox', 'radio'].includes(rest.type)) return value;
     if (hasValue()) return value;
-    return rest?.defaultValue;
+    value = rest?.defaultValue;
+    return value;
   };
 
   const reset = () => {
@@ -169,7 +170,7 @@
   const onChange: FormEventHandler<HTMLInputElement> = e => {
     touched = true;
     validate();
-    value = fallback();
+    fallback();
     onchange?.(e);
   };
 
@@ -188,7 +189,6 @@
   $effect(() => {
     if (group === undefined) return;
     checked = !!ref?.checked;
-    console.info('checked', { checked, group });
   });
 
   const useFn = $derived(toAction(use));

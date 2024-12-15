@@ -116,6 +116,11 @@
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
+  const affix = $derived(clearable || loading !== undefined || validation);
+  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
+  const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
+  const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
+
   const validate: NeoInputMethods<HTMLTextAreaElement>['validate'] = (
     update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true },
   ) => {
@@ -154,12 +159,17 @@
     oninput?.(e);
   };
 
+  const fallback = () => {
+    if (nullable) return value;
+    if (hasValue) return value;
+    value = rest?.defaultValue ?? '';
+    return value;
+  };
+
   const onChange: FormEventHandler<HTMLTextAreaElement> = e => {
     touched = true;
     validate();
-    if (!nullable && (value === undefined || (typeof value === 'string' && !value.length))) {
-      value = rest?.defaultValue ?? '';
-    }
+    fallback();
     onchange?.(e);
   };
 
@@ -220,11 +230,6 @@
     if (!ref) return;
     Object.assign(ref, { mark, clear, change, validate });
   });
-
-  const affix = $derived(clearable || loading !== undefined || validation);
-  const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
-  const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
-  const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
 
   let labelHeight = $state<string>();
   let labelWidth = $state<string>();

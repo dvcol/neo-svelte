@@ -216,7 +216,6 @@
     box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-2));
     cursor: pointer;
     transition:
-      outline 0.3s ease,
       color 0.3s ease,
       box-shadow 0.3s ease,
       border-radius 0.3s ease,
