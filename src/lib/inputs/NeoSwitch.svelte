@@ -2,9 +2,9 @@
   import { fade } from 'svelte/transition';
 
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
-  import type { NeoCheckboxProps } from '~/inputs/neo-checkbox.model.js';
 
-  import IconCheckbox from '~/icons/IconCheckbox.svelte';
+  import type { NeoSwitchProps } from '~/inputs/neo-switch.model.js';
+
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
@@ -22,7 +22,7 @@
 
     // State
     type = 'checkbox',
-    id = label ? `neo-checkbox-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-switch-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     group = $bindable(),
     checked = $bindable(false),
@@ -39,7 +39,7 @@
     // Styles
     start,
     glass,
-    rounded,
+    rounded = true,
     skeleton,
 
     elevation = 2,
@@ -59,14 +59,14 @@
     wrapperTag = 'div',
     wrapperProps,
     ...rest
-  }: NeoCheckboxProps = $props();
+  }: NeoSwitchProps = $props();
   /* eslint-enable prefer-const */
 
   let initial = $state(checked);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
   let visible = $state(false);
-  let messageId = $state(`neo-checkbox-message-${crypto.randomUUID()}`);
+  let messageId = $state(`neo-switch-message-${crypto.randomUUID()}`);
   const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
     // Ref
     ref,
@@ -92,8 +92,7 @@
     skeleton,
   });
 
-  const boxShadow = $derived(computeShadowElevation(elevation, { glass }, { max: 2, min: -2 }));
-  const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
+  const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
 </script>
 
 <NeoInputValidation
@@ -115,9 +114,9 @@
   {...wrapperProps}
   style={toStyle('--neo-validation-padding: 0', wrapperProps?.style)}
 >
-  <svelte:element this={containerTag} class:neo-checkbox-container={true} class:neo-rounded={rounded} class:neo-flat={!elevation} {...containerProps}>
+  <svelte:element this={containerTag} class:neo-switch-container={true} class:neo-flat={!elevation} {...containerProps}>
     <button
-      class="neo-checkbox-button"
+      class="neo-switch-button"
       role="checkbox"
       aria-checked={indeterminate ? 'mixed' : checked}
       class:neo-checked={checked || indeterminate}
@@ -127,12 +126,12 @@
       class:neo-disabled={disabled}
       class:neo-skeleton={skeleton}
       class:neo-flat={!elevation}
-      class:neo-inset={elevation <= 0}
-      style:--neo-checkbox-box-shadow={boxShadow}
-      style:--neo-checkbox-checked-shadow={checkedShadow}
+      class:neo-valid={validation && valid}
+      class:neo-invalid={validation && !valid}
+      style:--neo-switch-box-shadow={boxShadow}
       onclick={() => ref?.click()}
     >
-      <span class="neo-checkbox-input">
+      <span class="neo-switch-input">
         <NeoBaseInput
           aria-invalid={valid === undefined ? undefined : !valid}
           aria-describedby={visible ? messageId : undefined}
@@ -156,19 +155,23 @@
           tabindex={-1}
         />
       </span>
-      {#if indeterminate}
-        <IconCheckbox circle={rounded} indeterminate />
-      {:else if checked}
-        <IconCheckbox circle={rounded} checked />
-      {:else}
-        <IconCheckbox circle={rounded} enter={touched} />
-      {/if}
+      <span class="neo-switch-rail">
+        <span class="neo-switch-toggle-before">
+          <!--   Toggle before   -->
+        </span>
+        <span class="neo-switch-toggle">
+          <!--   Toggle handle   -->
+        </span>
+        <span class="neo-switch-toggle-after">
+          <!--   Toggle after   -->
+        </span>
+      </span>
     </button>
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
     {#if loading !== undefined}
-      <span class="neo-checkbox-suffix">
+      <span class="neo-switch-suffix">
         {#if loading}
-          <span class="neo-checkbox-loading" out:fade={enterDefaultTransition}>
+          <span class="neo-switch-loading" out:fade={enterDefaultTransition}>
             <IconCircleLoading width="1rem" height="1rem" />
           </span>
         {/if}
@@ -180,7 +183,7 @@
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-checkbox {
+  .neo-switch {
     &-container {
       --neo-label-margin: 0 0 0 0.75rem;
       --neo-label-padding: 0;
@@ -189,15 +192,7 @@
       align-items: center;
       width: fit-content;
       margin: 0;
-      padding: calc(0.375rem + var(--neo-checkbox-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
-      border-radius: var(--neo-border-radius);
-      transition:
-        box-shadow 0.3s ease,
-        border-radius 0.3s ease;
-
-      &.neo-rounded {
-        border-radius: var(--neo-border-radius-lg);
-      }
+      padding: calc(0.375rem + var(--neo-switch-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
 
       &.neo-flat {
         --neo-label-margin: 0 0 0 0.625rem;
@@ -208,39 +203,90 @@
       display: none;
     }
 
-    &-button {
+    &-rail {
+      display: inline-flex;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--neo-switch-rail-background, transparent);
+      border-radius: inherit;
+      transition: background-color 0.3s ease;
+    }
+
+    &-toggle {
+      display: inline-flex;
       box-sizing: border-box;
-      min-width: fit-content;
-      margin: 0 0 0.125rem;
-      padding: 0.125rem;
+      height: calc(100% - var(--neo-switch-toggle-spacing, 0.1875rem) * 2);
+      margin: var(--neo-switch-toggle-spacing, 0.1875rem);
+      background: var(--neo-switch-toggle-background, var(--neo-background-color));
+      border-radius: 50%;
+      box-shadow: var(--neo-switch-toggle-box-shadow, var(--neo-box-shadow-convex-2));
+      transition:
+        right 0.3s ease,
+        scale 0.3s ease;
+      aspect-ratio: 1 / 1;
+
+      &-before,
+      &-after {
+        display: inline-flex;
+        transition: width 0.3s ease-out;
+      }
+
+      &-before {
+        width: 0;
+      }
+
+      &-after {
+        width: 100%;
+      }
+    }
+
+    &-button {
+      display: inline-flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-width: calc(var(--neo-line-height, 1.5rem) * 1.8);
+      height: var(--neo-line-height, 1.5rem);
+      margin: 0;
+      padding: 0;
       color: inherit;
       text-decoration: none;
-      background-color: color-mix(in srgb, transparent, currentcolor 1%);
-      border: var(--neo-checkbox-border-width, var(--neo-border-width, 1px)) var(--neo-checkbox-border-color, transparent) solid;
-      border-radius: var(--neo-border-radius-sm);
+      background: transparent;
+      border: var(--neo-switch-border-width, var(--neo-border-width, 1px)) var(--neo-switch-border-color, transparent) solid;
+      border-radius: var(--neo-switch-border-radius, var(--neo-border-radius));
       outline: none;
-      box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-2));
+      box-shadow: var(--neo-switch-box-shadow, var(--neo-box-shadow-pressed-2));
       cursor: pointer;
       transition:
         color 0.3s ease,
         box-shadow 0.3s ease,
         border-radius 0.3s ease,
-        border-color 0.3s ease,
-        background-color 0.3s ease;
+        border-color 0.3s ease;
 
-      &.neo-disabled,
-      &.neo-flat {
-        background-color: transparent;
-        border-color: var(--neo-input-border-color, var(--neo-border-color));
+      &.neo-rounded {
+        border-radius: var(--neo-border-radius-lg);
       }
 
-      &:focus-visible,
+      &.neo-valid {
+        --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 30%);
+      }
+
+      &.neo-invalid {
+        --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 30%);
+      }
+
       &.neo-checked {
-        box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
-      }
+        .neo-switch-rail {
+          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
+        }
 
-      &.neo-inset:focus-visible {
-        border-color: var(--neo-checkbox-border-color-focused, var(--neo-border-color-focused));
+        .neo-switch-toggle-before {
+          width: 100%;
+        }
+
+        .neo-switch-toggle-after {
+          width: 0;
+        }
       }
 
       &.neo-disabled {
@@ -250,20 +296,47 @@
         opacity: var(--neo-card-opacity-disabled, var(--neo-opacity-disabled));
       }
 
-      &.neo-rounded {
-        border-radius: 50%;
+      &.neo-disabled,
+      &.neo-flat {
+        --neo-switch-toggle-spacing: 0.25rem;
+
+        border-color: var(--neo-input-border-color, var(--neo-border-color));
+
+        .neo-switch-toggle {
+          background-color: var(--neo-input-border-color, currentcolor);
+          box-shadow: var(--neo-box-shadow-flat);
+        }
+
+        &.neo-checked .neo-switch-rail {
+          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 10%));
+        }
+      }
+
+      &:focus-visible {
+        border-color: var(--neo-radio-border-color-focused, var(--neo-border-color-focused));
+      }
+
+      &:active {
+        .neo-switch-toggle {
+          transform-origin: left center;
+          scale: 1.2 1;
+        }
+
+        &.neo-checked .neo-switch-toggle {
+          transform-origin: right center;
+        }
       }
 
       &.neo-glass {
         @include mixin.glass;
 
-        background-color: var(--neo-checkbox-bg-color, var(--neo-glass-background-color));
+        background-color: var(--neo-switch-bg-color, var(--neo-glass-background-color));
         border-color: var(
-          --neo-checkbox-border-color,
+          --neo-radio-border-color,
           var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
             var(--neo-glass-left-border-color)
         );
-        backdrop-filter: var(--neo-checkbox-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+        backdrop-filter: var(--neo-radio-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
       }
 
       &.neo-start {

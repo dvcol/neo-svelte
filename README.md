@@ -25,10 +25,7 @@ Neomorphic ui library for svelte 5
   - [x] pin
 - [x] time/date/week
   - [ ] range
-- [ ] switch
-  - [ ] loading
-  - [ ] border loading
-  - [ ] skeleton
+- [x] switch
 - [ ] slider
   - [ ] range
   - [ ] steps/ticks

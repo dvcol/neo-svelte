@@ -17,6 +17,7 @@
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoRadio from '~/inputs/NeoRadio.svelte';
+  import NeoSwitch from '~/inputs/NeoSwitch.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
 
@@ -127,6 +128,9 @@
 
   const radioState = new ValidationState({ type: 'radio' });
 
+  const switchState = new ValidationState({ type: 'checkbox' });
+  const switchGroupState = new ValidationState({ type: 'checkbox' });
+
   const onClear = () =>
     [
       validation,
@@ -150,6 +154,9 @@
       checkboxGroupState,
 
       radioState,
+
+      switchState,
+      switchGroupState,
     ].forEach(state => state.clear());
 
   const columns: ColumProps[] = [
@@ -796,6 +803,42 @@
         <NeoRadio label="Radio 1" value="Radio 1" name="radio-group" bind:group={radioState.group} {...options} />
         <NeoRadio label="Radio 2" value="Radio 2" name="radio-group" bind:group={radioState.group} {...options} />
         <NeoRadio label="Radio 3" value="Radio 3" name="radio-group" bind:group={radioState.group} {...options} />
+      </div>
+    </SphereBackdrop>
+  </div>
+</div>
+
+<!-- Radio inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Switch</span>
+    {@render validationState(switchState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <div class="column">
+        <NeoSwitch
+          label="Switch"
+          bind:touched={switchState.touched}
+          bind:dirty={switchState.dirty}
+          bind:valid={switchState.valid}
+          bind:checked={switchState.checked}
+          bind:indeterminate={switchState.indeterminate}
+          required
+          validation
+          {...options}
+          wrapperProps={{ style: 'min-width: 20rem' }}
+        />
+      </div>
+    </SphereBackdrop>
+  </div>
+
+  <div class="column content">
+    <span class="label">Switch Group</span>
+    <div class="label">Group: {switchGroupState.group}</div>
+    <SphereBackdrop glass={options.glass}>
+      <div class="column" style:gap="0.5rem">
+        <NeoSwitch label="Switch 1" value="Switch 1" name="switch-group" bind:group={switchGroupState.group} {...options} />
+        <NeoSwitch label="Switch 2" value="Switch 2" name="switch-group" bind:group={switchGroupState.group} {...options} />
+        <NeoSwitch label="Switch 3" value="Switch 3" name="switch-group" bind:group={switchGroupState.group} {...options} />
       </div>
     </SphereBackdrop>
   </div>

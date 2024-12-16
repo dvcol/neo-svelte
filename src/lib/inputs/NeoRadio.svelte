@@ -70,6 +70,7 @@
     class:neo-disabled={disabled}
     class:neo-skeleton={skeleton}
     class:neo-flat={!elevation}
+    class:neo-inset={elevation <= 0}
     style:--neo-radio-box-shadow={boxShadow}
     style:--neo-radio-checked-shadow={checkedShadow}
     onclick={() => ref?.click()}
@@ -152,7 +153,7 @@
       padding: 0;
       color: inherit;
       text-decoration: none;
-      background: transparent;
+      background-color: color-mix(in srgb, transparent, currentcolor 1%);
       border: var(--neo-radio-border-width, var(--neo-border-width, 1px)) var(--neo-radio-border-color, transparent) solid;
       border-radius: var(--neo-border-radius-sm);
       outline: none;
@@ -162,15 +163,22 @@
         color 0.3s ease,
         box-shadow 0.3s ease,
         border-radius 0.3s ease,
-        border-color 0.3s ease;
+        border-color 0.3s ease,
+        background-color 0.3s ease;
 
+      &.neo-disabled,
       &.neo-flat {
+        background-color: transparent;
         border-color: var(--neo-input-border-color, var(--neo-border-color));
       }
 
       &:focus-visible,
       &.neo-checked {
         box-shadow: var(--neo-radio-checked-shadow, var(--neo-box-shadow-pressed-2));
+      }
+
+      &.neo-inset:focus-visible {
+        border-color: var(--neo-checkbox-border-color-focused, var(--neo-border-color-focused));
       }
 
       &.neo-disabled {
@@ -187,7 +195,7 @@
       &.neo-glass {
         @include mixin.glass;
 
-        background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
+        background-color: var(--neo-radio-bg-color, var(--neo-glass-background-color));
         border-color: var(
           --neo-radio-border-color,
           var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
