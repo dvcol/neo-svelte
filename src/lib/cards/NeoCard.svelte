@@ -248,15 +248,15 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-card {
-    --neo-card-full-spacing: var(--neo-card-spacing, 1.5rem);
-    --neo-card-half-spacing: calc(var(--neo-card-spacing, 1.5rem) / 2);
+    $full-spacing: var(--neo-card-spacing, 1.5rem);
+    $half-spacing: calc(var(--neo-card-spacing, 1.5rem) / 2);
 
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     width: fit-content;
     margin: var(--neo-card-margin, var(--neo-shadow-margin, 0.625rem));
-    padding: var(--neo-card-full-spacing);
+    padding: $full-spacing;
     color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
     border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
@@ -307,29 +307,29 @@
     }
 
     .neo-card-divider {
-      margin: 0.5rem calc(var(--neo-card-full-spacing) - 0.25rem);
+      margin: 0.5rem calc(#{$full-spacing} - 0.25rem);
     }
 
     .neo-card-segment {
       transition: border-radius 0.3s ease;
 
       &:not(.neo-card-media) {
-        padding: var(--neo-card-half-spacing) var(--neo-card-full-spacing);
+        padding: $half-spacing $full-spacing;
 
         &:first-child {
-          padding: var(--neo-card-full-spacing) var(--neo-card-full-spacing) var(--neo-card-half-spacing);
+          padding: $full-spacing $full-spacing $half-spacing;
           border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
         }
 
         &:last-child {
-          padding: var(--neo-card-half-spacing) var(--neo-card-full-spacing) var(--neo-card-full-spacing);
+          padding: $half-spacing $full-spacing $full-spacing;
           border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius));
         }
       }
     }
 
     .neo-card-media {
-      margin: var(--neo-card-full-spacing);
+      margin: $full-spacing;
       overflow: hidden;
       border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
       scrollbar-gutter: auto;
@@ -338,7 +338,7 @@
         padding: 0;
 
         &:not(:only-child) {
-          margin: 0 0 var(--neo-card-full-spacing);
+          margin: 0 0 $full-spacing;
           border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
         }
 
@@ -389,7 +389,7 @@
 
     &.neo-segmented {
       .neo-card-segment:not(.neo-card-media) {
-        padding: var(--neo-card-full-spacing);
+        padding: $full-spacing;
       }
 
       .neo-card-segment:not(.neo-card-media, :last-child) {
@@ -432,20 +432,20 @@
       }
 
       .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
-        margin: 0 var(--neo-card-full-spacing) 0 0;
+        margin: 0 $full-spacing 0 0;
         border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
       }
 
       .neo-card-segment:not(.neo-card-media) {
-        padding: var(--neo-card-full-spacing) var(--neo-card-half-spacing);
+        padding: $full-spacing $half-spacing;
 
         &:first-child {
-          padding: var(--neo-card-full-spacing) var(--neo-card-half-spacing) var(--neo-card-full-spacing) var(--neo-card-full-spacing);
+          padding: $full-spacing $half-spacing $full-spacing $full-spacing;
           border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
         }
 
         &:last-child {
-          padding: var(--neo-card-full-spacing) var(--neo-card-full-spacing) var(--neo-card-full-spacing) var(--neo-card-half-spacing);
+          padding: $full-spacing $full-spacing $full-spacing $half-spacing;
           border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0;
         }
       }

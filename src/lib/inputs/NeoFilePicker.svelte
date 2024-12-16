@@ -469,8 +469,6 @@
     }
 
     .neo-drop-container {
-      --neo-drop-spacing: 0.375rem;
-
       position: relative;
       display: inline-flex;
       align-items: center;

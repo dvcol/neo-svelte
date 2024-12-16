@@ -179,103 +179,104 @@
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-checkbox-container {
-    --neo-label-margin: 0 0 0 0.75rem;
-    --neo-label-padding: 0;
+  .neo-checkbox {
+    &-container {
+      --neo-label-margin: 0 0 0 0.75rem;
+      --neo-label-padding: 0;
 
-    display: inline-flex;
-    align-items: center;
-    width: fit-content;
-    margin: 0;
-    padding: calc(0.375rem + var(--neo-checkbox-border-width, var(--neo-border-width-md, 2px))) 0.5rem 0.375rem;
-    border-radius: var(--neo-border-radius);
-    transition:
-      box-shadow 0.3s ease,
-      border-radius 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      margin: 0;
+      padding: calc(0.375rem + var(--neo-checkbox-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
+      border-radius: var(--neo-border-radius);
+      transition:
+        box-shadow 0.3s ease,
+        border-radius 0.3s ease;
 
-    &.neo-rounded {
-      border-radius: var(--neo-border-radius-lg);
-    }
+      &.neo-rounded {
+        border-radius: var(--neo-border-radius-lg);
+      }
 
-    &.neo-flat {
-      --neo-label-margin: 0 0 0 0.625rem;
-    }
-  }
-
-  .neo-checkbox-button {
-    box-sizing: border-box;
-    min-width: fit-content;
-    margin: 0 0 0.125rem;
-    padding: 0.125rem;
-    color: inherit;
-    text-decoration: none;
-    background: transparent;
-    border: var(--neo-checkbox-border-width, var(--neo-border-width-md, 2px)) var(--neo-checkbox-border-color, transparent) solid;
-    border-radius: var(--neo-border-radius-sm);
-    outline: none;
-    box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-2));
-    cursor: pointer;
-    transition:
-      color 0.3s ease,
-      box-shadow 0.3s ease,
-      border-radius 0.3s ease,
-      border-color 0.3s ease;
-
-    &.neo-flat {
-      border-color: var(--neo-input-border-color, var(--neo-border-color));
-      border-width: var(--neo-border-width, 1px);
-    }
-
-    &:focus-visible,
-    &.neo-checked {
-      box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
-    }
-
-    &.neo-disabled {
-      color: var(--neo-text-color-disabled);
-      box-shadow: var(--neo-box-shadow-flat);
-      cursor: not-allowed;
-      opacity: var(--neo-card-opacity-disabled, var(--neo-opacity-disabled));
-    }
-
-    &.neo-rounded {
-      border-radius: 50%;
-    }
-
-    .neo-checkbox-input {
-      display: none;
-    }
-
-    &.neo-glass {
-      @include mixin.glass;
-
-      background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
-      border-color: var(
-        --neo-checkbox-border-color,
-        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
-      );
-      border-width: var(--neo-border-width, 1px);
-      backdrop-filter: var(--neo-checkbox-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
-    }
-
-    &.neo-start {
-      @starting-style {
-        box-shadow: var(--neo-box-shadow-flat);
+      &.neo-flat {
+        --neo-label-margin: 0 0 0 0.625rem;
       }
     }
 
-    &.neo-skeleton {
-      box-shadow: var(--neo-box-shadow-flat);
-      pointer-events: none;
-
-      @include mixin.skeleton;
+    &-input {
+      display: none;
     }
-  }
 
-  .neo-checkbox-suffix {
-    width: 1rem;
-    height: 1rem;
-    margin-bottom: 0.125rem;
-    margin-left: 0.5rem;
+    &-button {
+      box-sizing: border-box;
+      min-width: fit-content;
+      margin: 0 0 0.125rem;
+      padding: 0.125rem;
+      color: inherit;
+      text-decoration: none;
+      background: transparent;
+      border: var(--neo-checkbox-border-width, var(--neo-border-width, 1px)) var(--neo-checkbox-border-color, transparent) solid;
+      border-radius: var(--neo-border-radius-sm);
+      outline: none;
+      box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-2));
+      cursor: pointer;
+      transition:
+        color 0.3s ease,
+        box-shadow 0.3s ease,
+        border-radius 0.3s ease,
+        border-color 0.3s ease;
+
+      &.neo-flat {
+        border-color: var(--neo-input-border-color, var(--neo-border-color));
+      }
+
+      &:focus-visible,
+      &.neo-checked {
+        box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
+      }
+
+      &.neo-disabled {
+        color: var(--neo-text-color-disabled);
+        box-shadow: var(--neo-box-shadow-flat);
+        cursor: not-allowed;
+        opacity: var(--neo-card-opacity-disabled, var(--neo-opacity-disabled));
+      }
+
+      &.neo-rounded {
+        border-radius: 50%;
+      }
+
+      &.neo-glass {
+        @include mixin.glass;
+
+        background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
+        border-color: var(
+          --neo-checkbox-border-color,
+          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+            var(--neo-glass-left-border-color)
+        );
+        backdrop-filter: var(--neo-checkbox-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+      }
+
+      &.neo-start {
+        @starting-style {
+          box-shadow: var(--neo-box-shadow-flat);
+        }
+      }
+
+      &.neo-skeleton {
+        box-shadow: var(--neo-box-shadow-flat);
+        pointer-events: none;
+
+        @include mixin.skeleton;
+      }
+    }
+
+    &-suffix {
+      width: 1rem;
+      height: 1rem;
+      margin-bottom: 0.125rem;
+      margin-left: 0.5rem;
+    }
   }
 </style>
