@@ -17,6 +17,7 @@
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoRadio from '~/inputs/NeoRadio.svelte';
+  import NeoRange from '~/inputs/NeoRange.svelte';
   import NeoSwitch from '~/inputs/NeoSwitch.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
@@ -131,6 +132,8 @@
   const switchState = new ValidationState({ type: 'checkbox' });
   const switchGroupState = new ValidationState({ type: 'checkbox' });
 
+  const rangeState = new ValidationState({ type: 'range', value: 0 });
+
   const onClear = () =>
     [
       validation,
@@ -157,6 +160,8 @@
 
       switchState,
       switchGroupState,
+
+      rangeState,
     ].forEach(state => state.clear());
 
   const columns: ColumProps[] = [
@@ -840,6 +845,23 @@
         <NeoSwitch label="Switch 2" value="Switch 2" name="switch-group" bind:group={switchGroupState.group} {...options} />
         <NeoSwitch label="Switch 3" value="Switch 3" name="switch-group" bind:group={switchGroupState.group} {...options} />
       </div>
+    </SphereBackdrop>
+  </div>
+</div>
+
+<!-- Range inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Range</span>
+    {@render validationState(rangeState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoRange
+        bind:touched={rangeState.touched}
+        bind:dirty={rangeState.dirty}
+        bind:valid={rangeState.valid}
+        bind:value={rangeState.value}
+        {...options}
+      />
     </SphereBackdrop>
   </div>
 </div>
