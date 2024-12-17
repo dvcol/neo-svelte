@@ -117,7 +117,7 @@
   <svelte:element this={containerTag} class:neo-switch-container={true} class:neo-flat={!elevation} {...containerProps}>
     <button
       class="neo-switch-button"
-      role="checkbox"
+      role="switch"
       aria-checked={indeterminate ? 'mixed' : checked}
       class:neo-checked={checked || indeterminate}
       class:neo-rounded={rounded}
@@ -156,14 +156,8 @@
         />
       </span>
       <span class="neo-switch-rail">
-        <span class="neo-switch-toggle-before">
-          <!--   Toggle before   -->
-        </span>
         <span class="neo-switch-toggle">
           <!--   Toggle handle   -->
-        </span>
-        <span class="neo-switch-toggle-after">
-          <!--   Toggle after   -->
         </span>
       </span>
     </button>
@@ -185,6 +179,8 @@
 
   .neo-switch {
     &-container {
+      --neo-switch-height: var(--neo-line-height, 1.5rem);
+      --neo-switch-spacing: 0.125rem;
       --neo-label-margin: 0 0 0 0.75rem;
       --neo-label-padding: 0;
 
@@ -204,49 +200,40 @@
     }
 
     &-rail {
+      position: relative;
       display: inline-flex;
       width: 100%;
-      height: 100%;
+      height: calc(100% - (var(--neo-switch-spacing) * 2));
+      margin: var(--neo-switch-spacing);
       overflow: hidden;
-      background-color: var(--neo-switch-rail-background, transparent);
-      border-radius: inherit;
+      background-color: var(--neo-switch-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
+      border-radius: var(--neo-switch-border-radius, var(--neo-border-radius-sm));
       transition: background-color 0.3s ease;
     }
 
     &-toggle {
+      position: absolute;
+      left: 0;
       display: inline-flex;
       box-sizing: border-box;
-      height: calc(100% - var(--neo-switch-toggle-spacing, 0.1875rem) * 2);
-      margin: var(--neo-switch-toggle-spacing, 0.1875rem);
+      height: calc(100% - (var(--neo-switch-spacing) * 2));
+      margin: var(--neo-switch-spacing);
       background: var(--neo-switch-toggle-background, var(--neo-background-color));
       border-radius: 50%;
       box-shadow: var(--neo-switch-toggle-box-shadow, var(--neo-box-shadow-convex-2));
       transition:
-        right 0.3s ease,
+        translate 0.3s ease,
+        left 0.3s ease,
         scale 0.3s ease;
       aspect-ratio: 1 / 1;
-
-      &-before,
-      &-after {
-        display: inline-flex;
-        transition: width 0.3s ease-out;
-      }
-
-      &-before {
-        width: 0;
-      }
-
-      &-after {
-        width: 100%;
-      }
     }
 
     &-button {
       display: inline-flex;
       align-items: center;
       box-sizing: border-box;
-      min-width: calc(var(--neo-line-height, 1.5rem) * 1.8);
-      height: var(--neo-line-height, 1.5rem);
+      min-width: calc(var(--neo-switch-height) * 1.8);
+      height: var(--neo-switch-height);
       margin: 0;
       padding: 0;
       color: inherit;
@@ -265,6 +252,10 @@
 
       &.neo-rounded {
         border-radius: var(--neo-border-radius-lg);
+
+        .neo-switch-rail {
+          border-radius: var(--neo-border-radius-lg);
+        }
       }
 
       &.neo-valid {
@@ -280,12 +271,9 @@
           background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
         }
 
-        .neo-switch-toggle-before {
-          width: 100%;
-        }
-
-        .neo-switch-toggle-after {
-          width: 0;
+        .neo-switch-toggle {
+          left: calc(100% - (var(--neo-switch-spacing) * 2));
+          translate: -100% 0;
         }
       }
 

@@ -119,7 +119,7 @@
     margin: 0;
     padding: 0;
     border: none;
-    border-radius: var(--neo-border-radius-sm);
+    border-radius: var(--neo-border-radius-xs);
     transition: border-radius 0.3s ease;
     appearance: none;
     aspect-ratio: 4/3;
@@ -136,7 +136,7 @@
     &::-webkit-color-swatch-wrapper,
     &::-webkit-color-swatch,
     &::-moz-color-swatch {
-      border-radius: var(--neo-border-radius-sm);
+      border-radius: var(--neo-border-radius-xs);
     }
 
     &.neo-rounded {

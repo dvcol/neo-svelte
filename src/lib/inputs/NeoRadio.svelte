@@ -155,7 +155,7 @@
       text-decoration: none;
       background-color: color-mix(in srgb, transparent, currentcolor 1%);
       border: var(--neo-radio-border-width, var(--neo-border-width, 1px)) var(--neo-radio-border-color, transparent) solid;
-      border-radius: var(--neo-border-radius-sm);
+      border-radius: var(--neo-border-radius-xs);
       outline: none;
       box-shadow: var(--neo-radio-box-shadow, var(--neo-box-shadow-raised-2));
       cursor: pointer;
