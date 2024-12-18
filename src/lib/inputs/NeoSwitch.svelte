@@ -248,7 +248,8 @@
         color 0.3s ease,
         box-shadow 0.3s ease,
         border-radius 0.3s ease,
-        border-color 0.3s ease;
+        border-color 0.3s ease,
+        background-color 0.3s ease;
 
       &.neo-rounded {
         border-radius: var(--neo-border-radius-lg);
@@ -295,8 +296,20 @@
           box-shadow: var(--neo-box-shadow-flat);
         }
 
-        &.neo-checked .neo-switch-rail {
-          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 10%));
+        .neo-switch-rail {
+          background-color: transparent;
+        }
+
+        &.neo-checked {
+          background-color: color-mix(in srgb, transparent, currentcolor 10%);
+
+          &.neo-valid {
+            background-color: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-green-light)) 20%);
+          }
+
+          &.neo-invalid {
+            background-color: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 20%);
+          }
         }
       }
 
