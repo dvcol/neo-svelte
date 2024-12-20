@@ -180,6 +180,7 @@
   .neo-switch {
     &-container {
       --neo-switch-height: var(--neo-line-height, 1.5rem);
+      --neo-switch-toggle-width: 0.875rem;
       --neo-switch-spacing: 0.125rem;
       --neo-label-margin: 0 0 0 0.75rem;
       --neo-label-padding: 0;
@@ -203,7 +204,7 @@
       position: relative;
       display: inline-flex;
       width: 100%;
-      height: calc(100% - (var(--neo-switch-spacing) * 2));
+      height: calc(100% - var(--neo-switch-spacing) * 2);
       margin: var(--neo-switch-spacing);
       overflow: hidden;
       background-color: var(--neo-switch-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
@@ -222,7 +223,6 @@
       border-radius: 50%;
       box-shadow: var(--neo-switch-toggle-box-shadow, var(--neo-box-shadow-convex-2));
       transition:
-        translate 0.3s ease,
         left 0.3s ease,
         scale 0.3s ease;
       aspect-ratio: 1 / 1;
@@ -273,8 +273,7 @@
         }
 
         .neo-switch-toggle {
-          left: calc(100% - (var(--neo-switch-spacing) * 2));
-          translate: -100% 0;
+          left: calc(100% - var(--neo-switch-toggle-width) - (var(--neo-switch-spacing) * 2));
         }
       }
 
