@@ -214,7 +214,8 @@
 
   .neo-range {
     &-container {
-      --neo-range-height: var(--neo-line-height-sm, 1rem);
+      --neo-range-min-width: calc(var(--neo-range-height) / 2);
+      --neo-range-height: var(--neo-line-height-sm, 1.25rem);
       --neo-range-spacing: 0.125rem;
 
       display: inline-flex;
@@ -231,9 +232,12 @@
 
     &-rail {
       display: inline-flex;
+      align-items: center;
+      box-sizing: border-box;
       width: 100%;
       height: 100%;
-      overflow: hidden;
+      margin-right: calc(var(--neo-range-min-width) - var(--neo-range-spacing));
+      margin-left: var(--neo-range-min-width);
       background-color: var(--neo-range-rail-background, transparent);
       border-radius: var(--neo-switch-border-radius, var(--neo-border-radius-sm));
       transition: background-color 0.3s ease;
@@ -242,12 +246,13 @@
     &-toggle {
       z-index: var(--neo-z-index-in-front, 1);
       display: inline-flex;
+      align-self: center;
       box-sizing: border-box;
       height: 100%;
       margin-right: calc(0% - var(--neo-range-height) / 2);
       margin-left: calc(0% - var(--neo-range-height) / 2);
       background: var(--neo-range-toggle-background, var(--neo-background-color));
-      border-radius: 50%;
+      border-radius: var(--neo-border-radius-sm);
       box-shadow: var(--neo-range-toggle-box-shadow, var(--neo-box-shadow-convex-2));
       transition:
         right 0.3s ease,
@@ -257,20 +262,28 @@
       &-before,
       &-after {
         display: inline-flex;
-        min-width: calc(var(--neo-range-height) / 2 - var(--neo-range-spacing) * 2);
+        box-sizing: border-box;
         height: calc(100% - var(--neo-range-spacing) * 2);
         margin: var(--neo-range-spacing);
-        border-radius: inherit;
+        border-radius: var(--neo-border-radius-xs);
       }
 
       &-before {
-        width: var(--neo-range-progress, 0%);
-        background-color: red;
+        width: calc(var(--neo-range-min-width) - var(--neo-range-spacing) + var(--neo-range-progress, 0%));
+        margin-right: 0;
+        margin-left: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
+        background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
       }
 
       &-after {
-        width: calc(100% - var(--neo-range-progress, 0%));
-        background-color: blue;
+        flex: 1 1 auto;
+        margin-right: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
+        margin-left: 0;
+        background-color: var(--neo-switch-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
       }
     }
 
@@ -283,6 +296,7 @@
       height: var(--neo-range-height);
       margin: 0;
       padding: 0;
+      overflow: hidden;
       color: inherit;
       text-decoration: none;
       background: transparent;
@@ -299,6 +313,15 @@
 
       &.neo-rounded {
         border-radius: var(--neo-border-radius-lg);
+
+        .neo-range-toggle {
+          border-radius: 50%;
+
+          &-before,
+          &-after {
+            border-radius: var(--neo-border-radius-lg);
+          }
+        }
       }
 
       &.neo-valid {
@@ -318,13 +341,29 @@
 
       &.neo-disabled,
       &.neo-flat {
-        --neo-range-toggle-spacing: 0.25rem;
+        --neo-range-min-width: calc(var(--neo-range-height) / 2 - 2px);
 
         border-color: var(--neo-input-border-color, var(--neo-border-color));
+
+        .neo-range-rail {
+          margin-right: calc(var(--neo-range-min-width) + var(--neo-range-spacing));
+          margin-left: var(--neo-range-min-width);
+        }
 
         .neo-range-toggle {
           background-color: var(--neo-input-border-color, currentcolor);
           box-shadow: var(--neo-box-shadow-flat);
+
+          &-after,
+          &-before {
+            height: 100%;
+            border-radius: inherit;
+          }
+
+          &-before {
+            width: calc(var(--neo-range-min-width) + var(--neo-range-spacing) + var(--neo-range-progress, 0%));
+            margin-left: calc(0% - var(--neo-range-min-width));
+          }
         }
       }
 

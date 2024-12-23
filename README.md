@@ -28,6 +28,9 @@ Neomorphic ui library for svelte 5
 - [x] switch
 - [ ] slider
   - [ ] range
+  - [ ] inset
+  - [ ] before - after stepper
+  - [ ] custom before-after
   - [ ] steps/ticks
   - [ ] labels
 - [ ] select
