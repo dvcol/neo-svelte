@@ -7,7 +7,6 @@
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { toClass } from '~/utils/props.utils.js';
   import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -52,7 +51,7 @@
     style,
     ...buttonProps,
     toggle: true,
-    class: toClass('neo-password-toggle', buttonProps?.class),
+    class: ['neo-password-toggle', buttonProps?.class],
   });
 </script>
 

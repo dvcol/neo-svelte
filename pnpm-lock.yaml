@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@dvcol/common-utils':
-        specifier: ^1.18.3
-        version: 1.18.3
+        specifier: ^1.19.0
+        version: 1.19.0
       '@dvcol/svelte-utils':
         specifier: ^1.4.0
         version: 1.4.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.16.0)
@@ -360,8 +360,8 @@ packages:
   '@dual-bundle/import-meta-resolve@4.1.0':
     resolution: {integrity: sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg==}
 
-  '@dvcol/common-utils@1.18.3':
-    resolution: {integrity: sha512-8Q215wxY97+nu07i3cJfjaPs+3XedMtnRCdnQqJ497tcFml4ncK2W2l5/mJXg5uXaJXL40zM9k09f9NK/1oj5Q==}
+  '@dvcol/common-utils@1.19.0':
+    resolution: {integrity: sha512-14q3L+sGlAIAga77rkAksic238wataoVBQr9spGl6HKYNuu5BYROx017GfQ5BURwY4YYwPkPq66dxwhnXvGpgQ==}
     engines: {node: '>=20', pnpm: '>= 8'}
 
   '@dvcol/eslint-plugin-presets@1.3.11':
@@ -5141,7 +5141,7 @@ snapshots:
 
   '@dual-bundle/import-meta-resolve@4.1.0': {}
 
-  '@dvcol/common-utils@1.18.3':
+  '@dvcol/common-utils@1.19.0':
     dependencies:
       pretty-bytes: 6.1.1
 
@@ -5198,7 +5198,7 @@ snapshots:
 
   '@dvcol/svelte-simple-router@1.9.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.16.0)':
     dependencies:
-      '@dvcol/common-utils': 1.18.3
+      '@dvcol/common-utils': 1.19.0
       '@dvcol/svelte-utils': 1.5.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.16.0)
       svelte: 5.16.0
     transitivePeerDependencies:
@@ -5213,7 +5213,7 @@ snapshots:
 
   '@dvcol/svelte-utils@1.4.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.16.0)':
     dependencies:
-      '@dvcol/common-utils': 1.18.3
+      '@dvcol/common-utils': 1.19.0
       svelte: 5.16.0
       vite: 5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)
     transitivePeerDependencies:
@@ -5228,7 +5228,7 @@ snapshots:
 
   '@dvcol/svelte-utils@1.5.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.16.0)':
     dependencies:
-      '@dvcol/common-utils': 1.18.3
+      '@dvcol/common-utils': 1.19.0
       svelte: 5.16.0
       vite: 5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)
     transitivePeerDependencies:

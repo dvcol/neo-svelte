@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { toStyle } from '@dvcol/common-utils/common/class';
   import { height, width } from '@dvcol/svelte-utils/transition';
 
   import { untrack } from 'svelte';
@@ -13,7 +14,6 @@
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { toStyle } from '~/utils/props.utils.js';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */

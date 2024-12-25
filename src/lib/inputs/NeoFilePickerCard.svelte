@@ -13,7 +13,6 @@
   import IconPencil from '~/icons/IconPencil.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { toClass } from '~/utils/props.utils.js';
   import { enterDefaultTransition, leaveDefaultFadeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -97,7 +96,7 @@
   out={leaveDefaultFadeTransition}
   flex="1 1 auto"
   {...rest}
-  class={toClass('neo-file-picker-card', rest?.class)}
+  class={['neo-file-picker-card', rest?.class]}
 >
   {#if children}
     {@render children({
@@ -123,7 +122,7 @@
                   title="Remove file"
                   aria-label="Remove file"
                   {...removeButtonProps}
-                  class={toClass('neo-file-remove-button', removeButtonProps?.class)}
+                  class={['neo-file-remove-button', removeButtonProps?.class]}
                 >
                   {#snippet icon()}
                     <IconClear width="1rem" height="1rem" scale="1.5" stroke="1" />

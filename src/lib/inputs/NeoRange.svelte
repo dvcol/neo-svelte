@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { toStyle } from '@dvcol/common-utils/common/class';
   import { flip, useFloating } from '@skeletonlabs/floating-ui-svelte';
   import { fade } from 'svelte/transition';
 
@@ -9,7 +10,6 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { toStyle } from '~/utils/props.utils.js';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
   import { enterDefaultTransition } from '~/utils/transition.utils.js';
 

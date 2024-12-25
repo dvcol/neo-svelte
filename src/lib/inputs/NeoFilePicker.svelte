@@ -14,7 +14,6 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
-  import { toClass } from '~/utils/props.utils.js';
   import { computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -136,7 +135,7 @@
     text,
     style,
     ...buttonProps,
-    class: toClass('neo-file-picker-button', buttonProps?.class),
+    class: ['neo-file-picker-button', buttonProps?.class],
     onclick,
   });
 
@@ -318,7 +317,7 @@
     {...rest}
     oninput={mirrorInput}
     onchange={mirrorChange}
-    containerProps={{ ...groupProps, class: toClass('neo-file-picker-input-group', groupProps?.class) }}
+    containerProps={{ ...groupProps, class: ['neo-file-picker-input-group', groupProps?.class] }}
   >
     {#if drop}
       <div bind:this={overlayRef} class="neo-drop-overlay">
@@ -433,7 +432,7 @@
       out={outAction}
       transition={transitionAction}
       {...wrapperProps}
-      class={toClass('neo-file-picker-validation', wrapperProps?.class)}
+      class={['neo-file-picker-validation', wrapperProps?.class]}
     >
       {@render drag()}
     </NeoInputValidation>
