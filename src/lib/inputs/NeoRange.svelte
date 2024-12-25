@@ -2,7 +2,7 @@
   import { flip, useFloating } from '@skeletonlabs/floating-ui-svelte';
   import { fade } from 'svelte/transition';
 
-  import type { MouseEventHandler } from 'svelte/elements';
+  import type { FocusEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -58,11 +58,16 @@
     wrapperTag = 'div',
     wrapperProps,
     ...rest
-  } = $props();
+  }: {
+    value: number | [number, number];
+  } & any = $props();
   /* eslint-enable prefer-const */
 
   let initial = $state(value);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
+  const isArray = $derived(Array.isArray(value));
+  const progress = $derived(typeof value === 'number' ? value : value?.[0]);
+  const arrayProgress = $derived(typeof value === 'number' ? undefined : value?.[1]);
 
   let visible = $state(false);
   let messageId = $state(`neo-range-message-${crypto.randomUUID()}`);
@@ -94,7 +99,12 @@
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
 
   const show = $derived(focused || hovered);
-  const floating = useFloating({
+  const tooltip = useFloating({
+    placement: 'bottom',
+    middleware: [flip()],
+  });
+
+  const arrayTooltip = useFloating({
     placement: 'bottom',
     middleware: [flip()],
   });
@@ -109,12 +119,50 @@
     containerProps?.onmouseleave?.(e);
   };
 
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    focused = true;
+    containerProps?.onfocusin?.(e);
+  };
+
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    focused = false;
+    containerProps?.onfocusout?.(e);
+  };
+
   $effect(() => {
-    if (value > -1) floating.update();
+    if (value > -1) tooltip.update();
   });
 </script>
 
-<input type="range" bind:value />
+<input
+  type="range"
+  bind:value={() => {
+    if (isArray) return value[0];
+    return value;
+    // eslint-disable-next-line no-sequences
+  },
+  v => {
+    if (isArray) value[0] = v;
+    else value = v;
+  }}
+  max={arrayProgress}
+/>
+
+{#if isArray}
+  <input
+    type="range"
+    bind:value={() => {
+      if (isArray) return value[1];
+      return value;
+      // eslint-disable-next-line no-sequences
+    },
+    v => {
+      if (isArray) value[1] = v;
+      else value = v;
+    }}
+    min={progress}
+  />
+{/if}
 
 <NeoInputValidation
   tag={wrapperTag}
@@ -142,14 +190,21 @@
     {...containerProps}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
+    onfocusin={onFocusIn}
+    onfocusout={onFocusOut}
   >
     {#if show}
-      <span class="neo-range-value" bind:this={floating.elements.floating} style={floating.floatingStyles} transition:fade>
-        {value}
+      <span class="neo-range-value" bind:this={tooltip.elements.floating} style={tooltip.floatingStyles} transition:fade>
+        {progress}%
       </span>
     {/if}
-    <button
-      class="neo-range-button"
+    {#if isArray && show}
+      <span class="neo-range-value" bind:this={arrayTooltip.elements.floating} style={arrayTooltip.floatingStyles} transition:fade>
+        {arrayProgress}%
+      </span>
+    {/if}
+    <div
+      class="neo-range-slider"
       class:neo-rounded={rounded}
       class:neo-start={start}
       class:neo-glass={glass}
@@ -159,8 +214,8 @@
       class:neo-valid={validation && valid}
       class:neo-invalid={validation && !valid}
       style:--neo-range-box-shadow={boxShadow}
-      style:--neo-range-progress={`${value || 0}%`}
-      onclick={() => ref?.click()}
+      style:--neo-range-progress="{progress}%"
+      style:--neo-range-array-progress="{arrayProgress}%"
     >
       <span class="neo-range-input">
         <NeoBaseInput
@@ -169,11 +224,18 @@
           {id}
           bind:ref
           bind:initial
-          bind:value
+          bind:value={() => {
+            if (isArray) return value[0];
+            return value;
+            // eslint-disable-next-line no-sequences
+          },
+          v => {
+            if (isArray) value[0] = v;
+            else value = v;
+          }}
           bind:valid
           bind:dirty
           bind:touched
-          bind:focused
           bind:validationMessage
           {type}
           {disabled}
@@ -185,17 +247,25 @@
         />
       </span>
       <span class="neo-range-rail">
-        <span class="neo-range-toggle-before">
-          <!--   Toggle before   -->
+        <span class="neo-range-handle-before" class:neo-array={isArray}>
+          <!--   handle before   -->
         </span>
-        <span bind:this={floating.elements.reference} class="neo-range-toggle">
-          <!--   Toggle handle   -->
-        </span>
-        <span class="neo-range-toggle-after">
-          <!--   Toggle after   -->
+        <button bind:this={tooltip.elements.reference} class="neo-range-handle">
+          <!--   handle handle   -->
+        </button>
+        {#if isArray}
+          <span class="neo-range-handle-before neo-range">
+            <!--   handle before   -->
+          </span>
+          <button bind:this={arrayTooltip.elements.reference} class="neo-range-handle">
+            <!--   handle handle   -->
+          </button>
+        {/if}
+        <span class="neo-range-handle-after">
+          <!--   handle after   -->
         </span>
       </span>
-    </button>
+    </div>
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
     {#if loading !== undefined}
       <span class="neo-range-suffix">
@@ -243,21 +313,28 @@
       transition: background-color 0.3s ease;
     }
 
-    &-toggle {
+    &-handle {
       z-index: var(--neo-z-index-in-front, 1);
       display: inline-flex;
       align-self: center;
       box-sizing: border-box;
       height: 100%;
-      margin-right: calc(0% - var(--neo-range-height) / 2);
-      margin-left: calc(0% - var(--neo-range-height) / 2);
-      background: var(--neo-range-toggle-background, var(--neo-background-color));
+      margin: 0 calc(0% - var(--neo-range-height) / 2);
+      padding: 0;
+      color: inherit;
+      background: var(--neo-range-handle-background, var(--neo-background-color));
+      border: none;
       border-radius: var(--neo-border-radius-sm);
-      box-shadow: var(--neo-range-toggle-box-shadow, var(--neo-box-shadow-convex-2));
-      transition:
-        right 0.3s ease,
-        scale 0.3s ease;
+      box-shadow: var(--neo-range-handle-box-shadow, var(--neo-box-shadow-convex-2));
+      cursor: grab;
+      transition: scale 0.3s ease;
+      appearance: none;
       aspect-ratio: 1 / 1;
+
+      &:active {
+        cursor: grabbing;
+        scale: 0.95;
+      }
 
       &-before,
       &-after {
@@ -270,11 +347,22 @@
 
       &-before {
         width: calc(var(--neo-range-min-width) - var(--neo-range-spacing) + var(--neo-range-progress, 0%));
-        margin-right: 0;
-        margin-left: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
-        background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
         border-top-right-radius: 0 !important;
         border-bottom-right-radius: 0 !important;
+
+        &.neo-array {
+          margin-inline: calc((var(--neo-range-spacing) - var(--neo-range-min-width)) / 2);
+        }
+
+        &:not(.neo-array) {
+          margin-right: 0;
+          margin-left: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
+          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
+        }
+
+        &.neo-range {
+          width: calc(var(--neo-range-min-width) - var(--neo-range-spacing) - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%));
+        }
       }
 
       &-after {
@@ -287,7 +375,7 @@
       }
     }
 
-    &-button {
+    &-slider {
       display: inline-flex;
       align-items: center;
       box-sizing: border-box;
@@ -314,7 +402,7 @@
       &.neo-rounded {
         border-radius: var(--neo-border-radius-lg);
 
-        .neo-range-toggle {
+        .neo-range-handle {
           border-radius: 50%;
 
           &-before,
@@ -350,9 +438,13 @@
           margin-left: var(--neo-range-min-width);
         }
 
-        .neo-range-toggle {
+        .neo-range-handle {
           background-color: var(--neo-input-border-color, currentcolor);
           box-shadow: var(--neo-box-shadow-flat);
+
+          &:active {
+            scale: 1;
+          }
 
           &-after,
           &-before {
@@ -362,7 +454,20 @@
 
           &-before {
             width: calc(var(--neo-range-min-width) + var(--neo-range-spacing) + var(--neo-range-progress, 0%));
-            margin-left: calc(0% - var(--neo-range-min-width));
+
+            &.neo-array {
+              margin-inline: calc((0% - var(--neo-range-min-width)) / 2);
+            }
+
+            &:not(.neo-array) {
+              margin-left: calc(0% - var(--neo-range-min-width));
+            }
+
+            &.neo-range {
+              width: calc(
+                var(--neo-range-min-width) + var(--neo-range-spacing) - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%)
+              );
+            }
           }
         }
       }

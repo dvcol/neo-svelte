@@ -133,6 +133,7 @@
   const switchGroupState = new ValidationState({ type: 'checkbox' });
 
   const rangeState = new ValidationState({ type: 'range', value: 0 });
+  const rangeArrayState = new ValidationState({ type: 'range', value: [25, 75] });
 
   const onClear = () =>
     [
@@ -162,6 +163,7 @@
       switchGroupState,
 
       rangeState,
+      rangeArrayState,
     ].forEach(state => state.clear());
 
   const columns: ColumProps[] = [
@@ -860,6 +862,20 @@
         bind:dirty={rangeState.dirty}
         bind:valid={rangeState.valid}
         bind:value={rangeState.value}
+        {...options}
+      />
+    </SphereBackdrop>
+  </div>
+
+  <div class="column content">
+    <span class="label">Range</span>
+    {@render validationState(rangeArrayState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoRange
+        bind:touched={rangeArrayState.touched}
+        bind:dirty={rangeArrayState.dirty}
+        bind:valid={rangeArrayState.valid}
+        bind:value={rangeArrayState.value}
         {...options}
       />
     </SphereBackdrop>
