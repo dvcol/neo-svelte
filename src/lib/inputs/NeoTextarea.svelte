@@ -3,7 +3,7 @@
 
   import { tick } from 'svelte';
 
-  import type { EventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
+  import type { EventHandler, FocusEventHandler, FormEventHandler, PointerEventHandler } from 'svelte/elements';
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
@@ -131,14 +131,14 @@
     return { touched, dirty, valid, value };
   };
 
-  const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    containerProps?.onmouseenter?.(e);
+    containerProps?.onpointerenter?.(e);
   };
 
-  const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    containerProps?.onmouseleave?.(e);
+    containerProps?.onpointerleave?.(e);
   };
 
   const onFocus: FocusEventHandler<HTMLTextAreaElement> = e => {
@@ -415,8 +415,8 @@
     style:--neo-textarea-label-width={labelWidth}
     out:outFn={outProps}
     in:inFn={inProps}
-    onmouseenter={onMouseEnter}
-    onmouseleave={onMouseLeave}
+    onpointerenter={onPointerEnter}
+    onpointerleave={onPointerLeave}
     {...containerProps}
   >
     {#if label}

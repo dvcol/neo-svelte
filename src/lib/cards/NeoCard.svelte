@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { FocusEventHandler, MouseEventHandler } from 'svelte/elements';
+  import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -62,8 +62,8 @@
     onClose,
     onfocusin,
     onfocusout,
-    onmouseenter,
-    onmouseleave,
+    onpointerenter,
+    onpointerleave,
 
     // Other props
     contentTag = 'div',
@@ -92,14 +92,14 @@
 
   const segments = $derived([content, header, action, footer, media, close].filter(Boolean).length > 1);
 
-  const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    onmouseenter?.(e);
+    onpointerenter?.(e);
   };
 
-  const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    onmouseleave?.(e);
+    onpointerleave?.(e);
   };
 
   const onFocusIn: FocusEventHandler<HTMLInputElement> = e => {
@@ -192,8 +192,8 @@
   out:outFn={outProps}
   in:inFn={inProps}
   {...rest}
-  onmouseenter={onMouseEnter}
-  onmouseleave={onMouseLeave}
+  onpointerenter={onPointerEnter}
+  onpointerleave={onPointerLeave}
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}
 >

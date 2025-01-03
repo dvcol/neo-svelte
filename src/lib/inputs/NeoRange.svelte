@@ -3,7 +3,7 @@
   import { flip, useFloating } from '@skeletonlabs/floating-ui-svelte';
   import { fade } from 'svelte/transition';
 
-  import type { FocusEventHandler, MouseEventHandler } from 'svelte/elements';
+  import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -109,14 +109,14 @@
     middleware: [flip()],
   });
 
-  const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    containerProps?.onmouseenter?.(e);
+    containerProps?.onpointerenter?.(e);
   };
 
-  const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    containerProps?.onmouseleave?.(e);
+    containerProps?.onpointerleave?.(e);
   };
 
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
@@ -188,8 +188,8 @@
     role="none"
     class:neo-range-container={true}
     {...containerProps}
-    onmouseenter={onMouseEnter}
-    onmouseleave={onMouseLeave}
+    onpointerenter={onPointerEnter}
+    onpointerleave={onPointerLeave}
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
   >

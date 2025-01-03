@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EventHandler, FocusEventHandler, MouseEventHandler } from 'svelte/elements';
+  import type { EventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
   import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -297,13 +297,13 @@
     oninvalid?.(e);
   };
 
-  const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    containerProps?.onmouseenter?.(e);
+    containerProps?.onpointerenter?.(e);
   };
-  const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    containerProps?.onmouseleave?.(e);
+    containerProps?.onpointerleave?.(e);
   };
 
   const affix = $derived(clearable || loading !== undefined || validation);
@@ -359,8 +359,8 @@
     {...containerProps}
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
-    onmouseenter={onMouseEnter}
-    onmouseleave={onMouseLeave}
+    onpointerenter={onPointerEnter}
+    onpointerleave={onPointerLeave}
   >
     {#if before}
       <svelte:element this={beforeTag} class:neo-pin-before={true} class:neo-vertical={vertical} {...beforeProps}>

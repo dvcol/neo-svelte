@@ -1,7 +1,7 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
 
-  import type { MouseEventHandler } from 'svelte/elements';
+  import type { PointerEventHandler } from 'svelte/elements';
 
   import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
@@ -104,14 +104,14 @@
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
-  const onMouseEnter: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    containerProps?.onmouseenter?.(e);
+    containerProps?.onpointerenter?.(e);
   };
 
-  const onMouseLeave: MouseEventHandler<HTMLDivElement> = e => {
+  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    containerProps?.onmouseleave?.(e);
+    containerProps?.onpointerleave?.(e);
   };
 
   const typedValue = $derived(getValue());
@@ -326,8 +326,8 @@
     out:outFn={outProps}
     in:inFn={inProps}
     {...containerProps}
-    onmouseenter={onMouseEnter}
-    onmouseleave={onMouseLeave}
+    onpointerenter={onPointerEnter}
+    onpointerleave={onPointerLeave}
   >
     {@render prefix()}
     {#if label}
