@@ -31,6 +31,7 @@
     focused = $bindable(false),
     hovered = $bindable(false),
     disabled,
+    readonly,
     required,
     loading,
     validation,
@@ -86,7 +87,7 @@
     touched,
     dirty,
     valid,
-    readonly: rest.readonly,
+    readonly,
     disabled,
 
     // Styles
@@ -109,6 +110,11 @@
     middleware: [flip()],
   });
 
+  const updateTooltips = () => {
+    tooltip.update();
+    if (isArray) arrayTooltip.update();
+  };
+
   const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
     containerProps?.onpointerenter?.(e);
@@ -129,8 +135,57 @@
     containerProps?.onfocusout?.(e);
   };
 
+  let slider = $state<HTMLElement>();
+
+  // inverse logic => drag generate value recalculation
+  // switch all pointerenter to pointerenter
+
+  const setValue = (v: number, index = 0) => {
+    if (!isArray) value = v;
+    else if (index === 0 && v >= value[1]) value = [value[1], value[1]];
+    else if (index === 1 && v <= value[0]) value = [value[0], value[0]];
+    else value[index] = v;
+    updateTooltips();
+  };
+
+  const getDragHandler = (element: HTMLElement, index = 0) => {
+    const onMove = (event: PointerEvent) => {
+      if (disabled || readonly) return;
+      if (!element || !slider) return;
+      const { width, left } = slider.getBoundingClientRect();
+      const offset = event.clientX - left;
+      setValue(Math.round(Math.max(0, Math.min(10000, (offset / width) * 10000)) / 100), index);
+    };
+
+    const onUp = (event: PointerEvent) => {
+      if (!element) return;
+      element.removeEventListener('pointermove', onMove);
+      element.removeEventListener('pointerup', onUp);
+      element.releasePointerCapture(event.pointerId);
+    };
+
+    const onDown = (event: PointerEvent) => {
+      if (disabled || readonly) return;
+      if (!element || !slider) return;
+      event.stopPropagation();
+      element.setPointerCapture(event.pointerId);
+      element.addEventListener('pointermove', onMove);
+      element.addEventListener('pointerup', onUp);
+    };
+
+    return {
+      onpointercancel: onUp,
+      onpointerdown: onDown,
+      onpointerup: onUp,
+    };
+  };
+
+  const handler = $derived(getDragHandler(tooltip.elements.reference as HTMLElement));
+  const progressHandler = $derived(getDragHandler(arrayTooltip.elements.reference as HTMLElement, 1));
+
   $effect(() => {
-    if (value > -1) tooltip.update();
+    value; // eslint-disable-line no-unused-expressions
+    updateTooltips();
   });
 </script>
 
@@ -204,6 +259,7 @@
       </span>
     {/if}
     <div
+      bind:this={slider}
       class="neo-range-slider"
       class:neo-rounded={rounded}
       class:neo-start={start}
@@ -239,6 +295,7 @@
           bind:validationMessage
           {type}
           {disabled}
+          {readonly}
           {required}
           {...rest}
           hidden
@@ -250,14 +307,14 @@
         <span class="neo-range-handle-before" class:neo-array={isArray}>
           <!--   handle before   -->
         </span>
-        <button bind:this={tooltip.elements.reference} class="neo-range-handle">
+        <button bind:this={tooltip.elements.reference} class="neo-range-handle" {...handler}>
           <!--   handle handle   -->
         </button>
         {#if isArray}
           <span class="neo-range-handle-before neo-range">
             <!--   handle before   -->
           </span>
-          <button bind:this={arrayTooltip.elements.reference} class="neo-range-handle">
+          <button bind:this={arrayTooltip.elements.reference} class="neo-range-handle" {...progressHandler}>
             <!--   handle handle   -->
           </button>
         {/if}
@@ -466,7 +523,7 @@
 
             &.neo-range {
               width: calc(
-                var(--neo-range-min-width) + var(--neo-range-spacing) - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%)
+                var(--neo-range-min-width) * 2 - var(--neo-range-spacing) * 1.5 - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%)
               );
             }
           }
