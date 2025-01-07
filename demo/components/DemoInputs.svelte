@@ -134,6 +134,8 @@
 
   const rangeState = new ValidationState({ type: 'range', value: 0 });
   const rangeArrayState = new ValidationState({ type: 'range', value: [25, 75] });
+  const rangeMinMaxState = new ValidationState({ type: 'range', value: [-100, 100] });
+  const rangeSteppedState = new ValidationState({ type: 'range', value: 50 });
 
   const onClear = () =>
     [
@@ -858,6 +860,7 @@
     {@render validationState(rangeState, true)}
     <SphereBackdrop glass={options.glass}>
       <NeoRange
+        label="Range"
         bind:touched={rangeState.touched}
         bind:dirty={rangeState.dirty}
         bind:valid={rangeState.valid}
@@ -868,14 +871,50 @@
   </div>
 
   <div class="column content">
-    <span class="label">Range</span>
+    <span class="label">Stepped</span>
+    {@render validationState(rangeSteppedState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoRange
+        step={10}
+        label="Stepped"
+        bind:touched={rangeSteppedState.touched}
+        bind:dirty={rangeSteppedState.dirty}
+        bind:valid={rangeSteppedState.valid}
+        bind:value={rangeSteppedState.value}
+        {...options}
+      />
+    </SphereBackdrop>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column content">
+    <span class="label">Interval</span>
     {@render validationState(rangeArrayState, true)}
     <SphereBackdrop glass={options.glass}>
       <NeoRange
+        label="Interval"
         bind:touched={rangeArrayState.touched}
         bind:dirty={rangeArrayState.dirty}
         bind:valid={rangeArrayState.valid}
         bind:value={rangeArrayState.value}
+        {...options}
+      />
+    </SphereBackdrop>
+  </div>
+
+  <div class="column content">
+    <span class="label">Min Max</span>
+    {@render validationState(rangeMinMaxState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoRange
+        label="Min Max"
+        min={-200}
+        max={200}
+        bind:touched={rangeMinMaxState.touched}
+        bind:dirty={rangeMinMaxState.dirty}
+        bind:valid={rangeMinMaxState.valid}
+        bind:value={rangeMinMaxState.value}
         {...options}
       />
     </SphereBackdrop>

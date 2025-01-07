@@ -1,15 +1,17 @@
 <script lang="ts">
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { flip, useFloating } from '@skeletonlabs/floating-ui-svelte';
+  import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
 
-  import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
-  import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
+  import type { DragEventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
+
+  import type { NeoValidationFieldContext } from '~/inputs/common/neo-validation.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
-  import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import { clamp } from '~/utils/math.utils.js';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
   import { enterDefaultTransition } from '~/utils/transition.utils.js';
 
@@ -21,7 +23,6 @@
     error,
 
     // State
-    type = 'range',
     id = label ? `neo-range-${crypto.randomUUID()}` : undefined,
     ref = $bindable(),
     value = $bindable(0),
@@ -32,9 +33,11 @@
     hovered = $bindable(false),
     disabled,
     readonly,
-    required,
     loading,
     validation,
+    min = 0,
+    max = 100,
+    step,
 
     // Styles
     start,
@@ -58,29 +61,38 @@
     containerProps,
     wrapperTag = 'div',
     wrapperProps,
-    ...rest
   }: {
     value: number | [number, number];
   } & any = $props();
   /* eslint-enable prefer-const */
 
-  let initial = $state(value);
-  let validationMessage = $state<string>(ref?.validationMessage ?? '');
+  const initial = $state(Array.isArray(value) ? [...value] : value);
   const isArray = $derived(Array.isArray(value));
-  const progress = $derived(typeof value === 'number' ? value : value?.[0]);
-  const arrayProgress = $derived(typeof value === 'number' ? undefined : value?.[1]);
+  const lower = $derived(typeof value === 'number' ? value : value?.[0]);
+  const upper = $derived(typeof value === 'number' ? undefined : value?.[1]);
 
-  let visible = $state(false);
-  let messageId = $state(`neo-range-message-${crypto.randomUUID()}`);
-  const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
+  // TODO - tab focus & arrow steps
+  // TODO - vertical
+  // TODO - vefore/after stepped buttons
+
+  const lowerProgress = $derived(((lower - min) / (max - min)) * 100);
+  const upperProgress = $derived(((upper - min) / (max - min)) * 100);
+
+  const context = $derived<
+    NeoValidationFieldContext & {
+      // State
+      readonly?: boolean;
+      disabled?: boolean;
+
+      // Styles
+      rounded?: boolean;
+      glass?: boolean;
+      start?: boolean;
+      skeleton?: boolean;
+    }
+  >({
     // Ref
     ref,
-
-    // Methods
-    mark: ref?.mark,
-    clear: ref?.clear,
-    change: ref?.change,
-    validate: ref?.validate,
 
     // State
     value,
@@ -135,11 +147,6 @@
     containerProps?.onfocusout?.(e);
   };
 
-  let slider = $state<HTMLElement>();
-
-  // inverse logic => drag generate value recalculation
-  // switch all pointerenter to pointerenter
-
   const setValue = (v: number, index = 0) => {
     if (!isArray) value = v;
     else if (index === 0 && v >= value[1]) value = [value[1], value[1]];
@@ -148,84 +155,100 @@
     updateTooltips();
   };
 
+  const updateState = (val = value) => {
+    touched = true;
+    if (isArray) {
+      dirty = val[0] !== initial[0] || val[1] !== initial[1];
+      valid = val.every((v: number) => v >= min && v <= max);
+      return;
+    }
+    dirty = val !== initial;
+    valid = val >= min && val <= max;
+  };
+
+  let slider = $state<HTMLElement>();
+  const updateValue = (event: PointerEvent, index = 0) => {
+    if (disabled || readonly || !slider) return;
+    const { width, left } = slider.getBoundingClientRect();
+    const offset = event.clientX - left;
+    const ratio = Math.max(0, Math.min(1, offset / width));
+    const val = Math.round(min + ratio * (max - min));
+
+    if (step) {
+      const stepped = Math.round(val / step) * step;
+      setValue(stepped, index);
+    } else setValue(val, index);
+
+    updateState();
+  };
+
   const getDragHandler = (element: HTMLElement, index = 0) => {
-    const onMove = (event: PointerEvent) => {
-      if (disabled || readonly) return;
-      if (!element || !slider) return;
-      const { width, left } = slider.getBoundingClientRect();
-      const offset = event.clientX - left;
-      setValue(Math.round(Math.max(0, Math.min(10000, (offset / width) * 10000)) / 100), index);
+    const onMove: PointerEventHandler<HTMLElement> = event => {
+      if (!element) return;
+      updateValue(event, index);
     };
 
-    const onUp = (event: PointerEvent) => {
+    const onUp: PointerEventHandler<HTMLElement> = event => {
       if (!element) return;
-      element.removeEventListener('pointermove', onMove);
-      element.removeEventListener('pointerup', onUp);
+      element.removeEventListener('pointermove', onMove as EventListener);
+      element.removeEventListener('pointerup', onUp as EventListener);
       element.releasePointerCapture(event.pointerId);
     };
 
-    const onDown = (event: PointerEvent) => {
+    const onDown: PointerEventHandler<HTMLElement> = event => {
       if (disabled || readonly) return;
       if (!element || !slider) return;
       event.stopPropagation();
       element.setPointerCapture(event.pointerId);
-      element.addEventListener('pointermove', onMove);
-      element.addEventListener('pointerup', onUp);
+      element.addEventListener('pointermove', onMove as EventListener);
+      element.addEventListener('pointerup', onUp as EventListener);
     };
+
+    const onDrag: DragEventHandler<HTMLElement> = e => e.preventDefault();
 
     return {
       onpointercancel: onUp,
       onpointerdown: onDown,
       onpointerup: onUp,
+      ondragstart: onDrag,
     };
   };
 
   const handler = $derived(getDragHandler(tooltip.elements.reference as HTMLElement));
   const progressHandler = $derived(getDragHandler(arrayTooltip.elements.reference as HTMLElement, 1));
 
+  const onClick: PointerEventHandler<HTMLElement> = e => {
+    let index = 0;
+    if (isArray && tooltip?.elements.reference && arrayTooltip?.elements.reference) {
+      // select handle closest to the click
+      const lowerOffset = Math.abs(e.clientX - tooltip.elements.reference.getBoundingClientRect().left);
+      const upperOffset = Math.abs(arrayTooltip.elements.reference.getBoundingClientRect().left - e.clientX);
+      index = lowerOffset <= upperOffset ? 0 : 1;
+    }
+    updateValue(e, index);
+    if (index === 0) handler.onpointerdown(e);
+    else progressHandler.onpointerdown(e);
+  };
+
   $effect(() => {
-    value; // eslint-disable-line no-unused-expressions
+    if (isArray) {
+      value[0] = clamp(value[0], min, max);
+      value[1] = clamp(value[1], min, max);
+    } else {
+      value = clamp(value, min, max);
+    }
     updateTooltips();
+  });
+
+  $effect(() => {
+    if (innerWidth.current) updateTooltips();
   });
 </script>
 
-<input
-  type="range"
-  bind:value={() => {
-    if (isArray) return value[0];
-    return value;
-    // eslint-disable-next-line no-sequences
-  },
-  v => {
-    if (isArray) value[0] = v;
-    else value = v;
-  }}
-  max={arrayProgress}
-/>
-
-{#if isArray}
-  <input
-    type="range"
-    bind:value={() => {
-      if (isArray) return value[1];
-      return value;
-      // eslint-disable-next-line no-sequences
-    },
-    v => {
-      if (isArray) value[1] = v;
-      else value = v;
-    }}
-    min={progress}
-  />
-{/if}
-
 <NeoInputValidation
   tag={wrapperTag}
-  bind:visible
-  bind:messageId
   {valid}
   {validation}
-  {validationMessage}
   {error}
   {rounded}
   {context}
@@ -240,6 +263,7 @@
 >
   <svelte:element
     this={containerTag}
+    bind:this={ref}
     role="none"
     class:neo-range-container={true}
     {...containerProps}
@@ -250,80 +274,50 @@
   >
     {#if show}
       <span class="neo-range-value" bind:this={tooltip.elements.floating} style={tooltip.floatingStyles} transition:fade>
-        {progress}%
+        {lower}
       </span>
     {/if}
     {#if isArray && show}
       <span class="neo-range-value" bind:this={arrayTooltip.elements.floating} style={arrayTooltip.floatingStyles} transition:fade>
-        {arrayProgress}%
+        {upper}
       </span>
     {/if}
-    <div
-      bind:this={slider}
-      class="neo-range-slider"
-      class:neo-rounded={rounded}
-      class:neo-start={start}
-      class:neo-glass={glass}
-      class:neo-disabled={disabled}
-      class:neo-skeleton={skeleton}
-      class:neo-flat={!elevation}
-      class:neo-valid={validation && valid}
-      class:neo-invalid={validation && !valid}
-      style:--neo-range-box-shadow={boxShadow}
-      style:--neo-range-progress="{progress}%"
-      style:--neo-range-array-progress="{arrayProgress}%"
-    >
-      <span class="neo-range-input">
-        <NeoBaseInput
-          aria-invalid={valid === undefined ? undefined : !valid}
-          aria-describedby={visible ? messageId : undefined}
-          {id}
-          bind:ref
-          bind:initial
-          bind:value={() => {
-            if (isArray) return value[0];
-            return value;
-            // eslint-disable-next-line no-sequences
-          },
-          v => {
-            if (isArray) value[0] = v;
-            else value = v;
-          }}
-          bind:valid
-          bind:dirty
-          bind:touched
-          bind:validationMessage
-          {type}
-          {disabled}
-          {readonly}
-          {required}
-          {...rest}
-          hidden
-          aria-hidden
-          tabindex={-1}
-        />
-      </span>
-      <span class="neo-range-rail">
-        <span class="neo-range-handle-before" class:neo-array={isArray}>
-          <!--   handle before   -->
-        </span>
-        <button bind:this={tooltip.elements.reference} class="neo-range-handle" {...handler}>
-          <!--   handle handle   -->
-        </button>
-        {#if isArray}
-          <span class="neo-range-handle-before neo-range">
+    <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {...labelProps}>
+      <div
+        class="neo-range-slider"
+        class:neo-rounded={rounded}
+        class:neo-start={start}
+        class:neo-glass={glass}
+        class:neo-disabled={disabled}
+        class:neo-skeleton={skeleton}
+        class:neo-flat={!elevation}
+        class:neo-valid={validation && valid}
+        class:neo-invalid={validation && !valid}
+        style:--neo-range-box-shadow={boxShadow}
+        style:--neo-range-progress="{lowerProgress}%"
+        style:--neo-range-array-progress="{upperProgress}%"
+      >
+        <span role="region" class="neo-range-rail" bind:this={slider} onpointerdown={onClick}>
+          <span class="neo-range-handle-before" class:neo-array={isArray}>
             <!--   handle before   -->
           </span>
-          <button bind:this={arrayTooltip.elements.reference} class="neo-range-handle" {...progressHandler}>
+          <button bind:this={tooltip.elements.reference} class="neo-range-handle" {...handler}>
             <!--   handle handle   -->
           </button>
-        {/if}
-        <span class="neo-range-handle-after">
-          <!--   handle after   -->
+          {#if isArray}
+            <span class="neo-range-handle-before neo-range">
+              <!--   handle before   -->
+            </span>
+            <button bind:this={arrayTooltip.elements.reference} class="neo-range-handle" {...progressHandler}>
+              <!--   handle handle   -->
+            </button>
+          {/if}
+          <span class="neo-range-handle-after">
+            <!--   handle after   -->
+          </span>
         </span>
-      </span>
-    </div>
-    <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
+      </div>
+    </NeoLabel>
     {#if loading !== undefined}
       <span class="neo-range-suffix">
         {#if loading}
@@ -344,6 +338,8 @@
       --neo-range-min-width: calc(var(--neo-range-height) / 2);
       --neo-range-height: var(--neo-line-height-sm, 1.25rem);
       --neo-range-spacing: 0.125rem;
+      --neo-label-padding: 0;
+      --neo-label-margin: var(--neo-shadow-margin) 0.25rem;
 
       display: inline-flex;
       align-items: center;
@@ -351,10 +347,6 @@
       min-width: calc(var(--neo-range-height) * 12);
       margin: 0;
       padding: calc(0.375rem + var(--neo-range-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
-    }
-
-    &-input {
-      display: none;
     }
 
     &-rail {
@@ -366,7 +358,7 @@
       margin-right: calc(var(--neo-range-min-width) - var(--neo-range-spacing));
       margin-left: var(--neo-range-min-width);
       background-color: var(--neo-range-rail-background, transparent);
-      border-radius: var(--neo-switch-border-radius, var(--neo-border-radius-sm));
+      border-radius: var(--neo-range-border-radius, var(--neo-border-radius-sm));
       transition: background-color 0.3s ease;
     }
 
@@ -386,6 +378,7 @@
       cursor: grab;
       transition: scale 0.3s ease;
       appearance: none;
+      touch-action: none;
       aspect-ratio: 1 / 1;
 
       &:active {
@@ -419,7 +412,7 @@
         }
 
         &:not(.neo-array) {
-          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
+          background-color: var(--neo-range-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
         }
       }
 
@@ -427,7 +420,7 @@
         flex: 1 1 auto;
         margin-right: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
         margin-left: 0;
-        background-color: var(--neo-switch-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
+        background-color: var(--neo-range-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
         border-top-left-radius: 0 !important;
         border-bottom-left-radius: 0 !important;
       }
@@ -471,11 +464,11 @@
       }
 
       &.neo-valid {
-        --neo-range-rail-background: color-mix(in srgb, transparent, var(--neo-range-valid-color, var(--neo-color-success)) 30%);
+        --neo-range-checked-background: color-mix(in srgb, transparent, var(--neo-range-valid-color, var(--neo-color-success)) 30%);
       }
 
       &.neo-invalid {
-        --neo-range-rail-background: color-mix(in srgb, transparent, var(--neo-range-invalid-color, var(--neo-color-error)) 30%);
+        --neo-range-checked-background: color-mix(in srgb, transparent, var(--neo-range-invalid-color, var(--neo-color-error)) 30%);
       }
 
       &.neo-disabled {
