@@ -10,4 +10,54 @@
   --neo-font-size-md: 1.125rem;
   --neo-font-size-lg: 1.25rem;
   --neo-font-size-xl: 1.5rem;
+  --neo-font-size-xxl: 1.875rem;
+  --neo-font-size-xxxl: 2.125rem;
+
+  /* Line height */
+  --neo-line-height-xxs: 0.75rem;
+  --neo-line-height-xs: 1rem;
+  --neo-line-height-sm: 1.25rem;
+  --neo-line-height: 1.5rem;
+}
+
+@mixin heading {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  h1 {
+    font-size: var(--neo-h1-font-size, var(--neo-font-size-xxxl));
+    line-height: var(--neo-h1-line-height, 1);
+  }
+
+  h2 {
+    font-size: var(--neo-h2-font-size, var(--neo-font-size-xxl));
+    line-height: var(--neo-h2-line-height, 1.067);
+  }
+
+  h3 {
+    font-size: var(--neo-h3-font-size, var(--neo-font-size-xl));
+    line-height: var(--neo-h3-line-height, 1.083);
+  }
+
+  h4 {
+    font-size: var(--neo-h4-font-size, var(--neo-font-size-lg));
+    line-height: var(--neo-h4-line-height, 1.1);
+  }
+
+  h5 {
+    font-size: var(--neo-h5-font-size, var(--neo-font-size-md));
+    line-height: var(--neo-h5-line-height, 1.111);
+  }
+
+  h6 {
+    font-size: var(--neo-h6-font-size, var(--neo-font-size));
+    line-height: var(--neo-h6-line-height, 1.125);
+  }
 }

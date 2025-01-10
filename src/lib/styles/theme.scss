@@ -1,8 +1,6 @@
-@use 'src/lib/styles/common/z-index' as z-index;
 @use 'src/lib/styles/common/colors' as colors;
 @use 'src/lib/styles/common/typography' as typography;
 @use 'src/lib/styles/common/shadows' as shadows;
-@use 'src/lib/styles/common/filters' as filters;
 @use 'src/lib/styles/common/spacing' as spacing;
 @use 'src/lib/styles/common/utils' as utils;
 @use 'src/lib/styles/common/properties';
@@ -18,12 +16,13 @@
     -webkit-tap-highlight-color: transparent;
 
     @include utils.utils;
-    @include z-index.z-index;
-    @include typography.typography;
+    @include utils.z-index;
     @include spacing.spacing;
-    @include filters.filters;
+    @include typography.typography;
+    @include utils.filters;
     @include colors.colors;
     @include shadows.shadows;
+    @include typography.heading;
 
     /* cursor highlight */
     *::selection {
@@ -40,6 +39,20 @@
       &:not([neo-theme='light']) {
         @include colors.dark-theme;
       }
+    }
+
+    @media (width <= 768px) {
+      --neo-h1-font-size: var(--neo-font-size-xxl);
+      --neo-h2-font-size: var(--neo-font-size-xl);
+      --neo-h3-font-size: var(--neo-font-size-lg);
+      --neo-h4-font-size: var(--neo-font-size-md);
+      --neo-h5-font-size: var(--neo-font-size);
+    }
+
+    @media (width <= 375px) {
+      --neo-h1-font-size: var(--neo-font-size-xl);
+      --neo-h2-font-size: var(--neo-font-size-lg);
+      --neo-h4-font-size: var(--neo-font-size);
     }
   }
 }
