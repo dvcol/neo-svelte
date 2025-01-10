@@ -1,5 +1,48 @@
-# neo-svelte
-Neomorphic ui library for svelte 5
+<h1 align="center">Welcome to <i>Neo Svelte</i></h1>
+<h3 align="center">A neo-morphic ui library for svelte 5</h3>
+
+<p>
+  <img src="https://img.shields.io/badge/pnpm-%3E%3D8.0.0-blue.svg" />
+  <img src="https://img.shields.io/badge/node-%3E%3D20.0.0-blue.svg" />
+  <a href="https://github.com/dvcol/neo-svelte#readme" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+  </a>
+  <a href="https://github.com/dvcol/neo-svelte/graphs/commit-activity" target="_blank">
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
+  </a>
+  <a href="https://github.com/dvcol/neo-svelte/blob/master/LICENSE" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/github/license/dvcol/neo-svelte" />
+  </a>
+ <a href="https://paypal.me/dvcol/5" target="_blank">
+    <img alt="donate" src="https://img.shields.io/badge/Donate%20€-PayPal-brightgreen.svg" />
+  </a>
+</p>
+
+## Prerequisites
+
+Note: Svelte Simple Router is a svelte 5 native library, and will not work with prior versions of svelte.
+
+- svelte >= 5.0.0
+
+## Install
+
+```sh
+pnpm add @dvcol/neo-svelte
+```
+
+## Getting Started
+
+Wrap any component inside the style provider
+
+```svelte
+<script lang="ts">
+  import { NeoThemeProvider } from '@dvcol/neo-svelte';
+</script>
+
+<NeoThemeProvider>
+  ...
+</NeoThemeProvider>
+```
 
 ## TODO
 - [ ] @media any-pointer:coarse any-hover:none
@@ -26,13 +69,12 @@ Neomorphic ui library for svelte 5
 - [x] time/date/week
   - [ ] range
 - [x] switch
-- [ ] slider
-  - [ ] range
-  - [ ] inset
-  - [ ] before - after stepper
+- [x] slider
+  - [X] range
+  - [X] inset
   - [ ] custom before-after
-  - [ ] steps/ticks
-  - [ ] labels
+  - [x] steps
+  - [ ] vertical
 - [ ] select
 - [ ] table
 - [ ] pagination
@@ -83,6 +125,21 @@ Neomorphic ui library for svelte 5
   - [ ] grid
   - [ ] masonry ?
 
+## Author
 
-# TODO (work in progress)
+* Github: [@dvcol](https://github.com/dvcol)
 
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+ <a href="https://paypal.me/dvcol/5" target="_blank">
+    <img alt="donate" src="https://img.shields.io/badge/Donate%20€-PayPal-brightgreen.svg" />
+</a>
+
+## 📝 License
+
+This project is [MIT](https://github.com/dvcol/neo-svelte/blob/master/LICENSE) licensed.
+
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

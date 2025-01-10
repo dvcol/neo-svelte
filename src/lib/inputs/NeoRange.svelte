@@ -1,12 +1,14 @@
 <script lang="ts">
   import { toStyle } from '@dvcol/common-utils/common/class';
-  import { flip, useFloating } from '@skeletonlabs/floating-ui-svelte';
+  import { flip, offset, useFloating } from '@skeletonlabs/floating-ui-svelte';
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
 
   import type { DragEventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
 
   import type { NeoValidationFieldContext } from '~/inputs/common/neo-validation.model.js';
+
+  import type { NeoRangeProps } from '~/inputs/neo-range.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
@@ -33,7 +35,7 @@
     hovered = $bindable(false),
     disabled,
     readonly,
-    loading,
+    loading, // TODO
     validation,
     min = 0,
     max = 100,
@@ -61,22 +63,20 @@
     containerProps,
     wrapperTag = 'div',
     wrapperProps,
-  }: {
-    value: number | [number, number];
-  } & any = $props();
+  }: NeoRangeProps = $props();
   /* eslint-enable prefer-const */
 
-  const initial = $state(Array.isArray(value) ? [...value] : value);
   const isArray = $derived(Array.isArray(value));
+  const initial = $state(Array.isArray(value) ? [...value] : value);
   const lower = $derived(typeof value === 'number' ? value : value?.[0]);
   const upper = $derived(typeof value === 'number' ? undefined : value?.[1]);
 
   // TODO - tab focus & arrow steps
   // TODO - vertical
-  // TODO - vefore/after stepped buttons
+  // TODO - before/after stepped buttons
 
   const lowerProgress = $derived(((lower - min) / (max - min)) * 100);
-  const upperProgress = $derived(((upper - min) / (max - min)) * 100);
+  const upperProgress = $derived(upper ? ((upper - min) / (max - min)) * 100 : undefined);
 
   const context = $derived<
     NeoValidationFieldContext & {
@@ -114,12 +114,12 @@
   const show = $derived(focused || hovered);
   const tooltip = useFloating({
     placement: 'bottom',
-    middleware: [flip()],
+    middleware: [flip(), offset(4)],
   });
 
   const arrayTooltip = useFloating({
     placement: 'bottom',
-    middleware: [flip()],
+    middleware: [flip(), offset(4)],
   });
 
   const updateTooltips = () => {
@@ -148,7 +148,7 @@
   };
 
   const setValue = (v: number, index = 0) => {
-    if (!isArray) value = v;
+    if (!Array.isArray(value)) value = v;
     else if (index === 0 && v >= value[1]) value = [value[1], value[1]];
     else if (index === 1 && v <= value[0]) value = [value[0], value[0]];
     else value[index] = v;
@@ -157,8 +157,8 @@
 
   const updateState = (val = value) => {
     touched = true;
-    if (isArray) {
-      dirty = val[0] !== initial[0] || val[1] !== initial[1];
+    if (Array.isArray(val)) {
+      if (Array.isArray(initial)) dirty = val[0] !== initial[0] || val[1] !== initial[1];
       valid = val.every((v: number) => v >= min && v <= max);
       return;
     }
@@ -170,8 +170,8 @@
   const updateValue = (event: PointerEvent, index = 0) => {
     if (disabled || readonly || !slider) return;
     const { width, left } = slider.getBoundingClientRect();
-    const offset = event.clientX - left;
-    const ratio = Math.max(0, Math.min(1, offset / width));
+    const diff = event.clientX - left;
+    const ratio = Math.max(0, Math.min(1, diff / width));
     const val = Math.round(min + ratio * (max - min));
 
     if (step) {
@@ -231,7 +231,7 @@
   };
 
   $effect(() => {
-    if (isArray) {
+    if (Array.isArray(value)) {
       value[0] = clamp(value[0], min, max);
       value[1] = clamp(value[1], min, max);
     } else {
@@ -250,11 +250,11 @@
   {valid}
   {validation}
   {error}
-  {rounded}
   {context}
   {message}
   {messageTag}
   {messageProps}
+  {rounded}
   in={inAction}
   out={outAction}
   transition={transitionAction}

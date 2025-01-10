@@ -2,6 +2,8 @@ import type { NeoBaseInputProps, NeoInputProps } from '~/inputs/common/neo-input
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
 
+export type NeoCheckboxElevation = -2 | -1 | 0 | 1 | 2;
+
 /**
  * Note: Checkbox group are exclusive due to the api design.
  *
@@ -12,7 +14,6 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     NeoInputProps,
     | 'start'
     | 'glass'
-    | 'elevation'
     | 'rounded'
     | 'readonly'
     | 'loading'
@@ -30,4 +31,10 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     | 'wrapperProps'
   > &
   Pick<NeoLabelProps, 'label'> &
-  Pick<NeoValidationProps, 'error' | 'message' | 'messageTag' | 'messageProps'>;
+  Pick<NeoValidationProps, 'error' | 'message' | 'messageTag' | 'messageProps'> & {
+    /**
+     * Input elevation.
+     * @default 2
+     */
+    elevation?: NeoCheckboxElevation;
+  };
