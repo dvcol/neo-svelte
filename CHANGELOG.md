@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/dvcol/neo-svelte/compare/v0.1.4...v0.1.5) (2025-01-10)
+
+
+### Features
+
+* **input:** adds basic select support ([f0a7973](https://github.com/dvcol/neo-svelte/commit/f0a797395a67017a437e9f32229d0ccc578b47a4))
+* **input:** adds range prefix & suffix ([1c6ab9c](https://github.com/dvcol/neo-svelte/commit/1c6ab9c731a9964dc921e6f11f77a0c45a7bfaf7))
+* **input:** adds range slider drag support ([f9c6275](https://github.com/dvcol/neo-svelte/commit/f9c6275ff0bf3cb717de94cbe75190237ca143be))
+* **input:** adds styling to labels ([7823b84](https://github.com/dvcol/neo-svelte/commit/7823b845e58762e51dae6eba36cc42f73b3349f2))
+* **input:** range switch to variable value ([41e491d](https://github.com/dvcol/neo-svelte/commit/41e491dd10ef6992c3e1b679edf4846c037f9e4c))
+
+
+### Bug Fixes
+
+* **input:** adjust range spacing ([d68bd8f](https://github.com/dvcol/neo-svelte/commit/d68bd8f2d7ebfd3c27b1d8f87aa15748eebd98be))
+
 ### [0.1.4](https://github.com/dvcol/neo-svelte/compare/v0.1.3...v0.1.4) (2024-12-31)
 
 
