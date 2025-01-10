@@ -4,25 +4,29 @@
 // }
 
 import type { Snippet } from 'svelte';
-import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
+import type { HTMLInputAttributes, HTMLSelectAttributes, HTMLTextareaAttributes } from 'svelte/elements';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
-export type NeoInputValue<T extends HTMLInputElement | HTMLTextAreaElement> = T extends HTMLTextAreaElement
+export type NeoInputValue<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = T extends HTMLTextAreaElement
   ? HTMLTextareaAttributes['value']
-  : HTMLInputAttributes['value'] | HTMLInputAttributes['checked'] | HTMLInputAttributes['bind:files'];
+  : T extends HTMLSelectElement
+    ? HTMLSelectAttributes['value']
+    : HTMLInputAttributes['value'] | HTMLInputAttributes['checked'] | HTMLInputAttributes['bind:files'];
 
-type NeoInputHTMLAttributes<T extends HTMLInputElement | HTMLTextAreaElement> = T extends HTMLTextAreaElement
+type NeoInputHTMLAttributes<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = T extends HTMLTextAreaElement
   ? HTMLTextareaAttributes
-  : HTMLInputAttributes & {
-      files?: HTMLInputAttributes['bind:files'];
-      group?: HTMLInputAttributes['bind:group'];
-    };
+  : T extends HTMLSelectElement
+    ? HTMLSelectAttributes & { type?: 'select' }
+    : HTMLInputAttributes & {
+        files?: HTMLInputAttributes['bind:files'];
+        group?: HTMLInputAttributes['bind:group'];
+      };
 
-export type NeoInputState<T extends HTMLInputElement | HTMLTextAreaElement> = NeoValidationState<NeoInputValue<T>>;
+export type NeoInputState<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = NeoValidationState<NeoInputValue<T>>;
 
 export type NeoInputStyles = {
   // Styles
@@ -73,7 +77,7 @@ export type NeoInputStyles = {
   readonly?: boolean;
 };
 
-export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement> = {
+export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = {
   /**
    * Change the input state. If no value is provided, the state attributes will be unchanged.
    * @param state
@@ -102,7 +106,7 @@ export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement> = 
 };
 
 export type NeoInputElevation = ShadowElevation;
-export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement> = NeoValidationFieldContext<T, NeoInputValue<T>> &
+export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = NeoValidationFieldContext<T, NeoInputValue<T>> &
   Partial<NeoInputStyles & NeoInputMethods<T>>;
 
 export const NeoInputLabelPosition = {
@@ -114,7 +118,13 @@ export const NeoInputLabelPosition = {
 
 export type NeoInputLabelPositions = (typeof NeoInputLabelPosition)[keyof typeof NeoInputLabelPosition];
 
-export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement = NeoInputHTMLElement> = {
+export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement = NeoInputHTMLElement> = {
+  // Snippets
+  /**
+   * A snippet to display as the input children.
+   */
+  children?: Snippet;
+
   // Styles
   /**
    * If `true`, the input will have no left padding/border radius.
@@ -192,7 +202,7 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement =
   NeoInputState<T> &
   NeoInputHTMLAttributes<T>;
 
-export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement> = {
+export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = {
   // Snippets
 
   /**
@@ -311,7 +321,7 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement>
   NeoInputStyles &
   HTMLTransitionProps;
 
-export type NeoInputProps<T extends HTMLInputElement = NeoInputHTMLElement> = {
+export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoInputHTMLElement> = {
   // Snippets
 
   /**
@@ -370,4 +380,5 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
   HTMLTextareaAttributes;
 
 export type NeoInputHTMLElement<T extends HTMLInputElement = HTMLInputElement> = T & Partial<NeoInputMethods<T>>;
+export type NeoSelectHTMLElement<T extends HTMLSelectElement = HTMLSelectElement> = T & Partial<NeoInputMethods<T>>;
 export type NeoTextareaHTMLElement<T extends HTMLTextAreaElement = HTMLTextAreaElement> = T & Partial<NeoInputMethods<T>>;

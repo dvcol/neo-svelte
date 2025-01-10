@@ -85,7 +85,7 @@
     messageProps,
     messageTag = 'div',
     ...rest
-  }: NeoInputProps = $props();
+  }: NeoInputProps<NeoInputHTMLElement> = $props();
   /* eslint-enable prefer-const */
 
   const getValue = () => {
@@ -131,9 +131,15 @@
     if (disabled || readonly) return;
     ref?.clear?.();
   };
+
   const onFocus = () => {
     if (focused || disabled || readonly) return;
     ref?.focus();
+  };
+
+  const onLabelClick = () => {
+    if (disabled || readonly || rest.type !== 'select') return;
+    ref?.showPicker?.();
   };
 
   let first = $state(true);
@@ -278,7 +284,9 @@
     after={!!(after || affix)}
     before={!!before}
     {...rest}
-  />
+  >
+    {@render children?.(context)}
+  </NeoBaseInput>
 {/snippet}
 
 {#snippet labelGroup()}
@@ -349,6 +357,7 @@
         label={labelGroup}
         required={rest.required}
         {disabled}
+        onclick={onLabelClick}
         {...labelProps}
       >
         {@render input()}
@@ -357,7 +366,6 @@
       {@render input()}
     {/if}
     {@render suffix()}
-    {@render children?.(context)}
   </svelte:element>
 {/snippet}
 

@@ -116,6 +116,8 @@
   const invalidState = new ValidationState();
   const customState = new ValidationState();
 
+  const selectState = new ValidationState();
+
   const numberState = new ValidationState({ type: 'number', value: 0 });
 
   const pinState = new ValidationState();
@@ -585,6 +587,33 @@
     {/each}
   </div>
 </form>
+
+<!--  Select  -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Select</span>
+    {@render validationState(selectState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoInput
+        type="select"
+        validation
+        required
+        label="Select"
+        bind:touched={selectState.touched}
+        bind:dirty={selectState.dirty}
+        bind:valid={selectState.valid}
+        bind:value={selectState.value}
+        {...options}
+        size={undefined}
+      >
+        <option value="" selected>Select an option below</option>
+        <option value="value 1">Label for value 1</option>
+        <option value="value 2">Label for value 2</option>
+        <option value="value 3">Label for value 3</option>
+      </NeoInput>
+    </SphereBackdrop>
+  </div>
+</div>
 
 <!--  Password  -->
 <div class="row">

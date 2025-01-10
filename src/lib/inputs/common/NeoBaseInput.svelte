@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
 
-  import type { EventHandler, FocusEventHandler, FormEventHandler } from 'svelte/elements';
+  import type { EventHandler, FocusEventHandler, FormEventHandler, HTMLSelectAttributes } from 'svelte/elements';
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
@@ -10,6 +10,9 @@
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
+    children,
+
     // States
     id,
     ref = $bindable(),
@@ -149,36 +152,36 @@
     return validate();
   };
 
-  const onFocus: FocusEventHandler<HTMLInputElement> = e => {
+  const onFocus: FocusEventHandler<HTMLElement> = e => {
     focused = true;
     touched = true;
-    onfocus?.(e);
+    onfocus?.(e as SvelteEvent<FocusEvent, HTMLInputElement>);
   };
 
-  const onBlur: FocusEventHandler<HTMLInputElement> = e => {
+  const onBlur: FocusEventHandler<HTMLElement> = e => {
     focused = false;
     validate({ dirty: dirtyOnBlur, valid: validateOnBlur });
-    onblur?.(e);
+    onblur?.(e as SvelteEvent<FocusEvent, HTMLInputElement>);
   };
 
-  const onInput: FormEventHandler<HTMLInputElement> = e => {
+  const onInput: FormEventHandler<HTMLElement> = e => {
     touched = true;
     validate({ dirty: dirtyOnInput, valid: validateOnInput });
-    oninput?.(e);
+    oninput?.(e as SvelteEvent<InputEvent, HTMLInputElement>);
   };
 
-  const onChange: FormEventHandler<HTMLInputElement> = e => {
+  const onChange: FormEventHandler<HTMLElement> = e => {
     touched = true;
     validate();
     fallback();
-    onchange?.(e);
+    onchange?.(e as SvelteEvent<InputEvent, HTMLInputElement>);
   };
 
-  const onInvalid: EventHandler<Event, HTMLInputElement> = e => {
+  const onInvalid: EventHandler<Event, HTMLElement> = e => {
     valid = false;
     validationMessage = ref?.validationMessage;
     e.preventDefault();
-    oninvalid?.(e);
+    oninvalid?.(e as SvelteEvent<Event, HTMLInputElement>);
   };
 
   $effect(() => {
@@ -195,7 +198,27 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-{#if rest.type === 'file'}
+{#if rest.type === 'select'}
+  <select
+    aria-invalid={valid === undefined ? undefined : !valid}
+    {id}
+    {disabled}
+    bind:this={ref as any}
+    bind:value
+    class:neo-input={true}
+    class:neo-after={after}
+    class:neo-before={before}
+    onblur={onBlur}
+    onfocus={onFocus}
+    oninput={onInput}
+    onchange={onChange}
+    oninvalid={onInvalid}
+    use:useFn={useProps}
+    {...rest as HTMLSelectAttributes}
+  >
+    {@render children?.()}
+  </select>
+{:else if rest.type === 'file'}
   <input
     aria-invalid={valid === undefined ? undefined : !valid}
     type="file"
@@ -313,6 +336,7 @@
       border-color 0.3s ease,
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
+    appearance: none;
 
     &.neo-before {
       padding-left: 0;
