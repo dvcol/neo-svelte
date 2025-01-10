@@ -44,6 +44,10 @@ Wrap any component inside the style provider
 </NeoThemeProvider>
 ```
 
+Then import any of the components you want to use.
+
+See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/fed1b3f42e863e18968c77256527a837957b3304/demo/components), live demo [here](https://dvcol.github.io/neo-svelte/#/inputs)).
+
 ## TODO
 - [ ] @media any-pointer:coarse any-hover:none
 - [x] Buttons
@@ -62,7 +66,6 @@ Wrap any component inside the style provider
   - [x] multiple
 - [x] numbers
   - [x] digits
-  - [ ] range
   - [ ] phone
   - [ ] credit card
   - [x] pin
@@ -72,7 +75,7 @@ Wrap any component inside the style provider
 - [x] slider
   - [X] range
   - [X] inset
-  - [ ] custom before-after
+  - [x] custom before-after
   - [x] steps
   - [ ] vertical
 - [ ] select

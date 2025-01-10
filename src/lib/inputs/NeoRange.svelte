@@ -44,6 +44,7 @@
     start,
     glass,
     rounded = true,
+    tooltips = true,
     skeleton,
 
     elevation = 2,
@@ -62,6 +63,8 @@
     containerProps,
     wrapperTag = 'div',
     wrapperProps,
+    floatingProps,
+    floatingOptions,
   }: NeoRangeProps = $props();
   /* eslint-enable prefer-const */
 
@@ -77,15 +80,17 @@
 
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
 
-  const show = $derived(focused || hovered);
+  const show = $derived(tooltips && (focused || hovered));
   const tooltip = useFloating({
     placement: 'bottom',
-    middleware: [flip(), offset(4)],
+    middleware: [flip(), offset(6)],
+    ...floatingOptions,
   });
 
   const arrayTooltip = useFloating({
     placement: 'bottom',
-    middleware: [flip(), offset(4)],
+    middleware: [flip(), offset(6)],
+    ...floatingOptions,
   });
 
   const updateTooltips = () => {
@@ -262,6 +267,7 @@
     valid,
 
     // Styles
+    tooltips,
     rounded,
     glass,
     start,
@@ -328,12 +334,18 @@
     onfocusout={onFocusOut}
   >
     {#if show}
-      <span class="neo-range-value" bind:this={tooltip.elements.floating} style={tooltip.floatingStyles} transition:fade>
+      <span class:neo-range-value={true} transition:fade {...floatingProps} bind:this={tooltip.elements.floating} style={tooltip.floatingStyles}>
         {lower}
       </span>
     {/if}
     {#if isArray && show}
-      <span class="neo-range-value" bind:this={arrayTooltip.elements.floating} style={arrayTooltip.floatingStyles} transition:fade>
+      <span
+        class:neo-range-value={true}
+        transition:fade
+        {...floatingProps}
+        bind:this={arrayTooltip.elements.floating}
+        style={arrayTooltip.floatingStyles}
+      >
         {upper}
       </span>
     {/if}
@@ -645,6 +657,22 @@
       display: inline-flex;
       width: 1rem;
       height: 1rem;
+    }
+
+    &-value {
+      padding: 0.125rem 0.375rem;
+      background-color: var(--neo-input-bg-color, var(--neo-glass-background-color));
+      border: var(--neo-border-width, 1px) solid var(--neo-border-color);
+      border-color: var(
+        --neo-input-border-color,
+        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
+      );
+      border-radius: var(--neo-border-radius, var(--neo-border-radius-sm));
+      box-shadow: var(--neo-glass-box-shadow-raised-1);
+      backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-1));
+      transition:
+        width 0.3s ease,
+        height 0.3s ease;
     }
   }
 </style>

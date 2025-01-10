@@ -1,3 +1,4 @@
+import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
 import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
@@ -50,6 +51,12 @@ export type NeoRangeStates = {
 };
 
 export type NeoRangeStyles = {
+  /**
+   * If true, the input value will be displayed as tooltip on hover/focus.
+   *
+   * @default true
+   */
+  tooltips?: boolean;
   /**
    * If true, the input will have a rounded border.
    */
@@ -118,6 +125,15 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
      * The ref to bind to the label.
      */
     labelRef?: HTMLLabelElement;
+
+    /**
+     * The props to pass to the floating label.
+     */
+    floatingProps?: HTMLNeoBaseElement<HTMLSpanElement>;
+    /**
+     * Options to pass to the floating label.
+     */
+    floatingOptions?: UseFloatingOptions;
   } & NeoRangeStates &
   NeoRangeStyles &
   HTMLActionProps &
