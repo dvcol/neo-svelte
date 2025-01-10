@@ -366,7 +366,7 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
   /**
    * Fall back value when the textarea value is cleared.
    */
-  defaultValue: HTMLTextareaAttributes['value'];
+  defaultValue?: HTMLTextareaAttributes['value'];
   /**
    * Automatically increments/decrements the textarea rows to fit the content.
    *
