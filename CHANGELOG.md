@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/dvcol/neo-svelte/compare/v0.1.5...v0.1.6) (2025-01-10)
+
+
+### Features
+
+* **style:** adds typography for headings ([d02ff78](https://github.com/dvcol/neo-svelte/commit/d02ff78e251fbb7dd7343bde29858d80336f6925))
+
+
+### Bug Fixes
+
+* **input:** adjust text-area sizing & fix typing ([c54d607](https://github.com/dvcol/neo-svelte/commit/c54d607dc707a819c7d29b814993719b2520fbce))
+
 ### [0.1.5](https://github.com/dvcol/neo-svelte/compare/v0.1.4...v0.1.5) (2025-01-10)
 
 
