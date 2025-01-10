@@ -376,6 +376,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      min-width: max-content;
     }
 
     .neo-content {

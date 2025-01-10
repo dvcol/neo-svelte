@@ -1,13 +1,16 @@
 <script lang="ts">
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import type { NeoRangeHTMLElement } from '~';
   import type { NeoInputProps } from '~/inputs/common/neo-input.model';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import IconAdd from '~/icons/IconAdd.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
+  import IconMinus from '~/icons/IconMinus.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoCheckbox from '~/inputs/NeoCheckbox.svelte';
   import NeoColorPicker from '~/inputs/NeoColorPicker.svelte';
@@ -41,7 +44,8 @@
 
   type InputState = Pick<NeoInputProps, 'type' | 'touched' | 'dirty' | 'valid' | 'value' | 'group' | 'checked' | 'indeterminate' | 'files'>;
 
-  class ValidationState implements InputState {
+  class ValidationState<T extends HTMLElement = HTMLElement> implements InputState {
+    ref = $state<T>();
     type = $state<string>('text');
     touched = $state<boolean>(false);
     dirty = $state<boolean>(false);
@@ -132,7 +136,7 @@
   const switchState = new ValidationState({ type: 'checkbox' });
   const switchGroupState = new ValidationState({ type: 'checkbox' });
 
-  const rangeState = new ValidationState({ type: 'range', value: 0 });
+  const rangeState = new ValidationState<NeoRangeHTMLElement>({ type: 'range', value: 0 });
   const rangeArrayState = new ValidationState({ type: 'range', value: [25, 75] });
   const rangeMinMaxState = new ValidationState({ type: 'range', value: [-100, 100] });
   const rangeSteppedState = new ValidationState({ type: 'range', value: 50 });
@@ -921,6 +925,57 @@
   </div>
 </div>
 
+{#snippet beforeRange()}
+  <NeoButton
+    rounded
+    glass={options.glass}
+    disabled={options.disabled}
+    readonly={options.readonly}
+    skeleton={options.skeleton}
+    text
+    onclick={() => rangeState.ref.stepUp()}
+  >
+    {#snippet icon()}
+      <IconMinus />
+    {/snippet}
+  </NeoButton>
+{/snippet}
+{#snippet afterRange()}
+  <NeoButton
+    rounded
+    glass={options.glass}
+    disabled={options.disabled}
+    readonly={options.readonly}
+    skeleton={options.skeleton}
+    text
+    onclick={() => rangeState.ref.stepDown()}
+  >
+    {#snippet icon()}
+      <IconAdd />
+    {/snippet}
+  </NeoButton>
+{/snippet}
+
+<div class="row">
+  <div class="column content">
+    <span class="label">Prefix/suffix</span>
+    {@render validationState(rangeState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoRange
+        label="Interval"
+        bind:ref={rangeState.ref}
+        bind:touched={rangeState.touched}
+        bind:dirty={rangeState.dirty}
+        bind:valid={rangeState.valid}
+        bind:value={rangeState.value}
+        before={beforeRange}
+        after={afterRange}
+        {...options}
+      />
+    </SphereBackdrop>
+  </div>
+</div>
+
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
 
@@ -935,7 +990,7 @@
 
     &.content {
       flex: 1 0 20%;
-      max-width: min(25%, 30rem);
+      max-width: min(25%, 50rem);
     }
   }
 
@@ -948,7 +1003,7 @@
   @media (width < 1500px) {
     .column.content {
       flex: 1 0 40%;
-      max-width: min(100%, 30rem);
+      max-width: min(100%, 50rem);
     }
   }
 </style>

@@ -4,11 +4,8 @@
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
 
-  import type { DragEventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
-
-  import type { NeoValidationFieldContext } from '~/inputs/common/neo-validation.model.js';
-
-  import type { NeoRangeProps } from '~/inputs/neo-range.model.js';
+  import type { DragEventHandler, FocusEventHandler, KeyboardEventHandler, PointerEventHandler } from 'svelte/elements';
+  import type { NeoRangeContext, NeoRangeHTMLElement, NeoRangeProps, NeoRangeValidationState, NeoRangeValue } from '~/inputs/neo-range.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
@@ -23,6 +20,8 @@
     label,
     message,
     error,
+    before,
+    after,
 
     // State
     id = label ? `neo-range-${crypto.randomUUID()}` : undefined,
@@ -35,7 +34,7 @@
     hovered = $bindable(false),
     disabled,
     readonly,
-    loading, // TODO
+    loading,
     validation,
     min = 0,
     max = 100,
@@ -67,47 +66,14 @@
   /* eslint-enable prefer-const */
 
   const isArray = $derived(Array.isArray(value));
-  const initial = $state(Array.isArray(value) ? [...value] : value);
+  const initial = $state<NeoRangeValue>(Array.isArray(value) ? [...value] : value);
   const lower = $derived(typeof value === 'number' ? value : value?.[0]);
   const upper = $derived(typeof value === 'number' ? undefined : value?.[1]);
 
-  // TODO - tab focus & arrow steps
   // TODO - vertical
-  // TODO - before/after stepped buttons
 
   const lowerProgress = $derived(((lower - min) / (max - min)) * 100);
   const upperProgress = $derived(upper ? ((upper - min) / (max - min)) * 100 : undefined);
-
-  const context = $derived<
-    NeoValidationFieldContext & {
-      // State
-      readonly?: boolean;
-      disabled?: boolean;
-
-      // Styles
-      rounded?: boolean;
-      glass?: boolean;
-      start?: boolean;
-      skeleton?: boolean;
-    }
-  >({
-    // Ref
-    ref,
-
-    // State
-    value,
-    touched,
-    dirty,
-    valid,
-    readonly,
-    disabled,
-
-    // Styles
-    rounded,
-    glass,
-    start,
-    skeleton,
-  });
 
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
 
@@ -153,17 +119,37 @@
     else if (index === 1 && v <= value[0]) value = [value[0], value[0]];
     else value[index] = v;
     updateTooltips();
+    return value;
   };
+
+  const stepUp = (index = 0) => {
+    if (disabled || readonly) return value;
+    return setValue((index ? (upper ?? 0) : lower) - (step || 1), index);
+  };
+  const stepDown = (index = 0) => {
+    if (disabled || readonly) return value;
+    return setValue((index ? (upper ?? 0) : lower) + (step || 1), index);
+  };
+
+  const validity = $derived<NeoRangeValidationState>({
+    touched,
+    dirty,
+    valid,
+    value,
+    initial,
+  });
 
   const updateState = (val = value) => {
     touched = true;
     if (Array.isArray(val)) {
       if (Array.isArray(initial)) dirty = val[0] !== initial[0] || val[1] !== initial[1];
       valid = val.every((v: number) => v >= min && v <= max);
-      return;
+      return { ...validity };
     }
     dirty = val !== initial;
     valid = val >= min && val <= max;
+
+    return { ...validity };
   };
 
   let slider = $state<HTMLElement>();
@@ -206,11 +192,22 @@
 
     const onDrag: DragEventHandler<HTMLElement> = e => e.preventDefault();
 
+    const onArrow: KeyboardEventHandler<HTMLElement> = e => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        stepUp(index);
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        stepDown(index);
+      }
+    };
+
     return {
       onpointercancel: onUp,
       onpointerdown: onDown,
       onpointerup: onUp,
       ondragstart: onDrag,
+      onkeydown: onArrow,
     };
   };
 
@@ -242,6 +239,64 @@
 
   $effect(() => {
     if (innerWidth.current) updateTooltips();
+  });
+
+  const context = $derived<NeoRangeContext>({
+    // Ref
+    ref,
+
+    // State
+    focused,
+    hovered,
+    disabled,
+    readonly,
+
+    loading,
+    min,
+    max,
+    step,
+
+    value,
+    touched,
+    dirty,
+    valid,
+
+    // Styles
+    rounded,
+    glass,
+    start,
+    skeleton,
+    elevation,
+
+    // Methods
+    stepUp,
+    stepDown,
+  });
+
+  $effect(() => {
+    if (!ref) return;
+    Object.assign(ref, {
+      get value() {
+        return value;
+      },
+      get initial() {
+        return initial;
+      },
+      get isArray() {
+        return isArray;
+      },
+      get lower() {
+        return lower;
+      },
+      get upper() {
+        return upper;
+      },
+      get validity() {
+        return validity;
+      },
+      stepUp,
+      stepDown,
+    } satisfies Partial<NeoRangeHTMLElement>);
   });
 </script>
 
@@ -283,50 +338,60 @@
       </span>
     {/if}
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {...labelProps}>
-      <div
-        class="neo-range-slider"
-        class:neo-rounded={rounded}
-        class:neo-start={start}
-        class:neo-glass={glass}
-        class:neo-disabled={disabled}
-        class:neo-skeleton={skeleton}
-        class:neo-flat={!elevation}
-        class:neo-valid={validation && valid}
-        class:neo-invalid={validation && !valid}
-        style:--neo-range-box-shadow={boxShadow}
-        style:--neo-range-progress="{lowerProgress}%"
-        style:--neo-range-array-progress="{upperProgress}%"
-      >
-        <span role="region" class="neo-range-rail" bind:this={slider} onpointerdown={onClick}>
-          <span class="neo-range-handle-before" class:neo-array={isArray}>
-            <!--   handle before   -->
+      <span class="neo-range-label-container">
+        {#if before !== undefined}
+          <span class="neo-range-prefix">
+            {@render before(context)}
           </span>
-          <button bind:this={tooltip.elements.reference} class="neo-range-handle" {...handler}>
-            <!--   handle handle   -->
-          </button>
-          {#if isArray}
-            <span class="neo-range-handle-before neo-range">
+        {/if}
+        <span
+          class="neo-range-slider"
+          class:neo-rounded={rounded}
+          class:neo-start={start}
+          class:neo-glass={glass}
+          class:neo-disabled={disabled}
+          class:neo-skeleton={skeleton}
+          class:neo-flat={!elevation}
+          class:neo-valid={validation && valid}
+          class:neo-invalid={validation && !valid}
+          style:--neo-range-box-shadow={boxShadow}
+          style:--neo-range-progress="{lowerProgress}%"
+          style:--neo-range-array-progress="{upperProgress}%"
+        >
+          <span role="region" class="neo-range-rail" bind:this={slider} onpointerdown={onClick}>
+            <span class="neo-range-handle-before" class:neo-array={isArray}>
               <!--   handle before   -->
             </span>
-            <button bind:this={arrayTooltip.elements.reference} class="neo-range-handle" {...progressHandler}>
+            <button bind:this={tooltip.elements.reference} class="neo-range-handle" {...handler}>
               <!--   handle handle   -->
             </button>
-          {/if}
-          <span class="neo-range-handle-after">
-            <!--   handle after   -->
+            {#if isArray}
+              <span class="neo-range-handle-before neo-range">
+                <!--   handle before   -->
+              </span>
+              <button bind:this={arrayTooltip.elements.reference} class="neo-range-handle" {...progressHandler}>
+                <!--   handle handle   -->
+              </button>
+            {/if}
+            <span class="neo-range-handle-after">
+              <!--   handle after   -->
+            </span>
           </span>
         </span>
-      </div>
-    </NeoLabel>
-    {#if loading !== undefined}
-      <span class="neo-range-suffix">
-        {#if loading}
-          <span class="neo-range-loading" out:fade={enterDefaultTransition}>
-            <IconCircleLoading width="1rem" height="1rem" />
+        {#if loading !== undefined || after !== undefined}
+          <span class="neo-range-suffix">
+            {#if after}
+              {@render after(context)}
+            {/if}
+            {#if loading}
+              <span class="neo-range-loading" out:fade={enterDefaultTransition}>
+                <IconCircleLoading width="1rem" height="1rem" />
+              </span>
+            {/if}
           </span>
         {/if}
       </span>
-    {/if}
+    </NeoLabel>
   </svelte:element>
 </NeoInputValidation>
 
@@ -372,8 +437,9 @@
       padding: 0;
       color: inherit;
       background: var(--neo-range-handle-background, var(--neo-background-color));
-      border: none;
+      border: 1px solid var(--neo-range-handle-border-color, transparent);
       border-radius: var(--neo-border-radius-sm);
+      outline: none;
       box-shadow: var(--neo-range-handle-box-shadow, var(--neo-box-shadow-convex-2));
       cursor: grab;
       transition: scale 0.3s ease;
@@ -384,6 +450,10 @@
       &:active {
         cursor: grabbing;
         scale: 0.95;
+      }
+
+      &:focus-visible {
+        border-color: var(--neo-rangre-handle-border-color-focused, var(--neo-border-color-focused));
       }
 
       &-before,
@@ -553,11 +623,28 @@
       }
     }
 
+    &-label-container {
+      display: inline-flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    &-prefix {
+      display: inline-flex;
+      align-items: center;
+    }
+
     &-suffix {
+      display: inline-flex;
+      align-items: center;
+      min-width: 1rem;
+      min-height: 1rem;
+    }
+
+    &-loading {
+      display: inline-flex;
       width: 1rem;
       height: 1rem;
-      margin-bottom: 0.125rem;
-      margin-left: 0.5rem;
     }
   }
 </style>
