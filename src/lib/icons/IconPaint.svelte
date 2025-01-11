@@ -1,4 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" {...$$props} style:scale={$$props.scale} scale={undefined}>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={$$props.size ?? '1em'}
+  height={$$props.size ?? '1em'}
+  viewBox="0 0 24 24"
+  {...$$props}
+  style:scale={$$props.scale}
+  scale={undefined}
+>
   <path
     fill="currentColor"
     fill-opacity="0"

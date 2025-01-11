@@ -34,19 +34,19 @@
 <span bind:this={ref} class:neo-affix-container={true} class:neo-skeleton={skeleton} style:--neo-affix-size={size} role="none" {...rest}>
   {#if loading}
     <span class="neo-affix-loading" out:fade={leave}>
-      <IconCircleLoading width={size} height={size} />
+      <IconCircleLoading {size} />
     </span>
   {:else if close && !disabled}
     <button {disabled} class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
-      <IconClear width={size} height={size} />
+      <IconClear {size} />
     </button>
   {:else}
     <span class="neo-affix-validation" data-valid={valid} in:fade={leave}>
       {#if valid !== undefined}
         {#if valid}
-          <IconConfirm width={size} height={size} />
+          <IconConfirm {size} />
         {:else}
-          <IconAlert width={size} height={size} />
+          <IconAlert {size} />
         {/if}
       {/if}
     </span>

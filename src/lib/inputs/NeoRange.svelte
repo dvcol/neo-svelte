@@ -397,7 +397,7 @@
             {/if}
             {#if loading}
               <span class="neo-range-loading" out:fade={enterDefaultTransition}>
-                <IconCircleLoading width="1rem" height="1rem" />
+                <IconCircleLoading size="1rem" />
               </span>
             {/if}
           </span>

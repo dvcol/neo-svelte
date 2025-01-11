@@ -268,9 +268,9 @@
   <NeoButton {...afterProps}>
     {#snippet icon()}
       {#if isDragging}
-        <IconDownload width="1.25rem" height="1.25rem" scale="1.5" stroke="1" />
+        <IconDownload size="1.25rem" scale="1.5" stroke="1" />
       {:else}
-        <IconFileUpload width="1.25rem" height="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
+        <IconFileUpload size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}
     {/snippet}
   </NeoButton>

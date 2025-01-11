@@ -108,7 +108,7 @@
     <span class="neo-radio-suffix">
       {#if loading}
         <span class="neo-radio-loading" out:fade={enterDefaultTransition}>
-          <IconCircleLoading width="1rem" height="1rem" />
+          <IconCircleLoading size="1rem" />
         </span>
       {/if}
     </span>

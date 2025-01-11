@@ -1,4 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" {...$$props} style:scale={$$props.scale} scale={undefined}>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={$$props.size ?? '1em'}
+  height={$$props.size ?? '1em'}
+  viewBox="0 0 24 24"
+  {...$$props}
+  style:scale={$$props.scale}
+  scale={undefined}
+>
   <rect width="14" height="0" x="5" y="5" fill="currentColor">
     <animate fill="freeze" attributeName="height" begin="0.6s" dur="0.2s" values="0;3" />
   </rect>

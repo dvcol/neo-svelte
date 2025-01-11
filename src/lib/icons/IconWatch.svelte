@@ -1,4 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...$$props} style:scale={$$props.scale} scale={undefined}>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={$$props.size ?? '1em'}
+  height={$$props.size ?? '1em'}
+  viewBox="0 0 24 24"
+  {...$$props}
+  style:scale={$$props.scale}
+  scale={undefined}
+>
   <circle cx="12" cy="12" r="0" fill="currentColor">
     <animate attributeName="r" dur="6s" keyTimes="0;0.03;0.97;1" repeatCount="indefinite" values="0;3;3;0" />
   </circle>

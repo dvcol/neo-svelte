@@ -166,7 +166,7 @@
       <span class="neo-switch-suffix">
         {#if loading}
           <span class="neo-switch-loading" out:fade={enterDefaultTransition}>
-            <IconCircleLoading width="1rem" height="1rem" />
+            <IconCircleLoading size="1rem" />
           </span>
         {/if}
       </span>

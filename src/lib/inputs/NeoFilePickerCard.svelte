@@ -125,7 +125,7 @@
                   class={['neo-file-remove-button', removeButtonProps?.class]}
                 >
                   {#snippet icon()}
-                    <IconClear width="1rem" height="1rem" scale="1.5" stroke="1" />
+                    <IconClear size="1rem" scale="1.5" stroke="1" />
                   {/snippet}
                 </NeoButton>
               </span>
@@ -138,7 +138,7 @@
       <span>{placeholder}</span>
       <NeoButton {disabled} rounded text onclick={onEdit} title="Edit files" aria-label="Edit files" {...editButtonProps}>
         {#snippet icon()}
-          <IconPencil width="1.25rem" height="1.25rem" scale="1" />
+          <IconPencil size="1.25rem" scale="1" />
         {/snippet}
       </NeoButton>
     </div>
@@ -160,11 +160,11 @@
         <NeoButton aria-label="Add files" title="Add files" text rounded {skeleton} {disabled} onclick={onEdit} {...addButtonProps}>
           {#snippet icon()}
             {#if dragging}
-              <IconDownload width="2.5rem" height="2.5rem" scale="1.25" stroke="0.5" />
+              <IconDownload size="2.5rem" scale="1.25" stroke="0.5" />
             {:else if loading}
-              <IconCircleLoading width="2.5rem" height="2.5rem" scale="1" />
+              <IconCircleLoading size="2.5rem" scale="1" />
             {:else}
-              <IconAdd width="2.5rem" height="2.5rem" scale="1" stroke="0.5" />
+              <IconAdd size="2.5rem" scale="1" stroke="0.5" />
             {/if}
           {/snippet}
         </NeoButton>

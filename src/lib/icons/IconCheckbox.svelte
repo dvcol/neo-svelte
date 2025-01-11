@@ -2,6 +2,7 @@
   const {
     box = 1.25,
     check = 2,
+    size = '1em',
     scale = 1.6,
     border = false,
     circle = false,
@@ -23,6 +24,10 @@
      * The scale of the icon.
      */
     scale?: number;
+    /**
+     * The size (width and height) of the icon.
+     */
+    size?: string;
     /**
      * Whether to render the border.
      */
@@ -53,7 +58,7 @@
   const squarePath = 'M4 12v-7c0 -0.55 0.45 -1 1 -1h14c0.55 0 1 0.45 1 1v14c0 0.55 -0.45 1 -1 1h-14c-0.55 0 -1 -0.45 -1 -1Z';
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" style:scale {...rest}>
+<svg xmlns="http://www.w3.org/2000/svg" width={size ?? '1em'} height={size ?? '1em'} viewBox="0 0 24 24" style:scale {...rest}>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width={box}>
     {#if border}
       <path stroke-opacity="0.5" stroke-dasharray="64" stroke-dashoffset={!checked || !draw ? 0 : 64} d={circle ? circlePath : squarePath}>
