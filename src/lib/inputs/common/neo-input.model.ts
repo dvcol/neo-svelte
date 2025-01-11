@@ -222,7 +222,7 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    */
   after?: Snippet<[NeoInputContext<T>]>;
   /**
-   * Element(s) to render inside the input-group (after the input).
+   * Element(s) to render inside the input-group.
    */
   children?: Snippet<[NeoInputContext<T>]>;
 
@@ -297,7 +297,7 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
 
   /*
    * The HTML tag to use for the suffix.
-   * @default div
+   * @default span
    */
   afterTag?: keyof HTMLElementTagNameMap;
   /**
@@ -333,7 +333,7 @@ export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoIn
 
   /**
    * The HTML tag to use for the prefix.
-   * @default div
+   * @default span
    */
   beforeTag?: keyof HTMLElementTagNameMap;
   /**

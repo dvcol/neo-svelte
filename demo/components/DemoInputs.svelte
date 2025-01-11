@@ -21,6 +21,7 @@
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoRadio from '~/inputs/NeoRadio.svelte';
   import NeoRange from '~/inputs/NeoRange.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoSwitch from '~/inputs/NeoSwitch.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
@@ -116,7 +117,7 @@
   const invalidState = new ValidationState();
   const customState = new ValidationState();
 
-  const selectState = new ValidationState();
+  const selectState = new ValidationState<HTMLSelectElement>();
 
   const numberState = new ValidationState({ type: 'number', value: 0 });
 
@@ -591,14 +592,15 @@
 <!--  Select  -->
 <div class="row">
   <div class="column content">
-    <span class="label">Select</span>
+    <span class="label">Native Select</span>
     {@render validationState(selectState, true)}
     <SphereBackdrop glass={options.glass}>
-      <NeoInput
+      <NeoSelect
         type="select"
         validation
         required
-        label="Select"
+        label="Native Select"
+        bind:ref={selectState.ref}
         bind:touched={selectState.touched}
         bind:dirty={selectState.dirty}
         bind:valid={selectState.valid}
@@ -610,7 +612,7 @@
         <option value="value 1">Label for value 1</option>
         <option value="value 2">Label for value 2</option>
         <option value="value 3">Label for value 3</option>
-      </NeoInput>
+      </NeoSelect>
     </SphereBackdrop>
   </div>
 </div>

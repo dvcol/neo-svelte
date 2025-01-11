@@ -233,7 +233,7 @@
   {#if affix}
     <NeoAffix
       bind:ref={affixRef}
-      class={after ? 'neo-after' : undefined}
+      class={[after ? 'neo-after' : undefined, rest.type === 'select' ? 'neo-select' : undefined]}
       {loading}
       {close}
       {disabled}
@@ -416,6 +416,7 @@
 
   .neo-input {
     &-before {
+      padding: var(--neo-input-before-padding, 0.75rem);
       color: var(--neo-input-before-color, inherit);
       background-color: var(--neo-input-before-bg-color, transparent);
       border: none;
@@ -424,6 +425,7 @@
     }
 
     &-after {
+      padding: var(--neo-input-after-padding, 0.75rem);
       color: var(--neo-input-after-color, inherit);
       background-color: var(--neo-input-after-bg-color, transparent);
       border: none;
@@ -435,7 +437,6 @@
     &-after {
       align-items: center;
       min-width: max-content;
-      padding: 0.75rem;
 
       &:is(button, a) {
         cursor: pointer;
@@ -461,7 +462,7 @@
       }
 
       &:has(:global(.neo-button:only-child)):not(.neo-inside) {
-        padding: 0 0.125rem;
+        padding: 0 0.25rem;
       }
 
       :global(.neo-button) {
@@ -598,6 +599,14 @@
         min-width: 1.75rem;
         padding-right: 0;
         padding-left: 0.5rem;
+      }
+
+      :global(.neo-affix-container.neo-select) {
+        margin-left: 0.5rem;
+      }
+
+      :global(.neo-affix-container.neo-select.neo-after) {
+        margin-right: -0.375rem;
       }
 
       &.neo-rounded {
