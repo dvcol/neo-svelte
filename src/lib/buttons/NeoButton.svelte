@@ -376,7 +376,6 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: max-content;
     }
 
     .neo-content {
@@ -384,14 +383,14 @@
 
       .neo-icon:not(.neo-only) {
         margin-right: var(--neo-btn-icon-gap, 0.35rem);
-        margin-left: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.35rem)));
+        margin-left: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
       }
 
       &.neo-reverse {
         flex-direction: row-reverse;
 
         .neo-icon:not(.neo-only) {
-          margin-right: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.35rem)));
+          margin-right: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
           margin-left: var(--neo-btn-icon-gap, 0.35rem);
         }
       }

@@ -965,7 +965,7 @@
     onclick={() => rangeState.ref.stepUp()}
   >
     {#snippet icon()}
-      <IconMinus />
+      <IconMinus style="min-width: 1rem" />
     {/snippet}
   </NeoButton>
 {/snippet}
@@ -980,7 +980,7 @@
     onclick={() => rangeState.ref.stepDown()}
   >
     {#snippet icon()}
-      <IconAdd />
+      <IconAdd style="min-width: 1rem" />
     {/snippet}
   </NeoButton>
 {/snippet}
