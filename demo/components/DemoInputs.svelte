@@ -713,6 +713,7 @@
         label="Pin Password"
         required
         validation
+        pin
         bind:touched={pinPasswordState.touched}
         bind:dirty={pinPasswordState.dirty}
         bind:valid={pinPasswordState.valid}
