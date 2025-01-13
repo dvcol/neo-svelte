@@ -14,6 +14,7 @@ const plugins: PluginOption[] = [];
 const isTest = process.env.NODE_ENV === 'test';
 const isDev = process.env.NODE_ENV === 'development';
 const isWeb = process.env.VITE_MODE === 'WEB';
+const isWC = process.env.VITE_MODE === 'WC';
 
 if (isDev) {
   plugins.push(
@@ -26,7 +27,7 @@ if (isDev) {
       },
     }),
   );
-} else if (isWeb) {
+} else if (isWeb || isWC) {
   plugins.push(
     svelte({
       preprocess: sveltePreprocess(),
@@ -67,5 +68,15 @@ const config: ViteUserConfig = {
 };
 
 if (isWeb) config.base = '/neo-svelte/';
+if (isWC)
+  config.build = {
+    outDir: 'dist/wc',
+    rollupOptions: {
+      input: {
+        providers: 'src/lib/providers/index.wc.ts',
+        buttons: 'src/lib/buttons/index.wc.ts',
+      },
+    },
+  };
 
 export default defineConfig(config);
