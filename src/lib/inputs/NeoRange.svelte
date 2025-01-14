@@ -10,6 +10,7 @@
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { clamp } from '~/utils/math.utils.js';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
   import { enterDefaultTransition } from '~/utils/transition.utils.js';
@@ -53,6 +54,9 @@
     in: inAction,
     out: outAction,
     transition: transitionAction,
+
+    // Actions
+    use,
 
     // Other props
     labelRef = $bindable(),
@@ -304,6 +308,14 @@
       stepDown,
     } satisfies Partial<NeoRangeHTMLElement>);
   });
+
+  const inFn = $derived(toTransition(inAction ?? transitionAction));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
+  const outFn = $derived(toTransition(outAction ?? transitionAction));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
+
+  const useFn = $derived(toAction(use));
+  const useProps = $derived(toActionProps(use));
 </script>
 
 <NeoInputValidation
@@ -327,6 +339,9 @@
     bind:this={ref}
     role="none"
     class:neo-range-container={true}
+    use:useFn={useProps}
+    out:outFn={outProps}
+    in:inFn={inProps}
     {...containerProps}
     onpointerenter={onPointerEnter}
     onpointerleave={onPointerLeave}
@@ -660,19 +675,7 @@
     }
 
     &-value {
-      padding: 0.125rem 0.375rem;
-      background-color: var(--neo-input-bg-color, var(--neo-glass-background-color));
-      border: var(--neo-border-width, 1px) solid var(--neo-border-color);
-      border-color: var(
-        --neo-input-border-color,
-        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
-      );
-      border-radius: var(--neo-border-radius, var(--neo-border-radius-sm));
-      box-shadow: var(--neo-glass-box-shadow-raised-1);
-      backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-1));
-      transition:
-        width 0.3s ease,
-        height 0.3s ease;
+      @include mixin.tooltip;
     }
   }
 </style>
