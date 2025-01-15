@@ -86,12 +86,18 @@
 
   const show = $derived(tooltips && (focused || hovered));
   const tooltip = useFloating({
+    get open() {
+      return show;
+    },
     placement: 'bottom',
     middleware: [flip(), offset(6)],
     ...floatingOptions,
   });
 
   const arrayTooltip = useFloating({
+    get open() {
+      return show;
+    },
     placement: 'bottom',
     middleware: [flip(), offset(6)],
     ...floatingOptions,
@@ -348,18 +354,24 @@
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
   >
-    {#if show}
-      <span class:neo-range-value={true} transition:fade {...floatingProps} bind:this={tooltip.elements.floating} style={tooltip.floatingStyles}>
+    {#if tooltip.open}
+      <span
+        class:neo-range-value={true}
+        transition:fade={enterDefaultTransition}
+        {...floatingProps}
+        bind:this={tooltip.elements.floating}
+        style={toStyle(tooltip.floatingStyles, floatingProps?.style)}
+      >
         {lower}
       </span>
     {/if}
-    {#if isArray && show}
+    {#if isArray && arrayTooltip.open}
       <span
         class:neo-range-value={true}
-        transition:fade
+        transition:fade={enterDefaultTransition}
         {...floatingProps}
         bind:this={arrayTooltip.elements.floating}
-        style={arrayTooltip.floatingStyles}
+        style={toStyle(arrayTooltip.floatingStyles, floatingProps?.style)}
       >
         {upper}
       </span>
@@ -675,7 +687,7 @@
     }
 
     &-value {
-      @include mixin.tooltip;
+      @include mixin.tooltip($padding: 0.125rem 0.375rem);
     }
   }
 </style>

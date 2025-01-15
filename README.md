@@ -78,9 +78,24 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] custom before-after
   - [x] steps
   - [ ] vertical
-- [ ] select
+- [x] select
+  - [x] native
+  - [ ] custom
+- [x] tooltip
+  - [ ] popconfirm
+  - [ ] popselect
+  - [ ] nested menus
+
+- [ ] Modal/dialog
+- [ ] drawer/panel
+  - [ ] collapsible
+  - [ ] position
+  - [ ] backdrop
+  - [ ] click outside
+
 - [ ] table
 - [ ] pagination
+
 - [ ] auto-complete
   - [ ] @ / # tags
   - [ ] select
@@ -104,9 +119,6 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] summary
   - [ ] details (html semantic tags)
 
-- [ ] tooltip
-  - [ ] popconfirm
-  - [ ] popselect
 - [ ] text
   - [ ] elevation
   - [ ] elipsis
@@ -114,12 +126,6 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [ ] Alerts
     - [ ] toast
     - [ ] rich notification
-- [ ] Modal/dialog
-- [ ] drawer/panel
-    - [ ] collapsible
-    - [ ] position
-    - [ ] backdrop
-    - [ ] click outside
 - [ ] scrollbar ?
 - [ ] container
   - [x] transition
