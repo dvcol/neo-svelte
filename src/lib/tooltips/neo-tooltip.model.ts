@@ -11,6 +11,8 @@ import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
+export type NeoTooltipElevation = 0 | 1 | 2 | 3 | 4 | 5;
+
 export type NeoTooltipProps = {
   // Snippets
 
@@ -56,6 +58,25 @@ export type NeoTooltipProps = {
    * Where to place the floating element relative to its reference element.
    */
   placement?: UseFloatingOptions['placement'];
+
+  // Styles
+
+  /**
+   * If true, the tooltip will have a rounded border.
+   */
+  rounded?: boolean;
+  /**
+   * The shadow elevation of the tooltip.
+   *
+   * @default 2
+   */
+  elevation?: NeoTooltipElevation;
+  /**
+   * The blur filter of the tooltip.
+   *
+   * @default match elevation (2)
+   */
+  blur?: NeoTooltipElevation;
 
   // Hover
 

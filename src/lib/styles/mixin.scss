@@ -297,5 +297,8 @@
   border-radius: var($border-radius, var(--neo-border-radius-sm));
   outline: none;
   box-shadow: var($box-shadow, var(--neo-glass-box-shadow-raised-1));
-  backdrop-filter: var($backdrop-filter, var(--neo-blur-1));
+  backdrop-filter: var($backdrop-filter, var(--neo-blur-2));
+  transition:
+    box-shadow 0.3s ease,
+    backdrop-filter 0.3s ease;
 }

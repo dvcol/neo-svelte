@@ -1,7 +1,7 @@
 <script lang="ts">
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
-  import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model';
+  import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
   import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
 

@@ -5,7 +5,7 @@
 
   import { useButtonState } from '../utils/use-button-state.svelte';
 
-  import type { NeoTabProps, TabId } from '~/nav/neo-tab.model';
+  import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
   import type { NeoTabContextValue, NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';

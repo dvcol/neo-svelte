@@ -4,6 +4,7 @@ export const DefaultShadowElevation = 3;
 export const DefaultShadowPressedElevation = -2;
 export const DefaultShadowHoverElevation = -1;
 export const DefaultShadowHoverPressedElevation = 0;
+export const DefaultShadowTooltipElevation = 2;
 export const DefaultSaturation = 3;
 export const ShadowElevations = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5] as const;
 export type ShadowElevation = (typeof ShadowElevations)[number];

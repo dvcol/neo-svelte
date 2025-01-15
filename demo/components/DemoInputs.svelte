@@ -1,10 +1,10 @@
 <script lang="ts">
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
-  import type { NeoRangeHTMLElement } from '~';
-  import type { NeoInputProps } from '~/inputs/common/neo-input.model';
-  import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model';
-  import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model';
+  import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
+  import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
+  import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
+  import type { NeoRangeHTMLElement } from '~/inputs/neo-range.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';

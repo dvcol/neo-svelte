@@ -4,13 +4,12 @@
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { flip, offset, useDismiss, useFloating, useFocus, useHover, useInteractions, useRole } from '@skeletonlabs/floating-ui-svelte';
 
-  import { untrack } from 'svelte';
-
   import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
 
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { DefaultShadowTooltipElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
   import { scaleTransition } from '~/utils/transition.utils.js';
 
   let {
@@ -19,7 +18,6 @@
     children,
 
     // States
-
     role,
     tag = 'span',
     ref = $bindable(),
@@ -28,6 +26,11 @@
     placement,
     target,
     options,
+
+    // Styles
+    rounded,
+    elevation = DefaultShadowTooltipElevation,
+    blur,
 
     // Hover
     openOnHover = true,
@@ -82,14 +85,37 @@
       open = _open;
     },
     middleware: [flip(), offset(spacing)],
-    placement,
+    get placement() {
+      return placement;
+    },
     ...options,
   });
 
-  const _role = useRole(floating.context, { role: role ?? 'tooltip' });
-  const _hover = useHover(floating.context, { enabled: openOnHover, move: false, delay: 100, ...hoverOptions });
-  const _focus = useFocus(floating.context, { enabled: openOnFocus, ...focusOptions });
-  const _dismiss = useDismiss(floating.context, { enabled: closeOnDismiss, ...dismissOptions });
+  const _role = useRole(floating.context, {
+    get role() {
+      return role ?? 'tooltip';
+    },
+  });
+  const _hover = useHover(floating.context, {
+    get enabled() {
+      return openOnHover;
+    },
+    move: false,
+    delay: 100,
+    ...hoverOptions,
+  });
+  const _focus = useFocus(floating.context, {
+    get enabled() {
+      return openOnFocus;
+    },
+    ...focusOptions,
+  });
+  const _dismiss = useDismiss(floating.context, {
+    get enabled() {
+      return closeOnDismiss;
+    },
+    ...dismissOptions,
+  });
   const interactions = useInteractions([_role, _hover, _focus, _dismiss]);
 
   const triggerHandler = $derived<HTMLNeoBaseElement>(interactions.getReferenceProps());
@@ -105,6 +131,9 @@
     return floating.placement;
   });
 
+  const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${Math.max(0, Math.min(elevation, MaxShadowElevation))})`);
+  const tooltipBlur = $derived(`var(--neo-blur-${Math.max(0, Math.min(blur ?? elevation, MaxShadowElevation))})`);
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -115,26 +144,30 @@
 
   $effect(() => {
     if (!host) return;
-    untrack(() => {
-      triggerRef = host;
-      const listener: [string, EventListener][] = [
-        ...Object.entries(triggerHandler),
-        ['onfocusin', triggerHandler.onfocus],
-        ['onfocusout', triggerHandler.onblur],
-      ];
-      listener.forEach(([key, value]) => {
-        if (!triggerRef) return;
-        if (typeof value !== 'function') return;
-        triggerRef.addEventListener(key.substring(2).toLowerCase(), value);
-      });
+    triggerRef = host;
+    const listener: [string, EventListener][] = [
+      ...Object.entries(triggerHandler),
+      ['onfocusin', triggerHandler.onfocus],
+      ['onfocusout', triggerHandler.onblur],
+    ];
+    listener.forEach(([key, value]) => {
+      if (!triggerRef || typeof value !== 'function') return;
+      triggerRef.addEventListener(key.substring(2).toLowerCase(), value);
     });
+    return () => {
+      if (!host) return;
+      listener.forEach(([key, value]) => {
+        if (!triggerRef || typeof value !== 'function') return;
+        triggerRef.removeEventListener(key.substring(2).toLowerCase(), value);
+      });
+    };
   });
 
   $effect(() => {
     if (!host || !triggerRef) return;
     const aria = triggerHandler['aria-describedby'];
     if (aria) triggerRef.setAttribute('aria-describedby', aria);
-    else triggerRef.removeAttribute('aria-describedby');
+    return () => triggerRef?.removeAttribute('aria-describedby');
   });
 
   const addMethods = <T extends HTMLElement>(element?: T) => {
@@ -163,8 +196,8 @@
     this={triggerTag}
     bind:this={triggerRef}
     class:neo-tooltip-trigger={true}
-    onfocusin={triggerHandler.onfocus}
-    onfocusout={triggerHandler.onblur}
+    onfocusin={triggerHandler?.onfocus}
+    onfocusout={triggerHandler?.onblur}
     {...triggerHandler}
     {...triggerProps}
   >
@@ -177,6 +210,9 @@
     this={tag}
     bind:this={ref}
     class:neo-tooltip={true}
+    class:neo-rounded={rounded}
+    style:--neo-tooltip-box-shadow={tooltipShadow}
+    style:--neo-tooltip-backdrop-filter={tooltipBlur}
     in:inFn={inProps}
     out:outFn={outProps}
     use:useFn={useProps}
@@ -198,5 +234,11 @@
 
   .neo-tooltip {
     @include mixin.tooltip;
+
+    &.neo-rounded {
+      --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));
+
+      padding: 0.75rem 1rem;
+    }
   }
 </style>

@@ -6,7 +6,7 @@
 
   import { useButtonState } from '../utils/use-button-state.svelte';
 
-  import type { NeoButtonProps } from '~/buttons/neo-button.model';
+  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
