@@ -69,6 +69,7 @@
     return target;
   });
 
+  let focus = $state(false);
   const floating = useFloating({
     get elements() {
       return {
@@ -80,8 +81,13 @@
       return open;
     },
     onOpenChange(_open, _event, _reason) {
-      if (_reason === 'hover' && keepOpenOnHover && !_open) return;
-      if (_reason === 'focus' && keepOpenOnFocus && !_open) return;
+      if (_reason === 'focus' && _open) focus = true;
+      if (_reason === 'focus' && !_open) {
+        if (keepOpenOnFocus) return;
+        focus = _open;
+      }
+      if (_reason === 'hover' && !_open && (keepOpenOnHover || focus)) return;
+
       open = _open;
     },
     middleware: [flip(), offset(spacing)],
