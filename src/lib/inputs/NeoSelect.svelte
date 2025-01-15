@@ -9,6 +9,9 @@
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
+    children,
+
     // State
     ref = $bindable(),
     value = $bindable(),
@@ -18,6 +21,7 @@
     hovered = $bindable(false),
     focused = $bindable(false),
     type = 'select',
+    options = [],
 
     // Other props
     containerRef = $bindable(),
@@ -61,4 +65,24 @@
   </NeoButton>
 {/snippet}
 
-<NeoInput bind:ref bind:containerRef bind:wrapperRef bind:labelRef bind:touched bind:dirty bind:valid bind:value {type} {after} {...rest} />
+{#snippet content()}
+  {#each options as option}
+    <option value={option.value}>{option.label ?? option.value}</option>
+  {/each}
+  {@render children?.()}
+{/snippet}
+
+<NeoInput
+  bind:ref
+  bind:containerRef
+  bind:wrapperRef
+  bind:labelRef
+  bind:touched
+  bind:dirty
+  bind:valid
+  bind:value
+  {type}
+  {after}
+  children={options?.length ? content : children}
+  {...rest}
+></NeoInput>

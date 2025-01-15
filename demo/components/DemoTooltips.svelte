@@ -44,6 +44,19 @@
     <NeoButton toggle bind:checked={options.closeOnDismiss}>Dismiss</NeoButton>
   </NeoButtonGroup>
 
+  <NeoSelect
+    label="Placement"
+    position="left"
+    bind:value={options.placement}
+    containerProps={{ style: 'margin-left: 6.75rem' }}
+    options={[
+      { value: 'top', label: 'Top' },
+      { value: 'right', label: 'Right' },
+      { value: 'bottom', label: 'Bottom' },
+      { value: 'left', label: 'Left' },
+    ]}
+  />
+
   <NeoNumberStep
     label="Elevation"
     position="left"
@@ -57,13 +70,6 @@
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
   />
-
-  <NeoSelect label="Placement" position="left" bind:value={options.placement} containerProps={{ style: 'margin-left: 6.75rem' }}>
-    <option value="top">Top</option>
-    <option value="right">Right</option>
-    <option value="bottom">Bottom</option>
-    <option value="left">Left</option>
-  </NeoSelect>
 </div>
 
 {#snippet tooltip()}
@@ -98,7 +104,7 @@
 
     <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" />
 
-    <NeoTooltip {tooltip} target={containerRef} {...options} />
+    <NeoTooltip {tooltip} target={containerRef} offset={8} {...options} />
   </div>
 </div>
 
