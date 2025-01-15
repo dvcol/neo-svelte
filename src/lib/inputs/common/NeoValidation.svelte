@@ -4,7 +4,7 @@
   import type { NeoValidationContext, NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
 
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -50,8 +50,8 @@
         this={messageTag}
         id={messageId}
         class:neo-validation-error={true}
-        in:fade={enterDefaultTransition}
-        out:fade={leaveDefaultTransition}
+        in:fade={enterTransitionProps}
+        out:fade={leaveTransitionProps}
         {...messageProps}
       >
         {#if typeof error === 'string'}
@@ -65,8 +65,8 @@
         this={messageTag}
         id={messageId}
         class:neo-validation-description={true}
-        in:fade={enterDefaultTransition}
-        out:fade={leaveDefaultTransition}
+        in:fade={enterTransitionProps}
+        out:fade={leaveTransitionProps}
         {...messageProps}
       >
         {#if typeof message === 'string'}

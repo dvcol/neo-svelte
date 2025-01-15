@@ -13,7 +13,7 @@
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { clamp } from '~/utils/math.utils.js';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
-  import { enterDefaultTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -89,6 +89,7 @@
     get open() {
       return show;
     },
+    translate: true,
     placement: 'bottom',
     middleware: [flip(), offset(6)],
     ...floatingOptions,
@@ -357,7 +358,7 @@
     {#if tooltip.open}
       <span
         class:neo-range-value={true}
-        transition:fade={enterDefaultTransition}
+        transition:fade={enterTransitionProps}
         {...floatingProps}
         bind:this={tooltip.elements.floating}
         style={toStyle(tooltip.floatingStyles, floatingProps?.style)}
@@ -368,7 +369,7 @@
     {#if isArray && arrayTooltip.open}
       <span
         class:neo-range-value={true}
-        transition:fade={enterDefaultTransition}
+        transition:fade={enterTransitionProps}
         {...floatingProps}
         bind:this={arrayTooltip.elements.floating}
         style={toStyle(arrayTooltip.floatingStyles, floatingProps?.style)}
@@ -423,7 +424,7 @@
               {@render after(context)}
             {/if}
             {#if loading}
-              <span class="neo-range-loading" out:fade={enterDefaultTransition}>
+              <span class="neo-range-loading" out:fade={enterTransitionProps}>
                 <IconCircleLoading size="1rem" />
               </span>
             {/if}

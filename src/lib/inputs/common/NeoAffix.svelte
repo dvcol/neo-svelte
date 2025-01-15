@@ -7,7 +7,7 @@
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
   import IconConfirm from '~/icons/IconConfirm.svelte';
-  import { leaveDefaultTransition } from '~/utils/transition.utils.js';
+  import { leaveTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -28,7 +28,7 @@
   }: NeoAffixProps = $props();
   /* eslint-enable prefer-const */
 
-  const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveDefaultTransition);
+  const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveTransitionProps);
 </script>
 
 <span bind:this={ref} class:neo-affix-container={true} class:neo-skeleton={skeleton} style:--neo-affix-size={size} role="none" {...rest}>

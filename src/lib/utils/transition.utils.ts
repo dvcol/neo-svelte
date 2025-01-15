@@ -1,4 +1,4 @@
-import { fade, type FadeParams } from 'svelte/transition';
+import { fade, type FadeParams, scale, type ScaleParams } from 'svelte/transition';
 
 import type { TransitionProps } from '@dvcol/svelte-utils/transition';
 import type { TransitionWithProps } from '~/utils/action.utils.js';
@@ -11,15 +11,22 @@ export const enterFreezeTransition: TransitionProps = {
   css: `overflow: hidden; white-space: nowrap`,
 };
 
-export const enterDefaultTransition: TransitionProps = { duration: 200 };
-export const leaveDefaultTransition: TransitionProps = { delay: 200, duration: 100 };
+export const enterTransitionProps: TransitionProps = { duration: 200 };
+export const leaveTransitionProps: TransitionProps = { delay: 200, duration: 100 };
 
 export const enterDefaultFadeTransition: TransitionWithProps<FadeParams> = {
   use: fade,
-  props: enterDefaultTransition,
+  props: enterTransitionProps,
 };
 
 export const leaveDefaultFadeTransition: TransitionWithProps<FadeParams> = {
   use: fade,
-  props: leaveDefaultTransition,
+  props: leaveTransitionProps,
+};
+
+export const scaleTransitionProps: TransitionProps = { duration: defaultTransitionDuration, start: 0.9 };
+
+export const scaleTransition: TransitionWithProps<ScaleParams> = {
+  use: scale,
+  props: scaleTransitionProps,
 };

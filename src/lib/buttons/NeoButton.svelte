@@ -5,7 +5,7 @@
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { enterDefaultTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -146,7 +146,7 @@
 >
   <span class="neo-content" class:neo-reverse={reverse}>
     {#if loading || icon}
-      <span class="neo-icon" class:neo-only={empty} transition:width={enterDefaultTransition}>
+      <span class="neo-icon" class:neo-only={empty} transition:width={enterTransitionProps}>
         {#if loading}
           <IconCircleLoading />
         {:else}

@@ -8,7 +8,7 @@
   import IconVideo from '~/icons/IconVideo.svelte';
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
 
   const {
     // Snippets
@@ -50,9 +50,9 @@
   });
 
   const inFn = $derived(toTransition(inAction, fade));
-  const inProps = $derived(toTransitionProps(inAction, leaveDefaultTransition));
+  const inProps = $derived(toTransitionProps(inAction, leaveTransitionProps));
   const outFn = $derived(toTransition(outAction, fade));
-  const outProps = $derived(toTransitionProps(outAction, enterDefaultTransition));
+  const outProps = $derived(toTransitionProps(outAction, enterTransitionProps));
 </script>
 
 <NeoSkeletonContainer {loading} in={inAction} out={outAction} {width} {height} {containerProps} {content}>

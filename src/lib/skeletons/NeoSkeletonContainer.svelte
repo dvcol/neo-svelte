@@ -5,7 +5,7 @@
 
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { enterDefaultTransition, leaveDefaultTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
 
   const {
     // Snippets
@@ -28,9 +28,9 @@
   }: NeoSkeletonContainerProps = $props();
 
   const inFn = $derived(toTransition(inAction, fade));
-  const inProps = $derived(toTransitionProps(inAction, leaveDefaultTransition));
+  const inProps = $derived(toTransitionProps(inAction, leaveTransitionProps));
   const outFn = $derived(toTransition(outAction, fade));
-  const outProps = $derived(toTransitionProps(outAction, enterDefaultTransition));
+  const outProps = $derived(toTransitionProps(outAction, enterTransitionProps));
 </script>
 
 {#if content}

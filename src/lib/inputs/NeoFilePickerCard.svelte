@@ -13,7 +13,7 @@
   import IconPencil from '~/icons/IconPencil.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { enterDefaultTransition, leaveDefaultFadeTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps, leaveDefaultFadeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -154,7 +154,7 @@
       class:neo-disabled={disabled}
       class:neo-label={label}
       onclick={onEdit}
-      in:fade={enterDefaultTransition}
+      in:fade={enterTransitionProps}
     >
       <div class="neo-expanded-button">
         <NeoButton aria-label="Add files" title="Add files" text rounded {skeleton} {disabled} onclick={onEdit} {...addButtonProps}>

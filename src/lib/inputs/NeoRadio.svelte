@@ -8,7 +8,7 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
-  import { enterDefaultTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -107,7 +107,7 @@
   {#if loading !== undefined}
     <span class="neo-radio-suffix">
       {#if loading}
-        <span class="neo-radio-loading" out:fade={enterDefaultTransition}>
+        <span class="neo-radio-loading" out:fade={enterTransitionProps}>
           <IconCircleLoading size="1rem" />
         </span>
       {/if}

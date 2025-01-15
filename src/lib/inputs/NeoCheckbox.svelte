@@ -11,7 +11,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
-  import { enterDefaultTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -168,7 +168,7 @@
     {#if loading !== undefined}
       <span class="neo-checkbox-suffix">
         {#if loading}
-          <span class="neo-checkbox-loading" out:fade={enterDefaultTransition}>
+          <span class="neo-checkbox-loading" out:fade={enterTransitionProps}>
             <IconCircleLoading size="1rem" />
           </span>
         {/if}
