@@ -15,8 +15,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)(svelte@5.16.0)
       '@skeletonlabs/floating-ui-svelte':
-        specifier: ^0.3.1
-        version: 0.3.1(svelte@5.16.0)
+        specifier: ^0.3.9
+        version: 0.3.9(svelte@5.16.0)
       svelte:
         specifier: ^5.16.0
         version: 5.16.0
@@ -634,14 +634,14 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@floating-ui/core@1.6.8':
-    resolution: {integrity: sha512-7XJ9cPU+yI2QeLS+FCSlqNFZJq8arvswefkZrYI1yQBbftw6FyrZOxYSh+9S7z7TpeWlRt9zJ5IhM1WIL334jA==}
+  '@floating-ui/core@1.6.9':
+    resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
 
-  '@floating-ui/dom@1.6.12':
-    resolution: {integrity: sha512-NP83c0HjokcGVEMeoStg317VD9W7eDlGK7457dMBANbKA6GJZdc7rjujdgqzTaz93jkGgc5P/jeWbaCHnMNc+w==}
+  '@floating-ui/dom@1.6.13':
+    resolution: {integrity: sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==}
 
-  '@floating-ui/utils@0.2.8':
-    resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
+  '@floating-ui/utils@0.2.9':
+    resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -795,10 +795,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@skeletonlabs/floating-ui-svelte@0.3.1':
-    resolution: {integrity: sha512-rTOCi7/+2Sc1ip/WhNVAoTIgre9ffRAOqCbiz25eV8vlT2bnT9I0L0MBF0sgAAhASOueQScmRP7GhZFGfX3Qdw==}
+  '@skeletonlabs/floating-ui-svelte@0.3.9':
+    resolution: {integrity: sha512-YjGAqVVD54v2biXgbVeZKTj40Zc1I7hS62NTpF72UBFzKsFrYN8+odexBaHNZ/4ScPYLF1ChA0vp3NClo8To1Q==}
     peerDependencies:
-      svelte: ^5.0.0-next.1
+      svelte: ^5.0.0
 
   '@sveltejs/adapter-auto@3.3.1':
     resolution: {integrity: sha512-5Sc7WAxYdL6q9j/+D0jJKjGREGlfIevDyHSQ2eNETHcB1TKlQWHcAo8AS8H1QdjNvSXpvOwNjykDUHPEAyGgdQ==}
@@ -5333,16 +5333,16 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
-  '@floating-ui/core@1.6.8':
+  '@floating-ui/core@1.6.9':
     dependencies:
-      '@floating-ui/utils': 0.2.8
+      '@floating-ui/utils': 0.2.9
 
-  '@floating-ui/dom@1.6.12':
+  '@floating-ui/dom@1.6.13':
     dependencies:
-      '@floating-ui/core': 1.6.8
-      '@floating-ui/utils': 0.2.8
+      '@floating-ui/core': 1.6.9
+      '@floating-ui/utils': 0.2.9
 
-  '@floating-ui/utils@0.2.8': {}
+  '@floating-ui/utils@0.2.9': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -5460,10 +5460,10 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.21.2':
     optional: true
 
-  '@skeletonlabs/floating-ui-svelte@0.3.1(svelte@5.16.0)':
+  '@skeletonlabs/floating-ui-svelte@0.3.9(svelte@5.16.0)':
     dependencies:
-      '@floating-ui/dom': 1.6.12
-      '@floating-ui/utils': 0.2.8
+      '@floating-ui/dom': 1.6.13
+      '@floating-ui/utils': 0.2.9
       svelte: 5.16.0
 
   '@sveltejs/adapter-auto@3.3.1(@sveltejs/kit@2.15.0(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.16.0)(vite@5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)))(svelte@5.16.0)(vite@5.4.10(@types/node@22.5.4)(sass@1.78.0)(sugarss@2.0.0)))':

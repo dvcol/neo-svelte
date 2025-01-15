@@ -283,8 +283,10 @@
   $border-color: --neo-tooltip-border-color,
   $border-radius: --neo-tooltip-border-radius,
   $box-shadow: --neo-tooltip-box-shadow,
-  $backdrop-filter: --neo-tooltip-backdrop-filter
+  $backdrop-filter: --neo-tooltip-backdrop-filter,
+  $z-index: --neo-tooltip-z-index
 ) {
+  z-index: var($z-index, var(--neo-z-index-in-front, 1));
   padding: $padding;
   background-color: var($background-color, var(--neo-glass-background-color));
   border: var(--neo-border-width, 1px) solid var($border-color, var(--neo-glass-background-color));

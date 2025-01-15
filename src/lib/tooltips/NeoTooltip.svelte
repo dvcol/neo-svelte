@@ -2,12 +2,16 @@
   /* eslint-disable prefer-const -- necessary for binding checked */
 
   import { toStyle } from '@dvcol/common-utils/common/class';
-  import { flip, offset, useDismiss, useFloating, useHover, useInteractions, useRole } from '@skeletonlabs/floating-ui-svelte';
+  import { flip, offset, useDismiss, useFloating, useFocus, useHover, useInteractions, useRole } from '@skeletonlabs/floating-ui-svelte';
+
+  import { untrack } from 'svelte';
 
   import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
 
+  import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { enterDefaultFadeTransition } from '~/utils/transition.utils.js';
+  import { scaleTransition } from '~/utils/transition.utils.js';
 
   let {
     // Snippets
@@ -20,11 +24,20 @@
     tag = 'span',
     ref = $bindable(),
     open = $bindable(false),
+    offset: spacing = 6,
+    placement,
+    target,
+    options,
 
     // Hover
     openOnHover = true,
     keepOpenOnHover = false,
     hoverOptions,
+
+    // Focus
+    openOnFocus = true,
+    keepOpenOnFocus = false,
+    focusOptions,
 
     // Dismiss
     closeOnDismiss = true,
@@ -33,7 +46,7 @@
     // Actions
     in: inAction,
     out: outAction,
-    transition: transitionAction = enterDefaultFadeTransition,
+    transition: transitionAction = scaleTransition,
 
     // Actions
     use,
@@ -47,11 +60,17 @@
   }: NeoTooltipProps = $props();
   /* eslint-enable prefer-const */
 
+  const host = $derived.by(() => {
+    if (!target) return;
+    if (typeof target === 'function') return target();
+    return target;
+  });
+
   const floating = useFloating({
     get elements() {
       return {
         floating: ref,
-        reference: triggerRef,
+        reference: host ?? triggerRef,
       };
     },
     get open() {
@@ -59,15 +78,32 @@
     },
     onOpenChange(_open, _event, _reason) {
       if (_reason === 'hover' && keepOpenOnHover && !_open) return;
+      if (_reason === 'focus' && keepOpenOnFocus && !_open) return;
       open = _open;
     },
-    middleware: [flip(), offset(4)],
+    middleware: [flip(), offset(spacing)],
+    placement,
+    ...options,
   });
 
   const _role = useRole(floating.context, { role: role ?? 'tooltip' });
   const _hover = useHover(floating.context, { enabled: openOnHover, move: false, delay: 100, ...hoverOptions });
+  const _focus = useFocus(floating.context, { enabled: openOnFocus, ...focusOptions });
   const _dismiss = useDismiss(floating.context, { enabled: closeOnDismiss, ...dismissOptions });
-  const interactions = useInteractions([_role, _hover, _dismiss]);
+  const interactions = useInteractions([_role, _hover, _focus, _dismiss]);
+
+  const triggerHandler = $derived<HTMLNeoBaseElement>(interactions.getReferenceProps());
+  const tooltipHandler = $derived<HTMLNeoBaseElement>(interactions.getFloatingProps());
+
+  const tooltipStyle = $derived(floating?.floatingStyles?.replace(/transform:\s*translate\(\s*([^,)]+)\s*,\s*([^)]+)\s*\)/, 'translate: $1 $2'));
+  const tooltipOrigin = $derived.by(() => {
+    if (rest?.style?.includes('transform-origin')) return;
+    if (floating.placement.startsWith('top')) return floating.placement.replace('top', 'bottom');
+    if (floating.placement.startsWith('bottom')) return floating.placement.replace('bottom', 'top');
+    if (floating.placement.startsWith('left')) return floating.placement.replace('left', 'right');
+    if (floating.placement.startsWith('right')) return floating.placement.replace('right', 'left');
+    return floating.placement;
+  });
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -76,11 +112,65 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  $effect(() => {
+    if (!host) return;
+    untrack(() => {
+      triggerRef = host;
+      const listener: [string, EventListener][] = [
+        ...Object.entries(triggerHandler),
+        ['onfocusin', triggerHandler.onfocus],
+        ['onfocusout', triggerHandler.onblur],
+      ];
+      listener.forEach(([key, value]) => {
+        if (!triggerRef) return;
+        if (typeof value !== 'function') return;
+        triggerRef.addEventListener(key.substring(2).toLowerCase(), value);
+      });
+    });
+  });
+
+  $effect(() => {
+    if (!host || !triggerRef) return;
+    const aria = triggerHandler['aria-describedby'];
+    if (aria) triggerRef.setAttribute('aria-describedby', aria);
+    else triggerRef.removeAttribute('aria-describedby');
+  });
+
+  const addMethods = <T extends HTMLElement>(element?: T) => {
+    if (!element) return;
+    if (!Object.hasOwn(element, 'toggle')) {
+      Object.assign(element, {
+        toggle: (state = !open) => {
+          open = state;
+          return open;
+        },
+      });
+    }
+    if (!Object.hasOwn(element, 'update')) {
+      Object.assign(element, {
+        update: () => floating.update(),
+      });
+    }
+  };
+
+  $effect(() => addMethods(ref));
+  $effect(() => addMethods(triggerRef));
 </script>
 
-<svelte:element this={triggerTag} bind:this={triggerRef} class:neo-tooltip-trigger={true} {...interactions.getReferenceProps()} {...triggerProps}>
-  {@render children?.(floating)}
-</svelte:element>
+{#if !target}
+  <svelte:element
+    this={triggerTag}
+    bind:this={triggerRef}
+    class:neo-tooltip-trigger={true}
+    onfocusin={triggerHandler.onfocus}
+    onfocusout={triggerHandler.onblur}
+    {...triggerHandler}
+    {...triggerProps}
+  >
+    {@render children?.(floating)}
+  </svelte:element>
+{/if}
 
 {#if floating.open}
   <svelte:element
@@ -90,9 +180,10 @@
     in:inFn={inProps}
     out:outFn={outProps}
     use:useFn={useProps}
-    {...interactions.getFloatingProps()}
+    {...tooltipHandler}
     {...rest}
-    style={toStyle(floating?.floatingStyles, rest.style)}
+    style:transform-origin={tooltipOrigin}
+    style={toStyle(tooltipStyle, rest.style)}
   >
     {#if typeof tooltip === 'string'}
       {tooltip}

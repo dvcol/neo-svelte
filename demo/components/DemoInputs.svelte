@@ -25,7 +25,6 @@
   import NeoSwitch from '~/inputs/NeoSwitch.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-
   import {
     DefaultShadowElevation,
     DefaultShadowHoverElevation,

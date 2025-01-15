@@ -1,4 +1,12 @@
-import type { UseDismissOptions, UseFloatingReturn, UseHoverOptions, UseRoleOptions } from '@skeletonlabs/floating-ui-svelte';
+import type {
+  offset,
+  UseDismissOptions,
+  UseFloatingOptions,
+  UseFloatingReturn,
+  UseFocusOptions,
+  UseHoverOptions,
+  UseRoleOptions,
+} from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
@@ -29,21 +37,63 @@ export type NeoTooltipProps = {
    * Represents the open/ close state of the tooltip.
    */
   open?: boolean;
+  /**
+   * The target to attach the tooltip to.
+   */
+  target?: HTMLElement | (() => HTMLElement);
+  /**
+   * The floating options to pass to the useFloating hook.
+   */
+  options?: UseFloatingOptions;
+  /**
+   * Modifies the placement by translating the floating element along the specified axes.
+   * A number (shorthand for mainAxis or distance), or an axes configuration object may be passed.
+   *
+   * @default 6
+   */
+  offset?: Parameters<typeof offset>[0];
+  /**
+   * Where to place the floating element relative to its reference element.
+   */
+  placement?: UseFloatingOptions['placement'];
 
   // Hover
 
   /**
    * Whether the tooltip should open/close when hovering over the trigger.
+   *
+   * @default true
    */
   openOnHover?: boolean;
   /**
    * Whether the tooltip should remain open when mousing off the trigger.
+   *
+   * @default false
    */
   keepOpenOnHover?: boolean;
   /**
    * Options to pass to the useHover hook.
    */
   hoverOptions?: UseHoverOptions;
+
+  // Focus
+
+  /**
+   * Whether the tooltip should open/close when focusing on the trigger.
+   *
+   * @default true
+   */
+  openOnFocus?: boolean;
+  /**
+   * Whether the tooltip should remain open when focusing off the trigger.
+   *
+   * @default false
+   */
+  keepOpenOnFocus?: boolean;
+  /**
+   * Options to pass to the useFocus hook.
+   */
+  focusOptions?: UseFocusOptions;
 
   // Dismiss
 
@@ -61,7 +111,7 @@ export type NeoTooltipProps = {
   /**
    * Reference to the trigger element.
    */
-  triggerRef?: HTMLRefProps['ref'];
+  triggerRef?: HTMLRefProps<NeoTooltipHTMLElement>['ref'];
   /**
    * The HTML tag to use for the trigger element.
    */
@@ -70,6 +120,13 @@ export type NeoTooltipProps = {
    * Properties to pass to the trigger element.
    */
   triggerProps?: HTMLNeoBaseElement;
-} & HTMLRefProps &
+} & HTMLRefProps<NeoTooltipHTMLElement> &
   HTMLActionProps &
   HTMLNeoBaseElement;
+
+export type NeoTooltipMethods = {
+  toggle: (open?: boolean) => boolean;
+  update: UseFloatingReturn['update'];
+};
+
+export type NeoTooltipHTMLElement<T extends HTMLElement = HTMLElement> = T & Partial<NeoTooltipMethods>;

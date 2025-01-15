@@ -1,17 +1,45 @@
 <script lang="ts">
+  import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
+
+  let containerRef = $state<HTMLElement>();
+  let content = $state();
 </script>
+
+{#snippet tooltip()}
+  <div class="neo-tooltip-content">
+    <div>Tooltip content</div>
+    <div>Line 1</div>
+    <div>Line 2</div>
+    <div>Line 3</div>
+    {#if content}
+      <div>{content}</div>
+    {/if}
+  </div>
+{/snippet}
 
 <div class="row">
   <div class="column content">
     <span class="label">Tooltip</span>
-    <NeoTooltip>
-      <div>Trigger content</div>
-
-      {#snippet tooltip()}
-        <div>Tooltip content</div>
-      {/snippet}
+    <NeoTooltip {tooltip}>
+      <NeoButton text>Hover Me</NeoButton>
     </NeoTooltip>
+  </div>
+
+  <div class="column content">
+    <span class="label">Tooltip (string)</span>
+    <NeoTooltip tooltip="This is a string tooltip">
+      <NeoButton text>Hover Me</NeoButton>
+    </NeoTooltip>
+  </div>
+
+  <div class="column content">
+    <span class="label">Tooltip (ref)</span>
+
+    <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" />
+
+    <NeoTooltip {tooltip} target={containerRef} />
   </div>
 </div>
 
@@ -22,6 +50,10 @@
     max-width: 80vw;
     white-space: pre-line;
     word-break: break-all;
+  }
+
+  .neo-tooltip-content {
+    @include flex.column($center: true, $gap: var(--neo-gap-xxs));
   }
 
   .column {

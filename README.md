@@ -86,6 +86,18 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] popselect
   - [ ] nested menus
 
+- [ ] list
+  - [ ] virtualized
+  - [ ] infinite scroll
+  - [ ] drag & drop
+  - [ ] pagination
+  - [ ] pull/scroll to refresh
+  - [ ] filter
+  - [ ] sort
+  - [ ] search
+  - [ ] select
+  - [ ] tree
+
 - [ ] Modal/dialog
 - [ ] drawer/panel
   - [ ] collapsible
