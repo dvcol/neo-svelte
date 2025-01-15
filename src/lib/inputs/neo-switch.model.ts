@@ -25,8 +25,10 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'transition'
     | 'labelRef'
     | 'labelProps'
+    | 'containerRef'
     | 'containerTag'
     | 'containerProps'
+    | 'wrapperRef'
     | 'wrapperTag'
     | 'wrapperProps'
   > &

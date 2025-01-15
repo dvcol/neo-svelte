@@ -25,8 +25,10 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     | 'transition'
     | 'labelRef'
     | 'labelProps'
+    | 'containerRef'
     | 'containerTag'
     | 'containerProps'
+    | 'wrapperRef'
     | 'wrapperTag'
     | 'wrapperProps'
   > &

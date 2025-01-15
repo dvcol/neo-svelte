@@ -20,6 +20,8 @@
     type = 'select',
 
     // Other props
+    containerRef = $bindable(),
+    wrapperRef = $bindable(),
     labelRef = $bindable(),
     buttonProps,
     ...rest
@@ -59,4 +61,4 @@
   </NeoButton>
 {/snippet}
 
-<NeoInput bind:ref bind:labelRef bind:touched bind:dirty bind:valid bind:value {type} {after} {...rest} />
+<NeoInput bind:ref bind:containerRef bind:wrapperRef bind:labelRef bind:touched bind:dirty bind:valid bind:value {type} {after} {...rest} />

@@ -38,9 +38,11 @@
     onStepDown,
 
     // Other props
+    wrapperRef = $bindable(),
     labelRef = $bindable(),
     buttonProps,
     groupProps,
+    containerRef = $bindable(),
     containerTag = 'div',
     containerProps,
     ...rest
@@ -139,6 +141,8 @@
 >
   <NeoInput
     bind:ref
+    bind:containerRef
+    bind:wrapperRef
     bind:labelRef
     bind:value
     bind:valid

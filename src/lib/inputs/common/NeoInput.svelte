@@ -78,8 +78,10 @@
     beforeRef = $bindable(),
     beforeProps,
     beforeTag = beforeProps?.onclick ? 'button' : 'span',
+    containerRef = $bindable(),
     containerProps,
     containerTag = 'div',
+    wrapperRef = $bindable(),
     wrapperProps,
     wrapperTag = 'div',
     messageProps,
@@ -300,6 +302,7 @@
 {#snippet inputGroup()}
   <svelte:element
     this={containerTag}
+    bind:this={containerRef}
     role="none"
     data-position={position}
     data-touched={touched}
@@ -370,6 +373,7 @@
 {/snippet}
 
 <NeoInputValidation
+  bind:ref={wrapperRef}
   tag={wrapperTag}
   bind:visible
   bind:messageId

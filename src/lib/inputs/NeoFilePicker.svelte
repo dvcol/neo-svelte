@@ -77,8 +77,10 @@
     groupProps,
     messageTag = 'div',
     messageProps,
+    containerRef = $bindable(),
     containerTag = 'div',
     containerProps,
+    wrapperRef = $bindable(),
     wrapperTag = 'div',
     wrapperProps,
     ...rest
@@ -279,6 +281,7 @@
 {#snippet input()}
   <NeoInput
     bind:ref
+    bind:wrapperRef
     bind:files
     bind:value
     bind:valid
@@ -329,6 +332,7 @@
 
 {#snippet card()}
   <NeoFilePickerCard
+    bind:ref={wrapperRef}
     bind:hovered
     bind:focused
     bind:labelRef
@@ -412,11 +416,12 @@
   </div>
 {/snippet}
 
-<svelte:element this={containerTag} class:neo-file-picker={true} class:neo-expanded={expanded} {...containerProps}>
+<svelte:element this={containerTag} bind:this={containerRef} class:neo-file-picker={true} class:neo-expanded={expanded} {...containerProps}>
   {#if drop && expanded}
     <!-- Expanded picker -->
     <NeoInputValidation
       tag={wrapperTag}
+      bind:ref={wrapperRef}
       bind:visible
       bind:messageId
       {valid}

@@ -26,6 +26,8 @@
     placeholder = pin ? undefined : 'Enter your password',
 
     // Other props
+    containerRef = $bindable(),
+    wrapperRef = $bindable(),
     labelRef = $bindable(),
     buttonProps,
     ...rest
@@ -70,6 +72,8 @@
 {#if pin}
   <NeoPin
     bind:ref
+    bind:containerRef
+    bind:wrapperRef
     bind:labelRef
     bind:value
     bind:valid
@@ -85,6 +89,8 @@
 {:else}
   <NeoInput
     bind:ref
+    bind:containerRef
+    bind:wrapperRef
     bind:labelRef
     bind:value
     bind:valid

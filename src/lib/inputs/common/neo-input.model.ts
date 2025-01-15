@@ -268,6 +268,10 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
   // Other props
 
   /**
+   * The ref to bind to the input wrapper (validation).
+   */
+  wrapperRef?: HTMLRefProps['ref'];
+  /**
    * The HTML tag to use for the wrapper component (when message or error are shown).
    */
   wrapperTag?: keyof HTMLElementTagNameMap;
@@ -276,6 +280,10 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    */
   wrapperProps?: HTMLNeoBaseElement;
 
+  /**
+   * The ref to bind to the input container.
+   */
+  containerRef?: HTMLRefProps['ref'];
   /**
    * The HTML tag to use for the container.
    * @default div

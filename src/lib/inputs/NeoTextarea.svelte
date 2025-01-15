@@ -96,8 +96,10 @@
     afterRef = $bindable(),
     afterProps,
     afterTag = afterProps?.onclick ? 'button' : 'span',
+    containerRef = $bindable(),
     containerProps,
     containerTag = 'div',
+    wrapperRef = $bindable(),
     wrapperProps,
     wrapperTag = 'div',
     messageProps,
@@ -385,6 +387,7 @@
 {#snippet textareaGroup()}
   <svelte:element
     this={containerTag}
+    bind:this={containerRef}
     role="none"
     data-position={position}
     data-touched={touched}
@@ -451,6 +454,7 @@
 
 <NeoInputValidation
   tag={wrapperTag}
+  bind:ref={wrapperRef}
   bind:visible
   bind:messageId
   {valid}

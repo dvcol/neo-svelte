@@ -10,6 +10,7 @@
     error,
 
     // States
+    ref = $bindable(),
     visible = $bindable(false),
     validation,
     validationMessage,
@@ -39,7 +40,7 @@
 </script>
 
 {#if showMessage}
-  <NeoValidation bind:messageId error={errorMessage} {message} {messageProps} {children} {...rest} />
+  <NeoValidation bind:ref bind:messageId error={errorMessage} {message} {messageProps} {children} {...rest} />
 {:else}
   {@render children?.({ messageId, message, error })}
 {/if}

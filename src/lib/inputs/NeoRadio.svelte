@@ -43,6 +43,7 @@
     transition: transitionAction,
 
     // Other props
+    containerRef = $bindable(),
     labelRef = $bindable(),
     labelProps,
     containerTag = 'div',
@@ -58,7 +59,14 @@
   const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
 </script>
 
-<svelte:element this={containerTag} class:neo-radio-container={true} class:neo-rounded={rounded} class:neo-flat={!elevation} {...containerProps}>
+<svelte:element
+  this={containerTag}
+  bind:this={containerRef}
+  class:neo-radio-container={true}
+  class:neo-rounded={rounded}
+  class:neo-flat={!elevation}
+  {...containerProps}
+>
   <button
     class="neo-radio-button"
     role="radio"

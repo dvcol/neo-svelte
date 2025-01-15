@@ -90,5 +90,6 @@ export type NeoValidationProps<
    */
   messageProps?: HTMLNeoBaseElement;
 } & HTMLTransitionProps &
+  HTMLRefProps &
   NeoValidationContext<T, V, C> &
   HTMLNeoBaseElement;

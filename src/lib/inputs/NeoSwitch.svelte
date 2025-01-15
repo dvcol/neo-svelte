@@ -54,8 +54,10 @@
     labelProps,
     messageTag = 'div',
     messageProps,
+    containerRef = $bindable(),
     containerTag = 'div',
     containerProps,
+    wrapperRef = $bindable(),
     wrapperTag = 'div',
     wrapperProps,
     ...rest
@@ -97,6 +99,7 @@
 
 <NeoInputValidation
   tag={wrapperTag}
+  bind:ref={wrapperRef}
   bind:visible
   bind:messageId
   {valid}
@@ -114,7 +117,7 @@
   {...wrapperProps}
   style={toStyle('--neo-validation-padding: 0', wrapperProps?.style)}
 >
-  <svelte:element this={containerTag} class:neo-switch-container={true} class:neo-flat={!elevation} {...containerProps}>
+  <svelte:element this={containerTag} bind:this={containerRef} class:neo-switch-container={true} class:neo-flat={!elevation} {...containerProps}>
     <button
       class="neo-switch-button"
       role="switch"

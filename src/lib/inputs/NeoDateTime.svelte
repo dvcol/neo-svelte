@@ -22,6 +22,8 @@
     placeholder = 'Select a date',
 
     // Other props
+    containerRef = $bindable(),
+    wrapperRef = $bindable(),
     labelRef = $bindable(),
     buttonProps,
     ...rest
@@ -64,6 +66,8 @@
 <div class="neo-date-time" class:neo-picker={ref?.showPicker}>
   <NeoInput
     bind:ref
+    bind:containerRef
+    bind:wrapperRef
     bind:labelRef
     bind:value
     bind:valid

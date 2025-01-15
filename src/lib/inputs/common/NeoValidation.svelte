@@ -14,6 +14,7 @@
     error,
 
     // States
+    ref = $bindable(),
     tag = 'div',
     context,
 
@@ -42,7 +43,7 @@
   const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
 </script>
 
-<svelte:element this={tag} class:neo-validation-group-wrapper={true} out:outFn={outProps} in:inFn={inProps} {...rest}>
+<svelte:element this={tag} bind:this={ref} class:neo-validation-group-wrapper={true} out:outFn={outProps} in:inFn={inProps} {...rest}>
   {@render children?.(innerContext)}
   <div class="neo-validation-message">
     {#if error}

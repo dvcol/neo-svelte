@@ -19,6 +19,7 @@ export type NeoRadioProps = NeoBaseInputProps &
     | 'transition'
     | 'labelRef'
     | 'labelProps'
+    | 'containerRef'
     | 'containerTag'
     | 'containerProps'
   > &

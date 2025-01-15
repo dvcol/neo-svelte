@@ -65,6 +65,7 @@
     messageProps,
     containerTag = 'div',
     containerProps,
+    wrapperRef = $bindable(),
     wrapperTag = 'div',
     wrapperProps,
     floatingProps,
@@ -89,7 +90,6 @@
     get open() {
       return show;
     },
-    translate: true,
     placement: 'bottom',
     middleware: [flip(), offset(6)],
     ...floatingOptions,
@@ -327,6 +327,7 @@
 
 <NeoInputValidation
   tag={wrapperTag}
+  bind:ref={wrapperRef}
   {valid}
   {validation}
   {error}

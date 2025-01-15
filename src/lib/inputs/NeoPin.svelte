@@ -74,8 +74,10 @@
     afterTag = 'div',
     beforeProps,
     beforeTag = 'div',
+    containerRef = $bindable(),
     containerProps,
     containerTag = 'div',
+    wrapperRef = $bindable(),
     wrapperProps,
     wrapperTag,
     messageProps,
@@ -344,6 +346,7 @@
 {#snippet group()}
   <svelte:element
     this={containerTag}
+    bind:this={containerRef}
     role="none"
     class:neo-pin-container={true}
     class:neo-deep={elevation < -3}
@@ -447,6 +450,7 @@
 {#snippet validationGroup()}
   <NeoInputValidation
     tag={wrapperTag}
+    bind:ref={wrapperRef}
     bind:visible
     bind:messageId
     {valid}

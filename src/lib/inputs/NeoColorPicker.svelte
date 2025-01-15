@@ -26,6 +26,8 @@
     maxlength = 7,
 
     // Other props
+    containerRef = $bindable(),
+    wrapperRef = $bindable(),
     labelRef = $bindable(),
     buttonProps,
     pickerRef = $bindable(),
@@ -93,6 +95,8 @@
 
 <NeoInput
   bind:ref
+  bind:containerRef
+  bind:wrapperRef
   bind:labelRef
   bind:value
   bind:valid

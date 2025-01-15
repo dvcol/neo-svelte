@@ -54,8 +54,10 @@
     labelProps,
     messageTag = 'div',
     messageProps,
+    containerRef = $bindable(),
     containerTag = 'div',
     containerProps,
+    wrapperRef = $bindable(),
     wrapperTag = 'div',
     wrapperProps,
     ...rest
@@ -98,6 +100,7 @@
 
 <NeoInputValidation
   tag={wrapperTag}
+  bind:ref={wrapperRef}
   bind:visible
   bind:messageId
   {valid}
@@ -115,7 +118,14 @@
   {...wrapperProps}
   style={toStyle('--neo-validation-padding: 0', wrapperProps?.style)}
 >
-  <svelte:element this={containerTag} class:neo-checkbox-container={true} class:neo-rounded={rounded} class:neo-flat={!elevation} {...containerProps}>
+  <svelte:element
+    this={containerTag}
+    bind:this={containerRef}
+    class:neo-checkbox-container={true}
+    class:neo-rounded={rounded}
+    class:neo-flat={!elevation}
+    {...containerProps}
+  >
     <button
       class="neo-checkbox-button"
       role="checkbox"

@@ -99,6 +99,10 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
 
     // Other props
     /**
+     * The HTML tag to use for the validation container.
+     */
+    wrapperRef?: HTMLRefProps['ref'];
+    /**
      * The HTML tag to use for the wrapper component (when message or error are shown).
      */
     wrapperTag?: keyof HTMLElementTagNameMap;
