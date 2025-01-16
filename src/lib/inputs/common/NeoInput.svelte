@@ -561,7 +561,6 @@
           --neo-label-margin: 0;
           --neo-label-color: var(--neo-input-label-color, inherit);
 
-          min-height: var(--neo-input-label-height);
           transition:
             opacity 0.3s ease,
             padding 0.3s ease,

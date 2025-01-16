@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { debounced } from '@dvcol/svelte-utils';
   import { fade } from 'svelte/transition';
 
   import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
@@ -29,6 +30,7 @@
   /* eslint-enable prefer-const */
 
   const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveTransitionProps);
+  const clear = $derived.by(debounced(() => close && !disabled, 100));
 </script>
 
 <span bind:this={ref} class:neo-affix-container={true} class:neo-skeleton={skeleton} style:--neo-affix-size={size} role="none" {...rest}>
@@ -36,7 +38,7 @@
     <span class="neo-affix-loading" out:fade={leave}>
       <IconCircleLoading {size} />
     </span>
-  {:else if close && !disabled}
+  {:else if clear}
     <button {disabled} class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
       <IconClear {size} />
     </button>
