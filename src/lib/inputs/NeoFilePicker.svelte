@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
 
-  import type { DragEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
+  import type { DragEventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
@@ -36,6 +36,7 @@
     touched = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     placeholder = 'Choose a file',
 
     loading,
@@ -264,6 +265,19 @@
     start: rest.start,
     skeleton,
   });
+
+  let timeout: ReturnType<typeof setTimeout>;
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    clearTimeout(timeout);
+    focusin = true;
+    containerProps?.onfocusin?.(e);
+  };
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    timeout = setTimeout(() => {
+      focusin = false;
+      containerProps?.onfocusout?.(e);
+    }, 0);
+  };
 </script>
 
 {#snippet upload()}
@@ -416,7 +430,15 @@
   </div>
 {/snippet}
 
-<svelte:element this={containerTag} bind:this={containerRef} class:neo-file-picker={true} class:neo-expanded={expanded} {...containerProps}>
+<svelte:element
+  this={containerTag}
+  bind:this={containerRef}
+  class:neo-file-picker={true}
+  class:neo-expanded={expanded}
+  {...containerProps}
+  onfocusin={onFocusIn}
+  onfocusout={onFocusOut}
+>
   {#if drop && expanded}
     <!-- Expanded picker -->
     <NeoInputValidation

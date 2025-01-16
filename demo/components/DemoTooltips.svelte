@@ -48,6 +48,7 @@
     label="Placement"
     position="left"
     bind:value={options.placement}
+    rounded={options.rounded}
     containerProps={{ style: 'margin-left: 6.75rem' }}
     options={[
       { value: 'top', label: 'Top' },
@@ -74,7 +75,7 @@
 
 {#snippet tooltip()}
   <div class="neo-tooltip-content">
-    <div>Tooltip content</div>
+    <div>Tooltip</div>
     <div>Line 1</div>
     <div>Line 2</div>
     <div>Line 3</div>
@@ -88,21 +89,21 @@
   <div class="column content">
     <span class="label">Tooltip</span>
     <NeoTooltip {tooltip} {...options}>
-      <NeoButton text>Hover Me</NeoButton>
+      <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
     </NeoTooltip>
   </div>
 
   <div class="column content">
     <span class="label">Tooltip (string)</span>
     <NeoTooltip tooltip="This is a string tooltip" {...options}>
-      <NeoButton text>Hover Me</NeoButton>
+      <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
     </NeoTooltip>
   </div>
 
   <div class="column content">
     <span class="label">Tooltip (ref)</span>
 
-    <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" />
+    <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" rounded={options.rounded} />
 
     <NeoTooltip {tooltip} target={containerRef} offset={8} {...options} />
   </div>

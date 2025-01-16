@@ -20,6 +20,7 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'disabled'
     | 'skeleton'
     | 'validation'
+    | 'focusin'
     | 'in'
     | 'out'
     | 'transition'

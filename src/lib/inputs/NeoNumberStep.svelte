@@ -24,6 +24,7 @@
     touched = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     type = 'number',
     placeholder = '0',
     center = !label,
@@ -150,6 +151,7 @@
     bind:touched
     bind:hovered
     bind:focused
+    bind:focusin
     {type}
     {placeholder}
     {before}

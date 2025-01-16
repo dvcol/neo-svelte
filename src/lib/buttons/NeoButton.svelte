@@ -203,6 +203,33 @@
       --neo-glass-box-shadow-pressed-2: var(--neo-glass-box-shadow-inset-2);
     }
 
+    .neo-icon,
+    .neo-content {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: scale 0.3s ease;
+      scale: 1;
+    }
+
+    .neo-content {
+      height: 100%;
+
+      .neo-icon:not(.neo-only) {
+        margin-right: var(--neo-btn-icon-gap, 0.35rem);
+        margin-left: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
+      }
+
+      &.neo-reverse {
+        flex-direction: row-reverse;
+
+        .neo-icon:not(.neo-only) {
+          margin-right: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
+          margin-left: var(--neo-btn-icon-gap, 0.35rem);
+        }
+      }
+    }
+
     &:hover {
       color: var(--neo-btn-text-color-hover, inherit);
       box-shadow: var(--neo-btn-box-shadow-hover, var(--neo-box-shadow-raised-2));
@@ -220,6 +247,10 @@
         backdrop-filter 0.3s ease,
         border-radius 0.3s ease,
         box-shadow 0.15s ease-out;
+
+      .neo-content {
+        scale: 0.98;
+      }
     }
 
     &:focus-visible {
@@ -370,31 +401,6 @@
 
     &.neo-coalesce {
       @include mixin.coalesce;
-    }
-
-    .neo-icon,
-    .neo-content {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .neo-content {
-      height: 100%;
-
-      .neo-icon:not(.neo-only) {
-        margin-right: var(--neo-btn-icon-gap, 0.35rem);
-        margin-left: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
-      }
-
-      &.neo-reverse {
-        flex-direction: row-reverse;
-
-        .neo-icon:not(.neo-only) {
-          margin-right: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
-          margin-left: var(--neo-btn-icon-gap, 0.35rem);
-        }
-      }
     }
   }
 </style>

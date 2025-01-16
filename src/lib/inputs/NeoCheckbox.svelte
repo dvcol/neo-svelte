@@ -2,6 +2,7 @@
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { fade } from 'svelte/transition';
 
+  import type { FocusEventHandler } from 'svelte/elements';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoCheckboxProps } from '~/inputs/neo-checkbox.model.js';
 
@@ -96,6 +97,19 @@
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass }, { max: 2, min: -2 }));
   const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
+
+  let timeout: ReturnType<typeof setTimeout>;
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    clearTimeout(timeout);
+    focused = true;
+    containerProps?.onfocusin?.(e);
+  };
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    timeout = setTimeout(() => {
+      focused = false;
+      containerProps?.onfocusout?.(e);
+    }, 0);
+  };
 </script>
 
 <NeoInputValidation
@@ -125,6 +139,8 @@
     class:neo-rounded={rounded}
     class:neo-flat={!elevation}
     {...containerProps}
+    onfocusin={onFocusIn}
+    onfocusout={onFocusOut}
   >
     <button
       class="neo-checkbox-button"

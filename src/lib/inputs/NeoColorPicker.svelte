@@ -20,6 +20,7 @@
     touched = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     placeholder = 'Pick a color',
     pattern = HexColorRegexString,
     minlength = 7,
@@ -104,6 +105,7 @@
   bind:touched
   bind:hovered
   bind:focused
+  bind:focusin
   type="text"
   {placeholder}
   {before}

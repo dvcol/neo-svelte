@@ -244,7 +244,7 @@
     &.neo-rounded {
       --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));
 
-      padding: 0.75rem 1rem;
+      padding: 0.5rem 1rem;
     }
   }
 </style>

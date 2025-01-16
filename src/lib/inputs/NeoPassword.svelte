@@ -22,6 +22,7 @@
     touched = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     type = 'password',
     placeholder = pin ? undefined : 'Enter your password',
 
@@ -98,6 +99,7 @@
     bind:touched
     bind:hovered
     bind:focused
+    bind:focusin
     type={_type}
     {placeholder}
     {after}

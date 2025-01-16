@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
 
+  import type { FocusEventHandler } from 'svelte/elements';
   import type { NeoRadioProps } from '~/inputs/neo-radio.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -25,6 +26,7 @@
     dirty = $bindable(false),
     touched = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     disabled,
     required,
     loading,
@@ -57,6 +59,19 @@
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass }, { max: 2, min: -2 }));
   const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
+
+  let timeout: ReturnType<typeof setTimeout>;
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    clearTimeout(timeout);
+    focusin = true;
+    containerProps?.onfocusin?.(e);
+  };
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    timeout = setTimeout(() => {
+      focusin = false;
+      containerProps?.onfocusout?.(e);
+    }, 0);
+  };
 </script>
 
 <svelte:element
@@ -66,6 +81,8 @@
   class:neo-rounded={rounded}
   class:neo-flat={!elevation}
   {...containerProps}
+  onfocusin={onFocusIn}
+  onfocusout={onFocusOut}
 >
   <button
     class="neo-radio-button"

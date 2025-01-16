@@ -2,6 +2,7 @@
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { fade } from 'svelte/transition';
 
+  import type { FocusEventHandler } from 'svelte/elements';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
 
   import type { NeoSwitchProps } from '~/inputs/neo-switch.model.js';
@@ -31,6 +32,7 @@
     dirty = $bindable(false),
     touched = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     disabled,
     required,
     loading,
@@ -95,6 +97,19 @@
   });
 
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
+
+  let timeout: ReturnType<typeof setTimeout>;
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    clearTimeout(timeout);
+    focusin = true;
+    containerProps?.onfocusin?.(e);
+  };
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    timeout = setTimeout(() => {
+      focusin = false;
+      containerProps?.onfocusout?.(e);
+    }, 0);
+  };
 </script>
 
 <NeoInputValidation
@@ -117,7 +132,15 @@
   {...wrapperProps}
   style={toStyle('--neo-validation-padding: 0', wrapperProps?.style)}
 >
-  <svelte:element this={containerTag} bind:this={containerRef} class:neo-switch-container={true} class:neo-flat={!elevation} {...containerProps}>
+  <svelte:element
+    this={containerTag}
+    bind:this={containerRef}
+    class:neo-switch-container={true}
+    class:neo-flat={!elevation}
+    {...containerProps}
+    onfocusin={onFocusIn}
+    onfocusout={onFocusOut}
+  >
     <button
       class="neo-switch-button"
       role="switch"

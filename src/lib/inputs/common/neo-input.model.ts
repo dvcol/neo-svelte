@@ -238,6 +238,10 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    */
   hovered?: boolean;
   /**
+   * Weather the input group has focus (input, affixes or label).
+   */
+  focusin?: boolean;
+  /**
    * Display a clear button to reset the input value.
    * If used in combination with `loading`, the clear button will be hidden while loading.
    * @default false

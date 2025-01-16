@@ -14,6 +14,7 @@ export type NeoRadioProps = NeoBaseInputProps &
     | 'loading'
     | 'disabled'
     | 'skeleton'
+    | 'focusin'
     | 'in'
     | 'out'
     | 'transition'

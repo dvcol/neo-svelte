@@ -48,6 +48,7 @@
     touched = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     readonly,
     disabled,
     loading,
@@ -118,9 +119,22 @@
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
+  let timeout: ReturnType<typeof setTimeout>;
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    clearTimeout(timeout);
+    focusin = true;
+    containerProps?.onfocusin?.(e);
+  };
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    timeout = setTimeout(() => {
+      focusin = false;
+      containerProps?.onfocusout?.(e);
+    }, 0);
+  };
+
   const affix = $derived(clearable || loading !== undefined || validation);
   const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
-  const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
+  const close = $derived(clearable && (focusin || focused || hovered) && hasValue && !disabled && !readonly);
   const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
 
   const validate: NeoInputMethods<HTMLTextAreaElement>['validate'] = (
@@ -418,9 +432,11 @@
     style:--neo-textarea-label-width={labelWidth}
     out:outFn={outProps}
     in:inFn={inProps}
+    {...containerProps}
     onpointerenter={onPointerEnter}
     onpointerleave={onPointerLeave}
-    {...containerProps}
+    onfocusin={onFocusIn}
+    onfocusout={onFocusOut}
   >
     {#if label}
       <NeoLabel

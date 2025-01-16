@@ -1,7 +1,7 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
 
-  import type { PointerEventHandler } from 'svelte/elements';
+  import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
 
   import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
@@ -44,6 +44,7 @@
     touched = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     disabled,
     readonly,
 
@@ -124,8 +125,21 @@
     return value !== undefined && value !== null;
   });
 
+  let timeout: ReturnType<typeof setTimeout>;
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
+    clearTimeout(timeout);
+    focusin = true;
+    containerProps?.onfocusin?.(e);
+  };
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
+    timeout = setTimeout(() => {
+      focusin = false;
+      containerProps?.onfocusout?.(e);
+    }, 0);
+  };
+
   const affix = $derived(clearable || loading !== undefined || validation);
-  const close = $derived(clearable && (focused || hovered) && hasValue && !disabled && !readonly);
+  const close = $derived(clearable && (focusin || focused || hovered) && hasValue && !disabled && !readonly);
   const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
   const inside = $derived(position === NeoInputLabelPosition.Inside && label);
 
@@ -339,6 +353,8 @@
     {...containerProps}
     onpointerenter={onPointerEnter}
     onpointerleave={onPointerLeave}
+    onfocusin={onFocusIn}
+    onfocusout={onFocusOut}
   >
     {@render prefix()}
     {#if label}

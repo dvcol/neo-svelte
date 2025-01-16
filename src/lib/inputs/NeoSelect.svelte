@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { wait } from '@dvcol/common-utils/common/promise';
+
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoSelectProps } from '~/inputs/neo-select.model.js';
 
@@ -20,6 +22,7 @@
     touched = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     type = 'select',
     options = [],
 
@@ -45,22 +48,35 @@
     start: rest.start,
     text,
     style,
-    ...buttonProps,
-    class: ['neo-select-toggle', buttonProps?.class],
-  });
-</script>
-
-{#snippet after()}
-  <NeoButton
-    onclick={() => {
+    onclick: () => {
       ref?.focus?.();
       ref?.click?.();
       ref?.showPicker?.();
-    }}
-    {...afterProps}
-  >
+    },
+    ...buttonProps,
+    class: ['neo-select-toggle', buttonProps?.class],
+  });
+
+  let space = $state(7);
+  const onpointerdown = () => {
+    space = 6;
+  };
+
+  let timeout: ReturnType<typeof setTimeout>;
+  const onpointerup = async () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(async () => {
+      space = 8;
+      await wait(300);
+      space = 7;
+    }, 200);
+  };
+</script>
+
+{#snippet after()}
+  <NeoButton {onpointerdown} {onpointerup} {...afterProps}>
     {#snippet icon()}
-      <IconDoubleChevron />
+      <IconDoubleChevron {space} />
     {/snippet}
   </NeoButton>
 {/snippet}
@@ -77,12 +93,17 @@
   bind:containerRef
   bind:wrapperRef
   bind:labelRef
-  bind:touched
+  bind:value
   bind:dirty
   bind:valid
-  bind:value
+  bind:touched
+  bind:hovered
+  bind:focused
+  bind:focusin
   {type}
   {after}
   children={options?.length ? content : children}
+  {onpointerdown}
+  {onpointerup}
   {...rest}
-></NeoInput>
+/>

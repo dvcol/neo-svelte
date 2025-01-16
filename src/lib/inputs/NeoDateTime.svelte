@@ -19,6 +19,7 @@
     touched = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    focusin = $bindable(false),
     placeholder = 'Select a date',
 
     // Other props
@@ -75,6 +76,7 @@
     bind:touched
     bind:hovered
     bind:focused
+    bind:focusin
     {type}
     {placeholder}
     after={ref?.showPicker ? after : undefined}
