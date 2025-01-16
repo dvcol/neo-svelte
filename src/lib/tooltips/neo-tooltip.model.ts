@@ -77,6 +77,14 @@ export type NeoTooltipProps = {
    * @default match elevation (2)
    */
   blur?: NeoTooltipElevation;
+  /**
+   * Width strategy for the tooltip.
+   * - `true`: the tooltip will match the width of the trigger.
+   * - `min`: the tooltip will be at least as wide as the trigger.
+   * - `max`: the tooltip will be at most as wide as the trigger.
+   * - `string`: a css width value will be applied to the tooltip.
+   */
+  width?: boolean | 'min' | 'max' | string;
 
   // Hover
 

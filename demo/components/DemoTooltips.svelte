@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { height } from '@dvcol/svelte-utils/transition';
+
   import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -80,7 +82,7 @@
     <div>Line 2</div>
     <div>Line 3</div>
     {#if content}
-      <div>{content}</div>
+      <div transition:height={{ duration: 200 }} style="overflow: hidden">{content}</div>
     {/if}
   </div>
 {/snippet}
@@ -88,7 +90,7 @@
 <div class="row">
   <div class="column content">
     <span class="label">Tooltip</span>
-    <NeoTooltip {tooltip} {...options}>
+    <NeoTooltip {tooltip} width {...options}>
       <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
     </NeoTooltip>
   </div>
@@ -105,7 +107,7 @@
 
     <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" rounded={options.rounded} />
 
-    <NeoTooltip {tooltip} target={containerRef} offset={8} {...options} />
+    <NeoTooltip {tooltip} target={containerRef} offset={8} width {...options} />
   </div>
 </div>
 

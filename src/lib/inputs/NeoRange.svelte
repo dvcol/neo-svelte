@@ -362,6 +362,7 @@
     {#if lowerTooltip.open}
       <span
         class:neo-range-value={true}
+        class:neo-rounded={rounded}
         style:--neo-range-handler-z-index={lastIndex ? 0 : 1}
         transition:fade={enterTransitionProps}
         {...floatingProps}
@@ -378,6 +379,7 @@
     {#if isArray && upperTooltip.open}
       <span
         class:neo-range-value={true}
+        class:neo-rounded={rounded}
         transition:fade={enterTransitionProps}
         {...floatingProps}
         bind:this={upperTooltip.elements.floating}
@@ -707,8 +709,13 @@
 
     &-value {
       --neo-tooltip-z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
+      --neo-tooltip-padding: 0.125rem 0.375rem;
 
-      @include mixin.tooltip($padding: 0.125rem 0.375rem);
+      @include mixin.tooltip;
+
+      &.neo-rounded {
+        --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));
+      }
     }
   }
 </style>

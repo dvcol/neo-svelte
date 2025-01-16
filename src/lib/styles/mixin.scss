@@ -278,7 +278,7 @@
 }
 
 @mixin tooltip(
-  $padding: 0.25rem 0.625rem,
+  $padding: --neo-tooltip-padding,
   $background-color: --neo-tooltip-bg-color,
   $border-color: --neo-tooltip-border-color,
   $border-radius: --neo-tooltip-border-radius,
@@ -287,18 +287,20 @@
   $z-index: --neo-tooltip-z-index
 ) {
   z-index: var($z-index, var(--neo-z-index-in-front, 1));
-  padding: $padding;
+  padding: var($padding, 0.4375rem 0.625rem);
   background-color: var($background-color, var(--neo-glass-background-color));
   border: var(--neo-border-width, 1px) solid var($border-color, var(--neo-glass-background-color));
   border-color: var(
     $border-color,
     var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
   );
-  border-radius: var($border-radius, var(--neo-border-radius-sm));
+  border-radius: var($border-radius, var(--neo-border-radius));
   outline: none;
   box-shadow: var($box-shadow, var(--neo-glass-box-shadow-raised-1));
   backdrop-filter: var($backdrop-filter, var(--neo-blur-2));
   transition:
     box-shadow 0.3s ease,
-    backdrop-filter 0.3s ease;
+    backdrop-filter 0.3s ease,
+    border-radius 0.3s ease,
+    padding 0.3s ease;
 }

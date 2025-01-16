@@ -31,6 +31,7 @@
     rounded,
     elevation = DefaultShadowTooltipElevation,
     blur,
+    width,
 
     // Hover
     openOnHover = true,
@@ -195,6 +196,14 @@
 
   $effect(() => addMethods(ref));
   $effect(() => addMethods(triggerRef));
+
+  const tooltipWidth = $derived.by(() => {
+    if (!triggerRef?.clientWidth) return;
+    if (width === true) return `width: ${triggerRef?.clientWidth}px;`;
+    if (width === 'min') return `min-width: ${triggerRef?.clientWidth}px;`;
+    if (width === 'max') return `max-width: ${triggerRef?.clientWidth}px;`;
+    if (typeof width === 'string') return `width: ${width};`;
+  });
 </script>
 
 {#if !target}
@@ -225,7 +234,7 @@
     {...tooltipHandler}
     {...rest}
     style:transform-origin={tooltipOrigin}
-    style={toStyle(tooltipStyle, rest.style)}
+    style={toStyle(tooltipStyle, tooltipWidth, rest.style)}
   >
     {#if typeof tooltip === 'string'}
       {tooltip}
@@ -243,8 +252,7 @@
 
     &.neo-rounded {
       --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));
-
-      padding: 0.5rem 1rem;
+      --neo-tooltip-padding: 0.625rem 1rem;
     }
   }
 </style>
