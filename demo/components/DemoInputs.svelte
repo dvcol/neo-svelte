@@ -951,7 +951,11 @@
         bind:valid={rangeMinMaxState.valid}
         bind:value={rangeMinMaxState.value}
         {...options}
-      />
+      >
+        {#snippet tooltip({ value, upper })}
+          {value} / {upper ? 200 : -200}
+        {/snippet}
+      </NeoRange>
     </SphereBackdrop>
   </div>
 </div>

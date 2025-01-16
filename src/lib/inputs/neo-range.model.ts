@@ -81,6 +81,13 @@ export type NeoRangeStyles = {
   elevation?: NeoRangeElevation;
 };
 
+export type NeoRangeTooltipContext = {
+  lower?: boolean;
+  upper?: boolean;
+  value?: number;
+  context: NeoRangeContext;
+};
+
 export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation' | 'error' | 'context' | 'message' | 'messageTag' | 'messageProps'> &
   NeoValidationState<NeoRangeValue> & {
     // Snippets
@@ -88,6 +95,10 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
      * A snippet or a string to display as the input label.
      */
     label?: NeoLabelProps['label'];
+    /**
+     * A snippet to display as value labels.
+     */
+    tooltip?: Snippet<[NeoRangeTooltipContext]>;
     /**
      * A snippet to display as the input prefix.
      */

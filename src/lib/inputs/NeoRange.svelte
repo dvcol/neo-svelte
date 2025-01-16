@@ -19,6 +19,7 @@
   let {
     // Snippets
     label,
+    tooltip,
     message,
     error,
     before,
@@ -86,7 +87,7 @@
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
 
   const show = $derived(tooltips && (focused || hovered));
-  const tooltip = useFloating({
+  const lowerTooltip = useFloating({
     get open() {
       return show;
     },
@@ -95,7 +96,7 @@
     ...floatingOptions,
   });
 
-  const arrayTooltip = useFloating({
+  const upperTooltip = useFloating({
     get open() {
       return show;
     },
@@ -105,8 +106,8 @@
   });
 
   const updateTooltips = () => {
-    tooltip.update();
-    if (isArray) arrayTooltip.update();
+    lowerTooltip.update();
+    if (isArray) upperTooltip.update();
   };
 
   const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
@@ -168,6 +169,7 @@
     return { ...validity };
   };
 
+  let lastIndex = $state(0);
   let slider = $state<HTMLElement>();
   const updateValue = (event: PointerEvent, index = 0) => {
     if (disabled || readonly || !slider) return;
@@ -182,6 +184,7 @@
     } else setValue(val, index);
 
     updateState();
+    lastIndex = index;
   };
 
   const getDragHandler = (element: HTMLElement, index = 0) => {
@@ -227,15 +230,15 @@
     };
   };
 
-  const handler = $derived(getDragHandler(tooltip.elements.reference as HTMLElement));
-  const progressHandler = $derived(getDragHandler(arrayTooltip.elements.reference as HTMLElement, 1));
+  const handler = $derived(getDragHandler(lowerTooltip.elements.reference as HTMLElement));
+  const progressHandler = $derived(getDragHandler(upperTooltip.elements.reference as HTMLElement, 1));
 
   const onClick: PointerEventHandler<HTMLElement> = e => {
     let index = 0;
-    if (isArray && tooltip?.elements.reference && arrayTooltip?.elements.reference) {
+    if (isArray && lowerTooltip?.elements.reference && upperTooltip?.elements.reference) {
       // select handle closest to the click
-      const lowerOffset = Math.abs(e.clientX - tooltip.elements.reference.getBoundingClientRect().left);
-      const upperOffset = Math.abs(arrayTooltip.elements.reference.getBoundingClientRect().left - e.clientX);
+      const lowerOffset = Math.abs(e.clientX - lowerTooltip.elements.reference.getBoundingClientRect().left);
+      const upperOffset = Math.abs(upperTooltip.elements.reference.getBoundingClientRect().left - e.clientX);
       index = lowerOffset <= upperOffset ? 0 : 1;
     }
     updateValue(e, index);
@@ -356,26 +359,35 @@
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
   >
-    {#if tooltip.open}
+    {#if lowerTooltip.open}
       <span
         class:neo-range-value={true}
+        style:--neo-range-handler-z-index={lastIndex ? 0 : 1}
         transition:fade={enterTransitionProps}
         {...floatingProps}
-        bind:this={tooltip.elements.floating}
-        style={toStyle(tooltip.floatingStyles, floatingProps?.style)}
+        bind:this={lowerTooltip.elements.floating}
+        style={toStyle(lowerTooltip.floatingStyles, floatingProps?.style)}
       >
-        {lower}
+        {#if tooltip}
+          {@render tooltip({ lower: true, upper: false, value: lower, context })}
+        {:else}
+          {lower}
+        {/if}
       </span>
     {/if}
-    {#if isArray && arrayTooltip.open}
+    {#if isArray && upperTooltip.open}
       <span
         class:neo-range-value={true}
         transition:fade={enterTransitionProps}
         {...floatingProps}
-        bind:this={arrayTooltip.elements.floating}
-        style={toStyle(arrayTooltip.floatingStyles, floatingProps?.style)}
+        bind:this={upperTooltip.elements.floating}
+        style={toStyle(upperTooltip.floatingStyles, floatingProps?.style)}
       >
-        {upper}
+        {#if tooltip}
+          {@render tooltip({ lower: false, upper: true, value: upper, context })}
+        {:else}
+          {upper}
+        {/if}
       </span>
     {/if}
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {...labelProps}>
@@ -403,14 +415,19 @@
             <span class="neo-range-handle-before" class:neo-array={isArray}>
               <!--   handle before   -->
             </span>
-            <button bind:this={tooltip.elements.reference} class="neo-range-handle" {...handler}>
+            <button
+              bind:this={lowerTooltip.elements.reference}
+              class="neo-range-handle"
+              style:--neo-range-handler-z-index={lastIndex ? 0 : 1}
+              {...handler}
+            >
               <!--   handle handle   -->
             </button>
             {#if isArray}
               <span class="neo-range-handle-before neo-range">
                 <!--   handle before   -->
               </span>
-              <button bind:this={arrayTooltip.elements.reference} class="neo-range-handle" {...progressHandler}>
+              <button bind:this={upperTooltip.elements.reference} class="neo-range-handle" {...progressHandler}>
                 <!--   handle handle   -->
               </button>
             {/if}
@@ -469,7 +486,7 @@
     }
 
     &-handle {
-      z-index: var(--neo-z-index-in-front, 1);
+      z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
       display: inline-flex;
       align-self: center;
       box-sizing: border-box;
@@ -689,6 +706,8 @@
     }
 
     &-value {
+      --neo-tooltip-z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
+
       @include mixin.tooltip($padding: 0.125rem 0.375rem);
     }
   }
