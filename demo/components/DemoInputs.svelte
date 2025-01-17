@@ -117,6 +117,7 @@
   const customState = new ValidationState();
 
   const selectState = new ValidationState<HTMLSelectElement>();
+  const selectMultipleState = new ValidationState<HTMLSelectElement>();
 
   const numberState = new ValidationState({ type: 'number', value: 0 });
 
@@ -149,6 +150,9 @@
       validState,
       invalidState,
       customState,
+
+      selectState,
+      selectMultipleState,
 
       numberState,
 
@@ -608,6 +612,32 @@
         size={undefined}
       >
         <option value="" selected>Select an option below</option>
+        <option value="value 1">Label for value 1</option>
+        <option value="value 2">Label for value 2</option>
+        <option value="value 3" disabled>Label for value 3</option>
+        <option value="value 4">Label for value 4</option>
+      </NeoSelect>
+    </SphereBackdrop>
+  </div>
+
+  <div class="column content">
+    <span class="label">Native Multiple Select</span>
+    {@render validationState(selectMultipleState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoSelect
+        type="select"
+        validation
+        required
+        multiple
+        label="Native Multiple Select"
+        bind:ref={selectMultipleState.ref}
+        bind:touched={selectMultipleState.touched}
+        bind:dirty={selectMultipleState.dirty}
+        bind:valid={selectMultipleState.valid}
+        bind:value={selectMultipleState.value}
+        {...options}
+        size={undefined}
+      >
         <option value="value 1">Label for value 1</option>
         <option value="value 2">Label for value 2</option>
         <option value="value 3">Label for value 3</option>

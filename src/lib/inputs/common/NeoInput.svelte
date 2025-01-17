@@ -251,7 +251,7 @@
   {#if affix}
     <NeoAffix
       bind:ref={affixRef}
-      class={[after ? 'neo-after' : undefined, rest.type === 'select' ? 'neo-select' : undefined]}
+      class={[after ? 'neo-after' : undefined, rest.type === 'select' ? 'neo-select' : undefined, rest.multiple ? 'neo-multiple' : undefined]}
       {loading}
       {close}
       {disabled}
@@ -553,6 +553,36 @@
         box-shadow: var(--neo-input-hover-shadow, var(--neo-box-shadow-flat));
       }
 
+      :global(.neo-input:is(select) option) {
+        padding: 0.375rem 0.5rem;
+        border-radius: var(--neo-input-border-radius, var(--neo-border-radius-sm));
+        cursor: pointer;
+        transition:
+          color 0.1s ease,
+          box-shadow 0.3s ease;
+        margin-inline: -0.5rem;
+        margin-block: 0.375rem;
+      }
+
+      :global(.neo-input:is(select) option:disabled) {
+        color: var(--neo-text-color-disabled);
+        cursor: not-allowed;
+      }
+
+      :global(.neo-input:is(select) option:checked) {
+        color: var(--neo-select-text-color-checked, var(--neo-text-color-active));
+        background-color: unset;
+        box-shadow: var(--neo-box-shadow-inset-1);
+      }
+
+      :global(.neo-input:is(select) option:hover) {
+        color: var(--neo-select-text-color-hover, var(--neo-text-color-hover));
+      }
+
+      :global(.neo-input:is(select) option:active) {
+        color: var(--neo-select-text-color-active, var(--neo-text-color-hover-active));
+      }
+
       :global(.neo-label-container) {
         width: 100%;
         transition:
@@ -624,8 +654,12 @@
         padding-left: 0.5rem;
       }
 
-      :global(.neo-affix-container.neo-select) {
+      :global(.neo-affix-container.neo-select:not(.neo-multiple)) {
         margin-left: 0.5rem;
+      }
+
+      :global(.neo-affix-container.neo-select.neo-multiple) {
+        margin-left: -0.5rem;
       }
 
       :global(.neo-affix-container.neo-select.neo-after) {
@@ -633,7 +667,11 @@
       }
 
       &.neo-rounded {
-        border-radius: var(--neo-input-border-radius-lg, var(--neo-border-radius-lg));
+        border-radius: var(--neo-input-border-radius, var(--neo-border-radius-lg));
+
+        :global(.neo-input:is(select) option) {
+          border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
+        }
 
         :global(.neo-affix-container:not(.neo-after)) {
           margin-right: 0.25rem;
@@ -710,7 +748,7 @@
         }
 
         :global(.neo-label-container .neo-label) {
-          padding: 0.75rem 1rem 0.1875rem;
+          padding: 0.75rem 1rem 0.25rem;
           line-height: var(--neo-line-height-xs, 1rem);
         }
 
@@ -719,7 +757,7 @@
         }
 
         :global(.neo-label-container.neo-floating .neo-label) {
-          translate: 0 calc(50% - ((0.75rem - 0.1875rem) / 2));
+          translate: 0 calc(50% - ((0.75rem - 0.25rem) / 2));
         }
 
         :global(.neo-label-container:not(.neo-floating) .neo-label) {

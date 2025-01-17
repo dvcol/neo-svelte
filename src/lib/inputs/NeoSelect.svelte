@@ -25,6 +25,8 @@
     focusin = $bindable(false),
     type = 'select',
     options = [],
+    multiple,
+    floating,
 
     // Other props
     containerRef = $bindable(),
@@ -82,8 +84,8 @@
 {/snippet}
 
 {#snippet content()}
-  {#each options as option}
-    <option value={option.value}>{option.label ?? option.value}</option>
+  {#each options as { label, ...option }}
+    <option {...option} value={option.value}>{label ?? option.value}</option>
   {/each}
   {@render children?.()}
 {/snippet}
@@ -101,7 +103,9 @@
   bind:focused
   bind:focusin
   {type}
-  {after}
+  {multiple}
+  floating={multiple ? false : floating}
+  after={multiple ? undefined : after}
   children={options?.length ? content : children}
   {onpointerdown}
   {onpointerup}
