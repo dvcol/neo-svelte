@@ -54,9 +54,17 @@
     containerProps={{ style: 'margin-left: 6.75rem' }}
     options={[
       { value: 'top', label: 'Top' },
+      { value: 'top-start', label: 'Top Start' },
+      { value: 'top-end', label: 'Top End' },
       { value: 'right', label: 'Right' },
+      { value: 'right-start', label: 'Right Start' },
+      { value: 'right-end', label: 'Right End' },
       { value: 'bottom', label: 'Bottom' },
+      { value: 'bottom-start', label: 'Bottom Start' },
+      { value: 'bottom-end', label: 'Bottom End' },
       { value: 'left', label: 'Left' },
+      { value: 'left-start', label: 'Left Start' },
+      { value: 'left-end', label: 'Left End' },
     ]}
   />
 
@@ -107,7 +115,7 @@
 
     <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" rounded={options.rounded} />
 
-    <NeoTooltip {tooltip} target={containerRef} offset={8} width {...options} />
+    <NeoTooltip {tooltip} target={containerRef} offset={8} width="min" {...options} />
   </div>
 </div>
 

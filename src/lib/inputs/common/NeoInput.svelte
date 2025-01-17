@@ -1,5 +1,6 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
+  import { resize } from '@dvcol/svelte-utils/resize';
 
   import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
 
@@ -11,7 +12,7 @@
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { NeoInputLabelPosition } from '~/inputs/common/neo-input.model.js';
 
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { type ActionWithProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import {
     computeGlassFilter,
     computeHoverShadowElevation,
@@ -182,8 +183,8 @@
   };
 
   $effect(() => {
-    if (first) waitForTick();
-    updateRefs();
+    if (!first) return updateRefs();
+    waitForTick();
   });
 
   let visible = $state(false);
@@ -237,6 +238,7 @@
       class:neo-deep={elevation < -3}
       {disabled}
       {readonly}
+      use:resize={updateRefs}
       {...beforeProps}
     >
       {@render before(context)}
@@ -271,6 +273,7 @@
       class:neo-deep={elevation < -3}
       {disabled}
       {readonly}
+      use:resize={updateRefs}
       {...afterProps}
     >
       {@render after(context)}
@@ -377,6 +380,7 @@
         required={rest.required}
         {disabled}
         onclick={onLabelClick}
+        use={{ use: resize, props: updateRefs } as ActionWithProps}
         {...labelProps}
       >
         {@render input()}
