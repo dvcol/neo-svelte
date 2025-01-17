@@ -1,5 +1,6 @@
 <script lang="ts">
   import { toStyle } from '@dvcol/common-utils/common/class';
+  import { clamp } from '@dvcol/common-utils/common/math';
   import { flip, offset, useFloating } from '@skeletonlabs/floating-ui-svelte';
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
@@ -11,7 +12,6 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { clamp } from '~/utils/math.utils.js';
   import { computeShadowElevation } from '~/utils/shadow.utils.js';
   import { enterTransitionProps } from '~/utils/transition.utils.js';
 
@@ -175,7 +175,7 @@
     if (disabled || readonly || !slider) return;
     const { width, left } = slider.getBoundingClientRect();
     const diff = event.clientX - left;
-    const ratio = Math.max(0, Math.min(1, diff / width));
+    const ratio = clamp(diff / width, 0, 1);
     const val = Math.round(min + ratio * (max - min));
 
     if (step) {

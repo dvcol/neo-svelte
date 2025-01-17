@@ -2,6 +2,8 @@
   /* eslint-disable prefer-const -- necessary for binding checked */
 
   import { toStyle } from '@dvcol/common-utils/common/class';
+  import { clamp } from '@dvcol/common-utils/common/math';
+  import { resize } from '@dvcol/svelte-utils/resize';
   import { flip, offset, useDismiss, useFloating, useFocus, useHover, useInteractions, useRole } from '@skeletonlabs/floating-ui-svelte';
 
   import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
@@ -138,8 +140,8 @@
     return floating.placement;
   });
 
-  const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${Math.max(0, Math.min(elevation, MaxShadowElevation))})`);
-  const tooltipBlur = $derived(`var(--neo-blur-${Math.max(0, Math.min(blur ?? elevation, MaxShadowElevation))})`);
+  const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${clamp(elevation, 0, MaxShadowElevation)})`);
+  const tooltipBlur = $derived(`var(--neo-blur-${clamp(blur ?? elevation, 0, MaxShadowElevation)})`);
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -198,10 +200,10 @@
   $effect(() => addMethods(triggerRef));
 
   const tooltipWidth = $derived.by(() => {
-    if (!triggerRef?.clientWidth) return;
-    if (width === true) return `width: ${triggerRef?.clientWidth}px;`;
-    if (width === 'min') return `min-width: ${triggerRef?.clientWidth}px;`;
-    if (width === 'max') return `max-width: ${triggerRef?.clientWidth}px;`;
+    if (!triggerRef?.offsetWidth) return;
+    if (width === true) return `width: ${triggerRef?.offsetWidth}px;`;
+    if (width === 'min') return `min-width: ${triggerRef?.offsetWidth}px;`;
+    if (width === 'max') return `max-width: ${triggerRef?.offsetWidth}px;`;
     if (typeof width === 'string') return `width: ${width};`;
   });
 </script>
@@ -231,6 +233,7 @@
     in:inFn={inProps}
     out:outFn={outProps}
     use:useFn={useProps}
+    use:resize={floating.update}
     {...tooltipHandler}
     {...rest}
     style:transform-origin={tooltipOrigin}
@@ -249,6 +252,8 @@
 
   .neo-tooltip {
     @include mixin.tooltip;
+
+    overflow: auto;
 
     &.neo-rounded {
       --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));

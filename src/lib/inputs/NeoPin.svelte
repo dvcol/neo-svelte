@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { doubleBind } from '@dvcol/svelte-utils/watch';
+
   import type { EventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
   import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
@@ -12,7 +14,6 @@
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { ArrowPrefix } from '~/utils/regex.utils.js';
   import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
-  import { doubleBind } from '~/utils/utils.svelte.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {

@@ -1,3 +1,5 @@
+import { clamp } from '@dvcol/common-utils/common/math';
+
 export const MaxShadowElevation = 5;
 export const MinShadowElevation = -5;
 export const DefaultShadowElevation = 3;
@@ -64,9 +66,9 @@ export const computeButtonShadows = (elevation: number | ShadowElevation, text?:
   if (text) return;
   return `
       --neo-btn-box-shadow: var(--neo-box-shadow-raised-${Math.min(Math.abs(elevation), 3)});
-      --neo-btn-box-shadow-hover: var(--neo-box-shadow-raised-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-focus: var(--neo-box-shadow-raised-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
-      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-${Math.min(Math.max(Math.abs(elevation) - 1, 1), 2)});
+      --neo-btn-box-shadow-hover: var(--neo-box-shadow-raised-${clamp(Math.abs(elevation) - 1, 1, 2)});
+      --neo-btn-box-shadow-focus: var(--neo-box-shadow-raised-${clamp(Math.abs(elevation) - 1, 1, 2)});
+      --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-${clamp(Math.abs(elevation) - 1, 1, 2)});
+      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-${clamp(Math.abs(elevation) - 1, 1, 2)});
       `;
 };
