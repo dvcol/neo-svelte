@@ -112,7 +112,7 @@
 
   @media (width > 1550px) {
     .column {
-      @include flex.row($gap: var(--neo-gap-xl));
+      @include flex.row($gap: var(--neo-gap-lg));
 
       &.content {
         width: 100%;

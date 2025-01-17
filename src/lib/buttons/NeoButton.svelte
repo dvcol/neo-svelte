@@ -191,7 +191,6 @@
 
     &.neo-empty {
       padding: var(--neo-btn-padding-empty, 0.5rem);
-      aspect-ratio: 1 / 1;
     }
 
     &.neo-loading {
