@@ -41,6 +41,10 @@ export type NeoSkeletonMediaProps = {
    */
   circle?: boolean;
   /**
+   * Whether to add glass like transparency to the skeleton.
+   */
+  glass?: boolean;
+  /**
    * Aspect ratio of the media.
    */
   ratio?: CSSStyleDeclaration['aspectRatio'];

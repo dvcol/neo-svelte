@@ -21,6 +21,7 @@
     size = type === 'avatar' ? '70%' : '20%',
     width,
     height,
+    glass,
 
     // Styles
     rounded,
@@ -60,6 +61,7 @@
     class:neo-skeleton-media={true}
     class:neo-rounded={rounded}
     class:neo-circle={circle}
+    class:neo-glass={glass}
     style:aspect-ratio={ratio}
     style:width
     style:height
@@ -90,6 +92,10 @@
     border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius));
 
     @include mixin.skeleton;
+
+    &.neo-glass {
+      --neo-skeleton-color: var(--neo-glass-skeleton-color);
+    }
 
     &.neo-rounded {
       border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-lg));

@@ -42,6 +42,10 @@ export type NeoSkeletonTextProps = {
    * Height of the element.
    */
   height?: CSSStyleDeclaration['height'];
+  /**
+   * Whether to add glass like transparency to the skeleton.
+   */
+  glass?: boolean;
 
   // Other props
   /**

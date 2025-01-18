@@ -8,6 +8,7 @@
 
   const options = $state<NeoSkeletonTextProps>({
     loading: true,
+    glass: false,
   });
 
   const titleProps = { style: 'align-self: center; width: 12rem', class: 'test' };
@@ -31,6 +32,7 @@
 <div class="row">
   <NeoButtonGroup>
     <NeoButton toggle bind:checked={options.loading}>Skeleton</NeoButton>
+    <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
   </NeoButtonGroup>
 </div>
 

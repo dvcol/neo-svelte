@@ -17,6 +17,7 @@
     justify,
     width,
     height,
+    glass,
 
     // State
     loading = true,
@@ -41,7 +42,7 @@
 </script>
 
 <NeoSkeletonContainer {loading} in={inAction} out={outAction} {width} {height} {containerProps} {content}>
-  <div class:neo-skeleton-text={true} style:width style:height in:inFn={inProps} out:outFn={outProps} {...rest}>
+  <div class:neo-skeleton-text={true} class:neo-glass={glass} style:width style:height in:inFn={inProps} out:outFn={outProps} {...rest}>
     {#if title}
       <div class:neo-skeleton-text-line={true} class:neo-title={title} class:neo-alt={alt} {...titleProps}>&nbsp;</div>
     {/if}
@@ -66,6 +67,10 @@
     flex: 1 1 auto;
     flex-direction: column;
     gap: var(--neo-skeleton-gap, var(--neo-gap-lg));
+
+    &.neo-glass {
+      --neo-skeleton-color: var(--neo-glass-skeleton-color);
+    }
   }
 
   .neo-skeleton-text-line {
