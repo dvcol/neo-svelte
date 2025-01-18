@@ -1,7 +1,6 @@
 import { fileURLToPath, URL } from 'url';
 
 import { sveltekit } from '@sveltejs/kit/vite';
-
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import { sveltePreprocess } from 'svelte-preprocess';
@@ -62,6 +61,7 @@ const config: ViteUserConfig = {
     setupFiles: ['/test/setup.test.ts'],
     alias: {
       '~/': fileURLToPath(new URL('./src/lib', import.meta.url)),
+      'src/': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
 };
