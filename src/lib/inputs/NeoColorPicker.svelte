@@ -126,9 +126,7 @@
 <style lang="scss">
   .neo-color-picker {
     box-sizing: border-box;
-    min-width: 3rem;
     height: 100%;
-    min-height: 2.25rem;
     margin: 0;
     padding: 0;
     border: none;

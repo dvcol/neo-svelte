@@ -781,6 +781,8 @@
     {@render validationState(colorState, true)}
     <SphereBackdrop glass={options.glass}>
       <NeoColorPicker
+        validation
+        required
         bind:touched={colorState.touched}
         bind:dirty={colorState.dirty}
         bind:valid={colorState.valid}
