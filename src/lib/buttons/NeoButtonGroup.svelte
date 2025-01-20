@@ -170,6 +170,11 @@
         backdrop-filter: none;
       }
 
+      &.neo-convex,
+      &.neo-inset {
+        border-color: var(--neo-btn-border-color, transparent);
+      }
+
       &.neo-flat {
         border-color: var(--neo-btn-border-color, var(--neo-glass-border-color));
       }

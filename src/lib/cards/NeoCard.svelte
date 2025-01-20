@@ -177,7 +177,8 @@
   class:neo-hovered={hovered}
   class:neo-start={start}
   class:neo-raised={elevation > 3 || hoverElevation > 3}
-  class:neo-inset={elevation < -3 || hoverElevation < -3}
+  class:neo-inset={elevation < 0 || hoverElevation < 0}
+  class:neo-deep={elevation < -3 || hoverElevation < -3}
   class:neo-flat={!elevation}
   class:neo-hover-flat={hoverFlat}
   class:neo-flat-hover={flatHover}
@@ -288,7 +289,7 @@
       }
     }
 
-    &.neo-inset.neo-pressed,
+    &.neo-deep.neo-pressed,
     &.neo-raised:not(.neo-convex) {
       margin: var(--neo-shadow-margin-lg, 1.125rem);
     }
@@ -407,6 +408,11 @@
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
       backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+
+      &.neo-convex,
+      &.neo-inset {
+        border-color: var(--neo-card-border-color, transparent);
+      }
     }
 
     &.neo-start {

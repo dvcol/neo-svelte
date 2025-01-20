@@ -350,8 +350,12 @@
         }
       }
 
-      &.neo-flat {
+      &.neo-flat:not(.neo-pressed, :active:not(.neo-loading)) {
         border-color: var(--neo-btn-border-color, var(--neo-glass-border-color));
+
+        &:hover {
+          border-color: transparent;
+        }
       }
     }
 

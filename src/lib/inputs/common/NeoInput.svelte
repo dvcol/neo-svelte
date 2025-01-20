@@ -344,7 +344,8 @@
     class:neo-validation={validation}
     class:neo-disabled={disabled}
     class:neo-raised={elevation > 3 || elevation + hover > 3}
-    class:neo-inset={elevation < -3 || elevation + hover < -3}
+    class:neo-inset={elevation < 0 || elevation + hover < 0}
+    class:neo-deep={elevation < -3 || elevation + hover < -3}
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
     class:neo-flat-hover={flatHover}
@@ -539,12 +540,12 @@
         border-color: transparent !important;
       }
 
-      &.neo-inset.neo-pressed,
+      &.neo-deep.neo-pressed,
       &.neo-raised {
         margin: var(--neo-shadow-margin-lg, 1.125rem);
       }
 
-      &.neo-inset {
+      &.neo-deep {
         padding: 0.25rem;
       }
 
@@ -815,6 +816,10 @@
             var(--neo-glass-left-border-color)
         );
         backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+
+        &.neo-inset {
+          border-color: var(--neo-input-border-color, transparent);
+        }
       }
 
       &.neo-validation {
