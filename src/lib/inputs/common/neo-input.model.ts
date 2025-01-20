@@ -340,6 +340,15 @@ export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoIn
    * A snippet to display as the input prefix.
    */
   before?: Snippet<[NeoInputContext<T>]>;
+  /**
+   * A snippet to display inside the input group but outside the input.
+   * This is meant for internal use only. Elements will not be styled as affixes.
+   *
+   * Use `before` or `after` for custom affixes.
+   *
+   * @internal
+   */
+  inner?: Snippet<[NeoInputContext<T>]>;
 
   // Other props
 

@@ -25,6 +25,8 @@
     message,
     after,
     before,
+    iconDownload,
+    iconUpload,
 
     // States
     id = label ? `neo-file-picker-${crypto.randomUUID()}` : undefined,
@@ -96,7 +98,6 @@
   let dragWith = $state<string | number>();
   let dragHeight = $state<string | number>();
 
-  let overlayRef = $state<HTMLDivElement>();
   let contentMargin = $state<{ top?: string | number; left?: string | number; right?: string | number; bottom?: string | number }>({});
 
   const updateMargin = (target: Element | null | undefined) => {
@@ -283,13 +284,24 @@
 {#snippet upload()}
   <NeoButton {...afterProps}>
     {#snippet icon()}
-      {#if isDragging}
+      {#if isDragging && iconDownload}
+        {@render iconDownload()}
+      {:else if isDragging}
         <IconDownload size="1.25rem" scale="1.5" stroke="1" />
+      {:else if iconUpload}
+        {@render iconUpload()}
       {:else}
         <IconFileUpload size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}
     {/snippet}
   </NeoButton>
+{/snippet}
+
+{#snippet overlay(ctx: NeoInputContext<NeoInputHTMLElement>)}
+  <div class="neo-drop-overlay">
+    {dropText}
+  </div>
+  {@render rest.inner?.(ctx)}
 {/snippet}
 
 {#snippet input()}
@@ -331,17 +343,12 @@
     in={inAction}
     out={outAction}
     transition={transitionAction}
+    inner={drop ? overlay : rest.inner}
     {...rest}
     oninput={mirrorInput}
     onchange={mirrorChange}
     containerProps={{ ...groupProps, class: ['neo-file-picker-input-group', groupProps?.class] }}
-  >
-    {#if drop}
-      <div bind:this={overlayRef} class="neo-drop-overlay">
-        {dropText}
-      </div>
-    {/if}
-  </NeoInput>
+  />
 {/snippet}
 
 {#snippet card()}
@@ -373,6 +380,8 @@
     detailText={expandText}
     {label}
     labelProps={{ for: id, ...labelProps }}
+    {iconDownload}
+    {iconUpload}
     {...cardProps}
     {onClear}
     onRemove={removeFile}

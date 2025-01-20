@@ -10,6 +10,10 @@ export type NeoSelectOption = {
 
 export type NeoSelectProps = {
   /**
+   * Custom icon for the picker.
+   */
+  icon?: NeoButtonProps['icon'];
+  /**
    * Button properties to pass to the show/hide password button.
    */
   buttonProps?: NeoButtonProps;

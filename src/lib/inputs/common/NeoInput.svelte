@@ -28,6 +28,7 @@
     label,
     before,
     after,
+    inner,
     message,
     error,
     children,
@@ -389,6 +390,7 @@
       {@render input()}
     {/if}
     {@render suffix()}
+    {@render inner?.(context)}
   </svelte:element>
 {/snippet}
 

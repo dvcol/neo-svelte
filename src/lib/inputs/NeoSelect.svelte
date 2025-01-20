@@ -13,6 +13,7 @@
   let {
     // Snippets
     children,
+    icon: customIcon,
 
     // State
     ref = $bindable(),
@@ -78,7 +79,11 @@
 {#snippet after()}
   <NeoButton {onpointerdown} {onpointerup} {...afterProps}>
     {#snippet icon()}
-      <IconDoubleChevron {space} />
+      {#if customIcon}
+        {@render customIcon()}
+      {:else}
+        <IconDoubleChevron {space} />
+      {/if}
     {/snippet}
   </NeoButton>
 {/snippet}

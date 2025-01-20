@@ -2,6 +2,16 @@ import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
 export type NeoNumberStepProps = NeoInputProps & {
+  // Snippets
+  /**
+   * Custom icon for the plus button.
+   */
+  iconPlus?: NeoButtonProps['icon'];
+  /**
+   * Custom icon for the minus button.
+   */
+  iconMinus?: NeoButtonProps['icon'];
+
   // States
   /**
    * Center the input value.

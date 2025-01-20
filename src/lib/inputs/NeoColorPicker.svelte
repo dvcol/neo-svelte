@@ -12,6 +12,9 @@
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
+    icon: customIcon,
+
     // State
     ref = $bindable(),
     value = $bindable(),
@@ -89,7 +92,11 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon()}
-      <IconPaint size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
+      {#if customIcon}
+        {@render customIcon()}
+      {:else}
+        <IconPaint size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
+      {/if}
     {/snippet}
   </NeoButton>
 {/snippet}

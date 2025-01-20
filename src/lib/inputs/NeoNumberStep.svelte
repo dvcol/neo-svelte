@@ -14,6 +14,8 @@
   let {
     // Snippets
     label,
+    iconPlus,
+    iconMinus,
 
     // State
     defaultValue = 0,
@@ -115,7 +117,11 @@
 {#snippet before()}
   <NeoButton aria-label="Decrement number" title="Decrement number" onclick={decrement} {...buttonsProps}>
     {#snippet icon()}
-      <IconMinus size="1.25rem" />
+      {#if iconMinus}
+        {@render iconMinus()}
+      {:else}
+        <IconMinus size="1.25rem" />
+      {/if}
     {/snippet}
   </NeoButton>
 {/snippet}
@@ -123,7 +129,11 @@
 {#snippet after()}
   <NeoButton aria-label="Increment number" title="Increment number" onclick={increment} {...buttonsProps}>
     {#snippet icon()}
-      <IconAdd size="1.25rem" />
+      {#if iconPlus}
+        {@render iconPlus()}
+      {:else}
+        <IconAdd size="1.25rem" />
+      {/if}
     {/snippet}
   </NeoButton>
 {/snippet}

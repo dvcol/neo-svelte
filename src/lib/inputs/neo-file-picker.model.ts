@@ -44,6 +44,14 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    * A snippet or a string to display as the input label.
    */
   label?: Snippet | string;
+  /**
+   * Custom icon for the download button.
+   */
+  iconDownload?: NeoButtonProps['icon'];
+  /**
+   * Custom icon for the upload button.
+   */
+  iconUpload?: NeoButtonProps['icon'];
 
   // States
   /**
@@ -110,6 +118,15 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
   Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange' | 'label'>;
 
 export type NeoFilePickerCardProps = Omit<NeoCardProps, 'children'> & {
+  /**
+   * Custom icon for the download button.
+   */
+  iconDownload?: NeoButtonProps['icon'];
+  /**
+   * Custom icon for the upload button.
+   */
+  iconUpload?: NeoButtonProps['icon'];
+
   // States
   /**
    * If the is currently in a dragging state.

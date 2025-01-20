@@ -11,6 +11,9 @@
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
+    icon: customIcon,
+
     // Styles
     pin,
 
@@ -61,7 +64,9 @@
 {#snippet after()}
   <NeoButton bind:checked={show} {...afterProps}>
     {#snippet icon()}
-      {#if show}
+      {#if customIcon}
+        {@render customIcon({ show })}
+      {:else if show}
         <IconWatchOff size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {:else}
         <IconWatch size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />

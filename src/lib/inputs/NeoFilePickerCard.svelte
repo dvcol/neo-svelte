@@ -6,10 +6,10 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
-  import IconAdd from '~/icons/IconAdd.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
   import IconDownload from '~/icons/IconDownload.svelte';
+  import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconPencil from '~/icons/IconPencil.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
@@ -20,6 +20,8 @@
     // Snippets
     children,
     label,
+    iconUpload,
+    iconDownload,
 
     // States
     ref = $bindable(),
@@ -159,12 +161,16 @@
       <div class="neo-expanded-button">
         <NeoButton aria-label="Add files" title="Add files" text rounded {skeleton} {disabled} onclick={onEdit} {...addButtonProps}>
           {#snippet icon()}
-            {#if dragging}
-              <IconDownload size="2.5rem" scale="1.25" stroke="0.5" />
+            {#if dragging && iconDownload}
+              {@render iconDownload()}
+            {:else if dragging}
+              <IconDownload size="2rem" scale="1.25" stroke="0.5" />
             {:else if loading}
-              <IconCircleLoading size="2.5rem" scale="1" />
+              <IconCircleLoading size="2rem" scale="1" />
+            {:else if iconUpload}
+              {@render iconUpload()}
             {:else}
-              <IconAdd size="2.5rem" scale="1" stroke="0.5" />
+              <IconFileUpload size="2rem" scale="1" stroke="0.5" />
             {/if}
           {/snippet}
         </NeoButton>

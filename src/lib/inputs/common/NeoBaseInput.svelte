@@ -241,6 +241,9 @@
     use:useFn={useProps}
     {...rest}
   />
+
+  <!--  Space necessary for self-closing input -->
+  {@render children?.()}
 {:else if rest.type === 'checkbox'}
   <input
     aria-invalid={valid === undefined ? undefined : !valid}
@@ -264,6 +267,9 @@
     use:useFn={useProps}
     {...rest}
   />
+
+  <!--  Space necessary for self-closing input -->
+  {@render children?.()}
 {:else if rest.type === 'radio'}
   <input
     type="radio"
@@ -285,6 +291,9 @@
     use:useFn={useProps}
     {...rest}
   />
+
+  <!--  Space necessary for self-closing input -->
+  {@render children?.()}
 {:else}
   <input
     aria-invalid={valid === undefined ? undefined : !valid}
@@ -306,6 +315,9 @@
     use:useFn={useProps}
     {...rest}
   />
+
+  <!--  Space necessary for self-closing input -->
+  {@render children?.()}
 {/if}
 
 <style lang="scss">
