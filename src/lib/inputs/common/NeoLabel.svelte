@@ -19,6 +19,7 @@
     use,
 
     // Other props
+    containerRef = $bindable(),
     containerTag = 'div',
     containerProps,
     ...rest
@@ -29,7 +30,7 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-<svelte:element this={containerTag} class:neo-label-container={true} {...containerProps}>
+<svelte:element this={containerTag} bind:this={containerRef} class:neo-label-container={true} {...containerProps}>
   <label
     bind:this={ref}
     class:neo-label={true}

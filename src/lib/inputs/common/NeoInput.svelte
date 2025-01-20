@@ -172,10 +172,14 @@
   let affixWidth = $state<string>();
   let afterWidth = $state<string>();
   let beforeWidth = $state<string>();
-  let labelWidth = $state<string>();
+
+  let labelContainerRef = $state<HTMLElement>();
+  let labelContainerHeight = $state<string>();
   let labelHeight = $state<string>();
+  let labelWidth = $state<string>();
 
   const updateRefs = () => {
+    labelContainerHeight = `${labelContainerRef?.clientHeight ?? 0}px`;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
     beforeWidth = `${beforeRef?.clientWidth ?? 0}px`;
@@ -347,6 +351,7 @@
     style:--neo-input-glass-blur={filter}
     style:--neo-input-box-shadow={boxShadow}
     style:--neo-input-hover-shadow={hoverShadow}
+    style:--neo-input-label-container-height={labelContainerHeight}
     style:--neo-input-label-height={labelHeight}
     style:--neo-input-label-width={labelWidth}
     style:--neo-input-before-width={beforeWidth}
@@ -365,6 +370,7 @@
       <NeoLabel
         for={id}
         bind:ref={labelRef}
+        bind:containerRef={labelContainerRef}
         containerProps={{
           class: [
             first ? 'neo-first' : undefined,
@@ -750,6 +756,7 @@
         }
 
         :global(.neo-label-container .neo-label) {
+          min-width: var(--neo-input-label-width);
           padding: 0.75rem 1rem 0.25rem;
           line-height: var(--neo-line-height-xs, 1rem);
         }
@@ -759,7 +766,7 @@
         }
 
         :global(.neo-label-container.neo-floating .neo-label) {
-          translate: 0 calc(50% - ((0.75rem - 0.25rem) / 2));
+          translate: 0 calc((var(--neo-input-label-container-height) / 2) - 50% - 0.25rem);
         }
 
         :global(.neo-label-container:not(.neo-floating) .neo-label) {

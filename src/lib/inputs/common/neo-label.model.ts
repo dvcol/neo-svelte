@@ -31,6 +31,10 @@ export type NeoLabelProps = {
 
   // Other props
   /**
+   * The ref to bind to the label container.
+   */
+  containerRef?: HTMLRefProps['ref'];
+  /**
    * The HTML tag to use for the container.
    * @default div
    */
