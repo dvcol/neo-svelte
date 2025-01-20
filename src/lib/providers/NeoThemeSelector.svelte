@@ -18,7 +18,9 @@
 
     // state
     remember: showRemember,
+    sourceLabel = 'Source',
     source: showSource = true,
+    themeLabel = 'Theme',
     theme: showTheme = true,
     reset: showReset,
 
@@ -60,7 +62,7 @@
           <IconSunFull />
         </span>
       {/snippet}
-      <span>Source</span>
+      <span>{sourceLabel}</span>
     </NeoButton>
   {/if}
   {#if showTheme}
@@ -79,7 +81,7 @@
           <IconSun />
         {/if}
       {/snippet}
-      <span>Theme</span>
+      <span>{themeLabel}</span>
     </NeoButton>
   {/if}
   {#if showReset}

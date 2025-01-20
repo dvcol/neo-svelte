@@ -9,7 +9,6 @@ export type NeoThemeSelectorProps = {
   children?: Snippet<[INeoThemeProviderContext]>;
 
   // State
-
   /**
    * Whether to show the reset style button or not.
    */
@@ -19,9 +18,21 @@ export type NeoThemeSelectorProps = {
    */
   theme?: boolean;
   /**
+   * The label to show in the theme selector.
+   *
+   * @default Theme
+   */
+  themeLabel?: string;
+  /**
    * Whether to show the light source button or not.
    */
   source?: boolean;
+  /**
+   * The label to show in the source selector.
+   *
+   * @default Source
+   */
+  sourceLabel?: string;
   /**
    * Whether to show the remember button or not.
    */

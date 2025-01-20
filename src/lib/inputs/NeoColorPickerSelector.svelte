@@ -24,11 +24,16 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    border: none;
+    border: var(--neo-color-picker-border-width, 0) solid var(--neo-color-picker-border-color, transparent);
     border-radius: var(--neo-border-radius-xs);
+    cursor: pointer;
     transition: border-radius 0.3s ease;
     appearance: none;
     aspect-ratio: 4/3;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
 
     &::-webkit-color-swatch-wrapper {
       padding: 0;

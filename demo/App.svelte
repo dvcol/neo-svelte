@@ -15,6 +15,7 @@
   import IconGithub from '~/icons/IconGithub.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
+  import NeoThemePicker from '~/providers/NeoThemePicker.svelte';
   import NeoThemeProvider from '~/providers/NeoThemeProvider.svelte';
   import NeoThemeSelector from '~/providers/NeoThemeSelector.svelte';
 
@@ -67,6 +68,7 @@
       </NeoTabs>
 
       <NeoThemeSelector rounded reset remember />
+      <NeoThemePicker rounded />
     </header>
 
     <main class="column view" class:transition={transitioning}>

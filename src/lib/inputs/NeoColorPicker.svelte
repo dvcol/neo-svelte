@@ -77,7 +77,17 @@
 </script>
 
 {#snippet before()}
-  <NeoColorPickerSelector bind:ref={pickerRef} bind:value height="100%" rounded={rest.rounded} {oninput} {onchange} {...pickerProps} />
+  <NeoColorPickerSelector
+    bind:ref={pickerRef}
+    bind:value
+    height="100%"
+    rounded={rest.rounded}
+    disabled={rest.disabled}
+    readonly={rest.readonly}
+    {oninput}
+    {onchange}
+    {...pickerProps}
+  />
 {/snippet}
 
 {#snippet after()}
