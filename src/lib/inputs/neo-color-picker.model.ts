@@ -1,6 +1,15 @@
 import type { HTMLInputAttributes } from 'svelte/elements';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
+import type { HTMLRefProps } from '~/utils/html-element.utils.js';
+
+export type NeoColorPickerSelectorProps = HTMLRefProps<HTMLInputElement> &
+  HTMLInputAttributes & {
+    /**
+     * If true, the input will have a rounded border.
+     */
+    rounded?: NeoInputProps['rounded'];
+  };
 
 export type NeoColorPickerProps = {
   /**
@@ -10,11 +19,11 @@ export type NeoColorPickerProps = {
   /**
    * Reference to the color picker input element.
    */
-  pickerRef?: HTMLInputElement;
+  pickerRef?: NeoColorPickerSelectorProps['ref'];
   /**
    * Input properties to pass to the color picker input.
    */
-  pickerProps?: HTMLInputAttributes;
+  pickerProps?: Omit<NeoColorPickerSelectorProps, 'ref'>;
   /**
    * Button properties to pass to the picker button.
    */

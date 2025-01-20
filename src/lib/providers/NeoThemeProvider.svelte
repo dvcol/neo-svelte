@@ -4,6 +4,8 @@
   import { setNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
   import { type NeoThemeProviderProps } from '~/providers/neo-theme-provider.model.js';
 
+  import '~/providers/neo-theme-provider.scss';
+
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
@@ -24,14 +26,3 @@
 </script>
 
 {@render children?.(context.state)}
-
-<style lang="scss" global>
-  @use 'src/lib/styles/reset' as reset;
-  @use 'src/lib/styles/theme' as theme;
-
-  // Inject reset styles
-  @include reset.nested;
-
-  // Inject theme styles
-  @include theme.theme;
-</style>

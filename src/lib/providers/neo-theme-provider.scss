@@ -1,0 +1,8 @@
+@use '~/styles/reset' as reset;
+@use '~/styles/theme' as theme;
+
+// Inject reset styles
+@include reset.nested;
+
+// Inject theme styles
+@include theme.theme;

@@ -6,6 +6,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconPaint from '~/icons/IconPaint.svelte';
+  import NeoColorPickerSelector from '~/inputs/NeoColorPickerSelector.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { HexColorRegexString } from '~/utils/regex.utils.js';
   import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
@@ -76,17 +77,7 @@
 </script>
 
 {#snippet before()}
-  <input
-    class:neo-color-picker={true}
-    class:neo-rounded={rest.rounded}
-    class:neo-label={rest.label}
-    bind:this={pickerRef}
-    bind:value
-    type="color"
-    {oninput}
-    {onchange}
-    {...pickerProps}
-  />
+  <NeoColorPickerSelector bind:ref={pickerRef} bind:value height="100%" rounded={rest.rounded} {oninput} {onchange} {...pickerProps} />
 {/snippet}
 
 {#snippet after()}
@@ -122,42 +113,3 @@
   {maxlength}
   {...rest}
 />
-
-<style lang="scss">
-  .neo-color-picker {
-    box-sizing: border-box;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    border: none;
-    border-radius: var(--neo-border-radius-xs);
-    transition: border-radius 0.3s ease;
-    appearance: none;
-    aspect-ratio: 4/3;
-
-    &::-webkit-color-swatch-wrapper {
-      padding: 0;
-    }
-
-    &::-webkit-color-swatch-wrapper,
-    &::-webkit-color-swatch {
-      border: none;
-    }
-
-    &::-webkit-color-swatch-wrapper,
-    &::-webkit-color-swatch,
-    &::-moz-color-swatch {
-      border-radius: var(--neo-border-radius-xs);
-    }
-
-    &.neo-rounded {
-      border-radius: var(--neo-border-radius-lg);
-
-      &::-webkit-color-swatch-wrapper,
-      &::-webkit-color-swatch,
-      &::-moz-color-swatch {
-        border-radius: var(--neo-border-radius-lg);
-      }
-    }
-  }
-</style>
