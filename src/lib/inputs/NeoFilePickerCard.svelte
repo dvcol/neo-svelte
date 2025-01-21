@@ -221,7 +221,7 @@
       &::before {
         position: absolute;
         margin: -0.5rem;
-        border: var(--neo-border-width) dashed var(--neo-grey-soft);
+        border: var(--neo-border-width) dashed var(--neo-text-color-secondary);
         border-radius: var(--neo-border-radius);
         transition: margin 0.3s ease;
         content: '';

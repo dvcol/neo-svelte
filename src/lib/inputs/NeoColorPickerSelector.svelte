@@ -24,6 +24,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    overflow: hidden;
     border: var(--neo-color-picker-border-width, 0) solid var(--neo-color-picker-border-color, transparent);
     border-radius: var(--neo-border-radius-xs);
     cursor: pointer;

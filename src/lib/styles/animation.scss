@@ -46,30 +46,16 @@
   }
 }
 
-@mixin skeleton($start: var(--neo-skeleton-color-start), $end: var(--neo-skeleton-color-end)) {
+@mixin skeleton($start: var(--neo-skeleton-start), $end: var(--neo-skeleton-end)) {
   @keyframes skeleton {
-    0% {
-      color: $start;
-      background-color: $start;
-      border-color: $start;
+    0%,
+    80%,
+    100% {
+      opacity: $start;
     }
 
     40% {
-      color: $end;
-      background-color: $end;
-      border-color: $end;
-    }
-
-    80% {
-      color: $start;
-      background-color: $start;
-      border-color: $start;
-    }
-
-    100% {
-      color: $start;
-      background-color: $start;
-      border-color: $start;
+      opacity: $end;
     }
   }
 }

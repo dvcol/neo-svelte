@@ -141,7 +141,7 @@
   onkeydown={onKeydownEnter}
   onkeyup={onKeyUpEnter}
   onclick={onClick}
-  disabled={disabled || skeleton}
+  {disabled}
   {...rest}
 >
   <span class="neo-content" class:neo-reverse={reverse}>

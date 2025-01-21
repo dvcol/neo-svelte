@@ -66,13 +66,17 @@
 </script>
 
 <NeoButtonGroup {rounded} {...rest}>
-  <NeoButton onclick={clearBackground}>{labelBackground}</NeoButton>
+  <NeoButton aria-label="Reset theme background color to default" title="Reset theme background color to default" onclick={clearBackground}>
+    {labelBackground}
+  </NeoButton>
   <span class="neo-theme-picker">
-    <NeoColorPickerSelector bind:value={background} {rounded} />
+    <NeoColorPickerSelector aria-label="Select theme background color" title="Select theme background color" bind:value={background} {rounded} />
   </span>
-  <NeoButton onclick={clearText}>{labelText}</NeoButton>
+  <NeoButton aria-label="Reset theme text color to default" title="Reset theme text color to default" onclick={clearText}>
+    {labelText}
+  </NeoButton>
   <span class="neo-theme-picker">
-    <NeoColorPickerSelector bind:value={text} {rounded} />
+    <NeoColorPickerSelector aria-label="Select theme text color" title="Select theme text color" bind:value={text} {rounded} />
   </span>
   {@render children?.(context.state)}
 </NeoButtonGroup>

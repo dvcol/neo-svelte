@@ -168,22 +168,26 @@
 }
 
 @mixin skeleton(
+  $start: 1,
+  $step: var(--neo-skeleton-step, -0.3),
   $color: var(--neo-skeleton-color),
   $timing: 3s,
   $easing: var(--neo-transition-skeleton),
-  $delay: 1s,
-  $step: var(--neo-skeleton-color-step, 0.05)
+  $delay: 1s
 ) {
-  --neo-skeleton-color-start: #{$color};
-  --neo-skeleton-color-end: oklch(from #{$color} calc(l - #{$step}) c h);
+  --neo-skeleton-start: #{$start};
+  --neo-skeleton-end: calc(#{$start} + #{$step});
 
-  color: var(--neo-skeleton-color-start);
-  background-color: var(--neo-skeleton-color-start);
-  border-color: var(--neo-skeleton-color-start);
+  color: $color;
+  background-color: $color;
+  background-clip: padding-box;
+  border-color: $color;
+  opacity: $start;
   transition:
     background-color $delay ease,
     color $delay ease,
-    border-color $delay ease;
+    border-color $delay ease,
+    opacity $delay ease;
   animation: skeleton $timing $easing infinite;
   animation-delay: $delay;
 
