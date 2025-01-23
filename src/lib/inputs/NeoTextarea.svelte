@@ -822,14 +822,25 @@
       --neo-border-color: var(--neo-glass-border-color);
 
       background-color: var(--neo-textarea-bg-color, var(--neo-glass-background-color));
-      border-color: var(
-        --neo-textarea-border-color,
-        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
-      );
       backdrop-filter: var(--neo-textarea-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
 
       &.neo-inset {
         border-color: var(--neo-textarea-border-color, transparent);
+      }
+
+      &:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+        border-color: var(
+          --neo-textarea-border-color,
+          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+            var(--neo-glass-left-border-color)
+        );
+      }
+
+      &.neo-hover.neo-flat-hover.neo-hovered,
+      &.neo-hover.neo-flat-hover:hover,
+      &.neo-hover.neo-flat-hover:focus-within,
+      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered .neo-hover-flat:focus-within) {
+        border-color: var(--neo-extarea-border-color, var(--neo-glass-border-color-flat));
       }
     }
 

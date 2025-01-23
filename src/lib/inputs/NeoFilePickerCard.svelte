@@ -261,6 +261,7 @@
       --neo-label-padding: 0;
 
       &.neo-label {
+        margin-top: 0.25rem;
         margin-bottom: 0.5rem;
 
         .neo-expanded-detail {

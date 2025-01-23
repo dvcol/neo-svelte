@@ -74,6 +74,7 @@
   // Border
   --neo-glass-border-color: oklch(from var(--neo-shadow-color-light) l c h / 60%);
   --neo-glass-border-color-hover: oklch(from var(--neo-shadow-color-light) l c h / 30%);
+  --neo-glass-border-color-flat: oklch(from var(--neo-shadow-color-dark) l c h / 60%);
 
   // Background
   --neo-glass-background-color: oklch(from var(--neo-background-color) l c h / 20%);
@@ -144,6 +145,7 @@
   // Border
   --neo-dark-glass-border-color: var(--neo-dark-shadow-color-light);
   --neo-dark-glass-border-color-hover: var(--neo-dark-glass-shadow-color-light);
+  --neo-dark-glass-border-color-flat: oklch(from var(--neo-dark-glass-shadow-color-light) calc(l + 0.1) c h);
 
   // Background
   --neo-dark-glass-background-color: oklch(from var(--neo-dark-background-color) l c h / 20%);
@@ -218,6 +220,7 @@
   // Border
   --neo-glass-border-color: var(--neo-dark-glass-border-color);
   --neo-glass-border-color-hover: var(--neo-dark-glass-border-color-hover);
+  --neo-glass-border-color-flat: var(--neo-dark-glass-border-color-flat);
 
   // Background
   --neo-glass-background-color: var(--neo-dark-glass-background-color);

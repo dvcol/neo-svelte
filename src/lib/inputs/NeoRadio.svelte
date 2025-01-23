@@ -177,6 +177,7 @@
       margin: 0 0 0.125rem;
       padding: 0;
       color: inherit;
+      font: inherit;
       text-decoration: none;
       background-color: color-mix(in srgb, transparent, currentcolor 1%);
       border: var(--neo-radio-border-width, var(--neo-border-width, 1px)) var(--neo-radio-border-color, transparent) solid;
@@ -191,10 +192,15 @@
         border-color 0.3s ease,
         background-color 0.3s ease;
 
+      :global(svg) {
+        display: block;
+        max-width: 100%;
+      }
+
       &.neo-disabled,
       &.neo-flat {
         background-color: transparent;
-        border-color: var(--neo-input-border-color, var(--neo-border-color));
+        border-color: var(--neo-radio-border-color, var(--neo-border-color));
       }
 
       &:focus-visible,
@@ -218,15 +224,13 @@
       }
 
       &.neo-glass {
-        @include mixin.glass;
-
         background-color: var(--neo-radio-bg-color, var(--neo-glass-background-color));
-        border-color: var(
-          --neo-radio-border-color,
-          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-            var(--neo-glass-left-border-color)
-        );
+        border-color: var(--neo-radio-border-color, transparent);
         backdrop-filter: var(--neo-radio-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+
+        &.neo-flat {
+          border-color: var(--neo-radio-border-color, var(--neo-glass-border-color-flat));
+        }
       }
 
       &.neo-start {

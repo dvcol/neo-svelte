@@ -257,7 +257,7 @@
     box-sizing: border-box;
     width: fit-content;
     margin: var(--neo-card-margin, var(--neo-shadow-margin, 0.625rem));
-    padding: $full-spacing;
+    padding: var(--neo-card-padding, $full-spacing);
     color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
     border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
@@ -403,15 +403,26 @@
       --neo-border-color: var(--neo-glass-border-color);
 
       background-color: var(--neo-card-bg-color, var(--neo-glass-background-color));
-      border-color: var(
-        --neo-card-border-color,
-        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
-      );
       backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
 
       &.neo-convex,
       &.neo-inset {
         border-color: var(--neo-card-border-color, transparent);
+      }
+
+      &:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+        border-color: var(
+          --neo-card-border-color,
+          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+            var(--neo-glass-left-border-color)
+        );
+      }
+
+      &.neo-hover.neo-flat-hover.neo-hovered,
+      &.neo-hover.neo-flat-hover:hover,
+      &.neo-hover.neo-flat-hover:focus-within,
+      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+        border-color: var(--neo-card-border-color, var(--neo-glass-border-color-flat));
       }
     }
 

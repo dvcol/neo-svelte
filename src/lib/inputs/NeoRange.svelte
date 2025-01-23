@@ -513,7 +513,7 @@
       }
 
       &:focus-visible {
-        border-color: var(--neo-rangre-handle-border-color-focused, var(--neo-border-color-focused));
+        border-color: var(--neo-range-handle-border-color-focused, var(--neo-border-color-focused));
       }
 
       &-before,
@@ -605,14 +605,14 @@
         color: var(--neo-text-color-disabled);
         box-shadow: var(--neo-box-shadow-flat);
         cursor: not-allowed;
-        opacity: var(--neo-card-opacity-disabled, var(--neo-opacity-disabled));
+        opacity: var(--neo-range-opacity-disabled, var(--neo-opacity-disabled));
       }
 
       &.neo-disabled,
       &.neo-flat {
         --neo-range-min-width: calc(var(--neo-range-height) / 2 - 2px);
 
-        border-color: var(--neo-input-border-color, var(--neo-border-color));
+        border-color: var(--neo-range-border-color, var(--neo-border-color));
 
         .neo-range-rail {
           margin-right: calc(var(--neo-range-min-width) + var(--neo-range-spacing));
@@ -620,7 +620,7 @@
         }
 
         .neo-range-handle {
-          background-color: var(--neo-input-border-color, currentcolor);
+          background-color: var(--neo-range-border-color, currentcolor);
           box-shadow: var(--neo-box-shadow-flat);
 
           &:active {
@@ -654,19 +654,17 @@
       }
 
       &:focus-visible {
-        border-color: var(--neo-radio-border-color-focused, var(--neo-border-color-focused));
+        border-color: var(--neo-range-border-color-focused, var(--neo-border-color-focused));
       }
 
       &.neo-glass {
-        @include mixin.glass;
-
         background-color: var(--neo-range-bg-color, var(--neo-glass-background-color));
-        border-color: var(
-          --neo-radio-border-color,
-          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-            var(--neo-glass-left-border-color)
-        );
-        backdrop-filter: var(--neo-radio-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+        border-color: var(--neo-range-border-color, transparent);
+        backdrop-filter: var(--neo-range-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+
+        &.neo-flat {
+          border-color: var(--neo-range-border-color, var(--neo-glass-border-color-flat));
+        }
       }
 
       &.neo-start {

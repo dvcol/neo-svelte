@@ -140,8 +140,8 @@
     return floating.placement;
   });
 
-  const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${clamp(elevation, 0, MaxShadowElevation)})`);
-  const tooltipBlur = $derived(`var(--neo-blur-${clamp(blur ?? elevation, 0, MaxShadowElevation)})`);
+  const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${clamp(elevation, 1, MaxShadowElevation)})`);
+  const tooltipBlur = $derived(`var(--neo-blur-${clamp(blur ?? elevation, 1, MaxShadowElevation)})`);
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));

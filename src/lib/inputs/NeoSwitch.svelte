@@ -314,10 +314,10 @@
       &.neo-flat {
         --neo-switch-toggle-spacing: 0.25rem;
 
-        border-color: var(--neo-input-border-color, var(--neo-border-color));
+        border-color: var(--neo-switch-border-color, var(--neo-border-color));
 
         .neo-switch-toggle {
-          background-color: var(--neo-input-border-color, currentcolor);
+          background-color: var(--neo-switch-border-color, currentcolor);
           box-shadow: var(--neo-box-shadow-flat);
         }
 
@@ -354,15 +354,13 @@
       }
 
       &.neo-glass {
-        @include mixin.glass;
-
         background-color: var(--neo-switch-bg-color, var(--neo-glass-background-color));
-        border-color: var(
-          --neo-radio-border-color,
-          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-            var(--neo-glass-left-border-color)
-        );
-        backdrop-filter: var(--neo-radio-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+        border-color: var(--neo-switch-border-color, transparent);
+        backdrop-filter: var(--neo-switch-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+
+        &.neo-flat {
+          border-color: var(--neo-switch-border-color, var(--neo-glass-border-color-flat));
+        }
       }
 
       &.neo-start {

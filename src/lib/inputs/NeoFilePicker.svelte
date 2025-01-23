@@ -547,6 +547,7 @@
               var(--neo-shadow-margin, 0.625rem)
             )
         );
+        padding: var(--neo-file-picker-card-padding, 1rem 1.5rem 1.5rem);
       }
 
       &.neo-dragging:not(.neo-skeleton) {

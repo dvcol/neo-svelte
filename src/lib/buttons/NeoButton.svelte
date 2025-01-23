@@ -351,7 +351,7 @@
       }
 
       &.neo-flat:not(.neo-pressed, :active:not(.neo-loading)) {
-        border-color: var(--neo-btn-border-color, var(--neo-glass-border-color));
+        border-color: var(--neo-btn-border-color, var(--neo-glass-border-color-flat));
 
         &:hover {
           border-color: transparent;
