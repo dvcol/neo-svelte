@@ -34,7 +34,8 @@
     add,
     line,
     slide = true,
-    slideElevation = -2,
+    pressed,
+    slideElevation = pressed ? 2 : -2,
 
     // Events
     onchange,
@@ -98,7 +99,7 @@
       // Groups
       borderless: rest.borderless,
       elevation: rest.elevation,
-      pressed: rest.pressed,
+      pressed,
       convex: rest.convex,
       glass: rest.glass,
       start: rest.start,
@@ -140,7 +141,7 @@
     in:inFn={inProps}
     {style}
   >
-    <NeoButtonGroup role="tablist" {...rest}>
+    <NeoButtonGroup role="tablist" {pressed} {...rest}>
       {@render children?.(ctx)}
       {#if add}
         <div transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }}>
@@ -234,18 +235,6 @@
 
       :global(.neo-tab .neo-button) {
         box-shadow: var(--neo-box-shadow-flat) !important;
-      }
-
-      :global(.neo-tab .neo-button:hover) {
-        color: var(--neo-tabs-text-color-hover, var(--neo-text-color-hover));
-        transition:
-          opacity 0.3s ease,
-          color 0.1s ease,
-          background-color 0.3s ease,
-          border-color 0.3s ease,
-          backdrop-filter 0.3s ease,
-          border-radius 0.3s ease,
-          box-shadow 0.15s ease-out;
       }
 
       :global(.neo-tab) {

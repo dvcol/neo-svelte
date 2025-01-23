@@ -35,8 +35,8 @@
   --neo-text-color-active: color-mix(in srgb, currentcolor, white 10%);
   --neo-text-color-focused: color-mix(in srgb, var(--neo-text-color), var(--neo-color-primary) 50%);
   --neo-text-color-focused-active: color-mix(in srgb, var(--neo-text-color-focused), white 10%);
-  --neo-text-color-hover: color-mix(in srgb, var(--neo-text-color), var(--neo-color-primary) 70%);
-  --neo-text-color-hover-active: color-mix(in srgb, var(--neo-text-color-hover), white 20%);
+  --neo-text-color-hover: color-mix(in srgb, var(--neo-text-color), white 10%);
+  --neo-text-color-hover-active: color-mix(in srgb, var(--neo-text-color-hover), white 10%);
   --neo-text-color-disabled: oklch(from var(--neo-text-color) l c h / 60%);
 
   // Highlight
@@ -105,8 +105,8 @@
   --neo-dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
   --neo-dark-text-color-focused: color-mix(in srgb, var(--neo-dark-text-color), var(--neo-dark-color-primary) 40%);
   --neo-dark-text-color-focused-active: color-mix(in srgb, var(--neo-dark-text-color-focused), black 10%);
-  --neo-dark-text-color-hover: color-mix(in srgb, var(--neo-dark-text-color), var(--neo-dark-color-primary) 80%);
-  --neo-dark-text-color-hover-active: color-mix(in srgb, var(--neo-dark-text-color-hover), black 20%);
+  --neo-dark-text-color-hover: color-mix(in srgb, var(--neo-dark-text-color), black 10%);
+  --neo-dark-text-color-hover-active: color-mix(in srgb, var(--neo-dark-text-color-hover), black 10%);
   --neo-dark-text-color-disabled: oklch(from var(--neo-dark-text-color) l c h / 80%);
 
   // Highlight

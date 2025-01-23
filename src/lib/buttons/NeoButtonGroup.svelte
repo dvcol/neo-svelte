@@ -185,6 +185,10 @@
       border-color: transparent !important;
     }
 
+    :global(.neo-button .neo-content) {
+      scale: 1 !important;
+    }
+
     :global(.neo-button:disabled:not(.neo-pressed)),
     :global(.neo-button[disabled]:not([disabled='false'], .neo-pressed)) {
       box-shadow: var(--neo-box-shadow-flat) !important;

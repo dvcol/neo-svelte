@@ -230,7 +230,7 @@
     }
 
     &:hover {
-      color: var(--neo-btn-text-color-hover, inherit);
+      color: var(--neo-btn-text-color-hover, var(--neo-text-color-hover));
       box-shadow: var(--neo-btn-box-shadow-hover, var(--neo-box-shadow-raised-2));
     }
 
@@ -258,7 +258,7 @@
       box-shadow: var(--neo-btn-box-shadow-focus, var(--neo-box-shadow-raised-2));
       transition:
         opacity 0.3s ease,
-        color 0s,
+        color 0.2s ease,
         background-color 0.3s ease,
         border-color 0.3s ease,
         backdrop-filter 0.3s ease,

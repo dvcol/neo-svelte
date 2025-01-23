@@ -55,7 +55,7 @@
 <NeoThemeProvider>
   <div class="container">
     <header class="row header">
-      <NeoTabs rounded tag="nav" {active} onchange={onClick}>
+      <NeoTabs rounded pressed tag="nav" {active} onchange={onClick}>
         {#each routes as route}
           <NeoTab tabId={route}>{route}</NeoTab>
         {/each}
