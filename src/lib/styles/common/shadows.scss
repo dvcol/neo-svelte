@@ -58,6 +58,13 @@
   $neo-glass-shadow-inset-4: null;
   $neo-glass-shadow-inset-5: null;
 
+  /** Glass shadows pressed */
+  $neo-glass-shadow-pressed-1: null;
+  $neo-glass-shadow-pressed-2: null;
+  $neo-glass-shadow-pressed-3: null;
+  $neo-glass-shadow-pressed-4: null;
+  $neo-glass-shadow-pressed-5: null;
+
   /** Glass shadows convex */
   $neo-glass-shadow-convex-1: null;
   $neo-glass-shadow-convex-2: null;
@@ -131,23 +138,6 @@
     $neo-glass-shadow-raised-4: 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color-dark);
     $neo-glass-shadow-raised-5: 0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color-dark);
 
-    /** Glass shadows convex */
-    $neo-glass-shadow-convex-1:
-      inset 0.08rem 0.08rem 0.2rem var(--neo-glass-shadow-color-light),
-      inset -0.08rem -0.08rem 0.1rem var(--neo-glass-shadow-color-dark);
-    $neo-glass-shadow-convex-2:
-      inset 0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color-light),
-      inset -0.1rem -0.1rem 0.2rem var(--neo-glass-shadow-color-dark);
-    $neo-glass-shadow-convex-3:
-      inset 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color-light),
-      inset -0.2rem -0.2rem 0.2rem var(--neo-glass-shadow-color-dark);
-    $neo-glass-shadow-convex-4:
-      inset 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color-light),
-      inset -0.35rem -0.35rem 0.4rem var(--neo-glass-shadow-color-dark);
-    $neo-glass-shadow-convex-5:
-      inset 0.7rem 0.7rem 0.7rem var(--neo-glass-shadow-color-light),
-      inset -0.55rem -0.55rem 0.7rem var(--neo-glass-shadow-color-dark);
-
     /** Glass shadows inset */
     $neo-glass-shadow-inset-1:
       inset 0.08rem 0.08rem 0.2rem var(--neo-glass-shadow-color-dark),
@@ -164,6 +154,40 @@
     $neo-glass-shadow-inset-5:
       inset 0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color-dark),
       inset -0.6rem -0.6rem 0.8rem var(--neo-glass-shadow-color-light);
+
+    /** Glass shadows pressed */
+    $neo-glass-shadow-pressed-1:
+      #{$neo-glass-shadow-raised-1},
+      -0.08rem -0.08rem 0.1rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-2:
+      #{$neo-glass-shadow-raised-2},
+      -0.1rem -0.1rem 0.2rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-3:
+      #{$neo-glass-shadow-raised-3},
+      -0.2rem -0.2rem 0.2rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-4:
+      #{$neo-glass-shadow-raised-4},
+      -0.35rem -0.35rem 0.4rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-5:
+      #{$neo-glass-shadow-raised-5},
+      -0.55rem -0.55rem 0.7rem var(--neo-glass-shadow-color-light);
+
+    /** Glass shadows convex */
+    $neo-glass-shadow-convex-1:
+      inset 0.08rem 0.08rem 0.2rem var(--neo-glass-shadow-color-light),
+      inset -0.08rem -0.08rem 0.1rem var(--neo-glass-shadow-color-dark);
+    $neo-glass-shadow-convex-2:
+      inset 0.1rem 0.1rem 0.3rem var(--neo-glass-shadow-color-light),
+      inset -0.1rem -0.1rem 0.2rem var(--neo-glass-shadow-color-dark);
+    $neo-glass-shadow-convex-3:
+      inset 0.3rem 0.3rem 0.3rem var(--neo-glass-shadow-color-light),
+      inset -0.2rem -0.2rem 0.2rem var(--neo-glass-shadow-color-dark);
+    $neo-glass-shadow-convex-4:
+      inset 0.5rem 0.5rem 0.6rem var(--neo-glass-shadow-color-light),
+      inset -0.35rem -0.35rem 0.4rem var(--neo-glass-shadow-color-dark);
+    $neo-glass-shadow-convex-5:
+      inset 0.7rem 0.7rem 0.7rem var(--neo-glass-shadow-color-light),
+      inset -0.55rem -0.55rem 0.7rem var(--neo-glass-shadow-color-dark);
 
     /** glass border-color */
     $neo-glass-top-border-color: var(--neo-glass-border-color);
@@ -248,6 +272,23 @@
     $neo-glass-shadow-inset-5:
       inset -0.8rem 0.8rem 0.7rem var(--neo-glass-shadow-color-dark),
       inset 0.6rem -0.6rem 0.8rem var(--neo-glass-shadow-color-light);
+
+    /** Glass shadows pressed */
+    $neo-glass-shadow-pressed-1:
+      #{$neo-glass-shadow-raised-1},
+      0.08rem -0.08rem 0.1rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-2:
+      #{$neo-glass-shadow-raised-2},
+      0.1rem -0.1rem 0.2rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-3:
+      #{$neo-glass-shadow-raised-3},
+      0.2rem -0.2rem 0.2rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-4:
+      #{$neo-glass-shadow-raised-4},
+      0.35rem -0.35rem 0.4rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-5:
+      #{$neo-glass-shadow-raised-5},
+      0.55rem -0.55rem 0.7rem var(--neo-glass-shadow-color-light);
 
     /* Base shadows convex */
     $neo-glass-shadow-convex-1:
@@ -350,6 +391,23 @@
       inset -0.8rem -0.8rem 0.7rem var(--neo-glass-shadow-color-dark),
       inset 0.6rem 0.6rem 0.8rem var(--neo-glass-shadow-color-light);
 
+    /** Glass shadows pressed */
+    $neo-glass-shadow-pressed-1:
+      #{$neo-glass-shadow-raised-1},
+      0.08rem 0.08rem 0.1rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-2:
+      #{$neo-glass-shadow-raised-2},
+      0.1rem 0.1rem 0.2rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-3:
+      #{$neo-glass-shadow-raised-3},
+      0.2rem 0.2rem 0.2rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-4:
+      #{$neo-glass-shadow-raised-4},
+      0.35rem 0.35rem 0.4rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-5:
+      #{$neo-glass-shadow-raised-5},
+      0.55rem 0.55rem 0.7rem var(--neo-glass-shadow-color-light);
+
     /* Base shadows convex */
     $neo-glass-shadow-convex-1:
       inset -0.08rem -0.08rem 0.2rem var(--neo-glass-shadow-color-light),
@@ -451,6 +509,23 @@
       inset 0.8rem -0.8rem 0.7rem var(--neo-glass-shadow-color-dark),
       inset -0.6rem 0.6rem 0.8rem var(--neo-glass-shadow-color-light);
 
+    /** Glass shadows pressed */
+    $neo-glass-shadow-pressed-1:
+      #{$neo-glass-shadow-raised-1},
+      -0.08rem 0.08rem 0.1rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-2:
+      #{$neo-glass-shadow-raised-2},
+      -0.1rem 0.1rem 0.2rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-3:
+      #{$neo-glass-shadow-raised-3},
+      -0.2rem 0.2rem 0.2rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-4:
+      #{$neo-glass-shadow-raised-4},
+      -0.35rem 0.35rem 0.4rem var(--neo-glass-shadow-color-light);
+    $neo-glass-shadow-pressed-5:
+      #{$neo-glass-shadow-raised-5},
+      -0.55rem 0.55rem 0.7rem var(--neo-glass-shadow-color-light);
+
     /* Base shadows convex */
     $neo-glass-shadow-convex-1:
       inset 0.08rem -0.08rem 0.2rem var(--neo-glass-shadow-color-light),
@@ -521,11 +596,11 @@
   --neo-glass-box-shadow-inset-5: #{$neo-glass-shadow-inset-5};
 
   /** Glass shadows pressed */
-  --neo-glass-box-shadow-pressed-1: #{$neo-glass-shadow-raised-1}, #{$neo-glass-shadow-inset-1};
-  --neo-glass-box-shadow-pressed-2: #{$neo-glass-shadow-raised-2}, #{$neo-glass-shadow-inset-2};
-  --neo-glass-box-shadow-pressed-3: #{$neo-glass-shadow-raised-3}, #{$neo-glass-shadow-inset-3};
-  --neo-glass-box-shadow-pressed-4: #{$neo-glass-shadow-raised-4}, #{$neo-glass-shadow-inset-4};
-  --neo-glass-box-shadow-pressed-5: #{$neo-glass-shadow-raised-5}, #{$neo-glass-shadow-inset-5};
+  --neo-glass-box-shadow-pressed-1: #{$neo-glass-shadow-pressed-1}, #{$neo-glass-shadow-inset-1};
+  --neo-glass-box-shadow-pressed-2: #{$neo-glass-shadow-pressed-2}, #{$neo-glass-shadow-inset-2};
+  --neo-glass-box-shadow-pressed-3: #{$neo-glass-shadow-pressed-3}, #{$neo-glass-shadow-inset-3};
+  --neo-glass-box-shadow-pressed-4: #{$neo-glass-shadow-pressed-4}, #{$neo-glass-shadow-inset-4};
+  --neo-glass-box-shadow-pressed-5: #{$neo-glass-shadow-pressed-5}, #{$neo-glass-shadow-inset-5};
 
   /** Glass shadows convex */
   --neo-glass-box-shadow-convex-1: #{$neo-glass-shadow-convex-1};
