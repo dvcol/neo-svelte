@@ -35,6 +35,7 @@
     pressed,
     convex,
     elevation = getDefaultElevation(pressed),
+    spacing,
     hover = 0,
     borderless,
     rounded,
@@ -186,6 +187,7 @@
   style:--neo-card-hover-shadow={hoverShadow}
   style:--neo-card-box-shadow={boxShadow}
   style:--neo-card-glass-blur={filter}
+  style:--neo-card-spacing={spacing}
   style:justify-content={justify}
   style:align-items={align}
   style:flex

@@ -7,7 +7,8 @@
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
 
-  const {
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
     // Snippets
     children: content,
 
@@ -15,11 +16,13 @@
     alt,
     title,
     justify,
+    align,
     width,
     height,
     glass,
 
     // State
+    ref = $bindable(),
     loading = true,
     paragraphs = 1,
     lines = alt ? 26 : 6,
@@ -32,8 +35,10 @@
     titleProps,
     paragraphProps,
     containerProps,
+    transitionProps,
     ...rest
   }: NeoSkeletonTextProps = $props();
+  /* eslint-enable prefer-const */
 
   const inFn = $derived(toTransition(inAction, fade));
   const inProps = $derived(toTransitionProps(inAction, leaveTransitionProps));
@@ -41,8 +46,27 @@
   const outProps = $derived(toTransitionProps(outAction, enterTransitionProps));
 </script>
 
-<NeoSkeletonContainer {loading} in={inAction} out={outAction} {width} {height} {containerProps} {content}>
-  <div class:neo-skeleton-text={true} class:neo-glass={glass} style:width style:height in:inFn={inProps} out:outFn={outProps} {...rest}>
+<NeoSkeletonContainer
+  bind:ref
+  {loading}
+  in={inAction}
+  out={outAction}
+  {width}
+  {height}
+  {content}
+  containerProps={transitionProps}
+  {...containerProps}
+>
+  <div
+    class:neo-skeleton-text={true}
+    class:neo-glass={glass}
+    style:width
+    style:height
+    style:align-self={align}
+    in:inFn={inProps}
+    out:outFn={outProps}
+    {...rest}
+  >
     {#if title}
       <div class:neo-skeleton-text-line={true} class:neo-title={title} class:neo-alt={alt} {...titleProps}>&nbsp;</div>
     {/if}

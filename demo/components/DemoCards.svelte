@@ -109,8 +109,9 @@
   <NeoSkeletonText
     loading={skeleton}
     paragraphs="2"
+    lines="7"
     width="80ch"
-    containerProps={{ style: horizontal ? 'min-height: 21.5rem; max-width: 50dvw' : 'min-height: 21.5rem' }}
+    transitionProps={{ style: horizontal ? 'min-height: 21.5rem; max-width: 50dvw' : 'min-height: 21.5rem' }}
   >
     <div class="column">
       <p>
@@ -137,7 +138,7 @@
     type="image"
     ratio="1.5"
     width="calc(80ch + 3rem)"
-    containerProps={{ style: horizontal ? 'max-width: 30dvw' : undefined }}
+    transitionProps={{ style: horizontal ? 'max-width: 30dvw' : undefined }}
   >
     <img
       height="100%"
@@ -207,6 +208,7 @@
     @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
 
     align-self: flex-start;
+    text-wrap: balance;
   }
 
   .row {

@@ -15,6 +15,12 @@ export type NeoCardContext = {
    */
   elevation?: NeoCardElevation;
   /**
+   * Card spacing.
+   *
+   * @default '1.5rem'
+   */
+  spacing?: CSSStyleDeclaration['padding'];
+  /**
    * Weather to increase/decrease the elevation when hovered/focused.
    * @default 0
    */

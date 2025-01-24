@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLTransitionProps } from '~/utils/action.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoSkeletonTextProps = {
   // Snippets
@@ -12,6 +13,10 @@ export type NeoSkeletonTextProps = {
 
   // States
 
+  /**
+   * Whether to show the skeleton.
+   */
+  loading?: boolean;
   /**
    * Number of paragraphs to show.
    */
@@ -35,6 +40,10 @@ export type NeoSkeletonTextProps = {
    */
   justify?: boolean;
   /**
+   * Alignment strategy for the skeleton.
+   */
+  align?: CSSStyleDeclaration['alignSelf'];
+  /**
    * Width of the element.
    */
   width?: CSSStyleDeclaration['width'];
@@ -56,4 +65,14 @@ export type NeoSkeletonTextProps = {
    * Props for the paragraph div.
    */
   paragraphProps?: HTMLNeoBaseElement;
-} & Omit<NeoSkeletonContainerProps, 'children' | 'content'>;
+  /**
+   * Props to pass to the skeleton container.
+   */
+  containerProps?: Omit<NeoSkeletonContainerProps, 'children' | 'content' | 'containerProps'>;
+  /**
+   * Props to pass to the transition container.
+   */
+  transitionProps?: NeoSkeletonContainerProps['containerProps'];
+} & Pick<HTMLTransitionProps, 'in' | 'out'> &
+  HTMLRefProps &
+  HTMLNeoBaseElement;

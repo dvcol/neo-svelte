@@ -10,15 +10,18 @@
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
 
-  const {
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
     // Snippets
     children: content,
     media,
 
     // State
+    ref = $bindable(),
     loading = true,
     type = 'empty',
     size = type === 'avatar' ? '70%' : '20%',
+    align,
     width,
     height,
     glass,
@@ -34,8 +37,10 @@
 
     // Other props
     containerProps,
+    transitionProps,
     ...rest
   }: NeoSkeletonMediaProps = $props();
+  /* eslint-enable prefer-const */
 
   const MediaType = $derived.by(() => {
     switch (type) {
@@ -56,7 +61,17 @@
   const outProps = $derived(toTransitionProps(outAction, enterTransitionProps));
 </script>
 
-<NeoSkeletonContainer {loading} in={inAction} out={outAction} {width} {height} {containerProps} {content}>
+<NeoSkeletonContainer
+  bind:ref
+  {loading}
+  in={inAction}
+  out={outAction}
+  {width}
+  {height}
+  {content}
+  containerProps={transitionProps}
+  {...containerProps}
+>
   <div
     class:neo-skeleton-media={true}
     class:neo-rounded={rounded}
@@ -65,6 +80,7 @@
     style:aspect-ratio={ratio}
     style:width
     style:height
+    style:align-self={align}
     in:inFn={inProps}
     out:outFn={outProps}
     {...rest}

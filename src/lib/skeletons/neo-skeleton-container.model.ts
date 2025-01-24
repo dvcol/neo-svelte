@@ -1,8 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { NeoTransitionContainerProps } from '~/containers/neo-transition-container.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-export type NeoSkeletonContainerProps = {
+export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
 
   /**
@@ -16,6 +17,11 @@ export type NeoSkeletonContainerProps = {
 
   // States
 
+  /**
+   * The HTML tag to use for the container.
+   * @default 'div'
+   */
+  tag?: Tag | keyof HTMLElementTagNameMap;
   /**
    * Whether to show the skeleton.
    */
@@ -38,4 +44,6 @@ export type NeoSkeletonContainerProps = {
    * Props for the transition container.
    */
   containerProps?: NeoTransitionContainerProps;
-} & Pick<HTMLTransitionProps, 'in' | 'out'>;
+} & Pick<HTMLTransitionProps, 'in' | 'out'> &
+  HTMLRefProps &
+  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

@@ -1,5 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
+import type { HTMLTransitionProps } from '~/utils/action.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoSkeletonMediaProps = {
   // Snippets
@@ -15,6 +17,10 @@ export type NeoSkeletonMediaProps = {
 
   // State
   /**
+   * Whether to show the skeleton.
+   */
+  loading?: boolean;
+  /**
    * Type of media skeleton to display.
    */
   type: 'image' | 'video' | 'avatar' | 'empty';
@@ -22,6 +28,10 @@ export type NeoSkeletonMediaProps = {
    * Size of the media skeleton icon.
    */
   size?: CSSStyleDeclaration['width'];
+  /**
+   * Alignment strategy for the skeleton.
+   */
+  align?: CSSStyleDeclaration['alignSelf'];
   /**
    * Width of the skeleton.
    */
@@ -47,5 +57,14 @@ export type NeoSkeletonMediaProps = {
   /**
    * Aspect ratio of the media.
    */
-  ratio?: CSSStyleDeclaration['aspectRatio'];
-} & Omit<NeoSkeletonContainerProps, 'children' | 'content'>;
+  ratio?: CSSStyleDeclaration['aspectRatio'] /**
+   * Props to pass to the skeleton container.
+   */;
+  containerProps?: Omit<NeoSkeletonContainerProps, 'children' | 'content' | 'containerProps'>;
+  /**
+   * Props to pass to the transition container.
+   */
+  transitionProps?: NeoSkeletonContainerProps['containerProps'];
+} & Pick<HTMLTransitionProps, 'in' | 'out'> &
+  HTMLRefProps &
+  HTMLNeoBaseElement;
