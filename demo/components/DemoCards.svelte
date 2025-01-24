@@ -109,7 +109,7 @@
   <NeoSkeletonText
     loading={skeleton}
     paragraphs="2"
-    lines="7"
+    lines={[6, 7]}
     width="80ch"
     transitionProps={{ style: horizontal ? 'min-height: 21.5rem; max-width: 50dvw' : 'min-height: 21.5rem' }}
   >
@@ -151,7 +151,7 @@
 
 {#snippet header()}
   <NeoSkeletonText loading={skeleton} title paragraphs="0" width="8.125rem">
-    <h2 style="margin: 0 0.25rem">NeoCard Header</h2>
+    <h3 style="margin: 0 0.25rem">NeoCard Header</h3>
   </NeoSkeletonText>
 {/snippet}
 

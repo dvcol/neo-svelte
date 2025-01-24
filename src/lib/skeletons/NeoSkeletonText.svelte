@@ -72,9 +72,9 @@
     {/if}
 
     {#if paragraphs && lines}
-      {#each Array(Number(paragraphs)) as _}
+      {#each Array(Number(paragraphs)) as _, i}
         <div class:neo-skeleton-text-paragraph={true} class:neo-alt={alt} class:neo-justify={justify} {...paragraphProps}>
-          {#each Array(Number(lines)) as __}
+          {#each Array(Number(Array.isArray(lines) ? lines[i] : lines)) as __}
             <div class="neo-skeleton-text-line" class:neo-alt={alt}>&nbsp;</div>
           {/each}
         </div>
@@ -99,7 +99,8 @@
 
   .neo-skeleton-text-line {
     width: 100%;
-    height: var(--neo-line-height-xs, 1rem);
+    height: var(--neo-skeleton-text-font-size, var(--neo-font-size, 1rem));
+    margin: var(--neo-skeleton-text-line-height, calc((var(--neo-line-height, 1.5rem) - var(--neo-font-size, 1rem)) / 2));
     border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-lg));
 
     @include mixin.skeleton;
@@ -164,7 +165,7 @@
 
     &.neo-title {
       width: 70%;
-      height: var(--neo-line-height, 1.5rem);
+      height: var(--neo-skeleton-text-title-font-size, var(--neo-font-size-xl, 1.5rem));
     }
   }
 
@@ -172,7 +173,6 @@
     display: flex;
     flex: 0 1 auto;
     flex-direction: column;
-    gap: var(--neo-skeleton-paragraph-gap, var(--neo-gap-xs));
 
     &.neo-alt {
       flex-flow: row wrap;

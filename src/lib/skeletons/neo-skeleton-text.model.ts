@@ -20,11 +20,11 @@ export type NeoSkeletonTextProps = {
   /**
    * Number of paragraphs to show.
    */
-  paragraphs?: number;
+  paragraphs?: string | number;
   /**
    * Number of lines to show in each paragraph.
    */
-  lines?: number;
+  lines?: string | number | number[];
 
   // Styles
   /**

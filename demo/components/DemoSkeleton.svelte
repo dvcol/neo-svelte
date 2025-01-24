@@ -94,6 +94,13 @@
   .content {
     min-width: 48.625rem;
     min-height: 10rem;
+
+    p {
+      max-width: 80ch;
+      margin: 0;
+      padding: 0;
+      text-wrap: pretty;
+    }
   }
 
   .column {
