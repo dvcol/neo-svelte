@@ -11,6 +11,10 @@ export type NeoButtonProps = {
    */
   children?: Snippet;
   /**
+   * Optional snippet or text to display as the button label.
+   */
+  label?: Snippet | string;
+  /**
    * Optional icon snippet to display before the text.
    */
   icon?: Snippet;

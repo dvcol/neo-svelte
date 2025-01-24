@@ -73,7 +73,7 @@
     position="left"
     center
     bind:value={options.elevation}
-    min={0}
+    min={1}
     max={MaxShadowElevation}
     defaultValue={DefaultShadowTooltipElevation}
     rounded={options.rounded}

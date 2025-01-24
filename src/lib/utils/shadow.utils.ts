@@ -13,8 +13,10 @@ export type ShadowElevation = (typeof ShadowElevations)[number];
 export type ShadowModifier = { glass?: boolean; convex?: boolean; pressed?: boolean };
 export const ShadowFlatRegex = /^.*flat\)?;?$/;
 
-export const getDefaultElevation = (pressed?: boolean) => (pressed ? DefaultShadowPressedElevation : DefaultShadowElevation);
-export const getDefaultHoverElevation = (pressed?: boolean) => (pressed ? DefaultShadowHoverPressedElevation : DefaultShadowHoverElevation);
+export const getDefaultElevation = (pressed?: boolean, fallback: ShadowElevation = DefaultShadowElevation) =>
+  pressed ? DefaultShadowPressedElevation : fallback;
+export const getDefaultHoverElevation = (pressed?: boolean, fallback: ShadowElevation = DefaultShadowHoverElevation) =>
+  pressed ? DefaultShadowHoverPressedElevation : fallback;
 
 export const isShadowFlat = (shadow: string) => ShadowFlatRegex.test(shadow);
 

@@ -56,13 +56,19 @@
 
 <NeoButtonGroup {...rest}>
   {#if showSource}
-    <NeoButton aria-label="Cycle light source origin" title="Cycle light source origin" checked onclick={onCycleSource} {...sourceProps}>
+    <NeoButton
+      aria-label="Cycle light source origin"
+      title="Cycle light source origin"
+      checked
+      onclick={onCycleSource}
+      label={sourceLabel}
+      {...sourceProps}
+    >
       {#snippet icon()}
         <span class="neo-source-icon" style:--neo-source-rotate="{angle}deg">
           <IconSunFull />
         </span>
       {/snippet}
-      <span>{sourceLabel}</span>
     </NeoButton>
   {/if}
   {#if showTheme}
@@ -72,6 +78,7 @@
       toggle
       checked={dark}
       onclick={onTheme}
+      label={themeLabel}
       {...themeProps}
     >
       {#snippet icon()}
@@ -81,7 +88,6 @@
           <IconSun />
         {/if}
       {/snippet}
-      <span>{themeLabel}</span>
     </NeoButton>
   {/if}
   {#if showReset}

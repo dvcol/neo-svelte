@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { sentenceCase } from '@dvcol/common-utils';
   import { wait } from '@dvcol/common-utils/common/promise';
 
   import { RouterView } from '@dvcol/svelte-simple-router/components';
@@ -57,7 +58,7 @@
     <header class="row header">
       <NeoTabs rounded pressed tag="nav" {active} onchange={onClick}>
         {#each routes as route}
-          <NeoTab tabId={route}>{route}</NeoTab>
+          <NeoTab tabId={route}>{sentenceCase(route)}</NeoTab>
         {/each}
 
         <NeoButton aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">

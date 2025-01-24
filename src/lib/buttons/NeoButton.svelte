@@ -11,6 +11,7 @@
   let {
     // Snippets
     children,
+    label,
     icon,
 
     // States
@@ -63,7 +64,7 @@
   let enter = $state(false);
   let active = $state(false);
   const pressed = $derived(enter || active || checked);
-  const empty = $derived(only || !children);
+  const empty = $derived(only || (!children && !label));
 
   let timeout: ReturnType<typeof setTimeout>;
   const onActive = () => {
@@ -155,6 +156,11 @@
       </span>
     {/if}
     {#if !empty}
+      {#if typeof label === 'string'}
+        <span class="neo-label">{label}</span>
+      {:else}
+        {@render label?.()}
+      {/if}
       {@render children?.()}
     {/if}
   </span>
