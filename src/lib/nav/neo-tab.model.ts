@@ -5,7 +5,7 @@ import type { HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type TabId = string | number | symbol;
-export type NeoTabProps<T = unknown> = {
+export type NeoTabProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
 
   /**
@@ -19,7 +19,7 @@ export type NeoTabProps<T = unknown> = {
    * The HTML tag to use for the tab.
    * @default 'div'
    */
-  tag?: keyof HTMLElementTagNameMap;
+  tag?: Tag | keyof HTMLElementTagNameMap;
   /**
    * A unique identifier for the tab.
    * If none is provided, the tab will be assigned a random id.
@@ -28,7 +28,7 @@ export type NeoTabProps<T = unknown> = {
   /**
    * Optional value to associate with the tab.
    */
-  value?: T;
+  value?: Value;
 
   // Styles
 
@@ -43,7 +43,7 @@ export type NeoTabProps<T = unknown> = {
   /**
    * Event handler that fires wwhen the close button is clicked.
    */
-  onclose?: OnChange<T>;
+  onclose?: OnChange<Value>;
 
   // Other props
 
@@ -51,5 +51,5 @@ export type NeoTabProps<T = unknown> = {
    * Optional props to pass to the tab container.
    */
   tabProps?: HTMLNeoBaseElement & HTMLUseProps;
-} & Omit<NeoButtonProps, 'value' | 'children' | 'ref'> &
+} & Omit<NeoButtonProps, 'value' | 'children' | 'ref' | 'tag'> &
   HTMLRefProps;

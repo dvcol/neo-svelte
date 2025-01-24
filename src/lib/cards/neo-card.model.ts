@@ -87,7 +87,7 @@ export type NeoCardContext = {
   onClose?: NeoButtonProps['onclick'];
 };
 
-export type NeoCardProps = {
+export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
   /**
    * Snippet to display as the card content.
@@ -117,7 +117,7 @@ export type NeoCardProps = {
    * The HTML tag to use for the card.
    * @default 'div'
    */
-  tag?: keyof HTMLElementTagNameMap;
+  tag?: Tag | keyof HTMLElementTagNameMap;
   /**
    * The HTML tag to use for the card content.
    * @default 'div'
@@ -169,7 +169,7 @@ export type NeoCardProps = {
    */
   closeProps?: NeoButtonProps;
 } & NeoCardContext &
-  HTMLNeoBaseElement &
+  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   HTMLFlexProps &
   HTMLActionProps &
   HTMLRefProps;

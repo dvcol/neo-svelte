@@ -6,13 +6,13 @@ import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
-export type NeoTabContextValue<T = unknown> = { index: number; value?: T; ref: HTMLElement };
-export type OnChange<T = unknown> = (tabId?: TabId, newValue?: NeoTabContextValue<T>, oldValue?: NeoTabContextValue) => unknown;
-export type OnClose<T = unknown> = (tabId?: TabId, value?: NeoTabContextValue<T>) => unknown;
+export type NeoTabContextValue<Value = unknown> = { index: number; value?: Value; ref: HTMLElement };
+export type OnChange<Value = unknown> = (tabId?: TabId, newValue?: NeoTabContextValue<Value>, oldValue?: NeoTabContextValue) => unknown;
+export type OnClose<Value = unknown> = (tabId?: TabId, value?: NeoTabContextValue<Value>) => unknown;
 
 export type NeoTabsSlideElevation = ShadowElevation;
 export type NeoTabsContainerProps = HTMLNeoBaseElement & HTMLActionProps;
-export type NeoTabsProps<T = unknown> = {
+export type NeoTabsProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
 
   /**
@@ -30,7 +30,7 @@ export type NeoTabsProps<T = unknown> = {
    * The HTML tag to use for the tabs.
    * @default 'div'
    */
-  tag?: keyof HTMLElementTagNameMap;
+  tag?: Tag | keyof HTMLElementTagNameMap;
 
   // Styles
 
@@ -54,11 +54,11 @@ export type NeoTabsProps<T = unknown> = {
   /**
    * Event handler that fires when the active tab changes.
    */
-  onchange?: OnChange<T>;
+  onchange?: OnChange<Value>;
   /**
    * Event handler that fires when any close button is clicked.
    */
-  onclose?: OnClose<T>;
+  onclose?: OnClose<Value>;
   /**
    * Event handler that fires when the add button is clicked.
    */
@@ -76,5 +76,5 @@ export type NeoTabsProps<T = unknown> = {
    */
   containerProps?: NeoTabsContainerProps;
 } & NeoTabsContext &
-  Omit<NeoButtonGroupProps, 'onchange' | 'children' | 'vertical' | 'ref'> &
+  Omit<NeoButtonGroupProps<Tag>, 'onchange' | 'children' | 'vertical' | 'ref'> &
   HTMLRefProps;

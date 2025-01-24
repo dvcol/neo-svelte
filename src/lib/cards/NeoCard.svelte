@@ -102,12 +102,12 @@
     onpointerleave?.(e);
   };
 
-  const onFocusIn: FocusEventHandler<HTMLInputElement> = e => {
+  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     focused = true;
     onfocusin?.(e);
   };
 
-  const onFocusOut: FocusEventHandler<HTMLInputElement> = e => {
+  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     focused = false;
     onfocusout?.(e);
   };

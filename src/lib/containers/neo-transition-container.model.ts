@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-export type NeoTransitionContainerProps = {
+export type NeoTransitionContainerProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
 
   /**
@@ -15,7 +15,7 @@ export type NeoTransitionContainerProps = {
    * The HTML tag to use for the container.
    * @default 'div'
    */
-  tag?: keyof HTMLElementTagNameMap;
+  tag?: Tag | keyof HTMLElementTagNameMap;
 
   // Styles
 
@@ -39,4 +39,4 @@ export type NeoTransitionContainerProps = {
    * Height of the container.
    */
   height?: CSSStyleDeclaration['height'];
-} & HTMLNeoBaseElement;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

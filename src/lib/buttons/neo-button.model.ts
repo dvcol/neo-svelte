@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
-import type { HTMLFlexProps, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 
-export type NeoButtonProps = {
+export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> = {
   // Snippets
 
   /**
@@ -26,7 +26,11 @@ export type NeoButtonProps = {
    * If an `href` is provided, the tag will default to `'a'`.
    * @default 'button'
    */
-  tag?: keyof HTMLElementTagNameMap;
+  tag?: Tag | keyof HTMLElementTagNameMap;
+  /**
+   * The url to navigate to when the anchor is clicked.
+   */
+  href?: string;
   /**
    * If true, the button will be disabled and a spinner will be displayed alongside the text.
    * If an icon is provided, the spinner will replace the icon.
@@ -44,6 +48,10 @@ export type NeoButtonProps = {
    * If true, the button will act as a toggle button.
    */
   toggle?: boolean;
+  /**
+   * Disables all button interactions.
+   */
+  disabled?: boolean;
   /**
    * If true, the button will ignore click events for the toggle state.
    */
@@ -119,8 +127,12 @@ export type NeoButtonProps = {
    * @param e
    */
   onkeyup?: (e: SvelteEvent<KeyboardEvent>) => unknown;
-} & Partial<Omit<HTMLButtonAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
-  Partial<Omit<HTMLAnchorAttributes, 'onclick' | 'onkeydown' | 'onkeyup'>> &
-  HTMLFlexProps &
+} & HTMLFlexProps &
   HTMLActionProps &
-  HTMLRefProps;
+  HTMLRefProps &
+  Partial<
+    Omit<
+      Tag extends 'button' ? HTMLButtonAttributes : Tag extends 'a' ? HTMLAnchorAttributes : HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>,
+      'onclick' | 'onkeydown' | 'onkeyup'
+    >
+  >;

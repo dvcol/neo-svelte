@@ -8,11 +8,6 @@ export type NeoButtonGroupContext = {
   // States
 
   /**
-   * The HTML tag to use for the button group.
-   * @default 'div'
-   */
-  tag?: keyof HTMLElementTagNameMap;
-  /**
    * If true, the button will be disabled and a loading skeleton will be displayed instead of the text.
    */
   skeleton?: boolean;
@@ -65,11 +60,19 @@ export type NeoButtonGroupContext = {
   start?: boolean;
 };
 
-export type NeoButtonGroupProps = {
+export type NeoButtonGroupProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
+  // Snippets
   /**
    * Snippet to display as the button content.
    */
   children?: Snippet<[NeoButtonGroupContext]>;
+
+  // States
+  /**
+   * The HTML tag to use for the button group.
+   * @default 'div'
+   */
+  tag?: Tag | keyof HTMLElementTagNameMap;
 
   // Styles
   /**
@@ -78,6 +81,6 @@ export type NeoButtonGroupProps = {
   nowrap?: boolean;
 } & NeoButtonGroupContext &
   HTMLFlexProps &
-  HTMLNeoBaseElement &
+  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   HTMLActionProps &
   HTMLRefProps;

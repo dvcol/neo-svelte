@@ -3,12 +3,12 @@ import type { HTMLOptionAttributes } from 'svelte/elements';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
-export type NeoSelectOption = {
-  value: any;
+export type NeoSelectOption<Value = unknown> = {
+  value: Value;
   label?: string | Snippet;
 } & HTMLOptionAttributes;
 
-export type NeoSelectProps = {
+export type NeoSelectProps<Value = unknown> = {
   /**
    * Custom icon for the picker.
    */
@@ -20,5 +20,5 @@ export type NeoSelectProps = {
   /**
    * The array of options to display in the select.
    */
-  options?: NeoSelectOption[];
+  options?: NeoSelectOption<Value>[];
 } & NeoInputProps;

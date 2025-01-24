@@ -55,6 +55,7 @@ export type NeoValidationProps<
   T extends HTMLElement = HTMLElement,
   V extends NeoValidationValue = NeoValidationValue,
   C extends NeoValidationFieldContext<T, V> = NeoValidationFieldContext<T, V>,
+  Tag extends keyof HTMLElementTagNameMap = 'div',
 > = {
   // Snippets
   /**
@@ -66,8 +67,10 @@ export type NeoValidationProps<
 
   /**
    * The HTML tag to use for the wrapper component (when message or error are shown).
+   *
+   * @default 'div'
    */
-  tag?: keyof HTMLElementTagNameMap;
+  tag?: Tag | keyof HTMLElementTagNameMap;
   /**
    * The context to pass to the snippets.
    */
@@ -92,4 +95,4 @@ export type NeoValidationProps<
 } & HTMLTransitionProps &
   HTMLRefProps &
   NeoValidationContext<T, V, C> &
-  HTMLNeoBaseElement;
+  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
