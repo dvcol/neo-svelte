@@ -33,6 +33,7 @@
     close,
     add,
     line,
+    pill,
     slide = true,
     pressed,
     slideElevation = pressed ? 2 : -2,
@@ -130,6 +131,7 @@
     class:neo-inset={(rest?.elevation ?? 0) < 0}
     class:neo-add={add}
     class:neo-line={line}
+    class:neo-pill={pill}
     class:neo-slide={slide}
     class:neo-translate={translate}
     class:neo-vertical={rest.vertical}
@@ -243,16 +245,19 @@
 
       :global(.neo-tab::before) {
         position: absolute;
-        inset: 0;
         z-index: var(--neo-z-index-in-front, 1);
         box-sizing: border-box;
+        background-color: var(--neo-tab-bg-color, transparent);
         border: var(--neo-border-width, 1px) var(--neo-tab-border-color, transparent) solid;
         border-radius: var(--neo-tab-border-radius, var(--neo-border-radius));
         box-shadow: var(--neo-box-shadow-flat);
         backface-visibility: hidden;
-        transition: box-shadow 0.3s ease;
+        transition:
+          box-shadow 0.3s ease,
+          background-color 0.3s ease;
         content: '';
         pointer-events: none;
+        inset: 0;
       }
 
       &.neo-line :global(.neo-tab.neo-active::before) {
@@ -275,12 +280,23 @@
           margin-bottom: 0.125rem;
           transition:
             box-shadow 0.3s ease,
-            width 0.3s var(--neo-transition-bezier);
+            background-color 0.3s ease;
           margin-inline: 0.75rem;
         }
 
         :global(.neo-tab.neo-active::before) {
           width: var(--neo-tab-width, 100%);
+        }
+      }
+
+      &.neo-pill:not(.neo-line) {
+        :global(.neo-tab::before) {
+          z-index: var(--neo-z-index-behind, -1) !important;
+          box-shadow: var(--neo-box-shadow-flat) !important;
+        }
+
+        :global(.neo-tab.neo-active::before) {
+          background-color: var(--neo-tab-bg-color, var(--neo-background-color-secondary));
         }
       }
 

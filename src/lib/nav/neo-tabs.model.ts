@@ -37,8 +37,20 @@ export type NeoTabsProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Display the active tab with a line.
    * Only applies when `slide` is `true`.
+   *
+   * @see slide
    */
   line?: boolean;
+  /**
+   * Display the active tab as a pill.
+   * Only applies when `slide` is `true`.
+   *
+   * Cannot be used with `line`.
+   *
+   * @see line
+   * @see slide
+   */
+  pill?: boolean;
   /**
    * If `true`, the panes will be displayed before the tabs.
    * @default false

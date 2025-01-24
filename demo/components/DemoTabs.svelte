@@ -51,6 +51,7 @@
     slide: true,
     toggle: false,
     line: false,
+    pill: false,
     rounded: false,
     vertical: false,
     glass: false,
@@ -98,6 +99,7 @@
       <NeoButton toggle bind:checked={options.slide}>Slide</NeoButton>
       <NeoButton toggle bind:checked={options.toggle}>Toggle</NeoButton>
       <NeoButton toggle bind:checked={options.line}>Line</NeoButton>
+      <NeoButton toggle bind:checked={options.pill}>Pill</NeoButton>
       <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
       <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
       <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
