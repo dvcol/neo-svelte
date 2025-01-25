@@ -145,6 +145,7 @@
     <NeoCheckboxButton
       {indeterminate}
       {checked}
+      {touched}
       {rounded}
       {start}
       {glass}
