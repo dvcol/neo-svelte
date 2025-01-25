@@ -18,6 +18,11 @@ export const getDefaultElevation = (pressed?: boolean, fallback: ShadowElevation
 export const getDefaultHoverElevation = (pressed?: boolean, fallback: ShadowElevation = DefaultShadowHoverElevation) =>
   pressed ? DefaultShadowHoverPressedElevation : fallback;
 
+export const getDefaultSlideElevation = (elevation: ShadowElevation, fallback: ShadowElevation = DefaultShadowPressedElevation): ShadowElevation => {
+  if (elevation < 0) return Math.abs(elevation) as ShadowElevation;
+  return fallback;
+};
+
 export const isShadowFlat = (shadow: string) => ShadowFlatRegex.test(shadow);
 
 export const computeElevation = (

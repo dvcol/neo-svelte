@@ -14,7 +14,7 @@
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeShadowElevation } from '~/utils/shadow.utils.js';
+  import { computeShadowElevation, getDefaultElevation, getDefaultSlideElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -36,7 +36,8 @@
     pill,
     slide = true,
     pressed,
-    slideElevation = pressed ? 2 : -2,
+    elevation = getDefaultElevation(pressed),
+    slideElevation = getDefaultSlideElevation(elevation),
 
     // Events
     onchange,
@@ -99,7 +100,7 @@
 
       // Groups
       borderless: rest.borderless,
-      elevation: rest.elevation,
+      elevation,
       pressed,
       convex: rest.convex,
       glass: rest.glass,
@@ -128,7 +129,7 @@
     this={containerTag}
     bind:this={ref}
     class:neo-tabs={true}
-    class:neo-inset={(rest?.elevation ?? 0) < 0}
+    class:neo-inset={(elevation ?? 0) < 0}
     class:neo-add={add}
     class:neo-line={line}
     class:neo-pill={pill}
@@ -143,7 +144,7 @@
     in:inFn={inProps}
     {style}
   >
-    <NeoButtonGroup role="tablist" {pressed} {...rest}>
+    <NeoButtonGroup role="tablist" {pressed} {elevation} {...rest}>
       {@render children?.(ctx)}
       {#if add}
         <div transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }}>
@@ -210,6 +211,7 @@
           --neo-tab-max-height: calc(var(--neo-tab-height, 100%) - 1rem);
 
           top: 0;
+          bottom: unset;
           box-sizing: border-box;
           width: 2px;
           height: 0;
@@ -252,9 +254,7 @@
         border-radius: var(--neo-tab-border-radius, var(--neo-border-radius));
         box-shadow: var(--neo-box-shadow-flat);
         backface-visibility: hidden;
-        transition:
-          box-shadow 0.3s ease,
-          background-color 0.3s ease;
+        transition: box-shadow 0.3s ease;
         content: '';
         pointer-events: none;
         inset: 0;
@@ -274,13 +274,15 @@
           --neo-tab-old-max-width: calc(var(--neo-tab-old-width, 100%) - 1.5rem);
           --neo-tab-max-width: calc(var(--neo-tab-width, 100%) - 1.5rem);
 
+          top: unset;
+          bottom: 0;
           width: 0;
           max-width: var(--neo-tab-max-width);
           height: 2px;
           margin-bottom: 0.125rem;
           transition:
             box-shadow 0.3s ease,
-            background-color 0.3s ease;
+            height 0.3s var(--neo-transition-bezier);
           margin-inline: 0.75rem;
         }
 
@@ -291,8 +293,12 @@
 
       &.neo-pill:not(.neo-line) {
         :global(.neo-tab::before) {
+          --neo-tabs-slide-box-shadow: var(--neo-box-shadow-flat);
+
           z-index: var(--neo-z-index-behind, -1) !important;
-          box-shadow: var(--neo-box-shadow-flat) !important;
+          transition:
+            box-shadow 0.3s ease,
+            background-color 0.3s ease;
         }
 
         :global(.neo-tab.neo-active::before) {
