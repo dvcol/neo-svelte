@@ -6,12 +6,11 @@
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoCheckboxProps } from '~/inputs/neo-checkbox.model.js';
 
-  import IconCheckbox from '~/icons/IconCheckbox.svelte';
+  import NeoCheckboxButton from '~/buttons/NeoCheckboxButton.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { computeShadowElevation } from '~/utils/shadow.utils.js';
   import { enterTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -53,6 +52,7 @@
     // Other props
     labelRef = $bindable(),
     labelProps,
+    buttonProps,
     messageTag = 'div',
     messageProps,
     containerRef = $bindable(),
@@ -94,9 +94,6 @@
     start,
     skeleton,
   });
-
-  const boxShadow = $derived(computeShadowElevation(elevation, { glass }, { max: 2, min: -2 }));
-  const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
 
   let timeout: ReturnType<typeof setTimeout>;
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
@@ -142,21 +139,17 @@
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
   >
-    <button
-      class="neo-checkbox-button"
-      role="checkbox"
-      aria-checked={indeterminate ? 'mixed' : checked}
-      class:neo-checked={checked || indeterminate}
-      class:neo-rounded={rounded}
-      class:neo-start={start}
-      class:neo-glass={glass}
-      class:neo-disabled={disabled}
-      class:neo-skeleton={skeleton}
-      class:neo-flat={!elevation}
-      class:neo-inset={elevation <= 0}
-      style:--neo-checkbox-box-shadow={boxShadow}
-      style:--neo-checkbox-checked-shadow={checkedShadow}
+    <NeoCheckboxButton
+      {indeterminate}
+      {checked}
+      {rounded}
+      {start}
+      {glass}
+      {disabled}
+      {skeleton}
+      {elevation}
       onclick={() => ref?.click()}
+      {...buttonProps}
     >
       <span class="neo-checkbox-input">
         <NeoBaseInput
@@ -182,14 +175,7 @@
           tabindex={-1}
         />
       </span>
-      {#if indeterminate}
-        <IconCheckbox circle={rounded} indeterminate />
-      {:else if checked}
-        <IconCheckbox circle={rounded} checked />
-      {:else}
-        <IconCheckbox circle={rounded} enter={touched} />
-      {/if}
-    </button>
+    </NeoCheckboxButton>
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
     {#if loading !== undefined}
       <span class="neo-checkbox-suffix">
@@ -232,82 +218,6 @@
 
     &-input {
       display: none;
-    }
-
-    &-button {
-      box-sizing: border-box;
-      min-width: fit-content;
-      margin: 0 0 0.125rem;
-      padding: 0.125rem;
-      color: inherit;
-      font: inherit;
-      text-decoration: none;
-      background-color: color-mix(in srgb, transparent, currentcolor 1%);
-      border: var(--neo-checkbox-border-width, var(--neo-border-width, 1px)) var(--neo-checkbox-border-color, transparent) solid;
-      border-radius: var(--neo-border-radius-xs);
-      outline: none;
-      box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-2));
-      cursor: pointer;
-      transition:
-        color 0.3s ease,
-        box-shadow 0.3s ease,
-        border-radius 0.3s ease,
-        border-color 0.3s ease,
-        background-color 0.3s ease;
-
-      :global(svg) {
-        display: block;
-        max-width: 100%;
-      }
-
-      &.neo-disabled,
-      &.neo-flat {
-        background-color: transparent;
-        border-color: var(--neo-input-border-color, var(--neo-border-color));
-      }
-
-      &:focus-visible,
-      &.neo-checked {
-        box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
-      }
-
-      &.neo-inset:focus-visible {
-        border-color: var(--neo-checkbox-border-color-focused, var(--neo-border-color-focused));
-      }
-
-      &.neo-disabled {
-        color: var(--neo-text-color-disabled);
-        box-shadow: var(--neo-box-shadow-flat);
-        cursor: not-allowed;
-        opacity: var(--neo-checkbox-opacity-disabled, var(--neo-opacity-disabled));
-      }
-
-      &.neo-rounded {
-        border-radius: 50%;
-      }
-
-      &.neo-glass {
-        background-color: var(--neo-checkbox-bg-color, var(--neo-glass-background-color));
-        border-color: var(--neo-checkbox-border-color, transparent);
-        backdrop-filter: var(--neo-checkbox-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
-
-        &.neo-flat {
-          border-color: var(--neo-checkbox-border-color, var(--neo-glass-border-color-flat));
-        }
-      }
-
-      &.neo-start {
-        @starting-style {
-          box-shadow: var(--neo-box-shadow-flat);
-        }
-      }
-
-      &.neo-skeleton {
-        box-shadow: var(--neo-box-shadow-flat);
-        pointer-events: none;
-
-        @include mixin.skeleton;
-      }
     }
 
     &-suffix {

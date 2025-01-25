@@ -1,8 +1,7 @@
+import type { NeoCommonSwitchProps, NeoSwitchButtonProps } from '~/buttons/neo-switch-button.model.js';
 import type { NeoBaseInputProps, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
-
-export type NeoSwitchElevation = -2 | -1 | 0 | 1 | 2;
 
 /**
  * Note: Checkbox group are exclusive due to the api design.
@@ -12,13 +11,8 @@ export type NeoSwitchElevation = -2 | -1 | 0 | 1 | 2;
 export type NeoSwitchProps = NeoBaseInputProps &
   Pick<
     NeoInputProps,
-    | 'start'
-    | 'glass'
-    | 'rounded'
     | 'readonly'
     | 'loading'
-    | 'disabled'
-    | 'skeleton'
     | 'validation'
     | 'focusin'
     | 'in'
@@ -33,11 +27,11 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'wrapperTag'
     | 'wrapperProps'
   > &
+  NeoCommonSwitchProps &
   Pick<NeoLabelProps, 'label'> &
   Pick<NeoValidationProps, 'error' | 'message' | 'messageTag' | 'messageProps'> & {
     /**
-     * Input elevation.
-     * @default 2
+     * Props to be passed to the switch button.
      */
-    elevation?: NeoSwitchElevation;
+    buttonProps?: NeoSwitchButtonProps;
   };

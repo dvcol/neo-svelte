@@ -10,6 +10,9 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import NeoCheckboxButton from '~/buttons/NeoCheckboxButton.svelte';
+  import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
+  import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
 
   const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
@@ -88,6 +91,23 @@
       {@render buttons(props)}
     </div>
   {/each}
+</div>
+
+<div class="row">
+  <div class="column">
+    <span class="label">Checkbox</span>
+    <SphereBackdrop glass={options.glass}>
+      <NeoCheckboxButton {...options} />
+    </SphereBackdrop>
+    <span class="label">Radio</span>
+    <SphereBackdrop glass={options.glass}>
+      <NeoRadioButton {...options} />
+    </SphereBackdrop>
+    <span class="label">Switch</span>
+    <SphereBackdrop glass={options.glass}>
+      <NeoSwitchButton {...options} />
+    </SphereBackdrop>
+  </div>
 </div>
 
 <style lang="scss">

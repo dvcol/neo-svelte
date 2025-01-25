@@ -1,33 +1,16 @@
+import type { NeoCommonRadioProps, NeoRadioButtonProps } from '~/buttons/neo-radio-button.model.js';
 import type { NeoBaseInputProps, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
-
-export type NeoRadioElevation = -2 | -1 | 0 | 1 | 2;
 
 export type NeoRadioProps = NeoBaseInputProps &
   Pick<
     NeoInputProps,
-    | 'start'
-    | 'glass'
-    | 'elevation'
-    | 'rounded'
-    | 'readonly'
-    | 'loading'
-    | 'disabled'
-    | 'skeleton'
-    | 'focusin'
-    | 'in'
-    | 'out'
-    | 'transition'
-    | 'labelRef'
-    | 'labelProps'
-    | 'containerRef'
-    | 'containerTag'
-    | 'containerProps'
+    'readonly' | 'loading' | 'focusin' | 'in' | 'out' | 'transition' | 'labelRef' | 'labelProps' | 'containerRef' | 'containerTag' | 'containerProps'
   > &
-  Pick<NeoLabelProps, 'label'> & {
+  Pick<NeoLabelProps, 'label'> &
+  NeoCommonRadioProps & {
     /**
-     * Input elevation.
-     * @default 2
+     * Props to be passed to the radio button.
      */
-    elevation?: NeoRadioElevation;
+    buttonProps?: NeoRadioButtonProps;
   };
