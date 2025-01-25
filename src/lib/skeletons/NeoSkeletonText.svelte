@@ -100,7 +100,13 @@
   .neo-skeleton-text-line {
     width: 100%;
     height: var(--neo-skeleton-text-font-size, var(--neo-font-size, 1rem));
-    margin-block: var(--neo-skeleton-text-line-height, calc((var(--neo-line-height, 1.5rem) - var(--neo-font-size, 1rem)) / 2));
+    margin: var(
+      --neo-skeleton-text-margin,
+      calc(
+          (var(--neo-skeleton-text-line-height, var(--neo-line-height, 1.5rem)) - var(--neo-skeleton-text-font-size, var(--neo-font-size, 1rem))) / 2
+        )
+        0
+    );
     border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-lg));
 
     @include mixin.skeleton;
@@ -176,6 +182,7 @@
 
     &.neo-alt {
       flex-flow: row wrap;
+      gap: var(--neo-skeleton-alt-gap, 0 var(--neo-gap-xxxs));
     }
 
     &.neo-justify {
