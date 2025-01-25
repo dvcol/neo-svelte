@@ -8,7 +8,7 @@
   import IconMinus from '~/icons/IconMinus.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeButtonShadows, DefaultShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -80,7 +80,7 @@
     onStepDown?.(e, ref.valueAsNumber, ref.step);
   };
 
-  const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
+  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowElevation));
   const text = $derived(elevation >= 0 || !rest.pressed);
   const style = $derived(computeButtonShadows(elevation, text));
   const buttonsProps = $derived<NeoButtonProps>({

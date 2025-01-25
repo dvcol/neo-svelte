@@ -9,7 +9,7 @@ import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
-import type { ShadowElevation } from '~/utils/shadow.utils.js';
+import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
 
 export type NeoInputValue<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = T extends HTMLTextAreaElement
   ? HTMLTextareaAttributes['value']
@@ -40,7 +40,7 @@ export type NeoInputStyles = {
    * Weather to increase/decrease the elevation when hovered/focused.
    * @default 0
    */
-  hover?: number;
+  hover?: NeoInputHoverElevation;
   /**
    * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
    */
@@ -105,7 +105,8 @@ export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement | H
   validate: (update?: { dirty?: boolean; valid?: boolean }) => NeoInputState<T>;
 };
 
-export type NeoInputElevation = ShadowElevation;
+export type NeoInputElevation = ShadowElevation | ShadowElevationString;
+export type NeoInputHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = NeoValidationFieldContext<T, NeoInputValue<T>> &
   Partial<NeoInputStyles & NeoInputMethods<T>>;
 

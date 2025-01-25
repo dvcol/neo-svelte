@@ -12,6 +12,7 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import { coerce, DefaultShadowShallowElevation } from '~/utils/shadow.utils.js';
   import { enterTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -44,8 +45,6 @@
     rounded = true,
     skeleton,
 
-    elevation = 2,
-
     // Actions
     in: inAction,
     out: outAction,
@@ -66,6 +65,8 @@
     ...rest
   }: NeoSwitchProps = $props();
   /* eslint-enable prefer-const */
+
+  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
 
   let initial = $state(checked);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');

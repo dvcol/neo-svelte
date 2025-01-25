@@ -2,16 +2,35 @@ import { clamp } from '@dvcol/common-utils/common/math';
 
 export const MaxShadowElevation = 5;
 export const MinShadowElevation = -5;
+export const DefaultShallowMinMaxElevation: { min: ShadowElevation; max: ShadowElevation } = { max: 2, min: -2 };
+
 export const DefaultShadowElevation = 3;
 export const DefaultShadowPressedElevation = -2;
-export const DefaultShadowHoverElevation = -1;
-export const DefaultShadowHoverPressedElevation = 0;
-export const DefaultShadowTooltipElevation = 2;
-export const DefaultSaturation = 3;
+
 export const ShadowElevations = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5] as const;
 export type ShadowElevation = (typeof ShadowElevations)[number];
+export type ShadowElevationString = `${ShadowElevation}`;
+
+export const DefaultShadowHoverElevation = -1;
+export const DefaultShadowHoverPressedElevation = 0;
+
+export const ShadowHoverElevations = [-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+export type ShadowHoverElevation = (typeof ShadowHoverElevations)[number];
+export type ShadowHoverElevationsString = `${ShadowHoverElevation}`;
+
+export const DefaultShadowShallowElevation = 2;
+export const ShadowShallowElevations = [-2, -1, 0, 1, 2] as const;
+export type ShadowShallowElevation = (typeof ShadowShallowElevations)[number];
+export type ShadowShallowElevationString = `${ShadowShallowElevation}`;
+
+export const PositiveShadowElevations = [0, 1, 2, 3, 4, 5] as const;
+export type PositiveShadowElevation = (typeof PositiveShadowElevations)[number];
+export type PositiveShadowElevationString = `${PositiveShadowElevation}`;
+
 export type ShadowModifier = { glass?: boolean; convex?: boolean; pressed?: boolean };
 export const ShadowFlatRegex = /^.*flat\)?;?$/;
+
+export const DefaultSaturation = 3;
 
 export const getDefaultElevation = (pressed?: boolean, fallback: ShadowElevation = DefaultShadowElevation) =>
   pressed ? DefaultShadowPressedElevation : fallback;
@@ -22,6 +41,9 @@ export const getDefaultSlideElevation = (elevation: ShadowElevation, fallback: S
   if (elevation < 0) return Math.abs(elevation) as ShadowElevation;
   return fallback;
 };
+
+export const coerce = <Elevation extends number = ShadowElevation>(elevation: Elevation | `${Elevation}`): Elevation =>
+  Number(elevation) as Elevation;
 
 export const isShadowFlat = (shadow: string) => ShadowFlatRegex.test(shadow);
 

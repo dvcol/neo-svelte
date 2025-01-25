@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoSwitchButtonProps } from '~/buttons/neo-switch-button.model.js';
 
-  import { computeShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -20,14 +20,13 @@
     rounded = true,
     skeleton,
 
-    elevation = 2,
-
     // Other props
     ...rest
   }: NeoSwitchButtonProps = $props();
   /* eslint-enable prefer-const */
 
-  const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
+  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
+  const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
 
   const onclick = () => {
     if (disabled) return;

@@ -11,7 +11,7 @@
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { DefaultShadowTooltipElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
   import { scaleTransition } from '~/utils/transition.utils.js';
 
   let {
@@ -31,8 +31,6 @@
 
     // Styles
     rounded,
-    elevation = DefaultShadowTooltipElevation,
-    blur,
     width,
 
     // Hover
@@ -65,6 +63,9 @@
     ...rest
   }: NeoTooltipProps = $props();
   /* eslint-enable prefer-const */
+
+  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
+  const blur = $derived(coerce(rest?.blur ?? elevation));
 
   const host = $derived.by(() => {
     if (!target) return;
@@ -141,7 +142,7 @@
   });
 
   const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${clamp(elevation, 1, MaxShadowElevation)})`);
-  const tooltipBlur = $derived(`var(--neo-blur-${clamp(blur ?? elevation, 1, MaxShadowElevation)})`);
+  const tooltipBlur = $derived(`var(--neo-blur-${clamp(blur, 1, MaxShadowElevation)})`);
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));

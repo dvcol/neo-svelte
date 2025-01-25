@@ -10,11 +10,11 @@
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
-  import { DefaultShadowTooltipElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
+  import { DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
 
   const options = $state<NeoTooltipProps>({
     rounded: false,
-    elevation: DefaultShadowTooltipElevation,
+    elevation: DefaultShadowShallowElevation,
 
     placement: 'bottom',
     openOnHover: true,
@@ -75,7 +75,7 @@
     bind:value={options.elevation}
     min={1}
     max={MaxShadowElevation}
-    defaultValue={DefaultShadowTooltipElevation}
+    defaultValue={DefaultShadowShallowElevation}
     rounded={options.rounded}
     nullable={false}
     floating={false}

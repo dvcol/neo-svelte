@@ -13,7 +13,7 @@
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { ArrowPrefix } from '~/utils/regex.utils.js';
-  import { DefaultShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -316,7 +316,7 @@
   let visible = $state(false);
   let messageId = $state(`neo-pin-message-${crypto.randomUUID()}`);
 
-  const elevation = $derived(rest?.elevation ?? DefaultShadowElevation);
+  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowElevation));
 
   const context = $derived<NeoPinContext>({
     // Ref

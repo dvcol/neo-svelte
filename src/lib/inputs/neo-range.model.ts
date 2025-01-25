@@ -5,9 +5,10 @@ import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 
 export type NeoRangeValue = number | [number, number];
-export type NeoRangeElevation = -2 | -1 | 0 | 1 | 2;
+export type NeoRangeElevation = ShadowShallowElevation | ShadowShallowElevationString;
 
 export type NeoRangeStates = {
   /**
@@ -153,7 +154,7 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
   NeoRangeStyles &
   HTMLActionProps &
   HTMLRefProps &
-  HTMLNeoBaseElement;
+  HTMLNeoBaseElement<HTMLSpanElement>;
 
 export type NeoRangeValidationState = NeoValidationState<NeoRangeValue>;
 

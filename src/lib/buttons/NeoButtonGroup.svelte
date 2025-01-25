@@ -2,7 +2,7 @@
   import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeGlassFilter, computeShadowElevation, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeGlassFilter, computeShadowElevation, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -17,7 +17,6 @@
     // Styles
     pressed,
     convex,
-    elevation = getDefaultElevation(pressed),
     borderless,
     start,
     glass,
@@ -44,6 +43,8 @@
     ...rest
   }: NeoButtonGroupProps = $props();
   /* eslint-enable prefer-const */
+
+  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
 
   const filter = $derived(computeGlassFilter(elevation, glass));
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }));

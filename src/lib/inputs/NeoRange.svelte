@@ -12,7 +12,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
   import { enterTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -49,8 +49,6 @@
     tooltips = true,
     skeleton,
 
-    elevation = 2,
-
     // Actions
     in: inAction,
     out: outAction,
@@ -71,8 +69,11 @@
     wrapperProps,
     floatingProps,
     floatingOptions,
+    ...rest
   }: NeoRangeProps = $props();
   /* eslint-enable prefer-const */
+
+  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
 
   const isArray = $derived(Array.isArray(value));
   const initial = $state<NeoRangeValue>(Array.isArray(value) ? [...value] : value);
@@ -84,7 +85,7 @@
   const lowerProgress = $derived(((lower - min) / (max - min)) * 100);
   const upperProgress = $derived(upper ? ((upper - min) / (max - min)) * 100 : undefined);
 
-  const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
+  const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
 
   const show = $derived(tooltips && (focused || hovered));
   const lowerTooltip = useFloating({
@@ -400,7 +401,7 @@
           </span>
         {/if}
         <span
-          class="neo-range-slider"
+          class:neo-range-slider={true}
           class:neo-rounded={rounded}
           class:neo-start={start}
           class:neo-glass={glass}
@@ -412,6 +413,7 @@
           style:--neo-range-box-shadow={boxShadow}
           style:--neo-range-progress="{lowerProgress}%"
           style:--neo-range-array-progress="{upperProgress}%"
+          {...rest}
         >
           <span role="region" class="neo-range-rail" bind:this={slider} onpointerdown={onClick}>
             <span class="neo-range-handle-before" class:neo-array={isArray}>

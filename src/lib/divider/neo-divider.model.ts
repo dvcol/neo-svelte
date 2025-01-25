@@ -1,4 +1,7 @@
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
+
+export type NeoDividerElevation = ShadowElevation | ShadowElevationString;
 
 export type NeoDividerProps = {
   // States
@@ -17,7 +20,7 @@ export type NeoDividerProps = {
    *
    * @default -2
    */
-  elevation?: number;
+  elevation?: NeoDividerElevation;
   /**
    * Divider height.
    */

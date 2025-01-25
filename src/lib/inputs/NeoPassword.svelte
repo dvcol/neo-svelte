@@ -7,7 +7,7 @@
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, getDefaultElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -42,7 +42,7 @@
 
   const _type = $derived(show ? 'text' : type);
 
-  const elevation = $derived(rest?.elevation ?? getDefaultElevation(rest?.pressed));
+  const elevation = $derived(coerce<ShadowElevation>(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
   const text = $derived(elevation >= 0 || !rest.pressed || pin);
   const style = $derived(computeButtonShadows(elevation, text));
   const afterProps = $derived<NeoButtonProps>({

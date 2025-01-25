@@ -9,7 +9,7 @@
   import NeoColorPickerSelector from '~/inputs/NeoColorPickerSelector.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { HexColorRegexString } from '~/utils/regex.utils.js';
-  import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -48,7 +48,7 @@
     buttonProps?.onclick?.(e);
   };
 
-  const elevation = $derived(rest?.elevation ?? getDefaultElevation(rest?.pressed));
+  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
   const text = $derived(elevation >= 0 || !rest.pressed);
   const style = $derived(computeButtonShadows(elevation, text));
   const afterProps = $derived<NeoButtonProps>({

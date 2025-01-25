@@ -10,8 +10,9 @@ import type {
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
 
-export type NeoTooltipElevation = 0 | 1 | 2 | 3 | 4 | 5;
+export type NeoTooltipElevation = PositiveShadowElevation | PositiveShadowElevationString;
 
 export type NeoTooltipProps = {
   // Snippets

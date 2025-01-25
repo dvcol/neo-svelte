@@ -14,7 +14,7 @@
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { computeShadowElevation, getDefaultElevation, getDefaultSlideElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeShadowElevation, getDefaultElevation, getDefaultSlideElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -36,8 +36,6 @@
     pill,
     slide = true,
     pressed,
-    elevation = getDefaultElevation(pressed),
-    slideElevation = getDefaultSlideElevation(elevation),
 
     // Events
     onchange,
@@ -50,6 +48,9 @@
     ...rest
   }: NeoTabsProps = $props();
   /* eslint-enable prefer-const */
+
+  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
+  const slideElevation = $derived(coerce(rest?.slideElevation ?? getDefaultSlideElevation(elevation)));
 
   // reflect context active to component
   const onChange: OnChange = (_tabId, _new, _old) => {

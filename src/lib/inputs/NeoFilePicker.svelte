@@ -14,7 +14,7 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
-  import { computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -49,9 +49,6 @@
     readonly,
     rounded,
     pressed,
-
-    elevation = getDefaultElevation(pressed),
-    hover = getDefaultHoverElevation(pressed),
 
     // File picker
     append,
@@ -89,6 +86,9 @@
     ...rest
   }: NeoFilePickerProps = $props();
   /* eslint-enable prefer-const */
+
+  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
+  const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(pressed)));
 
   const text = $derived(elevation >= 0 || !pressed);
   const style = $derived(computeButtonShadows(elevation, text));

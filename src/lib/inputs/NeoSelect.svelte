@@ -7,7 +7,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -38,7 +38,7 @@
   }: NeoSelectProps = $props();
   /* eslint-enable prefer-const */
 
-  const elevation = $derived(rest?.elevation ?? getDefaultElevation(rest?.pressed));
+  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
   const text = $derived(elevation >= 0 || !rest.pressed);
   const style = $derived(computeButtonShadows(elevation, text));
   const afterProps = $derived<NeoButtonProps>({

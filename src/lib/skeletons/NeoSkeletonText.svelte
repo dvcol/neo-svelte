@@ -100,7 +100,7 @@
   .neo-skeleton-text-line {
     width: 100%;
     height: var(--neo-skeleton-text-font-size, var(--neo-font-size, 1rem));
-    margin: var(--neo-skeleton-text-line-height, calc((var(--neo-line-height, 1.5rem) - var(--neo-font-size, 1rem)) / 2));
+    margin-block: var(--neo-skeleton-text-line-height, calc((var(--neo-line-height, 1.5rem) - var(--neo-font-size, 1rem)) / 2));
     border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-lg));
 
     @include mixin.skeleton;

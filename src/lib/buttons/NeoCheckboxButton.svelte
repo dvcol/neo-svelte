@@ -2,7 +2,7 @@
   import type { NeoCheckboxButtonProps } from '~/buttons/neo-checkbox-button.model.js';
 
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
-  import { computeShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -21,15 +21,15 @@
     rounded,
     skeleton,
 
-    elevation = 2,
-
     // Other props
     ...rest
   }: NeoCheckboxButtonProps = $props();
   /* eslint-enable prefer-const */
 
-  const boxShadow = $derived(computeShadowElevation(elevation, { glass }, { max: 2, min: -2 }));
-  const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, { max: 2, min: -2 }));
+  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
+
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass }, DefaultShallowMinMaxElevation));
+  const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
 
   const onclick = () => {
     if (disabled) return;

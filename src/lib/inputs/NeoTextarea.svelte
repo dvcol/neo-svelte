@@ -21,6 +21,7 @@
   } from '~/inputs/common/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import {
+    coerce,
     computeGlassFilter,
     computeHoverShadowElevation,
     computeShadowElevation,
@@ -71,8 +72,6 @@
     floating = true,
     skeleton,
     validation,
-    elevation = getDefaultElevation(pressed),
-    hover = getDefaultHoverElevation(pressed),
 
     // Transition
     in: inAction,
@@ -111,6 +110,9 @@
 
   let initial = $state(value);
   let validationMessage: string | undefined = $state(ref?.validationMessage);
+
+  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
+  const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(pressed)));
 
   const filter = $derived(computeGlassFilter(elevation, glass));
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }));
@@ -319,6 +321,7 @@
 
     // State
     value,
+    initial,
     touched,
     dirty,
     valid,

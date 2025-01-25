@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
-import type { ShadowElevation } from '~/utils/shadow.utils.js';
+import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
 
-export type NeoButtonGroupElevation = ShadowElevation;
+export type NeoButtonGroupElevation = ShadowElevation | ShadowElevationString;
 export type NeoButtonGroupContext = {
   // States
 

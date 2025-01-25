@@ -7,6 +7,7 @@
   import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import {
+    coerce,
     computeGlassFilter,
     computeHoverShadowElevation,
     computeShadowElevation,
@@ -34,9 +35,7 @@
     // Styles
     pressed,
     convex,
-    elevation = getDefaultElevation(pressed),
     spacing,
-    hover = 0,
     borderless,
     rounded,
     glass,
@@ -82,6 +81,9 @@
     ...rest
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
+
+  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
+  const hover = $derived(coerce(rest?.hover ?? 0));
 
   const filter = $derived(computeGlassFilter(elevation, glass));
 

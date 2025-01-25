@@ -3,9 +3,10 @@ import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
-import type { ShadowElevation } from '~/utils/shadow.utils.js';
+import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
 
-export type NeoCardElevation = ShadowElevation;
+export type NeoCardElevation = ShadowElevation | ShadowElevationString;
+export type NeoCardHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 
 export type NeoCardContext = {
   // Styles
@@ -25,7 +26,7 @@ export type NeoCardContext = {
    * Weather to increase/decrease the elevation when hovered/focused.
    * @default 0
    */
-  hover?: number;
+  hover?: NeoCardHoverElevation;
   /**
    * If the card is currently hovered.
    */
@@ -63,7 +64,7 @@ export type NeoCardContext = {
    * If true, a border will separate the card content from the header, footer, and action.
    * If a number is provided, a raised/inset divider will be displayed instead.
    */
-  segmented?: boolean | number;
+  segmented?: boolean | NeoDividerProps['elevation'];
   /**
    * If true, the media will be displayed as a cover (no margin).
    */
