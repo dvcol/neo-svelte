@@ -1,3 +1,4 @@
+import type { NeoDividerProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
@@ -170,6 +171,10 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    * Props for the card media.
    */
   mediaProps?: HTMLNeoBaseElement;
+  /**
+   * Props for the devider.
+   */
+  dividerProps?: NeoDividerProps;
   /**
    * Props for the close button.
    */

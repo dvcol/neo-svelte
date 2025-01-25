@@ -77,6 +77,7 @@
     actionProps,
     mediaTag = 'div',
     mediaProps,
+    dividerProps,
     closeProps,
     ...rest
   }: NeoCardProps = $props();
@@ -154,7 +155,7 @@
 {#snippet divider()}
   {#if segments && typeof segmented === 'number'}
     <div class="neo-card-divider">
-      <NeoDivider vertical={horizontal} elevation={segmented} />
+      <NeoDivider vertical={horizontal} elevation={segmented} {rounded} {glass} {skeleton} {...dividerProps} />
     </div>
   {/if}
 {/snippet}
@@ -412,7 +413,7 @@
         border-color: var(--neo-card-border-color, transparent);
       }
 
-      &:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+      &:not(.neo-inset, .neo-convex, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
         border-color: var(
           --neo-card-border-color,
           var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)

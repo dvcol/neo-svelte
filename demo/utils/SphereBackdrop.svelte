@@ -3,7 +3,9 @@
 
   import type { Snippet } from 'svelte';
 
-  const { glass = true, row = false, children }: { glass?: boolean; row?: boolean; children: Snippet } = $props();
+  import type { HTMLNeoBaseElement } from '~/utils/html-element.utils';
+
+  const { glass = true, row = false, children, ...rest }: { glass?: boolean; row?: boolean; children: Snippet } & HTMLNeoBaseElement = $props();
 
   let ref = $state<HTMLElement | null>(null);
 
@@ -23,7 +25,7 @@
 </script>
 
 {#if glass}
-  <div bind:this={ref} class="neo-sphere" class:neo-sphere-row={row}>
+  <div bind:this={ref} class:neo-sphere={true} class:neo-sphere-row={row} {...rest}>
     <div class="neo-sphere-before" style={`--translate:${width}; --translate-y:${height}`}></div>
     {@render children?.()}
     <div class="neo-sphere-after" style={`--translate:-${width}; --translate-y:-${height}`}></div>

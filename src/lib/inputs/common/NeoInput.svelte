@@ -816,7 +816,7 @@
           border-color: var(--neo-input-border-color, transparent);
         }
 
-        &:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+        &:not(.neo-inset, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
           border-color: var(
             --neo-input-border-color,
             var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
