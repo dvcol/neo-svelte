@@ -176,7 +176,7 @@
       }
 
       &.neo-flat {
-        border-color: var(--neo-btn-border-color, var(--neo-glass-border-color));
+        border-color: var(--neo-btn-border-color, var(--neo-glass-border-color-flat));
       }
     }
 
