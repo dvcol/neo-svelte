@@ -43,8 +43,8 @@
 
   const updateSize = () => {
     const rect = ref?.getBoundingClientRect();
-    if (rect?.width) skeletonWidth = `${rect.width}px`;
-    if (rect?.height) skeletonHeight = `${rect.height}px`;
+    if (!width && rect?.width) skeletonWidth = `${rect.width}px`;
+    if (!height && rect?.height) skeletonHeight = `${rect.height}px`;
   };
 
   $effect(() => {
@@ -87,7 +87,7 @@
   .neo-skeleton-container {
     display: flex;
     width: var(--neo-skeleton-content-width);
-    height: var(--neo-skeleton-content-height);
+    min-height: var(--neo-skeleton-content-height);
   }
 
   .neo-skeleton-content-container {

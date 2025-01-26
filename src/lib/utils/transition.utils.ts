@@ -1,3 +1,4 @@
+import { circOut } from 'svelte/easing';
 import { fade, type FadeParams, scale, type ScaleParams } from 'svelte/transition';
 
 import type { TransitionProps } from '@dvcol/svelte-utils/transition';
@@ -30,3 +31,5 @@ export const scaleTransition: TransitionWithProps<ScaleParams> = {
   use: scale,
   props: scaleTransitionProps,
 };
+
+export const flipTransitionProps: TransitionProps = { duration: 200, ease: circOut, delay: 100 };

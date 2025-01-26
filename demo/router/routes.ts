@@ -11,6 +11,7 @@ export const Route = {
   Skeleton: 'skeleton' as const,
   Inputs: 'inputs' as const,
   Tooltips: 'tooltips' as const,
+  Lists: 'lists' as const,
 } as const;
 
 export type Routes = (typeof Route)[keyof typeof Route];
@@ -25,6 +26,7 @@ export const Path: Record<keyof typeof Route, string> = {
   Skeleton: '/skeleton' as const,
   Inputs: '/inputs' as const,
   Tooltips: '/tooltips' as const,
+  Lists: '/lists' as const,
   Any: '*' as const,
 } as const;
 
@@ -78,6 +80,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.Tooltips,
       path: Path.Tooltips,
       component: () => import('../components/DemoTooltips.svelte'),
+    },
+    {
+      name: Route.Lists,
+      path: Path.Lists,
+      component: () => import('../components/DemoLists.svelte'),
     },
     {
       name: Route.Any,

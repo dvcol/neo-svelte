@@ -49,6 +49,7 @@
     justify,
     align,
     flex,
+    width,
 
     // Transition
     in: inAction,
@@ -194,6 +195,7 @@
   style:justify-content={justify}
   style:align-items={align}
   style:flex
+  style:width
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}

@@ -13,7 +13,7 @@
   import IconPencil from '~/icons/IconPencil.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { enterTransitionProps, leaveDefaultFadeTransition } from '~/utils/transition.utils.js';
+  import { enterTransitionProps, flipTransitionProps, leaveDefaultFadeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -112,7 +112,7 @@
     <div class="neo-expanded-list" class:neo-rounded={rounded} style:--neo-file-picker-card-max-height={maxHeight}>
       <div class="neo-expanded-scroll">
         {#each files as file, i (file)}
-          <div class="neo-file" transition:fade={{ duration: 200 }} animate:flip={{ duration: 200, delay: 100 }}>
+          <div class="neo-file" transition:fade={enterTransitionProps} animate:flip={flipTransitionProps}>
             <span class="neo-file-name" title={file.name}>{file.name}</span>
             {#if clearable}
               <span class="neo-file-remove">
@@ -318,7 +318,6 @@
       gap: var(--neo-gap-xxs);
       max-height: var(--neo-file-picker-card-max-height);
       padding: 0.625rem 0.25rem;
-      overflow: auto;
 
       @include mixin.fade-scroll(1rem);
       @include mixin.scrollbar($gutter: stable both-edges);

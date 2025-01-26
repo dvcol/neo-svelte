@@ -21,3 +21,9 @@
   initial-value: transparent;
   inherits: false;
 }
+
+@property --neo-thumb-color {
+  syntax: '<color>';
+  initial-value: transparent;
+  inherits: true;
+}

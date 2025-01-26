@@ -152,6 +152,14 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    */
   mediaTag?: keyof HTMLElementTagNameMap;
 
+  // Styles
+  /**
+   * Overrides the default width.
+   */
+  width?: CSSStyleDeclaration['width'];
+
+  // Other props
+
   /**
    * Props for the card content.
    */

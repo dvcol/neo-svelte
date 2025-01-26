@@ -10,17 +10,23 @@
   --neo-grey-dark: oklch(from var(--neo-grey) calc(l + 0.2) c h);
   --neo-blue: oklch(50% 0.302 264.206deg);
   --neo-blue-dark: oklch(from var(--neo-blue) calc(l + 0.4) c h);
+  --neo-purple-light: oklch(from var(--neo-purple) calc(l + 0.25) c h);
+  --neo-purple: oklch(50% 0.302 304.206deg);
   --neo-red-light: oklch(from var(--neo-red) calc(l + 0.25) c h);
   --neo-red: oklch(50% 0.302 26.206deg);
+  --neo-orange-light: oklch(from var(--neo-orange) calc(l + 0.15) c h);
+  --neo-orange: oklch(72% 0.177 65deg);
   --neo-green-light: oklch(from var(--neo-green) calc(l + 0.25) c h);
   --neo-green: oklch(52% 0.177 142.495deg);
 
   /** primary colors */
   --neo-color-primary: var(--neo-blue);
   --neo-color-primary-50: oklch(from var(--neo-color-primary) l c h / 50%);
+  --neo-color-secondary: var(--neo-purple);
   --neo-color-error: var(--neo-red);
   --neo-color-error-50: oklch(from var(--neo-color-error) l c h / 50%);
   --neo-color-error-75: oklch(from var(--neo-color-error) l c h / 75%);
+  --neo-color-warning: var(--neo-orange);
   --neo-color-success: var(--neo-green);
   --neo-color-success-50: oklch(from var(--neo-color-success) l c h / 50%);
 
@@ -31,7 +37,7 @@
   // Text
   --neo-text-color: var(--neo-grey-dark);
   --neo-text-color-secondary: color-mix(in srgb, var(--neo-text-color), white 20%);
-  --neo-text-color-highlight: color-mix(in srgb, currentcolor, black 50%);
+  --neo-text-color-highlight: oklch(from currentcolor calc(l - 0.15) c h);
   --neo-text-color-active: color-mix(in srgb, currentcolor, white 10%);
   --neo-text-color-focused: color-mix(in srgb, var(--neo-text-color), var(--neo-color-primary) 50%);
   --neo-text-color-focused-active: color-mix(in srgb, var(--neo-text-color-focused), white 10%);
@@ -89,11 +95,13 @@
   /** dark primary colors */
   --neo-dark-color-primary: var(--neo-blue-dark);
   --neo-dark-color-primary-50: oklch(from var(--neo-dark-color-primary) l c h / 50%);
+  --neo-dark-color-secondary: var(--neo-purple-light);
   --neo-dark-color-error: var(--neo-red-light);
   --neo-dark-color-error-50: oklch(from var(--neo-dark-color-error) l c h / 50%);
   --neo-dark-color-error-75: oklch(from var(--neo-dark-color-error) l c h / 75%);
   --neo-dark-color-success: var(--neo-green-light);
   --neo-dark-color-success-50: oklch(from var(--neo-dark-color-success) l c h / 50%);
+  --neo-dark-color-warning: var(--neo-orange-light);
 
   /*********************
    ** dark mode colors **
@@ -102,7 +110,7 @@
   // Text
   --neo-dark-text-color: var(--neo-white-soft-dark);
   --neo-dark-text-color-secondary: color-mix(in srgb, var(--neo-text-color), black 20%);
-  --neo-dark-text-color-highlight: color-mix(in srgb, currentcolor, white 80%);
+  --neo-dark-text-color-highlight: oklch(from currentcolor calc(l + 0.15) c h);
   --neo-dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
   --neo-dark-text-color-focused: color-mix(in srgb, var(--neo-dark-text-color), var(--neo-dark-color-primary) 40%);
   --neo-dark-text-color-focused-active: color-mix(in srgb, var(--neo-dark-text-color-focused), black 10%);
@@ -164,11 +172,13 @@
    *********************/
   --neo-color-primary: var(--neo-dark-color-primary);
   --neo-color-primary-50: var(--neo-dark-color-primary-50);
+  --neo-color-secondary: var(--neo-dark-color-secondary);
   --neo-color-error: var(--neo-dark-color-error);
   --neo-color-error-50: var(--neo-dark-color-error-50);
   --neo-color-error-75: var(--neo-dark-color-error-75);
   --neo-color-success: var(--neo-dark-color-success);
   --neo-color-success-50: var(--neo-dark-color-success-50);
+  --neo-color-warning: var(--neo-dark-color-warning);
 
   /*********************
    ** semantic colors **

@@ -51,6 +51,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 ## TODO
 - [ ] @media any-pointer:coarse any-hover:none
 - [x] Buttons
+  - [x] toggle
+  - [x] groups
 - [x] Tabs
 - [x] Card
 - [x] Inputs
@@ -78,6 +80,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] custom before-after
   - [x] steps
   - [ ] vertical
+  - [ ] rating (stars)
 - [x] select
   - [x] native
   - [ ] custom
@@ -87,6 +90,19 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] nested menus
 
 - [ ] list
+  - [ ] snippets
+    - [ ] children
+    - [ ] header
+    - [ ] footer
+  - [ ] select
+    - [ ] multiple
+    - [ ] disabled
+    - [ ] readonly
+    - [ ] header (pills or item count)
+  - [ ] separator
+    - [ ] label (sections
+  - [ ] keyboard navigation
+  - [ ] scroll shadow
   - [ ] virtualized
   - [ ] infinite scroll
   - [ ] drag & drop
@@ -97,6 +113,27 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] search
   - [ ] select
   - [ ] tree
+
+- [ ] Chat
+  - [ ] infinite scroll 
+  - [ ] virtual scroll
+  - [ ] async
+  - [ ] stream
+  - [ ] generative text animation
+  - [ ] scroll to bottom
+  - [ ] typing indicator
+  - [ ] read indicator
+  - [ ] reactions
+  - [ ] threads
+  - [ ] @ / # tags
+  - [ ] mentions
+  - [ ] attachments
+  - [ ] gifs/images
+  - [ ] videos
+  - [ ] audio
+  - [ ] custom cards (contact, etc.)
+  - [ ] custom bubbles
+  - [ ] custom input
 
 - [ ] Modal/dialog
 - [ ] drawer/panel

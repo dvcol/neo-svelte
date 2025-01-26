@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { NeoTransitionContainerProps } from '~/containers/neo-transition-container.model.js';
 
+  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+
   const {
     // Snippets
     children,
@@ -15,9 +17,19 @@
     width,
     height,
 
+    // Transition
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
+
     // Other props
     ...rest
   }: NeoTransitionContainerProps = $props();
+
+  const inFn = $derived(toTransition(inAction ?? transitionAction));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
+  const outFn = $derived(toTransition(outAction ?? transitionAction));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
 </script>
 
 <svelte:element
@@ -28,6 +40,8 @@
   style:overflow-y={overflowY}
   style:width
   style:height
+  out:outFn={outProps}
+  in:inFn={inProps}
   {...rest}
 >
   {@render children?.()}

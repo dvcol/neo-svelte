@@ -204,13 +204,26 @@
 }
 
 @mixin scrollbar(
+  $overflow: auto,
   $gutter: stable,
   $width: var(--neo-scrollbar-width, 0.375rem),
   $thumb-color: var(--neo-scrollbar-color),
   $thumb-border-radius: var(--neo-border-radius),
-  $button-height: var(--neo-scrollbar-button-height, 2px)
+  $button-height: var(--neo-scrollbar-button-height, 2px),
+  $timing: 0.3s,
+  $delay: 0.1s
 ) {
   scrollbar-gutter: $gutter;
+  overflow: $overflow;
+  transition: --neo-thumb-color calc($timing * 1.5) ease $delay;
+
+  &:focus-within,
+  &:focus,
+  &:hover {
+    --neo-thumb-color: #{$thumb-color};
+
+    transition: --neo-thumb-color $timing ease 0s;
+  }
 
   &::-webkit-scrollbar {
     width: $width;
@@ -224,7 +237,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $thumb-color;
+    background-color: var(--neo-thumb-color, transparent);
     border: none;
     border-radius: $thumb-border-radius;
     cursor: pointer;

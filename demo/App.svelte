@@ -24,7 +24,15 @@
     in: fade,
     out: fade,
     params: { in: { delay: 200, duration: 200 }, out: { duration: 200 } },
-    props: { container: { style: 'display: flex; justify-content: center; align-items: center;' } },
+    props: {
+      container: {
+        style: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      },
+    },
     skipFirst: true,
   };
 

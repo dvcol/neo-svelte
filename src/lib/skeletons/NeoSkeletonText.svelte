@@ -172,6 +172,7 @@
     &.neo-title {
       width: 70%;
       height: var(--neo-skeleton-text-title-font-size, var(--neo-font-size-xl, 1.5rem));
+      margin: 0;
     }
   }
 
