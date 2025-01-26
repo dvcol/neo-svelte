@@ -1,5 +1,7 @@
 <script lang="ts">
-  import type { NeoSwitchButtonProps } from '~/buttons/neo-switch-button.model.js';
+  import { resize } from '@dvcol/svelte-utils/resize';
+
+  import type { NeoSwitchButtonContext, NeoSwitchButtonProps } from '~/buttons/neo-switch-button.model.js';
 
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
@@ -7,6 +9,9 @@
   let {
     // Snippets
     children,
+    handle,
+    on,
+    off,
 
     // State
     checked = $bindable(false),
@@ -28,12 +33,33 @@
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
 
+  const context = $derived<NeoSwitchButtonContext>({ checked, indeterminate, disabled });
+
   const onclick = () => {
     if (disabled) return;
     checked = !checked;
     indeterminate = false;
   };
+
+  let toggleWidth = $state<string>();
+  let toggleRef = $state<HTMLSpanElement>();
+  const updateSize = () => {
+    if (!toggleRef) return;
+    const width = toggleRef?.getBoundingClientRect().width;
+    if (!width) return;
+    toggleWidth = `${width}px`;
+  };
+
+  $effect(updateSize);
 </script>
+
+{#snippet label(content: NeoSwitchButtonProps['on'])}
+  {#if content && typeof content === 'function'}
+    {@render content?.(context)}
+  {:else if content}
+    {content}
+  {/if}
+{/snippet}
 
 <button
   role="switch"
@@ -49,13 +75,22 @@
   class:neo-valid={valid === true}
   class:neo-invalid={valid === false}
   style:--neo-switch-box-shadow={boxShadow}
+  style:--neo-switch-toggle-width={toggleWidth}
+  use:resize={updateSize}
   {onclick}
   {...rest}
 >
   {@render children?.()}
   <span class="neo-switch-rail">
-    <span class="neo-switch-toggle">
+    <span class="neo-switch-on" class:neo-visible={checked}>
+      {@render label(on)}
+    </span>
+    <span class="neo-switch-toggle" bind:this={toggleRef}>
       <!--   Toggle handle   -->
+      {@render label(handle)}
+    </span>
+    <span class="neo-switch-off" class:neo-visible={!checked}>
+      {@render label(off)}
     </span>
   </span>
 </button>
@@ -67,10 +102,14 @@
     &-rail {
       position: relative;
       display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
+      min-width: calc(var(--neo-switch-toggle-width) * 2 + var(--neo-switch-spacing) * 4);
       height: calc(100% - var(--neo-switch-spacing) * 2);
       margin: var(--neo-switch-spacing);
       overflow: hidden;
+      font-size: var(--neo-switch-font-size, var(--neo-font-size-xs, 0.75rem));
       background-color: var(--neo-switch-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
       border-radius: var(--neo-switch-border-radius, var(--neo-border-radius-sm));
       transition: background-color 0.3s ease;
@@ -79,7 +118,10 @@
     &-toggle {
       position: absolute;
       left: 0;
+      z-index: var(--neo-switch-toggle-z-index, var(--neo-z-index-in-front, 1));
       display: inline-flex;
+      align-items: center;
+      justify-content: center;
       box-sizing: border-box;
       height: calc(100% - (var(--neo-switch-spacing) * 2));
       margin: var(--neo-switch-spacing);
@@ -90,6 +132,27 @@
         left 0.3s ease,
         scale 0.3s ease;
       aspect-ratio: 1 / 1;
+    }
+
+    &-on,
+    &-off {
+      margin: var(--neo-switch-spacing);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      &.neo-visible {
+        opacity: 1;
+      }
+    }
+
+    &-on {
+      margin-right: 0;
+      transform-origin: left center;
+    }
+
+    &-off {
+      margin-left: 0;
+      transform-origin: right center;
     }
 
     &-button {

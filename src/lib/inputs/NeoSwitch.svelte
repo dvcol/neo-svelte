@@ -21,6 +21,9 @@
     label,
     message,
     error,
+    on,
+    off,
+    handle,
 
     // State
     type = 'checkbox',
@@ -142,6 +145,9 @@
     onfocusout={onFocusOut}
   >
     <NeoSwitchButton
+      {handle}
+      {off}
+      {on}
       {indeterminate}
       {checked}
       {rounded}

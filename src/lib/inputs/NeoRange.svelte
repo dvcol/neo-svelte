@@ -171,10 +171,10 @@
   };
 
   let lastIndex = $state(0);
-  let slider = $state<HTMLElement>();
+  let rail = $state<HTMLElement>();
   const updateValue = (event: PointerEvent, index = 0) => {
-    if (disabled || readonly || !slider) return;
-    const { width, left } = slider.getBoundingClientRect();
+    if (disabled || readonly || !rail) return;
+    const { width, left } = rail.getBoundingClientRect();
     const diff = event.clientX - left;
     const ratio = clamp(diff / width, 0, 1);
     const val = Math.round(min + ratio * (max - min));
@@ -203,7 +203,7 @@
 
     const onDown: PointerEventHandler<HTMLElement> = event => {
       if (disabled || readonly) return;
-      if (!element || !slider) return;
+      if (!element || !rail) return;
       event.stopPropagation();
       element.setPointerCapture(event.pointerId);
       element.addEventListener('pointermove', onMove as EventListener);
@@ -320,6 +320,16 @@
     } satisfies Partial<NeoRangeHTMLElement>);
   });
 
+  let slider = $state<HTMLElement>();
+  let rangeHeight = $state<string>();
+  const updateSize = () => {
+    if (!slider) return;
+    const height = slider?.getBoundingClientRect().height;
+    if (!height) return;
+    rangeHeight = `${height}px`;
+  };
+  $effect(updateSize);
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -351,6 +361,7 @@
     bind:this={ref}
     role="none"
     class:neo-range-container={true}
+    style:--neo-range-height={rangeHeight}
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
@@ -401,6 +412,7 @@
           </span>
         {/if}
         <span
+          bind:this={slider}
           class:neo-range-slider={true}
           class:neo-rounded={rounded}
           class:neo-start={start}
@@ -415,7 +427,7 @@
           style:--neo-range-array-progress="{upperProgress}%"
           {...rest}
         >
-          <span role="region" class="neo-range-rail" bind:this={slider} onpointerdown={onClick}>
+          <span role="region" class="neo-range-rail" bind:this={rail} onpointerdown={onClick}>
             <span class="neo-range-handle-before" class:neo-array={isArray}>
               <!--   handle before   -->
             </span>
@@ -471,7 +483,7 @@
       display: inline-flex;
       align-items: center;
       width: fit-content;
-      min-width: calc(var(--neo-range-height) * 12);
+      min-width: min(calc(var(--neo-range-height) * 12), 20rem);
       margin: 0;
       padding: calc(0.375rem + var(--neo-range-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
     }
@@ -529,8 +541,6 @@
 
       &-before {
         width: calc(var(--neo-range-min-width) - var(--neo-range-spacing) + var(--neo-range-progress, 0%));
-        border-top-right-radius: 0 !important;
-        border-bottom-right-radius: 0 !important;
 
         &:not(.neo-range) {
           margin-right: 0;
@@ -583,14 +593,14 @@
         border-color 0.3s ease;
 
       &.neo-rounded {
-        border-radius: var(--neo-border-radius-lg);
+        border-radius: calc(var(--neo-range-height) / 2);
 
         .neo-range-handle {
           border-radius: 50%;
 
           &-before,
           &-after {
-            border-radius: var(--neo-border-radius-lg);
+            border-radius: calc(var(--neo-range-height) / 2);
           }
         }
       }
