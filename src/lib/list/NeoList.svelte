@@ -4,7 +4,7 @@
   import { flip } from 'svelte/animate';
   import { fade } from 'svelte/transition';
 
-  import type { NeoListContext, NeoListProps } from '~/list/neo-list.model.js';
+  import type { NeoListContext, NeoListItem, NeoListProps } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconList from '~/icons/IconList.svelte';
@@ -99,6 +99,12 @@
   {/if}
 {/snippet}
 
+{#snippet listItem({ label, value, disabled }: NeoListItem)}
+  <NeoSkeletonText class="neo-list-item-skeleton" loading={skeleton} lines={1} align="center">
+    <div class="neo-list-item-content" class:neo-disabled={disabled}>{label ?? value}</div>
+  </NeoSkeletonText>
+{/snippet}
+
 {#snippet list()}
   <!-- Items -->
   {#each items as item, index (item.id ?? index)}
@@ -107,6 +113,7 @@
       label: itemLabel,
       value: itemValue,
       color: itemColor,
+      disabled: itemDisabled,
       render: itemRender,
       id: itemId,
       href: itemHref,
@@ -127,14 +134,12 @@
       {:else if customItem}
         {@render customItem(item, index, context)}
       {:else if itemHref || itemOnClick}
-        <NeoButton ghost href={itemHref} onclick={itemOnClick} {...itemButtonProps}>
-          <NeoSkeletonText class="neo-list-item-skeleton" loading={skeleton} lines={1} align="center">
-            <span class="neo-list-item-content">{itemLabel ?? itemValue}</span>
-          </NeoSkeletonText>
+        <NeoButton class="neo-list-item-button" ghost href={itemHref} onclick={itemOnClick} disabled={itemDisabled} {...itemButtonProps}>
+          {@render listItem(item)}
         </NeoButton>
       {:else}
         <NeoSkeletonText class="neo-list-item-skeleton" loading={skeleton} lines={1} align="center">
-          <span class="neo-list-item-content">{itemLabel ?? itemValue}</span>
+          {@render listItem(item)}
         </NeoSkeletonText>
       {/if}
     </svelte:element>
@@ -202,6 +207,8 @@
       height: 100%;
 
       &.neo-shadow {
+        --neo-scrollbar-button-height: 0.375rem;
+
         @include mixin.fade-scroll(1rem);
 
         padding-block: 0.625rem;
@@ -214,7 +221,7 @@
 
     &-loader,
     &-item {
-      max-width: 100%;
+      width: 100%;
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
     }
@@ -223,10 +230,13 @@
       padding: 0.125rem 0.5rem;
       transition: color 0.3s ease;
 
-      &:hover {
-        --neo-btn-text-color-hover: var(--neo-text-color-highlight);
-
+      &:hover:not(.neo-disabled) {
         color: var(--neo-text-color-highlight);
+      }
+
+      &.neo-disabled {
+        color: var(--neo-text-color-disabled);
+        cursor: not-allowed;
       }
     }
 
@@ -238,6 +248,10 @@
       justify-content: center;
       min-width: var(--neo-list-min-width, 8rem);
       min-height: var(--neo-list-min-height);
+    }
+
+    :global(.neo-list-item-button) {
+      width: 100%;
     }
 
     :global(.neo-list-empty-skeleton),

@@ -114,6 +114,10 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] select
   - [ ] tree
 
+- [ ] stepper
+  - [ ] vertical
+  - [ ] progress/dots
+
 - [ ] Chat
   - [ ] infinite scroll 
   - [ ] virtual scroll

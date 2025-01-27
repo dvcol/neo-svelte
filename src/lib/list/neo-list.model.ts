@@ -30,6 +30,10 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    */
   color?: Color;
   /**
+   * If true, the list item will be disabled.
+   */
+  disabled?: boolean;
+  /**
    * Optional snippet to display in place of the list item.
    */
   render?: Snippet<[NeoListItem, number, NeoListContext]>;

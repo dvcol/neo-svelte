@@ -33,6 +33,7 @@
       href: 'https://www.google.com',
       buttonProps: { target: '_blank' },
       title: 'This is a link to google',
+      color: Colors.Primary,
     },
     {
       label: 'Line item with onclick',
@@ -40,6 +41,13 @@
       id: crypto.randomUUID(),
       onclick: () => console.info('clicked'),
       title: 'This is a clickable element',
+    },
+    {
+      label: 'Line item disabled',
+      value: 'This is a disabled item',
+      id: crypto.randomUUID(),
+      onclick: () => console.info('disabled clicked'),
+      disabled: true,
     },
     { label: 'Line item error', value: 2, color: Colors.Error, id: crypto.randomUUID() },
     { label: 'Line item warning', value: 3, color: Colors.Warning, id: crypto.randomUUID() },
