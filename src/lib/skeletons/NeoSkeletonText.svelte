@@ -133,11 +133,11 @@
     }
 
     &:nth-last-child(2) {
-      width: 60%;
+      width: 70%;
     }
 
     &:last-child {
-      width: 40%;
+      width: 50%;
     }
 
     &:only-child {

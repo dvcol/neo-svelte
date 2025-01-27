@@ -29,7 +29,7 @@
     scrollToLoader,
 
     // Styles
-    shadow,
+    shadow = true,
 
     // Other props
     containerTag = 'div',
@@ -118,6 +118,7 @@
     <svelte:element
       this={itemTag ?? 'li'}
       class:neo-list-item={true}
+      class:neo-skeleton={skeleton}
       style:--neo-list-item-color={getColorVariable(itemColor)}
       animate:flip={flipTransitionProps}
       transition:scale={scaleTransitionProps}
@@ -132,9 +133,7 @@
           {@render listItem(item)}
         </NeoButton>
       {:else}
-        <NeoSkeletonText class="neo-list-item-skeleton" loading={skeleton} lines={1} align="center">
-          {@render listItem(item)}
-        </NeoSkeletonText>
+        {@render listItem(item)}
       {/if}
     </svelte:element>
   {/each}
@@ -147,7 +146,6 @@
       this={tag}
       bind:this={ref}
       class:neo-list-items={true}
-      class:neo-skeleton={skeleton}
       class:neo-shadow={shadow && !empty}
       in:scaleFreeze={scaleTransitionProps}
       {...rest}
@@ -198,18 +196,12 @@
     &-items {
       @include mixin.scrollbar($gutter: stable both-edges);
 
-      height: 100%;
-
       &.neo-shadow {
         --neo-scrollbar-button-height: 0.375rem;
 
         @include mixin.fade-scroll(1rem);
 
         padding-block: 0.625rem;
-      }
-
-      &.neo-skeleton {
-        pointer-events: none;
       }
     }
 
@@ -220,17 +212,23 @@
       list-style-type: none;
     }
 
-    &-item-content {
-      padding: 0.125rem 0.5rem;
-      transition: color 0.3s ease;
+    &-item {
+      &-content {
+        padding: 0.125rem 0.5rem;
+        transition: color 0.3s ease;
 
-      &:hover:not(.neo-disabled) {
-        color: var(--neo-text-color-highlight);
+        &:hover:not(.neo-disabled) {
+          color: var(--neo-text-color-highlight);
+        }
+
+        &.neo-disabled {
+          color: var(--neo-text-color-disabled);
+          cursor: not-allowed;
+        }
       }
 
-      &.neo-disabled {
-        color: var(--neo-text-color-disabled);
-        cursor: not-allowed;
+      &.neo-skeleton {
+        pointer-events: none;
       }
     }
 
@@ -252,6 +250,10 @@
     :global(.neo-list-item-skeleton),
     :global(.neo-list-loader-skeleton) {
       padding-inline: 0.5rem;
+    }
+
+    :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
+      gap: 0.125rem;
     }
 
     :global(.neo-list-empty-skeleton-container) {

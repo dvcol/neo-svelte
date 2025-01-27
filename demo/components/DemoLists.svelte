@@ -153,13 +153,13 @@
     <NeoList {items} {item} {...options} />
   </div>
 
-  <!--  buttons item -->
-
-  <!--  tooltip item (menu drawer) -->
-
   <!--  select items -->
 
   <!--  multi select items -->
+
+  <!-- custom item with before, after & description  -->
+
+  <!--  tooltip item (nested menu drawer, portal ?) -->
 
   <!--  search items -->
 

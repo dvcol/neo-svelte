@@ -207,12 +207,6 @@
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
 
-    &.neo-ghost {
-      justify-content: flex-start;
-      padding: var(--neo-btn-padding, 0);
-      border: none;
-    }
-
     &.neo-empty {
       padding: var(--neo-btn-padding-empty, 0.5rem);
     }
@@ -254,6 +248,17 @@
           margin-right: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
           margin-left: var(--neo-btn-icon-gap, 0.35rem);
         }
+      }
+    }
+
+    &.neo-ghost {
+      justify-content: unset;
+      padding: var(--neo-btn-padding, 0);
+      border: none;
+
+      .neo-content {
+        justify-content: unset;
+        text-align: start;
       }
     }
 
