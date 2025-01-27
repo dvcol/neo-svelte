@@ -25,7 +25,7 @@ export const leaveDefaultFadeTransition: TransitionWithProps<FadeParams> = {
   props: leaveTransitionProps,
 };
 
-export const scaleTransitionProps: TransitionProps = { duration: defaultTransitionDuration, start: 0.9 };
+export const scaleTransitionProps: TransitionProps = { duration: defaultTransitionDuration, start: 0.95 };
 
 export const scaleTransition: TransitionWithProps<ScaleParams> = {
   use: scale,

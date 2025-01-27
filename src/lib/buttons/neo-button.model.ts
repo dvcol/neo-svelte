@@ -70,7 +70,11 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   start?: boolean;
   /**
-   * If true, only the button content will be displayed.
+   If true, only the button content will be displayed.
+   */
+  ghost?: boolean;
+  /**
+   * If true, the button will be displayed with no elevation or border.
    */
   text?: boolean;
   /**

@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
@@ -32,9 +33,32 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    * Optional snippet to display in place of the list item.
    */
   render?: Snippet<[NeoListItem, number, NeoListContext]>;
+  /**
+   * The url to navigate to when the anchor is clicked.
+   */
+  href?: NeoButtonProps['href'];
+  /**
+   * Callback function to be called when the button is clicked.
+   */
+  onclick?: NeoButtonProps['onclick'];
+  /**
+   * Optional props to pass to the button.
+   */
+  buttonProps?: NeoButtonProps;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
-export type NeoListContext = {
+export type NeoListMethods = {
+  /**
+   * Scroll the list to the top.
+   */
+  scrollTop: () => Promise<HTMLElement | false>;
+  /**
+   * Scroll the list to the bottom.
+   */
+  scrollBottom: () => Promise<HTMLElement | false>;
+};
+
+export type NeoListState = {
   // States
   /**
    * List items to display.
@@ -50,6 +74,8 @@ export type NeoListContext = {
    */
   skeleton?: boolean;
 };
+
+export type NeoListContext = NeoListState & NeoListMethods;
 
 export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
   // Snippets
@@ -77,6 +103,12 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
    * @default true
    */
   shadow?: boolean;
+  /**
+   * Whether to scroll to the bottom when loading additional items.
+   *
+   * @default false
+   */
+  scrollToLoader?: boolean;
 
   // States
   /**
@@ -84,6 +116,17 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
    * @default 'ul'
    */
   tag?: Tag | keyof HTMLElementTagNameMap;
+
+  // Other Props
+  /**
+   * The HTML tag to use for the list container.
+   * @default div
+   */
+  containerTag?: keyof HTMLElementTagNameMap;
+  /**
+   * The props to pass to the list container.
+   */
+  containerProps?: HTMLNeoBaseElement;
 } & HTMLRefProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  NeoListContext;
+  NeoListState;

@@ -28,6 +28,7 @@
 
     // Styles
     start,
+    ghost,
     text,
     flat,
     glass,
@@ -116,7 +117,7 @@
 <svelte:element
   this={element}
   bind:this={ref}
-  {href}
+  href={loading || disabled ? undefined : href}
   {role}
   {tabindex}
   class:neo-button={true}
@@ -128,8 +129,9 @@
   class:neo-skeleton={skeleton}
   class:neo-start={start}
   class:neo-glass={glass}
-  class:neo-flat={flat || text}
-  class:neo-borderless={text}
+  class:neo-flat={flat || text || ghost}
+  class:neo-ghost={ghost}
+  class:neo-borderless={text || ghost}
   class:neo-inset={inset}
   class:neo-rounded={rounded}
   class:neo-empty={empty}
@@ -175,7 +177,7 @@
     justify-content: center;
     box-sizing: border-box;
     min-width: var(--neo-btn-min-width);
-    min-height: calc(var(--neo-btn-min-height, var(--neo-line-height)) + 0.5rem);
+    min-height: var(--neo-btn-min-height, var(--neo-line-height));
     margin: var(--neo-btn-margin, var(--neo-shadow-margin, 0.625rem));
     padding: var(--neo-btn-padding, 0.25rem 0.75rem);
     color: var(--neo-btn-text-color, inherit);
@@ -195,6 +197,12 @@
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
 
+    &.neo-ghost {
+      justify-content: flex-start;
+      padding: var(--neo-btn-padding, 0);
+      border: none;
+    }
+
     &.neo-empty {
       padding: var(--neo-btn-padding-empty, 0.5rem);
     }
@@ -213,11 +221,13 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      backface-visibility: hidden;
       transition: scale 0.3s ease;
       scale: 1;
     }
 
     .neo-content {
+      width: 100%;
       height: 100%;
 
       .neo-icon:not(.neo-only) {

@@ -515,6 +515,7 @@
       border-radius: var(--neo-border-radius-sm);
       outline: none;
       box-shadow: var(--neo-range-handle-box-shadow, var(--neo-box-shadow-convex-2));
+      backface-visibility: hidden;
       cursor: grab;
       transition: scale 0.3s ease;
       appearance: none;

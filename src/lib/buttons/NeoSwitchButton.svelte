@@ -128,9 +128,10 @@
       background: var(--neo-switch-toggle-background, var(--neo-background-color));
       border-radius: 50%;
       box-shadow: var(--neo-switch-toggle-box-shadow, var(--neo-box-shadow-convex-2));
+      backface-visibility: hidden;
       transition:
         left 0.3s ease,
-        scale 0.3s ease;
+        scale 0.3s ease 0.1s;
       aspect-ratio: 1 / 1;
     }
 
