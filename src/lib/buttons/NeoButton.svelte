@@ -50,6 +50,7 @@
     onclick,
     onkeydown,
     onkeyup,
+    onblur,
 
     // Transition
     in: inAction,
@@ -103,6 +104,11 @@
     onkeyup?.(e);
   };
 
+  const onBlur: NeoButtonProps['onblur'] = e => {
+    enter = false;
+    onblur?.(e);
+  };
+
   const element = $derived(tag ?? (href ? 'a' : 'button'));
   const role = $derived(!['button', 'a'].includes(element) ? 'button' : undefined);
   const tabindex = $derived(!disabled && role ? 0 : undefined);
@@ -147,6 +153,7 @@
   onkeydown={onKeydownEnter}
   onkeyup={onKeyUpEnter}
   onclick={onClick}
+  onblur={onBlur}
   {disabled}
   {...rest}
 >
