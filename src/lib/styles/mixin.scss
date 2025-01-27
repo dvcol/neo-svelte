@@ -211,11 +211,19 @@
   $thumb-border-radius: var(--neo-border-radius),
   $button-height: var(--neo-scrollbar-button-height, 2px),
   $timing: 0.3s,
-  $delay: 0.1s
+  $delay: 0.1s,
+  $transition: false
 ) {
   scrollbar-gutter: $gutter;
   overflow: $overflow;
-  transition: --neo-thumb-color calc($timing * 1.5) ease $delay;
+
+  @if $transition {
+    transition:
+      $transition,
+      --neo-thumb-color calc($timing * 1.5) ease $delay;
+  } @else {
+    transition: --neo-thumb-color calc($timing * 1.5) ease $delay;
+  }
 
   &:focus-within,
   &:focus,

@@ -168,6 +168,7 @@
   role="none"
   bind:this={ref}
   class:neo-card={true}
+  class:neo-scroll={true}
   class:neo-horizontal={horizontal}
   class:neo-borderless={borderless}
   class:neo-segmented={segmented === true}
@@ -270,14 +271,6 @@
     border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
     border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-card-box-shadow, var(--neo-box-shadow-flat));
-    transition:
-      margin 0.3s ease,
-      color 0.3s ease,
-      background-color 0.3s ease,
-      border-color 0.3s ease,
-      border-radius 0.3s ease,
-      backdrop-filter 0.3s ease,
-      box-shadow 0.3s ease-out;
 
     &-content {
       flex: 1 1 auto;
@@ -319,8 +312,6 @@
     }
 
     .neo-card-segment {
-      transition: border-radius 0.3s ease;
-
       &:not(.neo-card-media) {
         padding: $half-spacing $full-spacing;
 
@@ -525,12 +516,23 @@
     }
   }
 
-  .neo-card,
   .neo-card-media,
   .neo-card-header,
   .neo-card-content,
   .neo-card-action,
   .neo-card-footer {
-    @include mixin.scrollbar;
+    @include mixin.scrollbar($transition: border-radius 0.3s ease);
+  }
+
+  .neo-scroll {
+    @include mixin.scrollbar(
+      $transition: #{margin 0.3s ease,
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      border-radius 0.3s ease,
+      backdrop-filter 0.3s ease,
+      box-shadow 0.3s ease-out}
+    );
   }
 </style>
