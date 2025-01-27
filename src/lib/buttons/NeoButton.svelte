@@ -5,6 +5,7 @@
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { getColorVariable } from '~/utils/colors.utils.js';
   import { enterTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -28,6 +29,7 @@
 
     // Styles
     start,
+    color,
     ghost,
     text,
     flat,
@@ -135,6 +137,7 @@
   class:neo-inset={inset}
   class:neo-rounded={rounded}
   class:neo-empty={empty}
+  style:--neo-btn-text-color={getColorVariable(color)}
   style:justify-content={justify}
   style:align-items={align}
   style:flex
@@ -172,7 +175,7 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-button {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
@@ -222,7 +225,9 @@
       align-items: center;
       justify-content: center;
       backface-visibility: hidden;
-      transition: scale 0.3s ease;
+      transition:
+        color 0.3s ease,
+        scale 0.3s ease;
       scale: 1;
     }
 
@@ -246,13 +251,19 @@
     }
 
     &:hover {
-      color: var(--neo-btn-text-color-hover, var(--neo-text-color-hover));
       box-shadow: var(--neo-btn-box-shadow-hover, var(--neo-box-shadow-raised-2));
+    }
+
+    &:hover .neo-content {
+      color: var(--neo-btn-text-color-hover, var(--neo-text-color-hover));
+    }
+
+    &:focus-visible .neo-content {
+      color: var(--neo-btn-text-color-focused, var(--neo-text-color-focused));
     }
 
     &.neo-pressed,
     &:active:not(.neo-loading) {
-      color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
       box-shadow: var(--neo-btn-box-shadow-active, var(--neo-box-shadow-pressed-2));
       transition:
         opacity 0.3s ease,
@@ -265,11 +276,17 @@
 
       .neo-content {
         scale: 0.98;
+        color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
       }
     }
 
+    &:disabled:disabled .neo-content,
+    &[disabled]:not([disabled='false']) .neo-content {
+      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled));
+      scale: 1;
+    }
+
     &:focus-visible {
-      color: var(--neo-btn-text-color-focused, var(--neo-text-color-focused));
       outline: none;
       box-shadow: var(--neo-btn-box-shadow-focus, var(--neo-box-shadow-raised-2));
       transition:
@@ -281,14 +298,17 @@
         border-radius 0.3s ease,
         box-shadow 0.15s ease-out;
 
-      &:hover {
+      &:hover .neo-content {
         color: var(--neo-btn-text-color-focused-hover, var(--neo-text-color-focused));
       }
 
       &.neo-pressed,
       &:active:not(.neo-loading) {
-        color: var(--neo-btn-text-color-focused-active, var(--neo-text-color-focused-active));
         box-shadow: var(--neo-btn-box-shadow-focus-active, var(--neo-box-shadow-pressed-2));
+
+        .neo-content {
+          color: var(--neo-btn-text-color-focused-active, var(--neo-text-color-focused-active));
+        }
       }
     }
 
@@ -304,10 +324,7 @@
       border-color: var(--neo-btn-border-color, var(--neo-border-color));
       box-shadow: var(--neo-box-shadow-flat);
 
-      &:focus-visible {
-        border-color: var(--neo-btn-border-color-focused, var(--neo-border-color-focused));
-      }
-
+      &:focus-visible,
       &:hover {
         border-color: transparent;
         box-shadow: var(--neo-btn-box-shadow-hover-flat, var(--neo-box-shadow-inset-1));
@@ -387,7 +404,6 @@
 
     &:disabled:disabled,
     &[disabled]:not([disabled='false']) {
-      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled));
       cursor: not-allowed;
       opacity: var(--neo-btn-opacity-disabled, var(--neo-opacity-disabled));
 

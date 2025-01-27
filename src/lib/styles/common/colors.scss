@@ -39,19 +39,19 @@
   --neo-text-color-secondary: color-mix(in srgb, var(--neo-text-color), white 20%);
   --neo-text-color-highlight: oklch(from currentcolor calc(l - 0.15) c h);
   --neo-text-color-active: color-mix(in srgb, currentcolor, white 10%);
-  --neo-text-color-focused: color-mix(in srgb, var(--neo-text-color), var(--neo-color-primary) 50%);
+  --neo-text-color-focused: oklch(from var(--neo-color-primary) calc(l - 0.15) c h);
   --neo-text-color-focused-active: color-mix(in srgb, var(--neo-text-color-focused), white 10%);
-  --neo-text-color-hover: color-mix(in srgb, var(--neo-text-color), white 10%);
+  --neo-text-color-hover: oklch(from currentcolor calc(l + 0.075) c h);
   --neo-text-color-hover-active: color-mix(in srgb, var(--neo-text-color-hover), white 10%);
-  --neo-text-color-disabled: oklch(from var(--neo-text-color) l c h / 60%);
+  --neo-text-color-disabled: oklch(from currentcolor l c h / 60%);
 
   // Highlight
   --neo-text-highlight-color: oklch(from var(--neo-text-color) calc(l + 0.3) c h / 50%);
 
   // Border
-  --neo-border-color: oklch(from var(--neo-text-color) l c h / 20%);
+  --neo-border-color: oklch(from currentcolor l c h / 20%);
   --neo-border-color-focused: color-mix(in srgb, var(--neo-border-color), var(--neo-color-primary) 50%);
-  --neo-border-color-disabled: oklch(from var(--neo-text-color) l c h / 10%);
+  --neo-border-color-disabled: oklch(from currentcolor l c h / 10%);
 
   // Skeleton
   --neo-skeleton-color: oklch(from var(--neo-text-color) l c h / 60%);
@@ -112,19 +112,19 @@
   --neo-dark-text-color-secondary: color-mix(in srgb, var(--neo-text-color), black 20%);
   --neo-dark-text-color-highlight: oklch(from currentcolor calc(l + 0.15) c h);
   --neo-dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
-  --neo-dark-text-color-focused: color-mix(in srgb, var(--neo-dark-text-color), var(--neo-dark-color-primary) 40%);
+  --neo-dark-text-color-focused: oklch(from var(--neo-dark-color-primary) calc(l - 0.1) c h);
   --neo-dark-text-color-focused-active: color-mix(in srgb, var(--neo-dark-text-color-focused), black 10%);
-  --neo-dark-text-color-hover: color-mix(in srgb, var(--neo-dark-text-color), black 10%);
+  --neo-dark-text-color-hover: oklch(from currentcolor calc(l - 0.075) c h);
   --neo-dark-text-color-hover-active: color-mix(in srgb, var(--neo-dark-text-color-hover), black 10%);
-  --neo-dark-text-color-disabled: oklch(from var(--neo-dark-text-color) l c h / 80%);
+  --neo-dark-text-color-disabled: oklch(from currentcolor l c h / 80%);
 
   // Highlight
   --neo-dark-text-highlight-color: oklch(from var(--neo-dark-text-color) calc(l - 0.3) c h / 50%);
 
   // Border
-  --neo-dark-border-color: oklch(from var(--neo-dark-text-color) l c h / 20%);
+  --neo-dark-border-color: oklch(from currentcolor l c h / 20%);
   --neo-dark-border-color-focused: color-mix(in srgb, var(--neo-dark-border-color), var(--neo-dark-color-primary) 40%);
-  --neo-dark-border-color-disabled: oklch(from var(--neo-dark-text-color) l c h / 10%);
+  --neo-dark-border-color-disabled: oklch(from currentcolor l c h / 10%);
 
   // Skeleton
   --neo-dark-skeleton-color: oklch(from var(--neo-dark-text-color) l c h / 30%);

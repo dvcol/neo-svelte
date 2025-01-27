@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 
 export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> = {
@@ -69,6 +70,10 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
    */
   start?: boolean;
+  /**
+   * Text color to use for the button.
+   */
+  color?: Color;
   /**
    If true, only the button content will be displayed.
    */

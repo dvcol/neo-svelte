@@ -14,6 +14,8 @@
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
   import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
+  import { Colors } from '~/utils/colors.utils';
 
   const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
 
@@ -23,6 +25,7 @@
     loading: false,
     inset: false,
     glass: false,
+    color: '',
   });
 
   const loading = $derived.by(() => isLoading() || options.loading);
@@ -81,6 +84,22 @@
       <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     </NeoButtonGroup>
+
+    <NeoSelect
+      label="Color"
+      position="left"
+      floating={false}
+      bind:value={options.color}
+      containerProps={{ style: 'margin-left: 6rem' }}
+      options={[
+        { value: '', label: 'default' },
+        { value: Colors.Primary },
+        { value: Colors.Secondary },
+        { value: Colors.Success },
+        { value: Colors.Warning },
+        { value: Colors.Error },
+      ]}
+    />
   </div>
 </div>
 
