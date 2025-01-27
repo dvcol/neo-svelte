@@ -204,6 +204,10 @@
       width: min(80vw, 18rem);
       min-width: fit-content;
       height: min(80vh, 24rem);
+
+      :global(.neo-list) {
+        max-height: calc(min(80vh, 24rem) - var(--neo-gap-lg) - 2rem);
+      }
     }
   }
 

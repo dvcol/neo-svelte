@@ -1,8 +1,8 @@
 <script lang="ts">
   import { debounce } from '@dvcol/common-utils/common/debounce';
-  import { scaleFreeze, scaleHeight } from '@dvcol/svelte-utils';
+  import { scaleFreeze } from '@dvcol/svelte-utils';
   import { flip } from 'svelte/animate';
-  import { fade } from 'svelte/transition';
+  import { fade, scale } from 'svelte/transition';
 
   import type { NeoListContext, NeoListItem, NeoListProps } from '~/list/neo-list.model.js';
 
@@ -52,15 +52,9 @@
     return ref;
   }, defaultTransitionDuration / 2);
 
-  let loaderRef = $state<HTMLElement>();
-  const scrollLoaderIntoView = debounce(() => {
-    if (!loaderRef) return;
-    loaderRef.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, defaultTransitionDuration + 100);
-
   $effect(() => {
     if (!loading || !scrollToLoader) return;
-    scrollLoaderIntoView();
+    scrollBottom();
   });
 
   const context = $derived<NeoListContext>({
@@ -89,7 +83,7 @@
 {#snippet loader()}
   <!-- Loading indicator -->
   {#if loading}
-    <li bind:this={loaderRef} class="neo-list-loader" transition:scaleHeight={scaleTransitionProps}>
+    <li class="neo-list-loader" transition:scale={scaleTransitionProps}>
       {#if customLoader}
         {@render customLoader(context)}
       {:else}
@@ -126,7 +120,7 @@
       class:neo-list-item={true}
       style:--neo-list-item-color={getColorVariable(itemColor)}
       animate:flip={flipTransitionProps}
-      transition:scaleHeight={scaleTransitionProps}
+      transition:scale={scaleTransitionProps}
       {...itemProps}
     >
       {#if itemRender}
