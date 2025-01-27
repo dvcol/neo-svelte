@@ -157,6 +157,10 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    * Overrides the default width.
    */
   width?: CSSStyleDeclaration['width'];
+  /**
+   * Overrides the default height.
+   */
+  height?: CSSStyleDeclaration['height'];
 
   // Other props
 

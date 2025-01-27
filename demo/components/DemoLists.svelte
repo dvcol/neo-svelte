@@ -14,7 +14,7 @@
   const options = $state<NeoListProps>({
     loading: false,
     skeleton: false,
-    shadow: true,
+    shadow: false,
   });
 
   const list: NeoListItem[] = $state([
@@ -54,7 +54,7 @@
 <div class="row">
   <div class="column content">
     <span class="label">Card List</span>
-    <NeoCard rounded elevation="0" hover="-2" flex="1 0 100%" width="min(80vw, 18rem)">
+    <NeoCard rounded elevation="0" hover="-2" flex="0 0 min(80vh, 16rem)" width="min(80vw, 18rem)">
       <NeoList {items} {...options} />
     </NeoCard>
   </div>

@@ -8,7 +8,6 @@
 
   import IconList from '~/icons/IconList.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
-
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { defaultTransitionDuration, enterTransitionProps, flipTransitionProps, scaleTransitionProps } from '~/utils/transition.utils.js';
 
@@ -112,7 +111,7 @@
   bind:this={ref}
   class:neo-list={true}
   class:neo-empty={empty}
-  class:neo-shadow={shadow}
+  class:neo-shadow={shadow && !empty}
   style:--neo-list-min-height={listHeight}
   style:--neo-list-min-width={listWidth}
   {...rest}
@@ -150,7 +149,6 @@
   .neo-list {
     @include mixin.scrollbar($gutter: stable both-edges);
 
-    position: relative;
     display: flex;
     flex-direction: column;
     min-width: var(--neo-list-min-width, 8rem);
@@ -170,6 +168,7 @@
     }
 
     &-item {
+      max-width: 100%;
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
     }

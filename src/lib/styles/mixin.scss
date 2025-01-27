@@ -230,7 +230,13 @@
   &:hover {
     --neo-thumb-color: #{$thumb-color};
 
-    transition: --neo-thumb-color $timing ease 0s;
+    @if $transition {
+      transition:
+        $transition,
+        --neo-thumb-color calc($timing * 1.5) ease 0s;
+    } @else {
+      transition: --neo-thumb-color calc($timing * 1.5) ease 0s;
+    }
   }
 
   &::-webkit-scrollbar {

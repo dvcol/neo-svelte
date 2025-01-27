@@ -50,6 +50,7 @@
     align,
     flex,
     width,
+    height,
 
     // Transition
     in: inAction,
@@ -197,6 +198,7 @@
   style:align-items={align}
   style:flex
   style:width
+  style:height
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}
