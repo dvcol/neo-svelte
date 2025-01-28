@@ -1,14 +1,16 @@
 <script lang="ts">
   import { debounce } from '@dvcol/common-utils/common/debounce';
+  import { shallowClone } from '@dvcol/common-utils/common/object';
   import { scaleFreeze } from '@dvcol/svelte-utils';
   import { flip } from 'svelte/animate';
   import { fade, scale } from 'svelte/transition';
 
-  import type { NeoListContext, NeoListItem, NeoListProps } from '~/list/neo-list.model.js';
+  import type { NeoListContext, NeoListItem, NeoListMethods, NeoListProps, NeoListSelectedItem, NeoListSelectEvent } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconList from '~/icons/IconList.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
+  import { emptyAnimation, emptyTransition, toAnimation, toAnimationProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { defaultTransitionDuration, enterTransitionProps, flipTransitionProps, scaleTransitionProps } from '~/utils/transition.utils.js';
 
@@ -23,13 +25,24 @@
     // States
     ref = $bindable(),
     tag = 'ul',
-    items = [],
+    items = $bindable([]),
     loading,
     skeleton,
     scrollToLoader,
 
+    select = false,
+    multiple = false,
+    selected = $bindable(),
+
     // Styles
-    shadow = true,
+    shadow,
+
+    // Animation
+    transition,
+    animate,
+
+    // Events
+    onselect,
 
     // Other props
     containerTag = 'div',
@@ -39,6 +52,7 @@
   /* eslint-enable prefer-const */
 
   const empty = $derived(!items?.length);
+  const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
   const scrollTop = debounce(() => {
     if (!ref) return false;
@@ -57,6 +71,49 @@
     scrollBottom();
   });
 
+  const findItem = (index: NeoListSelectedItem['index']): NeoListSelectedItem => {
+    const item: NeoListSelectedItem['item'] = items[index];
+    if (!item) throw new Error('Item not found.'); // TODO custom error
+    return { index, item, id: item.id, value: item?.value };
+  };
+
+  const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
+    multiple && (Array.isArray(list) || list === undefined);
+
+  const selectItem: NeoListMethods['selectItem'] = (
+    index: NeoListSelectedItem['index'],
+    ...indexes: NeoListSelectedItem['index'][]
+  ): NeoListSelectEvent => {
+    if (!select) throw new Error('Selection is disabled.'); // TODO custom error
+
+    const previous = shallowClone(selected, 2);
+    if (isMultiple(selected)) {
+      selected = [...(selected ?? []), findItem(index), ...indexes.map(findItem)];
+    } else {
+      if (indexes.length) console.warn('Multiple selection is disabled. Only the first selection will be considered.');
+      selected = findItem(index);
+    }
+    return { previous, current: shallowClone(selected, 2) };
+  };
+
+  const clearItem: NeoListMethods['clearItem'] = (...indexes: NeoListSelectedItem['index'][]): NeoListSelectEvent => {
+    if (!select) throw new Error('Selection is disabled.'); // TODO custom error
+
+    const previous = shallowClone(selected, 2);
+    if (isMultiple(selected)) {
+      selected = selected?.filter(item => !indexes.includes(item.index)) ?? [];
+    } else {
+      selected = undefined;
+    }
+
+    return { previous, current: shallowClone(selected, 2) };
+  };
+
+  const toggleItem = (index: NeoListSelectedItem['index']) => {
+    const clear = isMultiple(selected) ? selected?.some(item => item.index === index) : selected?.index === index;
+    onselect?.(clear ? clearItem(index) : selectItem(index));
+  };
+
   const context = $derived<NeoListContext>({
     // States
     items,
@@ -64,11 +121,15 @@
     loading,
     skeleton,
 
-    // Styles
+    select,
+    multiple,
+    selected,
 
     // Methods
     scrollTop,
     scrollBottom,
+    selectItem,
+    clearItem,
   });
 
   $effect(() => {
@@ -78,12 +139,17 @@
       scrollBottom,
     });
   });
+
+  const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate, flip));
+  const animateProps = $derived(toAnimationProps(animate, flipTransitionProps));
+  const transitionFn = $derived(missing ? emptyTransition : toTransition(transition, scale));
+  const transitionProps = $derived(toTransitionProps(transition, scaleTransitionProps));
 </script>
 
 {#snippet loader()}
   <!-- Loading indicator -->
   {#if loading}
-    <li class="neo-list-loader" transition:scale={scaleTransitionProps}>
+    <li class="neo-list-loader" transition:transitionFn={transitionProps}>
       {#if customLoader}
         {@render customLoader(context)}
       {:else}
@@ -120,19 +186,22 @@
       class:neo-list-item={true}
       class:neo-skeleton={skeleton}
       style:--neo-list-item-color={getColorVariable(itemColor)}
-      animate:flip={flipTransitionProps}
-      transition:scale={scaleTransitionProps}
+      animate:animateFn={animateProps}
+      transition:transitionFn={transitionProps}
       {...itemProps}
     >
       {#if itemRender}
         {@render itemRender(item, index, context)}
       {:else if customItem}
         {@render customItem(item, index, context)}
-      {:else if itemHref || itemOnClick}
+      {:else if itemHref || itemOnClick || select}
         <NeoButton
           ghost
           href={itemHref}
-          onclick={itemOnClick}
+          onclick={e => {
+            toggleItem(index);
+            itemOnClick?.(e);
+          }}
           disabled={itemDisabled}
           {...itemButtonProps}
           class={['neo-list-item-button', itemButtonProps?.class]}

@@ -16,59 +16,54 @@
   const options = $state<NeoListProps>({
     loading: false,
     skeleton: false,
-    shadow: true,
+    shadow: false,
     scrollToLoader: false,
   });
 
-  const custom: NeoListItem = { label: 'Custom Render Item', value: -1, id: getUUID(), render };
+  const custom: NeoListItem = { label: 'Custom Render Item', value: -1, render, id: getUUID() };
 
-  const list: NeoListItem[] = $state([
-    { label: 'Line item label', value: 0, id: getUUID() },
-    { label: 'Line item with longer label', value: 1, id: getUUID() },
-    custom,
-    {
-      label: 'Line item with external link',
-      value: 'https://www.google.com',
-      id: getUUID(),
-      href: 'https://www.google.com',
-      buttonProps: { target: '_blank' },
-      title: 'This is a link to google',
-      color: Colors.Primary,
-    },
-    {
-      label: 'Line item with onclick',
-      value: 'This is a clickable item',
-      id: getUUID(),
-      onclick: () => console.info('clicked'),
-      title: 'This is a clickable element',
-    },
-    {
-      label: 'Line item disabled',
-      value: 'This is a disabled item',
-      id: getUUID(),
-      onclick: () => console.info('disabled clicked'),
-      disabled: true,
-    },
-    { label: 'Line item error', value: 2, color: Colors.Error, id: getUUID() },
-    { label: 'Line item warning', value: 3, color: Colors.Warning, id: getUUID() },
-    { label: 'Line item success', value: 4, color: Colors.Success, id: getUUID() },
-    { label: 'Line item primary', value: 5, color: Colors.Primary, id: getUUID() },
-    { label: 'Line item secondary', value: 6, color: Colors.Secondary, id: getUUID() },
-  ]);
+  const list: NeoListItem[] = $state(
+    [
+      { label: 'Line item label', value: 0 },
+      { label: 'Line item with longer label', value: 1 },
+      custom,
+      {
+        label: 'Line item with external link',
+        value: 'https://www.google.com',
+        href: 'https://www.google.com',
+        buttonProps: { target: '_blank' },
+        title: 'This is a link to google',
+        color: Colors.Primary,
+      },
+      {
+        label: 'Line item with onclick',
+        value: 'This is a clickable item',
+        onclick: () => console.info('clicked'),
+        title: 'This is a clickable element',
+      },
+      {
+        label: 'Line item disabled',
+        value: 'This is a disabled item',
+        onclick: () => console.info('disabled clicked'),
+        disabled: true,
+      },
+      { label: 'Line item error', value: 2, color: Colors.Error },
+      { label: 'Line item warning', value: 3, color: Colors.Warning },
+      { label: 'Line item success', value: 4, color: Colors.Success },
+      { label: 'Line item primary', value: 5, color: Colors.Primary },
+      { label: 'Line item secondary', value: 6, color: Colors.Secondary },
+    ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
+  );
 
   let isEmpty = $state(false);
   const items = $derived(isEmpty ? [] : list.filter(item => item.id !== custom.id));
 
   const withCustom = $derived(isEmpty ? [] : list);
 
-  const onAdd = () => {
-    list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
-  };
+  const onAdd = () => list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
 
-  const onRemove = () => {
-    // remove a random element form the list
-    list.splice(Math.floor(Math.random() * list.length), 1);
-  };
+  // remove a random element form the list
+  const onRemove = () => list.splice(Math.floor(Math.random() * list.length), 1);
 </script>
 
 <div class="row">
@@ -154,8 +149,17 @@
   </div>
 
   <!--  select items -->
+  <div class="column content">
+    <span class="label">Custom item</span>
+    <NeoList select {items} {...options} onselect={e => console.info('onSelect - single', e)} />
+  </div>
 
   <!--  multi select items -->
+
+  <div class="column content">
+    <span class="label">Custom item</span>
+    <NeoList select multiple {items} {...options} onselect={e => console.info('onSelect - multiple', e)} />
+  </div>
 
   <!-- custom item with before, after & description  -->
 

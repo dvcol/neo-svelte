@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
@@ -51,6 +52,36 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   buttonProps?: NeoButtonProps;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
+export type NeoListSelectedItem = {
+  /**
+   * The index of the selected item.
+   */
+  index: number;
+  /**
+   * The selected item.
+   */
+  item: NeoListItem;
+  /**
+   * The selected id.
+   */
+  id?: NeoListItem['id'];
+  /**
+   * The selected value.
+   */
+  value?: NeoListItem['value'];
+};
+
+export type NeoListSelectEvent<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = {
+  /**
+   * The previous selected item(s).
+   */
+  previous?: Selected;
+  /**
+   * The current selected item(s).
+   */
+  current?: Selected;
+};
+
 export type NeoListMethods = {
   /**
    * Scroll the list to the top.
@@ -60,14 +91,35 @@ export type NeoListMethods = {
    * Scroll the list to the bottom.
    */
   scrollBottom: () => Promise<HTMLElement | false>;
+  /**
+   * Select an item in the list.
+   * @param index - The index of the item to select.
+   */
+  selectItem: (index: NeoListSelectedItem['index'], ...rest: NeoListSelectedItem['index'][]) => NeoListSelectEvent;
+  /**
+   * Clear the selected item(s).
+   */
+  clearItem: (...rest: NeoListSelectedItem['index'][]) => NeoListSelectEvent;
 };
 
-export type NeoListState = {
+export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSelectedItem[]> = {
   // States
   /**
    * List items to display.
    */
   items?: NeoListItem[];
+  /**
+   * Whether to allow selecting items in the list.
+   */
+  select?: boolean;
+  /**
+   * Whether to allow multiple items in the selection.
+   */
+  multiple?: boolean;
+  /**
+   * The currently selected item(s).
+   */
+  selected?: Selected;
 
   /**
    * If the list is currently loading additional items.
@@ -79,9 +131,9 @@ export type NeoListState = {
   skeleton?: boolean;
 };
 
-export type NeoListContext = NeoListState & NeoListMethods;
+export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = NeoListState<Selected> & NeoListMethods;
 
-export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
+export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul', Selected = NeoListSelectedItem | NeoListSelectedItem[]> = {
   // Snippets
   /**
    * Optional snippet to display in place of each list item.
@@ -100,11 +152,21 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
    */
   children?: Snippet<[NeoListContext]>;
 
+  // Animation
+  /**
+   * Transition function to apply when removing items from the list.
+   */
+  animate: HTMAnimationProps['animate'];
+  /**
+   * Transition function to apply when adding items to the list.
+   */
+  transition: HTMLTransitionProps['transition'];
+
   // Styles
   /**
    * Whether to display a shadow when scrolling content.
    *
-   * @default true
+   * @default false
    */
   shadow?: boolean;
   /**
@@ -121,6 +183,9 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
    */
   tag?: Tag | keyof HTMLElementTagNameMap;
 
+  // Events
+  onselect?: (event: NeoListSelectEvent<Selected>) => void;
+
   // Other Props
   /**
    * The HTML tag to use for the list container.
@@ -133,4 +198,4 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
   containerProps?: HTMLNeoBaseElement;
 } & HTMLRefProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  NeoListState;
+  NeoListState<Selected>;
