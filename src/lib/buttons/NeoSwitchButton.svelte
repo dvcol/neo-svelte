@@ -65,7 +65,8 @@
   role="switch"
   aria-checked={indeterminate ? 'mixed' : checked}
   class:neo-switch-button={true}
-  class:neo-checked={checked || indeterminate}
+  class:neo-checked={checked}
+  class:neo-indeterminate={indeterminate}
   class:neo-rounded={rounded}
   class:neo-start={start}
   class:neo-glass={glass}
@@ -199,6 +200,16 @@
         --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 30%);
       }
 
+      &.neo-indeterminate {
+        .neo-switch-rail {
+          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 10%));
+        }
+
+        .neo-switch-toggle {
+          left: calc(50% - var(--neo-switch-toggle-width) / 2 - (var(--neo-switch-spacing)));
+        }
+      }
+
       &.neo-checked {
         .neo-switch-rail {
           background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
@@ -229,6 +240,10 @@
 
         .neo-switch-rail {
           background-color: transparent;
+        }
+
+        &.neo-indeterminate {
+          background-color: color-mix(in srgb, transparent, currentcolor 5%);
         }
 
         &.neo-checked {

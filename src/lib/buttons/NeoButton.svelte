@@ -36,6 +36,7 @@
     glass,
     rounded,
     inset,
+    shallow,
     reverse,
     coalesce,
     pulse,
@@ -141,6 +142,7 @@
   class:neo-ghost={ghost}
   class:neo-borderless={text || ghost}
   class:neo-inset={inset}
+  class:neo-shallow={shallow}
   class:neo-rounded={rounded}
   class:neo-empty={empty}
   style:--neo-btn-text-color={getColorVariable(color)}
@@ -216,8 +218,16 @@
     }
 
     &.neo-inset {
-      --neo-box-shadow-pressed-2: var(--neo-box-shadow-inset-2);
-      --neo-glass-box-shadow-pressed-2: var(--neo-glass-box-shadow-inset-2);
+      --neo-btn-box-shadow-active: var(--neo-box-shadow-inset-1);
+      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-inset-1);
+    }
+
+    &.neo-shallow {
+      --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-1);
+      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-1);
+      --neo-btn-box-shadow-active-flat: var(--neo-box-shadow-inset-2);
+      --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
+      --neo-btn-scale-pressed: 1;
     }
 
     .neo-icon,
@@ -287,7 +297,7 @@
         box-shadow 0.15s ease-out;
 
       .neo-content {
-        scale: 0.98;
+        scale: var(--neo-btn-scale-pressed, 0.98);
         color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
       }
     }

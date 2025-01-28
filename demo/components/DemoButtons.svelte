@@ -24,6 +24,7 @@
     skeleton: false,
     loading: false,
     inset: false,
+    shallow: false,
     glass: false,
     color: '',
   });
@@ -80,6 +81,7 @@
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
       <NeoButton toggle bind:checked={options.inset}>Inset</NeoButton>
+      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
       <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
@@ -116,7 +118,7 @@
   <div class="column">
     <span class="label">Checkbox</span>
     <SphereBackdrop glass={options.glass}>
-      <NeoCheckboxButton {...options} />
+      <NeoCheckboxButton indeterminate {...options} />
     </SphereBackdrop>
     <span class="label">Radio</span>
     <SphereBackdrop glass={options.glass}>
@@ -124,7 +126,7 @@
     </SphereBackdrop>
     <span class="label">Switch</span>
     <SphereBackdrop glass={options.glass}>
-      <NeoSwitchButton {...options} />
+      <NeoSwitchButton indeterminate {...options} />
     </SphereBackdrop>
   </div>
 </div>

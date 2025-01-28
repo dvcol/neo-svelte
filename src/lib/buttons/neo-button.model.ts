@@ -99,6 +99,10 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   inset?: boolean;
   /**
+   * If true, the button will be displayed with a shallower elevation.
+   */
+  shallow?: boolean;
+  /**
    * If true, the flex direction of the button will be reversed.
    */
   reverse?: boolean;

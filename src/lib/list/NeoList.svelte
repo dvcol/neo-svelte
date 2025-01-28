@@ -197,6 +197,7 @@
       {:else if itemHref || itemOnClick || select}
         <NeoButton
           ghost
+          shallow
           href={itemHref}
           onclick={e => {
             toggleItem(index);
