@@ -103,6 +103,7 @@
     empty={!children}
     {...rest}
     {disabled}
+    class={['neo-tab-button', rest.class]}
   >
     {@render children?.({ active, tabId, value })}
     {#if closeable}
@@ -122,19 +123,22 @@
 
 <style lang="scss">
   .neo-tab {
+    --neo-btn-text-color-hover: var(--neo-tab-text-color-hover, var(--neo-text-color-highlight));
+    --neo-btn-text-color-active: var(--neo-tab-text-color-active, var(--neo-text-color-highlight));
+
     display: flex;
 
-    :global(.neo-button:active),
-    :global(.neo-button.pressed),
-    :global(.neo-button:focus-visible),
-    :global(.neo-button:hover) {
+    :global(.neo-tab-button:active),
+    :global(.neo-tab-button.pressed),
+    :global(.neo-tab-button:focus-visible),
+    :global(.neo-tab-button:hover) {
       :global(.neo-icon-close) {
         opacity: 1;
         pointer-events: auto;
       }
     }
 
-    :global(.neo-button .neo-icon-close:focus-visible) {
+    :global(.neo-tab-button .neo-icon-close:focus-visible) {
       transition: none;
     }
   }

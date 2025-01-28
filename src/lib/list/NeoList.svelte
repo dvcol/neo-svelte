@@ -129,7 +129,14 @@
       {:else if customItem}
         {@render customItem(item, index, context)}
       {:else if itemHref || itemOnClick}
-        <NeoButton class="neo-list-item-button" ghost href={itemHref} onclick={itemOnClick} disabled={itemDisabled} {...itemButtonProps}>
+        <NeoButton
+          ghost
+          href={itemHref}
+          onclick={itemOnClick}
+          disabled={itemDisabled}
+          {...itemButtonProps}
+          class={['neo-list-item-button', itemButtonProps?.class]}
+        >
           {@render listItem(item)}
         </NeoButton>
       {:else}

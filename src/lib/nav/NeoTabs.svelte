@@ -145,7 +145,7 @@
     in:inFn={inProps}
     {style}
   >
-    <NeoButtonGroup role="tablist" {pressed} {elevation} {...rest}>
+    <NeoButtonGroup role="tablist" {pressed} {elevation} {...rest} class={['neo-tabs-group', rest.class]}>
       {@render children?.(ctx)}
       {#if add}
         <div transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }}>
@@ -183,7 +183,7 @@
         min-width: max-content;
       }
 
-      :global(.neo-tab .neo-button) {
+      :global(.neo-tab .neo-tab-button) {
         justify-content: flex-start;
       }
 
@@ -200,7 +200,7 @@
         left: 0.75rem;
       }
 
-      &.neo-add :global(.neo-button-group) {
+      &.neo-add :global(.neo-tabs-group) {
         padding-bottom: 0.5rem;
       }
 
@@ -230,7 +230,7 @@
       }
     }
 
-    &.neo-add:not(.neo-vertical) :global(.neo-button-group) {
+    &.neo-add:not(.neo-vertical) :global(.neo-tabs-group) {
       padding-right: 0.5rem;
     }
 
@@ -238,7 +238,7 @@
       --neo-tab-width: 100%;
       --neo-tab-height: 100%;
 
-      :global(.neo-tab .neo-button) {
+      :global(.neo-tab .neo-tab-button) {
         box-shadow: var(--neo-box-shadow-flat) !important;
       }
 
@@ -345,7 +345,7 @@
         }
       }
 
-      &.neo-rounded :global(.neo-button-group .neo-tab::before) {
+      &.neo-rounded :global(.neo-tabs-group .neo-tab::before) {
         border-radius: var(--neo-tab-border-radius, var(--neo-border-radius-lg));
       }
     }
