@@ -1,4 +1,5 @@
 <script lang="ts" generics="T extends HTMLElement, V extends any">
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
   import type { NeoValidationContext, NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
@@ -26,7 +27,7 @@
     // Other props
     messageProps,
     messageTag = 'div',
-    messageId = $bindable(messageProps?.id ?? `neo-validation-message-${crypto.randomUUID()}`),
+    messageId = $bindable(messageProps?.id ?? `neo-validation-message-${getUUID()}`),
     ...rest
   }: NeoValidationProps<T, V> = $props();
   /* eslint-enable prefer-const */

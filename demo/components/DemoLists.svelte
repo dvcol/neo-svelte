@@ -1,7 +1,6 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
-
-  import NeoSkeletonText from '../../src/lib/skeletons/NeoSkeletonText.svelte';
 
   import type { NeoListItem, NeoListProps } from '~/list/neo-list.model.js';
 
@@ -10,26 +9,27 @@
   import NeoCard from '~/cards/NeoCard.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoList from '~/list/NeoList.svelte';
+  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { Colors } from '~/utils/colors.utils';
   import { enterTransitionProps } from '~/utils/transition.utils';
 
   const options = $state<NeoListProps>({
     loading: false,
     skeleton: false,
-    shadow: false,
+    shadow: true,
     scrollToLoader: false,
   });
 
-  const custom: NeoListItem = { label: 'Custom Render Item', value: -1, id: crypto.randomUUID(), render };
+  const custom: NeoListItem = { label: 'Custom Render Item', value: -1, id: getUUID(), render };
 
   const list: NeoListItem[] = $state([
-    { label: 'Line item label', value: 0, id: crypto.randomUUID() },
-    { label: 'Line item with longer label', value: 1, id: crypto.randomUUID() },
+    { label: 'Line item label', value: 0, id: getUUID() },
+    { label: 'Line item with longer label', value: 1, id: getUUID() },
     custom,
     {
       label: 'Line item with external link',
       value: 'https://www.google.com',
-      id: crypto.randomUUID(),
+      id: getUUID(),
       href: 'https://www.google.com',
       buttonProps: { target: '_blank' },
       title: 'This is a link to google',
@@ -38,22 +38,22 @@
     {
       label: 'Line item with onclick',
       value: 'This is a clickable item',
-      id: crypto.randomUUID(),
+      id: getUUID(),
       onclick: () => console.info('clicked'),
       title: 'This is a clickable element',
     },
     {
       label: 'Line item disabled',
       value: 'This is a disabled item',
-      id: crypto.randomUUID(),
+      id: getUUID(),
       onclick: () => console.info('disabled clicked'),
       disabled: true,
     },
-    { label: 'Line item error', value: 2, color: Colors.Error, id: crypto.randomUUID() },
-    { label: 'Line item warning', value: 3, color: Colors.Warning, id: crypto.randomUUID() },
-    { label: 'Line item success', value: 4, color: Colors.Success, id: crypto.randomUUID() },
-    { label: 'Line item primary', value: 5, color: Colors.Primary, id: crypto.randomUUID() },
-    { label: 'Line item secondary', value: 6, color: Colors.Secondary, id: crypto.randomUUID() },
+    { label: 'Line item error', value: 2, color: Colors.Error, id: getUUID() },
+    { label: 'Line item warning', value: 3, color: Colors.Warning, id: getUUID() },
+    { label: 'Line item success', value: 4, color: Colors.Success, id: getUUID() },
+    { label: 'Line item primary', value: 5, color: Colors.Primary, id: getUUID() },
+    { label: 'Line item secondary', value: 6, color: Colors.Secondary, id: getUUID() },
   ]);
 
   let isEmpty = $state(false);
@@ -62,7 +62,7 @@
   const withCustom = $derived(isEmpty ? [] : list);
 
   const onAdd = () => {
-    list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: crypto.randomUUID() });
+    list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
   };
 
   const onRemove = () => {

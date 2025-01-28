@@ -1,5 +1,6 @@
 <script lang="ts">
   import { toStyle } from '@dvcol/common-utils/common/class';
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
   import type { FocusEventHandler } from 'svelte/elements';
@@ -23,7 +24,7 @@
 
     // State
     type = 'checkbox',
-    id = label ? `neo-checkbox-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-checkbox-${getUUID()}` : undefined,
     ref = $bindable(),
     group = $bindable(),
     checked = $bindable(false),
@@ -70,7 +71,7 @@
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
   let visible = $state(false);
-  let messageId = $state(`neo-checkbox-message-${crypto.randomUUID()}`);
+  let messageId = $state(`neo-checkbox-message-${getUUID()}`);
   const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
     // Ref
     ref,

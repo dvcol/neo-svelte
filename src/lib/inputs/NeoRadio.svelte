@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
   import type { FocusEventHandler } from 'svelte/elements';
@@ -18,7 +19,7 @@
 
     // State
     type = 'radio',
-    id = label ? `neo-radio-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-radio-${getUUID()}` : undefined,
     ref = $bindable(),
     group = $bindable(),
     checked = $bindable(false),

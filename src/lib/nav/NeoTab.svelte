@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { height, width } from '@dvcol/svelte-utils/transition';
 
   import { tick, untrack } from 'svelte';
@@ -19,7 +20,7 @@
     // States
     ref = $bindable(),
     tag = 'div',
-    tabId = crypto.randomUUID(),
+    tabId = getUUID(),
     value,
 
     // styles

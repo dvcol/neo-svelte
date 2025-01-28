@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { tick } from 'svelte';
 
   import type { DragEventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
@@ -29,7 +30,7 @@
     iconUpload,
 
     // States
-    id = label ? `neo-file-picker-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-file-picker-${getUUID()}` : undefined,
     ref = $bindable(),
     files = $bindable(),
     value = $bindable(),
@@ -235,7 +236,7 @@
   };
 
   let visible = $state(false);
-  let messageId = $state(`neo-file-picker-message-${crypto.randomUUID()}`);
+  let messageId = $state(`neo-file-picker-message-${getUUID()}`);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
   const context = $derived<NeoInputContext<NeoInputHTMLElement>>({

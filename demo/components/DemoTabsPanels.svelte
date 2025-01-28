@@ -1,5 +1,6 @@
 <script lang="ts">
   import { randomHex } from '@dvcol/common-utils/common/crypto';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
@@ -19,7 +20,7 @@
     { text: 'Button', tabId: 'button', close: false },
     { text: 'Icon', tabId: 'icon', close: false, icon },
     { text: 'Reversed', tabId: 'reversed', close: false, icon, reverse: true },
-    { text: `Removable`, tabId: crypto.randomUUID() },
+    { text: `Removable`, tabId: getUUID() },
   ]);
   const onclose = (id: TabId) => {
     const index = added.findIndex(tab => tab.tabId === id);
@@ -30,7 +31,7 @@
   const onadd = () => {
     added.push({
       text: `Added ${randomHex(1)}-${added.length + 1}`,
-      tabId: crypto.randomUUID(),
+      tabId: getUUID(),
     });
   };
 

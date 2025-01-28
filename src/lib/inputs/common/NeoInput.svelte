@@ -1,5 +1,6 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { resize } from '@dvcol/svelte-utils/resize';
 
   import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
@@ -35,7 +36,7 @@
     children,
 
     // States
-    id = label ? `neo-input-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-input-${getUUID()}` : undefined,
     ref = $bindable(),
     files = $bindable(), // type="file"
     value = $bindable(),
@@ -195,7 +196,7 @@
   });
 
   let visible = $state(false);
-  let messageId = $state(`neo-textarea-message-${crypto.randomUUID()}`);
+  let messageId = $state(`neo-textarea-message-${getUUID()}`);
 
   const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
     // Ref

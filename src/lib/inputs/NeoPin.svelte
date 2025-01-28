@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { doubleBind } from '@dvcol/svelte-utils/watch';
 
   import type { EventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
@@ -26,7 +27,7 @@
     icon,
 
     // State
-    id = label ? `neo-pin-input-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-pin-input-${getUUID()}` : undefined,
     ref = $bindable(),
     value = $bindable(''),
     valid = $bindable(),
@@ -314,7 +315,7 @@
   const close = $derived(clearable && (focused || hovered) && hasValue && !rest.disabled && !rest.readonly);
 
   let visible = $state(false);
-  let messageId = $state(`neo-pin-message-${crypto.randomUUID()}`);
+  let messageId = $state(`neo-pin-message-${getUUID()}`);
 
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowElevation));
 

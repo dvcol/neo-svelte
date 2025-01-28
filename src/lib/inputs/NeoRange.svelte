@@ -1,6 +1,7 @@
 <script lang="ts">
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { clamp } from '@dvcol/common-utils/common/math';
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { flip, offset, useFloating } from '@skeletonlabs/floating-ui-svelte';
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
@@ -26,7 +27,7 @@
     after,
 
     // State
-    id = label ? `neo-range-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-range-${getUUID()}` : undefined,
     ref = $bindable(),
     value = $bindable(0),
     valid = $bindable(),

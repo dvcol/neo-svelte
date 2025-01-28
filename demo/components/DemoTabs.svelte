@@ -1,5 +1,6 @@
 <script lang="ts">
   import { randomHex } from '@dvcol/common-utils/common/crypto';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
@@ -29,7 +30,7 @@
     console.info('Add');
     added.push({
       text: `Added ${randomHex(2)}-${added.length + 1}`,
-      tabId: crypto.randomUUID(),
+      tabId: getUUID(),
       value: added.length + 1,
     });
   };

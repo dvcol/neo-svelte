@@ -1,5 +1,6 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import { tick } from 'svelte';
 
@@ -40,7 +41,7 @@
     children,
 
     // States
-    id = label ? `neo-textarea-${crypto.randomUUID()}` : undefined,
+    id = label ? `neo-textarea-${getUUID()}` : undefined,
     ref = $bindable(),
 
     value = $bindable(),
@@ -307,7 +308,7 @@
   });
 
   let visible = $state(false);
-  let messageId = $state(`neo-textarea-message-${crypto.randomUUID()}`);
+  let messageId = $state(`neo-textarea-message-${getUUID()}`);
 
   const context = $derived<NeoInputContext<NeoTextareaHTMLElement>>({
     // Ref
