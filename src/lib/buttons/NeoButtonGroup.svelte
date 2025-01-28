@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
+  import type { NeoButtonGroupContext, NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, getDefaultElevation } from '~/utils/shadow.utils.js';
@@ -56,6 +56,23 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  const context = $derived<NeoButtonGroupContext>({
+    // States
+    skeleton,
+
+    // styles
+    elevation,
+    pressed,
+    convex,
+    borderless,
+    rounded,
+    glass,
+    pulse,
+    coalesce,
+    vertical,
+    start,
+  });
 </script>
 
 <svelte:element
@@ -84,22 +101,7 @@
   in:inFn={inProps}
   {...rest}
 >
-  {@render children?.({
-    // States
-    skeleton,
-
-    // styles
-    elevation,
-    pressed,
-    convex,
-    borderless,
-    rounded,
-    glass,
-    pulse,
-    coalesce,
-    vertical,
-    start,
-  })}
+  {@render children?.(context)}
 </svelte:element>
 
 <style lang="scss">
@@ -109,7 +111,7 @@
     display: inline-flex;
     flex: 0 1 auto;
     flex-flow: row wrap;
-    gap: var(--neo-btn-grp-gap, 0.25rem);
+    gap: var(--neo-btn-grp-gap, 0.375rem);
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
@@ -241,8 +243,18 @@
       @include mixin.skeleton;
     }
 
+    &:not(.neo-vertical) :global(.neo-divider) {
+      --neo-divider-margin: 0.125rem;
+
+      max-height: calc(var(--neo-line-height) + 0.125rem * 2);
+    }
+
     &.neo-vertical {
       flex-direction: column;
+
+      :global(.neo-divider) {
+        max-width: calc(100% - 0.5rem);
+      }
 
       --neo-btn-grp-scale-x: 1.75;
       --neo-btn-grp-scale-y: 1.5;

@@ -15,6 +15,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconGithub from '~/icons/IconGithub.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
+  import NeoTabDivider from '~/nav/NeoTabDivider.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
   import NeoThemePicker from '~/providers/NeoThemePicker.svelte';
   import NeoThemeProvider from '~/providers/NeoThemeProvider.svelte';
@@ -68,6 +69,8 @@
         {#each routes as route}
           <NeoTab tabId={route}>{sentenceCase(route)}</NeoTab>
         {/each}
+
+        <NeoTabDivider />
 
         <NeoButton aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
           {#snippet icon()}

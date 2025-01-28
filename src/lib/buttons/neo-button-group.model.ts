@@ -63,7 +63,7 @@ export type NeoButtonGroupContext = {
 export type NeoButtonGroupProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
   /**
-   * Snippet to display as the button content.
+   * Snippet to display as the group content.
    */
   children?: Snippet<[NeoButtonGroupContext]>;
 

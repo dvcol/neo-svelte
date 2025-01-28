@@ -13,6 +13,7 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
+  import NeoTabDivider from '~/nav/NeoTabDivider.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
 
   const { onClick, loading: loading$, onLoading } = useButtonState('DemoTabsClicked');
@@ -75,9 +76,11 @@
 {#snippet tabs()}
   <NeoTab tabId="button" value="button" close={false} onclick={onClick}>Button</NeoTab>
   <NeoTab tabId="disabled" value="disabled" disabled close={false} onclick={onClick}>Disabled</NeoTab>
+  <NeoTabDivider />
   <NeoTab tabId="loading" value="loading" {loading} close={false} onclick={onLoading}>Loading</NeoTab>
   <NeoTab tabId="icon" value="icon" {loading} close={false} onclick={onLoading} {icon} />
   <NeoTab tabId="icon-label" value="icon-label" close={false} onclick={onClick} {icon}>Icon</NeoTab>
+  <NeoTabDivider />
   <NeoTab tabId="reversed" value="reversed" reverse close={false} onclick={onClick} {icon}>Reversed</NeoTab>
   {#each added as { text, ...tab } (tab.tabId)}
     <NeoTab {...tab}>{text}</NeoTab>

@@ -9,10 +9,11 @@
     skeleton,
 
     // Styles
+    margin,
     height,
     width,
     glass,
-    rounded,
+    rounded = true,
 
     // Other props
     ...rest
@@ -20,6 +21,19 @@
 
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowPressedElevation));
   const boxShadow = $derived(computeShadowElevation(elevation));
+
+  const minimum = $derived.by(() => {
+    if (elevation <= -5) return '24px';
+    if (elevation <= -4) return '16px';
+    if (elevation <= -3) return '12px';
+    if (elevation <= -2) return '10px';
+    if (elevation <= -1) return '8px';
+    if (elevation <= 1) return '1px';
+    if (elevation <= 2) return '4px';
+    if (elevation <= 3) return '6px';
+    if (elevation <= 4) return '12px';
+    return '16px';
+  });
 </script>
 
 <div
@@ -27,13 +41,14 @@
   aria-orientation={vertical ? 'vertical' : 'horizontal'}
   class:neo-divider={true}
   class:neo-vertical={vertical}
-  class:neo-inset={elevation < 0}
   class:neo-flat={!elevation}
   class:neo-glass={glass}
   class:neo-rounded={rounded}
   class:neo-skeleton={skeleton}
   style:--neo-divider-height={height}
   style:--neo-divider-width={width}
+  style:--neo-divider-margin={margin}
+  style:--neo-divider-minimum={minimum}
   style:--neo-divider-box-shadow={boxShadow}
   {...rest}
 >
@@ -44,10 +59,12 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-divider {
+    --neo-divider-margin: 0px;
+
     box-sizing: border-box;
-    width: calc(var(--neo-divider-width, 100%) - var(--neo-shadow-margin, 0.625rem) * 2);
-    height: max(4px, var(--neo-divider-height, 4px));
-    margin: var(--neo-shadow-margin, 0.625rem);
+    width: calc(var(--neo-divider-width, 100%) - var(--neo-divider-margin) * 2);
+    height: calc(max(var(--neo-divider-minimum), var(--neo-divider-height, 1px) - var(--neo-divider-margin) * 2));
+    margin: var(--neo-divider-margin, var(--neo-shadow-margin, 0.625rem));
     border: var(--neo-border-width, 1px) solid var(--neo-divider-color, transparent);
     border-radius: var(--neo-divider-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
@@ -60,18 +77,9 @@
       border-radius: var(--neo-divider-border-radius, var(--neo-border-radius-lg));
     }
 
-    &.neo-inset {
-      height: max(6px, var(--neo-divider-height, 6px));
-      box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-inset-2));
-    }
-
     &.neo-vertical {
-      width: var(--neo-divider-width, 4px);
-      height: calc(var(--neo-divider-height, 100%) - var(--neo-shadow-margin, 0.625rem) * 2);
-
-      &.neo-inset {
-        width: max(6px, var(--neo-divider-width, 6px));
-      }
+      width: max(var(--neo-divider-minimum), var(--neo-divider-width, 1px) - var(--neo-divider-margin) * 2);
+      height: calc(var(--neo-divider-height, 100%) - var(--neo-divider-margin, 0.625rem) * 2);
     }
 
     &.neo-flat {

@@ -30,6 +30,10 @@ export type NeoDividerProps = {
    */
   width?: CSSStyleDeclaration['width'];
   /**
+   * Divider margin.
+   */
+  margin?: CSSStyleDeclaration['margin'];
+  /**
    * If true, the divider will be displayed with a glass effect.
    */
   glass?: boolean;

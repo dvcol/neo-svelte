@@ -1,6 +1,8 @@
 <script lang="ts">
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
+
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -9,7 +11,7 @@
   import { DefaultShadowPressedElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils.js';
 
   const options = $state<NeoDividerProps>({
-    rounded: false,
+    rounded: true,
     vertical: false,
     skeleton: false,
     glass: false,
