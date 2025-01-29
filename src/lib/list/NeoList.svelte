@@ -8,6 +8,7 @@
   import type { NeoListContext, NeoListItem, NeoListMethods, NeoListProps, NeoListSelectedItem, NeoListSelectEvent } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import IconCheckbox from '~/icons/IconCheckbox.svelte';
   import IconList from '~/icons/IconList.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { emptyAnimation, emptyTransition, toAnimation, toAnimationProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -20,6 +21,8 @@
     item: customItem,
     empty: customEmpty,
     loader: customLoader,
+    after,
+    before,
     children,
 
     // States
@@ -33,6 +36,7 @@
     select = false,
     multiple = false,
     selected = $bindable(),
+    touched = $bindable([]),
 
     // Styles
     shadow,
@@ -111,8 +115,14 @@
   };
 
   const toggleItem = (index: NeoListSelectedItem['index']) => {
+    touched.push(index);
     const clear = isMultiple(selected) ? selected?.some(item => item.index === index) : selected?.index === index;
-    onselect?.(clear ? clearItem(index) : selectItem(index));
+    const event = clear ? clearItem(index) : selectItem(index);
+    onselect?.(event);
+  };
+
+  const isChecked = (index: NeoListSelectedItem['index']) => {
+    return isMultiple(selected) ? selected?.some(item => item.index === index) : selected?.index === index;
   };
 
   // Clear selected item(s) when items list changes and attempts to re-select if the item still exists
@@ -122,15 +132,18 @@
       if (!select || !selected) return;
       const previous = shallowClone(selected, 2);
       clearItem();
+      let event: NeoListSelectEvent;
       if (isMultiple(previous)) {
         const [first, ...indexes]: number[] = previous.map(item => items?.findIndex(i => i.id === item.id)).filter(index => index > -1);
         if (!first) return;
-        onselect?.(selectItem(first, ...indexes));
+        event = selectItem(first, ...indexes);
       } else {
         const index = items?.findIndex(i => i.id === previous.id);
         if (index === -1) return;
-        onselect?.(selectItem(index));
+        event = selectItem(index);
       }
+      touched = [];
+      onselect?.(event);
     },
   );
 
@@ -169,7 +182,7 @@
 {#snippet loader()}
   <!-- Loading indicator -->
   {#if loading}
-    <li class="neo-list-loader" transition:transitionFn={transitionProps}>
+    <li class="neo-list-loader" class:neo-list-item-select={select} transition:transitionFn={transitionProps}>
       {#if customLoader}
         {@render customLoader(context)}
       {:else}
@@ -205,6 +218,7 @@
       this={itemTag ?? 'li'}
       class:neo-list-item={true}
       class:neo-skeleton={skeleton}
+      class:neo-list-item-select={select}
       style:--neo-list-item-color={getColorVariable(itemColor)}
       animate:animateFn={animateProps}
       transition:transitionFn={transitionProps}
@@ -228,6 +242,11 @@
           class={['neo-list-item-button', itemButtonProps?.class]}
         >
           {@render listItem(item)}
+          {#if select}
+            <span class="neo-list-item-checkmark">
+              <IconCheckbox checked={isChecked(index)} enter={touched?.includes(index)} />
+            </span>
+          {/if}
         </NeoButton>
       {:else}
         {@render listItem(item)}
@@ -237,7 +256,7 @@
 {/snippet}
 
 <svelte:element this={containerTag} class:neo-list={true} class:neo-empty={empty} {...containerProps}>
-  {@render children?.(context)}
+  {@render before?.(context)}
   {#if !empty}
     <svelte:element
       this={tag}
@@ -247,6 +266,7 @@
       in:scaleFreeze={scaleTransitionProps}
       {...rest}
     >
+      {@render children?.(context)}
       {@render list()}
       {@render loader()}
     </svelte:element>
@@ -271,6 +291,7 @@
       {/if}
     </svelte:element>
   {/if}
+  {@render after?.(context)}
 </svelte:element>
 
 <style lang="scss">
@@ -280,6 +301,25 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+
+    :global(.neo-list-item-button) {
+      width: 100%;
+    }
+
+    :global(.neo-list-empty-skeleton),
+    :global(.neo-list-item-skeleton),
+    :global(.neo-list-loader-skeleton) {
+      padding-inline: 0.5rem;
+    }
+
+    :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
+      gap: 0.125rem;
+    }
+
+    :global(.neo-list-empty-skeleton-container) {
+      width: 100%;
+      margin: auto;
+    }
 
     &-items,
     &-empty {
@@ -292,6 +332,8 @@
 
     &-items {
       @include mixin.scrollbar($gutter: stable both-edges);
+
+      padding: 0 0.25rem;
 
       &.neo-shadow {
         --neo-scrollbar-button-height: 0.375rem;
@@ -324,8 +366,27 @@
         }
       }
 
+      &-checkmark {
+        padding: 0.125rem 0.5rem 0.125rem 0;
+      }
+
       &.neo-skeleton {
         pointer-events: none;
+      }
+
+      &-select {
+        :global(.neo-list-item-button) {
+          padding: 0.125rem;
+        }
+
+        :global(.neo-list-loader-skeleton) {
+          margin-top: 0.125rem;
+        }
+
+        :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
+          gap: 0.5rem;
+          padding: 0.125rem;
+        }
       }
     }
 
@@ -337,25 +398,6 @@
       justify-content: center;
       min-width: var(--neo-list-min-width, 8rem);
       min-height: var(--neo-list-min-height);
-    }
-
-    :global(.neo-list-item-button) {
-      width: 100%;
-    }
-
-    :global(.neo-list-empty-skeleton),
-    :global(.neo-list-item-skeleton),
-    :global(.neo-list-loader-skeleton) {
-      padding-inline: 0.5rem;
-    }
-
-    :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
-      gap: 0.125rem;
-    }
-
-    :global(.neo-list-empty-skeleton-container) {
-      width: 100%;
-      margin: auto;
     }
   }
 </style>

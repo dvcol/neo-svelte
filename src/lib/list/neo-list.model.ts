@@ -120,6 +120,10 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    * The currently selected item(s).
    */
   selected?: Selected;
+  /**
+   * Array of indexes of items that have been touched.
+   */
+  touched?: NeoListSelectedItem['index'][];
 
   /**
    * If the list is currently loading additional items.
@@ -147,6 +151,14 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul', Selecte
    * Optional snippet to display in place of the loading indicator.
    */
   loader?: Snippet<[NeoListContext]>;
+  /**
+   * Optional snippet to display after the list.
+   */
+  after?: Snippet<[NeoListContext]>;
+  /**
+   * Optional snippet to display before the list.
+   */
+  before?: Snippet<[NeoListContext]>;
   /**
    * Optional snippet to display inside the list.
    */

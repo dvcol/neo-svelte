@@ -85,7 +85,7 @@
           />
         </path>
       {:else}
-        <path stroke-dasharray="14" stroke-dashoffset="14" d="M8 12l3 3l5 -5" stroke-width={check}>
+        <path stroke-dasharray={!enter && checked ? 0 : 14} stroke-dashoffset="14" d="M8 12l3 3l5 -5" stroke-width={check}>
           <animate
             fill="freeze"
             attributeName="stroke-dashoffset"
