@@ -145,6 +145,10 @@ export type NeoFilePickerCardProps = Omit<NeoCardProps, 'children'> & {
    * @default 20rem
    */
   maxHeight?: string;
+  /**
+   * Overrides the default scrollbars.
+   */
+  scrollbar?: boolean;
 
   // Events
   /**

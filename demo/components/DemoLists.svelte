@@ -102,8 +102,8 @@
 <div class="row">
   <div class="column content">
     <span class="label">Card List</span>
-    <NeoCard rounded elevation="0" hover="-2" height="100%" width="min(80vw, 18rem)">
-      <NeoList {items} {...options} />
+    <NeoCard rounded elevation="0" scrollbar={false} hover="-2" height="20rem" width="min(80vw, 18rem)" spacing="0.75rem">
+      <NeoList select {items} {...options} />
     </NeoCard>
   </div>
 
@@ -151,9 +151,9 @@
   {#snippet values({ selected })}
     <div class="list-values">
       {#if Array.isArray(selected)}
-        Values: {selected?.map(i => i.value).join(', ') ?? 'no values'}
+        Values: {selected?.map(i => i.value).join(', ') || 'no values'}
       {:else}
-        Value: {selected?.value ?? 'no value'}
+        Value: {selected?.value || 'no value'}
       {/if}
     </div>
   {/snippet}

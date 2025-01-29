@@ -161,6 +161,10 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    * Overrides the default height.
    */
   height?: CSSStyleDeclaration['height'];
+  /**
+   * Overrides the default scrollbars.
+   */
+  scrollbar?: boolean;
 
   // Other props
 

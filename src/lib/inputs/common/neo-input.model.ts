@@ -390,6 +390,10 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
    */
   defaultValue?: HTMLTextareaAttributes['value'];
   /**
+   * Overrides the default scrollbars.
+   */
+  scrollbar?: boolean;
+  /**
    * Automatically increments/decrements the textarea rows to fit the content.
    *
    * If `true`, the textarea will increment indefinitely and will not decrement.

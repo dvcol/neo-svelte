@@ -44,6 +44,7 @@
     start,
     skeleton,
     horizontal,
+    scrollbar = true,
 
     // Flex
     justify,
@@ -169,7 +170,7 @@
   role="none"
   bind:this={ref}
   class:neo-card={true}
-  class:neo-scroll={true}
+  class:neo-scroll={scrollbar}
   class:neo-horizontal={horizontal}
   class:neo-borderless={borderless}
   class:neo-segmented={segmented === true}
@@ -213,6 +214,7 @@
       this={mediaTag}
       class:neo-card-segment={true}
       class:neo-card-media={true}
+      class:neo-scroll={scrollbar}
       class:neo-cover={cover}
       class:neo-inset={elevation < 0 || hoverElevation < 0}
       {...mediaProps}
@@ -221,7 +223,7 @@
     </svelte:element>
   {/if}
   {#if header || (!horizontal && close)}
-    <svelte:element this={headerTag} class:neo-card-segment={true} class:neo-card-header={true} {...headerProps}>
+    <svelte:element this={headerTag} class:neo-card-segment={true} class:neo-card-header={true} class:neo-scroll={scrollbar} {...headerProps}>
       {@render header?.(context)}
       {#if !horizontal}
         {@render closeBtn()}
@@ -231,7 +233,7 @@
   {#if segments}
     {@render divider()}
     {#if content}
-      <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} {...contentProps}>
+      <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} class:neo-scroll={scrollbar} {...contentProps}>
         {@render content?.(context)}
       </svelte:element>
     {/if}
@@ -240,13 +242,13 @@
   {/if}
   {#if footer}
     {@render divider()}
-    <svelte:element this={footerTag} class:neo-card-segment={true} class:neo-card-footer={true} {...footerProps}>
+    <svelte:element this={footerTag} class:neo-card-segment={true} class:neo-card-footer={true} class:neo-scroll={scrollbar} {...footerProps}>
       {@render footer?.(context)}
     </svelte:element>
   {/if}
   {#if action || (horizontal && close)}
     {@render divider()}
-    <svelte:element this={actionTag} class:neo-card-segment={true} class:neo-card-action={true} {...actionProps}>
+    <svelte:element this={actionTag} class:neo-card-segment={true} class:neo-card-action={true} class:neo-scroll={scrollbar} {...actionProps}>
       {#if horizontal}
         {@render closeBtn()}
       {/if}
@@ -258,10 +260,10 @@
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-card {
-    $full-spacing: var(--neo-card-spacing, 1.5rem);
-    $half-spacing: calc(var(--neo-card-spacing, 1.5rem) / 2);
+  $full-spacing: var(--neo-card-spacing, 1.5rem);
+  $half-spacing: calc(var(--neo-card-spacing, 1.5rem) / 2);
 
+  .neo-card {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -273,9 +275,18 @@
     border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
     border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-card-box-shadow, var(--neo-box-shadow-flat));
+    transition:
+      margin 0.3s ease,
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      border-radius 0.3s ease,
+      backdrop-filter 0.3s ease,
+      box-shadow 0.3s ease-out;
 
     &-content {
       flex: 1 1 auto;
+      overflow: auto;
     }
 
     &.neo-borderless {
@@ -518,16 +529,13 @@
     }
   }
 
-  .neo-card-media,
-  .neo-card-header,
-  .neo-card-content,
-  .neo-card-action,
-  .neo-card-footer {
-    @include mixin.scrollbar($transition: border-radius 0.3s ease);
+  .neo-card-content.neo-scroll {
+    @include mixin.scrollbar($gutter: auto, $transition: border-radius 0.3s ease);
   }
 
-  .neo-scroll {
+  .neo-card.neo-scroll:not(.neo-segments) {
     @include mixin.scrollbar(
+      $gutter: auto,
       $transition: #{margin 0.3s ease,
       color 0.3s ease,
       background-color 0.3s ease,

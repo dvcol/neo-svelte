@@ -46,6 +46,7 @@
 
     // Style
     maxHeight = '20rem',
+    scrollbar = true,
 
     // Events
     onClear,
@@ -92,6 +93,7 @@
   bind:ref
   bind:hovered
   bind:focused
+  scrollbar={false}
   {rounded}
   {disabled}
   {skeleton}
@@ -110,7 +112,7 @@
   {:else if files?.length}
     {@render labelGroup()}
     <div class="neo-expanded-list" class:neo-rounded={rounded} style:--neo-file-picker-card-max-height={maxHeight}>
-      <div class="neo-expanded-scroll">
+      <div class="neo-expanded-scroll" class:neo-scroll={scrollbar}>
         {#each files as file, i (file)}
           <div class="neo-file" transition:fade={enterTransitionProps} animate:flip={flipTransitionProps}>
             <span class="neo-file-name" title={file.name}>{file.name}</span>
@@ -309,8 +311,6 @@
     }
 
     &-scroll {
-      --neo-scrollbar-button-height: 0.375rem;
-
       position: relative;
       display: inline-flex;
       flex: 1 1 auto;
@@ -318,9 +318,12 @@
       gap: var(--neo-gap-xxs);
       max-height: var(--neo-file-picker-card-max-height);
       padding: 0.625rem 0.25rem;
+      overflow: auto;
 
-      @include mixin.fade-scroll(1rem);
-      @include mixin.scrollbar($gutter: stable both-edges);
+      &.neo-scroll {
+        @include mixin.fade-scroll(1rem);
+        @include mixin.scrollbar($button-height: 0.375rem);
+      }
     }
   }
 </style>

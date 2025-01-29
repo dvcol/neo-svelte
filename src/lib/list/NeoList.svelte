@@ -40,6 +40,7 @@
 
     // Styles
     shadow,
+    scrollbar = true,
 
     // Animation
     transition,
@@ -268,7 +269,8 @@
       role={select ? 'listbox' : 'list'}
       bind:this={ref}
       class:neo-list-items={true}
-      class:neo-shadow={shadow && !empty}
+      class:neo-scroll={scrollbar}
+      class:neo-shadow={shadow}
       in:scaleFreeze={scaleTransitionProps}
       {...rest}
     >
@@ -337,16 +339,16 @@
     }
 
     &-items {
-      @include mixin.scrollbar($gutter: stable both-edges);
+      padding-inline: 0.25rem;
 
-      padding: 0 0.25rem;
+      &.neo-scroll {
+        @include mixin.scrollbar($button-height: 0.375rem);
 
-      &.neo-shadow {
-        --neo-scrollbar-button-height: 0.375rem;
+        &.neo-shadow {
+          @include mixin.fade-scroll(1rem);
 
-        @include mixin.fade-scroll(1rem);
-
-        padding-block: 0.625rem;
+          padding-block: 0.25rem;
+        }
       }
     }
 

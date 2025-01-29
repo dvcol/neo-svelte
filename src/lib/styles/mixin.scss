@@ -205,7 +205,7 @@
 
 @mixin scrollbar(
   $overflow: auto,
-  $gutter: stable,
+  $gutter: stable both-edges,
   $width: var(--neo-scrollbar-width, 0.375rem),
   $thumb-color: var(--neo-scrollbar-color),
   $thumb-border-radius: var(--neo-border-radius),
@@ -270,9 +270,16 @@
   }
 }
 
-@mixin fade-scroll($fade-height: 1rem) {
-  mask-image: linear-gradient(to top, transparent, transparent $fade-height, black $fade-height, black calc(100% - #{$fade-height}), transparent),
-    linear-gradient(to bottom, transparent, transparent $fade-height, black $fade-height, black calc(100% - #{$fade-height}), transparent);
+@mixin fade-scroll($fade-height: 1rem, $direction: top) {
+  mask-image: linear-gradient(
+    to $direction,
+    black,
+    black,
+    transparent 0,
+    black var(--neo-scroll-shadow-size, #{$fade-height}),
+    black calc(100% - var(--neo-scroll-shadow-size, #{$fade-height})),
+    transparent
+  );
 }
 
 @mixin glass() {

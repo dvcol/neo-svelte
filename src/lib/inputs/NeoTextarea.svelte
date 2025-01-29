@@ -72,6 +72,7 @@
     start,
     floating = true,
     skeleton,
+    scrollbar = true,
     validation,
 
     // Transition
@@ -381,6 +382,7 @@
     bind:this={ref}
     bind:value
     class:neo-textarea={true}
+    class:neo-scroll={scrollbar}
     class:neo-affix={affix || after}
     {rows}
     onblur={onBlur}
@@ -525,6 +527,7 @@
     max-width: 100%;
     min-height: fit-content;
     padding: 0.75rem 0.95rem;
+    overflow: auto;
     color: inherit;
     text-overflow: ellipsis;
     background-color: transparent;
@@ -879,8 +882,9 @@
       @include mixin.skeleton;
     }
 
-    .neo-textarea {
+    .neo-textarea.neo-scroll {
       @include mixin.scrollbar;
+      @include mixin.fade-scroll($fade-height: 0.5rem);
     }
   }
 </style>

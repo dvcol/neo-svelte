@@ -182,6 +182,10 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul', Selecte
    */
   shadow?: boolean;
   /**
+   * Overrides the default scrollbars.
+   */
+  scrollbar?: boolean;
+  /**
    * Whether to scroll to the bottom when loading additional items.
    *
    * @default false
