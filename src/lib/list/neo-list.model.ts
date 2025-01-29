@@ -4,36 +4,47 @@ import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.util
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
+export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+  /**
+   * Unique identifier for the list item.
+   * Used for keying the list item.
+   * If not provided, the index will be used.
+   * Note: Required for entering/leaving transitions.
+   */
+  id?: string | number;
+  /**
+   * The HTML tag to use for the item.
+   * @default 'li'
+   */
+  tag?: Tag;
+  /**
+   * Text color to use for the item.
+   */
+  color?: Color;
+  /**
+   Optional props to pass to the container.
+   */
+  containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+};
+
 export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   /**
    * An arbitrary value to associate with the list item.
    */
   value: Value;
   /**
-   * The HTML tag to use for the list item.
-   *
-   * @default 'li'
-   */
-  tag?: Tag;
-  /**
-   * Unique identifier for the list item.
-   * Used for keying the list item.
-   * If not provided, the index will be used.
-   */
-  id?: string | number;
-  /**
    * Optional label to display in the list item.
    * If not provided, the value will be used.
    */
   label?: string;
   /**
-   * Text color to use for the list item.
-   */
-  color?: Color;
-  /**
    * If true, the list item will be disabled.
    */
   disabled?: boolean;
+  /**
+   * If true, the list section will display a divider above the title.
+   */
+  divider?: boolean;
   /**
    * Optional snippet to display in place of the list item.
    */
@@ -50,7 +61,20 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    * Optional props to pass to the button.
    */
   buttonProps?: NeoButtonProps;
-} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+} & NeoListItemCommon<Tag>;
+
+export type NeoListSection<Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+  /**
+   * The title of the list section.
+   */
+  title?: string;
+  /**
+   * The items to display in the list section.
+   */
+  items: NeoListItem[];
+} & NeoListItemCommon<Tag>;
+
+export const isSection = (item: NeoListItem | NeoListSection): item is NeoListSection => 'items' in item;
 
 export type NeoListSelectedItem = {
   /**
@@ -107,7 +131,7 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
   /**
    * List items to display.
    */
-  items?: NeoListItem[];
+  items?: (NeoListItem | NeoListSection)[];
   /**
    * Whether to allow selecting items in the list.
    */
@@ -142,7 +166,7 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul', Selecte
   /**
    * Optional snippet to display in place of each list item.
    */
-  item?: NeoListItem['render'];
+  item?: Snippet<[NeoListItem | NeoListSection, number, NeoListContext]>;
   /**
    * Optional snippet to display when the list is empty.
    */
@@ -167,10 +191,12 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul', Selecte
   // Animation
   /**
    * Transition function to apply when removing items from the list.
+   * Note: unique `id` is required for entering/leaving transitions.
    */
   animate: HTMAnimationProps['animate'];
   /**
    * Transition function to apply when adding items to the list.
+   * Note: unique `id` is required for entering/leaving transitions.
    */
   transition: HTMLTransitionProps['transition'];
 

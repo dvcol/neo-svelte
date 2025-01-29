@@ -2,7 +2,7 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
-  import type { NeoListItem, NeoListProps } from '~/list/neo-list.model.js';
+  import type { NeoListItem, NeoListProps, NeoListSection } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -55,10 +55,32 @@
     ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
   );
 
+  const sectionA: NeoListSection = {
+    id: getUUID(),
+    title: 'Section A',
+    items: [
+      { label: 'Section A item 1', value: 'section A - 1', color: Colors.Primary },
+      { label: 'Section A item 2', value: 'section A - 2', color: Colors.Primary },
+      { label: 'Section A item 4', value: 'section A - 3', color: Colors.Primary },
+    ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
+  };
+
+  const sectionB: NeoListSection = {
+    id: getUUID(),
+    title: 'Section B',
+    items: [
+      { label: 'Section B item 1', value: 'section B - 1', color: Colors.Secondary },
+      { label: 'Section B item 2', value: 'section B - 2', color: Colors.Secondary },
+      { label: 'Section B item 4', value: 'section B - 3', color: Colors.Secondary },
+    ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
+  };
+
   let isEmpty = $state(false);
   const items = $derived(isEmpty ? [] : list.filter(item => item.id !== custom.id));
 
   const withCustom = $derived(isEmpty ? [] : list);
+
+  const withSection = $derived(isEmpty ? [] : [sectionA, ...items, sectionB]);
 
   const onAdd = () => list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
 
@@ -172,6 +194,11 @@
   </div>
 
   <!--  section (i.e. sublists) -->
+
+  <div class="column content">
+    <span class="label">Select section</span>
+    <NeoList select multiple items={withSection} {...options} onselect={e => console.info('onSelect - sections', e)} after={values} />
+  </div>
 
   <!-- custom item with select, before, after & description  & loader  -->
 

@@ -5,11 +5,18 @@
   import { flip } from 'svelte/animate';
   import { fade, scale } from 'svelte/transition';
 
-  import type { NeoListContext, NeoListItem, NeoListMethods, NeoListProps, NeoListSelectedItem, NeoListSelectEvent } from '~/list/neo-list.model.js';
-
-  import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconCheckbox from '~/icons/IconCheckbox.svelte';
   import IconList from '~/icons/IconList.svelte';
+  import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
+  import {
+    isSection,
+    type NeoListContext,
+    type NeoListItem,
+    type NeoListMethods,
+    type NeoListProps,
+    type NeoListSection,
+    type NeoListSelectedItem,
+    type NeoListSelectEvent,
+  } from '~/list/neo-list.model.js';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { emptyAnimation, emptyTransition, toAnimation, toAnimationProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -77,7 +84,8 @@
   });
 
   const findItem = (index: NeoListSelectedItem['index']): NeoListSelectedItem => {
-    const item: NeoListSelectedItem['item'] = items[index];
+    const item: NeoListItem | NeoListSection = items[index];
+    if (isSection(item)) throw new Error('Section cannot be selected.'); // TODO custom error
     if (!item) throw new Error('Item not found.'); // TODO custom error
     return { index, item, id: item.id, value: item?.value };
   };
@@ -133,17 +141,16 @@
       if (!select || !selected) return;
       const previous = shallowClone(selected, 2);
       clearItem();
-      let event: NeoListSelectEvent;
+      let event: NeoListSelectEvent | undefined;
       if (isMultiple(previous)) {
-        const [first, ...indexes]: number[] = previous.map(item => items?.findIndex(i => i.id === item.id)).filter(index => index > -1);
-        if (!first) return;
-        event = selectItem(first, ...indexes);
+        const [first, ...indexes]: number[] = previous.map(item => items?.findIndex(i => i?.id === item.id)).filter(index => index > -1);
+        if (first) event = selectItem(first, ...indexes);
       } else {
-        const index = items?.findIndex(i => i.id === previous.id);
-        if (index === -1) return;
-        event = selectItem(index);
+        const index = items?.findIndex(i => i?.id === previous.id);
+        if (index !== -1) event = selectItem(index);
       }
       touched = [];
+      if (!event) return;
       onselect?.(event);
     },
   );
@@ -193,69 +200,36 @@
   {/if}
 {/snippet}
 
-{#snippet listItem({ label, value, disabled }: NeoListItem)}
-  <NeoSkeletonText class="neo-list-item-skeleton" loading={skeleton} lines={1} align="center">
-    <div class="neo-list-item-content" class:neo-disabled={disabled}>{label ?? value}</div>
-  </NeoSkeletonText>
-{/snippet}
-
-{#snippet checkmark(index: number)}
-  {#if select}
-    <span class="neo-list-item-checkmark">
-      <IconCheckbox checked={isChecked(index)} enter={touched?.includes(index)} />
-    </span>
-  {/if}
-{/snippet}
-
-{#snippet list()}
+{#snippet list(_items: (NeoListItem | NeoListSection)[])}
   <!-- Items -->
-  {#each items as item, index (item.id ?? index)}
-    {@const {
-      tag: itemTag,
-      label: itemLabel,
-      value: itemValue,
-      color: itemColor,
-      disabled: itemDisabled,
-      render: itemRender,
-      id: itemId,
-      href: itemHref,
-      onclick: itemOnClick,
-      buttonProps: itemButtonProps,
-      ...itemProps
-    } = item}
+  {#each _items as _item, _index (_item.id ?? _index)}
     <svelte:element
-      this={itemTag ?? 'li'}
+      this={_item.tag ?? 'li'}
       role={select ? 'option' : 'listitem'}
       class:neo-list-item={true}
       class:neo-skeleton={skeleton}
       class:neo-list-item-select={select}
-      style:--neo-list-item-color={getColorVariable(itemColor)}
+      style:--neo-list-item-color={getColorVariable(_item.color)}
       animate:animateFn={animateProps}
       transition:transitionFn={transitionProps}
-      {...itemProps}
+      {..._item.containerProps}
     >
-      {#if itemRender}
-        {@render itemRender(item, index, context)}
-      {:else if customItem}
-        {@render customItem(item, index, context)}
-      {:else if itemHref || itemOnClick || select}
-        <NeoButton
-          ghost
-          shallow
-          href={itemHref}
-          onclick={e => {
-            toggleItem(index);
-            itemOnClick?.(e);
-          }}
-          disabled={itemDisabled}
-          {...itemButtonProps}
-          class={['neo-list-item-button', itemButtonProps?.class]}
-        >
-          {@render listItem(item)}
-          {@render checkmark(index)}
-        </NeoButton>
+      {#if isSection(_item)}
+        <!-- TODO - section-->
+      {:else if customItem && !_item.render}
+        {@render customItem(_item, _index, context)}
       {:else}
-        {@render listItem(item)}
+        <NeoListBaseItem
+          item={_item}
+          index={_index}
+          {context}
+          {skeleton}
+          {select}
+          checked={isChecked(_index)}
+          touched={touched?.includes(_index)}
+          disabled={_item.disabled}
+          {toggleItem}
+        />
       {/if}
     </svelte:element>
   {/each}
@@ -275,7 +249,7 @@
       {...rest}
     >
       {@render children?.(context)}
-      {@render list()}
+      {@render list(items)}
       {@render loader()}
     </svelte:element>
   {:else}
@@ -331,6 +305,7 @@
 
     &-items,
     &-empty {
+      position: relative;
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -360,24 +335,6 @@
     }
 
     &-item {
-      &-content {
-        padding: 0.125rem 0.5rem;
-        transition: color 0.3s ease;
-
-        &:hover:not(.neo-disabled) {
-          color: var(--neo-text-color-highlight);
-        }
-
-        &.neo-disabled {
-          color: var(--neo-text-color-disabled);
-          cursor: not-allowed;
-        }
-      }
-
-      &-checkmark {
-        padding: 0.125rem 0.5rem 0.125rem 0;
-      }
-
       &.neo-skeleton {
         pointer-events: none;
       }
