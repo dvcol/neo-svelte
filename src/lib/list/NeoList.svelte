@@ -198,6 +198,14 @@
   </NeoSkeletonText>
 {/snippet}
 
+{#snippet checkmark(index: number)}
+  {#if select}
+    <span class="neo-list-item-checkmark">
+      <IconCheckbox checked={isChecked(index)} enter={touched?.includes(index)} />
+    </span>
+  {/if}
+{/snippet}
+
 {#snippet list()}
   <!-- Items -->
   {#each items as item, index (item.id ?? index)}
@@ -216,6 +224,7 @@
     } = item}
     <svelte:element
       this={itemTag ?? 'li'}
+      role={select ? 'option' : 'listitem'}
       class:neo-list-item={true}
       class:neo-skeleton={skeleton}
       class:neo-list-item-select={select}
@@ -242,11 +251,7 @@
           class={['neo-list-item-button', itemButtonProps?.class]}
         >
           {@render listItem(item)}
-          {#if select}
-            <span class="neo-list-item-checkmark">
-              <IconCheckbox checked={isChecked(index)} enter={touched?.includes(index)} />
-            </span>
-          {/if}
+          {@render checkmark(index)}
         </NeoButton>
       {:else}
         {@render listItem(item)}
@@ -260,6 +265,7 @@
   {#if !empty}
     <svelte:element
       this={tag}
+      role={select ? 'listbox' : 'list'}
       bind:this={ref}
       class:neo-list-items={true}
       class:neo-shadow={shadow && !empty}

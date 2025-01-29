@@ -148,20 +148,32 @@
     <NeoList {items} {item} {...options} />
   </div>
 
+  {#snippet values({ selected })}
+    <div class="list-values">
+      {#if Array.isArray(selected)}
+        Values: {selected?.map(i => i.value).join(', ') ?? 'no values'}
+      {:else}
+        Value: {selected?.value ?? 'no value'}
+      {/if}
+    </div>
+  {/snippet}
+
   <!--  select items -->
   <div class="column content">
-    <span class="label">Custom item</span>
-    <NeoList select {items} {...options} onselect={e => console.info('onSelect - single', e)} />
+    <span class="label">Select item</span>
+    <NeoList select {items} {...options} onselect={e => console.info('onSelect - single', e)} after={values} />
   </div>
 
   <!--  multi select items -->
 
   <div class="column content">
-    <span class="label">Custom item</span>
-    <NeoList select multiple {items} {...options} onselect={e => console.info('onSelect - multiple', e)} />
+    <span class="label">Select multiple</span>
+    <NeoList select multiple {items} {...options} onselect={e => console.info('onSelect - multiple', e)} after={values} />
   </div>
 
-  <!-- custom item with before, after & description  -->
+  <!--  section (i.e. sublists) -->
+
+  <!-- custom item with select, before, after & description  & loader  -->
 
   <!--  tooltip item (nested menu drawer, portal ?) -->
 
@@ -191,6 +203,13 @@
     display: flex;
     flex-direction: column;
     margin-block: 0.25rem;
+  }
+
+  .list-values {
+    margin-top: 0.25rem;
+    color: var(--neo-text-color-secondary);
+    font-size: var(--neo-font-size-sm);
+    padding-inline: 1.125rem;
   }
 
   .custom-item-card,

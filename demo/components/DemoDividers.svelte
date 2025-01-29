@@ -15,7 +15,7 @@
     vertical: false,
     skeleton: false,
     glass: false,
-    elevation: DefaultShadowPressedElevation,
+    elevation: 0,
   });
 </script>
 

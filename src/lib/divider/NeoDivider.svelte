@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 
-  import { coerce, computeShadowElevation, DefaultShadowPressedElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeShadowElevation } from '~/utils/shadow.utils.js';
 
   const {
     // State
@@ -19,7 +19,7 @@
     ...rest
   }: NeoDividerProps = $props();
 
-  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowPressedElevation));
+  const elevation = $derived(coerce(rest?.elevation ?? 0));
   const boxShadow = $derived(computeShadowElevation(elevation));
 
   const minimum = $derived.by(() => {
