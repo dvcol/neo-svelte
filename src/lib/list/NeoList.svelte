@@ -1,7 +1,7 @@
 <script lang="ts">
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
-  import { scaleFreeze } from '@dvcol/svelte-utils';
+  import { scaleFreeze, watch } from '@dvcol/svelte-utils';
   import { flip } from 'svelte/animate';
   import { fade, scale } from 'svelte/transition';
 
@@ -101,7 +101,8 @@
 
     const previous = shallowClone(selected, 2);
     if (isMultiple(selected)) {
-      selected = selected?.filter(item => !indexes.includes(item.index)) ?? [];
+      if (!indexes?.length) selected = undefined;
+      else selected = selected?.filter(item => !indexes.includes(item.index)) ?? [];
     } else {
       selected = undefined;
     }
@@ -113,6 +114,25 @@
     const clear = isMultiple(selected) ? selected?.some(item => item.index === index) : selected?.index === index;
     onselect?.(clear ? clearItem(index) : selectItem(index));
   };
+
+  // Clear selected item(s) when items list changes and attempts to re-select if the item still exists
+  watch(
+    () => items,
+    () => {
+      if (!select || !selected) return;
+      const previous = shallowClone(selected, 2);
+      clearItem();
+      if (isMultiple(previous)) {
+        const [first, ...indexes]: number[] = previous.map(item => items?.findIndex(i => i.id === item.id)).filter(index => index > -1);
+        if (!first) return;
+        onselect?.(selectItem(first, ...indexes));
+      } else {
+        const index = items?.findIndex(i => i.id === previous.id);
+        if (index === -1) return;
+        onselect?.(selectItem(index));
+      }
+    },
+  );
 
   const context = $derived<NeoListContext>({
     // States
