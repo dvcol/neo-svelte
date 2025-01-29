@@ -57,13 +57,7 @@
   {...rest}
 >
   {@render children?.()}
-  {#if indeterminate}
-    <IconCheckbox circle={rounded} indeterminate />
-  {:else if checked}
-    <IconCheckbox circle={rounded} checked />
-  {:else}
-    <IconCheckbox circle={rounded} enter={touched} />
-  {/if}
+  <IconCheckbox circle={rounded} indeterminate={!!indeterminate} checked={!!checked} enter={touched} />
 </button>
 
 <style lang="scss">

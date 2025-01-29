@@ -55,11 +55,7 @@
   {...rest}
 >
   {@render children?.()}
-  {#if checked}
-    <IconRadio circle={rounded} scale={rounded ? 0.75 : 0.9} checked />
-  {:else}
-    <IconRadio circle={rounded} scale={rounded ? 0.75 : 0.9} enter={touched} />
-  {/if}
+  <IconRadio circle={rounded} scale={rounded ? 0.75 : 0.9} checked={!!checked} enter={touched} />
 </button>
 
 <style lang="scss">

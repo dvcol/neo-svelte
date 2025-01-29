@@ -112,9 +112,6 @@
       {@render buttons(props)}
     </div>
   {/each}
-</div>
-
-<div class="row">
   <div class="column">
     <span class="label">Checkbox</span>
     <SphereBackdrop glass={options.glass}>
