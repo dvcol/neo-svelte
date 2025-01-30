@@ -53,7 +53,6 @@
     flex-grow: 1;
     grid-template-areas: 'transition';
     width: 100%;
-    height: 100%;
 
     :global(> *) {
       grid-area: transition;

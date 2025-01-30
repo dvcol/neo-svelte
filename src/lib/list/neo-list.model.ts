@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
@@ -22,11 +23,25 @@ export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = 
    */
   color?: Color;
   /**
+   * If true, the list section will display a divider above the title.
+   */
+  divider?: boolean;
+  /**
+   * Optional props to pass to the divider.
+   */
+  dividerProps?: NeoDividerProps;
+  /**
    Optional props to pass to the container.
    */
   containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 };
 
+export type NeoListItemRenderContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+  item: NeoListItem<Value, Tag>;
+  index: number;
+  context: NeoListContext;
+};
+export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = Snippet<[NeoListItemRenderContext<Value, Tag>]>;
 export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   /**
    * An arbitrary value to associate with the list item.
@@ -42,13 +57,13 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    */
   disabled?: boolean;
   /**
-   * If true, the list section will display a divider above the title.
+   * If true, the item will not trigger selection, but will not be styled as disabled.
    */
-  divider?: boolean;
+  readonly?: boolean;
   /**
    * Optional snippet to display in place of the list item.
    */
-  render?: Snippet<[NeoListItem, number, NeoListContext]>;
+  render?: NeoListItemRender<Value, Tag>;
   /**
    * The url to navigate to when the anchor is clicked.
    */
@@ -63,50 +78,44 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   buttonProps?: NeoButtonProps;
 } & NeoListItemCommon<Tag>;
 
-export type NeoListSection<Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+export type NeoListRenderContext<Value = unknown, Item = NeoListItem | NeoListSection> = {
+  items: Item[];
   /**
-   * The title of the list section.
+   * The index of the section in the list.
    */
+  index?: number;
+  section?: NeoListSection<Value>;
+  context?: NeoListContext;
+};
+export type NeoListRender<Value = unknown> = Snippet<[NeoListRenderContext<Value>]>;
+
+export type NeoListSectionRender<Value = unknown> = Snippet<[NeoListRender<Value>, NeoListRenderContext<Value>]>;
+export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
   title?: string;
+  items: NeoListItem<Value>[];
   /**
-   * The items to display in the list section.
+   * Optional snippet to display in place of the list section.
+   * @param list - The list snippet that render items.
+   * @param context - The list section context.
    */
-  items: NeoListItem[];
+  render?: NeoListSectionRender<Value>;
 } & NeoListItemCommon<Tag>;
 
 export const isSection = (item: NeoListItem | NeoListSection): item is NeoListSection => 'items' in item;
 
-export type NeoListSelectedItem = {
-  /**
-   * The index of the selected item.
-   */
+export type NeoListSelectedItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   index: number;
-  /**
-   * The selected item.
-   */
-  item: NeoListItem;
-  /**
-   * The selected id.
-   */
-  id?: NeoListItem['id'];
-  /**
-   * The selected value.
-   */
-  value?: NeoListItem['value'];
+  item: NeoListItem<Value, Tag>;
+  sectionIndex?: number;
+  section?: NeoListSection<Value>;
 };
 
 export type NeoListSelectEvent<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = {
-  /**
-   * The previous selected item(s).
-   */
   previous?: Selected;
-  /**
-   * The current selected item(s).
-   */
   current?: Selected;
 };
 
-export type NeoListMethods = {
+export type NeoListMethods<Value = unknown> = {
   /**
    * Scroll the list to the top.
    */
@@ -118,12 +127,17 @@ export type NeoListMethods = {
   /**
    * Select an item in the list.
    * @param index - The index of the item to select.
+   *
+   * @returns The selection event if the item was selected, undefined otherwise.
    */
-  selectItem: (index: NeoListSelectedItem['index'], ...rest: NeoListSelectedItem['index'][]) => NeoListSelectEvent;
+  selectItem: (...selection: NeoListSelectedItem<Value>[]) => NeoListSelectEvent | undefined;
   /**
    * Clear the selected item(s).
+   * If no index is provided, all items will be cleared.
+   *
+   * @returns The selection event if the list or item was cleared, undefined otherwise.
    */
-  clearItem: (...rest: NeoListSelectedItem['index'][]) => NeoListSelectEvent;
+  clearItem: (...selection: NeoListSelectedItem<Value>[]) => NeoListSelectEvent | undefined;
 };
 
 export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSelectedItem[]> = {
@@ -144,10 +158,6 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    * The currently selected item(s).
    */
   selected?: Selected;
-  /**
-   * Array of indexes of items that have been touched.
-   */
-  touched?: NeoListSelectedItem['index'][];
 
   /**
    * If the list is currently loading additional items.
@@ -157,16 +167,28 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    * If the list should display a loading skeleton.
    */
   skeleton?: boolean;
+  /**
+   * Disable all items in the list.
+   */
+  disabled?: boolean;
+  /**
+   * Disable selection for all items in the list.
+   */
+  readonly?: boolean;
 };
 
 export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = NeoListState<Selected> & NeoListMethods;
 
-export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul', Selected = NeoListSelectedItem | NeoListSelectedItem[]> = {
+export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul', Selected = NeoListSelectedItem | NeoListSelectedItem[]> = {
   // Snippets
   /**
    * Optional snippet to display in place of each list item.
    */
-  item?: Snippet<[NeoListItem | NeoListSection, number, NeoListContext]>;
+  item?: NeoListItemRender<Value>;
+  /**
+   * Optional snippet to display in place of each list section.
+   */
+  section?: NeoListSectionRender<Value>;
   /**
    * Optional snippet to display when the list is empty.
    */
@@ -204,7 +226,7 @@ export type NeoListProps<Tag extends keyof HTMLElementTagNameMap = 'ul', Selecte
   /**
    * Whether to display a shadow when scrolling content.
    *
-   * @default false
+   * @default true
    */
   shadow?: boolean;
   /**

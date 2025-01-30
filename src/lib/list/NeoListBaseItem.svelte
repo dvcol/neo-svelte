@@ -1,14 +1,16 @@
 <script lang="ts">
-  import NeoSkeletonText from '../skeletons/NeoSkeletonText.svelte';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { NeoListBaseItemModel } from '~/list/neo-list-base-item.model.js';
+  import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.props.js';
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
 
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
+  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
 
-  const {
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
     // Context
     item,
     index,
@@ -17,30 +19,48 @@
     // List State
     select,
     checked,
-    touched,
+    touched = $bindable(false),
     disabled,
+    readonly,
     skeleton,
 
     // Actions
-    toggleItem,
-  }: NeoListBaseItemModel = $props();
+    onclick,
+
+    // Other props
+    skeletonProps,
+    ...rest
+  }: NeoListBaseItemProps = $props();
+  /* eslint-enable prefer-const */
+
+  $effect(() => {
+    if (touched || !checked) return;
+    touched = true;
+  });
+
+  const labelId = $derived(select ? `neo-list-item-label-${getUUID()}` : undefined);
 </script>
 
 {#snippet listItem({ label, value }: NeoListItem)}
-  <NeoSkeletonText class="neo-list-item-skeleton" loading={skeleton} lines={1} align="center">
-    <div class="neo-list-item-content" class:neo-disabled={disabled}>{label ?? value}</div>
+  <NeoSkeletonText loading={skeleton} lines={1} align="center" {...skeletonProps} class={['neo-list-item-skeleton', skeletonProps?.class]}>
+    <div id={labelId} class:neo-list-item-content={true} class:neo-disabled={disabled} {...rest}>{label ?? value}</div>
   </NeoSkeletonText>
 {/snippet}
 
 {#if item?.render}
-  {@render item?.render(item, index, context)}
+  {@render item?.render({ item, index, context })}
 {:else if item?.href || item?.onclick || select}
   <NeoButton
+    aria-selected={checked}
+    aria-labelledby={labelId}
     ghost
     shallow
+    {readonly}
     href={item?.href}
     onclick={e => {
-      toggleItem(index);
+      if (readonly || disabled) return;
+      touched = true;
+      onclick?.(e);
       item?.onclick?.(e);
     }}
     {disabled}
@@ -71,7 +91,6 @@
 
       &.neo-disabled {
         color: var(--neo-text-color-disabled);
-        cursor: not-allowed;
       }
     }
 

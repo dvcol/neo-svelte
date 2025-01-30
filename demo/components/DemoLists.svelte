@@ -16,8 +16,10 @@
   const options = $state<NeoListProps>({
     loading: false,
     skeleton: false,
-    shadow: false,
+    shadow: true,
     scrollToLoader: false,
+    disabled: false,
+    readonly: false,
   });
 
   const custom: NeoListItem = { label: 'Custom Render Item', value: -1, render, id: getUUID() };
@@ -34,6 +36,7 @@
         buttonProps: { target: '_blank' },
         title: 'This is a link to google',
         color: Colors.Primary,
+        divider: true,
       },
       {
         label: 'Line item with onclick',
@@ -46,6 +49,7 @@
         value: 'This is a disabled item',
         onclick: () => console.info('disabled clicked'),
         disabled: true,
+        divider: true,
       },
       { label: 'Line item error', value: 2, color: Colors.Error },
       { label: 'Line item warning', value: 3, color: Colors.Warning },
@@ -55,19 +59,21 @@
     ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
   );
 
-  const sectionA: NeoListSection = {
+  const sectionA: NeoListSection = $state({
     id: getUUID(),
     title: 'Section A',
+    divider: true,
     items: [
       { label: 'Section A item 1', value: 'section A - 1', color: Colors.Primary },
       { label: 'Section A item 2', value: 'section A - 2', color: Colors.Primary },
       { label: 'Section A item 4', value: 'section A - 3', color: Colors.Primary },
     ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
-  };
+  });
 
   const sectionB: NeoListSection = {
     id: getUUID(),
     title: 'Section B',
+    divider: true,
     items: [
       { label: 'Section B item 1', value: 'section B - 1', color: Colors.Secondary },
       { label: 'Section B item 2', value: 'section B - 2', color: Colors.Secondary },
@@ -75,17 +81,43 @@
     ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
   };
 
+  const customSection: NeoListSection = {
+    id: getUUID(),
+    title: 'Item render section',
+    divider: true,
+    render: renderSection,
+    items: [
+      { label: 'Custom Section item 1', value: 'custom section - 1', color: Colors.Primary },
+      { label: 'Custom Section item 2', value: 'custom section - 2', color: Colors.Primary },
+      { label: 'Custom Section item 4', value: 'custom section - 3', color: Colors.Primary },
+    ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
+  };
+
+  const selected = [{ item: list[4] }, { item: list[6] }];
+
   let isEmpty = $state(false);
   const items = $derived(isEmpty ? [] : list.filter(item => item.id !== custom.id));
 
   const withCustom = $derived(isEmpty ? [] : list);
 
-  const withSection = $derived(isEmpty ? [] : [sectionA, ...items, sectionB]);
+  const sectionList = $state([...list.slice(0, 4), sectionA, sectionB]);
+  const withSection = $derived(isEmpty ? [] : sectionList);
 
-  const onAdd = () => list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
+  const customSectionList = $state([...list.slice(0, 4), sectionA, customSection, sectionB]);
+  const withCustomSection = $derived(isEmpty ? [] : customSectionList);
+
+  const onAdd = () => {
+    list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
+    sectionList.push({ label: `Section item ${sectionList.length + 1}`, value: sectionList.length + 1, id: getUUID() });
+    customSectionList.push({ label: `Custom Section item ${customSectionList.length + 1}`, value: customSectionList.length + 1, id: getUUID() });
+  };
 
   // remove a random element form the list
-  const onRemove = () => list.splice(Math.floor(Math.random() * list.length), 1);
+  const onRemove = () => {
+    if (list.length) list.splice(Math.floor(Math.random() * list.length), 1);
+    if (sectionList.length) sectionList.splice(Math.floor(Math.random() * sectionList.length), 1);
+    if (customSectionList.length) customSectionList.splice(Math.floor(Math.random() * customSectionList.length), 1);
+  };
 </script>
 
 <div class="row">
@@ -95,15 +127,17 @@
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.scrollToLoader}>Scroll to loader</NeoButton>
     <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
+    <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
     <NeoButton onclick={onAdd}>Add</NeoButton>
     <NeoButton onclick={onRemove}>Remove</NeoButton>
   </NeoButtonGroup>
 </div>
 
-{#snippet render(item, __, { skeleton })}
+{#snippet render({ context: { skeleton } })}
   <NeoSkeletonText class="custom-item-skeleton" loading={skeleton} lines={4} align="center">
     <div class="custom-item-card">
-      <div>{item.value}</div>
+      <div>Custom Render Item</div>
       <div>- John Doe</div>
       <div>- john.doe@email.com</div>
       <div>- 123-456-7890</div>
@@ -111,7 +145,15 @@
   </NeoSkeletonText>
 {/snippet}
 
-{#snippet item({ label, value }, index, { skeleton })}
+{#snippet renderSection(_children, _context)}
+  <h2>Custom Section</h2>
+  <h4>{_context?.section?.title}</h4>
+  <ul>
+    {@render _children(_context)}
+  </ul>
+{/snippet}
+
+{#snippet item({ item: { label, value }, index, context: { skeleton } })}
   <NeoSkeletonText class="custom-item-skeleton" loading={skeleton} lines={3} align="center">
     <div class="custom-item-card">
       <div>{label}</div>
@@ -122,6 +164,7 @@
 {/snippet}
 
 <div class="row">
+  <!--  card-->
   <div class="column content">
     <span class="label">Card List</span>
     <NeoCard rounded elevation="0" scrollbar={false} hover="-2" height="20rem" width="min(80vw, 18rem)" spacing="0.75rem">
@@ -129,11 +172,13 @@
     </NeoCard>
   </div>
 
+  <!--  multi line loader-->
   <div class="column content">
     <span class="label">Multi-line loader</span>
     <NeoList {items} {...options} loading={options.loading ? 10 : false} />
   </div>
 
+  <!--  custom loader-->
   <div class="column content">
     <span class="label">Custom loader</span>
     <NeoList {items} {...options}>
@@ -158,7 +203,6 @@
   </div>
 
   <!--  custom render -->
-
   <div class="column content">
     <span class="label">Custom Render</span>
     <NeoList items={withCustom} {...options} />
@@ -167,15 +211,15 @@
   <!--  custom item-->
   <div class="column content">
     <span class="label">Custom item</span>
-    <NeoList {items} {item} {...options} />
+    <NeoList items={withCustom} {item} {...options} />
   </div>
 
-  {#snippet values({ selected })}
+  {#snippet values(ctx)}
     <div class="list-values">
-      {#if Array.isArray(selected)}
-        Values: {selected?.map(i => i.value).join(', ') || 'no values'}
+      {#if Array.isArray(ctx.selected)}
+        Values: {ctx.selected?.map(i => i.item?.value).join(', ') || 'no values'}
       {:else}
-        Value: {selected?.value || 'no value'}
+        Value: {ctx.selected?.item?.value || 'no value'}
       {/if}
     </div>
   {/snippet}
@@ -183,21 +227,34 @@
   <!--  select items -->
   <div class="column content">
     <span class="label">Select item</span>
-    <NeoList select {items} {...options} onselect={e => console.info('onSelect - single', e)} after={values} />
+    <NeoList select selected={selected[0]} {items} {...options} onselect={e => console.info('onSelect - single', e)} after={values} />
   </div>
 
   <!--  multi select items -->
 
   <div class="column content">
     <span class="label">Select multiple</span>
-    <NeoList select multiple {items} {...options} onselect={e => console.info('onSelect - multiple', e)} after={values} />
+    <NeoList select multiple selected={[...selected]} {items} {...options} onselect={e => console.info('onSelect - multiple', e)} after={values} />
   </div>
 
-  <!--  section (i.e. sublists) -->
+  <!--  section (i.e. sub-lists) -->
 
   <div class="column content">
     <span class="label">Select section</span>
     <NeoList select multiple items={withSection} {...options} onselect={e => console.info('onSelect - sections', e)} after={values} />
+  </div>
+
+  <!--  custom section -->
+  <div class="column content">
+    <span class="label">Custom section</span>
+    <NeoList items={withCustomSection} {...options} {item}>
+      {#snippet section(_children, _context)}
+        <h2>{_context?.section?.title}</h2>
+        <ul>
+          {@render _children(_context)}
+        </ul>
+      {/snippet}
+    </NeoList>
   </div>
 
   <!-- custom item with select, before, after & description  & loader  -->
@@ -248,11 +305,10 @@
   }
 
   .column {
-    @include flex.column($gap: var(--neo-gap-lg), $flex: 0 1 auto);
+    @include flex.column($gap: var(--neo-gap-lg), $flex: 0 1 20%);
 
     &.content {
       width: min(80vw, 18rem);
-      min-width: fit-content;
       height: min(80vh, 24rem);
 
       :global(.neo-list) {

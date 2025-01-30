@@ -5,15 +5,16 @@
   import { flip } from 'svelte/animate';
   import { fade, scale } from 'svelte/transition';
 
+  import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconList from '~/icons/IconList.svelte';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
+  import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
   import {
     isSection,
     type NeoListContext,
-    type NeoListItem,
     type NeoListMethods,
     type NeoListProps,
-    type NeoListSection,
+    type NeoListRenderContext,
     type NeoListSelectedItem,
     type NeoListSelectEvent,
   } from '~/list/neo-list.model.js';
@@ -28,6 +29,7 @@
     item: customItem,
     empty: customEmpty,
     loader: customLoader,
+    section: customSection,
     after,
     before,
     children,
@@ -43,10 +45,11 @@
     select = false,
     multiple = false,
     selected = $bindable(),
-    touched = $bindable([]),
+    disabled,
+    readonly,
 
     // Styles
-    shadow,
+    shadow = true,
     scrollbar = true,
 
     // Animation
@@ -83,55 +86,77 @@
     scrollBottom();
   });
 
-  const findItem = (index: NeoListSelectedItem['index']): NeoListSelectedItem => {
-    const item: NeoListItem | NeoListSection = items[index];
-    if (isSection(item)) throw new Error('Section cannot be selected.'); // TODO custom error
-    if (!item) throw new Error('Item not found.'); // TODO custom error
-    return { index, item, id: item.id, value: item?.value };
-  };
-
   const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
     multiple && (Array.isArray(list) || list === undefined);
 
-  const selectItem: NeoListMethods['selectItem'] = (
-    index: NeoListSelectedItem['index'],
-    ...indexes: NeoListSelectedItem['index'][]
-  ): NeoListSelectEvent => {
-    if (!select) throw new Error('Selection is disabled.'); // TODO custom error
+  const isSameIndex = (left: NeoListSelectedItem, right: NeoListSelectedItem) =>
+    left?.index === right?.index && left?.sectionIndex === right?.sectionIndex;
 
-    const previous = shallowClone(selected, 2);
-    if (isMultiple(selected)) {
-      selected = [...(selected ?? []), findItem(index), ...indexes.map(findItem)];
-    } else {
-      if (indexes.length) console.warn('Multiple selection is disabled. Only the first selection will be considered.');
-      selected = findItem(index);
-    }
-    return { previous, current: shallowClone(selected, 2) };
+  const cloneSelection = (selection = selected): undefined | NeoListSelectedItem | NeoListSelectedItem[] => {
+    if (!selection || (Array.isArray(selection) && !selection.length)) return multiple ? [] : undefined;
+    return shallowClone(selection, Array.isArray(selection) ? 3 : 2);
   };
 
-  const clearItem: NeoListMethods['clearItem'] = (...indexes: NeoListSelectedItem['index'][]): NeoListSelectEvent => {
+  const selectItem: NeoListMethods['selectItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
+    if (disabled || readonly || !selection?.length) return;
     if (!select) throw new Error('Selection is disabled.'); // TODO custom error
 
-    const previous = shallowClone(selected, 2);
+    const previous = cloneSelection();
     if (isMultiple(selected)) {
-      if (!indexes?.length) selected = undefined;
-      else selected = selected?.filter(item => !indexes.includes(item.index)) ?? [];
+      selected = [...(selected ?? []), ...selection];
+    } else {
+      if (selection.length > 1) console.warn('Multiple selection is disabled. Only the first selection will be considered.');
+      [selected] = selection;
+    }
+    return { previous, current: cloneSelection() };
+  };
+
+  const clearItem: NeoListMethods['clearItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
+    if (disabled || readonly) return;
+    if (!select) throw new Error('Selection is disabled.'); // TODO custom error
+
+    const previous = cloneSelection();
+    if (isMultiple(selected)) {
+      if (!selection?.length) selected = [];
+      else selected = selected?.filter(item => !selection.some(s => isSameIndex(s, item))) ?? [];
     } else {
       selected = undefined;
     }
 
-    return { previous, current: shallowClone(selected, 2) };
+    return { previous, current: cloneSelection() };
   };
 
-  const toggleItem = (index: NeoListSelectedItem['index']) => {
-    touched.push(index);
-    const clear = isMultiple(selected) ? selected?.some(item => item.index === index) : selected?.index === index;
-    const event = clear ? clearItem(index) : selectItem(index);
-    onselect?.(event);
+  const toggleItem = (item: NeoListSelectedItem, clear = false) => {
+    if (disabled || readonly) return;
+    const event = clear ? clearItem(item) : selectItem(item);
+    if (event) onselect?.(event);
   };
 
-  const isChecked = (index: NeoListSelectedItem['index']) => {
-    return isMultiple(selected) ? selected?.some(item => item.index === index) : selected?.index === index;
+  const isChecked = (item: NeoListSelectedItem) => {
+    if (isMultiple(selected)) return selected?.some(i => isSameIndex(i, item));
+    return isSameIndex(selected, item);
+  };
+
+  const findInList = (selection: NeoListSelectedItem, array: NeoListProps['items']): NeoListSelectedItem | undefined => {
+    const result: Partial<NeoListSelectedItem> = {};
+    const search = array?.some((item, index) => {
+      if (isSection(item)) {
+        // if section differs, skip
+        if (selection?.section?.id !== item.id) return false;
+        const sectionIndex = item?.items?.findIndex(sub => sub.id === selection?.item?.id);
+        if (sectionIndex < 0) return false;
+        result.index = sectionIndex;
+        result.item = item.items[sectionIndex];
+        result.section = item;
+        result.sectionIndex = index;
+        return true;
+      }
+      if (item.id !== selection?.item?.id) return false;
+      result.index = index;
+      result.item = item;
+      return true;
+    });
+    return search ? (result as NeoListSelectedItem) : undefined;
   };
 
   // Clear selected item(s) when items list changes and attempts to re-select if the item still exists
@@ -139,19 +164,15 @@
     () => items,
     () => {
       if (!select || !selected) return;
-      const previous = shallowClone(selected, 2);
+      const previous = cloneSelection();
       clearItem();
-      let event: NeoListSelectEvent | undefined;
+      if (multiple && !Array.isArray(previous)) return;
       if (isMultiple(previous)) {
-        const [first, ...indexes]: number[] = previous.map(item => items?.findIndex(i => i?.id === item.id)).filter(index => index > -1);
-        if (first) event = selectItem(first, ...indexes);
+        selected = previous?.map(item => findInList(item, items)).filter<NeoListSelectedItem>(item => !!item) ?? [];
       } else {
-        const index = items?.findIndex(i => i?.id === previous.id);
-        if (index !== -1) event = selectItem(index);
+        selected = findInList(previous, items);
       }
-      touched = [];
-      if (!event) return;
-      onselect?.(event);
+      onselect?.({ previous, current: cloneSelection() });
     },
   );
 
@@ -159,12 +180,14 @@
     // States
     items,
 
-    loading,
-    skeleton,
-
     select,
     multiple,
     selected,
+
+    loading,
+    skeleton,
+    disabled,
+    readonly,
 
     // Methods
     scrollTop,
@@ -200,35 +223,45 @@
   {/if}
 {/snippet}
 
-{#snippet list(_items: (NeoListItem | NeoListSection)[])}
+{#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
   <!-- Items -->
-  {#each _items as _item, _index (_item.id ?? _index)}
+  {#each array as item, index (item.id ?? index)}
     <svelte:element
-      this={_item.tag ?? 'li'}
+      this={item.tag ?? 'li'}
       role={select ? 'option' : 'listitem'}
       class:neo-list-item={true}
       class:neo-skeleton={skeleton}
       class:neo-list-item-select={select}
-      style:--neo-list-item-color={getColorVariable(_item.color)}
+      style:--neo-list-item-color={getColorVariable(item.color)}
       animate:animateFn={animateProps}
       transition:transitionFn={transitionProps}
-      {..._item.containerProps}
+      {...item.containerProps}
     >
-      {#if isSection(_item)}
-        <!-- TODO - section-->
-      {:else if customItem && !_item.render}
-        {@render customItem(_item, _index, context)}
+      {#if item.divider}
+        <NeoDivider {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
+      {/if}
+      {#if isSection(item)}
+        {@const sectionContext = { items: item.items, section: item, index, context }}
+        {#if customSection && !item.render}
+          {@render customSection(list, sectionContext)}
+        {:else}
+          <NeoListBaseSection section={item} {index} {context} {skeleton} {list} />
+        {/if}
+      {:else if customItem && !item.render}
+        {@render customItem({ item, index, context })}
       {:else}
+        {@const selection = { index, item, sectionIndex, section }}
+        {@const checked = isChecked(selection)}
         <NeoListBaseItem
-          item={_item}
-          index={_index}
+          {item}
+          {index}
           {context}
           {skeleton}
           {select}
-          checked={isChecked(_index)}
-          touched={touched?.includes(_index)}
-          disabled={_item.disabled}
-          {toggleItem}
+          {checked}
+          disabled={item.disabled || disabled}
+          readonly={item.readonly || readonly}
+          onclick={() => toggleItem(selection, checked)}
         />
       {/if}
     </svelte:element>
@@ -249,7 +282,7 @@
       {...rest}
     >
       {@render children?.(context)}
-      {@render list(items)}
+      {@render list({ items, context })}
       {@render loader()}
     </svelte:element>
   {:else}
@@ -319,17 +352,20 @@
       &.neo-scroll {
         @include mixin.scrollbar($button-height: 0.375rem);
 
+        padding-block: 0.25rem;
+
         &.neo-shadow {
           @include mixin.fade-scroll(1rem);
-
-          padding-block: 0.25rem;
         }
       }
     }
 
     &-loader,
     &-item {
+      display: flex;
+      flex-direction: column;
       width: 100%;
+      max-width: 100%;
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
     }
@@ -351,6 +387,18 @@
         :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
           gap: 0.5rem;
           padding: 0.125rem;
+        }
+      }
+
+      :global(.neo-list-item-divider) {
+        margin-block: 0.5rem;
+      }
+
+      &:hover,
+      &:focus,
+      &:focus-within {
+        :global(.neo-list-item-section-title) {
+          color: var(--neo-text-color-highlight);
         }
       }
     }
