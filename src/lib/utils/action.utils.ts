@@ -1,6 +1,7 @@
+import { type AnimationConfig, flip, type FlipParams } from 'svelte/animate';
+
 import type { TransitionFunction, TransitionProps } from '@dvcol/svelte-utils/transition';
 import type { Action } from 'svelte/action';
-import type { AnimationConfig } from 'svelte/animate';
 
 export const emptyTransition: TransitionFunction = () => () => ({});
 export const emptyUse: Action<HTMLElement, any> = () => ({});
@@ -15,6 +16,10 @@ export type TransitionWithProps<T extends TransitionProps = TransitionProps> = {
    */
   props?: T;
 };
+
+export type FlipToggleParams = FlipParams & { enabled?: boolean };
+export const flipToggle: AnimationFunction<FlipToggleParams> = (node, directions, params) =>
+  params?.enabled === false ? {} : flip(node, directions, params);
 
 export const emptyAnimation: AnimationFunction = () => ({});
 export type AnimationFunction<T extends TransitionProps | undefined = TransitionProps | undefined> = (

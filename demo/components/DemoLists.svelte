@@ -59,7 +59,7 @@
     ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
   );
 
-  const sectionA: NeoListSection = $state({
+  const sectionA: NeoListSection = {
     id: getUUID(),
     title: 'Section A',
     divider: true,
@@ -68,7 +68,7 @@
       { label: 'Section A item 2', value: 'section A - 2', color: Colors.Primary },
       { label: 'Section A item 4', value: 'section A - 3', color: Colors.Primary },
     ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
-  });
+  };
 
   const sectionB: NeoListSection = {
     id: getUUID(),

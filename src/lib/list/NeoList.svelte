@@ -2,7 +2,6 @@
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
   import { scaleFreeze, watch } from '@dvcol/svelte-utils';
-  import { flip } from 'svelte/animate';
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -19,7 +18,15 @@
     type NeoListSelectEvent,
   } from '~/list/neo-list.model.js';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
-  import { emptyAnimation, emptyTransition, toAnimation, toAnimationProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import {
+    emptyAnimation,
+    emptyTransition,
+    flipToggle,
+    toAnimation,
+    toAnimationProps,
+    toTransition,
+    toTransitionProps,
+  } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { defaultTransitionDuration, enterTransitionProps, flipTransitionProps, scaleTransitionProps } from '~/utils/transition.utils.js';
 
@@ -203,8 +210,7 @@
       scrollBottom,
     });
   });
-
-  const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate, flip));
+  const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate, flipToggle));
   const animateProps = $derived(toAnimationProps(animate, flipTransitionProps));
   const transitionFn = $derived(missing ? emptyTransition : toTransition(transition, scale));
   const transitionProps = $derived(toTransitionProps(transition, scaleTransitionProps));
@@ -233,7 +239,7 @@
       class:neo-skeleton={skeleton}
       class:neo-list-item-select={select}
       style:--neo-list-item-color={getColorVariable(item.color)}
-      animate:animateFn={animateProps}
+      animate:animateFn={{ ...animateProps, enabled: !section }}
       transition:transitionFn={transitionProps}
       {...item.containerProps}
     >
@@ -362,8 +368,6 @@
 
     &-loader,
     &-item {
-      display: flex;
-      flex-direction: column;
       width: 100%;
       max-width: 100%;
       color: var(--neo-list-item-color, inherit);
