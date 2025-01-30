@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { height, width } from '@dvcol/svelte-utils/transition';
+  import { emptyTransition, height, width } from '@dvcol/svelte-utils/transition';
 
   import { tick, untrack } from 'svelte';
 
@@ -9,7 +9,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
-  import { emptyTransition, toAction, toActionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { defaultTransitionDuration, enterFreezeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */

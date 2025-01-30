@@ -1,32 +1,28 @@
-import { type AnimationConfig, flip, type FlipParams } from 'svelte/animate';
+import {
+  type AnimationFunction,
+  emptyAnimation,
+  emptyTransition,
+  type TransitionFunction,
+  type TransitionProps,
+} from '@dvcol/svelte-utils/transition';
 
-import type { TransitionFunction, TransitionProps } from '@dvcol/svelte-utils/transition';
 import type { Action } from 'svelte/action';
 
-export const emptyTransition: TransitionFunction = () => () => ({});
 export const emptyUse: Action<HTMLElement, any> = () => ({});
 
-export type TransitionWithProps<T extends TransitionProps = TransitionProps> = {
+export type TransitionWithProps<
+  T extends TransitionProps = TransitionProps,
+  F extends TransitionFunction<T> | AnimationFunction<T> = TransitionFunction<T>,
+> = {
   /**
    * Transition function.
    */
-  use: TransitionFunction<T>;
+  use: F;
   /**
    * Optional transition props.
    */
   props?: T;
 };
-
-export type FlipToggleParams = FlipParams & { enabled?: boolean };
-export const flipToggle: AnimationFunction<FlipToggleParams> = (node, directions, params) =>
-  params?.enabled === false ? {} : flip(node, directions, params);
-
-export const emptyAnimation: AnimationFunction = () => ({});
-export type AnimationFunction<T extends TransitionProps | undefined = TransitionProps | undefined> = (
-  node: Element,
-  directions: { from: DOMRect; to: DOMRect },
-  params?: T,
-) => AnimationConfig;
 
 export type AnimationWithProps<T extends TransitionProps = TransitionProps> = {
   /**
@@ -39,38 +35,30 @@ export type AnimationWithProps<T extends TransitionProps = TransitionProps> = {
   props?: T;
 };
 
-export const isAnimationWithProps = <T extends TransitionProps>(
-  transition: AnimationFunction<T> | AnimationWithProps<T>,
-): transition is AnimationWithProps<T> => 'use' in transition && transition.use !== undefined;
-export const toAnimation = <T extends TransitionProps>(
-  transition?: AnimationFunction<T> | AnimationWithProps<T>,
-  fallback: AnimationFunction<T> = emptyAnimation,
-): AnimationFunction<T> => {
-  if (!transition) return fallback;
-  if (isAnimationWithProps(transition)) return transition.use;
-  return transition;
-};
-export const toAnimationProps = <T extends TransitionProps>(
-  transition?: AnimationFunction<T> | AnimationWithProps<T>,
-  fallback?: T,
-): T | undefined => {
-  if (!transition) return fallback;
-  if (isAnimationWithProps(transition)) return transition.props;
-};
+export const isTransitionWithProps = <T extends TransitionProps, F extends TransitionFunction<T> | AnimationFunction<T> = TransitionFunction<T>>(
+  transition: F | TransitionWithProps<T, F>,
+): transition is TransitionWithProps<T, F> => 'use' in transition && transition.use !== undefined;
 
-export const isTransitionWithProps = <T extends TransitionProps>(
-  transition: TransitionFunction<T> | TransitionWithProps<T>,
-): transition is TransitionWithProps<T> => 'use' in transition && transition.use !== undefined;
-export const toTransition = <T extends TransitionProps>(
-  transition?: TransitionFunction<T> | TransitionWithProps<T>,
-  fallback: TransitionFunction<T> = emptyTransition,
-): TransitionFunction<T> => {
-  if (!transition) return fallback;
+const toFunction = <T extends TransitionProps, F extends TransitionFunction<T> | AnimationFunction<T> = TransitionFunction<T>>(
+  transition?: F | TransitionWithProps<T, F>,
+): F | undefined => {
+  if (!transition) return;
   if (isTransitionWithProps(transition)) return transition.use;
   return transition;
 };
-export const toTransitionProps = <T extends TransitionProps>(
+
+export const toAnimation = <T extends TransitionProps>(
+  transition?: AnimationFunction<T> | AnimationWithProps<T>,
+  fallback: AnimationFunction<T> = emptyAnimation,
+): AnimationFunction<T> => toFunction(transition) ?? fallback;
+
+export const toTransition = <T extends TransitionProps>(
   transition?: TransitionFunction<T> | TransitionWithProps<T>,
+  fallback: TransitionFunction<T> = emptyTransition,
+): TransitionFunction<T> => toFunction(transition) ?? fallback;
+
+export const toTransitionProps = <T extends TransitionProps, F extends TransitionFunction<T> | AnimationFunction<T> = TransitionFunction<T>>(
+  transition?: F | TransitionWithProps<T, F>,
   fallback?: T,
 ): T | undefined => {
   if (!transition) return fallback;

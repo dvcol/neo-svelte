@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { emptyTransition } from '@dvcol/svelte-utils/transition';
   import { untrack } from 'svelte';
   import { fly } from 'svelte/transition';
 
@@ -6,7 +7,6 @@
 
   import { getTabsCardContext } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
-  import { emptyTransition } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {

@@ -1,7 +1,8 @@
 <script lang="ts">
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
-  import { scaleFreeze, watch } from '@dvcol/svelte-utils';
+  import { flipToggle, scaleFreeze, watch } from '@dvcol/svelte-utils';
+  import { emptyAnimation, emptyTransition } from '@dvcol/svelte-utils/transition';
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -18,15 +19,7 @@
     type NeoListSelectEvent,
   } from '~/list/neo-list.model.js';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
-  import {
-    emptyAnimation,
-    emptyTransition,
-    flipToggle,
-    toAnimation,
-    toAnimationProps,
-    toTransition,
-    toTransitionProps,
-  } from '~/utils/action.utils.js';
+  import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { defaultTransitionDuration, enterTransitionProps, flipTransitionProps, scaleTransitionProps } from '~/utils/transition.utils.js';
 
@@ -211,7 +204,7 @@
     });
   });
   const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate, flipToggle));
-  const animateProps = $derived(toAnimationProps(animate, flipTransitionProps));
+  const animateProps = $derived(toTransitionProps(animate, flipTransitionProps));
   const transitionFn = $derived(missing ? emptyTransition : toTransition(transition, scale));
   const transitionProps = $derived(toTransitionProps(transition, scaleTransitionProps));
 </script>
