@@ -5,7 +5,6 @@
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
 
@@ -49,12 +48,10 @@
     {...skeletonProps}
     class={['neo-list-item-skeleton', skeletonProps?.class]}
   >
-    <div id={labelId} class:neo-list-item-content={true} class:neo-disabled={disabled} {...rest}>
+    <div class:neo-list-item-content={true} class:neo-disabled={disabled} {...rest}>
+      <span id={labelId} class="neo-list-item-label">{label ?? value}</span>
       {#if description}
-        <span class="neo-list-item-label">{label ?? value}</span>
         <span class="neo-list-item-description">{description}</span>
-      {:else}
-        {label ?? value}
       {/if}
     </div>
   </NeoSkeletonText>

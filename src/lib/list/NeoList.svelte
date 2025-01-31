@@ -8,6 +8,7 @@
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconList from '~/icons/IconList.svelte';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
+  import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
   import {
     isSection,
@@ -62,6 +63,7 @@
     // Other props
     containerTag = 'div',
     containerProps,
+    loaderProps,
     ...rest
   }: NeoListProps = $props();
   /* eslint-enable prefer-const */
@@ -211,15 +213,13 @@
 
 {#snippet loader()}
   <!-- Loading indicator -->
-  {#if loading}
-    <li class="neo-list-loader" class:neo-list-item-select={select} transition:transitionFn={transitionProps}>
-      {#if customLoader}
-        {@render customLoader(context)}
-      {:else}
-        <NeoSkeletonText class="neo-list-loader-skeleton" lines={typeof loading === 'boolean' ? 2 : loading} />
-      {/if}
-    </li>
-  {/if}
+  <li class="neo-list-loader" class:neo-list-item-select={select}>
+    {#if loading && customLoader}
+      {@render customLoader(context)}
+    {:else}
+      <NeoListBaseLoader {loading} {select} {transition} {...loaderProps} />
+    {/if}
+  </li>
 {/snippet}
 
 {#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
@@ -326,10 +326,6 @@
       padding-inline: 0.5rem;
     }
 
-    :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
-      gap: 0.125rem;
-    }
-
     :global(.neo-list-empty-skeleton-container) {
       width: 100%;
       margin: auto;
@@ -381,11 +377,6 @@
 
         :global(.neo-list-loader-skeleton) {
           margin-top: 0.125rem;
-        }
-
-        :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
-          gap: 0.5rem;
-          padding: 0.125rem;
         }
       }
 

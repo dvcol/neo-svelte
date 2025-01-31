@@ -110,7 +110,7 @@
     "svelte": ">=5"
   },
   "dependencies": {
-    "@dvcol/common-utils": "^1.21.3",
+    "@dvcol/common-utils": "^1.22.0",
     "@dvcol/svelte-utils": "^1.7.0",
     "@skeletonlabs/floating-ui-svelte": "^0.3.9",
     "svelte": "^5.19.3"

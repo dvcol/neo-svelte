@@ -40,6 +40,10 @@ export type NeoSkeletonTextProps = {
    */
   justify?: boolean;
   /**
+   * Overrides the default flex value.
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
    * Alignment strategy for the skeleton.
    */
   align?: CSSStyleDeclaration['alignSelf'];

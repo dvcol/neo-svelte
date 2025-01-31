@@ -183,7 +183,7 @@
   <!--  multi line loader-->
   <div class="column content">
     <span class="label">Multi-line loader</span>
-    <NeoList {items} {...options} loading={options.loading ? 10 : false} />
+    <NeoList {items} {...options} loaderProps={{ lines: 10, items: 1 }} />
   </div>
 
   <!--  custom loader-->
@@ -225,9 +225,9 @@
   {#snippet values(ctx)}
     <div class="list-values">
       {#if Array.isArray(ctx.selected)}
-        Values: {ctx.selected?.map(i => i.item?.value).join(', ') || 'no values'}
+        Indexes: {ctx.selected?.map(i => [i.sectionIndex, i?.index].filter(j => j !== undefined).join('-')).join(', ') || 'none selected'}
       {:else}
-        Value: {ctx.selected?.item?.value || 'no value'}
+        Indexes: {ctx.selected?.index || 'none selected'}
       {/if}
     </div>
   {/snippet}
@@ -268,7 +268,7 @@
   <!-- custom item with select, before, after & description  & loader  -->
   <div class="column content">
     <span class="label">Select multiple</span>
-    <NeoList select multiple items={withComplexList} {...options} after={values} />
+    <NeoList select multiple items={withComplexList} {...options} after={values} loaderProps={{ lines: 2 }} />
   </div>
 
   <!--  tooltip item (nested menu drawer, portal ?) -->

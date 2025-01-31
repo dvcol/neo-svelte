@@ -20,6 +20,7 @@
     width,
     height,
     glass,
+    flex,
 
     // State
     ref = $bindable(),
@@ -62,6 +63,7 @@
     class:neo-glass={glass}
     style:width
     style:height
+    style:flex
     style:align-self={align}
     in:inFn={inProps}
     out:outFn={outProps}

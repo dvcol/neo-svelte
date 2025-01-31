@@ -13,7 +13,7 @@ export type HTMLFlexProps = {
   /**
    * Overrides the default flex value.
    */
-  flex?: string;
+  flex?: CSSStyleDeclaration['flex'];
   /**
    * Overrides the default align-items value.
    */

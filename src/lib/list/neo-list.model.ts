@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
+import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
 import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
@@ -166,7 +167,7 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
   /**
    * If the list is currently loading additional items.
    */
-  loading?: boolean | number;
+  loading?: boolean;
   /**
    * If the list should display a loading skeleton.
    */
@@ -264,6 +265,10 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * The props to pass to the list container.
    */
   containerProps?: HTMLNeoBaseElement;
+  /**
+   * The props to pass to the loader.
+   */
+  loaderProps?: NeoListBaseLoaderProps;
 } & HTMLRefProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   NeoListState<Selected>;
