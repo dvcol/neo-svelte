@@ -115,10 +115,6 @@
       animation-delay: 0.5s;
     }
 
-    &:first-child {
-      width: 60%;
-    }
-
     &:nth-child(2n) {
       width: 95%;
     }
@@ -132,16 +128,20 @@
       width: 70%;
     }
 
-    &:nth-last-child(2) {
-      width: 70%;
-    }
-
     &:last-child {
-      width: 50%;
+      width: 60%;
     }
 
     &:only-child {
       width: 100%;
+    }
+
+    &:nth-last-child(2):not(:only-child, :first-child) {
+      width: 70%;
+    }
+
+    &:first-child:not(:only-child, :nth-last-child(2)) {
+      width: 75%;
     }
 
     &.neo-alt {

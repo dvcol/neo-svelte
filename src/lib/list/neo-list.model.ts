@@ -53,6 +53,10 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    */
   label?: string;
   /**
+   * Optional description to display in the list item.
+   */
+  description?: string;
+  /**
    * If true, the list item will be disabled.
    */
   disabled?: boolean;

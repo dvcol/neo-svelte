@@ -361,6 +361,8 @@
 
     &-loader,
     &-item {
+      display: flex;
+      flex-direction: column;
       width: 100%;
       max-width: 100%;
       color: var(--neo-list-item-color, inherit);
@@ -389,6 +391,7 @@
 
       :global(.neo-list-item-divider) {
         margin-block: 0.5rem;
+        color: var(--neo-list-divider-color, var(--neo-text-color));
       }
 
       &:hover,

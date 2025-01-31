@@ -106,6 +106,14 @@
   const customSectionList = $state([...list.slice(0, 4), sectionA, customSection, sectionB]);
   const withCustomSection = $derived(isEmpty ? [] : customSectionList);
 
+  const complexList = $state([
+    { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
+    { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
+    { label: 'John Smith', value: 'Smith', description: 'john.smith@hotmal.com' },
+  ]);
+
+  const withComplexList = $derived(isEmpty ? [] : complexList);
+
   const onAdd = () => {
     list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
     sectionList.push({ label: `Section item ${sectionList.length + 1}`, value: sectionList.length + 1, id: getUUID() });
@@ -258,6 +266,10 @@
   </div>
 
   <!-- custom item with select, before, after & description  & loader  -->
+  <div class="column content">
+    <span class="label">Select multiple</span>
+    <NeoList select multiple items={withComplexList} {...options} after={values} />
+  </div>
 
   <!--  tooltip item (nested menu drawer, portal ?) -->
 
@@ -322,5 +334,11 @@
 
     min-width: 80vw;
     margin: 2rem 0;
+  }
+
+  @media (width < 1550px) {
+    .column {
+      flex: 0 1 30%;
+    }
   }
 </style>

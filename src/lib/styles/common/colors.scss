@@ -36,7 +36,7 @@
 
   // Text
   --neo-text-color: var(--neo-grey-dark);
-  --neo-text-color-secondary: color-mix(in srgb, var(--neo-text-color), white 20%);
+  --neo-text-color-secondary: color-mix(in srgb, currentcolor, white 20%);
   --neo-text-color-highlight: oklch(from currentcolor calc(l - 0.15) c h);
   --neo-text-color-active: color-mix(in srgb, currentcolor, white 10%);
   --neo-text-color-focused: oklch(from var(--neo-color-primary) calc(l - 0.15) c h);
@@ -109,7 +109,7 @@
 
   // Text
   --neo-dark-text-color: var(--neo-white-soft-dark);
-  --neo-dark-text-color-secondary: color-mix(in srgb, var(--neo-text-color), black 20%);
+  --neo-dark-text-color-secondary: color-mix(in srgb, currentcolor, black 20%);
   --neo-dark-text-color-highlight: oklch(from currentcolor calc(l + 0.15) c h);
   --neo-dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
   --neo-dark-text-color-focused: oklch(from var(--neo-dark-color-primary) calc(l - 0.1) c h);

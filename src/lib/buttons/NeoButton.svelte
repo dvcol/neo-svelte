@@ -159,7 +159,7 @@
   {disabled}
   {...rest}
 >
-  <span class="neo-content" class:neo-reverse={reverse}>
+  <div class="neo-content" class:neo-reverse={reverse}>
     {#if loading || icon}
       <span class="neo-icon" class:neo-only={empty} transition:width={enterTransitionProps}>
         {#if loading}
@@ -177,7 +177,7 @@
       {/if}
       {@render children?.()}
     {/if}
-  </span>
+  </div>
 </svelte:element>
 
 <style lang="scss">

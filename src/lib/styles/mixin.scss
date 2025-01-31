@@ -173,7 +173,8 @@
   $color: var(--neo-skeleton-color),
   $timing: 3s,
   $easing: var(--neo-transition-skeleton),
-  $delay: 1s
+  $delay: 1s,
+  $content: true
 ) {
   --neo-skeleton-start: #{$start};
   --neo-skeleton-end: calc(#{$start} + #{$step});
@@ -191,13 +192,15 @@
   animation: skeleton $timing $easing infinite;
   animation-delay: $delay;
 
-  &::before,
-  &::after,
-  :global(> *::before),
-  :global(> *::after),
-  :global(> *) {
-    visibility: hidden;
-    pointer-events: none;
+  @if $content {
+    &::before,
+    &::after,
+    :global(> *::before),
+    :global(> *::after),
+    :global(> *) {
+      visibility: hidden;
+      pointer-events: none;
+    }
   }
 
   @include animation.skeleton;
