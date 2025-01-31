@@ -27,7 +27,6 @@
     onclick,
 
     // Other props
-    skeletonProps,
     ...rest
   }: NeoListBaseItemProps = $props();
   /* eslint-enable prefer-const */
@@ -41,20 +40,28 @@
 </script>
 
 {#snippet listItem({ label, value, description }: NeoListItem)}
-  <NeoSkeletonText
-    loading={skeleton}
-    lines={description ? 2 : 1}
-    align="center"
-    {...skeletonProps}
-    class={['neo-list-item-skeleton', skeletonProps?.class]}
-  >
-    <div class:neo-list-item-content={true} class:neo-disabled={disabled} {...rest}>
-      <span id={labelId} class="neo-list-item-label">{label ?? value}</span>
-      {#if description}
-        <span class="neo-list-item-description">{description}</span>
-      {/if}
-    </div>
-  </NeoSkeletonText>
+  <div class:neo-list-item-content={true} class:neo-disabled={disabled} class:neo-description={description}>
+    {#if item.before}
+      <div class="neo-list-item-before" class:neo-skeleton={skeleton}>
+        {@render item.before({ item, index, context })}
+      </div>
+    {/if}
+
+    <NeoSkeletonText loading={skeleton} lines={description ? 2 : 1} align="center" {...rest} class={['neo-list-item-skeleton', rest?.class]}>
+      <div class="neo-list-item-text">
+        <span id={labelId} class="neo-list-item-label">{label ?? value}</span>
+        {#if description}
+          <span class="neo-list-item-description">{description}</span>
+        {/if}
+      </div>
+    </NeoSkeletonText>
+
+    {#if item.after}
+      <div class="neo-list-item-after" class:neo-skeleton={skeleton}>
+        {@render item.after({ item, index, context })}
+      </div>
+    {/if}
+  </div>
 {/snippet}
 
 {#if item?.render}
@@ -109,15 +116,18 @@
     }
 
     &-description {
-      margin-bottom: 0.3125rem;
       color: var(--neo-text-color-secondary);
       font-size: var(--neo-font-size-sm, 0.875rem);
-      line-height: var(--neo-line-height-xs, 1rem);
+      line-height: var(--neo-line-height-sm, 1.25rem);
       -webkit-line-clamp: 1;
       line-clamp: 1;
     }
 
     &-content {
+      display: inline-flex;
+      flex: 1 1 auto;
+      gap: var(--neo-gap-xxs, 0.5rem);
+      align-items: center;
       padding: 0.125rem 0.5rem;
       transition: color 0.15s ease;
 
@@ -128,21 +138,36 @@
       &.neo-disabled {
         color: var(--neo-text-color-disabled);
       }
+
+      &.neo-description {
+        gap: var(--neo-gap-xs, 0.625rem);
+
+        :global(.neo-skeleton-text-line:nth-child(2n)) {
+          --neo-skeleton-text-font-size: var(--neo-font-size-sm, 0.875rem);
+          --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
+        }
+      }
     }
 
     &-checkmark {
+      margin-inline-end: 0.4375rem;
+      aspect-ratio: 1 / 1;
+    }
+
+    &-before,
+    &-after,
+    &-checkmark {
       display: inline-flex;
-      flex: 0 0 1.25rem;
+      flex: 0 0 auto;
       align-items: center;
       justify-content: center;
-      height: 1.25rem;
+      min-width: 1.25rem;
+      min-height: 1.25rem;
       text-align: center;
       border-radius: 50%;
       transition: background-color 0.3s ease-out;
-      margin-inline-end: 0.4375rem;
-      margin-block-end: 0.125rem;
 
-      :global(svg) {
+      :global(> *) {
         opacity: 1;
         transition: opacity 0.15s ease-out 0.15s;
       }
@@ -150,7 +175,7 @@
       &.neo-skeleton {
         @include mixin.skeleton($content: false);
 
-        :global(svg) {
+        :global(> *) {
           opacity: 0;
           transition-delay: 0s;
         }

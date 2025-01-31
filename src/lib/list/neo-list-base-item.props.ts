@@ -1,9 +1,9 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoListContext, NeoListItem } from '~/list/neo-list.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+  // Context
   /**
    * The list item to display.
    */
@@ -17,6 +17,7 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
    */
   context: NeoListContext;
 
+  // States
   /**
    * If true, the item will display as a skeleton.
    */
@@ -46,13 +47,10 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
    */
   readonly?: boolean;
 
+  // Methods
   /**
    * Optional callback to handle the item click event.
    * @param index
    */
   onclick: NeoButtonProps['onclick'];
-  /**
-   * Optional props to pass to the skeleton loader.
-   */
-  skeletonProps?: NeoSkeletonTextProps;
-} & HTMLNeoBaseElement;
+} & NeoSkeletonTextProps;

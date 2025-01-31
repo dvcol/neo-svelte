@@ -320,12 +320,6 @@
       width: 100%;
     }
 
-    :global(.neo-list-empty-skeleton),
-    :global(.neo-list-item-skeleton),
-    :global(.neo-list-loader-skeleton) {
-      padding-inline: 0.5rem;
-    }
-
     :global(.neo-list-empty-skeleton-container) {
       width: 100%;
       margin: auto;
@@ -363,6 +357,10 @@
       max-width: 100%;
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
+    }
+
+    &-loader {
+      gap: 0.125rem;
     }
 
     &-item {

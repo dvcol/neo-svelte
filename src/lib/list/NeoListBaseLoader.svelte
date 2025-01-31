@@ -14,6 +14,9 @@
   const {
     loading,
     select,
+    before,
+    after,
+    checkmark = select,
 
     lines = 1,
     items = 3,
@@ -21,6 +24,8 @@
 
     transition,
 
+    beforeProps,
+    afterProps,
     ...rest
   }: NeoListBaseLoaderProps = $props();
 
@@ -32,13 +37,30 @@
   {#if loading}
     <div
       class="neo-list-base-loader"
+      class:neo-select={select}
       in:transitionFn={{ ...transitionProps, delay: Math.min(300 + circIn(clamp(i / 10, 0, 1)) * 2000, 600) }}
       out:transitionFn={{ ...transitionProps, delay: Math.min(circIn(clamp((items - i) / 10, 0, 1)) * 2000, 600) }}
     >
-      <NeoSkeletonText flex={flex ?? `0 0 ${randomInt(40, 80)}%`} {lines} {...rest} class={['neo-list-loader-skeleton', rest?.class]} />
+      <div class="neo-list-base-loader-content">
+        {#if before}
+          {@const { width, height, ...bProps } = beforeProps ?? {}}
+          <div class="neo-list-base-loader-before-skeleton" style:width style:height {...bProps}>
+            <!--  Checkmark placeholder  -->
+          </div>
+        {/if}
 
-      {#if select}
-        <div class="neo-list-base-loader-checkmark-skeleton">
+        <NeoSkeletonText flex={flex ?? `0 1 ${randomInt(40, 80)}%`} {lines} {...rest} class={['neo-list-loader-skeleton', rest?.class]} />
+
+        {#if after}
+          {@const { width, height, ...aProps } = afterProps ?? {}}
+          <div class="neo-list-base-loader-after-skeleton" style:width style:height {...aProps}>
+            <!--  Checkmark placeholder  -->
+          </div>
+        {/if}
+      </div>
+
+      {#if checkmark}
+        <div class:neo-list-base-loader-checkmark-skeleton={true}>
           <!--  Checkmark placeholder  -->
         </div>
       {/if}
@@ -53,16 +75,40 @@
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.125rem;
 
+    &-content {
+      display: inline-flex;
+      flex: 1 1 auto;
+      gap: var(--neo-gap-xxs, 0.5rem);
+      align-items: center;
+      padding: 0.125rem 0.5rem;
+
+      :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
+        gap: 0.25rem;
+      }
+    }
+
+    &-after-skeleton,
+    &-before-skeleton,
     &-checkmark-skeleton {
+      flex: 0 0 auto;
       width: 1.25rem;
       height: 1.25rem;
       border-radius: 50%;
-      margin-inline-end: 0.4375rem;
-      margin-block-end: 0.125rem;
 
       @include mixin.skeleton;
+    }
+
+    &-after-skeleton {
+      margin-left: auto;
+    }
+
+    &-checkmark-skeleton {
+      margin-inline-end: 0.4375rem;
+    }
+
+    &.neo-select {
+      padding-inline: 0.125rem;
     }
   }
 </style>

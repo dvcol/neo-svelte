@@ -70,6 +70,16 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    */
   render?: NeoListItemRender<Value, Tag>;
   /**
+   * Snippet to display before the list item.
+   * e.g. an icon or avatar.
+   */
+  before?: Snippet<[NeoListItemRenderContext<Value, Tag>]>;
+  /**
+   * Snippet to display after the list item.
+   * e.g. a badge or action button.
+   */
+  after?: Snippet<[NeoListItemRenderContext<Value, Tag>]>;
+  /**
    * The url to navigate to when the anchor is clicked.
    */
   href?: NeoButtonProps['href'];

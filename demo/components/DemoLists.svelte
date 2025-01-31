@@ -7,6 +7,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
+  import IconAccount from '~/icons/IconAccount.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoList from '~/list/NeoList.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
@@ -37,6 +38,7 @@
         title: 'This is a link to google',
         color: Colors.Primary,
         divider: true,
+        readonly: true,
       },
       {
         label: 'Line item with onclick',
@@ -67,7 +69,7 @@
       { label: 'Section A item 1', value: 'section A - 1', color: Colors.Primary },
       { label: 'Section A item 2', value: 'section A - 2', color: Colors.Primary },
       { label: 'Section A item 4', value: 'section A - 3', color: Colors.Primary },
-    ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
+    ].map(item => ({ ...item, id: getUUID() })),
   };
 
   const sectionB: NeoListSection = {
@@ -78,7 +80,7 @@
       { label: 'Section B item 1', value: 'section B - 1', color: Colors.Secondary },
       { label: 'Section B item 2', value: 'section B - 2', color: Colors.Secondary },
       { label: 'Section B item 4', value: 'section B - 3', color: Colors.Secondary },
-    ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
+    ].map(item => ({ ...item, id: getUUID() })),
   };
 
   const customSection: NeoListSection = {
@@ -90,7 +92,7 @@
       { label: 'Custom Section item 1', value: 'custom section - 1', color: Colors.Primary },
       { label: 'Custom Section item 2', value: 'custom section - 2', color: Colors.Primary },
       { label: 'Custom Section item 4', value: 'custom section - 3', color: Colors.Primary },
-    ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
+    ].map(item => ({ ...item, id: getUUID() })),
   };
 
   const selected = [{ item: list[4] }, { item: list[6] }];
@@ -106,11 +108,13 @@
   const customSectionList = $state([...list.slice(0, 4), sectionA, customSection, sectionB]);
   const withCustomSection = $derived(isEmpty ? [] : customSectionList);
 
-  const complexList = $state([
-    { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
-    { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
-    { label: 'John Smith', value: 'Smith', description: 'john.smith@hotmal.com' },
-  ]);
+  const complexList = $state(
+    [
+      { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
+      { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
+      { label: 'John Smith', value: 'Smith', description: 'john.smith@hotmal.com' },
+    ].map(item => ({ ...item, id: getUUID(), before: avatar })),
+  );
 
   const withComplexList = $derived(isEmpty ? [] : complexList);
 
@@ -169,6 +173,12 @@
       <div>value: {value}</div>
     </div>
   </NeoSkeletonText>
+{/snippet}
+
+{#snippet avatar()}
+  <span class="custom-item-avatar">
+    <IconAccount size="1.5rem" />
+  </span>
 {/snippet}
 
 <div class="row">
@@ -268,7 +278,18 @@
   <!-- custom item with select, before, after & description  & loader  -->
   <div class="column content">
     <span class="label">Select multiple</span>
-    <NeoList select multiple items={withComplexList} {...options} after={values} loaderProps={{ lines: 2 }} />
+    <NeoList
+      select
+      multiple
+      items={withComplexList}
+      {...options}
+      after={values}
+      loaderProps={{
+        lines: 2,
+        before: true,
+        beforeProps: { width: '1.875rem', height: '1.875rem' },
+      }}
+    />
   </div>
 
   <!--  tooltip item (nested menu drawer, portal ?) -->
@@ -299,6 +320,15 @@
     display: flex;
     flex-direction: column;
     margin-block: 0.25rem;
+  }
+
+  .custom-item-avatar {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem;
+    border: 1px currentcolor solid;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
   }
 
   .list-values {

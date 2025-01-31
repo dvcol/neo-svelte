@@ -1,10 +1,45 @@
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
+import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoListBaseLoaderProps = {
-  loading?: boolean | number;
+  /**
+   * Whether to show the loader.
+   */
+  loading?: boolean;
+  /**
+   * Whether to style the loader as a select item.
+   */
   select?: boolean;
+  /**
+   * Number of items to show.
+   */
   items?: number;
 
+  /**
+   * Transition properties to apply to the loader.
+   */
   transition?: HTMLTransitionProps['transition'];
+
+  /**
+   * Whether to show the checkmark skeleton.
+   */
+  checkmark?: boolean;
+  /**
+   * Whether to show a before skeleton.
+   */
+  before?: boolean;
+  /**
+   * Whether to show an after skeleton.
+   */
+  after?: boolean;
+
+  /**
+   * Optional props to pass to the before skeleton.
+   */
+  beforeProps?: HTMLNeoBaseElement & { width?: CSSStyleDeclaration['width']; height?: CSSStyleDeclaration['height'] };
+  /**
+   * Optional props to pass to the after skeleton.
+   */
+  afterProps?: HTMLNeoBaseElement & { width?: CSSStyleDeclaration['width']; height?: CSSStyleDeclaration['height'] };
 } & NeoSkeletonTextProps;
