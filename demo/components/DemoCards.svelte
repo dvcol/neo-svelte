@@ -110,7 +110,6 @@
     loading={skeleton}
     paragraphs="2"
     lines={[6, 7]}
-    width="80ch"
     transitionProps={{ style: horizontal ? 'min-height: 21.5rem; max-width: 50dvw' : 'min-height: 21.5rem' }}
   >
     <div class="column">
@@ -133,13 +132,7 @@
 {/snippet}
 
 {#snippet media({ horizontal }: NeoCardContext)}
-  <NeoSkeletonMedia
-    loading={skeleton}
-    type="image"
-    ratio="1.5"
-    width="calc(80ch + 3rem)"
-    transitionProps={{ style: horizontal ? 'max-width: 30dvw' : undefined }}
-  >
+  <NeoSkeletonMedia loading={skeleton} type="image" ratio="1.5" transitionProps={{ style: horizontal ? 'max-width: 30dvw' : undefined }}>
     <img
       height="100%"
       width="100%"
@@ -150,13 +143,13 @@
 {/snippet}
 
 {#snippet header()}
-  <NeoSkeletonText loading={skeleton} title paragraphs="0" width="8.125rem">
+  <NeoSkeletonText loading={skeleton} title paragraphs="0">
     <h3 style="margin: 0 0.25rem">NeoCard Header</h3>
   </NeoSkeletonText>
 {/snippet}
 
 {#snippet footer()}
-  <NeoSkeletonText loading={skeleton} title paragraphs="0" width="8.125rem">
+  <NeoSkeletonText loading={skeleton} title paragraphs="0">
     <div>This is the footer</div>
   </NeoSkeletonText>
 {/snippet}

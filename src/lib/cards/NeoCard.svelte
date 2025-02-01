@@ -341,6 +341,9 @@
     }
 
     .neo-card-media {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: $full-spacing;
       overflow: hidden;
       border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
@@ -450,8 +453,14 @@
     &.neo-horizontal {
       flex-direction: row;
 
+      .neo-card-content,
+      .neo-card-header,
       .neo-card-action {
         flex-direction: column;
+      }
+
+      .neo-card-divider {
+        margin: calc(#{$full-spacing} - 0.25rem) 0.5rem;
       }
 
       .neo-card-close {
@@ -459,8 +468,12 @@
         margin-bottom: auto;
       }
 
+      .neo-card-segment.neo-card-media:not(:only-child) {
+        margin-right: $half-spacing;
+      }
+
       .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
-        margin: 0 $full-spacing 0 0;
+        margin: 0 $half-spacing 0 0;
         border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
       }
 
