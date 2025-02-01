@@ -124,6 +124,10 @@ export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagName
    * @param context - The list section context.
    */
   render?: NeoListSectionRender<Value>;
+  /**
+   * Optional props to pass to the section container.
+   */
+  sectionProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 } & NeoListItemCommon<Tag>;
 
 export const isSection = (item: NeoListItem | NeoListSection): item is NeoListSection => 'items' in item;
@@ -310,6 +314,10 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Optional props to pass to the button.
    */
   buttonProps?: NeoButtonProps;
+  /**
+   * Optional props to pass to the divider.
+   */
+  dividerProps?: NeoDividerProps;
 } & HTMLRefProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   NeoListState<Selected>;

@@ -7,6 +7,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
+  import { getNextFocusableElement } from '~/utils/html-element.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -36,6 +37,22 @@
     if (touched || !checked) return;
     touched = true;
   });
+
+  const getNextTarget = (element: EventTarget | HTMLElement | null, action: 'next' | 'previous') => {
+    const sibling: keyof HTMLElement = `${action}ElementSibling`;
+    if (!(element instanceof HTMLElement)) return;
+    let li = element?.closest<HTMLElement>('.neo-list-item.neo-list-item-select');
+    let next = li?.[sibling];
+    let target = getNextFocusableElement(next);
+    while (next?.[sibling]) {
+      if (target) return target.focus();
+      next = next?.[sibling];
+      target = getNextFocusableElement(next);
+    }
+    if (!li?.parentElement || li?.dataset?.section === undefined) return;
+    li = li.parentElement.closest<HTMLElement>('.neo-list-item.neo-list-item-select');
+    return getNextFocusableElement(li?.[sibling])?.focus();
+  };
 
   const labelId = $derived(select ? `neo-list-item-label-${getUUID()}` : undefined);
 </script>
@@ -89,6 +106,14 @@
       if (readonly || !select) return;
       touched = true;
       onclick?.(e);
+    }}
+    onkeydown={e => {
+      if (disabled) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        getNextTarget(e.target, e.key === 'ArrowDown' ? 'next' : 'previous');
+        e.preventDefault();
+      }
+      buttonProps?.onkeydown?.(e);
     }}
     {...buttonProps}
     {...item?.buttonProps}

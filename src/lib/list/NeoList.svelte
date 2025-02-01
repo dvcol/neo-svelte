@@ -68,12 +68,13 @@
     containerProps,
     loaderProps,
     buttonProps,
+    dividerProps,
     ...rest
   }: NeoListProps = $props();
   /* eslint-enable prefer-const */
 
   // Todo - keep selected on filter
-  // TODO - arrow navigation
+  // TODO - rework focus highlights
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
@@ -237,17 +238,19 @@
     <svelte:element
       this={item.tag ?? 'li'}
       role={select ? 'option' : 'listitem'}
+      data-index={index}
+      data-section={sectionIndex}
       class:neo-list-item={true}
       class:neo-skeleton={skeleton}
       class:neo-list-item-select={select}
       style:--neo-list-item-color={getColorVariable(item.color)}
+      {...item.containerProps}
       animate:animateFn={{ ...animateProps, enabled: !section }}
       out:inFn={inProps}
       in:outFn={outProps}
-      {...item.containerProps}
     >
       {#if item.divider}
-        <NeoDivider {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
+        <NeoDivider {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
       {/if}
       {#if isSection(item)}
         {@const sectionContext = { items: item.items, section: item, index, context }}

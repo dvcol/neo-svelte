@@ -16,6 +16,7 @@
   import NeoList from '~/list/NeoList.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { Colors } from '~/utils/colors.utils';
+  import { getNextFocusableElement } from '~/utils/html-element.utils';
   import { enterTransitionProps } from '~/utils/transition.utils';
 
   const options = $state<NeoListProps>({
@@ -358,6 +359,12 @@
             hover="0"
             rounded
             containerProps={{ style: 'margin-bottom: 0' }}
+            onkeydown={e => {
+              if (e.key !== 'ArrowDown' || !(e.target instanceof HTMLElement)) return;
+              const target = e.target.parentElement?.parentElement?.querySelector('.neo-list-item.neo-list-item-select');
+              if (target) e.preventDefault();
+              getNextFocusableElement(target)?.focus();
+            }}
           >
             {#snippet after()}
               <NeoButton

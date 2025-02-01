@@ -32,7 +32,7 @@
       <span id={labelId} class="neo-list-item-section-title">{section.label}</span>
     </NeoSkeletonText>
   {/if}
-  <ul role="group" aria-labelledby={labelId} class:neo-list-item-section={true} {...rest}>
+  <ul role="group" aria-labelledby={labelId} class:neo-list-item-section={true} {...rest} {...section.sectionProps}>
     {@render list({ items: section.items, section, index, context })}
   </ul>
 {/if}
