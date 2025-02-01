@@ -30,8 +30,8 @@
     fallback = alt ? 26 : 6,
 
     // Transition
-    in: inAction,
-    out: outAction,
+    in: inAction = { use: fade, props: leaveTransitionProps },
+    out: outAction = { use: fade, props: enterTransitionProps },
 
     // Other props
     titleProps,
@@ -62,10 +62,10 @@
     return Number(fallback);
   });
 
-  const inFn = $derived(toTransition(inAction, fade));
-  const inProps = $derived(toTransitionProps(inAction, leaveTransitionProps));
-  const outFn = $derived(toTransition(outAction, fade));
-  const outProps = $derived(toTransitionProps(outAction, enterTransitionProps));
+  const inFn = $derived(toTransition(inAction));
+  const inProps = $derived(toTransitionProps(inAction));
+  const outFn = $derived(toTransition(outAction));
+  const outProps = $derived(toTransitionProps(outAction));
 </script>
 
 <NeoSkeletonContainer

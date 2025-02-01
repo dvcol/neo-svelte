@@ -7,7 +7,7 @@
 
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
+  import { scaleEnterProps, scaleLeaveProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -25,8 +25,8 @@
     height,
 
     // Transition
-    in: inAction,
-    out: outAction,
+    in: inAction = { use: fade, props: scaleEnterProps },
+    out: outAction = { use: fade, props: scaleLeaveProps },
 
     // Other props
     containerProps,
@@ -34,10 +34,10 @@
   }: NeoSkeletonContainerProps = $props();
   /* eslint-enable prefer-const */
 
-  const inFn = $derived(toTransition(inAction, fade));
-  const inProps = $derived(toTransitionProps(inAction, leaveTransitionProps));
-  const outFn = $derived(toTransition(outAction, fade));
-  const outProps = $derived(toTransitionProps(outAction, enterTransitionProps));
+  const inFn = $derived(toTransition(inAction));
+  const inProps = $derived(toTransitionProps(inAction));
+  const outFn = $derived(toTransition(outAction));
+  const outProps = $derived(toTransitionProps(outAction));
 
   let skeletonWidth = $state(width);
   let skeletonHeight = $state(height);

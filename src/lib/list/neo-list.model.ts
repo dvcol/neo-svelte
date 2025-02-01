@@ -110,8 +110,14 @@ export type NeoListRender<Value = unknown> = Snippet<[NeoListRenderContext<Value
 
 export type NeoListSectionRender<Value = unknown> = Snippet<[NeoListRender<Value>, NeoListRenderContext<Value>]>;
 export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
-  title?: string;
+  /**
+   * Array of child list items to display.
+   */
   items: NeoListItem<Value>[];
+  /**
+   * Optional label to display in the list item.
+   */
+  label: string;
   /**
    * Optional snippet to display in place of the list section.
    * @param list - The list snippet that render items.
@@ -251,7 +257,12 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Transition function to apply when adding items to the list.
    * Note: unique `id` is required for entering/leaving transitions.
    */
-  transition: HTMLTransitionProps['transition'];
+  in: HTMLTransitionProps['in'];
+  /**
+   * Transition function to apply when removing items from the list.
+   * Note: unique `id` is required for entering/leaving transitions.
+   */
+  out: HTMLTransitionProps['out'];
 
   // Styles
   /**

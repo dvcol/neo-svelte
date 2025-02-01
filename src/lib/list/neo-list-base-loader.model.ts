@@ -17,9 +17,13 @@ export type NeoListBaseLoaderProps = {
   items?: number;
 
   /**
-   * Transition properties to apply to the loader.
+   * Transition function to apply when adding items to the loader.
    */
-  transition?: HTMLTransitionProps['transition'];
+  in: HTMLTransitionProps['in'];
+  /**
+   * Transition function to apply when removing items from the loader.
+   */
+  out: HTMLTransitionProps['out'];
 
   /**
    * Weather to style each 2n item as a description.

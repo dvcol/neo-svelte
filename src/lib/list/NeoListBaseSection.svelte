@@ -21,15 +21,15 @@
     ...rest
   }: NeoListBaseSectionProps = $props();
 
-  const labelId = $derived(section.title ? `neo-list-section-label-${getUUID()}` : undefined);
+  const labelId = $derived(section.label ? `neo-list-section-label-${getUUID()}` : undefined);
 </script>
 
 {#if section?.render}
   {@render section?.render(list, { items: section.items, section, index, context })}
 {:else}
-  {#if section.title}
+  {#if section.label}
     <NeoSkeletonText loading={skeleton} lines={1} align="center" {...skeletonProps} class={['neo-list-item-skeleton', skeletonProps?.class]}>
-      <span id={labelId} class="neo-list-item-section-title">{section.title}</span>
+      <span id={labelId} class="neo-list-item-section-title">{section.label}</span>
     </NeoSkeletonText>
   {/if}
   <ul role="group" aria-labelledby={labelId} class:neo-list-item-section={true} {...rest}>

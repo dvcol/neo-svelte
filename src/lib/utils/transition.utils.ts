@@ -12,8 +12,10 @@ export const enterFreezeTransition: TransitionProps = {
   css: `overflow: hidden; white-space: nowrap`,
 };
 
-export const enterTransitionProps: TransitionProps = { duration: 200 };
-export const leaveTransitionProps: TransitionProps = { delay: 200, duration: 100 };
+export const defaultEnterDuration = 200;
+
+export const enterTransitionProps: TransitionProps = { duration: defaultEnterDuration };
+export const leaveTransitionProps: TransitionProps = { delay: defaultEnterDuration, duration: defaultEnterDuration / 2 };
 
 export const enterDefaultFadeTransition: TransitionWithProps<FadeParams> = {
   use: fade,
@@ -25,11 +27,14 @@ export const leaveDefaultFadeTransition: TransitionWithProps<FadeParams> = {
   props: leaveTransitionProps,
 };
 
-export const scaleTransitionProps: TransitionProps = { duration: defaultTransitionDuration, start: 0.95 };
+export const scaleTransitionProps: TransitionProps = { duration: defaultEnterDuration, start: 0.95 };
+
+export const scaleEnterProps: TransitionProps = { duration: defaultEnterDuration, start: 0.95 };
+export const scaleLeaveProps: TransitionProps = { duration: defaultEnterDuration, start: 0.95, delay: defaultEnterDuration / 2 };
 
 export const scaleTransition: TransitionWithProps<ScaleParams> = {
   use: scale,
   props: scaleTransitionProps,
 };
 
-export const flipTransitionProps: TransitionProps = { duration: 200, ease: circOut, delay: 100 };
+export const flipTransitionProps: TransitionProps = { duration: defaultEnterDuration, ease: circOut, delay: defaultEnterDuration / 2 };

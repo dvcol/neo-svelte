@@ -1,15 +1,15 @@
 <script lang="ts">
   import { clamp, randomInt } from '@dvcol/common-utils/common/math';
-  import { circIn } from 'svelte/easing';
+  import { circIn, circOut } from 'svelte/easing';
 
-  import { scale } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
 
   import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
 
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
-  import { scaleTransitionProps } from '~/utils/transition.utils.js';
+  import { scaleEnterProps, scaleLeaveProps } from '~/utils/transition.utils.js';
 
   const {
     loading,
@@ -23,15 +23,18 @@
     items = 3,
     flex = items > 1 ? undefined : '0 0 70%',
 
-    transition,
+    in: inAction = { use: fade, props: scaleEnterProps },
+    out: outAction = { use: fade, props: scaleLeaveProps },
 
     beforeProps,
     afterProps,
     ...rest
   }: NeoListBaseLoaderProps = $props();
 
-  const transitionFn = $derived(toTransition(transition, scale));
-  const transitionProps = $derived(toTransitionProps(transition, scaleTransitionProps));
+  const inFn = $derived(toTransition(inAction));
+  const inProps = $derived(toTransitionProps(inAction));
+  const outFn = $derived(toTransition(outAction));
+  const outProps = $derived(toTransitionProps(outAction));
 </script>
 
 {#each { length: items } as _, i (i)}
@@ -39,8 +42,8 @@
     <div
       class="neo-list-base-loader"
       class:neo-select={select}
-      in:transitionFn={{ ...transitionProps, delay: Math.min(300 + circIn(clamp(i / 10, 0, 1)) * 2000, 600) }}
-      out:transitionFn={{ ...transitionProps, delay: Math.min(circIn(clamp((items - i) / 10, 0, 1)) * 2000, 600) }}
+      in:inFn={{ ...inProps, delay: Math.min((inProps?.duration ?? 0) + circIn(clamp(i / 10, 0, 1)) * 2000, 400) }}
+      out:outFn={{ ...outProps, delay: Math.min(circOut(clamp((items - i) / 10, 0, 1)) * 200, 400) }}
     >
       <div class="neo-list-base-loader-content" class:neo-description={description}>
         {#if before}

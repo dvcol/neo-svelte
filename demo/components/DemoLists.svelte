@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
@@ -8,6 +9,8 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
+  import IconAlignBottom from '~/icons/IconAlignBottom.svelte';
+  import IconAlignTop from '~/icons/IconAlignTop.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoList from '~/list/NeoList.svelte';
@@ -114,7 +117,6 @@
       { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
       { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
       { label: 'John Smith', value: 'Smith', description: 'john.smith@hotmal.com' },
-      { label: 'Jane Doe', value: 'Jane', description: 'jane.doe@yahoo.com' },
       { label: 'Alice Johnson', value: 'Alice', description: 'alice.johnson@outlook.com' },
       { label: 'Bob Brown', value: 'Bob', description: 'bob.brown@gmail.com' },
       { label: 'Charlie Davis', value: 'Charlie', description: 'charlie.davis@icloud.com' },
@@ -126,12 +128,38 @@
       { label: 'Ivy Johnson', value: 'Ivy', description: 'ivy.johnson@hotmail.com' },
       { label: 'Jack King', value: 'Jack', description: 'jack.king@yahoo.com' },
       { label: 'Karen Lee', value: 'Karen', description: 'karen.lee@outlook.com' },
+      {
+        label: 'Directors',
+        divider: true,
+        items: [
+          { label: 'Denis VVilleneuve', value: 'Denis', description: '+33 1 25 48 45 45' },
+          { label: 'Christopher Nolan', value: 'Christopher', description: '+44 2 07 94 60 95' },
+          { label: 'Quentin Tarantino', value: 'Quentin', description: '+33 1 05 55 12 34' },
+          { label: 'Martin Scorsese', value: 'Martin', description: '+33 1 25 55 56 78' },
+          { label: 'Steven Spielberg', value: 'Steven', description: '+33 1 85 55 87 65' },
+        ].map(item => ({ ...item, id: getUUID(), before: avatar })),
+      },
+      {
+        label: 'Actors',
+        divider: true,
+        items: [
+          { label: 'Leonardo DiCaprio', value: 'Leonardo', description: '+1 310 555 1234' },
+          { label: 'Brad Pitt', value: 'Brad', description: '+1 323 555 5678' },
+          { label: 'Meryl Streep', value: 'Meryl', description: '+1 212 555 8765' },
+          { label: 'Tom Hanks', value: 'Tom', description: '+1 310 555 4321' },
+          { label: 'Natalie Portman', value: 'Natalie', description: '+1 818 555 6789' },
+        ].map(item => ({ ...item, id: getUUID(), before: avatar })),
+      },
     ].map(item => ({ ...item, id: getUUID(), before: avatar })),
   );
 
   let hovered = $state(false);
   let focused = $state(false);
   let filter = $state('');
+  const setFilter = debounce((value: string) => {
+    filter = value;
+  }, 300);
+  let sort = $state(false);
   const withComplexList = $derived(isEmpty ? [] : complexList);
 
   const onAdd = () => {
@@ -175,7 +203,7 @@
 
 {#snippet renderSection(_children, _context)}
   <h2>Custom Section</h2>
-  <h4>{_context?.section?.title}</h4>
+  <h4>{_context?.section?.label}</h4>
   <ul>
     {@render _children(_context)}
   </ul>
@@ -209,7 +237,7 @@
   <!--  multi line loader-->
   <div class="column content">
     <span class="label">Multi-line loader</span>
-    <NeoList {items} {...options} loaderProps={{ lines: 2, items: 10 }} />
+    <NeoList {items} {...options} loaderProps={{ lines: 2, items: 5 }} />
   </div>
 
   <!--  custom loader-->
@@ -283,7 +311,7 @@
     <span class="label">Custom section</span>
     <NeoList items={withCustomSection} {...options} {item}>
       {#snippet section(_children, _context)}
-        <h2>{_context?.section?.title}</h2>
+        <h2>{_context?.section?.label}</h2>
         <ul>
           {@render _children(_context)}
         </ul>
@@ -317,17 +345,40 @@
           beforeProps: { width: '1.875rem', height: '1.875rem' },
         }}
         buttonProps={{ rounded: true }}
-        filter={i => i.label.toLowerCase().includes(filter.toLowerCase())}
+        filter={i =>
+          i.items?.some(j => j.label.toLowerCase().includes(filter.toLowerCase())) ||
+          (i.label && i.label.toLowerCase().includes(filter.toLowerCase()))}
+        sort={sort ? (a, b) => a.label.localeCompare(b.label) : (b, a) => a.label.localeCompare(b.label)}
       >
         {#snippet before(ctx)}
           <NeoInput
             placeholder="Placeholder"
-            bind:value={filter}
+            oninput={e => setFilter(e.target.value)}
             elevation={hovered || focused ? 1 : 0}
             hover="0"
             rounded
             containerProps={{ style: 'margin-bottom: 0' }}
-          />
+          >
+            {#snippet after()}
+              <NeoButton
+                text
+                rounded
+                shallow
+                title="Sort alphabetically"
+                onclick={() => {
+                  sort = !sort;
+                }}
+              >
+                {#snippet icon()}
+                  {#if sort}
+                    <IconAlignTop />
+                  {:else}
+                    <IconAlignBottom />
+                  {/if}
+                {/snippet}
+              </NeoButton>
+            {/snippet}
+          </NeoInput>
           {@render values(ctx)}
         {/snippet}
       </NeoList>

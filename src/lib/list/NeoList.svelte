@@ -56,8 +56,9 @@
     scrollbar = true,
 
     // Animation
-    transition,
-    animate,
+    in: inAction = { use: scale, props: scaleTransitionProps },
+    out: outAction = { use: fade, props: { ...scaleTransitionProps, delay: scaleTransitionProps?.duration } },
+    animate = { use: flipToggle, props: flipTransitionProps },
 
     // Events
     onselect,
@@ -73,8 +74,7 @@
 
   // Todo - keep selected on filter
   // TODO - arrow navigation
-  const visible = $derived<NeoListItemOrSection[]>(items?.filter(filter).sort(sort));
-  const empty = $derived(!visible?.length);
+  const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
   const scrollTop = debounce(() => {
@@ -211,10 +211,12 @@
       scrollBottom,
     });
   });
-  const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate, flipToggle));
-  const animateProps = $derived(toTransitionProps(animate, flipTransitionProps));
-  const transitionFn = $derived(missing ? emptyTransition : toTransition(transition, scale));
-  const transitionProps = $derived(toTransitionProps(transition, scaleTransitionProps));
+  const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
+  const animateProps = $derived(toTransitionProps(animate));
+  const inFn = $derived(missing ? emptyTransition : toTransition(inAction));
+  const inProps = $derived(toTransitionProps(inAction));
+  const outFn = $derived(missing ? emptyTransition : toTransition(outAction));
+  const outProps = $derived(toTransitionProps(outAction));
 </script>
 
 {#snippet loader(show = loading)}
@@ -223,14 +225,15 @@
     {#if show && customLoader}
       {@render customLoader(context)}
     {:else}
-      <NeoListBaseLoader loading={show} {select} {transition} {...loaderProps} />
+      <NeoListBaseLoader loading={show} {select} in={inAction} out={outAction} {...loaderProps} />
     {/if}
   </li>
 {/snippet}
 
 {#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
+  {@const visible = array?.filter(filter).sort(sort)}
   <!-- Items -->
-  {#each array as item, index (item.id ?? index)}
+  {#each visible as item, index (item.id ?? index)}
     <svelte:element
       this={item.tag ?? 'li'}
       role={select ? 'option' : 'listitem'}
@@ -239,8 +242,8 @@
       class:neo-list-item-select={select}
       style:--neo-list-item-color={getColorVariable(item.color)}
       animate:animateFn={{ ...animateProps, enabled: !section }}
-      out:transitionFn={transitionProps}
-      in:transitionFn={{ ...transitionProps, delay: transitionProps?.duration }}
+      out:inFn={inProps}
+      in:outFn={outProps}
       {...item.containerProps}
     >
       {#if item.divider}
@@ -289,7 +292,7 @@
       {...rest}
     >
       {@render children?.(context)}
-      {@render list({ items: visible, context })}
+      {@render list({ items, context })}
       {@render loader(loading || (empty && skeleton))}
     </svelte:element>
   {:else}
@@ -341,7 +344,7 @@
       &.neo-scroll {
         @include mixin.scrollbar($button-height: 0.375rem);
 
-        padding-block: 0.25rem;
+        padding-block: 0.5rem;
 
         &.neo-shadow {
           @include mixin.fade-scroll(1rem);
