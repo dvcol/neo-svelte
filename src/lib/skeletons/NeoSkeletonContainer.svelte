@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { wait } from '@dvcol/common-utils/common/promise';
   import { resize } from '@dvcol/svelte-utils/resize';
   import { fade } from 'svelte/transition';
 
@@ -40,14 +41,23 @@
 
   let skeletonWidth = $state(width);
   let skeletonHeight = $state(height);
+  let skeletonLines = $state<number>();
 
-  const updateSize = () => {
-    const rect = ref?.getBoundingClientRect();
+  const updateSize = async () => {
+    if (!ref) return;
+    await wait(inProps?.delay);
+
+    const rect = ref.getBoundingClientRect();
     if (!width && rect?.width) skeletonWidth = `${rect.width}px`;
     if (!height && rect?.height) skeletonHeight = `${rect.height}px`;
+
+    if (!rect?.height) return;
+    const lineHeight = Number.parseInt(getComputedStyle(ref).lineHeight, 10);
+    if (Number.isNaN(lineHeight) || !lineHeight) return;
+    skeletonLines = Math.round(rect.height / lineHeight);
   };
 
-  $effect(() => {
+  $effect.pre(() => {
     if (!ref || loading) return;
     updateSize();
   });
@@ -61,6 +71,7 @@
         class:neo-skeleton-container={true}
         style:--neo-skeleton-content-width={skeletonWidth}
         style:--neo-skeleton-content-height={skeletonHeight}
+        style:--neo-skeleton-content-lines={skeletonLines}
         {...rest}
       >
         {@render skeleton?.()}
@@ -70,6 +81,7 @@
         this={tag}
         class:neo-skeleton-content-container={true}
         bind:this={ref}
+        style:--neo-skeleton-content-lines={skeletonLines}
         in:inFn={inProps}
         out:outFn={outProps}
         use:resize={updateSize}
@@ -92,5 +104,6 @@
 
   .neo-skeleton-content-container {
     width: fit-content;
+    height: fit-content;
   }
 </style>

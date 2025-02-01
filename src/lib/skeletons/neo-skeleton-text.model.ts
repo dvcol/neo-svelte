@@ -22,9 +22,15 @@ export type NeoSkeletonTextProps = {
    */
   paragraphs?: string | number;
   /**
-   * Number of lines to show in each paragraph.
+   * Number of lines/words to show in each paragraph.
    */
   lines?: string | number | number[];
+  /**
+   * Number of lines/words to show in each paragraph if no lines are provided.
+   *
+   * @default 6 or 26 if `alt` is true
+   */
+  fallback?: number | string;
 
   // Styles
   /**

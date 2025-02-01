@@ -26,7 +26,8 @@
     ref = $bindable(),
     loading = true,
     paragraphs = 1,
-    lines = alt ? 26 : 6,
+    lines: inputLines,
+    fallback = alt ? 26 : 6,
 
     // Transition
     in: inAction,
@@ -40,6 +41,26 @@
     ...rest
   }: NeoSkeletonTextProps = $props();
   /* eslint-enable prefer-const */
+
+  let auto = $state<number>();
+  const updateLines = () => {
+    if (!ref) return;
+    const _lines = Number(getComputedStyle(ref)?.getPropertyValue('--neo-skeleton-content-lines'));
+    const _paragraphs = Number(paragraphs) || 1;
+    if (Number.isNaN(_lines) || Number.isNaN(_paragraphs)) return;
+    auto = Math.floor(_lines / _paragraphs);
+  };
+
+  $effect(() => {
+    if (loading || !ref || inputLines !== 'auto') return;
+    setTimeout(updateLines, 0);
+  });
+
+  const lines = $derived.by(() => {
+    if (inputLines === 'auto' && auto) return auto;
+    if (inputLines !== undefined && inputLines !== 'auto') return inputLines;
+    return Number(fallback);
+  });
 
   const inFn = $derived(toTransition(inAction, fade));
   const inProps = $derived(toTransitionProps(inAction, leaveTransitionProps));
