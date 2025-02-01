@@ -22,6 +22,10 @@ export type NeoListBaseLoaderProps = {
   transition?: HTMLTransitionProps['transition'];
 
   /**
+   * Weather to style each 2n item as a description.
+   */
+  description?: string;
+  /**
    * Whether to show the checkmark skeleton.
    */
   checkmark?: boolean;

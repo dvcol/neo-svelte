@@ -53,4 +53,8 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * @param index
    */
   onclick: NeoButtonProps['onclick'];
+  /**
+   * Optional props to pass to the button.
+   */
+  buttonProps?: NeoButtonProps;
 } & NeoSkeletonTextProps;

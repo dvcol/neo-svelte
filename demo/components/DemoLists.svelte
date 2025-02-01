@@ -9,6 +9,7 @@
   import NeoCard from '~/cards/NeoCard.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoList from '~/list/NeoList.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { Colors } from '~/utils/colors.utils';
@@ -113,9 +114,24 @@
       { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
       { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
       { label: 'John Smith', value: 'Smith', description: 'john.smith@hotmal.com' },
+      { label: 'Jane Doe', value: 'Jane', description: 'jane.doe@yahoo.com' },
+      { label: 'Alice Johnson', value: 'Alice', description: 'alice.johnson@outlook.com' },
+      { label: 'Bob Brown', value: 'Bob', description: 'bob.brown@gmail.com' },
+      { label: 'Charlie Davis', value: 'Charlie', description: 'charlie.davis@icloud.com' },
+      { label: 'Diana Evans', value: 'Diana', description: 'diana.evans@hotmail.com' },
+      { label: 'Eve Foster', value: 'Eve', description: 'eve.foster@yahoo.com' },
+      { label: 'Frank Green', value: 'Frank', description: 'frank.green@outlook.com' },
+      { label: 'Grace Harris', value: 'Grace', description: 'grace.harris@gmail.com' },
+      { label: 'Henry Irving', value: 'Henry', description: 'henry.irving@icloud.com' },
+      { label: 'Ivy Johnson', value: 'Ivy', description: 'ivy.johnson@hotmail.com' },
+      { label: 'Jack King', value: 'Jack', description: 'jack.king@yahoo.com' },
+      { label: 'Karen Lee', value: 'Karen', description: 'karen.lee@outlook.com' },
     ].map(item => ({ ...item, id: getUUID(), before: avatar })),
   );
 
+  let hovered = $state(false);
+  let focused = $state(false);
+  let filter = $state('');
   const withComplexList = $derived(isEmpty ? [] : complexList);
 
   const onAdd = () => {
@@ -193,7 +209,7 @@
   <!--  multi line loader-->
   <div class="column content">
     <span class="label">Multi-line loader</span>
-    <NeoList {items} {...options} loaderProps={{ lines: 10, items: 1 }} />
+    <NeoList {items} {...options} loaderProps={{ lines: 2, items: 10 }} />
   </div>
 
   <!--  custom loader-->
@@ -277,26 +293,50 @@
 
   <!-- custom item with select, before, after & description  & loader  -->
   <div class="column content">
-    <span class="label">Select multiple</span>
-    <NeoList
-      select
-      multiple
-      items={withComplexList}
-      {...options}
-      after={values}
-      loaderProps={{
-        lines: 2,
-        before: true,
-        beforeProps: { width: '1.875rem', height: '1.875rem' },
-      }}
-    />
+    <span class="label">Complexe list</span>
+    <NeoCard
+      rounded
+      elevation="0"
+      scrollbar={false}
+      bind:hovered
+      bind:focused
+      hover="-2"
+      height="20rem"
+      width="min(80vw, 20rem)"
+      spacing="0.25rem"
+      --neo-card-border-radius="2.5rem"
+    >
+      <NeoList
+        select
+        multiple
+        items={withComplexList}
+        {...options}
+        loaderProps={{
+          description: true,
+          before: true,
+          beforeProps: { width: '1.875rem', height: '1.875rem' },
+        }}
+        buttonProps={{ rounded: true }}
+        filter={i => i.label.toLowerCase().includes(filter.toLowerCase())}
+      >
+        {#snippet before(ctx)}
+          <NeoInput
+            placeholder="Placeholder"
+            bind:value={filter}
+            elevation={hovered || focused ? 1 : 0}
+            hover="0"
+            rounded
+            containerProps={{ style: 'margin-bottom: 0' }}
+          />
+          {@render values(ctx)}
+        {/snippet}
+      </NeoList>
+    </NeoCard>
   </div>
-
-  <!--  tooltip item (nested menu drawer, portal ?) -->
 
   <!--  search items -->
 
-  <!--  custom filter snippet -->
+  <!--  tooltip item (nested menu drawer, portal ?) -->
 </div>
 
 <style lang="scss">
@@ -332,10 +372,17 @@
   }
 
   .list-values {
+    display: -webkit-box;
     margin-top: 0.25rem;
+    overflow: hidden;
     color: var(--neo-text-color-secondary);
     font-size: var(--neo-font-size-sm);
+    text-overflow: ellipsis;
+    word-break: break-word;
     padding-inline: 1.125rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
   }
 
   .custom-item-card,

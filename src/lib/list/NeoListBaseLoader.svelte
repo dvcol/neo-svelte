@@ -17,8 +17,9 @@
     before,
     after,
     checkmark = select,
+    description,
 
-    lines = 1,
+    lines = description ? 2 : 1,
     items = 3,
     flex = items > 1 ? undefined : '0 0 70%',
 
@@ -41,7 +42,7 @@
       in:transitionFn={{ ...transitionProps, delay: Math.min(300 + circIn(clamp(i / 10, 0, 1)) * 2000, 600) }}
       out:transitionFn={{ ...transitionProps, delay: Math.min(circIn(clamp((items - i) / 10, 0, 1)) * 2000, 600) }}
     >
-      <div class="neo-list-base-loader-content">
+      <div class="neo-list-base-loader-content" class:neo-description={description}>
         {#if before}
           {@const { width, height, ...bProps } = beforeProps ?? {}}
           <div class="neo-list-base-loader-before-skeleton" style:width style:height {...bProps}>
@@ -83,8 +84,17 @@
       align-items: center;
       padding: 0.125rem 0.5rem;
 
-      :global(.neo-list-loader-skeleton .neo-skeleton-text-paragraph) {
-        gap: 0.25rem;
+      :global(.neo-skeleton-text-line) {
+        --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
+      }
+
+      &.neo-description {
+        gap: var(--neo-gap-xs, 0.625rem);
+
+        :global(.neo-skeleton-text-line:nth-child(2n)) {
+          --neo-skeleton-text-font-size: var(--neo-font-size-sm, 0.875rem);
+          --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
+        }
       }
     }
 

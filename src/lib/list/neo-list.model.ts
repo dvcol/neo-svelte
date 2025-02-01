@@ -28,6 +28,10 @@ export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = 
    */
   divider?: boolean;
   /**
+   * If true, the item will not be displayed.
+   */
+  hidden?: boolean;
+  /**
    * Optional props to pass to the divider.
    */
   dividerProps?: NeoDividerProps;
@@ -155,12 +159,13 @@ export type NeoListMethods<Value = unknown> = {
   clearItem: (...selection: NeoListSelectedItem<Value>[]) => NeoListSelectEvent | undefined;
 };
 
+export type NeoListItemOrSection = NeoListItem | NeoListSection;
 export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSelectedItem[]> = {
   // States
   /**
    * List items to display.
    */
-  items?: (NeoListItem | NeoListSection)[];
+  items?: NeoListItemOrSection[];
   /**
    * Whether to allow selecting items in the list.
    */
@@ -173,6 +178,17 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    * The currently selected item(s).
    */
   selected?: Selected;
+  /**
+   * A filter function to apply to each item in the list.
+   * @param item
+   */
+  filter?: (item: NeoListItemOrSection) => boolean;
+  /**
+   * A sort function to apply to the list items.
+   * @param a
+   * @param b
+   */
+  sort?: (a: NeoListItemOrSection, b: NeoListItemOrSection) => number;
 
   /**
    * If the list is currently loading additional items.
@@ -279,6 +295,10 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * The props to pass to the loader.
    */
   loaderProps?: NeoListBaseLoaderProps;
+  /**
+   * Optional props to pass to the button.
+   */
+  buttonProps?: NeoButtonProps;
 } & HTMLRefProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   NeoListState<Selected>;

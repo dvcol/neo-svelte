@@ -27,6 +27,7 @@
     onclick,
 
     // Other props
+    buttonProps,
     ...rest
   }: NeoListBaseItemProps = $props();
   /* eslint-enable prefer-const */
@@ -47,7 +48,14 @@
       </div>
     {/if}
 
-    <NeoSkeletonText loading={skeleton} lines={description ? 2 : 1} align="center" {...rest} class={['neo-list-item-skeleton', rest?.class]}>
+    <NeoSkeletonText
+      loading={skeleton}
+      lines="auto"
+      fallback={description ? 2 : 1}
+      align="center"
+      {...rest}
+      class={['neo-list-item-skeleton', rest?.class]}
+    >
       <div class="neo-list-item-text">
         <span id={labelId} class="neo-list-item-label">{label ?? value}</span>
         {#if description}
@@ -82,8 +90,9 @@
       touched = true;
       onclick?.(e);
     }}
+    {...buttonProps}
     {...item?.buttonProps}
-    class={['neo-list-item-button', item?.buttonProps?.class]}
+    class={['neo-list-item-button', buttonProps?.class, item?.buttonProps?.class]}
   >
     {@render listItem(item)}
 
@@ -101,6 +110,10 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-list-item {
+    &-text {
+      margin-block-end: 0.125rem;
+    }
+
     &-label,
     &-description {
       display: -webkit-box;
@@ -113,6 +126,7 @@
     &-label {
       -webkit-line-clamp: 2;
       line-clamp: 2;
+      line-height: var(--neo-line-height-sm, 1.25rem);
     }
 
     &-description {
@@ -137,6 +151,10 @@
 
       &.neo-disabled {
         color: var(--neo-text-color-disabled);
+      }
+
+      :global(.neo-skeleton-text-line) {
+        --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
       }
 
       &.neo-description {

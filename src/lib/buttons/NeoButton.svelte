@@ -230,21 +230,17 @@
       --neo-btn-scale-pressed: 1;
     }
 
-    .neo-icon,
     .neo-content {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
+      height: 100%;
       backface-visibility: hidden;
       transition:
         color 0.3s ease,
         scale 0.3s ease;
       scale: 1;
-    }
-
-    .neo-content {
-      width: 100%;
-      height: 100%;
 
       .neo-icon:not(.neo-only) {
         margin-right: var(--neo-btn-icon-gap, 0.35rem);
@@ -313,12 +309,18 @@
       box-shadow: var(--neo-btn-box-shadow-focus, var(--neo-box-shadow-raised-2));
       transition:
         opacity 0.3s ease,
-        color 0.2s ease,
+        color 0.3s ease,
         background-color 0.3s ease,
         border-color 0.3s ease,
         backdrop-filter 0.3s ease,
         border-radius 0.3s ease,
         box-shadow 0.15s ease-out;
+
+      &:not(:hover) .neo-content {
+        transition:
+          color 0s ease,
+          scale 0.3s ease;
+      }
 
       &:hover .neo-content {
         color: var(--neo-btn-text-color-focused-hover, var(--neo-text-color-focused));

@@ -13,13 +13,13 @@
   import {
     isSection,
     type NeoListContext,
+    type NeoListItemOrSection,
     type NeoListMethods,
     type NeoListProps,
     type NeoListRenderContext,
     type NeoListSelectedItem,
     type NeoListSelectEvent,
   } from '~/list/neo-list.model.js';
-  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { defaultTransitionDuration, enterTransitionProps, flipTransitionProps, scaleTransitionProps } from '~/utils/transition.utils.js';
@@ -39,6 +39,8 @@
     ref = $bindable(),
     tag = 'ul',
     items = $bindable([]),
+    filter = $bindable(item => !item?.hidden),
+    sort = $bindable(() => 0),
     loading,
     skeleton,
     scrollToLoader,
@@ -64,11 +66,15 @@
     containerTag = 'div',
     containerProps,
     loaderProps,
+    buttonProps,
     ...rest
   }: NeoListProps = $props();
   /* eslint-enable prefer-const */
 
-  const empty = $derived(!items?.length);
+  // Todo - keep selected on filter
+  // TODO - arrow navigation
+  const visible = $derived<NeoListItemOrSection[]>(items?.filter(filter).sort(sort));
+  const empty = $derived(!visible?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
   const scrollTop = debounce(() => {
@@ -139,7 +145,7 @@
     return isSameIndex(selected, item);
   };
 
-  const findInList = (selection: NeoListSelectedItem, array: NeoListProps['items']): NeoListSelectedItem | undefined => {
+  const findInList = (selection: NeoListSelectedItem, array: NeoListItemOrSection[]): NeoListSelectedItem | undefined => {
     const result: Partial<NeoListSelectedItem> = {};
     const search = array?.some((item, index) => {
       if (isSection(item)) {
@@ -211,13 +217,13 @@
   const transitionProps = $derived(toTransitionProps(transition, scaleTransitionProps));
 </script>
 
-{#snippet loader()}
+{#snippet loader(show = loading)}
   <!-- Loading indicator -->
   <li class="neo-list-loader" class:neo-list-item-select={select}>
-    {#if loading && customLoader}
+    {#if show && customLoader}
       {@render customLoader(context)}
     {:else}
-      <NeoListBaseLoader {loading} {select} {transition} {...loaderProps} />
+      <NeoListBaseLoader loading={show} {select} {transition} {...loaderProps} />
     {/if}
   </li>
 {/snippet}
@@ -233,7 +239,8 @@
       class:neo-list-item-select={select}
       style:--neo-list-item-color={getColorVariable(item.color)}
       animate:animateFn={{ ...animateProps, enabled: !section }}
-      transition:transitionFn={transitionProps}
+      out:transitionFn={transitionProps}
+      in:transitionFn={{ ...transitionProps, delay: transitionProps?.duration }}
       {...item.containerProps}
     >
       {#if item.divider}
@@ -258,6 +265,7 @@
           {skeleton}
           {select}
           {checked}
+          {buttonProps}
           disabled={item.disabled || disabled}
           readonly={item.readonly || readonly}
           onclick={() => toggleItem(selection, checked)}
@@ -269,7 +277,7 @@
 
 <svelte:element this={containerTag} class:neo-list={true} class:neo-empty={empty} {...containerProps}>
   {@render before?.(context)}
-  {#if !empty}
+  {#if !empty || loading || skeleton}
     <svelte:element
       this={tag}
       role={select ? 'listbox' : 'list'}
@@ -281,27 +289,18 @@
       {...rest}
     >
       {@render children?.(context)}
-      {@render list({ items, context })}
-      {@render loader()}
+      {@render list({ items: visible, context })}
+      {@render loader(loading || (empty && skeleton))}
     </svelte:element>
   {:else}
     <svelte:element this={tag} bind:this={ref} class:neo-list-empty={true} in:fade={enterTransitionProps} {...rest}>
       {#if customEmpty}
         {@render customEmpty(context)}
       {:else}
-        <NeoSkeletonText
-          class="neo-list-empty-skeleton"
-          loading={skeleton || !!loading}
-          lines={typeof loading === 'boolean' ? 6 : loading}
-          align="center"
-          transitionProps={{ tag: 'li' }}
-          containerProps={{ class: 'neo-list-empty-skeleton-container' }}
-        >
-          <div class="neo-list-empty-content">
-            <IconList size="3rem" stroke="1" />
-            <div>No items</div>
-          </div>
-        </NeoSkeletonText>
+        <div class="neo-list-empty-content">
+          <IconList size="3rem" stroke="1" />
+          <div>No items</div>
+        </div>
       {/if}
     </svelte:element>
   {/if}
@@ -333,6 +332,7 @@
       height: 100%;
       margin: 0;
       padding: 0;
+      border-radius: var(--neo-border-radius);
     }
 
     &-items {
@@ -357,6 +357,7 @@
       max-width: 100%;
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
+      padding-inline: 0.125rem;
     }
 
     &-loader {
@@ -394,6 +395,7 @@
 
     &-empty-content {
       display: flex;
+      flex: 1 1 auto;
       flex-direction: column;
       gap: var(--neo-gap-xxs, 0.5rem);
       align-items: center;
