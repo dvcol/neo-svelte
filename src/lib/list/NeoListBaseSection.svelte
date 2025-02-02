@@ -39,8 +39,6 @@
 
 <style lang="scss">
   .neo-list-item-section {
-    margin-inline-start: 0.5rem;
-
     &-title {
       display: inline-flex;
       padding: 0.25rem 0.6125rem;

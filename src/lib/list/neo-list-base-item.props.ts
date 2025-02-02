@@ -46,6 +46,10 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * If true, the item will not trigger selection, but will not be styled as disabled.
    */
   readonly?: boolean;
+  /**
+   * Optional filter to highlight text.
+   */
+  highlight?: string;
 
   // Methods
   /**

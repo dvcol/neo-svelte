@@ -174,12 +174,14 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 
 - [ ] text
   - [ ] elevation
-  - [ ] elipsis
+  - [ ] ellipsis
+  - [ ] mark
+  - [ ] scroll & shadow
+  - [ ] typing animation
 
 - [ ] Alerts
     - [ ] toast
     - [ ] rich notification
-- [ ] scrollbar ?
 - [ ] container
   - [x] transition
   - [ ] split/resizable

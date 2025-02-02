@@ -17,6 +17,6 @@ export const ColorVariables = {
 } as const;
 
 export const getColorVariable = (color?: Color): string | undefined => {
-  if (!color) return;
+  if (!color || !ColorVariables[color]) return color;
   return `var(${ColorVariables[color]})`;
 };

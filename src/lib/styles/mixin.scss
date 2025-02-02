@@ -345,3 +345,12 @@
     border-radius 0.3s ease,
     padding 0.3s ease;
 }
+
+@mixin ellipsis($line: var(--neo-ellipsis-lines, 1), $word-break: break-word) {
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: $word-break;
+}

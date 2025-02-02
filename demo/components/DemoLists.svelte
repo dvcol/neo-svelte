@@ -346,9 +346,11 @@
           beforeProps: { width: '1.875rem', height: '1.875rem' },
         }}
         buttonProps={{ rounded: true }}
+        highlight={filter}
         filter={i =>
-          i.items?.some(j => j.label.toLowerCase().includes(filter.toLowerCase())) ||
-          (i.label && i.label.toLowerCase().includes(filter.toLowerCase()))}
+          i.items?.some(j => j.label.toLowerCase().includes(filter.toLowerCase()) || j.description?.toLowerCase().includes(filter.toLowerCase())) ||
+          (i.label && i.label.toLowerCase().includes(filter.toLowerCase())) ||
+          i.description?.toLowerCase().includes(filter.toLowerCase())}
         sort={sort ? (a, b) => a.label.localeCompare(b.label) : (b, a) => a.label.localeCompare(b.label)}
       >
         {#snippet before(ctx)}
@@ -386,6 +388,7 @@
               </NeoButton>
             {/snippet}
           </NeoInput>
+
           {@render values(ctx)}
         {/snippet}
       </NeoList>
@@ -474,6 +477,12 @@
   @media (width < 1550px) {
     .column {
       flex: 0 1 30%;
+    }
+  }
+
+  @media (width < 600px) {
+    .column {
+      flex: 0 1 80%;
     }
   }
 </style>

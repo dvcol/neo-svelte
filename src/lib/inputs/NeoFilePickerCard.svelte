@@ -293,11 +293,7 @@
         transition: color 0.1s ease;
 
         &-name {
-          display: -webkit-box;
-          overflow: hidden;
-          -webkit-line-clamp: 2;
-          line-clamp: 2;
-          -webkit-box-orient: vertical;
+          @include mixin.ellipsis($line: 2);
         }
 
         &-remove {

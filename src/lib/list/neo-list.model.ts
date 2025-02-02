@@ -216,6 +216,10 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    * Disable selection for all items in the list.
    */
   readonly?: boolean;
+  /**
+   * Optional filter to highlight text.
+   */
+  highlight?: string;
 };
 
 export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = NeoListState<Selected> & NeoListMethods;

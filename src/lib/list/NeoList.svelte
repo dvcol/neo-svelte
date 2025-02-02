@@ -44,6 +44,7 @@
     loading,
     skeleton,
     scrollToLoader,
+    highlight,
 
     select = false,
     multiple = false,
@@ -75,6 +76,7 @@
 
   // Todo - keep selected on filter
   // TODO - rework focus highlights
+  // TODO - highlight search results
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
@@ -197,6 +199,7 @@
     skeleton,
     disabled,
     readonly,
+    highlight,
 
     // Methods
     scrollTop,
@@ -271,6 +274,7 @@
           {skeleton}
           {select}
           {checked}
+          {highlight}
           {buttonProps}
           disabled={item.disabled || disabled}
           readonly={item.readonly || readonly}

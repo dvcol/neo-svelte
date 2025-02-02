@@ -7,6 +7,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
+  import NeoMark from '~/text/NeoMark.svelte';
   import { getNextFocusableElement } from '~/utils/html-element.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -23,6 +24,7 @@
     disabled,
     readonly,
     skeleton,
+    highlight,
 
     // Actions
     onclick,
@@ -44,6 +46,7 @@
     let li = element?.closest<HTMLElement>('.neo-list-item.neo-list-item-select');
     let next = li?.[sibling];
     let target = getNextFocusableElement(next);
+    if (target) return target.focus();
     while (next?.[sibling]) {
       if (target) return target.focus();
       next = next?.[sibling];
@@ -74,9 +77,13 @@
       class={['neo-list-item-skeleton', rest?.class]}
     >
       <div class="neo-list-item-text">
-        <span id={labelId} class="neo-list-item-label">{label ?? value}</span>
+        <span id={labelId} class="neo-list-item-label">
+          <NeoMark value={label ?? value?.toString()} filter={highlight} />
+        </span>
         {#if description}
-          <span class="neo-list-item-description">{description}</span>
+          <span class="neo-list-item-description">
+            <NeoMark value={description} filter={highlight} />
+          </span>
         {/if}
       </div>
     </NeoSkeletonText>
@@ -141,25 +148,19 @@
 
     &-label,
     &-description {
-      display: -webkit-box;
-      overflow: hidden;
-      -webkit-box-orient: vertical;
-      text-overflow: ellipsis;
-      word-break: break-word;
+      @include mixin.ellipsis;
     }
 
     &-label {
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
       line-height: var(--neo-line-height-sm, 1.25rem);
     }
 
     &-description {
+      --neo-ellipsis-lines: 2;
+
       color: var(--neo-text-color-secondary);
       font-size: var(--neo-font-size-sm, 0.875rem);
       line-height: var(--neo-line-height-sm, 1.25rem);
-      -webkit-line-clamp: 1;
-      line-clamp: 1;
     }
 
     &-content {
