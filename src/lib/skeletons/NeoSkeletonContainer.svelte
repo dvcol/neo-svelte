@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { wait } from '@dvcol/common-utils/common/promise';
+  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { resize } from '@dvcol/svelte-utils/resize';
+  import { untrack } from 'svelte';
   import { fade } from 'svelte/transition';
 
   import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
@@ -43,19 +44,23 @@
   let skeletonHeight = $state(height);
   let skeletonLines = $state<number>();
 
-  const updateSize = async () => {
-    if (!ref) return;
-    await wait(inProps?.delay);
+  const updateSize = $derived(
+    debounce(
+      () =>
+        untrack(() => {
+          if (!ref) return;
+          const rect = ref.getBoundingClientRect();
+          if (!width && rect?.width) skeletonWidth = `${rect.width}px`;
+          if (!height && rect?.height) skeletonHeight = `${rect.height}px`;
 
-    const rect = ref.getBoundingClientRect();
-    if (!width && rect?.width) skeletonWidth = `${rect.width}px`;
-    if (!height && rect?.height) skeletonHeight = `${rect.height}px`;
-
-    if (!rect?.height) return;
-    const lineHeight = Number.parseInt(getComputedStyle(ref).lineHeight, 10);
-    if (Number.isNaN(lineHeight) || !lineHeight) return;
-    skeletonLines = Math.round(rect.height / lineHeight);
-  };
+          if (!rect?.height) return;
+          const lineHeight = Number.parseInt(getComputedStyle(ref).lineHeight, 10);
+          if (Number.isNaN(lineHeight) || !lineHeight) return;
+          skeletonLines = Math.round(rect.height / lineHeight);
+        }),
+      inProps?.delay,
+    ),
+  );
 
   $effect.pre(() => {
     if (!ref || loading) return;
