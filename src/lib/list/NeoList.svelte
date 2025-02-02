@@ -76,7 +76,7 @@
 
   // Todo - keep selected on filter
   // TODO - rework focus highlights
-  // TODO - highlight search results
+  // TODO - rework divider for re-sort
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
@@ -235,7 +235,7 @@
 {/snippet}
 
 {#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
-  {@const visible = array?.filter(filter).sort(sort)}
+  {@const visible = array?.filter(filter)}
   <!-- Items -->
   {#each visible as item, index (item.id ?? index)}
     <svelte:element
@@ -397,7 +397,7 @@
       &:hover,
       &:focus,
       &:focus-within {
-        :global(.neo-list-item-section-title) {
+        :global(.neo-list-section-title) {
           color: var(--neo-text-color-highlight);
         }
       }

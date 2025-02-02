@@ -385,5 +385,12 @@
         font-size: var(--neo-font-size-xs, 0.75rem);
       }
     }
+
+    &[type='search']::-webkit-search-decoration,
+    &[type='search']::-webkit-search-cancel-button,
+    &[type='search']::-webkit-search-results-button,
+    &[type='search']::-webkit-search-results-decoration {
+      appearance: none;
+    }
   }
 </style>

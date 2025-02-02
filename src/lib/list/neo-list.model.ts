@@ -119,6 +119,10 @@ export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagName
    */
   label: string;
   /**
+   * Whether the section is sticky (stays on top while scrolling the content).
+   */
+  sticky?: boolean;
+  /**
    * Optional snippet to display in place of the list section.
    * @param list - The list snippet that render items.
    * @param context - The list section context.
