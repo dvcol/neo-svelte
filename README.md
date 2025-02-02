@@ -89,29 +89,21 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] popselect
   - [ ] nested menus
 
-- [ ] list
-  - [ ] snippets
-    - [ ] children
-    - [ ] header
-    - [ ] footer
-  - [ ] select
-    - [ ] multiple
-    - [ ] disabled
-    - [ ] readonly
-    - [ ] header (pills or item count)
-  - [ ] separator
-    - [ ] label (sections
-  - [ ] keyboard navigation
-  - [ ] scroll shadow
+- [x] list
+  - [x] select
+    - [X] multiple
+    - [x] disabled
+    - [x] readonly
+    - [x] sections
+    - [x] keyboard navigation
+  - [x] scroll shadow
   - [ ] virtualized
   - [ ] infinite scroll
   - [ ] drag & drop
   - [ ] pagination
   - [ ] pull/scroll to refresh
-  - [ ] filter
-  - [ ] sort
-  - [ ] search
-  - [ ] select
+  - [x] filter
+  - [x] sort
   - [ ] tree
 
 - [ ] stepper
@@ -174,9 +166,9 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 
 - [ ] text
   - [ ] elevation
-  - [ ] ellipsis
-  - [ ] mark
-  - [ ] scroll & shadow
+  - [x] ellipsis
+  - [x] mark
+  - [x] scroll & shadow
   - [ ] typing animation
 
 - [ ] Alerts

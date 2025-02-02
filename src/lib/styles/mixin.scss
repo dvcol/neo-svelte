@@ -207,7 +207,7 @@
 }
 
 @mixin scrollbar(
-  $overflow: auto,
+  $overflow: var(--neo-scrollbar-overflow, auto),
   $gutter: stable both-edges,
   $width: var(--neo-scrollbar-width, 0.375rem),
   $thumb-color: var(--neo-scrollbar-color),
@@ -275,7 +275,7 @@
 
 @mixin fade-scroll($fade-height: 1rem, $direction: top) {
   mask-image: linear-gradient(
-    to $direction,
+    to var(--neo-scroll-direction, #{$direction}),
     black,
     black,
     transparent 0,
