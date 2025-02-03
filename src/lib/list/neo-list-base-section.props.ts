@@ -20,6 +20,10 @@ export type NeoListBaseSectionProps<Value = unknown, Tag extends keyof HTMLEleme
    * The current list context.
    */
   context: NeoListContext;
+  /**
+   * Optional filter to highlight text.
+   */
+  highlight?: string;
 
   /**
    * If true, the section will display as a skeleton.

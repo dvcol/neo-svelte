@@ -4,6 +4,7 @@
   import type { NeoListBaseSectionProps } from '~/list/neo-list-base-section.props.js';
 
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
+  import NeoMark from '~/text/NeoMark.svelte';
 
   const {
     // Snippets
@@ -15,6 +16,7 @@
     context,
 
     skeleton,
+    highlight,
 
     // Other props
     skeletonProps,
@@ -28,9 +30,9 @@
   {@render section?.render(list, { items: section.items, section, index, context })}
 {:else}
   {#if section.label}
-    <div class="neo-list-section-title" class:neo-sticky={section.sticky}>
+    <div id={labelId} class="neo-list-section-title" class:neo-sticky={section.sticky}>
       <NeoSkeletonText loading={skeleton} lines={1} align="center" {...skeletonProps} class={['neo-list-section-skeleton', skeletonProps?.class]}>
-        <span id={labelId}>{section.label}</span>
+        <NeoMark value={section.label} filter={highlight} />
       </NeoSkeletonText>
     </div>
   {/if}

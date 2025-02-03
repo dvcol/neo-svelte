@@ -19,6 +19,7 @@
     type NeoListRenderContext,
     type NeoListSelectedItem,
     type NeoListSelectEvent,
+    showDivider,
   } from '~/list/neo-list.model.js';
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -76,8 +77,6 @@
 
   // Todo - keep selected on filter
   // TODO - rework focus highlights
-  // TODO - rework divider for re-sort
-  // TODO - sticky section header background
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
@@ -235,6 +234,7 @@
       scrollBottom,
     });
   });
+
   const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
   const animateProps = $derived(toTransitionProps(animate));
   const inFn = $derived(missing ? emptyTransition : toTransition(inAction));
@@ -272,7 +272,7 @@
       out:inFn={inProps}
       in:outFn={outProps}
     >
-      {#if item.divider}
+      {#if index && showDivider(item, 'top')}
         <NeoDivider {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
       {/if}
       {#if isSection(item)}
@@ -300,6 +300,9 @@
           readonly={item.readonly || readonly}
           onclick={() => toggleItem(selection, checked)}
         />
+      {/if}
+      {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1], 'bottom')}
+        <NeoDivider {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
       {/if}
     </svelte:element>
   {/each}

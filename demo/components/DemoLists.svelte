@@ -38,7 +38,7 @@
         buttonProps: { target: '_blank' },
         title: 'This is a link to google',
         color: Colors.Primary,
-        divider: true,
+        divider: { top: true },
         readonly: true,
       },
       {
@@ -52,7 +52,7 @@
         value: 'This is a disabled item',
         onclick: () => console.info('disabled clicked'),
         disabled: true,
-        divider: true,
+        divider: { bottom: true },
       },
       { label: 'Line item error', value: 2, color: Colors.Error },
       { label: 'Line item warning', value: 3, color: Colors.Warning },
@@ -340,9 +340,9 @@
         }}
         buttonProps={{ rounded: true }}
       >
-        {#snippet before(ctx)}
-          <NeoListSearch context={ctx} elevation={hovered || focused ? 1 : 0} />
-          {@render values(ctx)}
+        {#snippet before(context)}
+          <NeoListSearch {context} elevation={hovered || focused ? 1 : 0} />
+          {@render values(context)}
         {/snippet}
       </NeoList>
     </NeoCard>

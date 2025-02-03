@@ -6,6 +6,12 @@ import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.util
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
+export type NeoListDividerOption = { top?: boolean; bottom?: boolean };
+export const showDivider = (item: NeoListItemOrSection, position: keyof NeoListDividerOption = 'top') => {
+  if (typeof item.divider !== 'boolean') return item.divider?.[position];
+  return item.divider;
+};
+
 export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   /**
    * Unique identifier for the list item.
@@ -26,7 +32,7 @@ export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = 
   /**
    * If true, the list section will display a divider above the title.
    */
-  divider?: boolean;
+  divider?: boolean | NeoListDividerOption;
   /**
    * If true, the item will not be displayed.
    */
