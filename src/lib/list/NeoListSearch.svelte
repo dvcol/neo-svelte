@@ -69,7 +69,7 @@
   const onclick: FormEventHandler<HTMLButtonElement> = () => {
     if (!context) return;
     if (reverse === false) {
-      context.sort = undefined;
+      context.sort = () => 0;
       reverse = undefined;
       return;
     }

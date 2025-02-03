@@ -154,6 +154,7 @@
 
   let hovered = $state(false);
   let focused = $state(false);
+  let elevation = $state(0);
   const withComplexList = $derived(isEmpty ? [] : complexList);
 
   const onAdd = () => {
@@ -273,9 +274,9 @@
   {#snippet values(ctx)}
     <div class="list-values">
       {#if Array.isArray(ctx.selected)}
-        Indexes: {ctx.selected?.map(i => [i.sectionIndex, i?.index].filter(j => j !== undefined).join('-')).join(', ') || 'none selected'}
+        values: {ctx.selected?.map(i => [i.sectionIndex, i?.index].filter(j => j !== undefined).join('-')).join(', ') || 'none selected'}
       {:else}
-        Indexes: {ctx.selected?.index || 'none selected'}
+        values: {ctx.selected?.index || 'none selected'}
       {/if}
     </div>
   {/snippet}
@@ -318,8 +319,8 @@
     <span class="label">Complexe list</span>
     <NeoCard
       rounded
-      elevation="0"
       scrollbar={false}
+      bind:elevation
       bind:hovered
       bind:focused
       hover="-2"
@@ -341,7 +342,7 @@
         buttonProps={{ rounded: true }}
       >
         {#snippet before(context)}
-          <NeoListSearch {context} elevation={hovered || focused ? 1 : 0} />
+          <NeoListSearch elevation={hovered || focused ? 2 : elevation} {context} />
           {@render values(context)}
         {/snippet}
       </NeoList>

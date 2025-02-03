@@ -75,7 +75,6 @@
   }: NeoListProps = $props();
   /* eslint-enable prefer-const */
 
-  // Todo - keep selected on filter
   // TODO - rework focus highlights
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
@@ -170,22 +169,26 @@
     return search ? (result as NeoListSelectedItem) : undefined;
   };
 
+  /**
+   * Re-selects the previous selection if it still exists in the list
+   */
+  const reSelect: NeoListMethods['reSelect'] = () => {
+    if (!select || !selected) return;
+    const previous = cloneSelection();
+    clearItem();
+    if (multiple && !Array.isArray(previous)) return;
+    if (isMultiple(previous)) {
+      selected = previous?.map(item => findInList(item, items)).filter<NeoListSelectedItem>(item => !!item) ?? [];
+    } else {
+      selected = findInList(previous, items);
+    }
+    const event = { previous, current: cloneSelection() };
+    onselect?.(event);
+    return event;
+  };
+
   // Clear selected item(s) when items list changes and attempts to re-select if the item still exists
-  watch(
-    () => items,
-    () => {
-      if (!select || !selected) return;
-      const previous = cloneSelection();
-      clearItem();
-      if (multiple && !Array.isArray(previous)) return;
-      if (isMultiple(previous)) {
-        selected = previous?.map(item => findInList(item, items)).filter<NeoListSelectedItem>(item => !!item) ?? [];
-      } else {
-        selected = findInList(previous, items);
-      }
-      onselect?.({ previous, current: cloneSelection() });
-    },
-  );
+  watch(() => items, reSelect);
 
   const context = $derived<NeoListContext>({
     // States
@@ -225,6 +228,7 @@
     scrollBottom,
     selectItem,
     clearItem,
+    reSelect,
   });
 
   $effect(() => {
@@ -255,9 +259,12 @@
 {/snippet}
 
 {#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
-  {@const visible = array?.filter(filter).sort(sort)}
+  {@const visible = array
+    ?.map((item, index) => ({ item, index }))
+    .filter(({ item }) => filter(item))
+    .sort((a, b) => sort(a.item, b.item))}
   <!-- Items -->
-  {#each visible as item, index (item.id ?? index)}
+  {#each visible as { item, index } (item.id ?? index)}
     <svelte:element
       this={item.tag ?? 'li'}
       role={select ? 'option' : 'listitem'}
@@ -301,7 +308,7 @@
           onclick={() => toggleItem(selection, checked)}
         />
       {/if}
-      {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1], 'bottom')}
+      {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1].item, 'bottom')}
         <NeoDivider {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
       {/if}
     </svelte:element>

@@ -177,6 +177,13 @@ export type NeoListMethods<Value = unknown> = {
    * @returns The selection event if the list or item was cleared, undefined otherwise.
    */
   clearItem: (...selection: NeoListSelectedItem<Value>[]) => NeoListSelectEvent | undefined;
+  /**
+   * Clear all items in the list then re-select the previously selected item(s) only if they still exist in the list.
+   * Requires the `id` property to be set and unique for each item.
+   *
+   * @returns The selection event if the list or item was cleared, undefined otherwise.
+   */
+  reSelect: () => NeoListSelectEvent | undefined;
 };
 
 export type NeoListItemOrSection = NeoListItem | NeoListSection;
