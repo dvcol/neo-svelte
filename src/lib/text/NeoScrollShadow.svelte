@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoScollShadowProps } from '~/text/neo-scroll-shadow.model.js';
+  import type { NeoScrollShadowProps } from '~/text/neo-scroll-shadow.model.js';
 
   const {
     // Snippets
@@ -16,7 +16,7 @@
 
     // Other props
     ...rest
-  }: NeoScollShadowProps = $props();
+  }: NeoScrollShadowProps = $props();
 </script>
 
 <svelte:element

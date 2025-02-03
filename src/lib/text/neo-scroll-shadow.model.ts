@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-export type NeoScollShadowProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
+export type NeoScrollShadowProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   /**
    * Children to overflow
    */

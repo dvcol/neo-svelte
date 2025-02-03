@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoEllipsisProps } from '~/text/neo-elipsis.model.js';
+  import type { NeoEllipsisProps } from '~/text/neo-ellipsis.model.js';
 
   const {
     // Snippets

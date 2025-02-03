@@ -1,3 +1,3 @@
 export { default as NeoDivider } from './NeoDivider.svelte';
 
-export type { NeoDividerProps } from './neo-divider.model.js';
+export type * from './neo-divider.model.js';

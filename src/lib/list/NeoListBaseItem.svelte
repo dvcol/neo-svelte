@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.props.js';
+  import type { NeoListBaseItemModel } from '~/list/neo-list-base-item.model.js';
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -32,7 +32,7 @@
     // Other props
     buttonProps,
     ...rest
-  }: NeoListBaseItemProps = $props();
+  }: NeoListBaseItemModel = $props();
   /* eslint-enable prefer-const */
 
   $effect(() => {

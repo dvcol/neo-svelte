@@ -12,14 +12,9 @@ export { default as NeoRadio } from './NeoRadio.svelte';
 export { default as NeoRange } from './NeoRange.svelte';
 export { default as NeoSwitch } from './NeoSwitch.svelte';
 
-export type {
-  NeoInputProps,
-  NeoTextareaProps,
-  NeoInputContext,
-  NeoInputElevation,
-  NeoInputLabelPositions,
-  NeoTextAreaResize,
-} from './common/neo-input.model.js';
+export { NeoInputLabelPosition } from './common/neo-input.model.js';
+
+export type * from './common/neo-input.model.js';
 
 export * from './neo-checkbox.model.js';
 export * from './neo-color-picker.model.js';

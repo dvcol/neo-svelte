@@ -2,7 +2,7 @@ import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoListContext, NeoListItem } from '~/list/neo-list.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 
-export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+export type NeoListBaseItemModel<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   // Context
   /**
    * The list item to display.

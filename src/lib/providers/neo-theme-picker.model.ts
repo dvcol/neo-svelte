@@ -5,7 +5,12 @@ import type { INeoThemeProviderContext } from '~/providers/neo-theme-provider.mo
 export type NeoThemePickerProps = {
   // Snippet
 
+  /**
+   * Any children to display in the theme picker.
+   */
   children?: Snippet<[INeoThemeProviderContext]>;
+
+  // State
 
   /**
    * The label to show in the background picker.

@@ -2,7 +2,7 @@ import type { NeoListContext, NeoListRender, NeoListSection } from '~/list/neo-l
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-export type NeoListBaseSectionProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
+export type NeoListBaseSectionModel<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
   /**
    * The list section to display.
    */

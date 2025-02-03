@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { NeoListBaseSectionProps } from '~/list/neo-list-base-section.props.js';
+  import type { NeoListBaseSectionModel } from '~/list/neo-list-base-section.model.js';
 
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
@@ -21,7 +21,7 @@
     // Other props
     skeletonProps,
     ...rest
-  }: NeoListBaseSectionProps = $props();
+  }: NeoListBaseSectionModel = $props();
 
   const labelId = $derived(section.label ? `neo-list-section-label-${getUUID()}` : undefined);
 </script>
