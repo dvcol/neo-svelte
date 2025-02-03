@@ -98,6 +98,8 @@
     afterRef = $bindable(),
     afterProps,
     afterTag = afterProps?.onclick ? 'button' : 'span',
+    affixRef = $bindable(),
+    affixProps,
     containerRef = $bindable(),
     containerProps,
     containerTag = 'div',
@@ -354,12 +356,14 @@
   <!--  Affix (loafing, clear, placeholder) -->
   {#if affix}
     <NeoAffix
+      bind:ref={affixRef}
       {loading}
       {close}
       {disabled}
       {skeleton}
       valid={validation ? valid : undefined}
-      closeProps={{ onclick: () => clear() }}
+      {...affixProps}
+      closeProps={{ onclick: () => clear(), ...affixProps?.closeProps }}
       onclick={() => focus()}
     />
   {/if}

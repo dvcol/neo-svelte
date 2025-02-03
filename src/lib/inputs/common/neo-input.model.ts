@@ -5,6 +5,7 @@
 
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLSelectAttributes, HTMLTextareaAttributes } from 'svelte/elements';
+import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
@@ -321,6 +322,15 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    * The ref to bind to the suffix.
    */
   afterRef?: HTMLElement;
+
+  /**
+   * The props to pass to the affix.
+   */
+  affixProps?: NeoAffixProps;
+  /**
+   * The ref to bind to the affix.
+   */
+  affixRef?: HTMLElement;
 
   /**
    * The props to pass to the label.

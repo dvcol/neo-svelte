@@ -1,7 +1,27 @@
+import type { Snippet } from 'svelte';
 import type { HTMLButtonAttributes } from 'svelte/elements';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-export type NeoAffixProps = {
+export type NeoAffixProps<Tag extends keyof HTMLElementTagNameMap = 'span'> = {
+  // Snippets
+  /**
+   * Optional close icon snippet.
+   */
+  reset?: Snippet<[{ size?: string }]>;
+  /**
+   * Optional loading icon snippet.
+   */
+  loader?: Snippet<[{ size?: string }]>;
+  /**
+   * Optional validation icon snippet.
+   */
+  validation?: Snippet<[{ valid?: boolean; size?: string }]>;
+
+  /**
+   * The HTML tag to use for the affix.
+   * @default span
+   */
+  tag?: Tag;
   /**
    * Display loading indicator
    */
@@ -30,5 +50,5 @@ export type NeoAffixProps = {
    * Props for the close button
    */
   closeProps?: HTMLButtonAttributes;
-} & HTMLNeoBaseElement<HTMLSpanElement> &
-  HTMLRefProps<HTMLSpanElement>;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
+  HTMLRefProps<HTMLElementTagNameMap[Tag]>;

@@ -78,6 +78,8 @@
     afterRef = $bindable(),
     afterProps,
     afterTag = afterProps?.onclick ? 'button' : 'span',
+    affixRef = $bindable(),
+    affixProps,
     beforeRef = $bindable(),
     beforeProps,
     beforeTag = beforeProps?.onclick ? 'button' : 'span',
@@ -171,7 +173,6 @@
     first = false;
   };
 
-  let affixRef = $state<HTMLElement>();
   let affixWidth = $state<string>();
   let afterWidth = $state<string>();
   let beforeWidth = $state<string>();
@@ -259,13 +260,19 @@
   {#if affix}
     <NeoAffix
       bind:ref={affixRef}
-      class={[after ? 'neo-after' : undefined, rest.type === 'select' ? 'neo-select' : undefined, rest.multiple ? 'neo-multiple' : undefined]}
       {loading}
       {close}
       {disabled}
       {skeleton}
       valid={validation ? valid : undefined}
-      closeProps={{ onclick: onClear }}
+      {...affixProps}
+      class={[
+        after ? 'neo-after' : undefined,
+        rest.type === 'select' ? 'neo-select' : undefined,
+        rest.multiple ? 'neo-multiple' : undefined,
+        affixProps?.class,
+      ]}
+      closeProps={{ onclick: onClear, ...affixProps?.closeProps }}
       onclick={onFocus}
     />
   {/if}

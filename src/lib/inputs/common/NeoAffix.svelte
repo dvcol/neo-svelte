@@ -12,7 +12,13 @@
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
+    reset,
+    loader,
+    validation,
+
     // States
+    tag = 'span',
     ref = $bindable(),
     loading,
     close,
@@ -33,19 +39,37 @@
   const clear = $derived.by(debounced(() => close && !disabled, 100));
 </script>
 
-<span bind:this={ref} class:neo-affix-container={true} class:neo-skeleton={skeleton} style:--neo-affix-size={size} role="none" {...rest}>
+<svelte:element
+  this={tag}
+  bind:this={ref}
+  class:neo-affix-container={true}
+  class:neo-skeleton={skeleton}
+  style:--neo-affix-size={size}
+  role="none"
+  {...rest}
+>
   {#if loading}
     <span class="neo-affix-loading" out:fade={leave}>
-      <IconCircleLoading {size} />
+      {#if loader}
+        {@render loader(size)}
+      {:else}
+        <IconCircleLoading {size} />
+      {/if}
     </span>
   {:else if clear}
     <button {disabled} class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
-      <IconClear {size} />
+      {#if reset}
+        {@render reset(size)}
+      {:else}
+        <IconClear {size} />
+      {/if}
     </button>
   {:else}
     <span class="neo-affix-validation" data-valid={valid} in:fade={leave}>
       {#if valid !== undefined}
-        {#if valid}
+        {#if validation}
+          {@render validation({ size, valid })}
+        {:else if valid}
           <IconConfirm {size} />
         {:else}
           <IconAlert {size} />
@@ -53,7 +77,7 @@
       {/if}
     </span>
   {/if}
-</span>
+</svelte:element>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
