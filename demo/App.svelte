@@ -70,9 +70,9 @@
           <NeoTab tabId={route}>{sentenceCase(route)}</NeoTab>
         {/each}
 
-        <NeoTabDivider />
+        <NeoTabDivider aria-hidden="true" />
 
-        <NeoButton aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
+        <NeoButton role="tab" aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
           {#snippet icon()}
             <IconGithub stroke="2" scale="1.125" />
           {/snippet}

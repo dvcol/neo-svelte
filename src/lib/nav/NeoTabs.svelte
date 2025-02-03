@@ -149,7 +149,7 @@
       {@render children?.(ctx)}
       {#if add}
         <div transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }}>
-          <NeoButton onclick={onadd} {icon} />
+          <NeoButton aria-label="Add new tab" onclick={onadd} {icon} />
         </div>
       {/if}
     </NeoButtonGroup>

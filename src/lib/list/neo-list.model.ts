@@ -61,6 +61,8 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   /**
    * Optional label to display in the list item.
    * If not provided, the value will be used.
+   *
+   * @note Recommended in section for accessibility.
    */
   label?: string;
   /**

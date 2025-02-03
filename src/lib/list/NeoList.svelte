@@ -249,7 +249,13 @@
 
 {#snippet loader(show = loading)}
   <!-- Loading indicator -->
-  <li class="neo-list-loader" class:neo-list-item-select={select}>
+  <li
+    role={select ? 'option' : 'listitem'}
+    aria-disabled="true"
+    aria-label="Loading placeholder."
+    class="neo-list-loader"
+    class:neo-list-item-select={select}
+  >
     {#if show && customLoader}
       {@render customLoader(context)}
     {:else}
@@ -270,6 +276,8 @@
       role={select ? 'option' : 'listitem'}
       data-index={index}
       data-section={sectionIndex}
+      aria-posinset={index + 1}
+      aria-setsize={array.length}
       class:neo-list-item={true}
       class:neo-skeleton={skeleton}
       class:neo-list-item-select={select}
@@ -280,14 +288,14 @@
       in:outFn={outProps}
     >
       {#if index && showDivider(item, 'top')}
-        <NeoDivider {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
+        <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
       {/if}
       {#if isSection(item)}
         {@const sectionContext = { items: item.items, section: item, index, context }}
         {#if customSection && !item.render}
           {@render customSection(list, sectionContext)}
         {:else}
-          <NeoListBaseSection section={item} {index} {context} {skeleton} {list} />
+          <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} />
         {/if}
       {:else if customItem && !item.render}
         {@render customItem({ item, index, context })}
@@ -309,7 +317,7 @@
         />
       {/if}
       {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1].item, 'bottom')}
-        <NeoDivider {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
+        <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
       {/if}
     </svelte:element>
   {/each}
@@ -333,7 +341,15 @@
       {@render loader(loading || (empty && skeleton))}
     </svelte:element>
   {:else}
-    <svelte:element this={tag} bind:this={ref} class:neo-list-empty={true} in:fade={enterTransitionProps} {...rest}>
+    <svelte:element
+      this={tag}
+      aria-label="Empty placeholder"
+      role={select ? 'listbox' : 'list'}
+      bind:this={ref}
+      class:neo-list-empty={true}
+      in:fade={enterTransitionProps}
+      {...rest}
+    >
       {#if customEmpty}
         {@render customEmpty(context)}
       {:else}

@@ -12,6 +12,10 @@ export type NeoListBaseSectionModel<Value = unknown, Tag extends keyof HTMLEleme
    * The list section to display.
    */
   section: NeoListSection<Value, Tag>;
+  /**
+   * If true, the section will display as a selectable list of items.
+   */
+  select?: boolean;
   /*
    * The current index of the section within the list.
    */

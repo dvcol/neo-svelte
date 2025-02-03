@@ -76,11 +76,11 @@
 {#snippet tabs()}
   <NeoTab tabId="button" value="button" close={false} onclick={onClick}>Button</NeoTab>
   <NeoTab tabId="disabled" value="disabled" disabled close={false} onclick={onClick}>Disabled</NeoTab>
-  <NeoTabDivider />
+  <NeoTabDivider aria-hidden="true" />
   <NeoTab tabId="loading" value="loading" {loading} close={false} onclick={onLoading}>Loading</NeoTab>
-  <NeoTab tabId="icon" value="icon" {loading} close={false} onclick={onLoading} {icon} />
+  <NeoTab tabId="icon" aria-label="icon button" value="icon" {loading} close={false} onclick={onLoading} {icon} />
   <NeoTab tabId="icon-label" value="icon-label" close={false} onclick={onClick} {icon}>Icon</NeoTab>
-  <NeoTabDivider />
+  <NeoTabDivider aria-hidden="true" />
   <NeoTab tabId="reversed" value="reversed" reverse close={false} onclick={onClick} {icon}>Reversed</NeoTab>
   {#each added as { text, ...tab } (tab.tabId)}
     <NeoTab {...tab}>{text}</NeoTab>

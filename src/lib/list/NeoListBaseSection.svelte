@@ -15,6 +15,7 @@
     index,
     context,
 
+    select,
     skeleton,
     highlight,
 
@@ -36,9 +37,16 @@
       </NeoSkeletonText>
     </div>
   {/if}
-  <ul role="group" aria-labelledby={labelId} class:neo-list-section-list={true} {...rest} {...section.sectionProps}>
+  <svelte:element
+    this={section?.tag ?? 'ul'}
+    role={select ? 'listbox' : 'list'}
+    aria-labelledby={labelId}
+    class:neo-list-section-list={true}
+    {...rest}
+    {...section.sectionProps}
+  >
     {@render list({ items: section.items, section, index, context })}
-  </ul>
+  </svelte:element>
 {/if}
 
 <style lang="scss">

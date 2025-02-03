@@ -100,7 +100,7 @@
   {@render item?.render({ item, index, context })}
 {:else if item?.href || item?.onclick || select}
   <NeoButton
-    aria-selected={checked}
+    data-select={checked}
     aria-labelledby={labelId}
     ghost
     shallow
