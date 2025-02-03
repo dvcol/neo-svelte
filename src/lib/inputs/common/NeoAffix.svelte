@@ -51,7 +51,7 @@
   {#if loading}
     <span class="neo-affix-loading" out:fade={leave}>
       {#if loader}
-        {@render loader(size)}
+        {@render loader({ size })}
       {:else}
         <IconCircleLoading {size} />
       {/if}
@@ -59,7 +59,7 @@
   {:else if clear}
     <button {disabled} class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
       {#if reset}
-        {@render reset(size)}
+        {@render reset({ size })}
       {:else}
         <IconClear {size} />
       {/if}

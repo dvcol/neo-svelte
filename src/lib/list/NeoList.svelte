@@ -39,12 +39,12 @@
     ref = $bindable(),
     tag = 'ul',
     items = $bindable([]),
+    highlight = $bindable(),
     filter = $bindable(item => !item?.hidden),
     sort = $bindable(() => 0),
     loading,
     skeleton,
     scrollToLoader,
-    highlight,
 
     select = false,
     multiple = false,
@@ -77,6 +77,7 @@
   // Todo - keep selected on filter
   // TODO - rework focus highlights
   // TODO - rework divider for re-sort
+  // TODO - sticky section header background
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
@@ -199,7 +200,26 @@
     skeleton,
     disabled,
     readonly,
-    highlight,
+
+    // Filter
+    get highlight() {
+      return highlight;
+    },
+    set highlight(value) {
+      highlight = value;
+    },
+    get sort() {
+      return sort;
+    },
+    set sort(value) {
+      sort = value;
+    },
+    get filter() {
+      return filter;
+    },
+    set filter(value) {
+      filter = value;
+    },
 
     // Methods
     scrollTop,
@@ -235,7 +255,7 @@
 {/snippet}
 
 {#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
-  {@const visible = array?.filter(filter)}
+  {@const visible = array?.filter(filter).sort(sort)}
   <!-- Items -->
   {#each visible as item, index (item.id ?? index)}
     <svelte:element

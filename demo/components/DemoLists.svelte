@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
@@ -9,14 +8,11 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
-  import IconAlignBottom from '~/icons/IconAlignBottom.svelte';
-  import IconAlignTop from '~/icons/IconAlignTop.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
-  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoList from '~/list/NeoList.svelte';
+  import NeoListSearch from '~/list/NeoListSearch.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { Colors } from '~/utils/colors.utils';
-  import { getNextFocusableElement } from '~/utils/html-element.utils';
   import { enterTransitionProps } from '~/utils/transition.utils';
 
   const options = $state<NeoListProps>({
@@ -132,6 +128,7 @@
       {
         label: 'Directors',
         divider: true,
+        sticky: true,
         items: [
           { label: 'Denis VVilleneuve', value: 'Denis', description: '+33 1 25 48 45 45' },
           { label: 'Christopher Nolan', value: 'Christopher', description: '+44 2 07 94 60 95' },
@@ -143,6 +140,7 @@
       {
         label: 'Actors',
         divider: true,
+        sticky: true,
         items: [
           { label: 'Leonardo DiCaprio', value: 'Leonardo', description: '+1 310 555 1234' },
           { label: 'Brad Pitt', value: 'Brad', description: '+1 323 555 5678' },
@@ -156,11 +154,6 @@
 
   let hovered = $state(false);
   let focused = $state(false);
-  let filter = $state('');
-  const setFilter = debounce((value: string) => {
-    filter = value;
-  }, 300);
-  let sort = $state(false);
   const withComplexList = $derived(isEmpty ? [] : complexList);
 
   const onAdd = () => {
@@ -332,8 +325,8 @@
       hover="-2"
       height="20rem"
       width="min(80vw, 20rem)"
-      spacing="0.25rem"
-      --neo-card-border-radius="2.5rem"
+      spacing="0.5rem"
+      --neo-card-border-radius="2.75rem"
     >
       <NeoList
         select
@@ -346,49 +339,9 @@
           beforeProps: { width: '1.875rem', height: '1.875rem' },
         }}
         buttonProps={{ rounded: true }}
-        highlight={filter}
-        filter={i =>
-          i.items?.some(j => j.label.toLowerCase().includes(filter.toLowerCase()) || j.description?.toLowerCase().includes(filter.toLowerCase())) ||
-          (i.label && i.label.toLowerCase().includes(filter.toLowerCase())) ||
-          i.description?.toLowerCase().includes(filter.toLowerCase())}
-        sort={sort ? (a, b) => a.label.localeCompare(b.label) : (b, a) => a.label.localeCompare(b.label)}
       >
         {#snippet before(ctx)}
-          <NeoInput
-            placeholder="Placeholder"
-            oninput={e => setFilter(e.target.value)}
-            elevation={hovered || focused ? 1 : 0}
-            hover="0"
-            rounded
-            containerProps={{ style: 'margin-bottom: 0' }}
-            onkeydown={e => {
-              if (e.key !== 'ArrowDown' || !(e.target instanceof HTMLElement)) return;
-              const target = e.target.parentElement?.parentElement?.querySelector('.neo-list-item.neo-list-item-select');
-              if (target) e.preventDefault();
-              getNextFocusableElement(target)?.focus();
-            }}
-          >
-            {#snippet after()}
-              <NeoButton
-                text
-                rounded
-                shallow
-                title="Sort alphabetically"
-                onclick={() => {
-                  sort = !sort;
-                }}
-              >
-                {#snippet icon()}
-                  {#if sort}
-                    <IconAlignTop />
-                  {:else}
-                    <IconAlignBottom />
-                  {/if}
-                {/snippet}
-              </NeoButton>
-            {/snippet}
-          </NeoInput>
-
+          <NeoListSearch context={ctx} elevation={hovered || focused ? 1 : 0} />
           {@render values(ctx)}
         {/snippet}
       </NeoList>
@@ -434,7 +387,7 @@
 
   .list-values {
     display: -webkit-box;
-    margin-top: 0.25rem;
+    margin-block: 0.25rem;
     overflow: hidden;
     color: var(--neo-text-color-secondary);
     font-size: var(--neo-font-size-sm);

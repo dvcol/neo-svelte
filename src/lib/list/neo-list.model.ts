@@ -193,6 +193,10 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    */
   selected?: Selected;
   /**
+   * Optional filter to highlight text.
+   */
+  highlight?: string;
+  /**
    * A filter function to apply to each item in the list.
    * @param item
    */
@@ -220,10 +224,6 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    * Disable selection for all items in the list.
    */
   readonly?: boolean;
-  /**
-   * Optional filter to highlight text.
-   */
-  highlight?: string;
 };
 
 export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = NeoListState<Selected> & NeoListMethods;
