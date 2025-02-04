@@ -22,6 +22,10 @@
     glass,
     flex,
 
+    // Size
+    width: _width,
+    height: _height,
+
     // State
     ref = $bindable(),
     loading = true,
@@ -62,8 +66,8 @@
     return Number(fallback);
   });
 
-  const width = $derived(toSize(rest.width));
-  const height = $derived(toSize(rest.height));
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 
   const inFn = $derived(toTransition(inAction));
   const inProps = $derived(toTransitionProps(inAction));

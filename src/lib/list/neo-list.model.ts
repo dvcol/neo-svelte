@@ -1,3 +1,4 @@
+import type { NeoListBaseItemProps, NeoListBaseSectionProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
@@ -321,11 +322,11 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Optional list width constraints.
    */
-  width: SizeInput<'width'>;
+  width?: SizeInput<'width'>;
   /**
    * Optional list height constraints.
    */
-  height: SizeInput<'height'>;
+  height?: SizeInput<'height'>;
 
   // States
   /**
@@ -359,6 +360,14 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Optional props to pass to the divider.
    */
   dividerProps?: NeoDividerProps;
+  /**
+   * Optional props to pass to the list item.
+   */
+  itemProps?: Omit<NeoListBaseItemProps<Value>, 'buttonProps'>;
+  /**
+   * Optional props to pass to the list section.
+   */
+  sectionProps?: NeoListBaseSectionProps<Value, Tag>;
 } & HTMLRefProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   NeoListState<Selected>;

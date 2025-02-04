@@ -1,0 +1,69 @@
+<script lang="ts">
+  import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
+  import type { NeoListContext } from '~/list/neo-list.model.js';
+  import type { NeoPopSelectProps } from '~/tooltips/neo-pop-select.model.js';
+
+  import NeoList from '~/list/NeoList.svelte';
+  import NeoListSearch from '~/list/NeoListSearch.svelte';
+  import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
+
+  /* eslint-disable prefer-const -- necessary for binding checked */
+  let {
+    // Snippets
+    children: trigger,
+    before,
+
+    // States
+    search = false,
+
+    // Styles
+    rounded = false,
+
+    // List Props
+    listRef = $bindable(),
+    highlight = $bindable(),
+    filter = $bindable(item => !item?.hidden),
+    sort = $bindable(() => 0),
+    selected = $bindable(),
+
+    // Tooltip Props
+    tooltipRef = $bindable(),
+    triggerRef = $bindable(),
+    open = $bindable(false),
+
+    // Other Props
+    tooltipProps,
+    searchProps,
+    ...rest
+  }: NeoPopSelectProps = $props();
+  /* eslint-enable prefer-const */
+</script>
+
+{#snippet beforeList(context: NeoListContext)}
+  {#if search}
+    <NeoListSearch elevation="0" hover="-1" {context} {...searchProps} inputProps={{ rounded, ...searchProps?.inputProps }} />
+  {/if}
+  {@render before?.(context)}
+{/snippet}
+
+{#snippet tooltip()}
+  <NeoList
+    bind:ref={listRef}
+    bind:selected
+    bind:highlight
+    bind:filter
+    bind:sort
+    select
+    reverse={tooltipProps?.placement?.startsWith('top')}
+    before={search ? beforeList : before}
+    {...rest}
+    buttonProps={{ rounded, ...rest.buttonProps }}
+    class={['neo-pop-select-list', rest.class]}
+  />
+{/snippet}
+
+<NeoTooltip bind:ref={tooltipRef} bind:triggerRef bind:open {tooltip} padding="0.25rem" {rounded} {...tooltipProps}>
+  {#snippet children(floating: UseFloatingReturn)}
+    {@render trigger?.(floating)}
+  {/snippet}
+</NeoTooltip>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { NeoListBaseItemModel } from '~/list/neo-list-base-item.model.js';
+  import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -32,7 +32,7 @@
     // Other props
     buttonProps,
     ...rest
-  }: NeoListBaseItemModel = $props();
+  }: NeoListBaseItemProps = $props();
   /* eslint-enable prefer-const */
 
   $effect(() => {
@@ -60,6 +60,19 @@
   const labelId = $derived(select ? `neo-list-item-label-${getUUID()}` : undefined);
 </script>
 
+{#snippet textContent({ label, value, description }: NeoListItem)}
+  <div class="neo-list-item-text">
+    <span id={labelId} class="neo-list-item-label">
+      <NeoMark value={label ?? value?.toString()} filter={highlight} />
+    </span>
+    {#if description}
+      <span class="neo-list-item-description">
+        <NeoMark value={description} filter={highlight} />
+      </span>
+    {/if}
+  </div>
+{/snippet}
+
 {#snippet listItem({ label, value, description }: NeoListItem)}
   <div class:neo-list-item-content={true} class:neo-disabled={disabled} class:neo-description={description}>
     {#if item.before}
@@ -76,16 +89,7 @@
       {...rest}
       class={['neo-list-item-skeleton', rest?.class]}
     >
-      <div class="neo-list-item-text">
-        <span id={labelId} class="neo-list-item-label">
-          <NeoMark value={label ?? value?.toString()} filter={highlight} />
-        </span>
-        {#if description}
-          <span class="neo-list-item-description">
-            <NeoMark value={description} filter={highlight} />
-          </span>
-        {/if}
-      </div>
+      {@render textContent({ label, value, description })}
     </NeoSkeletonText>
 
     {#if item.after}
@@ -142,10 +146,6 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-list-item {
-    &-text {
-      margin-block-end: 0.125rem;
-    }
-
     &-label,
     &-description {
       @include mixin.ellipsis;

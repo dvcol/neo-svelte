@@ -230,10 +230,14 @@
       --neo-btn-scale-pressed: 1;
     }
 
+    .neo-icon,
     .neo-content {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .neo-content {
       width: 100%;
       height: 100%;
       backface-visibility: hidden;

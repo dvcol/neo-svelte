@@ -119,6 +119,7 @@
     bind:focused
     bind:focusin
     type="search"
+    size={1}
     rounded
     clearable
     {placeholder}

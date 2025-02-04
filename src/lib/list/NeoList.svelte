@@ -60,6 +60,10 @@
     shadow = true,
     scrollbar = true,
 
+    // Size
+    width: _width,
+    height: _height,
+
     // Animation
     in: inAction = { use: scale, props: scaleTransitionProps },
     out: outAction = { use: fade, props: { ...scaleTransitionProps, delay: scaleTransitionProps?.duration } },
@@ -74,6 +78,8 @@
     loaderProps,
     buttonProps,
     dividerProps,
+    itemProps,
+    sectionProps,
     ...rest
   }: NeoListProps = $props();
   /* eslint-enable prefer-const */
@@ -196,7 +202,7 @@
     } else {
       selected = findInList(previous, items);
     }
-    const event = { type: 're-select', previous, current: cloneSelection() };
+    const event: NeoListSelectEvent = { type: 're-select', previous, current: cloneSelection() };
     onselect?.(event);
     return event;
   };
@@ -254,8 +260,8 @@
     });
   });
 
-  const width = $derived(toSize(rest.width));
-  const height = $derived(toSize(rest.height));
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 
   const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
   const animateProps = $derived(toTransitionProps(animate));
@@ -313,7 +319,7 @@
         {#if customSection && !item.render}
           {@render customSection(list, sectionContext)}
         {:else}
-          <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} />
+          <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} {...sectionProps} />
         {/if}
       {:else if customItem && !item.render}
         {@render customItem({ item, index, context })}
@@ -325,12 +331,13 @@
           {index}
           {context}
           {skeleton}
-          {select}
           {checked}
+          {select}
           {highlight}
           {buttonProps}
           disabled={item.disabled || disabled}
           readonly={item.readonly || readonly}
+          {...itemProps}
           onclick={() => toggleItem(selection, checked)}
         />
       {/if}
@@ -456,6 +463,10 @@
       }
 
       &-select {
+        :global(.neo-list-item-button.neo-rounded) {
+          border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-md));
+        }
+
         :global(.neo-list-item-button) {
           padding: 0.125rem;
         }

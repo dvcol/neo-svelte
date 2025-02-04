@@ -157,11 +157,11 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   /**
    * Optional width constraints.
    */
-  width: SizeInput<'width'>;
+  width?: SizeInput<'width'>;
   /**
    * Optional height constraints.
    */
-  height: SizeInput<'height'>;
+  height?: SizeInput<'height'>;
   /**
    * Overrides the default scrollbars.
    */

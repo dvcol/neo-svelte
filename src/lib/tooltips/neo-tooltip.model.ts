@@ -86,6 +86,10 @@ export type NeoTooltipProps = {
    * - `string`: a css width value will be applied to the tooltip.
    */
   width?: boolean | 'min' | 'max' | string;
+  /**
+   * Padding override for the tooltip.
+   */
+  padding?: CSSStyleDeclaration['padding'];
 
   // Hover
 
@@ -152,7 +156,7 @@ export type NeoTooltipProps = {
   triggerProps?: HTMLNeoBaseElement;
 } & HTMLRefProps<NeoTooltipHTMLElement> &
   HTMLActionProps &
-  HTMLNeoBaseElement;
+  Omit<HTMLNeoBaseElement, 'children'>;
 
 export type NeoTooltipMethods = {
   toggle: (open?: boolean) => boolean;

@@ -30,6 +30,7 @@
     options,
 
     // Styles
+    padding,
     rounded,
     width,
 
@@ -238,6 +239,7 @@
     {...tooltipHandler}
     {...rest}
     style:transform-origin={tooltipOrigin}
+    style:--neo-tooltip-padding={padding}
     style={toStyle(tooltipStyle, tooltipWidth, rest.style)}
   >
     {#if typeof tooltip === 'string'}

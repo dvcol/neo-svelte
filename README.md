@@ -86,7 +86,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] custom
 - [x] tooltip
   - [ ] popconfirm
-  - [ ] popselect
+  - [x] popselect
+  - [ ] menu
   - [ ] nested menus
 
 - [x] list

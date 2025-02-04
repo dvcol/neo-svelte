@@ -22,6 +22,7 @@
     scrollToLoader: false,
     disabled: false,
     readonly: false,
+    reverse: false,
   });
 
   const custom: NeoListItem = { label: 'Custom Render Item', value: -1, render, id: getUUID() };
@@ -180,6 +181,7 @@
     <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
     <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
+    <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
     <NeoButton onclick={onAdd}>Add</NeoButton>
     <NeoButton onclick={onRemove}>Remove</NeoButton>
   </NeoButtonGroup>
@@ -369,7 +371,6 @@
       >
         {#snippet before(context)}
           <NeoListSearch elevation={hovered || focused ? 2 : elevation} {context} />
-          {@render values(context)}
         {/snippet}
       </NeoList>
     </NeoCard>
@@ -414,10 +415,11 @@
 
   .list-values {
     display: -webkit-box;
-    margin-block: 0.25rem;
+    padding-block: 0.25rem;
     overflow: hidden;
     color: var(--neo-text-color-secondary);
     font-size: var(--neo-font-size-sm);
+    line-height: var(--neo-line-height-sm);
     text-overflow: ellipsis;
     word-break: break-word;
     padding-inline: 1.125rem;

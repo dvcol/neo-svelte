@@ -57,11 +57,11 @@ export type NeoSkeletonTextProps = {
   /**
    * Optional width constraints.
    */
-  width: SizeInput<'width'>;
+  width?: SizeInput<'width'>;
   /**
    * Optional height constraints.
    */
-  height: SizeInput<'height'>;
+  height?: SizeInput<'height'>;
   /**
    * Whether to add glass like transparency to the skeleton.
    */

@@ -31,6 +31,10 @@
     circle,
     ratio = type === 'video' ? '16 / 9' : '4 / 3',
 
+    // Size
+    width: _width,
+    height: _height,
+
     // Transition
     in: inAction = { use: fade, props: leaveTransitionProps },
     out: outAction = { use: fade, props: enterTransitionProps },
@@ -55,8 +59,8 @@
     }
   });
 
-  const width = $derived(toSize(rest.width));
-  const height = $derived(toSize(rest.height));
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 
   const inFn = $derived(toTransition(inAction));
   const inProps = $derived(toTransitionProps(inAction));
