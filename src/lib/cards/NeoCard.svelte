@@ -42,7 +42,7 @@
     segmented,
     cover,
     start,
-    skeleton,
+    skeleton = false,
     horizontal,
     scrollbar = true,
 

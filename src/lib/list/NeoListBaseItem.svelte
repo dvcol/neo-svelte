@@ -23,7 +23,7 @@
     touched = $bindable(false),
     disabled,
     readonly,
-    skeleton,
+    skeleton = false,
     highlight,
 
     // Actions

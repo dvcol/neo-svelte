@@ -42,7 +42,7 @@
     start,
     glass,
     rounded,
-    skeleton,
+    skeleton = false,
 
     // Actions
     in: inAction,

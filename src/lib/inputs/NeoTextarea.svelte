@@ -71,7 +71,7 @@
     glass,
     start,
     floating = true,
-    skeleton,
+    skeleton = false,
     scrollbar = true,
     validation,
 

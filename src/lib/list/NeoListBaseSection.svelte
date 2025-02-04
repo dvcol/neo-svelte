@@ -16,7 +16,7 @@
     context,
 
     select,
-    skeleton,
+    skeleton = false,
     highlight,
 
     // Other props

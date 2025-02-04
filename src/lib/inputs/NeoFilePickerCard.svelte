@@ -42,7 +42,7 @@
     loading,
     rounded,
     disabled,
-    skeleton,
+    skeleton = false,
 
     // Style
     maxHeight = '20rem',

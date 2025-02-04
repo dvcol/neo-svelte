@@ -6,7 +6,7 @@
   const {
     // State
     vertical = false,
-    skeleton,
+    skeleton = false,
 
     // Styles
     margin,

@@ -18,7 +18,7 @@
     start,
     glass,
     rounded = true,
-    skeleton,
+    skeleton = false,
 
     // Other props
     ...rest

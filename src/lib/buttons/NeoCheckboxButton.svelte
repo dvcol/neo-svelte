@@ -19,7 +19,7 @@
     start,
     glass,
     rounded,
-    skeleton,
+    skeleton = false,
 
     // Other props
     ...rest

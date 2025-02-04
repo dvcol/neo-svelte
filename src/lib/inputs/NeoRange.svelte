@@ -48,7 +48,7 @@
     glass,
     rounded = true,
     tooltips = true,
-    skeleton,
+    skeleton = false,
 
     // Actions
     in: inAction,

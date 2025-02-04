@@ -12,7 +12,7 @@
     // States
     ref = $bindable(),
     tag = 'div',
-    skeleton,
+    skeleton = false,
 
     // Styles
     pressed,

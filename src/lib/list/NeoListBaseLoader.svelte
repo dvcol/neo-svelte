@@ -12,7 +12,7 @@
   import { scaleEnterProps, scaleLeaveProps } from '~/utils/transition.utils.js';
 
   const {
-    loading,
+    loading = true,
     select,
     before,
     after,

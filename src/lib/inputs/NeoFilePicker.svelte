@@ -45,7 +45,7 @@
     loading,
     clearable,
     validation,
-    skeleton,
+    skeleton = false,
     disabled,
     readonly,
     rounded,

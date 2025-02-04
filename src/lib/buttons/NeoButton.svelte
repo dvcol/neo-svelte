@@ -20,7 +20,7 @@
     tag,
     href,
     loading,
-    skeleton,
+    skeleton = false,
     disabled,
     empty: only,
     toggle,
