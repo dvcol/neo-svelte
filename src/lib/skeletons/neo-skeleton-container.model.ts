@@ -3,13 +3,24 @@ import type { NeoTransitionContainerProps } from '~/containers/neo-transition-co
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
+export type NeoSkeletonContainerContext = {
+  /**
+   * Computed content width.
+   */
+  width?: string;
+  /**
+   * Computed content height.
+   */
+  height?: string;
+};
+
 export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
 
   /**
    * Snippet to display as the skeleton.
    */
-  children?: Snippet;
+  children?: Snippet<[NeoSkeletonContainerContext]>;
   /**
    * Snippet to display as the content.
    */
@@ -26,6 +37,10 @@ export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 
    * Whether to show the skeleton.
    */
   loading?: boolean;
+  /**
+   * The context to pass to the skeleton.
+   */
+  context?: NeoSkeletonContainerContext;
 
   // Styles
 
@@ -46,4 +61,4 @@ export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 
   containerProps?: NeoTransitionContainerProps;
 } & Pick<HTMLTransitionProps, 'in' | 'out'> &
   HTMLRefProps &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+  Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

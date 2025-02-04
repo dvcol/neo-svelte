@@ -25,6 +25,9 @@
     width,
     height,
 
+    // Content
+    context = $bindable({}),
+
     // Transition
     in: inAction = { use: fade, props: scaleEnterProps },
     out: outAction = { use: fade, props: scaleLeaveProps },
@@ -40,23 +43,14 @@
   const outFn = $derived(toTransition(outAction));
   const outProps = $derived(toTransitionProps(outAction));
 
-  let skeletonWidth = $state(width);
-  let skeletonHeight = $state(height);
-  let skeletonLines = $state<number>();
-
   const updateSize = $derived(
     debounce(
       () =>
         untrack(() => {
           if (!ref) return;
           const rect = ref.getBoundingClientRect();
-          if (!width && rect?.width) skeletonWidth = `${rect.width}px`;
-          if (!height && rect?.height) skeletonHeight = `${rect.height}px`;
-
-          if (!rect?.height) return;
-          const lineHeight = Number.parseInt(getComputedStyle(ref).lineHeight, 10);
-          if (Number.isNaN(lineHeight) || !lineHeight) return;
-          skeletonLines = Math.round(rect.height / lineHeight);
+          if (!width && rect?.width) context.width = `${rect.width}px`;
+          if (!height && rect?.height) context.height = `${rect.height}px`;
         }),
       inProps?.delay,
     ),
@@ -74,19 +68,17 @@
       <svelte:element
         this={tag}
         class:neo-skeleton-container={true}
-        style:--neo-skeleton-content-width={skeletonWidth}
-        style:--neo-skeleton-content-height={skeletonHeight}
-        style:--neo-skeleton-content-lines={skeletonLines}
+        style:--neo-skeleton-content-width={context?.width}
+        style:--neo-skeleton-content-height={context?.height}
         {...rest}
       >
-        {@render skeleton?.()}
+        {@render skeleton?.(context)}
       </svelte:element>
     {:else}
       <svelte:element
         this={tag}
         class:neo-skeleton-content-container={true}
         bind:this={ref}
-        style:--neo-skeleton-content-lines={skeletonLines}
         in:inFn={inProps}
         out:outFn={outProps}
         use:resize={updateSize}
@@ -97,7 +89,7 @@
     {/if}
   </NeoTransitionContainer>
 {:else if loading}
-  {@render skeleton?.()}
+  {@render skeleton?.(context)}
 {/if}
 
 <style lang="scss">

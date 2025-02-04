@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { fade } from 'svelte/transition';
 
   import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
@@ -47,17 +46,16 @@
   /* eslint-enable prefer-const */
 
   let auto = $state<number>();
-  const updateLines = debounce(() => {
-    if (!ref) return;
-    const _lines = Number(getComputedStyle(ref)?.getPropertyValue('--neo-skeleton-content-lines'));
-    const _paragraphs = Number(paragraphs) || 1;
-    if (Number.isNaN(_lines) || Number.isNaN(_paragraphs)) return;
-    auto = Math.floor(_lines / _paragraphs);
-  }, 0);
-
   $effect(() => {
     if (loading || !ref || inputLines !== 'auto') return;
-    updateLines();
+    const contentHeight = ref.getBoundingClientRect()?.height;
+    const lineHeight = Number.parseInt(getComputedStyle(ref).lineHeight, 10);
+    if (!contentHeight || Number.isNaN(lineHeight) || !lineHeight) return;
+    const _lines = Math.round(contentHeight / lineHeight);
+    if (!_lines) return;
+    const _paragraphs = Number(paragraphs) || 1;
+    if (Number.isNaN(_paragraphs)) return;
+    auto = Math.floor(_lines / _paragraphs);
   });
 
   const lines = $derived.by(() => {

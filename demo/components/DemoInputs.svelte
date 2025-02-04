@@ -1073,4 +1073,10 @@
       max-width: min(100%, 50rem);
     }
   }
+
+  @media (width < 600px) {
+    .column.content {
+      flex: 0 1 80%;
+    }
+  }
 </style>
