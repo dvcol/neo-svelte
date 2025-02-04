@@ -223,6 +223,41 @@
 {/snippet}
 
 <div class="row">
+  <!-- custom item with select, before, after & description  & loader  -->
+  <div class="column content">
+    <span class="label">Sortable Card list</span>
+    <NeoCard
+      rounded
+      scrollbar={false}
+      bind:elevation
+      bind:hovered
+      bind:focused
+      hover="-2"
+      height="20rem"
+      width="min(80vw, 20rem)"
+      spacing="0.5rem"
+      --neo-card-border-radius="2.75rem"
+    >
+      <NeoList
+        aria-label="Sortable list"
+        select
+        multiple
+        items={withComplexList}
+        {...options}
+        loaderProps={{
+          description: true,
+          before: true,
+          beforeProps: { width: '1.875rem', height: '1.875rem' },
+        }}
+        buttonProps={{ rounded: true }}
+      >
+        {#snippet before(context)}
+          <NeoListSearch elevation={hovered || focused ? 2 : elevation} {context} />
+        {/snippet}
+      </NeoList>
+    </NeoCard>
+  </div>
+
   <!--  card-->
   <div class="column content">
     <span class="label">Card List</span>
@@ -341,43 +376,6 @@
     </NeoList>
   </div>
 
-  <!-- custom item with select, before, after & description  & loader  -->
-  <div class="column content">
-    <span class="label">Sortable list</span>
-    <NeoCard
-      rounded
-      scrollbar={false}
-      bind:elevation
-      bind:hovered
-      bind:focused
-      hover="-2"
-      height="20rem"
-      width="min(80vw, 20rem)"
-      spacing="0.5rem"
-      --neo-card-border-radius="2.75rem"
-    >
-      <NeoList
-        aria-label="Sortable list"
-        select
-        multiple
-        items={withComplexList}
-        {...options}
-        loaderProps={{
-          description: true,
-          before: true,
-          beforeProps: { width: '1.875rem', height: '1.875rem' },
-        }}
-        buttonProps={{ rounded: true }}
-      >
-        {#snippet before(context)}
-          <NeoListSearch elevation={hovered || focused ? 2 : elevation} {context} />
-        {/snippet}
-      </NeoList>
-    </NeoCard>
-  </div>
-
-  <!--  search items -->
-
   <!--  tooltip item (nested menu drawer, portal ?) -->
 </div>
 
@@ -440,6 +438,7 @@
     @include flex.column($gap: var(--neo-gap-lg), $flex: 0 1 20%);
 
     &.content {
+      align-items: center;
       width: min(80vw, 18rem);
       height: min(80vh, 24rem);
 

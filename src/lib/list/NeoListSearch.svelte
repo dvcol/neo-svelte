@@ -126,10 +126,11 @@
     {oninput}
     {elevation}
     {hover}
-    {loading}
     {before}
     {after}
     {onkeydown}
+    loading={loading ?? context?.loading}
+    skeleton={context?.skeleton}
     {...inputProps}
     containerProps={{
       ...inputProps?.containerProps,
