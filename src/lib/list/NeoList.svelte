@@ -3,6 +3,7 @@
   import { shallowClone } from '@dvcol/common-utils/common/object';
   import { flipToggle, scaleFreeze, watch } from '@dvcol/svelte-utils';
   import { emptyAnimation, emptyTransition } from '@dvcol/svelte-utils/transition';
+  import { tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -23,6 +24,7 @@
   } from '~/list/neo-list.model.js';
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
   import { defaultTransitionDuration, enterTransitionProps, flipTransitionProps, scaleTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -39,12 +41,12 @@
     // States
     ref = $bindable(),
     tag = 'ul',
-    items = $bindable([]),
+    items = [],
     highlight = $bindable(),
     filter = $bindable(item => !item?.hidden),
     sort = $bindable(() => 0),
-    loading,
-    skeleton,
+    loading = false,
+    skeleton = false,
     scrollToLoader,
 
     select = false,
@@ -52,6 +54,7 @@
     selected = $bindable(),
     disabled,
     readonly,
+    reverse,
 
     // Styles
     shadow = true,
@@ -79,21 +82,32 @@
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
-  const scrollTop = debounce(() => {
+  const scrollTop: NeoListMethods['scrollTop'] = debounce((options?: ScrollToOptions) => {
     if (!ref) return false;
-    ref.scrollTo({ top: 0, behavior: 'smooth' });
+    ref.scrollTo({ top: 0, behavior: 'smooth', ...options });
     return ref;
   }, defaultTransitionDuration / 2);
 
-  const scrollBottom = debounce(() => {
+  const scrollBottom: NeoListMethods['scrollBottom'] = debounce((options?: ScrollToOptions) => {
     if (!ref?.scrollHeight) return false;
-    ref.scrollTo({ top: ref.scrollHeight, behavior: 'smooth' });
+    ref.scrollTo({ top: ref.scrollHeight, behavior: 'smooth', ...options });
     return ref;
   }, defaultTransitionDuration / 2);
 
   $effect(() => {
     if (!loading || !scrollToLoader) return;
     scrollBottom();
+  });
+
+  const scrollReverse = async () => {
+    await tick();
+    if (!ref) return;
+    ref.scrollTo({ top: ref.scrollHeight, behavior: 'instant' });
+  };
+
+  $effect(() => {
+    if (!reverse || !ref) return;
+    scrollReverse();
   });
 
   const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
@@ -118,7 +132,7 @@
       if (selection.length > 1) console.warn('Multiple selection is disabled. Only the first selection will be considered.');
       [selected] = selection;
     }
-    return { previous, current: cloneSelection() };
+    return { type: 'select', previous, current: cloneSelection(), added: selection };
   };
 
   const clearItem: NeoListMethods['clearItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
@@ -133,7 +147,7 @@
       selected = undefined;
     }
 
-    return { previous, current: cloneSelection() };
+    return { type: 'clear', previous, current: cloneSelection(), removed: selection };
   };
 
   const toggleItem = (item: NeoListSelectedItem, clear = false) => {
@@ -182,7 +196,7 @@
     } else {
       selected = findInList(previous, items);
     }
-    const event = { previous, current: cloneSelection() };
+    const event = { type: 're-select', previous, current: cloneSelection() };
     onselect?.(event);
     return event;
   };
@@ -202,6 +216,7 @@
     skeleton,
     disabled,
     readonly,
+    reverse,
 
     // Filter
     get highlight() {
@@ -238,6 +253,9 @@
       scrollBottom,
     });
   });
+
+  const width = $derived(toSize(rest.width));
+  const height = $derived(toSize(rest.height));
 
   const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
   const animateProps = $derived(toTransitionProps(animate));
@@ -323,7 +341,19 @@
   {/each}
 {/snippet}
 
-<svelte:element this={containerTag} class:neo-list={true} class:neo-empty={empty} {...containerProps}>
+<svelte:element
+  this={containerTag}
+  class:neo-list={true}
+  class:neo-empty={empty}
+  class:neo-reverse={reverse}
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
+  {...containerProps}
+>
   {@render before?.(context)}
   {#if !empty || loading || skeleton}
     <svelte:element
@@ -458,6 +488,10 @@
       justify-content: center;
       min-width: var(--neo-list-min-width, 8rem);
       min-height: var(--neo-list-min-height);
+    }
+
+    &.neo-reverse {
+      flex-direction: column-reverse;
     }
   }
 </style>

@@ -8,6 +8,7 @@
   import IconVideo from '~/icons/IconVideo.svelte';
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
   import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -21,9 +22,8 @@
     loading = true,
     type = 'empty',
     size = type === 'avatar' ? '70%' : '20%',
+    flex,
     align,
-    width,
-    height,
     glass,
 
     // Styles
@@ -55,6 +55,9 @@
     }
   });
 
+  const width = $derived(toSize(rest.width));
+  const height = $derived(toSize(rest.height));
+
   const inFn = $derived(toTransition(inAction));
   const inProps = $derived(toTransitionProps(inAction));
   const outFn = $derived(toTransition(outAction));
@@ -66,8 +69,8 @@
   {loading}
   in={inAction}
   out={outAction}
-  {width}
-  {height}
+  width={width?.absolute}
+  height={height?.absolute}
   {content}
   containerProps={transitionProps}
   {...containerProps}
@@ -77,10 +80,15 @@
     class:neo-rounded={rounded}
     class:neo-circle={circle}
     class:neo-glass={glass}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     style:aspect-ratio={ratio}
-    style:width
-    style:height
     style:align-self={align}
+    style:flex
     in:inFn={inProps}
     out:outFn={outProps}
     {...rest}

@@ -1,4 +1,5 @@
-import type { HTMLNeoBaseElement, MarkTokenizer } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { MarkTokenizer } from '~/utils/string.utils.js';
 
 export type NeoMarkTokenizer = MarkTokenizer;
 export type NeoMarkProps<Tag extends keyof HTMLElementTagNameMap = 'span'> = {

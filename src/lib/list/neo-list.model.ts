@@ -5,6 +5,7 @@ import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.j
 import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoListDividerOption = { top?: boolean; bottom?: boolean };
 export const showDivider = (item: NeoListItemOrSection, position: keyof NeoListDividerOption = 'top') => {
@@ -152,19 +153,24 @@ export type NeoListSelectedItem<Value = unknown, Tag extends keyof HTMLElementTa
 };
 
 export type NeoListSelectEvent<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = {
+  type: 'select' | 'clear' | 're-select';
+
   previous?: Selected;
   current?: Selected;
+
+  removed?: Selected;
+  added?: Selected;
 };
 
 export type NeoListMethods<Value = unknown> = {
   /**
    * Scroll the list to the top.
    */
-  scrollTop: () => Promise<HTMLElement | false>;
+  scrollTop: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
   /**
    * Scroll the list to the bottom.
    */
-  scrollBottom: () => Promise<HTMLElement | false>;
+  scrollBottom: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
   /**
    * Select an item in the list.
    * @param index - The index of the item to select.
@@ -239,6 +245,10 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    * Disable selection for all items in the list.
    */
   readonly?: boolean;
+  /**
+   * Inverts the flow of the list (flex-direction: column-reverse).
+   */
+  reverse?: boolean;
 };
 
 export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = NeoListState<Selected> & NeoListMethods;
@@ -308,6 +318,14 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * @default false
    */
   scrollToLoader?: boolean;
+  /**
+   * Optional list width constraints.
+   */
+  width: SizeInput<'width'>;
+  /**
+   * Optional list height constraints.
+   */
+  height: SizeInput<'height'>;
 
   // States
   /**

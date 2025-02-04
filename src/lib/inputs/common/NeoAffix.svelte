@@ -23,7 +23,7 @@
     loading,
     close,
     valid,
-    skeleton,
+    skeleton = false,
     disabled,
 
     // Styles

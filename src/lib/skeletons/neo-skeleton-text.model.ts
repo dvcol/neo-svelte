@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte';
 import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoSkeletonTextProps = {
   // Snippets
@@ -54,13 +55,13 @@ export type NeoSkeletonTextProps = {
    */
   align?: CSSStyleDeclaration['alignSelf'];
   /**
-   * Width of the element.
+   * Optional width constraints.
    */
-  width?: CSSStyleDeclaration['width'];
+  width: SizeInput<'width'>;
   /**
-   * Height of the element.
+   * Optional height constraints.
    */
-  height?: CSSStyleDeclaration['height'];
+  height: SizeInput<'height'>;
   /**
    * Whether to add glass like transparency to the skeleton.
    */

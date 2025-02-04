@@ -20,7 +20,7 @@
     tag = 'div',
     ref = $bindable(),
     delay = 250,
-    reverse = $bindable(),
+    invert = $bindable(),
     filter = itemSearchFilter,
     sort = itemLabelSort,
 
@@ -65,20 +65,20 @@
     inputProps?.onkeydown?.(e);
   };
 
-  const sortFunction = (a: NeoListItemOrSection, b: NeoListItemOrSection) => sort(a, b, reverse);
+  const sortFunction = (a: NeoListItemOrSection, b: NeoListItemOrSection) => sort(a, b, invert);
   const onclick: FormEventHandler<HTMLButtonElement> = () => {
     if (!context) return;
-    if (reverse === false) {
+    if (invert === false) {
       context.sort = () => 0;
-      reverse = undefined;
+      invert = undefined;
       return;
     }
     if (context.sort !== sortFunction) context.sort = sortFunction;
-    reverse = !reverse;
+    invert = !invert;
   };
   const title = $derived.by(() => {
-    if (reverse === undefined) return 'Initial sorting order';
-    return reverse ? 'Alphabetical order (descending)' : 'Alphabetical order (ascending)';
+    if (invert === undefined) return 'Initial sorting order';
+    return invert ? 'Alphabetical order (descending)' : 'Alphabetical order (ascending)';
   });
 
   const filterFunction = (item: NeoListItemOrSection) => filter(item, context?.highlight);
@@ -97,9 +97,9 @@
 {#snippet after()}
   <NeoButton text rounded shallow {title} aria-label="Change sorting order" {onclick}>
     {#snippet icon()}
-      {#if reverse === undefined}
+      {#if invert === undefined}
         <IconAlignMiddle size="1.25rem" stroke="1.5" />
-      {:else if reverse}
+      {:else if invert}
         <IconAlignBottom />
       {:else}
         <IconAlignTop />
@@ -108,7 +108,7 @@
   </NeoButton>
 {/snippet}
 
-<svelte:element this={tag} class:neo-list-search={true} {...rest}>
+<svelte:element this={tag} class:neo-list-search={true} class:neo-reverse={context?.reverse} {...rest}>
   <NeoInput
     bind:ref
     bind:value
@@ -142,8 +142,12 @@
     display: inline-flex;
     flex-direction: column;
 
-    :global(.neo-list-search-input) {
+    &:not(.neo-reverse) :global(.neo-list-search-input) {
       margin-bottom: 0;
+    }
+
+    &.neo-reverse :global(.neo-list-search-input) {
+      margin-top: 0;
     }
   }
 </style>

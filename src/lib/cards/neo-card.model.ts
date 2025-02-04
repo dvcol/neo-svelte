@@ -4,6 +4,7 @@ import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoCardElevation = ShadowElevation | ShadowElevationString;
 export type NeoCardHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
@@ -154,13 +155,13 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
 
   // Styles
   /**
-   * Overrides the default width.
+   * Optional width constraints.
    */
-  width?: CSSStyleDeclaration['width'];
+  width: SizeInput<'width'>;
   /**
-   * Overrides the default height.
+   * Optional height constraints.
    */
-  height?: CSSStyleDeclaration['height'];
+  height: SizeInput<'height'>;
   /**
    * Overrides the default scrollbars.
    */

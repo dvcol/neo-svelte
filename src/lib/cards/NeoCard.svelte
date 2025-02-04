@@ -14,6 +14,7 @@
     getDefaultElevation,
     isShadowFlat,
   } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -50,8 +51,6 @@
     justify,
     align,
     flex,
-    width,
-    height,
 
     // Transition
     in: inAction,
@@ -136,6 +135,9 @@
     onClose,
   });
 
+  const width = $derived(toSize(rest.width));
+  const height = $derived(toSize(rest.height));
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -198,8 +200,12 @@
   style:justify-content={justify}
   style:align-items={align}
   style:flex
-  style:width
-  style:height
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}

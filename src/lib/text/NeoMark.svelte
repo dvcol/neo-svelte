@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoMarkProps } from '~/text/neo-mark.model.js';
 
-  import { type MarkAndToken, markTokenizer } from '~/utils/html-element.utils.js';
+  import { type MarkAndToken, markTokenizer } from '~/utils/string.utils.js';
 
   const {
     // States

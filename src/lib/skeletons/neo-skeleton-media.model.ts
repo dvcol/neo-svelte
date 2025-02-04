@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte';
 import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoSkeletonMediaProps = {
   // Snippets
@@ -29,17 +30,21 @@ export type NeoSkeletonMediaProps = {
    */
   size?: CSSStyleDeclaration['width'];
   /**
+   * Overrides the default flex value.
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
    * Alignment strategy for the skeleton.
    */
   align?: CSSStyleDeclaration['alignSelf'];
   /**
-   * Width of the skeleton.
+   * Optional width constraints.
    */
-  width?: CSSStyleDeclaration['width'];
+  width: SizeInput<'width'>;
   /**
-   * Height of the skeleton.
+   * Optional height constraints.
    */
-  height?: CSSStyleDeclaration['height'];
+  height: SizeInput<'height'>;
 
   // Styles
   /**

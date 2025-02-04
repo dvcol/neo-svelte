@@ -4,7 +4,7 @@ import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.util
 import { isSection, type NeoListContext, type NeoListItem, type NeoListItemOrSection } from '~/list/neo-list.model.js';
 
 export type NeoListSearchFilter = (item: NeoListItemOrSection, search?: string) => boolean;
-export type NeoListSearchSort = (a: NeoListItemOrSection, b: NeoListItemOrSection, reverse?: boolean) => number;
+export type NeoListSearchSort = (a: NeoListItemOrSection, b: NeoListItemOrSection, invert?: boolean) => number;
 export type NeoListSearchProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   /**
    * The HTML tag to use for the container.
@@ -18,9 +18,9 @@ export type NeoListSearchProps<Tag extends keyof HTMLElementTagNameMap = 'div'> 
    */
   delay?: number;
   /**
-   * Whether to reverse the sort order of the list.
+   * Whether to invert the sort order of the list.
    */
-  reverse?: boolean;
+  invert?: boolean;
   /**
    * Custom filter function to apply to the list (overrides default list filter).
    * Defaults to filtering by label alphabetically based on the list highlight filter.

@@ -64,7 +64,7 @@
     glass,
     start,
     floating = true,
-    skeleton,
+    skeleton = false,
     validation,
 
     // Transition
