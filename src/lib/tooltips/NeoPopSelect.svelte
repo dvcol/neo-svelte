@@ -25,6 +25,7 @@
     filter = $bindable(item => !item?.hidden),
     sort = $bindable(() => 0),
     selected = $bindable(),
+    focused = $bindable(false),
 
     // Tooltip Props
     tooltipRef = $bindable(),
@@ -41,7 +42,15 @@
 
 {#snippet beforeList(context: NeoListContext)}
   {#if search}
-    <NeoListSearch elevation="0" hover="-1" {context} {...searchProps} inputProps={{ rounded, ...searchProps?.inputProps }} />
+    <NeoListSearch
+      bind:focused
+      elevation="0"
+      hover="-1"
+      value={highlight}
+      {context}
+      {...searchProps}
+      inputProps={{ rounded, ...searchProps?.inputProps }}
+    />
   {/if}
   {@render before?.(context)}
 {/snippet}
@@ -62,7 +71,18 @@
   />
 {/snippet}
 
-<NeoTooltip bind:ref={tooltipRef} bind:triggerRef bind:open {tooltip} padding="0.25rem" {rounded} {...tooltipProps}>
+<NeoTooltip
+  bind:ref={tooltipRef}
+  bind:triggerRef
+  bind:open={() => open || focused, // eslint-disable-line no-sequences
+  value => {
+    open = value;
+  }}
+  {tooltip}
+  padding="0.25rem"
+  {rounded}
+  {...tooltipProps}
+>
   {#snippet children(floating: UseFloatingReturn)}
     {@render trigger?.(floating)}
   {/snippet}

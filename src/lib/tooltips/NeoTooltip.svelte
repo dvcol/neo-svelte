@@ -4,7 +4,17 @@
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { clamp } from '@dvcol/common-utils/common/math';
   import { resize } from '@dvcol/svelte-utils/resize';
-  import { flip, offset, useDismiss, useFloating, useFocus, useHover, useInteractions, useRole } from '@skeletonlabs/floating-ui-svelte';
+  import {
+    autoPlacement,
+    flip,
+    offset,
+    useDismiss,
+    useFloating,
+    useFocus,
+    useHover,
+    useInteractions,
+    useRole,
+  } from '@skeletonlabs/floating-ui-svelte';
 
   import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
 
@@ -95,8 +105,12 @@
 
       open = _open;
     },
-    middleware: [flip(), offset(spacing)],
+    get middleware() {
+      if (placement === 'auto') return [autoPlacement(), offset(spacing)];
+      return [flip(), offset(spacing)];
+    },
     get placement() {
+      if (placement === 'auto') return undefined;
       return placement;
     },
     ...options,

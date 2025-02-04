@@ -1,3 +1,4 @@
+import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoListSearchProps } from '~/list/neo-list-search.model.js';
 import type { NeoListProps } from '~/list/neo-list.model.js';
 import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
@@ -22,6 +23,12 @@ export type NeoPopSelectProps = {
   rounded?: boolean;
 
   // List props
+  /**
+   * We use the list's search is focused.
+   *
+   * @see search
+   */
+  focused?: NeoInputProps['focused'];
   /**
    * Optional ref to the list.
    */

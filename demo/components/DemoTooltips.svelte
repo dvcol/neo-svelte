@@ -31,6 +31,7 @@
   let content = $state();
 
   const position = [
+    { value: 'auto', label: 'Auto' },
     { value: 'top', label: 'Top' },
     { value: 'top-start', label: 'Top Start' },
     { value: 'top-end', label: 'Top End' },
@@ -173,7 +174,9 @@
 
     <NeoTooltip {tooltip} target={containerRef} offset={8} width="min" {...options} />
   </div>
+</div>
 
+<div class="row">
   <div class="column content">
     <span class="label">PopSelect</span>
     <NeoPopSelect
@@ -218,5 +221,11 @@
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     margin: 2rem 0;
+  }
+
+  @media (width < 600px) {
+    .column.content {
+      flex: 0 1 80%;
+    }
   }
 </style>

@@ -58,7 +58,7 @@ export type NeoTooltipProps = {
   /**
    * Where to place the floating element relative to its reference element.
    */
-  placement?: UseFloatingOptions['placement'];
+  placement?: UseFloatingOptions['placement'] | 'auto';
 
   // Styles
 
