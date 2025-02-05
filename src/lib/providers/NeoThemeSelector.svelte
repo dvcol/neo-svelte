@@ -125,7 +125,7 @@
     rotate: var(--neo-source-rotate, 0);
     transition: rotate 0.5s ease;
 
-    :global(svg) {
+    :global(> svg) {
       width: 1.25rem;
       height: 1.25rem;
       translate: -30% -30%;

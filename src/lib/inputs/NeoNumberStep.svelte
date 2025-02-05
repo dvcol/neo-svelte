@@ -170,12 +170,13 @@
     {defaultValue}
     containerProps={groupProps}
     {...rest}
+    class={['neo-input-number-step', rest.class]}
   />
 </svelte:element>
 
 <style lang="scss">
   .neo-number-step {
-    :global(.neo-input[type='number']) {
+    :global(.neo-input-number-step.neo-input[type='number']) {
       /* Hide arrows -Firefox */
       appearance: textfield;
 
@@ -188,7 +189,7 @@
     }
 
     &.neo-center {
-      :global(.neo-input) {
+      :global(.neo-input-number-step.neo-input) {
         text-align: center;
       }
 

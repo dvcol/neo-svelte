@@ -146,7 +146,7 @@
       visibility: visible;
       opacity: 0.75;
 
-      :global(svg:only-child) {
+      :global(> svg:only-child) {
         width: 100%;
         height: 100%;
       }

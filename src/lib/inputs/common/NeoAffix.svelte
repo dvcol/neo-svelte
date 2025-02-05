@@ -137,7 +137,7 @@
         color 0.3s ease,
         background-color 0.3s ease;
 
-      :global(svg) {
+      :global(> svg) {
         width: 100%;
         height: 100%;
         margin: -0.05rem;

@@ -410,6 +410,7 @@
               type="text"
               containerProps={groupProps}
               {...rest}
+              class={['neo-input-pin', rest.class]}
               oninput={() => onInput(i, j)}
               onkeydown={e => onKeydown(e, i, j)}
               onpaste={e => onPaste(e, i, j)}
@@ -543,13 +544,13 @@
   .neo-pin-container {
     margin: var(--neo-shadow-margin, 0.625rem);
 
-    :global(.neo-input) {
+    :global(.neo-input-pin.neo-input) {
       width: 2.125rem;
       padding: 0.5rem;
       text-align: center;
     }
 
-    :global(.neo-input[type='number']) {
+    :global(.neo-input-pin.neo-input[type='number']) {
       /* Hide arrows -Firefox */
       appearance: textfield;
 
@@ -561,12 +562,12 @@
       }
     }
 
-    :global(.neo-input-group.neo-rounded .neo-input) {
+    :global(.neo-input-group.neo-rounded .neo-input-pin.neo-input) {
       width: 2.25rem;
       padding: 0.5rem;
     }
 
-    :global(.neo-input[type='password']:not(:placeholder-shown)) {
+    :global(.neo-input-pin.neo-input[type='password']:not(:placeholder-shown)) {
       -webkit-text-stroke-width: 0.1em;
       letter-spacing: 0;
 

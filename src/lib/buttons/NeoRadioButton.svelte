@@ -83,7 +83,7 @@
         border-color 0.3s ease,
         background-color 0.3s ease;
 
-      :global(svg) {
+      :global(> svg) {
         display: block;
         width: 100%;
         max-width: 100%;

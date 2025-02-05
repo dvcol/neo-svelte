@@ -346,6 +346,7 @@
     transition={transitionAction}
     inner={drop ? overlay : rest.inner}
     {...rest}
+    class={['neo-input-file-picker', rest.class]}
     oninput={mirrorInput}
     onchange={mirrorChange}
     containerProps={{ ...groupProps, class: ['neo-file-picker-input-group', groupProps?.class] }}
@@ -404,6 +405,7 @@
       {id}
       {multiple}
       {...rest}
+      class={['neo-input-file-picker', rest.class]}
       hidden
       aria-hidden
       tabindex={-1}
@@ -488,7 +490,7 @@
   .neo-file-picker {
     --neo-input-cursor: pointer;
 
-    :global(.neo-input::file-selector-button) {
+    :global(.neo-input.neo-input-file-picker::file-selector-button) {
       align-items: center;
       align-self: center;
       width: 0;
@@ -539,7 +541,7 @@
         display: none;
       }
 
-      :global(.neo-file-picker-card) {
+      :global(> .neo-file-picker-card) {
         gap: var(--neo-gap);
         width: 100%;
         height: calc(
@@ -556,7 +558,7 @@
           opacity: 1;
         }
 
-        :global(.neo-file-picker-card),
+        :global(> .neo-file-picker-card),
         :global(.neo-file-picker-input-group) {
           --neo-box-shadow-raised-1: var(--neo-box-shadow-pressed-1);
           --neo-box-shadow-raised-2: var(--neo-box-shadow-pressed-2);
@@ -584,7 +586,7 @@
       }
     }
 
-    :global(.neo-file-picker-validation) {
+    :global(> .neo-file-picker-validation) {
       width: 100%;
     }
   }
