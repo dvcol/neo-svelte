@@ -1,11 +1,11 @@
 <script lang="ts" generics="T extends HTMLElement, V extends any">
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { fade } from 'svelte/transition';
+  import { fly } from 'svelte/transition';
 
   import type { NeoValidationContext, NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
 
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
+  import { defaultFlyDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -52,8 +52,8 @@
         this={messageTag}
         id={messageId}
         class:neo-validation-error={true}
-        in:fade={enterTransitionProps}
-        out:fade={leaveTransitionProps}
+        in:fly={{ duration: defaultFlyDuration, delay: message ? defaultFlyDuration / 2 : 0, y: '-50%' }}
+        out:fly={{ duration: defaultFlyDuration, y: message ? '50%' : '-50%' }}
         {...messageProps}
       >
         {#if typeof error === 'string'}
@@ -67,8 +67,8 @@
         this={messageTag}
         id={messageId}
         class:neo-validation-description={true}
-        in:fade={enterTransitionProps}
-        out:fade={leaveTransitionProps}
+        in:fly={{ duration: defaultFlyDuration, delay: defaultFlyDuration / 2, y: '-50%' }}
+        out:fly={{ duration: defaultFlyDuration, y: '50%' }}
         {...messageProps}
       >
         {#if typeof message === 'string'}
@@ -82,6 +82,8 @@
 </svelte:element>
 
 <style lang="scss">
+  @use 'src/lib/styles/mixin' as mixin;
+
   .neo-validation-group-wrapper {
     display: flex;
     flex-direction: column;
@@ -104,6 +106,8 @@
       .neo-validation-description {
         padding: var(--neo-validation-padding, 0 0.75rem);
       }
+
+      @include mixin.transition-container;
     }
   }
 </style>

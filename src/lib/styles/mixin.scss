@@ -354,3 +354,14 @@
   text-overflow: ellipsis;
   word-break: $word-break;
 }
+
+@mixin transition-container($area: transition, $width: 100%) {
+  display: grid;
+  flex-grow: 1;
+  grid-template-areas: '#{$area}';
+  width: $width;
+
+  :global(> *) {
+    grid-area: $area;
+  }
+}

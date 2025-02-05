@@ -30,7 +30,7 @@
   const errorMessage = $derived.by(() => {
     if (valid !== false) return;
     if (error) return error;
-    if (!validation) return;
+    if (!validation || validation === 'success') return;
     return validationMessage;
   });
 

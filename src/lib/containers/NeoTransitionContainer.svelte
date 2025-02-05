@@ -48,14 +48,9 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-transition-container {
-    display: grid;
-    flex-grow: 1;
-    grid-template-areas: 'transition';
-    width: 100%;
+  @use 'src/lib/styles/mixin' as mixin;
 
-    :global(> *) {
-      grid-area: transition;
-    }
+  .neo-transition-container {
+    @include mixin.transition-container;
   }
 </style>

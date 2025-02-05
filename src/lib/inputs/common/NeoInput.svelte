@@ -66,6 +66,7 @@
     floating = true,
     skeleton = false,
     validation,
+    validationIcon,
 
     // Transition
     in: inAction,
@@ -145,9 +146,11 @@
     }, 0);
   };
 
-  const affix = $derived(clearable || loading !== undefined || validation);
+  const showAffixValidation = $derived(validation && validationIcon);
+  const showInputValidation = $derived(validation === true || (validation === 'success' && valid) || (validation === 'error' && !valid));
+  const affix = $derived(clearable || loading !== undefined || showAffixValidation);
   const close = $derived(clearable && (focusin || focused || hovered) && hasValue && !disabled && !readonly);
-  const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
+  const isFloating = $derived(floating && !hasValue && (!focused || disabled || readonly));
   const inside = $derived(position === NeoInputLabelPosition.Inside && label);
 
   const onClear = () => {
@@ -264,7 +267,7 @@
       {close}
       {disabled}
       {skeleton}
-      valid={validation ? valid : undefined}
+      valid={showAffixValidation ? valid : undefined}
       {...affixProps}
       class={[
         after ? 'neo-after' : undefined,
@@ -351,7 +354,7 @@
     class:neo-floating={floating}
     class:neo-start={start}
     class:neo-skeleton={skeleton}
-    class:neo-validation={validation}
+    class:neo-validation={showInputValidation}
     class:neo-disabled={disabled}
     class:neo-raised={elevation > 3 || elevation + hover > 3}
     class:neo-inset={elevation < 0 || elevation + hover < 0}

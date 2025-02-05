@@ -15,8 +15,11 @@ export type NeoInputValidationProps<
   visible?: boolean;
   /**
    * `true` to display the validation message.
+   * `false` to hide the validation message.
+   * `'error'` to only display the error message.
+   * `'success'` to only display the success message.
    */
-  validation?: boolean;
+  validation?: boolean | 'error' | 'success';
   /**
    * Optional validation message.
    * Note: This will be overridden by the error message if it is set.

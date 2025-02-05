@@ -95,10 +95,12 @@
   const currentState = $derived<NeoInputState<HTMLInputElement>>({ touched, dirty, valid, value: typedValue, initial });
 
   const validate: NeoInputMethods<HTMLInputElement>['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
-    if (update.dirty) dirty = typedValue !== initial;
+    if (update.dirty) dirty = !Object.is(typedValue, initial);
     if (!update.valid) return { ...currentState };
+    if (readonly) ref?.removeAttribute('readonly');
     valid = ref?.checkValidity();
     validationMessage = ref?.validationMessage;
+    if (readonly) ref?.setAttribute('readonly', '');
     return { ...currentState };
   };
 
@@ -154,7 +156,7 @@
 
   const onFocus: FocusEventHandler<HTMLElement> = e => {
     focused = true;
-    touched = true;
+    if (!readonly && !disabled) touched = true;
     onfocus?.(e as SvelteEvent<FocusEvent, HTMLInputElement>);
   };
 
