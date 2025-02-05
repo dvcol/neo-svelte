@@ -1,8 +1,9 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { watch } from '@dvcol/svelte-utils';
   import { emptyTransition, height, width } from '@dvcol/svelte-utils/transition';
 
-  import { tick, untrack } from 'svelte';
+  import { tick } from 'svelte';
 
   import type { NeoTabProps } from '~/nav/neo-tab.model.js';
 
@@ -55,18 +56,23 @@
   let skip = $state(true);
   // Skip enter transition on first render if closeable
   const waitForTick = async () => {
+    if (!skip) return;
     await tick();
     skip = false;
   };
 
   $effect(() => {
-    if (skip) waitForTick();
-    untrack(() => {
+    waitForTick();
+  });
+
+  watch(
+    () => {
       if (!ref) return;
       context?.register(tabId, { ref, value });
-    });
-    return () => context?.remove(tabId);
-  });
+      return () => context?.remove(tabId);
+    },
+    () => ref,
+  );
 
   const onClose = (e: MouseEvent) => {
     e.preventDefault();
@@ -87,6 +93,7 @@
   class:neo-tab={true}
   class:neo-active={active}
   class:neo-slide={slide}
+  class:neo-close={closeable}
   transition:transition={enterFreezeTransition}
   {...tabProps}
   use:useFn={useProps}
@@ -106,19 +113,18 @@
     class={['neo-tab-button', rest.class]}
   >
     {@render children?.({ active, tabId, value })}
-    {#if closeable}
-      <button
-        class="neo-tab-close"
-        aria-label="Close tab"
-        class:neo-reverse={rest.reverse}
-        class:neo-disabled={disabled}
-        transition:width={{ duration: skip ? 0 : defaultTransitionDuration }}
-        onclick={onClose}
-      >
-        <IconClose class="neo-icon-close" />
-      </button>
-    {/if}
   </NeoButton>
+  {#if closeable}
+    <button
+      class="neo-tab-close"
+      aria-label="Close tab"
+      class:neo-disabled={disabled}
+      transition:width={{ duration: skip ? 0 : defaultTransitionDuration }}
+      onclick={onClose}
+    >
+      <IconClose class="neo-icon-close" size="1rem" />
+    </button>
+  {/if}
 </svelte:element>
 
 <style lang="scss">
@@ -127,12 +133,12 @@
     --neo-btn-text-color-active: var(--neo-tab-text-color-active, var(--neo-text-color-highlight));
 
     display: flex;
+    transition: opacity 0.3s linear;
 
-    :global(.neo-tab-button:active),
-    :global(.neo-tab-button.pressed),
-    :global(.neo-tab-button:focus-visible),
-    :global(.neo-tab-button:hover) {
-      :global(.neo-icon-close) {
+    &.neo-active,
+    &:hover,
+    &:focus-within {
+      .neo-tab-close :global(> .neo-icon-close) {
         opacity: 1;
         pointer-events: auto;
       }
@@ -141,11 +147,18 @@
     :global(.neo-tab-button .neo-icon-close:focus-visible) {
       transition: none;
     }
+
+    &.neo-close :global(> .neo-tab-button) {
+      padding-right: 0.25rem;
+    }
   }
 
   .neo-tab-close {
     display: inline-flex;
-    width: calc(1rem + var(--neo-tab-icon-gap, 0.3rem) + var(--neo-tab-icon-gap-offset, -0.1875rem));
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    margin-right: 0.5rem;
     padding: 0;
     color: inherit;
     font: inherit;
@@ -159,9 +172,8 @@
       pointer-events: none;
     }
 
-    :global(.neo-icon-close) {
-      margin-right: var(--neo-tab-icon-gap-offset, -0.1875rem);
-      margin-left: var(--neo-tab-icon-gap, 0.3rem);
+    :global(> .neo-icon-close) {
+      margin-bottom: 0.0625rem;
       padding: 0.1rem;
       border-radius: 50%;
       opacity: 0;
@@ -172,22 +184,17 @@
       pointer-events: none;
     }
 
-    &:focus-visible :global(.neo-icon-close) {
+    &:focus-visible :global(> .neo-icon-close) {
       color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
       background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
       opacity: 1;
       transition: none;
     }
 
-    &:hover :global(.neo-icon-close) {
+    &:hover :global(> .neo-icon-close) {
       color: var(--neo-close-color, rgb(255 0 0));
       background-color: var(--neo-close-bg-color-hover, rgb(255 0 0 / 10%));
       opacity: 1;
-    }
-
-    &.neo-reverse :global(.neo-icon-close) {
-      margin-right: var(--neo-tab-icon-gap, 0.3rem);
-      margin-left: var(--neo-tab-icon-gap-offset, -0.1875rem);
     }
   }
 </style>

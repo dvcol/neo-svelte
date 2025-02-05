@@ -25,6 +25,7 @@
     // States
     ref = $bindable(),
     active = $bindable(),
+    value = $bindable(),
     disabled,
 
     // Styles
@@ -36,6 +37,7 @@
     pill,
     slide = true,
     pressed,
+    dim = true,
 
     // Events
     onchange,
@@ -55,13 +57,13 @@
   // reflect context active to component
   const onChange: OnChange = (_tabId, _new, _old) => {
     active = _tabId;
+    value = _new;
     onchange?.(_tabId, _new, _old);
   };
 
   const context = setTabContext({ onChange, onClose: onclose });
   const transition = $derived(rest.vertical ? height : width);
 
-  let translate = $state(transform(context.position));
   // Function to compute the transform
   function transform({ oldTab, newTab }: NeoTabContextPositions) {
     if (!newTab) return;
@@ -75,11 +77,7 @@
     return `--neo-tabs-transform: translate(${offsetX}px, ${offsetY}px); --neo-tab-old-width: ${oldTab.width}px; --neo-tab-old-height: ${oldTab.height}px;`;
   }
 
-  $effect.pre(() => {
-    if (!slide) return;
-    translate = transform(context.position);
-  });
-
+  const translate = $derived(slide ? transform(context.position) : undefined);
   const style = $derived(toStyle(containerProps?.style, translate));
 
   // reflect component active to context
@@ -138,6 +136,7 @@
     class:neo-translate={translate}
     class:neo-vertical={rest.vertical}
     class:neo-rounded={rest.rounded}
+    class:neo-dim={dim}
     style:--neo-tabs-slide-box-shadow={slideShadow}
     {...containerProps}
     use:useFn={useProps}
@@ -172,40 +171,34 @@
     flex: 0 1 auto;
     flex-flow: row wrap;
 
-    :global(.neo-tabs-add) {
+    :global(> .neo-tabs-group .neo-tabs-add) {
       min-width: 1rem;
     }
 
+    &.neo-dim {
+      :global(> .neo-tabs-group:has(> .neo-tab:hover) > .neo-tab:not(:hover, :focus-within, .neo-active)),
+      :global(> .neo-tabs-group:has(> .neo-tab:focus-within) > .neo-tab:not(:hover, :focus-within, .neo-active)) {
+        opacity: 0.6;
+      }
+    }
+
     &.neo-vertical {
-      :global(.neo-tab) {
+      :global(> .neo-tabs-group .neo-tab) {
         position: relative;
         width: 100%;
         min-width: max-content;
       }
 
-      :global(.neo-tab .neo-tab-button) {
+      :global(> .neo-tabs-group .neo-tab .neo-tab-button) {
         justify-content: flex-start;
       }
 
-      :global(.neo-tab-close .neo-icon-close) {
-        position: absolute;
-        top: calc(50% - 0.5rem);
-      }
-
-      :global(.neo-tab-close:not(.neo-reverse) .neo-icon-close) {
-        right: 0.75rem;
-      }
-
-      :global(.neo-tab-close.neo-reverse .neo-icon-close) {
-        left: 0.75rem;
-      }
-
-      &.neo-add :global(.neo-tabs-group) {
+      &.neo-add :global(> .neo-tabs-group) {
         padding-bottom: 0.5rem;
       }
 
       &.neo-line {
-        :global(.neo-tab::before) {
+        :global(> .neo-tabs-group .neo-tab::before) {
           --neo-tab-width: 2px;
           --neo-tab-old-width: 2px;
           --neo-tab-old-max-height: calc(var(--neo-tab-old-height, 100%) - 1rem);
@@ -224,13 +217,13 @@
           margin-block: 0.5rem;
         }
 
-        :global(.neo-tab.neo-active::before) {
+        :global(> .neo-tabs-group .neo-tab.neo-active::before) {
           height: var(--neo-tab-height, 100%);
         }
       }
     }
 
-    &.neo-add:not(.neo-vertical) :global(.neo-tabs-group) {
+    &.neo-add:not(.neo-vertical) :global(> .neo-tabs-group) {
       padding-right: 0.5rem;
     }
 
@@ -238,15 +231,15 @@
       --neo-tab-width: 100%;
       --neo-tab-height: 100%;
 
-      :global(.neo-tab .neo-tab-button) {
+      :global(> .neo-tabs-group .neo-tab .neo-tab-button) {
         box-shadow: var(--neo-box-shadow-flat) !important;
       }
 
-      :global(.neo-tab) {
+      :global(> .neo-tabs-group .neo-tab) {
         position: relative;
       }
 
-      :global(.neo-tab::before) {
+      :global(> .neo-tabs-group .neo-tab::before) {
         position: absolute;
         z-index: var(--neo-z-index-in-front, 1);
         box-sizing: border-box;
@@ -261,7 +254,7 @@
         inset: 0;
       }
 
-      &.neo-line :global(.neo-tab.neo-active::before) {
+      &.neo-line :global(> .neo-tabs-group .neo-tab.neo-active::before) {
         top: unset;
         bottom: 0;
         background-color: var(--neo-color-primary, var(--neo-text-color));
@@ -269,7 +262,7 @@
       }
 
       &.neo-line:not(.neo-vertical) {
-        :global(.neo-tab::before) {
+        :global(> .neo-tabs-group .neo-tab::before) {
           --neo-tab-height: 2px;
           --neo-tab-old-height: 2px;
           --neo-tab-old-max-width: calc(var(--neo-tab-old-width, 100%) - 1.5rem);
@@ -287,13 +280,13 @@
           margin-inline: 0.75rem;
         }
 
-        :global(.neo-tab.neo-active::before) {
+        :global(> .neo-tabs-group .neo-tab.neo-active::before) {
           width: var(--neo-tab-width, 100%);
         }
       }
 
       &.neo-pill:not(.neo-line) {
-        :global(.neo-tab::before) {
+        :global(> .neo-tabs-group .neo-tab::before) {
           --neo-tabs-slide-box-shadow: var(--neo-box-shadow-flat);
 
           z-index: var(--neo-z-index-behind, -1) !important;
@@ -302,12 +295,12 @@
             background-color 0.3s ease;
         }
 
-        :global(.neo-tab.neo-active::before) {
+        :global(> .neo-tabs-group .neo-tab.neo-active::before) {
           background-color: var(--neo-tab-bg-color, var(--neo-background-color-secondary));
         }
       }
 
-      :global(.neo-tab.neo-active::before) {
+      :global(> .neo-tabs-group .neo-tab.neo-active::before) {
         box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
       }
 
@@ -345,7 +338,7 @@
         }
       }
 
-      &.neo-rounded :global(.neo-tabs-group .neo-tab::before) {
+      &.neo-rounded :global(> .neo-tabs-group .neo-tab::before) {
         border-radius: var(--neo-tab-border-radius, var(--neo-border-radius-lg));
       }
     }

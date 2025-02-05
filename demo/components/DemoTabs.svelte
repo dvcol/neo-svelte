@@ -36,12 +36,11 @@
     });
   };
 
-  let active: unknown | undefined = $state('button');
-  let value: unknown | undefined = $state('button');
+  let active = $state<string>('button');
+  let context = $state<NeoTabContextValue>('button');
 
-  const onChange = (id?: TabId, context?: NeoTabContextValue) => {
-    active = id;
-    value = context?.value;
+  const onChange = (id?: TabId, ctx?: NeoTabContextValue) => {
+    console.info('Change', { id, ctx });
   };
 
   const onClear = () => onChange();
@@ -57,6 +56,7 @@
     rounded: false,
     vertical: false,
     glass: false,
+    dim: true,
   });
 
   const columns: { label: string; props?: NeoTabsProps }[] = [
@@ -88,7 +88,7 @@
 {/snippet}
 
 {#snippet group(props: NeoTabsProps = {})}
-  <NeoTabs bind:active onchange={onChange} {skeleton} {onclose} {onadd} {...options} {...props}>
+  <NeoTabs bind:active bind:value={context} onchange={onChange} {skeleton} {onclose} {onadd} {...options} {...props}>
     {@render tabs()}
   </NeoTabs>
 {/snippet}
@@ -104,6 +104,7 @@
       <NeoButton toggle bind:checked={options.toggle}>Toggle</NeoButton>
       <NeoButton toggle bind:checked={options.line}>Line</NeoButton>
       <NeoButton toggle bind:checked={options.pill}>Pill</NeoButton>
+      <NeoButton toggle bind:checked={options.dim}>Dim</NeoButton>
       <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
       <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
       <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
@@ -114,7 +115,7 @@
 
 <div class="values">
   <span>Active: {active}</span>
-  <span>Value: {typeof value === 'object' ? JSON.stringify(value, undefined, 2) : value}</span>
+  <span>Value: {typeof context?.value === 'object' ? JSON.stringify(context?.value, undefined, 2) : context?.value}</span>
 </div>
 
 <div class="row" class:invert={!options.vertical}>

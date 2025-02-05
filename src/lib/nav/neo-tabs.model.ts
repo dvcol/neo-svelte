@@ -35,6 +35,12 @@ export type NeoTabsProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   // Styles
 
   /**
+   * Whether to dim the opacity of inactive tabs on hover.
+   *
+   * @default true
+   */
+  dim?: boolean;
+  /**
    * Display the active tab with a line.
    * Only applies when `slide` is `true`.
    *
