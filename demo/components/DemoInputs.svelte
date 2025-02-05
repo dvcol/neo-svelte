@@ -6,6 +6,8 @@
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { NeoRangeHTMLElement } from '~/inputs/neo-range.model.js';
 
+  import type { NeoListItem } from '~/list/neo-list.model.js';
+
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
@@ -16,6 +18,7 @@
   import NeoColorPicker from '~/inputs/NeoColorPicker.svelte';
   import NeoDateTime from '~/inputs/NeoDateTime.svelte';
   import NeoFilePicker from '~/inputs/NeoFilePicker.svelte';
+  import NeoNativeSelect from '~/inputs/NeoNativeSelect.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
@@ -118,6 +121,8 @@
 
   const selectState = new ValidationState<HTMLSelectElement>();
   const selectMultipleState = new ValidationState<HTMLSelectElement>();
+  const selectCustomState = new ValidationState<HTMLSelectElement>();
+  const selectCustomMultipleState = new ValidationState<HTMLSelectElement>();
 
   const numberState = new ValidationState({ type: 'number', value: 0 });
 
@@ -153,6 +158,8 @@
 
       selectState,
       selectMultipleState,
+      selectCustomState,
+      selectCustomMultipleState,
 
       numberState,
 
@@ -176,6 +183,8 @@
 
       rangeState,
       rangeArrayState,
+      rangeMinMaxState,
+      rangeSteppedState,
     ].forEach(state => state.clear());
 
   const columns: ColumProps[] = [
@@ -341,6 +350,7 @@
         minLength: 5,
         placeholder: 'Placeholder',
         error: 'Custom error: min length 5',
+        message: 'This is only visible when valid or untouched.',
       },
       state: customState,
       textarea: true,
@@ -367,6 +377,7 @@
         placeholder: 'Placeholder',
         validation: true,
         wrapperProps: { style: 'max-width: 20.5rem' },
+        message: 'This is only visible when valid or untouched.',
       },
       state: invalidState,
       textarea: true,
@@ -468,6 +479,13 @@
       state: expandedFileState,
       input: true,
     },
+  ];
+
+  const items: NeoListItem = [
+    { value: 'value 1', label: 'Label for value 1' },
+    { value: 'value 2', label: 'Label for value 2' },
+    { value: 'value 3', label: 'Label for value 3', disabled: true },
+    { value: 'value 4', label: 'Label for value 4' },
   ];
 </script>
 
@@ -594,11 +612,11 @@
 
 <!--  Select  -->
 <div class="row">
-  <div class="column content">
+  <div class="column">
     <span class="label">Native Select</span>
     {@render validationState(selectState, true)}
     <SphereBackdrop glass={options.glass}>
-      <NeoSelect
+      <NeoNativeSelect
         type="select"
         validation
         required
@@ -616,15 +634,15 @@
         <option value="value 2">Label for value 2</option>
         <option value="value 3" disabled>Label for value 3</option>
         <option value="value 4">Label for value 4</option>
-      </NeoSelect>
+      </NeoNativeSelect>
     </SphereBackdrop>
   </div>
 
-  <div class="column content">
+  <div class="column">
     <span class="label">Native Multiple Select</span>
     {@render validationState(selectMultipleState, true)}
     <SphereBackdrop glass={options.glass}>
-      <NeoSelect
+      <NeoNativeSelect
         type="select"
         validation
         required
@@ -641,7 +659,52 @@
         <option value="value 1">Label for value 1</option>
         <option value="value 2">Label for value 2</option>
         <option value="value 3">Label for value 3</option>
-      </NeoSelect>
+      </NeoNativeSelect>
+    </SphereBackdrop>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <span class="label">Custom Select</span>
+
+    {@render validationState(selectCustomState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoSelect
+        validation
+        required
+        label="Custom Select"
+        options={items}
+        bind:ref={selectCustomState.ref}
+        bind:touched={selectCustomState.touched}
+        bind:dirty={selectCustomState.dirty}
+        bind:valid={selectCustomState.valid}
+        bind:value={selectCustomState.value}
+        {...options}
+        size={undefined}
+      />
+    </SphereBackdrop>
+  </div>
+
+  <div class="column">
+    <span class="label">Custom Multi Select</span>
+
+    {@render validationState(selectCustomMultipleState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoSelect
+        validation
+        required
+        label="Custom Select"
+        options={items}
+        multiple
+        bind:ref={selectCustomMultipleState.ref}
+        bind:touched={selectCustomMultipleState.touched}
+        bind:dirty={selectCustomMultipleState.dirty}
+        bind:valid={selectCustomMultipleState.valid}
+        bind:value={selectCustomMultipleState.value}
+        {...options}
+        size={undefined}
+      />
     </SphereBackdrop>
   </div>
 </div>

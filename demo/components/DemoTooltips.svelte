@@ -7,8 +7,8 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
+  import NeoNativeSelect from '~/inputs/NeoNativeSelect.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
-  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
@@ -116,7 +116,7 @@
     <NeoButton toggle bind:checked={options.closeOnDismiss}>Dismiss</NeoButton>
   </NeoButtonGroup>
 
-  <NeoSelect
+  <NeoNativeSelect
     label="Placement"
     position="left"
     bind:value={options.placement}

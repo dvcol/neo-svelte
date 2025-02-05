@@ -87,14 +87,14 @@
       align-items: center;
       padding: 0.125rem 0.5rem;
 
-      :global(.neo-skeleton-text-line) {
+      :global(.neo-list-loader-skeleton .neo-skeleton-text-line) {
         --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
       }
 
       &.neo-description {
         gap: var(--neo-gap-xs, 0.625rem);
 
-        :global(.neo-skeleton-text-line:nth-child(2n)) {
+        :global(.neo-list-loader-skeleton .neo-skeleton-text-line:nth-child(2n)) {
           --neo-skeleton-text-font-size: var(--neo-font-size-sm, 0.875rem);
           --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
         }

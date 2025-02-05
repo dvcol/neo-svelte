@@ -31,6 +31,7 @@
     tooltipRef = $bindable(),
     triggerRef = $bindable(),
     open = $bindable(false),
+    target,
 
     // Other Props
     tooltipProps,
@@ -80,6 +81,7 @@
   }}
   {tooltip}
   padding="0.25rem"
+  {target}
   {rounded}
   {...tooltipProps}
 >

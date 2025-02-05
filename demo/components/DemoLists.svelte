@@ -23,6 +23,7 @@
     disabled: false,
     readonly: false,
     reverse: false,
+    dim: false,
   });
 
   const custom: NeoListItem = { label: 'Custom Render Item', value: -1, render, id: getUUID() };
@@ -182,6 +183,7 @@
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
     <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
     <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
+    <NeoButton toggle bind:checked={options.dim}>Dim</NeoButton>
     <NeoButton onclick={onAdd}>Add</NeoButton>
     <NeoButton onclick={onRemove}>Remove</NeoButton>
   </NeoButtonGroup>

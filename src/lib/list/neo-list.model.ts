@@ -188,14 +188,14 @@ export type NeoListMethods<Value = unknown> = {
   clearItem: (...selection: NeoListSelectedItem<Value>[]) => NeoListSelectEvent | undefined;
   /**
    * Clear all items in the list then re-select the previously selected item(s) only if they still exist in the list.
-   * Requires the `id` property to be set and unique for each item.
    *
+   * @note Requires the `id` property to be set and unique for each item.
    * @returns The selection event if the list or item was cleared, undefined otherwise.
    */
   reSelect: () => NeoListSelectEvent | undefined;
 };
 
-export type NeoListItemOrSection = NeoListItem | NeoListSection;
+export type NeoListItemOrSection<Value = unknown> = NeoListItem<Value> | NeoListSection<Value>;
 export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSelectedItem[]> = {
   // States
   /**
@@ -290,19 +290,23 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Transition function to apply when removing items from the list.
    * Note: unique `id` is required for entering/leaving transitions.
    */
-  animate: HTMAnimationProps['animate'];
+  animate?: HTMAnimationProps['animate'];
   /**
    * Transition function to apply when adding items to the list.
    * Note: unique `id` is required for entering/leaving transitions.
    */
-  in: HTMLTransitionProps['in'];
+  in?: HTMLTransitionProps['in'];
   /**
    * Transition function to apply when removing items from the list.
    * Note: unique `id` is required for entering/leaving transitions.
    */
-  out: HTMLTransitionProps['out'];
+  out?: HTMLTransitionProps['out'];
 
   // Styles
+  /**
+   * Whether to dim the opacity of inactive tabs on hover.
+   */
+  dim?: boolean;
   /**
    * Whether to display a shadow when scrolling content.
    *

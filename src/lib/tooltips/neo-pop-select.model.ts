@@ -3,7 +3,7 @@ import type { NeoListSearchProps } from '~/list/neo-list-search.model.js';
 import type { NeoListProps } from '~/list/neo-list.model.js';
 import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
 
-export type NeoPopSelectProps = {
+export type NeoPopSelectProps<Value = unknown> = {
   // Snippet
   /**
    * Element(s) to render inside the trigger.
@@ -32,11 +32,11 @@ export type NeoPopSelectProps = {
   /**
    * Optional ref to the list.
    */
-  listRef?: NeoListProps['ref'];
+  listRef?: NeoListProps<Value>['ref'];
   /**
    * Optional props to pass to the search input.
    */
-  searchProps: NeoListSearchProps;
+  searchProps?: NeoListSearchProps;
 
   // Tooltip props
   /**
@@ -52,7 +52,11 @@ export type NeoPopSelectProps = {
    */
   open?: NeoTooltipProps['open'];
   /**
+   * The target element to attach the tooltip to.
+   */
+  target?: NeoTooltipProps['target'];
+  /**
    * Optional props to pass to the tooltip.
    */
-  tooltipProps: Omit<NeoTooltipProps, 'ref' | 'triggerRef' | 'open' | 'children'>;
-} & Omit<NeoListProps, 'ref' | 'children'>;
+  tooltipProps?: Omit<NeoTooltipProps, 'ref' | 'triggerRef' | 'open' | 'children'>;
+} & Omit<NeoListProps<Value>, 'ref' | 'children'>;

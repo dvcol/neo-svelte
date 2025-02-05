@@ -74,6 +74,7 @@
     skeleton = false,
     scrollbar = true,
     validation,
+    validationIcon,
 
     // Transition
     in: inAction,
@@ -138,10 +139,12 @@
     }, 0);
   };
 
-  const affix = $derived(clearable || loading !== undefined || validation);
+  const showAffixValidation = $derived(validation && validationIcon);
+  const showInputValidation = $derived(validation === true || (validation === 'success' && valid) || (validation === 'error' && !valid));
+  const affix = $derived(clearable || loading !== undefined || showAffixValidation);
   const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
   const close = $derived(clearable && (focusin || focused || hovered) && hasValue && !disabled && !readonly);
-  const isFloating = $derived(floating && !focused && !hasValue && !disabled && !readonly);
+  const isFloating = $derived(floating && !hasValue && (!focused || disabled || readonly));
 
   const validate: NeoInputMethods<HTMLTextAreaElement>['validate'] = (
     update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true },
@@ -361,7 +364,7 @@
       {close}
       {disabled}
       {skeleton}
-      valid={validation ? valid : undefined}
+      valid={showAffixValidation ? valid : undefined}
       {...affixProps}
       closeProps={{ onclick: () => clear(), ...affixProps?.closeProps }}
       onclick={() => focus()}
@@ -428,7 +431,7 @@
     class:neo-floating={floating}
     class:neo-start={start}
     class:neo-skeleton={skeleton}
-    class:neo-validation={validation}
+    class:neo-validation={showInputValidation}
     class:neo-disabled={disabled}
     class:neo-raised={elevation > 3 || elevation + hover > 3}
     class:neo-inset={elevation < 0 || elevation + hover < 0}

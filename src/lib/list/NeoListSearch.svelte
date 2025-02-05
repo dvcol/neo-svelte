@@ -144,7 +144,7 @@
     display: inline-flex;
     flex-direction: column;
 
-    &:not(.neo-reverse) :global(.neo-list-search-input) {
+    &:not(.neo-reverse) :global(> .neo-list-search-input) {
       margin-bottom: 0;
     }
 

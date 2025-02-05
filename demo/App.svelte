@@ -1,8 +1,8 @@
 <script lang="ts">
   import { sentenceCase } from '@dvcol/common-utils';
-  import { wait } from '@dvcol/common-utils/common/promise';
 
   import { RouterView } from '@dvcol/svelte-simple-router/components';
+
   import { fade } from 'svelte/transition';
 
   import { router } from './router/router.js';
@@ -10,7 +10,7 @@
   import { routes } from './router/routes.js';
 
   import type { Routes } from './router/routes.js';
-  import type { TransitionProps } from '@dvcol/svelte-simple-router/models';
+  import type { TransitionProps } from '@dvcol/svelte-utils/transition';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconGithub from '~/icons/IconGithub.svelte';
@@ -24,7 +24,7 @@
   const transition: TransitionProps = {
     in: fade,
     out: fade,
-    params: { in: { delay: 200, duration: 200 }, out: { duration: 200 } },
+    params: { in: { delay: 300, duration: 200 }, out: { duration: 200 } },
     props: {
       container: {
         style: {
@@ -38,23 +38,6 @@
   };
 
   const active = $derived(router.route?.name);
-  let transitioning = $state(false);
-
-  let first = true;
-  const onChange = async () => {
-    if (first) return;
-    transitioning = true;
-    await wait(100);
-  };
-
-  const onLoaded = async () => {
-    if (active && first) {
-      first = false;
-      return;
-    }
-    await wait(300);
-    transitioning = false;
-  };
 
   const onClick = (id?: Routes) => {
     if (id === undefined || id === active) return;
@@ -83,8 +66,8 @@
       <NeoThemePicker rounded />
     </header>
 
-    <main class="column view" class:transition={transitioning}>
-      <RouterView {router} {transition} {onChange} {onLoaded} />
+    <main class="column view">
+      <RouterView {router} {transition} />
     </main>
   </div>
 </NeoThemeProvider>
@@ -111,11 +94,5 @@
 
     min-height: 100dvh;
     padding: 1rem;
-
-    :global(.transition *),
-    :global(.transition *::before),
-    :global(.transition *::after) {
-      box-shadow: var(--neo-box-shadow-flat) !important;
-    }
   }
 </style>

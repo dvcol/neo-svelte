@@ -55,6 +55,7 @@
     disabled,
     readonly,
     reverse,
+    dim,
 
     // Styles
     shadow = true,
@@ -84,7 +85,6 @@
   }: NeoListProps = $props();
   /* eslint-enable prefer-const */
 
-  // TODO - rework focus highlights
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
@@ -173,7 +173,7 @@
       if (isSection(item)) {
         // if section differs, skip
         if (selection?.section?.id !== item.id) return false;
-        const sectionIndex = item?.items?.findIndex(sub => sub.id === selection?.item?.id);
+        const sectionIndex = item?.items?.findIndex(sub => Object.is(sub, selection?.item) || sub.id === selection?.item?.id);
         if (sectionIndex < 0) return false;
         result.index = sectionIndex;
         result.item = item.items[sectionIndex];
@@ -182,6 +182,7 @@
         return true;
       }
       if (item.id !== selection?.item?.id) return false;
+      if (item?.id === undefined && !Object.is(item, selection?.item)) return false;
       result.index = index;
       result.item = item;
       return true;
@@ -193,7 +194,8 @@
    * Re-selects the previous selection if it still exists in the list
    */
   const reSelect: NeoListMethods['reSelect'] = () => {
-    if (!select || !selected) return;
+    if (!select || missing || !selected) return;
+    if (Array.isArray(selected) && !selected.length) return;
     const previous = cloneSelection();
     clearItem();
     if (multiple && !Array.isArray(previous)) return;
@@ -208,7 +210,12 @@
   };
 
   // Clear selected item(s) when items list changes and attempts to re-select if the item still exists
-  watch(() => items, reSelect);
+  watch(
+    () => {
+      reSelect();
+    },
+    () => items,
+  );
 
   const context = $derived<NeoListContext>({
     // States
@@ -278,6 +285,7 @@
     aria-disabled="true"
     aria-label="Loading placeholder."
     class="neo-list-loader"
+    class:neo-select={select}
     class:neo-list-item-select={select}
   >
     {#if show && customLoader}
@@ -295,15 +303,18 @@
     .sort((a, b) => sort(a.item, b.item))}
   <!-- Items -->
   {#each visible as { item, index } (item.id ?? index)}
+    {@const checked = !isSection(item) && isChecked({ index, item, sectionIndex, section })}
     <svelte:element
       this={item.tag ?? 'li'}
       role={select ? 'option' : 'listitem'}
       data-index={index}
       data-section={sectionIndex}
+      aria-selected={checked}
       aria-posinset={index + 1}
       aria-setsize={array.length}
       class:neo-list-item={true}
       class:neo-skeleton={skeleton}
+      class:neo-checked={checked}
       class:neo-list-item-select={select}
       style:--neo-list-item-color={getColorVariable(item.color)}
       {...item.containerProps}
@@ -324,8 +335,6 @@
       {:else if customItem && !item.render}
         {@render customItem({ item, index, context })}
       {:else}
-        {@const selection = { index, item, sectionIndex, section }}
-        {@const checked = isChecked(selection)}
         <NeoListBaseItem
           {item}
           {index}
@@ -338,7 +347,7 @@
           disabled={item.disabled || disabled}
           readonly={item.readonly || readonly}
           {...itemProps}
-          onclick={() => toggleItem(selection, checked)}
+          onclick={() => toggleItem({ index, item, sectionIndex, section }, checked)}
         />
       {/if}
       {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1].item, 'bottom')}
@@ -370,6 +379,7 @@
       class:neo-list-items={true}
       class:neo-scroll={scrollbar}
       class:neo-shadow={shadow}
+      class:neo-dim={dim}
       in:scaleFreeze={scaleTransitionProps}
       {...rest}
     >
@@ -408,15 +418,6 @@
     flex-direction: column;
     height: 100%;
 
-    :global(.neo-list-item-button) {
-      width: 100%;
-    }
-
-    :global(.neo-list-empty-skeleton-container) {
-      width: 100%;
-      margin: auto;
-    }
-
     &-items,
     &-empty {
       position: relative;
@@ -429,15 +430,22 @@
     }
 
     &-items {
-      padding-inline: 0.25rem;
+      padding-inline: var(--neo-list-padding, 0.25rem);
 
       &.neo-scroll {
         @include mixin.scrollbar($button-height: 0.375rem);
 
-        padding-block: 0.5rem;
+        padding-block: var(--neo-list-scroll-padding, 0.5rem);
 
         &.neo-shadow {
           @include mixin.fade-scroll(1rem);
+        }
+      }
+
+      &.neo-dim {
+        &:has(> .neo-list-item:hover) > .neo-list-item:not(:hover, :focus-within, .neo-checked),
+        &:has(> .neo-list-item:focus-within) > .neo-list-item:not(:hover, :focus-within, .neo-checked) {
+          opacity: 0.6;
         }
       }
     }
@@ -451,32 +459,37 @@
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
       padding-inline: 0.125rem;
+      transition: opacity 0.3s linear;
     }
 
-    &-loader {
-      gap: 0.125rem;
+    &-loader.neo-select {
+      gap: 0.25rem;
     }
 
     &-item {
+      :global(> .neo-list-item-button) {
+        width: 100%;
+      }
+
       &.neo-skeleton {
         pointer-events: none;
       }
 
       &-select {
-        :global(.neo-list-item-button.neo-rounded) {
+        :global(> .neo-list-item-button.neo-rounded) {
           border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-md));
         }
 
-        :global(.neo-list-item-button) {
-          padding: 0.125rem;
+        :global(> .neo-list-item-button) {
+          padding: 0.25rem 0.125rem;
         }
 
-        :global(.neo-list-loader-skeleton) {
-          margin-top: 0.125rem;
+        :global(> .neo-list-base-loader:first-child) {
+          margin-top: 0.25rem;
         }
       }
 
-      :global(.neo-list-item-divider) {
+      :global(> .neo-list-item-divider) {
         margin-block: 0.5rem;
         color: var(--neo-list-divider-color, var(--neo-text-color));
       }
@@ -484,7 +497,7 @@
       &:hover,
       &:focus,
       &:focus-within {
-        :global(.neo-list-section-title) {
+        :global(> .neo-list-section-title) {
           color: var(--neo-text-color-highlight);
         }
       }
