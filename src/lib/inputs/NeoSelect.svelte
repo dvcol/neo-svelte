@@ -46,6 +46,8 @@
     tooltipRef = $bindable(),
     triggerRef = $bindable(),
     open = $bindable(false),
+    width,
+    height,
 
     // Other props
     containerRef = $bindable(),
@@ -145,6 +147,8 @@
   multiple={!!multiple}
   {rounded}
   {search}
+  {width}
+  {height}
   {...listProps}
-  tooltipProps={{ width: 'min', openOnHover: false, ...listProps?.tooltipProps }}
+  tooltipProps={{ openOnHover: false, ...listProps?.tooltipProps }}
 />

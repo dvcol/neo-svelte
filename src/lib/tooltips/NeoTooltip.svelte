@@ -114,8 +114,8 @@
         offset(spacing),
         size({
           apply({ availableWidth, availableHeight }) {
-            available.width = availableWidth;
-            available.height = availableHeight;
+            available.width = availableWidth - 8;
+            available.height = availableHeight - 8;
           },
         }),
       ];
@@ -299,7 +299,10 @@
   .neo-tooltip {
     @include mixin.tooltip;
 
-    :global(> .neo-list) {
+    :global(> .neo-list:only-child) {
+      width: inherit;
+      min-width: inherit;
+      max-width: inherit;
       height: inherit;
       min-height: inherit;
       max-height: inherit;
@@ -308,6 +311,10 @@
     &.neo-rounded {
       --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));
       --neo-tooltip-padding: 0.625rem 1rem;
+
+      :global(> .neo-list:only-child) {
+        --neo-list-scrollbar-padding: 0.75rem;
+      }
     }
   }
 </style>
