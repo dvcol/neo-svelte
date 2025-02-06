@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
-  import type { NeoListContext } from '~/list/neo-list.model.js';
+  import type { NeoListContext, NeoListItemOrSection } from '~/list/neo-list.model.js';
   import type { NeoPopSelectProps } from '~/tooltips/neo-pop-select.model.js';
 
   import NeoList from '~/list/NeoList.svelte';
@@ -15,9 +15,12 @@
 
     // States
     search = false,
+    items: array = [],
 
     // Styles
     rounded = false,
+    width = 'min',
+    height = 'min',
 
     // List Props
     listRef = $bindable(),
@@ -39,6 +42,8 @@
     ...rest
   }: NeoPopSelectProps = $props();
   /* eslint-enable prefer-const */
+
+  const items = $derived<NeoListItemOrSection[]>(array?.map(i => (typeof i === 'object' ? i : { value: i })));
 </script>
 
 {#snippet beforeList(context: NeoListContext)}
@@ -66,6 +71,7 @@
     select
     reverse={tooltipProps?.placement?.startsWith('top')}
     before={search ? beforeList : before}
+    {items}
     {...rest}
     buttonProps={{ rounded, ...rest.buttonProps }}
     class={['neo-pop-select-list', rest.class]}
@@ -83,6 +89,8 @@
   padding="0.25rem"
   {target}
   {rounded}
+  {width}
+  {height}
   {...tooltipProps}
 >
   {#snippet children(floating: UseFloatingReturn)}

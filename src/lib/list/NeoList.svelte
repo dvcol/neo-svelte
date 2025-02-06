@@ -424,6 +424,7 @@
       display: flex;
       flex-direction: column;
       height: 100%;
+      max-height: 100%;
       margin: 0;
       padding: 0;
       border-radius: var(--neo-border-radius);

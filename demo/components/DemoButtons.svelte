@@ -14,7 +14,7 @@
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
   import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
-  import NeoNativeSelect from '~/inputs/NeoNativeSelect.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { Colors } from '~/utils/colors.utils';
 
   const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
@@ -87,20 +87,15 @@
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     </NeoButtonGroup>
 
-    <NeoNativeSelect
+    <NeoSelect
       label="Color"
+      placeholder="Select color"
       position="left"
       floating={false}
+      size="10"
       bind:value={options.color}
       containerProps={{ style: 'margin-left: 6rem' }}
-      options={[
-        { value: '', label: 'default' },
-        { value: Colors.Primary },
-        { value: Colors.Secondary },
-        { value: Colors.Success },
-        { value: Colors.Warning },
-        { value: Colors.Error },
-      ]}
+      options={[Colors.Primary, Colors.Secondary, Colors.Success, Colors.Warning, Colors.Error]}
     />
   </div>
 </div>

@@ -1,6 +1,6 @@
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoListSearchProps } from '~/list/neo-list-search.model.js';
-import type { NeoListProps } from '~/list/neo-list.model.js';
+import type { NeoListItemOrSection, NeoListProps } from '~/list/neo-list.model.js';
 import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
 
 export type NeoPopSelectProps<Value = unknown> = {
@@ -23,6 +23,10 @@ export type NeoPopSelectProps<Value = unknown> = {
   rounded?: boolean;
 
   // List props
+  /**
+   * List items to select from.
+   */
+  items?: (string | number | NeoListItemOrSection)[];
   /**
    * We use the list's search is focused.
    *
@@ -56,7 +60,29 @@ export type NeoPopSelectProps<Value = unknown> = {
    */
   target?: NeoTooltipProps['target'];
   /**
+   * Width strategy for the tooltip.
+   * - `match`: the tooltip will match the width of the trigger.
+   * - `min`: the tooltip will be at least as wide as the trigger.
+   * - `max`: the tooltip will be at most as wide as the trigger.
+   * - `string`: a css width value will be applied to the tooltip.
+   * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
+   *
+   * @default 'min'
+   */
+  width?: NeoTooltipProps['width'];
+  /**
+   * Width strategy for the tooltip.
+   * - `match`: the tooltip will match the width of the trigger.
+   * - `min`: the tooltip will be at least as wide as the trigger.
+   * - `max`: the tooltip will be at most as wide as the trigger.
+   * - `string`: a css width value will be applied to the tooltip.
+   * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
+   *
+   * @default 'min'
+   */
+  height?: NeoTooltipProps['height'];
+  /**
    * Optional props to pass to the tooltip.
    */
   tooltipProps?: Omit<NeoTooltipProps, 'ref' | 'triggerRef' | 'open' | 'children'>;
-} & Omit<NeoListProps<Value>, 'ref' | 'children'>;
+} & Omit<NeoListProps<Value>, 'ref' | 'children' | 'width' | 'height'>;

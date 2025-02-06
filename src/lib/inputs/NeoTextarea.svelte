@@ -30,6 +30,7 @@
     getDefaultHoverElevation,
     isShadowFlat,
   } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -62,7 +63,12 @@
     validateOnInput,
     validateOnBlur,
     position = NeoInputLabelPosition.Inside,
+
+    // Size
+    width: _width,
+    height: _height,
     autoResize = true,
+    fitContent,
 
     // Styles
     borderless,
@@ -353,6 +359,9 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 </script>
 
 {#snippet suffix()}
@@ -391,6 +400,13 @@
     class:neo-textarea={true}
     class:neo-scroll={scrollbar}
     class:neo-affix={affix || after}
+    class:neo-fit-content={fitContent}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     {rows}
     onblur={onBlur}
     onfocus={onFocus}
@@ -541,6 +557,10 @@
     border: none;
     border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
     outline: none;
+
+    &.neo-fit-content {
+      field-sizing: content;
+    }
 
     &.neo-affix {
       padding: 0.75rem 2.25rem 0.75rem 0.95rem;

@@ -12,6 +12,7 @@ import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/com
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoInputValue<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = T extends HTMLTextAreaElement
   ? HTMLTextareaAttributes['value']
@@ -159,6 +160,22 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement |
    * Fall back checked state when the input value is cleared.
    */
   defaultChecked?: HTMLInputAttributes['checked'];
+
+  // Sizing
+  /**
+   * Optional width constraints.
+   */
+  width?: SizeInput<'width'>;
+  /**
+   * Optional height constraints.
+   */
+  height?: SizeInput<'height'>;
+  /**
+   * If true, the input will adjust its size to fit the content.
+   *
+   * @see [field-sizing](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) for browser support
+   */
+  fitContent?: boolean;
 
   // Validation
   /**

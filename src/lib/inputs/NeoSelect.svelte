@@ -6,7 +6,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { displayValue, type NeoSelectProps } from '~/inputs/neo-select.model.js';
+  import { type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import { coerce, computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
 
@@ -17,8 +17,8 @@
     icon: customIcon,
 
     // State
-    options = [],
-    display = displayValue,
+    options: items = [],
+    transform = transformValue,
 
     // Input Props
     ref = $bindable(),
@@ -32,6 +32,7 @@
     multiple,
     floating,
     rounded,
+    readonly,
 
     // Pop Select Props
     listRef = $bindable(),
@@ -76,11 +77,11 @@
     class: ['neo-select-toggle', buttonProps?.class],
   });
 
-  const space = $derived(open ? 9 : 6);
+  const space = $derived(open ? 8 : 6);
 
   watch(
     () => {
-      value = display(selected);
+      value = transform(selected);
       touched = true;
     },
     () => selected,
@@ -90,11 +91,11 @@
     },
   );
 
+  // TODO - disaply input ???
   // TODO - rework focus highlights
-  // implement readonly
+  // TODO - custom render trigger popselect ?
+  // TODO - pill
   // make clearable work
-  // list padding ?
-  // validation
 </script>
 
 {#snippet after()}
@@ -139,7 +140,8 @@
   bind:tooltipRef
   bind:triggerRef
   bind:open
-  items={options}
+  {readonly}
+  {items}
   multiple={!!multiple}
   {rounded}
   {search}

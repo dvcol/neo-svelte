@@ -31,6 +31,6 @@
 
 <style lang="scss">
   .neo-icon-double-chevron {
-    transition: translate 0.3s ease;
+    transition: translate 0.5s var(--neo-easing-overshoot-smooth, ease);
   }
 </style>

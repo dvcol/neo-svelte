@@ -7,6 +7,7 @@
 
   import { type NeoBaseInputProps, type NeoInputMethods, type NeoInputState, type NeoInputValue } from '~/inputs/common/neo-input.model.js';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -37,6 +38,11 @@
     validateOnInput,
     validateOnBlur,
     validationMessage = $bindable(),
+
+    // Size
+    width: _width,
+    height: _height,
+    fitContent,
 
     // Styles
     before,
@@ -198,6 +204,9 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 </script>
 
 {#if rest.type === 'select'}
@@ -210,6 +219,13 @@
     class:neo-input={true}
     class:neo-after={after}
     class:neo-before={before}
+    class:neo-fit-content={fitContent}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -235,6 +251,13 @@
     class:neo-input={true}
     class:neo-after={after}
     class:neo-before={before}
+    class:neo-fit-content={fitContent}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -261,6 +284,13 @@
     class:neo-input={true}
     class:neo-after={after}
     class:neo-before={before}
+    class:neo-fit-content={fitContent}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -285,6 +315,13 @@
     class:neo-input={true}
     class:neo-after={after}
     class:neo-before={before}
+    class:neo-fit-content={fitContent}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -309,6 +346,13 @@
     class:neo-input={true}
     class:neo-after={after}
     class:neo-before={before}
+    class:neo-fit-content={fitContent}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}
@@ -351,6 +395,10 @@
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
     appearance: none;
+
+    &.neo-fit-content {
+      field-sizing: content;
+    }
 
     &.neo-before {
       padding-left: 0;

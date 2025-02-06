@@ -5,10 +5,13 @@ import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoListItemOrSection, NeoListSelectedItem } from '~/list/neo-list.model.js';
 import type { NeoPopSelectProps } from '~/tooltips/neo-pop-select.model.js';
 
-export type NeoNativeSelectOption<Value = unknown> = {
-  value: Value;
-  label?: string | Snippet;
-} & HTMLOptionAttributes;
+export type NeoNativeSelectOption<Value = unknown> =
+  | string
+  | number
+  | ({
+      value: Value;
+      label?: string | Snippet;
+    } & HTMLOptionAttributes);
 
 export type NeoNativeSelectProps<Value = unknown> = {
   /**
@@ -25,6 +28,8 @@ export type NeoNativeSelectProps<Value = unknown> = {
   options?: NeoNativeSelectOption<Value>[];
 } & NeoInputProps;
 
+export type NeoSelectOption<Value = unknown> = NeoListItemOrSection<Value>;
+
 export type NeoSelectProps<Value = unknown> = {
   // Snippets
 
@@ -37,12 +42,12 @@ export type NeoSelectProps<Value = unknown> = {
   /**
    * The array of options to display in the select.
    */
-  options?: NeoListItemOrSection<Value>[];
+  options?: NeoSelectOption<Value>[];
   /**
    * Transform the selected item(s) into a displayable string.
    * @param selection
    */
-  display?: (selection?: NeoListSelectedItem | NeoListSelectedItem[]) => string | string[];
+  transform?: (selection?: NeoListSelectedItem | NeoListSelectedItem[]) => string | string[];
 
   // ListProps
   /**
@@ -98,10 +103,10 @@ export type NeoSelectProps<Value = unknown> = {
   buttonProps?: NeoButtonProps;
 } & NeoInputProps;
 
-export const displayValue = (selection?: NeoListSelectedItem | NeoListSelectedItem[]): string => {
+export const transformValue = (selection?: NeoListSelectedItem | NeoListSelectedItem[]): string => {
   if (Array.isArray(selection)) {
     if (selection?.length > 2) return `${selection?.length} items selected`;
-    return selection?.map?.(s => s?.item?.label).join(', ') ?? '';
+    return selection?.map?.(s => s?.item?.value).join(', ') ?? '';
   }
-  return selection?.item?.label?.toString() ?? '';
+  return selection?.item?.value?.toString() ?? '';
 };

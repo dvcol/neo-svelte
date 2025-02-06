@@ -3,11 +3,11 @@
 
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { clamp } from '@dvcol/common-utils/common/math';
-  import { resize } from '@dvcol/svelte-utils/resize';
   import {
     autoPlacement,
     flip,
     offset,
+    size,
     useDismiss,
     useFloating,
     useFocus,
@@ -16,12 +16,13 @@
     useRole,
   } from '@skeletonlabs/floating-ui-svelte';
 
-  import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
-
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+
+  import { type NeoTooltipProps, NeoTooltipSizeStrategy } from '~/tooltips/neo-tooltip.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
+  import { type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
   import { scaleTransition } from '~/utils/transition.utils.js';
 
   let {
@@ -42,7 +43,8 @@
     // Styles
     padding,
     rounded,
-    width,
+    width: inputWith,
+    height: inputHeight,
 
     // Hover
     openOnHover = true,
@@ -84,6 +86,8 @@
     return target;
   });
 
+  const available = $state<{ width?: number; height?: number }>({});
+
   let focus = $state(false);
   const floating = useFloating({
     get elements() {
@@ -106,8 +110,23 @@
       open = _open;
     },
     get middleware() {
-      if (placement === 'auto') return [autoPlacement(), offset(spacing)];
-      return [flip(), offset(spacing)];
+      const middleware = [
+        offset(spacing),
+        size({
+          apply({ availableWidth, availableHeight }) {
+            available.width = availableWidth;
+            available.height = availableHeight;
+          },
+        }),
+      ];
+      if (placement === 'auto') middleware.push(autoPlacement());
+      else
+        middleware.push(
+          flip({
+            fallbackAxisSideDirection: 'end',
+          }),
+        );
+      return middleware;
     },
     get placement() {
       if (placement === 'auto') return undefined;
@@ -215,13 +234,18 @@
   $effect(() => addMethods(ref));
   $effect(() => addMethods(triggerRef));
 
-  const tooltipWidth = $derived.by(() => {
-    if (!triggerRef?.offsetWidth) return;
-    if (width === true) return `width: ${triggerRef?.offsetWidth}px;`;
-    if (width === 'min') return `min-width: ${triggerRef?.offsetWidth}px;`;
-    if (width === 'max') return `max-width: ${triggerRef?.offsetWidth}px;`;
-    if (typeof width === 'string') return `width: ${width};`;
-  });
+  const computeSize = <T extends 'width' | 'height'>(value: NeoTooltipProps[T], dimension: T): SizeOption<T> | undefined => {
+    if (!open) return;
+    const tSize = dimension === 'width' ? triggerRef?.offsetWidth : triggerRef?.offsetHeight;
+    if (value === NeoTooltipSizeStrategy.Match) return { absolute: toPixel(tSize) };
+    if (value === NeoTooltipSizeStrategy.Min) return { max: toPixel(available[dimension]), min: toPixel(tSize) };
+    if (value === NeoTooltipSizeStrategy.Max) return { max: toPixel(tSize) };
+    const iSize = toSize(value);
+    return { max: iSize?.absolute ? undefined : toPixel(available[dimension]), ...iSize };
+  };
+
+  const width = $derived(computeSize(inputWith, 'width'));
+  const height = $derived(computeSize(inputHeight, 'height'));
 </script>
 
 {#if !target}
@@ -249,12 +273,17 @@
     in:inFn={inProps}
     out:outFn={outProps}
     use:useFn={useProps}
-    use:resize={floating.update}
     {...tooltipHandler}
     {...rest}
     style:transform-origin={tooltipOrigin}
     style:--neo-tooltip-padding={padding}
-    style={toStyle(tooltipStyle, tooltipWidth, rest.style)}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
+    style={toStyle(tooltipStyle, rest.style)}
   >
     {#if typeof tooltip === 'string'}
       {tooltip}
@@ -270,7 +299,11 @@
   .neo-tooltip {
     @include mixin.tooltip;
 
-    overflow: auto;
+    :global(> .neo-list) {
+      height: inherit;
+      min-height: inherit;
+      max-height: inherit;
+    }
 
     &.neo-rounded {
       --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));

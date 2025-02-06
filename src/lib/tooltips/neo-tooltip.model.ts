@@ -11,6 +11,15 @@ import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
+
+export const NeoTooltipSizeStrategy = {
+  Match: 'match' as const,
+  Min: 'min' as const,
+  Max: 'max' as const,
+} as const;
+
+export type NeoTooltipSizeStrategies = (typeof NeoTooltipSizeStrategy)[keyof typeof NeoTooltipSizeStrategy];
 
 export type NeoTooltipElevation = PositiveShadowElevation | PositiveShadowElevationString;
 
@@ -80,12 +89,22 @@ export type NeoTooltipProps = {
   blur?: NeoTooltipElevation;
   /**
    * Width strategy for the tooltip.
-   * - `true`: the tooltip will match the width of the trigger.
+   * - `match`: the tooltip will match the width of the trigger.
    * - `min`: the tooltip will be at least as wide as the trigger.
    * - `max`: the tooltip will be at most as wide as the trigger.
    * - `string`: a css width value will be applied to the tooltip.
+   * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
    */
-  width?: boolean | 'min' | 'max' | string;
+  width?: NeoTooltipSizeStrategies | SizeInput<'width'>;
+  /**
+   * Width strategy for the tooltip.
+   * - `match`: the tooltip will match the width of the trigger.
+   * - `min`: the tooltip will be at least as wide as the trigger.
+   * - `max`: the tooltip will be at most as wide as the trigger.
+   * - `string`: a css width value will be applied to the tooltip.
+   * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
+   */
+  height?: NeoTooltipSizeStrategies | SizeInput<'height'>;
   /**
    * Padding override for the tooltip.
    */

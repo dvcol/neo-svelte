@@ -2,14 +2,16 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { height } from '@dvcol/svelte-utils/transition';
 
+  import type { NeoListSelectedItem } from '~';
   import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
-  import NeoNativeSelect from '~/inputs/NeoNativeSelect.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
@@ -46,50 +48,65 @@
     { value: 'left-end', label: 'Left End' },
   ];
 
-  const items = $state(
-    [
-      { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
-      { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
-      { label: 'John Smith', value: 'Smith', description: 'john.smith@hotmal.com' },
-      { label: 'Alice Johnson', value: 'Alice', description: 'alice.johnson@outlook.com' },
-      { label: 'Bob Brown', value: 'Bob', description: 'bob.brown@gmail.com' },
-      { label: 'Charlie Davis', value: 'Charlie', description: 'charlie.davis@icloud.com' },
-      { label: 'Diana Evans', value: 'Diana', description: 'diana.evans@hotmail.com' },
-      { label: 'Eve Foster', value: 'Eve', description: 'eve.foster@yahoo.com' },
-      { label: 'Frank Green', value: 'Frank', description: 'frank.green@outlook.com' },
-      { label: 'Grace Harris', value: 'Grace', description: 'grace.harris@gmail.com' },
-      { label: 'Henry Irving', value: 'Henry', description: 'henry.irving@icloud.com' },
-      { label: 'Ivy Johnson', value: 'Ivy', description: 'ivy.johnson@hotmail.com' },
-      { label: 'Jack King', value: 'Jack', description: 'jack.king@yahoo.com' },
-      { label: 'Karen Lee', value: 'Karen', description: 'karen.lee@outlook.com' },
-      {
-        label: 'Directors',
-        divider: true,
-        sticky: true,
-        items: [
-          { label: 'Denis VVilleneuve', value: 'Denis', description: '+33 1 25 48 45 45' },
-          { label: 'Christopher Nolan', value: 'Christopher', description: '+44 2 07 94 60 95' },
-          { label: 'Quentin Tarantino', value: 'Quentin', description: '+33 1 05 55 12 34' },
-          { label: 'Martin Scorsese', value: 'Martin', description: '+33 1 25 55 56 78' },
-          { label: 'Steven Spielberg', value: 'Steven', description: '+33 1 85 55 87 65' },
-        ].map(item => ({ ...item, id: getUUID(), before: avatar })),
-      },
-      {
-        label: 'Actors',
-        divider: true,
-        sticky: true,
-        items: [
-          { label: 'Leonardo DiCaprio', value: 'Leonardo', description: '+1 310 555 1234' },
-          { label: 'Brad Pitt', value: 'Brad', description: '+1 323 555 5678' },
-          { label: 'Meryl Streep', value: 'Meryl', description: '+1 212 555 8765' },
-          { label: 'Tom Hanks', value: 'Tom', description: '+1 310 555 4321' },
-          { label: 'Natalie Portman', value: 'Natalie', description: '+1 818 555 6789' },
-        ].map(item => ({ ...item, id: getUUID(), before: avatar })),
-      },
-    ].map(item => ({ ...item, id: getUUID(), before: avatar })),
-  );
+  const simpleItems = [
+    'John Doe',
+    'Peter Jackson',
+    'John Smith',
+    'Alice Johnson',
+    'Bob Brown',
+    'Charlie Davis',
+    'Diana Evans',
+    'Eve Foster',
+    'Frank Green',
+    'Grace Harris',
+    'Henry Irving',
+    'Ivy Johnson',
+  ];
 
-  let selected = $state();
+  let simpleSelected = $state<NeoListSelectedItem>();
+
+  const complexItems = [
+    { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
+    { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
+    { label: 'John Smith', value: 'Smith', description: 'john.smith@hotmal.com' },
+    { label: 'Alice Johnson', value: 'Alice', description: 'alice.johnson@outlook.com' },
+    { label: 'Bob Brown', value: 'Bob', description: 'bob.brown@gmail.com' },
+    { label: 'Charlie Davis', value: 'Charlie', description: 'charlie.davis@icloud.com' },
+    { label: 'Diana Evans', value: 'Diana', description: 'diana.evans@hotmail.com' },
+    { label: 'Eve Foster', value: 'Eve', description: 'eve.foster@yahoo.com' },
+    { label: 'Frank Green', value: 'Frank', description: 'frank.green@outlook.com' },
+    { label: 'Grace Harris', value: 'Grace', description: 'grace.harris@gmail.com' },
+    { label: 'Henry Irving', value: 'Henry', description: 'henry.irving@icloud.com' },
+    { label: 'Ivy Johnson', value: 'Ivy', description: 'ivy.johnson@hotmail.com' },
+    { label: 'Jack King', value: 'Jack', description: 'jack.king@yahoo.com' },
+    { label: 'Karen Lee', value: 'Karen', description: 'karen.lee@outlook.com' },
+    {
+      label: 'Directors',
+      divider: true,
+      sticky: true,
+      items: [
+        { label: 'Denis VVilleneuve', value: 'Denis', description: '+33 1 25 48 45 45' },
+        { label: 'Christopher Nolan', value: 'Christopher', description: '+44 2 07 94 60 95' },
+        { label: 'Quentin Tarantino', value: 'Quentin', description: '+33 1 05 55 12 34' },
+        { label: 'Martin Scorsese', value: 'Martin', description: '+33 1 25 55 56 78' },
+        { label: 'Steven Spielberg', value: 'Steven', description: '+33 1 85 55 87 65' },
+      ].map(item => ({ ...item, id: getUUID(), before: avatar })),
+    },
+    {
+      label: 'Actors',
+      divider: true,
+      sticky: true,
+      items: [
+        { label: 'Leonardo DiCaprio', value: 'Leonardo', description: '+1 310 555 1234' },
+        { label: 'Brad Pitt', value: 'Brad', description: '+1 323 555 5678' },
+        { label: 'Meryl Streep', value: 'Meryl', description: '+1 212 555 8765' },
+        { label: 'Tom Hanks', value: 'Tom', description: '+1 310 555 4321' },
+        { label: 'Natalie Portman', value: 'Natalie', description: '+1 818 555 6789' },
+      ].map(item => ({ ...item, id: getUUID(), before: avatar })),
+    },
+  ].map(item => ({ ...item, id: getUUID(), before: avatar }));
+
+  let complexSelected = $state<NeoListSelectedItem>();
 </script>
 
 {#snippet avatar()}
@@ -116,13 +133,16 @@
     <NeoButton toggle bind:checked={options.closeOnDismiss}>Dismiss</NeoButton>
   </NeoButtonGroup>
 
-  <NeoNativeSelect
+  <NeoSelect
     label="Placement"
+    placeholder="Select placement"
     position="left"
+    floating={false}
     bind:value={options.placement}
     rounded={options.rounded}
     containerProps={{ style: 'margin-left: 6.75rem' }}
     options={position}
+    size="15"
   />
 
   <NeoNumberStep
@@ -178,18 +198,34 @@
 
 <div class="row">
   <div class="column content">
+    <span class="label">Simple hover Select</span>
+    <NeoPopSelect
+      bind:selected={simpleSelected}
+      items={simpleItems}
+      rounded={options.rounded}
+      height={'20rem'}
+      tooltipProps={options}
+      onselect={e => console.info('selected', e)}
+    >
+      <NeoButton text rounded={options.rounded}>Hover select: {simpleSelected?.item?.value ?? 'none selected'}</NeoButton>
+    </NeoPopSelect>
+  </div>
+
+  <div class="column content">
     <span class="label">PopSelect</span>
     <NeoPopSelect
       search
-      bind:selected
-      {items}
+      bind:selected={complexSelected}
+      items={complexItems}
       rounded={options.rounded}
+      height={{
+        min: '20rem',
+        max: '30rem',
+      }}
       tooltipProps={options}
-      height={{ max: '20rem' }}
-      width={{ min: '15.5rem' }}
       onselect={e => console.info('selected', e)}
     >
-      <NeoButton text rounded={options.rounded}>Hover select: {selected?.item?.label ?? 'none selected'}</NeoButton>
+      <NeoListBaseItem item={complexSelected?.item || complexItems[0]} />
     </NeoPopSelect>
   </div>
 </div>

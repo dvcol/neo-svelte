@@ -6,6 +6,7 @@
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { NeoRangeHTMLElement } from '~/inputs/neo-range.model.js';
 
+  import type { NeoNativeSelectOption } from '~/inputs/neo-select.model.js';
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -481,6 +482,12 @@
     },
   ];
 
+  const nativeSelectOptions: NeoNativeSelectOption[] = [
+    { value: 'value 1', label: 'Label for value 1' },
+    { value: 'value 2', label: 'Label for value 2' },
+    'value 3',
+  ];
+
   const items: NeoListItem = [
     { value: 'value 1', label: 'Label for value 1' },
     { value: 'value 2', label: 'Label for value 2' },
@@ -648,6 +655,7 @@
         required
         multiple
         label="Native Multiple Select"
+        options={nativeSelectOptions}
         bind:ref={selectMultipleState.ref}
         bind:touched={selectMultipleState.touched}
         bind:dirty={selectMultipleState.dirty}
@@ -655,11 +663,7 @@
         bind:value={selectMultipleState.value}
         {...options}
         size={undefined}
-      >
-        <option value="value 1">Label for value 1</option>
-        <option value="value 2">Label for value 2</option>
-        <option value="value 3">Label for value 3</option>
-      </NeoNativeSelect>
+      />
     </SphereBackdrop>
   </div>
 </div>

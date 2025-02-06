@@ -12,13 +12,18 @@ export type SizeOption<Size extends 'width' | 'height' = 'width' | 'height', Val
 
 export type SizeInput<Size extends 'width' | 'height' = 'width' | 'height'> = number | SizeValue<Size> | SizeOption<Size, number | SizeValue<Size>>;
 
+export const toPixel = (value?: number | string): string | undefined => {
+  if (!value) return;
+  return typeof value === 'number' ? `${value}px` : value;
+};
+
 export const toSize = <Size extends 'width' | 'height' = 'width' | 'height'>(
   size?: SizeInput<Size>,
 ): SizeOption<Size, SizeValue<Size>> | undefined => {
   if (!size) return;
-  if (typeof size === 'number') return { absolute: `${size}px` };
+  if (typeof size === 'number') return { absolute: toPixel(size) };
   if (typeof size === 'string') return { absolute: size };
   return Object.entries(size).reduce<SizeOption<Size>>((acc, [key, value]) => {
-    return { ...acc, [key]: typeof value === 'number' ? `${value}px` : value };
+    return { ...acc, [key]: toPixel(value) };
   }, {});
 };

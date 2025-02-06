@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { wait } from '@dvcol/common-utils/common/promise';
-
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoNativeSelectProps } from '~/inputs/neo-select.model.js';
 
@@ -38,6 +36,8 @@
   }: NeoNativeSelectProps = $props();
   /* eslint-enable prefer-const */
 
+  const items = $derived(options?.map(i => (typeof i === 'object' ? i : { value: i })));
+
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
   const text = $derived(elevation >= 0 || !rest.pressed);
   const style = $derived(computeButtonShadows(elevation, text));
@@ -60,19 +60,17 @@
     class: ['neo-select-toggle', buttonProps?.class],
   });
 
-  let space = $state(7);
+  let space = $state(6);
   const onpointerdown = () => {
-    space = 6;
+    space = 8;
   };
 
   let timeout: ReturnType<typeof setTimeout>;
   const onpointerup = async () => {
     clearTimeout(timeout);
     timeout = setTimeout(async () => {
-      space = 8;
-      await wait(300);
-      space = 7;
-    }, 200);
+      space = 6;
+    }, 250);
   };
 </script>
 
@@ -89,7 +87,7 @@
 {/snippet}
 
 {#snippet content()}
-  {#each options as { label, ...option }}
+  {#each items as { label, ...option }}
     <option {...option} value={option.value}>{label ?? option.value}</option>
   {/each}
   {@render children?.()}
@@ -111,7 +109,7 @@
   {multiple}
   floating={multiple ? false : floating}
   after={multiple ? undefined : after}
-  children={options?.length ? content : children}
+  children={items?.length ? content : children}
   {onpointerdown}
   {onpointerup}
   {...rest}
