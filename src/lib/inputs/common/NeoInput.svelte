@@ -850,12 +850,14 @@
           --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
           --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
           --neo-label-disabled-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
+          --neo-border-color: var(--neo-input-border-color-error, var(--neo-color-error));
         }
 
         &[data-valid='true'] {
           --neo-input-label-color: var(--neo-input-label-color-success, var(--neo-color-success));
           --neo-input-floating-label-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
           --neo-label-disabled-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
+          --neo-border-color: var(--neo-input-border-color-success, var(--neo-color-success));
         }
       }
 
