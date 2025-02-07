@@ -61,7 +61,7 @@
   {@render before?.(context)}
 {/snippet}
 
-{#snippet tooltip()}
+{#snippet tooltip(floating: UseFloatingReturn)}
   <NeoList
     bind:ref={listRef}
     bind:selected
@@ -69,7 +69,7 @@
     bind:filter
     bind:sort
     select
-    reverse={tooltipProps?.placement?.startsWith('top')}
+    reverse={floating?.placement?.startsWith('top')}
     before={search ? beforeList : before}
     {items}
     {...rest}

@@ -85,29 +85,18 @@
     @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
 
     &.content {
-      flex: 1 0 20%;
-      max-width: 25%;
+      flex: 0 1 45%;
+      max-width: 50%;
     }
   }
 
   .row {
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
-    margin: 8rem 0;
+    margin: 4rem 0;
   }
 
   @media (width < 1200px) {
-    .column.content {
-      flex: 0 1 50%;
-      max-width: 50%;
-    }
-
-    .row {
-      margin: 6rem 0;
-    }
-  }
-
-  @media (width < 600px) {
     .column.content {
       flex: 0 1 90%;
       max-width: 90%;

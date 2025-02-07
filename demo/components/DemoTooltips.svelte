@@ -2,11 +2,15 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { height } from '@dvcol/svelte-utils/transition';
 
-  import type { NeoListSelectedItem } from '~';
-  import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model';
+  import { fly } from 'svelte/transition';
+
+  import type { NeoListSelectedItem } from '~/list/neo-list.model.js';
+
+  import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
@@ -16,9 +20,10 @@
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
   import { DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
+  import { defaultEnterDuration, defaultFlyDuration } from '~/utils/transition.utils';
 
   const options = $state<NeoTooltipProps>({
-    rounded: false,
+    rounded: true,
     elevation: DefaultShadowShallowElevation,
 
     placement: 'bottom',
@@ -80,33 +85,11 @@
     { label: 'Ivy Johnson', value: 'Ivy', description: 'ivy.johnson@hotmail.com' },
     { label: 'Jack King', value: 'Jack', description: 'jack.king@yahoo.com' },
     { label: 'Karen Lee', value: 'Karen', description: 'karen.lee@outlook.com' },
-    {
-      label: 'Directors',
-      divider: true,
-      sticky: true,
-      items: [
-        { label: 'Denis VVilleneuve', value: 'Denis', description: '+33 1 25 48 45 45' },
-        { label: 'Christopher Nolan', value: 'Christopher', description: '+44 2 07 94 60 95' },
-        { label: 'Quentin Tarantino', value: 'Quentin', description: '+33 1 05 55 12 34' },
-        { label: 'Martin Scorsese', value: 'Martin', description: '+33 1 25 55 56 78' },
-        { label: 'Steven Spielberg', value: 'Steven', description: '+33 1 85 55 87 65' },
-      ].map(item => ({ ...item, id: getUUID(), before: avatar })),
-    },
-    {
-      label: 'Actors',
-      divider: true,
-      sticky: true,
-      items: [
-        { label: 'Leonardo DiCaprio', value: 'Leonardo', description: '+1 310 555 1234' },
-        { label: 'Brad Pitt', value: 'Brad', description: '+1 323 555 5678' },
-        { label: 'Meryl Streep', value: 'Meryl', description: '+1 212 555 8765' },
-        { label: 'Tom Hanks', value: 'Tom', description: '+1 310 555 4321' },
-        { label: 'Natalie Portman', value: 'Natalie', description: '+1 818 555 6789' },
-      ].map(item => ({ ...item, id: getUUID(), before: avatar })),
-    },
   ].map(item => ({ ...item, id: getUUID(), before: avatar }));
 
   let complexSelected = $state<NeoListSelectedItem>();
+
+  let open = $state(false);
 </script>
 
 {#snippet avatar()}
@@ -215,17 +198,25 @@
     <span class="label">PopSelect</span>
     <NeoPopSelect
       search
+      bind:open
       bind:selected={complexSelected}
       items={complexItems}
       rounded={options.rounded}
-      height={{
-        min: '20rem',
-        max: '30rem',
-      }}
+      height={'28rem'}
       tooltipProps={options}
-      onselect={e => console.info('selected', e)}
     >
-      <NeoListBaseItem item={complexSelected?.item || complexItems[0]} />
+      <NeoButton flat ghost shallow rounded={options.rounded} bind:checked={open} toggle>
+        <NeoTransitionContainer overflow="hidden" style="min-width: 252px; margin: 0.5rem">
+          {#key complexSelected?.item?.id}
+            <div
+              in:fly={{ duration: defaultFlyDuration, y: complexSelected?.item ? '-50%' : '50%' }}
+              out:fly={{ duration: defaultEnterDuration, y: complexSelected?.item ? '50%' : '-50%' }}
+            >
+              <NeoListBaseItem before={avatar} item={complexSelected?.item ?? { label: 'None Selected', description: 'Please select a profile' }} />
+            </div>
+          {/key}
+        </NeoTransitionContainer>
+      </NeoButton>
     </NeoPopSelect>
   </div>
 </div>

@@ -50,6 +50,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 
 ## TODO
 - [ ] @media any-pointer:coarse any-hover:none
+- [ ] move to inline/bloc to support writing-mode
 - [x] Buttons
   - [x] toggle
   - [x] groups

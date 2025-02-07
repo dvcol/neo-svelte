@@ -517,6 +517,12 @@
 
     &.neo-reverse {
       flex-direction: column-reverse;
+      justify-content: end;
+
+      .neo-list-items {
+        flex-direction: column-reverse;
+        justify-content: end;
+      }
     }
   }
 </style>

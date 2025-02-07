@@ -12,6 +12,10 @@
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
+    before,
+    after,
+
     // Context
     item,
     index,
@@ -75,9 +79,9 @@
 
 {#snippet listItem({ label, value, description }: NeoListItem)}
   <div class:neo-list-item-content={true} class:neo-disabled={disabled} class:neo-description={description}>
-    {#if item.before}
+    {#if item.before ?? before}
       <div class="neo-list-item-before" class:neo-skeleton={skeleton}>
-        {@render item.before({ item, index, context })}
+        {@render (item.before ?? before)?.({ item, index, context })}
       </div>
     {/if}
 
@@ -92,9 +96,9 @@
       {@render textContent({ label, value, description })}
     </NeoSkeletonText>
 
-    {#if item.after}
+    {#if item.after ?? after}
       <div class="neo-list-item-after" class:neo-skeleton={skeleton}>
-        {@render item.after({ item, index, context })}
+        {@render (item.after ?? after)?.({ item, index, context })}
       </div>
     {/if}
   </div>

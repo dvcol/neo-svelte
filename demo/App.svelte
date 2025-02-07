@@ -29,6 +29,19 @@
       container: {
         style: {
           display: 'flex',
+          flexDirection: 'column',
+          flex: '1 1 auto',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      },
+      wrapper: {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          flex: '1 1 auto',
+          width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
         },
@@ -90,7 +103,7 @@
   }
 
   .container {
-    @include flex.column($gap: var(--neo-gap-xl));
+    @include flex.column($gap: var(--neo-gap-l));
 
     min-height: 100dvh;
     padding: 1rem;

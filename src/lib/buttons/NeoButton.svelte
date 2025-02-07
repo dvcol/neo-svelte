@@ -140,7 +140,7 @@
   class:neo-glass={glass}
   class:neo-flat={flat || text || ghost}
   class:neo-ghost={ghost}
-  class:neo-borderless={text || ghost}
+  class:neo-borderless={text || (ghost && !flat)}
   class:neo-inset={inset}
   class:neo-shallow={shallow}
   class:neo-rounded={rounded}
@@ -265,7 +265,6 @@
     &.neo-ghost {
       justify-content: unset;
       padding: var(--neo-btn-padding, 0);
-      border: none;
 
       .neo-content {
         justify-content: unset;

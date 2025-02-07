@@ -93,9 +93,8 @@
     },
   );
 
-  // TODO - disaply input ???
+  // TODO - display input ??? -> custom snippet & pill inside NeoInput NeoTextArea
   // TODO - rework focus highlights
-  // TODO - custom render trigger popselect ?
   // TODO - pill
   // make clearable work
 </script>

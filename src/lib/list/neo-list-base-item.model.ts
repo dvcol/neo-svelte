@@ -3,6 +3,18 @@ import type { NeoListContext, NeoListItem } from '~/list/neo-list.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 
 export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+  // Snippets
+  /**
+   * Snippet to display before the list item.
+   * e.g. an icon or avatar.
+   */
+  before?: NeoListItem<Value, Tag>['before'];
+  /**
+   * Snippet to display after the list item.
+   * e.g. a badge or action button.
+   */
+  after?: NeoListItem<Value, Tag>['after'];
+
   // Context
   /**
    * The list item to display.
