@@ -88,7 +88,11 @@
     @include flex.column($center: true, $gap: var(--neo-gap-lg));
 
     &.vertical {
-      height: 20rem;
+      height: min(50vw, 20rem);
+    }
+
+    &:not(.vertical) {
+      width: max(20vw, 20rem);
     }
   }
 
