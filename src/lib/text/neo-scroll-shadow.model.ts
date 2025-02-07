@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoScrollShadowProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   /**
@@ -21,9 +22,17 @@ export type NeoScrollShadowProps<Tag extends keyof HTMLElementTagNameMap = 'div'
    */
   scrollbar?: boolean;
   /**
+   * Optional width constraints.
+   */
+  width?: SizeInput<'width'>;
+  /**
+   * Optional height constraints.
+   */
+  height?: SizeInput<'height'>;
+  /**
    * Custom mask size
    */
-  size?: CSSStyleDeclaration['width'];
+  shadowSize?: CSSStyleDeclaration['width'];
   /**
    * Custom mask direction
    */
@@ -32,4 +41,5 @@ export type NeoScrollShadowProps<Tag extends keyof HTMLElementTagNameMap = 'div'
    * Custom overflow value
    */
   overflow?: CSSStyleDeclaration['overflow'];
-} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
+  HTMLRefProps<HTMLElementTagNameMap[Tag]>;

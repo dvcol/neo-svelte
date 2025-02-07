@@ -434,7 +434,7 @@
       padding-inline: var(--neo-list-padding, 0.25rem);
 
       &.neo-scroll {
-        @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.375rem));
+        @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.5rem));
 
         padding-block: var(--neo-list-scroll-padding, 0.625rem);
 

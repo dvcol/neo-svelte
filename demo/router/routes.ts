@@ -7,6 +7,7 @@ export const Route = {
   Tabs: 'tabs' as const,
   TabsPanels: 'tabs-panels' as const,
   Dividers: 'dividers' as const,
+  Text: 'text' as const,
   Cards: 'cards' as const,
   Skeleton: 'skeleton' as const,
   Inputs: 'inputs' as const,
@@ -23,6 +24,7 @@ export const Path: Record<keyof typeof Route, string> = {
   TabsPanels: '/tabs/panels' as const,
   Dividers: '/dividers' as const,
   Cards: '/cards' as const,
+  Text: '/text' as const,
   Skeleton: '/skeleton' as const,
   Inputs: '/inputs' as const,
   Tooltips: '/tooltips' as const,
@@ -60,6 +62,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.Dividers,
       path: Path.Dividers,
       component: () => import('../components/DemoDividers.svelte'),
+    },
+    {
+      name: Route.Text,
+      path: Path.Text,
+      component: () => import('../components/DemoText.svelte'),
     },
     {
       name: Route.Cards,

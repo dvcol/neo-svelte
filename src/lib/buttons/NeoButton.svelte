@@ -208,6 +208,7 @@
       backdrop-filter 0.3s ease,
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
+    appearance: none;
 
     &.neo-empty {
       padding: var(--neo-btn-padding-empty, 0.5rem);
@@ -297,8 +298,8 @@
         box-shadow 0.15s ease-out;
 
       .neo-content {
-        scale: var(--neo-btn-scale-pressed, 0.98);
         color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
+        scale: var(--neo-btn-scale-pressed, 0.98);
       }
     }
 

@@ -212,7 +212,7 @@
   $width: var(--neo-scrollbar-width, 0.375rem),
   $thumb-color: var(--neo-scrollbar-color),
   $thumb-border-radius: var(--neo-border-radius),
-  $button-height: var(--neo-scrollbar-button-height, 2px),
+  $button-height: var(--neo-scrollbar-button-height, 0.125rem),
   $timing: 0.3s,
   $delay: 0.1s,
   $transition: false
@@ -249,8 +249,28 @@
     cursor: pointer;
   }
 
+  &::-webkit-scrollbar:vertical {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar:horizontal {
+    height: $width;
+  }
+
   &::-webkit-scrollbar-button {
+    display: block;
+
+    &:hover {
+      background-color: var(--neo-thumb-color, transparent);
+    }
+  }
+
+  &::-webkit-scrollbar-button:vertical {
     height: $button-height;
+  }
+
+  &::-webkit-scrollbar-button:horizontal {
+    width: $button-height;
   }
 
   &::-webkit-scrollbar-thumb {
