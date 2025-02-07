@@ -1,5 +1,6 @@
 <script lang="ts">
   import { debounced } from '@dvcol/svelte-utils';
+  import { width } from '@dvcol/svelte-utils/transition';
   import { fade } from 'svelte/transition';
 
   import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
@@ -8,7 +9,8 @@
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import IconClear from '~/icons/IconClear.svelte';
   import IconConfirm from '~/icons/IconConfirm.svelte';
-  import { leaveTransitionProps } from '~/utils/transition.utils.js';
+  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -29,6 +31,11 @@
     // Styles
     size = '1.25rem',
 
+    // Transition
+    in: inAction,
+    out: outAction,
+    transition: transitionAction = { use: width, props: enterTransitionProps },
+
     // Other props
     closeProps,
     ...rest
@@ -37,6 +44,11 @@
 
   const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveTransitionProps);
   const clear = $derived.by(debounced(() => close && !disabled, 100));
+
+  const inFn = $derived(toTransition(inAction ?? transitionAction));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
+  const outFn = $derived(toTransition(outAction ?? transitionAction));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
 </script>
 
 <svelte:element
@@ -45,7 +57,8 @@
   class:neo-affix-container={true}
   class:neo-skeleton={skeleton}
   style:--neo-affix-size={size}
-  role="none"
+  in:inFn={inProps}
+  out:outFn={outProps}
   {...rest}
 >
   {#if loading}
@@ -99,7 +112,6 @@
     grid-template-areas: 'affix';
     align-items: center;
     box-sizing: border-box;
-    min-width: max-content;
     min-height: max-content;
     padding: var(--neo-affix-padding, 0.75rem);
     border: none;

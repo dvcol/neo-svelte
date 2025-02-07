@@ -280,14 +280,12 @@
     width: fit-content;
     margin: var(--neo-card-margin, var(--neo-shadow-margin, 0.625rem));
     padding: var(--neo-card-padding, $full-spacing);
-    color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
     border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
     border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-card-box-shadow, var(--neo-box-shadow-flat));
     transition:
       margin 0.3s ease,
-      color 0.3s ease,
       background-color 0.3s ease,
       border-color 0.3s ease,
       border-radius 0.3s ease,
@@ -560,7 +558,6 @@
     @include mixin.scrollbar(
       $gutter: auto,
       $transition: #{margin 0.3s ease,
-      color 0.3s ease,
       background-color 0.3s ease,
       border-color 0.3s ease,
       border-radius 0.3s ease,

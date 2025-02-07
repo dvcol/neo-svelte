@@ -263,6 +263,7 @@
   {#if affix}
     <NeoAffix
       bind:ref={affixRef}
+      role="none"
       {loading}
       {close}
       {disabled}

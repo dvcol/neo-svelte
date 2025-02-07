@@ -1,12 +1,38 @@
 <script lang="ts">
+  import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import IconAccount from '~/icons/IconAccount.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoPill from '~/pill/NeoPill.svelte';
   import NeoEllipsis from '~/text/NeoEllipsis.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
   import NeoScrollShadow from '~/text/NeoScrollShadow.svelte';
+  import { Colors } from '~/utils/colors.utils';
 
   let lines = $state(1);
   let filter = $state('');
+
+  const options = $state({
+    elevation: 0,
+    hover: 0,
+
+    color: '',
+    close: false,
+    loading: false,
+    disabled: false,
+    skeleton: false,
+
+    borderless: false,
+    rounded: true,
+    glass: false,
+  });
+
+  const onElevation = () => {
+    if (options.elevation + options.hover < -2) options.hover += 1;
+    if (options.elevation + options.hover > 2) options.hover -= 1;
+  };
 </script>
 
 <div class="row">
@@ -70,6 +96,70 @@
       </p>
     </NeoScrollShadow>
   </div>
+</div>
+
+<div class="row">
+  <NeoButtonGroup>
+    <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
+    <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
+    <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
+    <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
+  </NeoButtonGroup>
+
+  <NeoNumberStep
+    label="Elevation"
+    position="left"
+    center
+    bind:value={options.elevation}
+    min={-2}
+    max={2}
+    defaultValue={0}
+    oninput={onElevation}
+    rounded={options.rounded}
+    nullable={false}
+    floating={false}
+    groupProps={{ style: 'margin-left: 6rem' }}
+  />
+
+  <NeoNumberStep
+    label="Hover"
+    position="left"
+    center
+    bind:value={options.hover}
+    min={-2 - options.elevation}
+    max={2 - options.elevation}
+    defaultValue={0}
+    rounded={options.rounded}
+    nullable={false}
+    floating={false}
+    groupProps={{ style: 'margin-left: 4rem' }}
+  />
+
+  <NeoSelect
+    label="Color"
+    placeholder="Select color"
+    position="left"
+    floating={false}
+    size="10"
+    bind:value={options.color}
+    containerProps={{ style: 'margin-left: 6rem' }}
+    options={[Colors.Primary, Colors.Secondary, Colors.Success, Colors.Warning, Colors.Error]}
+  />
+</div>
+
+<div class="row">
+  <span class="label">Pills</span>
+  <NeoPill {...options}>Default</NeoPill>
+  <NeoPill pressed {...options}>Pressed</NeoPill>
+  <NeoPill convex {...options}>Convex</NeoPill>
+
+  <NeoPill {...options}>
+    <IconAccount style="margin-inline: -0.1875rem 0.325rem" />
+    <span>Icon</span>
+  </NeoPill>
 </div>
 
 <style lang="scss">

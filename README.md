@@ -155,7 +155,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] carousel
 - [ ] avatar
   - [ ] badge
-- [ ] tags/pills
+- [x] tags/pills
     - [ ] badge
 - [ ] Progress/Loading
   - [ ] bar

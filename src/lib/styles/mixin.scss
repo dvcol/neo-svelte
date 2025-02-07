@@ -171,6 +171,7 @@
   $start: 1,
   $step: var(--neo-skeleton-step, -0.3),
   $color: var(--neo-skeleton-color),
+  $text: var(--neo-skeleton-color),
   $timing: 3s,
   $easing: var(--neo-transition-skeleton),
   $delay: 1s,
@@ -179,14 +180,14 @@
   --neo-skeleton-start: #{$start};
   --neo-skeleton-end: calc(#{$start} + #{$step});
 
-  color: $color;
+  color: $text;
   background-color: $color;
   background-clip: padding-box;
   border-color: $color;
   opacity: $start;
   transition:
     background-color $delay ease,
-    color $delay ease,
+    color calc($delay / 3) ease,
     border-color $delay ease,
     opacity $delay ease;
   animation: skeleton $timing $easing infinite;
