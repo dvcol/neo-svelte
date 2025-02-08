@@ -602,6 +602,13 @@
   --neo-glass-box-shadow-pressed-4: #{$neo-glass-shadow-pressed-4}, #{$neo-glass-shadow-inset-4};
   --neo-glass-box-shadow-pressed-5: #{$neo-glass-shadow-pressed-5}, #{$neo-glass-shadow-inset-5};
 
+  /** Glass shadows pressed */
+  --neo-glass-box-shadow-active-1: #{$neo-glass-shadow-raised-1}, #{$neo-glass-shadow-inset-1};
+  --neo-glass-box-shadow-active-2: #{$neo-glass-shadow-raised-2}, #{$neo-glass-shadow-inset-2};
+  --neo-glass-box-shadow-active-3: #{$neo-glass-shadow-raised-3}, #{$neo-glass-shadow-inset-3};
+  --neo-glass-box-shadow-active-4: #{$neo-glass-shadow-raised-4}, #{$neo-glass-shadow-inset-4};
+  --neo-glass-box-shadow-active-5: #{$neo-glass-shadow-raised-5}, #{$neo-glass-shadow-inset-5};
+
   /** Glass shadows convex */
   --neo-glass-box-shadow-convex-1: #{$neo-glass-shadow-convex-1};
   --neo-glass-box-shadow-convex-2: #{$neo-glass-shadow-convex-2};

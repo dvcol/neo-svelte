@@ -4,6 +4,7 @@
 
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import { colorOptions } from '../utils/color.utils';
   import { useButtonState } from '../utils/use-button-state.svelte';
 
   import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
@@ -12,6 +13,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabDivider from '~/nav/NeoTabDivider.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
@@ -57,6 +59,8 @@
     vertical: false,
     glass: false,
     dim: true,
+
+    color: '',
   });
 
   const columns: { label: string; props?: NeoTabsProps }[] = [
@@ -94,23 +98,32 @@
 {/snippet}
 
 <div class="row">
-  <div class="column">
-    <NeoButtonGroup>
-      <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
-      <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
-      <NeoButton toggle bind:checked={options.add}>Add</NeoButton>
-      <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
-      <NeoButton toggle bind:checked={options.slide}>Slide</NeoButton>
-      <NeoButton toggle bind:checked={options.toggle}>Toggle</NeoButton>
-      <NeoButton toggle bind:checked={options.line}>Line</NeoButton>
-      <NeoButton toggle bind:checked={options.pill}>Pill</NeoButton>
-      <NeoButton toggle bind:checked={options.dim}>Dim</NeoButton>
-      <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
-      <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
-      <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
-      <NeoButton onclick={onClear}>Clear</NeoButton>
-    </NeoButtonGroup>
-  </div>
+  <NeoButtonGroup>
+    <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
+    <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.add}>Add</NeoButton>
+    <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
+    <NeoButton toggle bind:checked={options.slide}>Slide</NeoButton>
+    <NeoButton toggle bind:checked={options.toggle}>Toggle</NeoButton>
+    <NeoButton toggle bind:checked={options.line}>Line</NeoButton>
+    <NeoButton toggle bind:checked={options.pill}>Pill</NeoButton>
+    <NeoButton toggle bind:checked={options.dim}>Dim</NeoButton>
+    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
+    <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
+    <NeoButton onclick={onClear}>Clear</NeoButton>
+  </NeoButtonGroup>
+
+  <NeoSelect
+    label="Color"
+    placeholder="Select color"
+    position="left"
+    floating={false}
+    size="10"
+    bind:value={options.color}
+    containerProps={{ style: 'margin-left: 6rem' }}
+    options={colorOptions}
+  />
 </div>
 
 <div class="values">

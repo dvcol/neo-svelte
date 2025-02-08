@@ -79,6 +79,8 @@
     rounded,
     pressed,
     glass,
+    tinted,
+    filled,
     start,
   });
 

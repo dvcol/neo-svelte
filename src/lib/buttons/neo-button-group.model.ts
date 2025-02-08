@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
 
@@ -36,9 +37,21 @@ export type NeoButtonGroupContext = {
    */
   rounded?: boolean;
   /**
+   * If true, the button group will be displayed with a shallower elevation when pressed.
+   */
+  shallow?: boolean;
+  /**
+   * Text color to use for the button.
+   */
+  color?: Color;
+  /**
    * If true, the buttongroup  will be displayed with a glass effect.
    */
   glass?: boolean;
+  /**
+   * Tints the button with the current color.
+   */
+  tinted?: boolean;
   /**
    * If true, the button group will be surrounded by expanding waves.
    * The waves will reverse direction on hover or active states.

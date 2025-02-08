@@ -91,6 +91,10 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   glass?: boolean;
   /**
+   * Tints the button with the current color.
+   */
+  tinted?: boolean;
+  /**
    * If true, the button will have a rounded border.
    */
   rounded?: boolean;
@@ -99,7 +103,7 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   inset?: boolean;
   /**
-   * If true, the button will be displayed with a shallower elevation.
+   * If true, the button will be displayed with a shallower elevation when pressed.
    */
   shallow?: boolean;
   /**

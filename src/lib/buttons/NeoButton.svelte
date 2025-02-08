@@ -34,6 +34,7 @@
     text,
     flat,
     glass,
+    tinted,
     rounded,
     inset,
     shallow,
@@ -138,6 +139,7 @@
   class:neo-skeleton={skeleton}
   class:neo-start={start}
   class:neo-glass={glass}
+  class:neo-tinted={tinted}
   class:neo-flat={flat || text || ghost}
   class:neo-ghost={ghost}
   class:neo-borderless={text || (ghost && !flat)}
@@ -370,7 +372,15 @@
     }
 
     &.neo-glass {
-      @include mixin.glass;
+      --neo-box-shadow-inset-1: var(--neo-glass-box-shadow-inset-1);
+      --neo-box-shadow-inset-2: var(--neo-glass-box-shadow-inset-2);
+      --neo-box-shadow-inset-3: var(--neo-glass-box-shadow-inset-3);
+      --neo-box-shadow-flat: var(--neo-glass-box-shadow-flat);
+      --neo-box-shadow-pressed-1: var(--neo-glass-box-shadow-active-1);
+      --neo-box-shadow-pressed-2: var(--neo-glass-box-shadow-active-2);
+      --neo-box-shadow-raised-2: var(--neo-glass-box-shadow-raised-2);
+      --neo-box-shadow-raised-3: var(--neo-glass-box-shadow-raised-3);
+      --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
 
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
       border-color: var(
@@ -386,8 +396,11 @@
 
       &.neo-pressed,
       &:active:not(.neo-loading) {
-        border-color: transparent;
         backdrop-filter: var(--neo-btn-backdrop-filter-active, var(--neo-blur-0) var(--neo-saturate-2));
+
+        &.neo-inset {
+          border-color: transparent;
+        }
       }
 
       &:disabled,
@@ -412,6 +425,10 @@
           border-color: var(--neo-btn-border-color, var(--neo-border-color));
         }
       }
+    }
+
+    &.neo-tinted {
+      background-color: var(--neo-btn-bg-color, var(--neo-background-color-tinted));
     }
 
     &:disabled:disabled,

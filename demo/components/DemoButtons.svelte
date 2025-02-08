@@ -4,6 +4,7 @@
   import { Path } from '../router/routes.js';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import { colorOptions } from '../utils/color.utils';
   import { useButtonState } from '../utils/use-button-state.svelte';
 
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
@@ -15,7 +16,6 @@
   import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
-  import { Colors } from '~/utils/colors.utils';
 
   const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
 
@@ -26,6 +26,7 @@
     inset: false,
     shallow: false,
     glass: false,
+    tinted: false,
     color: '',
   });
 
@@ -80,6 +81,7 @@
   <div class="column">
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
+      <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
       <NeoButton toggle bind:checked={options.inset}>Inset</NeoButton>
       <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
@@ -95,7 +97,7 @@
       size="10"
       bind:value={options.color}
       containerProps={{ style: 'margin-left: 6rem' }}
-      options={[Colors.Primary, Colors.Secondary, Colors.Success, Colors.Warning, Colors.Error]}
+      options={colorOptions}
     />
   </div>
 </div>

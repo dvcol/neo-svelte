@@ -1,6 +1,8 @@
 <script lang="ts">
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import { colorOptions } from '../utils/color.utils';
+
   import NeoBadge from '~/badge/NeoBadge.svelte';
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -9,7 +11,6 @@
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoPill from '~/pill/NeoPill.svelte';
-  import { Colors } from '~/utils/colors.utils';
 
   const options = $state({
     elevation: 1,
@@ -47,7 +48,9 @@
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
   </NeoButtonGroup>
+</div>
 
+<div class="row">
   <NeoNumberStep
     label="Elevation"
     position="left"
@@ -84,6 +87,7 @@
     floating={false}
     size="10"
     bind:value={options.size}
+    rounded={options.rounded}
     containerProps={{ style: 'margin-left: 4rem' }}
     options={['large', 'medium', 'small']}
   />
@@ -95,8 +99,9 @@
     floating={false}
     size="10"
     bind:value={options.color}
+    rounded={options.rounded}
     containerProps={{ style: 'margin-left: 4rem' }}
-    options={[Colors.Primary, Colors.Secondary, Colors.Success, Colors.Warning, Colors.Error]}
+    options={colorOptions}
   />
 </div>
 

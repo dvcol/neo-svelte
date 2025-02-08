@@ -1131,6 +1131,7 @@
   .row {
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
+    width: 100%;
     margin: 2rem 0;
   }
 
