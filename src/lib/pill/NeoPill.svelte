@@ -1,6 +1,4 @@
 <script lang="ts">
-  /* eslint-disable prefer-const -- necessary for binding checked */
-
   import { width } from '@dvcol/svelte-utils/transition';
 
   import type { NeoPillContext, NeoPillProps } from '~/pill/neo-pill.model.js';
@@ -18,9 +16,12 @@
   } from '~/utils/shadow.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
+  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
     children,
 
+    // States
     tag = 'div',
     close,
     color,
@@ -29,10 +30,13 @@
     skeleton = false,
     size,
 
+    // Styles
     borderless,
     rounded = true,
     pressed,
     glass,
+    tinted,
+    filled,
     start,
 
     // Transition
@@ -52,7 +56,7 @@
   }: NeoPillProps = $props();
   /* eslint-enable prefer-const */
 
-  const elevation = $derived(coerce(rest?.elevation ?? 0));
+  const elevation = $derived(coerce(rest?.elevation ?? 1));
   const hover = $derived(coerce(rest?.hover ?? 0));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }, DefaultShallowMinMaxElevation));
@@ -91,7 +95,7 @@
 
 <svelte:element
   this={tag}
-  class="neo-pill"
+  class:neo-pill={true}
   data-type={size}
   class:neo-borderless={borderless}
   class:neo-rounded={rounded}
@@ -99,6 +103,8 @@
   class:neo-skeleton={skeleton}
   class:neo-pressed={pressed}
   class:neo-glass={glass}
+  class:neo-tinted={tinted}
+  class:neo-filled={filled}
   class:neo-start={start}
   class:neo-hover={hover}
   class:neo-hover-flat={hoverFlat}
@@ -115,7 +121,7 @@
   {...rest}
 >
   {@render children?.(context)}
-  {#if close || loading}
+  {#if (close && !disabled) || loading}
     <NeoAffix
       {loading}
       {skeleton}
@@ -140,10 +146,10 @@
     display: inline-flex;
     align-items: center;
     box-sizing: border-box;
+    width: fit-content;
+    min-width: 1.875rem;
     margin: 0;
     color: var(--neo-pill-text-color, inherit);
-    padding-block: 0.125rem;
-    padding-inline: 0.5rem;
     border: var(--neo-pill-border-width, var(--neo-border-width, 1px)) var(--neo-pill-border-color, transparent) solid;
     border-radius: var(--neo-pill-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-pill-box-shadow, var(--neo-box-shadow-flat));
@@ -153,24 +159,14 @@
       border-color 0.3s ease,
       border-radius 0.3s ease,
       backdrop-filter 0.3s ease,
+      background-color 0.3s ease,
       box-shadow 0.3s ease-out;
-
-    &[small],
-    &[data-type='small'] {
-      font-size: var(--neo-pill-font-size-small, var(--neo-font-size-xs));
-      line-height: var(--neo-pill-line-height-small, var(--neo-line-height-xs));
-      padding-block: 0.0625rem;
-      padding-inline: 0.3125rem;
-
-      :global(> .neo-pill-affix) {
-        --neo-affix-size: 0.625rem;
-
-        margin-inline-start: 0.1875rem;
-      }
-    }
+    padding-block: 0.125rem;
+    padding-inline: 0.5rem;
 
     &[medium],
     &[data-type='medium'] {
+      min-width: 1.5rem;
       font-size: var(--neo-pill-font-size-medium, var(--neo-font-size-sm));
       line-height: var(--neo-pill-line-height-medium, var(--neo-line-height-sm));
       padding-block: 0.0625rem;
@@ -183,6 +179,21 @@
       }
     }
 
+    &[small],
+    &[data-type='small'] {
+      min-width: 1.25rem;
+      font-size: var(--neo-pill-font-size-small, var(--neo-font-size-xs));
+      line-height: var(--neo-pill-line-height-small, var(--neo-line-height-xs));
+      padding-block: 0.0625rem;
+      padding-inline: 0.3125rem;
+
+      :global(> .neo-pill-affix) {
+        --neo-affix-size: 0.625rem;
+
+        margin-inline-start: 0.1875rem;
+      }
+    }
+
     &:focus-within,
     &.neo-hover:hover {
       box-shadow: var(--neo-pill-hover-shadow, var(--neo-box-shadow-flat));
@@ -191,8 +202,8 @@
     :global(> .neo-pill-affix) {
       --neo-affix-size: 1rem;
 
-      margin-inline-start: 0.3125rem;
       padding: 0;
+      margin-inline-start: 0.3125rem;
     }
 
     &.neo-hover.neo-flat-hover:hover,
@@ -221,6 +232,7 @@
     &.neo-glass {
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
       --neo-border-color: var(--neo-glass-border-color);
+      --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
 
       background-color: var(--neo-pill-bg-color, var(--neo-glass-background-color));
       backdrop-filter: var(--neo-pill-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
@@ -229,7 +241,7 @@
         border-color: var(--neo-pill-border-color, transparent);
       }
 
-      &:not(.neo-inset, .neo-borderless, .neo-flat, .neo-disabled) {
+      &:not(.neo-inset, .neo-borderless, .neo-flat, .neo-disabled, .neo-filled) {
         border-color: var(
           --neo-pill-border-color,
           var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
@@ -237,7 +249,7 @@
         );
       }
 
-      &.neo-flat:not(.neo-borderless) {
+      &.neo-flat:not(.neo-borderless, .neo-filled) {
         border-color: var(--neo-pill-border-color, var(--neo-glass-border-color-flat));
       }
     }
@@ -249,6 +261,19 @@
         &:not(.neo-borderless) {
           border-color: var(--neo-pill-border-color, var(--neo-border-color));
         }
+      }
+    }
+
+    &.neo-tinted {
+      background-color: var(--neo-pill-bg-color, var(--neo-background-color-tinted));
+    }
+
+    &.neo-filled {
+      color: var(--neo-pill-text-color-filled, var(--neo-text-color-inverse));
+      background-color: var(--neo-pill-text-color, var(--neo-text-color));
+
+      &:not(.neo-borderless) {
+        border-color: var(--neo-pill-border-color, var(--neo-text-color-inverse));
       }
     }
 

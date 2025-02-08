@@ -348,7 +348,7 @@
   $backdrop-filter: --neo-tooltip-backdrop-filter,
   $z-index: --neo-tooltip-z-index
 ) {
-  z-index: var($z-index, var(--neo-z-index-in-front, 1));
+  z-index: var($z-index, var(--neo-z-index-layer-ui, 1000));
   padding: var($padding, 0.4375rem 0.625rem);
   background-color: var($background-color, var(--neo-glass-background-color));
   border: var(--neo-border-width, 1px) solid var($border-color, var(--neo-glass-background-color));
@@ -359,7 +359,7 @@
   border-radius: var($border-radius, var(--neo-border-radius));
   outline: none;
   box-shadow: var($box-shadow, var(--neo-glass-box-shadow-raised-1));
-  backdrop-filter: var($backdrop-filter, var(--neo-blur-2));
+  backdrop-filter: var($backdrop-filter, var(--neo-blur-3));
   transition:
     box-shadow 0.3s ease,
     backdrop-filter 0.3s ease,

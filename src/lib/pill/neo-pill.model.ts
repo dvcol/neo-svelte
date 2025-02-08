@@ -5,6 +5,14 @@ import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 
+export const NeoPillSize = {
+  Small: 'small' as const,
+  Medium: 'medium' as const,
+  Large: 'large' as const,
+} as const;
+
+export type NeoPillSizes = (typeof NeoPillSize)[keyof typeof NeoPillSize];
+
 export type NeoPillElevation = ShadowShallowElevation | ShadowShallowElevationString;
 export type NeoPillContext = {
   // State
@@ -33,7 +41,7 @@ export type NeoPillContext = {
    *
    * @default large
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: NeoPillSizes;
   /**
    * Pill elevation (-2 to 2).
    */
@@ -60,6 +68,14 @@ export type NeoPillContext = {
    * Display the pill with a glass effect (translucent background and blur).
    */
   glass?: boolean;
+  /**
+   * Tints the pill with the current color.
+   */
+  tinted?: boolean;
+  /**
+   * Invert the text color and background to fill the pill.
+   */
+  filled?: boolean;
   /**
    * Display the pill as flat on first render.
    */

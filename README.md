@@ -54,6 +54,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [x] Buttons
   - [x] toggle
   - [x] groups
+- [x] tags/pills
+  - [x] badge
 - [x] Tabs
 - [x] Card
 - [x] Inputs
@@ -90,7 +92,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] popselect
   - [ ] menu
   - [ ] nested menus
-
+  
 - [x] list
   - [x] select
     - [X] multiple
@@ -155,8 +157,6 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] carousel
 - [ ] avatar
   - [ ] badge
-- [x] tags/pills
-    - [ ] badge
 - [ ] Progress/Loading
   - [ ] bar
   - [ ] circle

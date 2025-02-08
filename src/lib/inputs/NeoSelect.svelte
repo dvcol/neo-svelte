@@ -95,7 +95,7 @@
 
   // TODO - display input ??? -> custom snippet & pill inside NeoInput NeoTextArea
   // TODO - rework focus highlights
-  // TODO - pill
+  // TODO - button tint
   // make clearable work
 </script>
 
