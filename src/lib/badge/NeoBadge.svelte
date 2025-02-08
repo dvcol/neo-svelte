@@ -1,10 +1,9 @@
 <script lang="ts">
-  /* eslint-disable prefer-const -- necessary for binding checked */
-
   import type { NeoBadgeProps } from '~/badge/neo-badge.model.js';
 
   import NeoPill from '~/pill/NeoPill.svelte';
 
+  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,

@@ -1,9 +1,9 @@
 <script lang="ts">
-  /* eslint-disable prefer-const -- necessary for binding checked */
   import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 
   import { toAction, toActionProps } from '~/utils/action.utils.js';
 
+  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,

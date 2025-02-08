@@ -4,6 +4,8 @@
 
   import { fly } from 'svelte/transition';
 
+  import { colorOptions } from '../utils/color.utils';
+
   import type { NeoListSelectedItem } from '~/list/neo-list.model.js';
 
   import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
@@ -24,6 +26,8 @@
   import { defaultDuration, quickDuration } from '~/utils/transition.utils';
 
   const options = $state<NeoTooltipProps>({
+    color: '',
+    tinted: false,
     rounded: true,
     elevation: DefaultShadowShallowElevation,
 
@@ -102,6 +106,7 @@
 <div class="row">
   <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.openOnHover}>Hover</NeoButton>
     <NeoButton toggle bind:checked={options.openOnFocus}>Focus</NeoButton>
     <NeoButton
@@ -141,6 +146,17 @@
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
+  />
+
+  <NeoSelect
+    label="Color"
+    placeholder="Select color"
+    position="left"
+    floating={false}
+    size="10"
+    bind:value={options.color}
+    containerProps={{ style: 'margin-left: 6rem' }}
+    options={colorOptions}
   />
 </div>
 

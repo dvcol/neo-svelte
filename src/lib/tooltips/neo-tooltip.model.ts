@@ -9,6 +9,7 @@ import type {
 } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
@@ -75,6 +76,14 @@ export type NeoTooltipProps = {
    * If true, the tooltip will have a rounded border.
    */
   rounded?: boolean;
+  /**
+   * Tints the tooltip with the current color.
+   */
+  tinted?: boolean;
+  /**
+   * Text color to use for the tooltip.
+   */
+  color?: Color;
   /**
    * The shadow elevation of the tooltip.
    *

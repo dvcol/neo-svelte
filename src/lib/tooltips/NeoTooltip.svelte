@@ -1,6 +1,4 @@
 <script lang="ts">
-  /* eslint-disable prefer-const -- necessary for binding checked */
-
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { clamp } from '@dvcol/common-utils/common/math';
   import {
@@ -23,10 +21,12 @@
   import { type NeoTooltipProps, NeoTooltipSizeStrategy } from '~/tooltips/neo-tooltip.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
   import { type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
   import { quickScaleProps } from '~/utils/transition.utils.js';
 
+  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     tooltip,
@@ -43,6 +43,8 @@
     options,
 
     // Styles
+    color,
+    tinted,
     padding,
     rounded,
     width: inputWith,
@@ -270,6 +272,8 @@
     bind:this={ref}
     class:neo-tooltip={true}
     class:neo-rounded={rounded}
+    class:neo-tinted={tinted}
+    style:--neo-tooltip-text-color={getColorVariable(color)}
     style:--neo-tooltip-box-shadow={tooltipShadow}
     style:--neo-tooltip-backdrop-filter={tooltipBlur}
     in:inFn={inProps}
@@ -301,6 +305,8 @@
   .neo-tooltip {
     @include mixin.tooltip;
 
+    color: var(--neo-tooltip-text-color, inherit);
+
     :global(> .neo-list:only-child) {
       width: inherit;
       min-width: inherit;
@@ -308,6 +314,10 @@
       height: inherit;
       min-height: inherit;
       max-height: inherit;
+    }
+
+    &.neo-tinted {
+      background-color: var(--neo-tooltip-bg-color, var(--neo-glass-background-color-tinted));
     }
 
     &.neo-rounded {
