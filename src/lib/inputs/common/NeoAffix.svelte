@@ -1,6 +1,5 @@
 <script lang="ts">
   import { debounced } from '@dvcol/svelte-utils';
-  import { width } from '@dvcol/svelte-utils/transition';
   import { fade } from 'svelte/transition';
 
   import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
@@ -10,7 +9,7 @@
   import IconClear from '~/icons/IconClear.svelte';
   import IconConfirm from '~/icons/IconConfirm.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
+  import { quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -29,12 +28,12 @@
     disabled,
 
     // Styles
-    size = '1.25rem',
+    size,
 
     // Transition
     in: inAction,
     out: outAction,
-    transition: transitionAction = { use: width, props: enterTransitionProps },
+    transition: transitionAction,
 
     // Other props
     closeProps,
@@ -42,7 +41,6 @@
   }: NeoAffixProps = $props();
   /* eslint-enable prefer-const */
 
-  const leave = $derived(!loading && !close && valid === undefined ? undefined : leaveTransitionProps);
   const clear = $derived.by(debounced(() => close && !disabled, 100));
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
@@ -62,30 +60,30 @@
   {...rest}
 >
   {#if loading}
-    <span class="neo-affix-loading" out:fade={leave}>
+    <span class="neo-affix-loading" transition:fade={quickDurationProps}>
       {#if loader}
         {@render loader({ size })}
       {:else}
-        <IconCircleLoading {size} />
+        <IconCircleLoading />
       {/if}
     </span>
   {:else if clear}
-    <button {disabled} class:neo-affix-clear={true} aria-label="clear" in:fade out:fade={leave} {...closeProps}>
+    <button {disabled} class:neo-affix-clear={true} aria-label="clear" transition:fade={quickDurationProps} {...closeProps}>
       {#if reset}
         {@render reset({ size })}
       {:else}
-        <IconClear {size} />
+        <IconClear />
       {/if}
     </button>
   {:else}
-    <span class="neo-affix-validation" data-valid={valid} in:fade={leave}>
+    <span class="neo-affix-validation" data-valid={valid} transition:fade={quickDurationProps}>
       {#if valid !== undefined}
         {#if validation}
           {@render validation({ size, valid })}
         {:else if valid}
-          <IconConfirm {size} />
+          <IconConfirm />
         {:else}
-          <IconAlert {size} />
+          <IconAlert />
         {/if}
       {/if}
     </span>
@@ -99,12 +97,21 @@
   .neo-affix-loading,
   .neo-affix-clear {
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
     width: var(--neo-affix-size, 1.25rem);
     height: var(--neo-affix-size, 1.25rem);
     font: inherit;
     text-decoration: none;
     outline: none;
+
+    :global(> svg) {
+      width: 100%;
+      height: 100%;
+      margin: -0.05rem;
+      padding: 0.05rem;
+    }
   }
 
   .neo-affix-container {
@@ -134,8 +141,6 @@
     }
 
     .neo-affix-clear {
-      align-items: center;
-      justify-content: center;
       margin: 0;
       padding: 0;
       color: var(--neo-affix-clear-color, inherit);
@@ -148,13 +153,6 @@
         opacity 0.2s ease-in,
         color 0.3s ease,
         background-color 0.3s ease;
-
-      :global(> svg) {
-        width: 100%;
-        height: 100%;
-        margin: -0.05rem;
-        padding: 0.05rem;
-      }
 
       &:focus-visible {
         color: var(--neo-close-color-focused, rgb(255 0 0 / 50%));
