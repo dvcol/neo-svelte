@@ -21,6 +21,7 @@
     type NeoTextareaProps,
   } from '~/inputs/common/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
     computeGlassFilter,
@@ -75,6 +76,8 @@
     pressed,
     rounded,
     glass,
+    color,
+    tinted,
     start,
     floating = true,
     skeleton = false,
@@ -348,6 +351,8 @@
     borderless,
     rounded,
     glass,
+    color,
+    tinted,
     start,
     skeleton,
   });
@@ -443,6 +448,7 @@
     class:neo-borderless={borderless}
     class:neo-rounded={rounded}
     class:neo-glass={glass}
+    class:neo-tinted={tinted}
     class:neo-hover={hover}
     class:neo-hovered={hovered}
     class:neo-floating={floating}
@@ -456,6 +462,7 @@
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
     class:neo-flat-hover={flatHover}
+    style:--neo-textarea-text-color={getColorVariable(color)}
     style:--neo-textarea-glass-blur={filter}
     style:--neo-textarea-box-shadow={boxShadow}
     style:--neo-textarea-hover-shadow={hoverShadow}
@@ -552,7 +559,7 @@
     min-height: fit-content;
     padding: 0.75rem 0.95rem;
     overflow: auto;
-    color: inherit;
+    color: var(--neo-textarea-text-color, inherit);
     text-overflow: ellipsis;
     background-color: transparent;
     border: none;
@@ -853,6 +860,7 @@
     }
 
     &.neo-glass {
+      --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
       --neo-border-color: var(--neo-glass-border-color);
 
@@ -901,6 +909,10 @@
           border-color: var(--neo-textarea-border-color, var(--neo-border-color));
         }
       }
+    }
+
+    &.neo-tinted {
+      background-color: var(--neo-textarea-bg-color, var(--neo-background-color-tinted));
     }
 
     &.neo-skeleton {

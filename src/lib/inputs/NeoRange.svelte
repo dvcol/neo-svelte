@@ -13,6 +13,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
@@ -46,6 +47,8 @@
     // Styles
     start,
     glass,
+    color,
+    tinted,
     rounded = true,
     tooltips = true,
     skeleton = false,
@@ -418,11 +421,13 @@
           class:neo-rounded={rounded}
           class:neo-start={start}
           class:neo-glass={glass}
+          class:neo-tinted={tinted}
           class:neo-disabled={disabled}
           class:neo-skeleton={skeleton}
           class:neo-flat={!elevation}
           class:neo-valid={validation && valid}
           class:neo-invalid={validation && !valid}
+          style:--neo-range-color={getColorVariable(color)}
           style:--neo-range-box-shadow={boxShadow}
           style:--neo-range-progress="{lowerProgress}%"
           style:--neo-range-array-progress="{upperProgress}%"
@@ -580,7 +585,7 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      color: inherit;
+      color: var(--neo-range-color, inherit);
       text-decoration: none;
       background: transparent;
       border: var(--neo-range-border-width, var(--neo-border-width, 1px)) var(--neo-range-border-color, transparent) solid;
@@ -685,6 +690,10 @@
         @starting-style {
           box-shadow: var(--neo-box-shadow-flat);
         }
+      }
+
+      &.neo-tinted {
+        background-color: var(--neo-input-bg-color, var(--neo-background-color-tinted));
       }
 
       &.neo-skeleton {

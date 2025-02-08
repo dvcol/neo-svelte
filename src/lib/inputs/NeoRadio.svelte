@@ -35,6 +35,8 @@
     // Styles
     start,
     glass,
+    color,
+    tinted,
     rounded = true,
     skeleton = false,
 
@@ -83,7 +85,20 @@
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}
 >
-  <NeoRadioButton {checked} {touched} {rounded} {start} {glass} {disabled} {skeleton} {elevation} onclick={() => ref?.click()} {...buttonProps}>
+  <NeoRadioButton
+    {checked}
+    {touched}
+    {rounded}
+    {start}
+    {glass}
+    {disabled}
+    {skeleton}
+    {elevation}
+    {color}
+    {tinted}
+    onclick={() => ref?.click()}
+    {...buttonProps}
+  >
     <span class="neo-radio-input">
       <NeoBaseInput
         aria-invalid={valid === undefined ? undefined : !valid}

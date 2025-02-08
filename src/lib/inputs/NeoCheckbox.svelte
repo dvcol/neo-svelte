@@ -41,6 +41,8 @@
     // Styles
     start,
     glass,
+    color,
+    tinted,
     rounded,
     skeleton = false,
 
@@ -94,6 +96,8 @@
     // Styles
     rounded,
     glass,
+    color,
+    tinted,
     start,
     skeleton,
     elevation,
@@ -150,6 +154,8 @@
       {rounded}
       {start}
       {glass}
+      {color}
+      {tinted}
       {disabled}
       {skeleton}
       {elevation}

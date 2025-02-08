@@ -266,6 +266,8 @@
     glass: rest.glass,
     start: rest.start,
     skeleton,
+    tinted: rest.tinted,
+    color: rest.color,
   });
 
   let timeout: ReturnType<typeof setTimeout>;
@@ -376,6 +378,8 @@
     {elevation}
     {hover}
     glass={rest.glass}
+    tinted={rest.tinted}
+    color={rest.color}
     start={rest.start}
     required={rest.required}
     maxHeight={expandHeight}

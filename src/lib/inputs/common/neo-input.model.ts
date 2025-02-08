@@ -10,6 +10,7 @@ import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validati
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
+import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
@@ -61,6 +62,14 @@ export type NeoInputStyles = {
    * If true, the input will be displayed with a glass effect.
    */
   glass?: boolean;
+  /**
+   * Tints the input with the current color.
+   */
+  tinted?: boolean;
+  /**
+   * Text color to use for the input.
+   */
+  color?: Color;
   /**
    * If true, the input input start as flat on first render.
    * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support

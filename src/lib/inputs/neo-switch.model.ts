@@ -26,6 +26,8 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'wrapperRef'
     | 'wrapperTag'
     | 'wrapperProps'
+    | 'color'
+    | 'tinted'
   > &
   NeoCommonSwitchProps &
   Pick<NeoLabelProps, 'label'> &

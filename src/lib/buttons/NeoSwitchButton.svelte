@@ -3,6 +3,7 @@
 
   import type { NeoSwitchButtonContext, NeoSwitchButtonProps } from '~/buttons/neo-switch-button.model.js';
 
+  import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -22,6 +23,8 @@
     // Styles
     start,
     glass,
+    color,
+    tinted,
     rounded = true,
     skeleton = false,
 
@@ -70,11 +73,13 @@
   class:neo-rounded={rounded}
   class:neo-start={start}
   class:neo-glass={glass}
+  class:neo-tinted={tinted}
   class:neo-disabled={disabled}
   class:neo-skeleton={skeleton}
   class:neo-flat={!elevation}
   class:neo-valid={valid === true}
   class:neo-invalid={valid === false}
+  style:--neo-switch-color={getColorVariable(color)}
   style:--neo-switch-box-shadow={boxShadow}
   style:--neo-switch-toggle-width={toggleWidth}
   use:resize={updateSize}
@@ -169,7 +174,7 @@
       height: var(--neo-switch-height);
       margin: 0;
       padding: 0;
-      color: inherit;
+      color: var(--neo-switch-color, inherit);
       text-decoration: none;
       background: transparent;
       border: var(--neo-switch-border-width, var(--neo-border-width, 1px)) var(--neo-switch-border-color, transparent) solid;
@@ -288,6 +293,10 @@
         @starting-style {
           box-shadow: var(--neo-box-shadow-flat);
         }
+      }
+
+      &.neo-tinted {
+        background-color: var(--neo-input-bg-color, var(--neo-background-color-tinted));
       }
 
       &.neo-skeleton {

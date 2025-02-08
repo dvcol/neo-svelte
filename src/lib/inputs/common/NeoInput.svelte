@@ -14,6 +14,7 @@
   import { NeoInputLabelPosition } from '~/inputs/common/neo-input.model.js';
 
   import { type ActionWithProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
     computeGlassFilter,
@@ -62,6 +63,8 @@
     pressed,
     rounded,
     glass,
+    color,
+    tinted,
     start,
     floating = true,
     skeleton = false,
@@ -228,6 +231,8 @@
     borderless,
     rounded,
     glass,
+    color,
+    tinted,
     start,
     skeleton,
   });
@@ -350,6 +355,7 @@
     class:neo-borderless={borderless}
     class:neo-rounded={rounded}
     class:neo-glass={glass}
+    class:neo-tinted={tinted}
     class:neo-hover={hover}
     class:neo-hovered={hovered}
     class:neo-floating={floating}
@@ -363,6 +369,7 @@
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
     class:neo-flat-hover={flatHover}
+    style:--neo-input-text-color={getColorVariable(color)}
     style:--neo-input-glass-blur={filter}
     style:--neo-input-box-shadow={boxShadow}
     style:--neo-input-hover-shadow={hoverShadow}
@@ -820,6 +827,7 @@
       }
 
       &.neo-glass {
+        --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
         --neo-skeleton-color: var(--neo-glass-skeleton-color);
         --neo-border-color: var(--neo-glass-border-color);
 
@@ -870,6 +878,10 @@
             border-color: var(--neo-input-border-color, var(--neo-border-color));
           }
         }
+      }
+
+      &.neo-tinted {
+        background-color: var(--neo-input-bg-color, var(--neo-background-color-tinted));
       }
 
       &.neo-skeleton {

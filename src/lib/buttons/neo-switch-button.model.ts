@@ -7,7 +7,7 @@ export type NeoSwitchElevation = ShadowShallowElevation | ShadowShallowElevation
 
 export type NeoSwitchButtonContext = Pick<NeoInputProps, 'checked' | 'indeterminate' | 'disabled'>;
 
-export type NeoCommonSwitchProps = Pick<NeoInputProps, 'valid' | 'start' | 'glass' | 'rounded' | 'skeleton'> &
+export type NeoCommonSwitchProps = Pick<NeoInputProps, 'valid' | 'start' | 'glass' | 'rounded' | 'skeleton' | 'color' | 'tinted'> &
   NeoSwitchButtonContext & {
     // Snippets
     /**

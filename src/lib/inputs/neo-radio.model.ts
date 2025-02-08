@@ -5,7 +5,19 @@ import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 export type NeoRadioProps = NeoBaseInputProps &
   Pick<
     NeoInputProps,
-    'readonly' | 'loading' | 'focusin' | 'in' | 'out' | 'transition' | 'labelRef' | 'labelProps' | 'containerRef' | 'containerTag' | 'containerProps'
+    | 'readonly'
+    | 'loading'
+    | 'focusin'
+    | 'in'
+    | 'out'
+    | 'transition'
+    | 'labelRef'
+    | 'labelProps'
+    | 'containerRef'
+    | 'containerTag'
+    | 'containerProps'
+    | 'color'
+    | 'tinted'
   > &
   Pick<NeoLabelProps, 'label'> &
   NeoCommonRadioProps & {

@@ -5,7 +5,10 @@ import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/uti
 
 export type NeoRadioElevation = ShadowShallowElevation | ShadowShallowElevationString;
 
-export type NeoCommonRadioProps = Pick<NeoInputProps, 'checked' | 'touched' | 'disabled' | 'start' | 'glass' | 'rounded' | 'skeleton'> & {
+export type NeoCommonRadioProps = Pick<
+  NeoInputProps,
+  'checked' | 'touched' | 'disabled' | 'start' | 'glass' | 'rounded' | 'skeleton' | 'tinted' | 'color'
+> & {
   /**
    * Input elevation.
    * @default 2

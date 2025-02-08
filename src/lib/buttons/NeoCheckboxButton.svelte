@@ -2,6 +2,7 @@
   import type { NeoCheckboxButtonProps } from '~/buttons/neo-checkbox-button.model.js';
 
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
+  import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -18,6 +19,8 @@
     // Styles
     start,
     glass,
+    color,
+    tinted,
     rounded,
     skeleton = false,
 
@@ -28,8 +31,10 @@
 
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
 
-  const boxShadow = $derived(computeShadowElevation(elevation, { glass }, DefaultShallowMinMaxElevation));
-  const checkedShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass, active: glass }, DefaultShallowMinMaxElevation));
+  const checkedShadow = $derived(
+    computeShadowElevation(-Math.abs(elevation), { glass, active: glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation),
+  );
 
   const onclick = () => {
     if (disabled) return;
@@ -47,10 +52,12 @@
   class:neo-rounded={rounded}
   class:neo-start={start}
   class:neo-glass={glass}
+  class:neo-tinted={tinted}
   class:neo-disabled={disabled}
   class:neo-skeleton={skeleton}
   class:neo-flat={!elevation}
   class:neo-inset={elevation <= 0}
+  style:--neo-checkbox-color={getColorVariable(color)}
   style:--neo-checkbox-box-shadow={boxShadow}
   style:--neo-checkbox-checked-shadow={checkedShadow}
   {onclick}
@@ -69,7 +76,7 @@
       min-width: fit-content;
       margin: 0 0 0.125rem;
       padding: 0.125rem;
-      color: inherit;
+      color: var(--neo-checkbox-color, inherit);
       font: inherit;
       text-decoration: none;
       background-color: color-mix(in srgb, transparent, currentcolor 1%);
@@ -120,6 +127,8 @@
       }
 
       &.neo-glass {
+        --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
+
         background-color: var(--neo-checkbox-bg-color, var(--neo-glass-background-color));
         border-color: var(--neo-checkbox-border-color, transparent);
         backdrop-filter: var(--neo-checkbox-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
@@ -127,12 +136,24 @@
         &.neo-flat {
           border-color: var(--neo-checkbox-border-color, var(--neo-glass-border-color-flat));
         }
+
+        &:not(.neo-flat, .neo-inset) {
+          border-color: var(
+            --neo-input-border-color,
+            var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+              var(--neo-glass-left-border-color)
+          );
+        }
       }
 
       &.neo-start {
         @starting-style {
           box-shadow: var(--neo-box-shadow-flat);
         }
+      }
+
+      &.neo-tinted {
+        background-color: var(--neo-input-bg-color, var(--neo-background-color-tinted));
       }
 
       &.neo-skeleton {

@@ -7,7 +7,7 @@ export type NeoCheckboxElevation = ShadowShallowElevation | ShadowShallowElevati
 
 export type NeoCommonCheckboxProps = Pick<
   NeoInputProps,
-  'checked' | 'indeterminate' | 'touched' | 'disabled' | 'start' | 'glass' | 'rounded' | 'skeleton'
+  'checked' | 'indeterminate' | 'touched' | 'disabled' | 'start' | 'glass' | 'rounded' | 'skeleton' | 'color' | 'tinted'
 > & {
   /**
    * Input elevation.

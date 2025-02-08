@@ -1,6 +1,8 @@
 <script lang="ts">
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import { colorOptions } from '../utils/color.utils';
+
   import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
@@ -89,6 +91,8 @@
     rounded: false,
     pressed: false,
     glass: false,
+    tinted: false,
+    color: '',
     loading: false,
     disabled: false,
     readonly: false,
@@ -502,6 +506,7 @@
     <NeoButton toggle bind:checked={options.pressed} onclick={onPressed}>Pressed</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
+    <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.floating}>Floating</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.clearable}>Clearable</NeoButton>
@@ -538,6 +543,17 @@
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 4rem' }}
+  />
+
+  <NeoSelect
+    label="Color"
+    placeholder="Select color"
+    position="left"
+    floating={false}
+    size="10"
+    bind:value={options.color}
+    containerProps={{ style: 'margin-left: 6rem' }}
+    options={colorOptions}
   />
 </div>
 

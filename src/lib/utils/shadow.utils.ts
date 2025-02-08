@@ -27,7 +27,7 @@ export const PositiveShadowElevations = [0, 1, 2, 3, 4, 5] as const;
 export type PositiveShadowElevation = (typeof PositiveShadowElevations)[number];
 export type PositiveShadowElevationString = `${PositiveShadowElevation}`;
 
-export type ShadowModifier = { glass?: boolean; convex?: boolean; pressed?: boolean };
+export type ShadowModifier = { glass?: boolean; convex?: boolean; pressed?: boolean; active?: boolean };
 export const ShadowFlatRegex = /^.*flat\)?;?$/;
 
 export const DefaultSaturation = 3;
@@ -58,11 +58,13 @@ export const computeElevation = (
 
 export const computeShadowElevation = (
   elevation: number | ShadowElevation,
-  { glass, convex, pressed }: ShadowModifier = {},
+  { glass, convex, pressed, active }: ShadowModifier = {},
   minMax: { min?: ShadowElevation; max?: ShadowElevation } = {},
 ) => {
   const raided = convex ? 'convex' : 'raised';
-  const inset = pressed ? 'pressed' : 'inset';
+  let inset = 'inset';
+  if (pressed) inset = 'pressed';
+  if (active) inset = 'active';
   let shadow = `var(--neo-${glass ? 'glass-' : ''}box-shadow-`;
   const level = computeElevation(elevation, minMax);
   if (!level) return `${shadow}flat)`;
