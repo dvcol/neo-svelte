@@ -2,6 +2,7 @@ import type { NeoDividerProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
@@ -61,6 +62,14 @@ export type NeoCardContext = {
    * If true, the card will be displayed with a glass effect.
    */
   glass?: boolean;
+  /**
+   * Tints the card with the current color.
+   */
+  tinted?: boolean;
+  /**
+   * Text color to use for the card.
+   */
+  color?: Color;
   /**
    * If true, a border will separate the card content from the header, footer, and action.
    * If a number is provided, a raised/inset divider will be displayed instead.

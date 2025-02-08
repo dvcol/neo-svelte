@@ -1,6 +1,8 @@
 <script lang="ts">
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
+  import { colorOptions } from '../utils/color.utils';
+
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
   import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
@@ -9,6 +11,7 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { DefaultShadowElevation, getDefaultElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
@@ -19,6 +22,8 @@
     borderless: false,
     rounded: true,
     glass: false,
+    tinted: false,
+    color: '',
     hover: 0,
     pressed: false,
     convex: false,
@@ -73,6 +78,7 @@
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
+    <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
   </NeoButtonGroup>
 
@@ -102,6 +108,17 @@
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 4rem' }}
+  />
+
+  <NeoSelect
+    label="Color"
+    placeholder="Select color"
+    position="left"
+    floating={false}
+    size="10"
+    bind:value={options.color}
+    containerProps={{ style: 'margin-left: 6rem' }}
+    options={colorOptions}
   />
 </div>
 

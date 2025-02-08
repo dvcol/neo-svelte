@@ -6,6 +6,7 @@
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
     computeGlassFilter,
@@ -39,7 +40,9 @@
     spacing,
     borderless,
     rounded,
+    color,
     glass,
+    tinted,
     segmented,
     cover,
     start,
@@ -122,7 +125,7 @@
     onfocusout?.(e);
   };
 
-  const context: NeoCardContext = $derived({
+  const context = $derived<NeoCardContext>({
     elevation,
     hover,
     hovered,
@@ -130,9 +133,15 @@
     borderless,
     rounded,
     glass,
+    tinted,
     segmented,
     cover,
     start,
+    color,
+    convex,
+    pressed,
+    focused,
+    spacing,
     skeleton,
     horizontal,
     close,
@@ -197,6 +206,8 @@
   class:neo-hover-flat={hoverFlat}
   class:neo-flat-hover={flatHover}
   class:neo-glass={glass}
+  class:neo-tinted={tinted}
+  style:--neo-card-text-color={getColorVariable(color)}
   style:--neo-card-hover-shadow={hoverShadow}
   style:--neo-card-box-shadow={boxShadow}
   style:--neo-card-glass-blur={filter}
@@ -280,6 +291,7 @@
     width: fit-content;
     margin: var(--neo-card-margin, var(--neo-shadow-margin, 0.625rem));
     padding: var(--neo-card-padding, $full-spacing);
+    color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
     border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
     border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
@@ -421,6 +433,7 @@
     }
 
     &.neo-glass {
+      --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
       --neo-border-color: var(--neo-glass-border-color);
 
@@ -456,6 +469,10 @@
           border-color: var(--neo-card-border-color, var(--neo-border-color));
         }
       }
+    }
+
+    &.neo-tinted {
+      background-color: var(--neo-card-bg-color, var(--neo-background-color-tinted));
     }
 
     &.neo-horizontal {
