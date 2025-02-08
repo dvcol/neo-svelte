@@ -6,7 +6,7 @@
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
-  import { enterTransitionProps } from '~/utils/transition.utils.js';
+  import { quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -161,7 +161,7 @@
 >
   <div class="neo-content" class:neo-reverse={reverse}>
     {#if loading || icon}
-      <span class="neo-icon" class:neo-only={empty} transition:width={enterTransitionProps}>
+      <span class="neo-icon" class:neo-only={empty} transition:width={quickDurationProps}>
         {#if loading}
           <IconCircleLoading />
         {:else}

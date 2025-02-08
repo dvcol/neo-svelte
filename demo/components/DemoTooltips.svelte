@@ -12,6 +12,7 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
+  import IconQuestionMark from '~/icons/IconQuestionMark.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
@@ -20,7 +21,7 @@
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
   import { DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
-  import { defaultEnterDuration, defaultFlyDuration } from '~/utils/transition.utils';
+  import { defaultDuration, quickDuration } from '~/utils/transition.utils';
 
   const options = $state<NeoTooltipProps>({
     rounded: true,
@@ -194,6 +195,10 @@
     </NeoPopSelect>
   </div>
 
+  {#snippet question()}
+    <IconQuestionMark size="1.5rem" />
+  {/snippet}
+
   <div class="column content">
     <span class="label">PopSelect</span>
     <NeoPopSelect
@@ -209,10 +214,10 @@
         <NeoTransitionContainer overflow="hidden" style="min-width: 252px; margin: 0.5rem">
           {#key complexSelected?.item?.id}
             <div
-              in:fly={{ duration: defaultFlyDuration, y: complexSelected?.item ? '-50%' : '50%' }}
-              out:fly={{ duration: defaultEnterDuration, y: complexSelected?.item ? '50%' : '-50%' }}
+              in:fly={{ duration: defaultDuration, y: complexSelected?.item ? '-50%' : '50%' }}
+              out:fly={{ duration: quickDuration, y: complexSelected?.item ? '50%' : '-50%' }}
             >
-              <NeoListBaseItem before={avatar} item={complexSelected?.item ?? { label: 'None Selected', description: 'Please select a profile' }} />
+              <NeoListBaseItem before={question} item={complexSelected?.item ?? { label: 'None Selected', description: 'Please select a profile' }} />
             </div>
           {/key}
         </NeoTransitionContainer>

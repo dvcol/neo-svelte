@@ -16,6 +16,8 @@
     useRole,
   } from '@skeletonlabs/floating-ui-svelte';
 
+  import { scale } from 'svelte/transition';
+
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
   import { type NeoTooltipProps, NeoTooltipSizeStrategy } from '~/tooltips/neo-tooltip.model.js';
@@ -23,7 +25,7 @@
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
   import { type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
-  import { scaleTransition } from '~/utils/transition.utils.js';
+  import { quickScaleProps } from '~/utils/transition.utils.js';
 
   let {
     // Snippets
@@ -63,7 +65,7 @@
     // Actions
     in: inAction,
     out: outAction,
-    transition: transitionAction = scaleTransition,
+    transition: transitionAction = { use: scale, props: quickScaleProps },
 
     // Actions
     use,

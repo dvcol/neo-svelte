@@ -29,6 +29,12 @@ export type NeoPillContext = {
    */
   skeleton?: boolean;
   /**
+   * Set the size of the pill.
+   *
+   * @default large
+   */
+  size?: 'small' | 'medium' | 'large';
+  /**
    * Pill elevation (-2 to 2).
    */
   elevation?: NeoPillElevation;
@@ -50,10 +56,6 @@ export type NeoPillContext = {
    * Recess the content of the pill if elevation is inset (< 0).
    */
   pressed?: boolean;
-  /**
-   * Smooth the edges of the pill if elevation is raised (> 0).
-   */
-  convex?: boolean;
   /**
    * Display the pill with a glass effect (translucent background and blur).
    */

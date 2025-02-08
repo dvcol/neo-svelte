@@ -8,7 +8,7 @@
 
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { scaleEnterProps, scaleLeaveProps } from '~/utils/transition.utils.js';
+  import { quickScaleDelayProps, quickScaleProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -29,8 +29,8 @@
     context = $bindable({}),
 
     // Transition
-    in: inAction = { use: fade, props: scaleEnterProps },
-    out: outAction = { use: fade, props: scaleLeaveProps },
+    in: inAction = { use: fade, props: quickScaleProps },
+    out: outAction = { use: fade, props: quickScaleDelayProps },
 
     // Other props
     containerProps,

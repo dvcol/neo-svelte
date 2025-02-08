@@ -11,7 +11,7 @@
   import IconClose from '~/icons/IconClose.svelte';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
-  import { defaultTransitionDuration, enterFreezeTransition } from '~/utils/transition.utils.js';
+  import { shortDuration, shortFreezeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -94,7 +94,7 @@
   class:neo-active={active}
   class:neo-slide={slide}
   class:neo-close={closeable}
-  transition:transition={enterFreezeTransition}
+  transition:transition={shortFreezeTransition}
   {...tabProps}
   use:useFn={useProps}
 >
@@ -119,7 +119,7 @@
       class="neo-tab-close"
       aria-label="Close tab"
       class:neo-disabled={disabled}
-      transition:width={{ duration: skip ? 0 : defaultTransitionDuration }}
+      transition:width={{ duration: skip ? 0 : shortDuration }}
       onclick={onClose}
     >
       <IconClose class="neo-icon-close" size="1rem" />

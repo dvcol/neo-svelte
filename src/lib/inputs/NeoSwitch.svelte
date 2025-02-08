@@ -14,7 +14,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { coerce, DefaultShadowShallowElevation } from '~/utils/shadow.utils.js';
-  import { enterTransitionProps } from '~/utils/transition.utils.js';
+  import { quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -190,7 +190,7 @@
     {#if loading !== undefined}
       <span class="neo-switch-suffix">
         {#if loading}
-          <span class="neo-switch-loading" out:fade={enterTransitionProps}>
+          <span class="neo-switch-loading" out:fade={quickDurationProps}>
             <IconCircleLoading size="1rem" />
           </span>
         {/if}

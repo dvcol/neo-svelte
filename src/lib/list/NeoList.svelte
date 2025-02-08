@@ -25,7 +25,7 @@
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { toSize } from '~/utils/style.utils.js';
-  import { defaultTransitionDuration, enterTransitionProps, flipTransitionProps, scaleTransitionProps } from '~/utils/transition.utils.js';
+  import { quickCircOutProps, quickDurationProps, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -66,9 +66,9 @@
     height: _height,
 
     // Animation
-    in: inAction = { use: scale, props: scaleTransitionProps },
-    out: outAction = { use: fade, props: { ...scaleTransitionProps, delay: scaleTransitionProps?.duration } },
-    animate = { use: flipToggle, props: flipTransitionProps },
+    in: inAction = { use: scale, props: quickScaleProps },
+    out: outAction = { use: fade, props: { ...quickScaleProps, delay: quickScaleProps?.duration } },
+    animate = { use: flipToggle, props: quickCircOutProps },
 
     // Events
     onselect,
@@ -92,13 +92,13 @@
     if (!ref) return false;
     ref.scrollTo({ top: 0, behavior: 'smooth', ...options });
     return ref;
-  }, defaultTransitionDuration / 2);
+  }, shortDuration / 2);
 
   const scrollBottom: NeoListMethods['scrollBottom'] = debounce((options?: ScrollToOptions) => {
     if (!ref?.scrollHeight) return false;
     ref.scrollTo({ top: ref.scrollHeight, behavior: 'smooth', ...options });
     return ref;
-  }, defaultTransitionDuration / 2);
+  }, shortDuration / 2);
 
   $effect(() => {
     if (!loading || !scrollToLoader) return;
@@ -380,7 +380,7 @@
       class:neo-scroll={scrollbar}
       class:neo-shadow={shadow}
       class:neo-dim={dim}
-      in:scaleFreeze={scaleTransitionProps}
+      in:scaleFreeze={quickScaleProps}
       {...rest}
     >
       {@render children?.(context)}
@@ -394,7 +394,7 @@
       role={select ? 'listbox' : 'list'}
       bind:this={ref}
       class:neo-list-empty={true}
-      in:fade={enterTransitionProps}
+      in:fade={quickDurationProps}
       {...rest}
     >
       {#if customEmpty}

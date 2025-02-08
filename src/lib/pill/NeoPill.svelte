@@ -1,6 +1,8 @@
 <script lang="ts">
   /* eslint-disable prefer-const -- necessary for binding checked */
 
+  import { width } from '@dvcol/svelte-utils/transition';
+
   import type { NeoPillContext, NeoPillProps } from '~/pill/neo-pill.model.js';
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
@@ -14,6 +16,7 @@
     DefaultShallowMinMaxElevation,
     isShadowFlat,
   } from '~/utils/shadow.utils.js';
+  import { quickDurationProps } from '~/utils/transition.utils.js';
 
   let {
     children,
@@ -24,11 +27,11 @@
     loading,
     disabled,
     skeleton = false,
+    size,
 
     borderless,
     rounded = true,
     pressed,
-    convex,
     glass,
     start,
 
@@ -52,7 +55,7 @@
   const elevation = $derived(coerce(rest?.elevation ?? 0));
   const hover = $derived(coerce(rest?.hover ?? 0));
 
-  const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }, DefaultShallowMinMaxElevation));
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }, DefaultShallowMinMaxElevation));
   const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed }, DefaultShallowMinMaxElevation) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
@@ -71,7 +74,6 @@
     borderless,
     rounded,
     pressed,
-    convex,
     glass,
     start,
   });
@@ -83,17 +85,19 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  // TODO - sizing: small, medium, large (font, line-height, padding)
 </script>
 
 <svelte:element
   this={tag}
   class="neo-pill"
+  data-type={size}
   class:neo-borderless={borderless}
   class:neo-rounded={rounded}
   class:neo-disabled={disabled}
   class:neo-skeleton={skeleton}
   class:neo-pressed={pressed}
-  class:neo-convex={convex}
   class:neo-glass={glass}
   class:neo-start={start}
   class:neo-hover={hover}
@@ -113,11 +117,11 @@
   {@render children?.(context)}
   {#if close || loading}
     <NeoAffix
-      size="1rem"
       {loading}
       {skeleton}
       {disabled}
       {close}
+      transition={{ use: width, props: quickDurationProps }}
       {...affixProps}
       closeProps={{
         'aria-label': 'close',
@@ -151,12 +155,42 @@
       backdrop-filter 0.3s ease,
       box-shadow 0.3s ease-out;
 
+    &[small],
+    &[data-type='small'] {
+      font-size: var(--neo-pill-font-size-small, var(--neo-font-size-xs));
+      line-height: var(--neo-pill-line-height-small, var(--neo-line-height-xs));
+      padding-block: 0.0625rem;
+      padding-inline: 0.3125rem;
+
+      :global(> .neo-pill-affix) {
+        --neo-affix-size: 0.625rem;
+
+        margin-inline-start: 0.1875rem;
+      }
+    }
+
+    &[medium],
+    &[data-type='medium'] {
+      font-size: var(--neo-pill-font-size-medium, var(--neo-font-size-sm));
+      line-height: var(--neo-pill-line-height-medium, var(--neo-line-height-sm));
+      padding-block: 0.0625rem;
+      padding-inline: 0.4375rem;
+
+      :global(> .neo-pill-affix) {
+        --neo-affix-size: 0.8125rem;
+
+        margin-inline-start: 0.25rem;
+      }
+    }
+
     &:focus-within,
     &.neo-hover:hover {
       box-shadow: var(--neo-pill-hover-shadow, var(--neo-box-shadow-flat));
     }
 
     :global(> .neo-pill-affix) {
+      --neo-affix-size: 1rem;
+
       margin-inline-start: 0.3125rem;
       padding: 0;
     }
@@ -181,12 +215,7 @@
     }
 
     &.neo-rounded {
-      padding-inline: 0.625rem;
       border-radius: var(--neo-pill-border-radius, var(--neo-border-radius-lg));
-    }
-
-    &.neo-convex:not(.neo-flat, .neo-inset) {
-      padding-block: 0.1875rem;
     }
 
     &.neo-glass {
@@ -196,12 +225,11 @@
       background-color: var(--neo-pill-bg-color, var(--neo-glass-background-color));
       backdrop-filter: var(--neo-pill-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
 
-      &.neo-convex,
       &.neo-inset {
         border-color: var(--neo-pill-border-color, transparent);
       }
 
-      &:not(.neo-inset, .neo-convex, .neo-borderless, .neo-flat, .neo-disabled) {
+      &:not(.neo-inset, .neo-borderless, .neo-flat, .neo-disabled) {
         border-color: var(
           --neo-pill-border-color,
           var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)

@@ -9,7 +9,7 @@
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
-  import { scaleEnterProps, scaleLeaveProps } from '~/utils/transition.utils.js';
+  import { quickScaleDelayProps, quickScaleProps } from '~/utils/transition.utils.js';
 
   const {
     loading = true,
@@ -23,8 +23,8 @@
     items = 3,
     flex = items > 1 ? undefined : '0 0 70%',
 
-    in: inAction = { use: fade, props: scaleEnterProps },
-    out: outAction = { use: fade, props: scaleLeaveProps },
+    in: inAction = { use: fade, props: quickScaleProps },
+    out: outAction = { use: fade, props: quickScaleDelayProps },
 
     beforeProps,
     afterProps,

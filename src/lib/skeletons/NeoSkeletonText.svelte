@@ -6,7 +6,7 @@
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { toSize } from '~/utils/style.utils.js';
-  import { enterTransitionProps, leaveTransitionProps } from '~/utils/transition.utils.js';
+  import { quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -33,8 +33,8 @@
     fallback = alt ? 26 : 6,
 
     // Transition
-    in: inAction = { use: fade, props: leaveTransitionProps },
-    out: outAction = { use: fade, props: enterTransitionProps },
+    in: inAction = { use: fade, props: quickDelayProps },
+    out: outAction = { use: fade, props: quickDurationProps },
 
     // Other props
     titleProps,

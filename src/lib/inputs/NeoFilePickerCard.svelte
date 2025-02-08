@@ -13,7 +13,7 @@
   import IconPencil from '~/icons/IconPencil.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { enterTransitionProps, flipTransitionProps, leaveDefaultFadeTransition } from '~/utils/transition.utils.js';
+  import { quickCircOutProps, quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -97,7 +97,7 @@
   {rounded}
   {disabled}
   {skeleton}
-  out={leaveDefaultFadeTransition}
+  out={{ use: fade, props: quickDelayProps }}
   flex="1 1 auto"
   {...rest}
   class={['neo-file-picker-card', rest?.class]}
@@ -114,7 +114,7 @@
     <div class="neo-expanded-list" class:neo-rounded={rounded} style:--neo-file-picker-card-max-height={maxHeight}>
       <div class="neo-expanded-scroll" class:neo-scroll={scrollbar}>
         {#each files as file, i (file)}
-          <div class="neo-file" transition:fade={enterTransitionProps} animate:flip={flipTransitionProps}>
+          <div class="neo-file" transition:fade={quickDurationProps} animate:flip={quickCircOutProps}>
             <span class="neo-file-name" title={file.name}>{file.name}</span>
             {#if clearable}
               <span class="neo-file-remove">
@@ -158,7 +158,7 @@
       class:neo-disabled={disabled}
       class:neo-label={label}
       onclick={onEdit}
-      in:fade={enterTransitionProps}
+      in:fade={quickDurationProps}
     >
       <div class="neo-expanded-button">
         <NeoButton aria-label="Add files" title="Add files" text rounded {skeleton} {disabled} onclick={onEdit} {...addButtonProps}>

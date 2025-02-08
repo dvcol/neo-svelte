@@ -13,7 +13,7 @@
   import NeoListSearch from '~/list/NeoListSearch.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { Colors } from '~/utils/colors.utils';
-  import { enterTransitionProps } from '~/utils/transition.utils';
+  import { quickDurationProps } from '~/utils/transition.utils';
 
   const options = $state<NeoListProps>({
     loading: false,
@@ -291,7 +291,7 @@
     <span class="label">Custom Empty</span>
     <NeoList aria-label="Custom empty list" {items} {...options}>
       {#snippet empty()}
-        <li class="custom-list-loader" in:fade={enterTransitionProps}>
+        <li class="custom-list-loader" in:fade={quickDurationProps}>
           <span> Custom empty snippet</span>
         </li>
       {/snippet}

@@ -18,6 +18,7 @@
     elevation: 0,
     hover: 0,
 
+    size: 'large',
     color: '',
     close: false,
     loading: false,
@@ -139,22 +140,32 @@
   />
 
   <NeoSelect
+    label="Size"
+    placeholder="Select size"
+    position="left"
+    floating={false}
+    size="10"
+    bind:value={options.size}
+    containerProps={{ style: 'margin-left: 4rem' }}
+    options={['large', 'medium', 'small']}
+  />
+
+  <NeoSelect
     label="Color"
     placeholder="Select color"
     position="left"
     floating={false}
     size="10"
     bind:value={options.color}
-    containerProps={{ style: 'margin-left: 6rem' }}
+    containerProps={{ style: 'margin-left: 4rem' }}
     options={[Colors.Primary, Colors.Secondary, Colors.Success, Colors.Warning, Colors.Error]}
   />
 </div>
 
 <div class="row">
   <span class="label">Pills</span>
-  <NeoPill {...options}>Default</NeoPill>
-  <NeoPill pressed {...options}>Pressed</NeoPill>
-  <NeoPill convex {...options}>Convex</NeoPill>
+  <NeoPill {...options}>default</NeoPill>
+  <NeoPill pressed {...options}>pressed</NeoPill>
 
   <NeoPill {...options}>
     <IconAccount style="margin-inline: -0.1875rem 0.325rem" />

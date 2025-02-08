@@ -14,7 +14,7 @@
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
-  import { enterTransitionProps } from '~/utils/transition.utils.js';
+  import { quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -377,7 +377,7 @@
         class:neo-range-value={true}
         class:neo-rounded={rounded}
         style:--neo-range-handler-z-index={lastIndex ? 0 : 1}
-        transition:fade={enterTransitionProps}
+        transition:fade={quickDurationProps}
         {...floatingProps}
         bind:this={lowerTooltip.elements.floating}
         style={toStyle(lowerTooltip.floatingStyles, floatingProps?.style)}
@@ -393,7 +393,7 @@
       <span
         class:neo-range-value={true}
         class:neo-rounded={rounded}
-        transition:fade={enterTransitionProps}
+        transition:fade={quickDurationProps}
         {...floatingProps}
         bind:this={upperTooltip.elements.floating}
         style={toStyle(upperTooltip.floatingStyles, floatingProps?.style)}
@@ -459,7 +459,7 @@
               {@render after(context)}
             {/if}
             {#if loading}
-              <span class="neo-range-loading" out:fade={enterTransitionProps}>
+              <span class="neo-range-loading" out:fade={quickDurationProps}>
                 <IconCircleLoading size="1rem" />
               </span>
             {/if}
