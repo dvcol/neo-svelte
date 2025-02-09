@@ -924,8 +924,8 @@
     }
 
     .neo-textarea.neo-scroll {
-      @include mixin.scrollbar;
       @include mixin.fade-scroll($fade-height: 0.5rem);
+      @include mixin.scrollbar;
     }
   }
 </style>

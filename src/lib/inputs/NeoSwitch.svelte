@@ -147,6 +147,29 @@
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
   >
+    <NeoBaseInput
+      aria-invalid={valid === undefined ? undefined : !valid}
+      aria-describedby={visible ? messageId : undefined}
+      {id}
+      bind:ref
+      bind:initial
+      bind:group
+      bind:checked
+      bind:indeterminate
+      bind:valid
+      bind:dirty
+      bind:touched
+      bind:focused
+      bind:validationMessage
+      {type}
+      {disabled}
+      {required}
+      {...rest}
+      hidden
+      aria-hidden
+      tabindex={-1}
+      class={['neo-switch-input', rest.class]}
+    />
     <NeoSwitchButton
       {handle}
       {off}
@@ -164,32 +187,7 @@
       valid={validation ? valid : undefined}
       onclick={() => ref?.click()}
       {...buttonProps}
-    >
-      <span class="neo-switch-input">
-        <NeoBaseInput
-          aria-invalid={valid === undefined ? undefined : !valid}
-          aria-describedby={visible ? messageId : undefined}
-          {id}
-          bind:ref
-          bind:initial
-          bind:group
-          bind:checked
-          bind:indeterminate
-          bind:valid
-          bind:dirty
-          bind:touched
-          bind:focused
-          bind:validationMessage
-          {type}
-          {disabled}
-          {required}
-          {...rest}
-          hidden
-          aria-hidden
-          tabindex={-1}
-        />
-      </span>
-    </NeoSwitchButton>
+    />
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
     {#if loading !== undefined}
       <span class="neo-switch-suffix">
@@ -220,10 +218,10 @@
       &.neo-flat {
         --neo-label-margin: 0 0 0 0.625rem;
       }
-    }
 
-    &-input {
-      display: none;
+      :global(> .neo-input.neo-switch-input) {
+        display: none;
+      }
     }
 
     &-suffix {

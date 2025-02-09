@@ -147,6 +147,29 @@
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
   >
+    <NeoBaseInput
+      aria-invalid={valid === undefined ? undefined : !valid}
+      aria-describedby={visible ? messageId : undefined}
+      {id}
+      bind:ref
+      bind:initial
+      bind:group
+      bind:checked
+      bind:indeterminate
+      bind:valid
+      bind:dirty
+      bind:touched
+      bind:focused
+      bind:validationMessage
+      {type}
+      {disabled}
+      {required}
+      {...rest}
+      hidden
+      aria-hidden
+      tabindex={-1}
+      class={['neo-checkbox-input', rest.class]}
+    />
     <NeoCheckboxButton
       {indeterminate}
       {checked}
@@ -161,32 +184,7 @@
       {elevation}
       onclick={() => ref?.click()}
       {...buttonProps}
-    >
-      <span class="neo-checkbox-input">
-        <NeoBaseInput
-          aria-invalid={valid === undefined ? undefined : !valid}
-          aria-describedby={visible ? messageId : undefined}
-          {id}
-          bind:ref
-          bind:initial
-          bind:group
-          bind:checked
-          bind:indeterminate
-          bind:valid
-          bind:dirty
-          bind:touched
-          bind:focused
-          bind:validationMessage
-          {type}
-          {disabled}
-          {required}
-          {...rest}
-          hidden
-          aria-hidden
-          tabindex={-1}
-        />
-      </span>
-    </NeoCheckboxButton>
+    />
     <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
     {#if loading !== undefined}
       <span class="neo-checkbox-suffix">
@@ -225,10 +223,10 @@
       &.neo-flat {
         --neo-label-margin: 0 0 0 0.625rem;
       }
-    }
 
-    &-input {
-      display: none;
+      :global(> .neo-input.neo-checkbox-input) {
+        display: none;
+      }
     }
 
     &-suffix {

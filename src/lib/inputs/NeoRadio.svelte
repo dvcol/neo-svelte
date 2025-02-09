@@ -85,6 +85,27 @@
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}
 >
+  <NeoBaseInput
+    aria-invalid={valid === undefined ? undefined : !valid}
+    {id}
+    bind:ref
+    bind:initial
+    bind:group
+    bind:checked
+    bind:valid
+    bind:dirty
+    bind:touched
+    bind:focused
+    bind:validationMessage
+    {type}
+    {disabled}
+    {required}
+    {...rest}
+    hidden
+    aria-hidden
+    tabindex={-1}
+    class={['neo-radio-input', rest.class]}
+  />
   <NeoRadioButton
     {checked}
     {touched}
@@ -98,30 +119,7 @@
     {tinted}
     onclick={() => ref?.click()}
     {...buttonProps}
-  >
-    <span class="neo-radio-input">
-      <NeoBaseInput
-        aria-invalid={valid === undefined ? undefined : !valid}
-        {id}
-        bind:ref
-        bind:initial
-        bind:group
-        bind:checked
-        bind:valid
-        bind:dirty
-        bind:touched
-        bind:focused
-        bind:validationMessage
-        {type}
-        {disabled}
-        {required}
-        {...rest}
-        hidden
-        aria-hidden
-        tabindex={-1}
-      />
-    </span>
-  </NeoRadioButton>
+  />
   <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
   {#if loading !== undefined}
     <span class="neo-radio-suffix">
@@ -159,10 +157,10 @@
       &.neo-flat {
         --neo-label-margin: 0 0 0 0.625rem;
       }
-    }
 
-    &-input {
-      display: none;
+      :global(> .neo-input.neo-radio-input) {
+        display: none;
+      }
     }
 
     &-suffix {

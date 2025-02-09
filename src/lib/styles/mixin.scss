@@ -221,11 +221,6 @@
   scrollbar-gutter: $gutter;
   overflow: $overflow;
 
-  @document url-prefix() {
-    scrollbar-width: thin;
-    scrollbar-color: $thumb-color;
-  }
-
   @if $transition {
     transition:
       $transition,
@@ -296,6 +291,11 @@
   &::-webkit-resizer {
     background: url('../assets/neo-icon-resizer-bottom-right.svg') no-repeat bottom;
     background-clip: border-box;
+  }
+
+  @document url-prefix() {
+    scrollbar-width: thin;
+    scrollbar-color: $thumb-color;
   }
 }
 

@@ -356,6 +356,27 @@
 {/snippet}
 
 {#snippet card()}
+  <NeoBaseInput
+    bind:ref
+    bind:files
+    bind:value
+    bind:valid
+    bind:dirty
+    bind:touched
+    bind:validationMessage
+    type="file"
+    aria-invalid={valid === undefined ? undefined : !valid}
+    aria-describedby={visible ? messageId : undefined}
+    {id}
+    {multiple}
+    {...rest}
+    class={['neo-input-file-picker', rest.class]}
+    hidden
+    aria-hidden
+    tabindex={-1}
+    oninput={mirrorInput}
+    onchange={mirrorChange}
+  />
   <NeoFilePickerCard
     bind:ref={wrapperRef}
     bind:hovered
@@ -394,29 +415,6 @@
     onEdit={onclick}
     addButtonProps={afterProps}
   />
-  <span class="neo-expanded-input">
-    <NeoBaseInput
-      bind:ref
-      bind:files
-      bind:value
-      bind:valid
-      bind:dirty
-      bind:touched
-      bind:validationMessage
-      type="file"
-      aria-invalid={valid === undefined ? undefined : !valid}
-      aria-describedby={visible ? messageId : undefined}
-      {id}
-      {multiple}
-      {...rest}
-      class={['neo-input-file-picker', rest.class]}
-      hidden
-      aria-hidden
-      tabindex={-1}
-      oninput={mirrorInput}
-      onchange={mirrorChange}
-    />
-  </span>
 {/snippet}
 
 <!-- Drag & drop -->
@@ -541,7 +539,7 @@
         width: 100%;
       }
 
-      .neo-expanded-input {
+      :global(> .neo-input.neo-input-file-picker) {
         display: none;
       }
 
