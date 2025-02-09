@@ -133,6 +133,7 @@
     if (rest?.type === 'file') return !!files?.length;
     if (rest?.type === 'checkbox' || rest?.type === 'radio') return checked !== undefined;
     if (typeof value === 'string') return !!value.length;
+    if (rest?.multiple && Array.isArray(value)) return !!value.length;
     return value !== undefined && value !== null;
   });
 

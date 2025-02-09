@@ -371,6 +371,7 @@
     {multiple}
     {...rest}
     class={['neo-input-file-picker', rest.class]}
+    hide
     hidden
     aria-hidden
     tabindex={-1}
@@ -537,10 +538,6 @@
 
       &.neo-expanded {
         width: 100%;
-      }
-
-      :global(> .neo-input.neo-input-file-picker) {
-        display: none;
       }
 
       :global(> .neo-file-picker-card) {

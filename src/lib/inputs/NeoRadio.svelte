@@ -101,6 +101,7 @@
     {disabled}
     {required}
     {...rest}
+    hide
     hidden
     aria-hidden
     tabindex={-1}
@@ -156,10 +157,6 @@
 
       &.neo-flat {
         --neo-label-margin: 0 0 0 0.625rem;
-      }
-
-      :global(> .neo-input.neo-radio-input) {
-        display: none;
       }
     }
 

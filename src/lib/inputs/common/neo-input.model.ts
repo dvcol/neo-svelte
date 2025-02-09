@@ -137,8 +137,18 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement |
    * A snippet to display as the input children.
    */
   children?: Snippet;
+  /**
+   * A snippet to display as the input display value.
+   *
+   * @note: This will hide the input (hidden & display: none) and might impact accessibility or form submission.
+   */
+  display?: Snippet<[NeoInputContext<T>]> | string;
 
   // Styles
+  /**
+   * Will apply a display: none style to the input.
+   */
+  hide?: boolean;
   /**
    * If `true`, the input will have no left padding/border radius.
    */
@@ -226,6 +236,18 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement |
    * @param event
    */
   onclear?: (state: NeoInputState<T>, event?: InputEvent) => unknown;
+
+  // Other props
+  /**
+   * The HTML tag to use for the input display wrapper.
+   *
+   * @default div
+   */
+  displayTag?: keyof HTMLElementTagNameMap;
+  /**
+   * The props to pass to the input display wrapper.
+   */
+  displayProps?: HTMLNeoBaseElement;
 } & HTMLUseProps &
   HTMLRefProps<T> &
   NeoInputState<T> &
@@ -443,7 +465,7 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
    * @default true
    */
   autoResize?: boolean | NeoTextAreaResize;
-} & NeoInputGroupProps<T> &
+} & Omit<NeoInputGroupProps<T>, 'hide' | 'display' | 'displayTag' | 'displayProps'> &
   HTMLTextareaAttributes;
 
 export type NeoInputHTMLElement<T extends HTMLInputElement = HTMLInputElement> = T & Partial<NeoInputMethods<T>>;

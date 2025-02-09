@@ -2,8 +2,9 @@
   import { tick } from 'svelte';
 
   import type { EventHandler, FocusEventHandler, FormEventHandler, HTMLSelectAttributes } from 'svelte/elements';
-
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
+  import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
 
   import { type NeoBaseInputProps, type NeoInputMethods, type NeoInputState, type NeoInputValue } from '~/inputs/common/neo-input.model.js';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
@@ -13,6 +14,7 @@
   let {
     // Snippets
     children,
+    display,
 
     // States
     id,
@@ -47,6 +49,7 @@
     // Styles
     before,
     after,
+    hide,
 
     // Actions
     use,
@@ -62,6 +65,8 @@
     onmark,
 
     // Other props
+    displayProps,
+    displayTag = 'span',
     ...rest
   }: NeoBaseInputProps = $props();
   /* eslint-enable prefer-const */
@@ -209,7 +214,74 @@
   const height = $derived(toSize(_height));
 </script>
 
-{#if rest.type === 'select'}
+{#if display !== undefined}
+  <NeoBaseInput
+    bind:ref
+    bind:files
+    bind:value
+    bind:group
+    bind:checked
+    bind:indeterminate
+    bind:initial
+    bind:touched
+    bind:valid
+    bind:dirty
+    bind:focused
+    bind:validationMessage
+    hidden
+    aria-hidden
+    tabindex={-1}
+    {children}
+    {id}
+    {disabled}
+    {readonly}
+    {nullable}
+    {dirtyOnInput}
+    {dirtyOnBlur}
+    {validateOnInput}
+    {validateOnBlur}
+    {onblur}
+    {onfocus}
+    {oninput}
+    {onchange}
+    {oninvalid}
+    {onclear}
+    {onmark}
+    {...rest}
+    class={['neo-input-display-input', rest.class]}
+    hide
+  />
+  <svelte:element
+    this={displayTag}
+    {id}
+    class:neo-input={true}
+    class:neo-after={after}
+    class:neo-before={before}
+    class:neo-fit-content={fitContent}
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
+    use:useFn={useProps}
+    {...displayProps}
+  >
+    {#if typeof display === 'function'}
+      {@render display(currentState)}
+    {:else}
+      <input
+        aria-hidden="true"
+        tabindex="-1"
+        class="neo-input-display-content"
+        readonly
+        value={display}
+        placeholder={rest?.placeholder}
+        size={rest?.size}
+      />
+    {/if}
+  </svelte:element>
+{:else if rest.type === 'select'}
   <select
     aria-invalid={valid === undefined ? undefined : !valid}
     {id}
@@ -217,6 +289,7 @@
     bind:this={ref as any}
     bind:value
     class:neo-input={true}
+    class:neo-hide={hide}
     class:neo-after={after}
     class:neo-before={before}
     class:neo-fit-content={fitContent}
@@ -249,6 +322,7 @@
     bind:group
     bind:indeterminate
     class:neo-input={true}
+    class:neo-hide={hide}
     class:neo-after={after}
     class:neo-before={before}
     class:neo-fit-content={fitContent}
@@ -282,6 +356,7 @@
     bind:checked
     bind:indeterminate
     class:neo-input={true}
+    class:neo-hide={hide}
     class:neo-after={after}
     class:neo-before={before}
     class:neo-fit-content={fitContent}
@@ -313,6 +388,7 @@
     bind:group
     bind:indeterminate
     class:neo-input={true}
+    class:neo-hide={hide}
     class:neo-after={after}
     class:neo-before={before}
     class:neo-fit-content={fitContent}
@@ -344,6 +420,7 @@
     bind:group
     bind:indeterminate
     class:neo-input={true}
+    class:neo-hide={hide}
     class:neo-after={after}
     class:neo-before={before}
     class:neo-fit-content={fitContent}
@@ -367,7 +444,34 @@
 {/if}
 
 <style lang="scss">
+  %input {
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    appearance: none;
+
+    &::placeholder {
+      color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
+      transition: opacity 0.3s ease;
+    }
+
+    &:read-only {
+      cursor: inherit;
+    }
+
+    &:disabled {
+      color: var(--neo-text-color-disabled);
+      cursor: not-allowed;
+    }
+  }
+
   .neo-input {
+    @extend %input;
+
     display: inline-flex;
     flex: 1 1 auto;
     align-self: center;
@@ -377,14 +481,7 @@
     max-width: 100%;
     min-height: var(--neo-input-min-height, fit-content);
     padding: var(--neo-input-padding, 0.75rem);
-    color: inherit;
-    font: inherit;
-    text-decoration: none;
-    text-overflow: ellipsis;
-    background-color: transparent;
-    border: none;
     border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
-    outline: none;
     transition:
       color 0.3s ease,
       margin 0.3s ease,
@@ -394,7 +491,17 @@
       border-color 0.3s ease,
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
-    appearance: none;
+
+    &-display-content {
+      @extend %input;
+
+      margin: 0;
+      padding: 0;
+    }
+
+    &.neo-hide {
+      display: none;
+    }
 
     &.neo-fit-content {
       field-sizing: content;
@@ -410,20 +517,6 @@
       padding-right: 0;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
-    }
-
-    &::placeholder {
-      color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
-      transition: opacity 0.3s ease;
-    }
-
-    &:read-only {
-      cursor: inherit;
-    }
-
-    &:disabled {
-      color: var(--neo-text-color-disabled);
-      cursor: not-allowed;
     }
 
     &[type='password']:not(:placeholder-shown) {
