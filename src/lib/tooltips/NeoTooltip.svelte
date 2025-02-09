@@ -324,6 +324,14 @@
 
     &.neo-filled {
       background-color: var(--neo-tooltip-bg-color, var(--neo-background-color));
+
+      &:not(.neo-tinted) {
+        border-color: var(
+          --neo-tooltip-border-color,
+          var(--neo-floating-top-border-color) var(--neo-floating-right-border-color) var(--neo-floating-bottom-border-color)
+            var(--neo-floating-left-border-color)
+        );
+      }
     }
 
     &.neo-rounded {
