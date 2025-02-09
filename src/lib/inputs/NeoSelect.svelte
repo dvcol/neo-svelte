@@ -1,7 +1,9 @@
 <script lang="ts">
   import { watch } from '@dvcol/svelte-utils';
 
-  import type { FormEventHandler } from 'svelte/elements';
+  import { tick } from 'svelte';
+
+  import type { FormEventHandler, KeyboardEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import type { NeoTooltipElevation } from '~/tooltips/neo-tooltip.model.js';
@@ -11,6 +13,7 @@
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
+  import { getNextFocusableElement } from '~/utils/html-element.utils.js';
   import { coerce, computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -117,14 +120,24 @@
     e.preventDefault();
   };
 
-  const onkeydown: FormEventHandler<HTMLElement> = () => {
-    // Todo toggle enter or focus next on arrow down
-    // e.stopPropagation();
-    // e.preventDefault();
+  const selectItem = async () => {
+    await tick();
+    getNextFocusableElement(listRef)?.focus();
   };
 
-  // TODO - arrow down to list
-  // TODO - display input ??? -> custom snippet & pill inside NeoInput NeoTextArea
+  const onkeydown: KeyboardEventHandler<HTMLElement> = e => {
+    if (rest?.disabled || readonly) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      return toggle(e);
+    }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!open) open = true;
+      e.preventDefault();
+      e.stopPropagation();
+      selectItem();
+    }
+  };
+
   // TODO - rework focus highlights
   // TODO - button rework css top match elevation / pressed (in place of hover)
 </script>
@@ -149,13 +162,13 @@
   bind:dirty
   bind:valid
   bind:touched
-  bind:hovered
-  bind:focused={() => {
-    return focused || open;
+  bind:hovered={() => {
+    return hovered || open;
   }, // eslint-disable-line no-sequences
   _state => {
-    focused = _state;
+    hovered = _state;
   }}
+  bind:focused
   bind:focusin
   bind:value
   display={(display ?? customDisplay) ? (customDisplay ?? display?.(value)) : undefined}
