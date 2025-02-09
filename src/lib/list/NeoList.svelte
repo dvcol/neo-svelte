@@ -444,8 +444,8 @@
       }
 
       &.neo-dim {
-        &:has(> .neo-list-item:hover) > .neo-list-item:not(:hover, :focus-within, .neo-checked),
-        &:has(> .neo-list-item:focus-within) > .neo-list-item:not(:hover, :focus-within, .neo-checked) {
+        &:has(> .neo-list-item:hover) > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
+        &:has(> .neo-list-item :global(*:focus-visible)) > .neo-list-item:not(:hover, .neo-checked, :has(:global(*:focus-visible))) {
           opacity: 0.6;
         }
       }
