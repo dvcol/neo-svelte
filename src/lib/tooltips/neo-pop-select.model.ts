@@ -82,6 +82,24 @@ export type NeoPopSelectProps<Value = unknown> = {
    */
   height?: NeoTooltipProps['height'];
   /**
+   * Text color to use for the tooltip.
+   */
+  color?: NeoTooltipProps['color'];
+  /**
+   * Fills the tooltip background.
+   */
+  filled?: NeoTooltipProps['filled'];
+  /**
+   * Tints the tooltip with the current color.
+   */
+  tinted?: NeoTooltipProps['tinted'];
+  /**
+   * The shadow elevation of the tooltip.
+   *
+   * @default 2
+   */
+  elevation?: NeoTooltipProps['elevation'];
+  /**
    * Optional props to pass to the tooltip.
    */
   tooltipProps?: Omit<NeoTooltipProps, 'ref' | 'triggerRef' | 'open' | 'children'>;

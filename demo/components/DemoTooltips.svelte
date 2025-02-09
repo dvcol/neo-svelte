@@ -27,6 +27,7 @@
 
   const options = $state<NeoTooltipProps>({
     color: '',
+    filled: false,
     tinted: false,
     rounded: true,
     elevation: DefaultShadowShallowElevation,
@@ -106,6 +107,7 @@
 <div class="row">
   <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.openOnHover}>Hover</NeoButton>
     <NeoButton toggle bind:checked={options.openOnFocus}>Focus</NeoButton>

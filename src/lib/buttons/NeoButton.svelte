@@ -389,23 +389,11 @@
       );
       backdrop-filter: var(--neo-btn-backdrop-filter, var(--neo-blur-2) var(--neo-saturate-3));
 
-      &:focus-visible,
-      &:hover {
-        backdrop-filter: var(--neo-btn-backdrop-filter-hover, var(--neo-blur-1) var(--neo-saturate-2));
-      }
-
       &.neo-pressed,
       &:active:not(.neo-loading) {
-        backdrop-filter: var(--neo-btn-backdrop-filter-active, var(--neo-blur-0) var(--neo-saturate-2));
-
         &.neo-inset {
           border-color: transparent;
         }
-      }
-
-      &:disabled,
-      &[disabled]:not([disabled='false']) {
-        backdrop-filter: var(--neo-btn-backdrop-filter-disabled, var(--neo-blur-1));
       }
 
       &.neo-flat:not(.neo-pressed, :active:not(.neo-loading)) {

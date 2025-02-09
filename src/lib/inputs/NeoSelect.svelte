@@ -3,12 +3,14 @@
 
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
+  import type { NeoTooltipElevation } from '~/tooltips/neo-tooltip.model.js';
+
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
-  import { coerce, computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -34,6 +36,8 @@
     rounded,
     readonly,
     clearable,
+    color,
+    tinted,
 
     // Pop Select Props
     listRef = $bindable(),
@@ -95,10 +99,18 @@
     },
   );
 
+  const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(rest?.pressed)));
+  const tooltipElevation = $derived((rest?.pressed ? Math.abs(elevation + hover) : elevation + hover) as NeoTooltipElevation);
+
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
   const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);
   const onClear = () => {
     selected = multiple ? [] : undefined;
+  };
+
+  const toggle = () => {
+    if (rest?.disabled || readonly) return;
+    open = !open;
   };
 
   // TODO - display input ??? -> custom snippet & pill inside NeoInput NeoTextArea
@@ -127,12 +139,21 @@
   bind:valid
   bind:touched
   bind:hovered
-  bind:focused
+  bind:focused={() => {
+    return focused || open;
+  }, // eslint-disable-line no-sequences
+  _state => {
+    focused = _state;
+  }}
   bind:focusin
   {value}
   {rounded}
   {floating}
   {clearable}
+  {elevation}
+  {hover}
+  {color}
+  {tinted}
   {after}
   {children}
   {...rest}
@@ -140,6 +161,7 @@
   affixProps={{
     close,
     readonly,
+    onclick: toggle,
     ...affixProps,
     closeProps: { onclick: onClear, ...affixProps?.closeProps },
   }}
@@ -162,6 +184,10 @@
   {search}
   {width}
   {height}
+  {color}
+  {tinted}
+  filled={!rest?.glass}
+  elevation={tooltipElevation}
   {...listProps}
   tooltipProps={{ openOnHover: false, ...listProps?.tooltipProps }}
 />

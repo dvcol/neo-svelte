@@ -44,6 +44,7 @@
 
     // Styles
     color,
+    filled,
     tinted,
     padding,
     rounded,
@@ -273,6 +274,7 @@
     class:neo-tooltip={true}
     class:neo-rounded={rounded}
     class:neo-tinted={tinted}
+    class:neo-filled={filled}
     style:--neo-tooltip-text-color={getColorVariable(color)}
     style:--neo-tooltip-box-shadow={tooltipShadow}
     style:--neo-tooltip-backdrop-filter={tooltipBlur}
@@ -318,6 +320,10 @@
 
     &.neo-tinted {
       background-color: var(--neo-tooltip-bg-color, var(--neo-glass-background-color-tinted));
+    }
+
+    &.neo-filled {
+      background-color: var(--neo-tooltip-bg-color, var(--neo-background-color));
     }
 
     &.neo-rounded {

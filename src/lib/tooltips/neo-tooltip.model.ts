@@ -81,6 +81,10 @@ export type NeoTooltipProps = {
    */
   tinted?: boolean;
   /**
+   * Fills the tooltip background.
+   */
+  filled?: boolean;
+  /**
    * Text color to use for the tooltip.
    */
   color?: Color;

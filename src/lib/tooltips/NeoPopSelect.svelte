@@ -35,6 +35,10 @@
     triggerRef = $bindable(),
     open = $bindable(false),
     target,
+    color,
+    filled,
+    tinted,
+    elevation,
 
     // Other Props
     tooltipProps,
@@ -91,6 +95,10 @@
   {rounded}
   {width}
   {height}
+  {color}
+  {filled}
+  {tinted}
+  {elevation}
   {...tooltipProps}
 >
   {#snippet children(floating: UseFloatingReturn)}

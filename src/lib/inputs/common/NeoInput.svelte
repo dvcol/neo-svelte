@@ -275,6 +275,7 @@
       {readonly}
       {skeleton}
       valid={showAffixValidation ? valid : undefined}
+      onclick={onFocus}
       {...affixProps}
       class={[
         after ? 'neo-after' : undefined,
@@ -283,7 +284,6 @@
         affixProps?.class,
       ]}
       closeProps={{ onclick: onClear, ...affixProps?.closeProps }}
-      onclick={onFocus}
     />
   {/if}
   <!--  Suffix  -->

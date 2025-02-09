@@ -381,9 +381,9 @@
       {readonly}
       {skeleton}
       valid={showAffixValidation ? valid : undefined}
+      onclick={() => focus()}
       {...affixProps}
       closeProps={{ onclick: () => clear(), ...affixProps?.closeProps }}
-      onclick={() => focus()}
     />
   {/if}
 
