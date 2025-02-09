@@ -17,6 +17,7 @@
   let {
     // Snippets
     children,
+    content: customDisplay,
     icon: customIcon,
 
     // State
@@ -110,8 +111,16 @@
 
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
   const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);
-  const onClear = () => {
+  const onClear: FormEventHandler<HTMLElement> = e => {
     selected = multiple ? [] : undefined;
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  const onkeydown: FormEventHandler<HTMLElement> = () => {
+    // Todo toggle enter or focus next on arrow down
+    // e.stopPropagation();
+    // e.preventDefault();
   };
 
   // TODO - arrow down to list
@@ -149,7 +158,7 @@
   }}
   bind:focusin
   bind:value
-  display={display ? display(value) : undefined}
+  display={(display ?? customDisplay) ? (customDisplay ?? display?.(value)) : undefined}
   {rounded}
   {floating}
   {clearable}
@@ -163,6 +172,8 @@
   {...rest}
   readonly
   hidden
+  tabindex={-1}
+  aria-hidden
   affixProps={{
     close,
     readonly,
@@ -173,6 +184,7 @@
     role: 'select',
     tabindex: 0,
     onclick: toggle,
+    onkeydown,
     ...rest.containerProps,
   }}
 />
@@ -199,5 +211,5 @@
   filled={!rest?.glass}
   elevation={tooltipElevation}
   {...listProps}
-  tooltipProps={{ openOnHover: false, ...listProps?.tooltipProps }}
+  tooltipProps={{ openOnHover: false, openOnFocus: false, ...listProps?.tooltipProps }}
 />

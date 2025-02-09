@@ -163,12 +163,12 @@
   };
 
   const onFocus = () => {
-    if (focused || disabled || readonly) return;
+    if (focused || disabled || readonly || rest?.hidden) return;
     ref?.focus();
   };
 
   const onLabelClick = () => {
-    if (disabled || readonly || rest.type !== 'select') return;
+    if (disabled || readonly || rest?.hidden || rest.type !== 'select') return;
     ref?.showPicker?.();
   };
 

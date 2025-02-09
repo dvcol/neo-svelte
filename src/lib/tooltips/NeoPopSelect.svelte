@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { watch } from '@dvcol/svelte-utils';
+
   import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
   import type { NeoListContext, NeoListItemOrSection } from '~/list/neo-list.model.js';
   import type { NeoPopSelectProps } from '~/tooltips/neo-pop-select.model.js';
@@ -48,6 +50,13 @@
   /* eslint-enable prefer-const */
 
   const items = $derived<NeoListItemOrSection[]>(array?.map(i => (typeof i === 'object' ? i : { value: i })));
+
+  watch(
+    () => {
+      tooltipRef?.update?.();
+    },
+    () => [items, selected],
+  );
 </script>
 
 {#snippet beforeList(context: NeoListContext)}

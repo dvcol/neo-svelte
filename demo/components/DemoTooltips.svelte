@@ -218,15 +218,16 @@
   {/snippet}
 
   <div class="column content">
-    <span class="label">PopSelect</span>
+    <span class="label">Click pop select</span>
     <NeoPopSelect
       search
       bind:open
       bind:selected={complexSelected}
       items={complexItems}
       rounded={options.rounded}
-      height={'28rem'}
-      tooltipProps={options}
+      height="28rem"
+      width="min"
+      tooltipProps={{ ...options, openOnFocus: false, openOnHover: false }}
     >
       <NeoButton flat ghost shallow rounded={options.rounded} bind:checked={open} toggle>
         <NeoTransitionContainer overflow="hidden" style="min-width: 252px; margin: 0.5rem">

@@ -1,9 +1,12 @@
 <script lang="ts">
+  import { flip } from 'svelte/animate';
+  import { fade } from 'svelte/transition';
+
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import { colorOptions } from '../utils/color.utils';
 
-  import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
+  import type { NeoInputProps, NeoInputState } from '~/inputs/common/neo-input.model.js';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { NeoRangeHTMLElement } from '~/inputs/neo-range.model.js';
@@ -33,6 +36,7 @@
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { displayValue } from '~/inputs/neo-select.model.js';
+  import NeoPill from '~/pill/NeoPill.svelte';
   import {
     DefaultShadowElevation,
     DefaultShadowHoverElevation,
@@ -41,6 +45,7 @@
     MaxShadowElevation,
     MinShadowElevation,
   } from '~/utils/shadow.utils.js';
+  import { quickCircOutProps, quickDurationProps } from '~/utils/transition.utils';
 
   type ColumProps<T = NeoInputProps> = {
     label: string;
@@ -718,6 +723,31 @@
         required
         label="Custom Select"
         placeholder="Select multiple"
+        options={items}
+        multiple
+        bind:ref={selectCustomMultipleState.ref}
+        bind:touched={selectCustomMultipleState.touched}
+        bind:dirty={selectCustomMultipleState.dirty}
+        bind:valid={selectCustomMultipleState.valid}
+        bind:value={selectCustomMultipleState.value}
+        {...options}
+        size={undefined}
+      />
+    </SphereBackdrop>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column">
+    <span class="label">Custom display text</span>
+
+    {@render validationState(selectCustomMultipleState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoSelect
+        validation
+        required
+        label="Custom Select"
+        placeholder="Select multiple"
         display={displayValue}
         options={items}
         multiple
@@ -729,6 +759,39 @@
         {...options}
         size={undefined}
       />
+    </SphereBackdrop>
+  </div>
+
+  <div class="column">
+    <span class="label">Custom display snippet</span>
+
+    {@render validationState(selectCustomMultipleState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoSelect
+        required
+        label="Custom Select"
+        placeholder="Select multiple"
+        display={displayValue}
+        options={items}
+        multiple
+        bind:ref={selectCustomMultipleState.ref}
+        bind:touched={selectCustomMultipleState.touched}
+        bind:dirty={selectCustomMultipleState.dirty}
+        bind:valid={selectCustomMultipleState.valid}
+        bind:value={selectCustomMultipleState.value}
+        {...options}
+        size={undefined}
+      >
+        {#snippet content({ value }: NeoInputState)}
+          <div style="display: inline-flex; gap: 0.25rem; margin-left: -0.125rem;">
+            {#each value as item (item)}
+              <span in:fade out:fade={quickDurationProps} animate:flip={quickCircOutProps}>
+                <NeoPill tinted small elevation="0">{item}</NeoPill>
+              </span>
+            {/each}
+          </div>
+        {/snippet}
+      </NeoSelect>
     </SphereBackdrop>
   </div>
 </div>

@@ -142,7 +142,7 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement |
    *
    * @note: This will hide the input (hidden & display: none) and might impact accessibility or form submission.
    */
-  display?: Snippet<[NeoInputContext<T>]> | string;
+  display?: Snippet<[NeoInputState<T>]> | string;
 
   // Styles
   /**

@@ -37,6 +37,10 @@ export type NeoSelectProps<Value = unknown> = {
    * Custom icon for the picker.
    */
   icon?: NeoButtonProps['icon'];
+  /**
+   * Custom content to display in the input.
+   */
+  content?: NeoInputProps['display'];
 
   // States
   /**
