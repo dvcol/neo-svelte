@@ -221,6 +221,11 @@
   scrollbar-gutter: $gutter;
   overflow: $overflow;
 
+  @document url-prefix() {
+    scrollbar-width: thin;
+    scrollbar-color: $thumb-color;
+  }
+
   @if $transition {
     transition:
       $transition,
@@ -365,6 +370,10 @@
     backdrop-filter 0.3s ease,
     border-radius 0.3s ease,
     padding 0.3s ease;
+
+  :global(> :only-child) {
+    clip-path: inset(0 round var($border-radius, var(--neo-border-radius)));
+  }
 }
 
 @mixin ellipsis($line: var(--neo-ellipsis-lines, 1), $word-break: break-word) {
