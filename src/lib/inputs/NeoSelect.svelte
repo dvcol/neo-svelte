@@ -1,6 +1,7 @@
 <script lang="ts">
   import { watch } from '@dvcol/svelte-utils';
 
+  import type { FormEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import type { NeoTooltipElevation } from '~/tooltips/neo-tooltip.model.js';
@@ -20,6 +21,7 @@
 
     // State
     options: items = [],
+    display,
     transform = transformValue,
 
     // Input Props
@@ -65,6 +67,13 @@
   }: NeoSelectProps = $props();
   /* eslint-enable prefer-const */
 
+  const toggle: FormEventHandler<HTMLElement> = e => {
+    if (rest?.disabled || readonly) return;
+    open = !open;
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
   const text = $derived(elevation >= 0 || !rest.pressed);
   const style = $derived(computeButtonShadows(elevation, text));
@@ -78,15 +87,12 @@
     rounded,
     text,
     style,
-    onclick: () => {
-      open = !open;
-    },
+    onclick: toggle,
     ...buttonProps,
     class: ['neo-select-toggle', buttonProps?.class],
   });
 
   const space = $derived(open ? 8 : 6);
-
   watch(
     () => {
       value = transform(selected);
@@ -108,11 +114,7 @@
     selected = multiple ? [] : undefined;
   };
 
-  const toggle = () => {
-    if (rest?.disabled || readonly) return;
-    open = !open;
-  };
-
+  // TODO - arrow down to list
   // TODO - display input ??? -> custom snippet & pill inside NeoInput NeoTextArea
   // TODO - rework focus highlights
   // TODO - button rework css top match elevation / pressed (in place of hover)
@@ -146,7 +148,8 @@
     focused = _state;
   }}
   bind:focusin
-  {value}
+  bind:value
+  display={display ? display(value) : undefined}
   {rounded}
   {floating}
   {clearable}
@@ -156,14 +159,21 @@
   {tinted}
   {after}
   {children}
+  {multiple}
   {...rest}
   readonly
+  hidden
   affixProps={{
     close,
     readonly,
-    onclick: toggle,
     ...affixProps,
     closeProps: { onclick: onClear, ...affixProps?.closeProps },
+  }}
+  containerProps={{
+    role: 'select',
+    tabindex: 0,
+    onclick: toggle,
+    ...rest.containerProps,
   }}
 />
 

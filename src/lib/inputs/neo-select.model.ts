@@ -47,7 +47,12 @@ export type NeoSelectProps<Value = unknown> = {
    * Transform the selected item(s) into a displayable string.
    * @param selection
    */
-  transform?: (selection?: NeoListSelectedItem | NeoListSelectedItem[]) => string | string[];
+  display?: (selection?: Value | Value[]) => NeoInputProps['display'];
+  /**
+   * Extract the selected item(s) value.
+   * @param selection
+   */
+  transform?: (selection?: NeoListSelectedItem<Value> | NeoListSelectedItem<Value>[]) => undefined | Value | Value[];
 
   // ListProps
   /**
@@ -103,10 +108,17 @@ export type NeoSelectProps<Value = unknown> = {
   buttonProps?: NeoButtonProps;
 } & NeoInputProps;
 
-export const transformValue = (selection?: NeoListSelectedItem | NeoListSelectedItem[]): string => {
+export const displayValue = <Value = unknown>(selection?: Value | Value[]): undefined | string => {
   if (Array.isArray(selection)) {
     if (selection?.length > 2) return `${selection?.length} items selected`;
-    return selection?.map?.(s => s?.item?.value).join(', ') ?? '';
+    return selection?.join(', ');
   }
-  return selection?.item?.value?.toString() ?? '';
+  return selection?.toString();
+};
+
+export const transformValue = <Value = unknown>(
+  selection?: NeoListSelectedItem<Value> | NeoListSelectedItem<Value>[],
+): undefined | Value | Value[] => {
+  if (Array.isArray(selection)) return selection?.map?.(s => s?.item?.value) ?? [];
+  return selection?.item?.value;
 };

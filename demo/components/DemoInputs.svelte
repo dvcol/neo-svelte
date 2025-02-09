@@ -9,6 +9,7 @@
   import type { NeoRangeHTMLElement } from '~/inputs/neo-range.model.js';
 
   import type { NeoNativeSelectOption } from '~/inputs/neo-select.model.js';
+
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -31,6 +32,7 @@
   import NeoSwitch from '~/inputs/NeoSwitch.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import { displayValue } from '~/inputs/neo-select.model.js';
   import {
     DefaultShadowElevation,
     DefaultShadowHoverElevation,
@@ -715,6 +717,8 @@
         validation
         required
         label="Custom Select"
+        placeholder="Select multiple"
+        display={displayValue}
         options={items}
         multiple
         bind:ref={selectCustomMultipleState.ref}
