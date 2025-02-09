@@ -80,7 +80,7 @@
    ******************/
 
   // Border
-  --neo-glass-border-color: color-mix(in srgb, oklch(from var(--neo-white) l c h / 60%), currentcolor 10%);
+  --neo-glass-border-color: color-mix(in srgb, oklch(from var(--neo-white) l c h / 80%), currentcolor 10%);
   --neo-glass-border-color-flat: color-mix(in srgb, oklch(from var(--neo-grey) l c h / 5%), currentcolor 5%);
 
   // Background

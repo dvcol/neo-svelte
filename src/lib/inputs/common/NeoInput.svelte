@@ -152,7 +152,7 @@
   const showAffixValidation = $derived(validation && validationIcon);
   const showInputValidation = $derived(validation === true || (validation === 'success' && valid) || (validation === 'error' && !valid));
   const affix = $derived(clearable || loading !== undefined || showAffixValidation);
-  const close = $derived(clearable && (focusin || focused || hovered) && hasValue && !disabled && !readonly);
+  const close = $derived(clearable && (focusin || focused || hovered) && hasValue);
   const isFloating = $derived(floating && !hasValue && (!focused || disabled || readonly));
   const inside = $derived(position === NeoInputLabelPosition.Inside && label);
 
@@ -272,6 +272,7 @@
       {loading}
       {close}
       {disabled}
+      {readonly}
       {skeleton}
       valid={showAffixValidation ? valid : undefined}
       {...affixProps}

@@ -375,3 +375,6 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
 } & HTMLRefProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   NeoListState<Selected>;
+
+export type NeoListHTMLElement<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
+  NeoListMethods<Value>;

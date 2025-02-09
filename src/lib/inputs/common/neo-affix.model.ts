@@ -44,6 +44,10 @@ export type NeoAffixProps<Tag extends keyof HTMLElementTagNameMap = 'span'> = {
    */
   disabled?: boolean;
   /**
+   * Disable close button
+   */
+  readonly?: boolean;
+  /**
    * The size of the inner svg
    */
   size?: string;

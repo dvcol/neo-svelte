@@ -33,6 +33,7 @@
     floating,
     rounded,
     readonly,
+    clearable,
 
     // Pop Select Props
     listRef = $bindable(),
@@ -55,6 +56,7 @@
     labelRef = $bindable(),
     listProps,
     buttonProps,
+    affixProps,
     ...rest
   }: NeoSelectProps = $props();
   /* eslint-enable prefer-const */
@@ -93,10 +95,15 @@
     },
   );
 
+  const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
+  const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);
+  const onClear = () => {
+    selected = multiple ? [] : undefined;
+  };
+
   // TODO - display input ??? -> custom snippet & pill inside NeoInput NeoTextArea
   // TODO - rework focus highlights
-  // TODO - button tint
-  // make clearable work
+  // TODO - button rework css top match elevation / pressed (in place of hover)
 </script>
 
 {#snippet after()}
@@ -125,10 +132,17 @@
   {value}
   {rounded}
   {floating}
+  {clearable}
   {after}
   {children}
   {...rest}
   readonly
+  affixProps={{
+    close,
+    readonly,
+    ...affixProps,
+    closeProps: { onclick: onClear, ...affixProps?.closeProps },
+  }}
 />
 
 <NeoPopSelect

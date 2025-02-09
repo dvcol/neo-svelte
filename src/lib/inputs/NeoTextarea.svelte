@@ -152,7 +152,7 @@
   const showInputValidation = $derived(validation === true || (validation === 'success' && valid) || (validation === 'error' && !valid));
   const affix = $derived(clearable || loading !== undefined || showAffixValidation);
   const hasValue = $derived(value !== undefined && (typeof value === 'string' ? !!value.length : value !== null));
-  const close = $derived(clearable && (focusin || focused || hovered) && hasValue && !disabled && !readonly);
+  const close = $derived(clearable && (focusin || focused || hovered) && hasValue);
   const isFloating = $derived(floating && !hasValue && (!focused || disabled || readonly));
 
   const validate: NeoInputMethods<HTMLTextAreaElement>['validate'] = (
@@ -378,6 +378,7 @@
       {loading}
       {close}
       {disabled}
+      {readonly}
       {skeleton}
       valid={showAffixValidation ? valid : undefined}
       {...affixProps}

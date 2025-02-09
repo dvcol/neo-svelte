@@ -92,6 +92,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] popselect
   - [ ] menu
   - [ ] nested menus
+  - [ ] menu pane (multi column)
   
 - [x] list
   - [x] select

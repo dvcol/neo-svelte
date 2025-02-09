@@ -26,6 +26,7 @@
     valid,
     skeleton = false,
     disabled,
+    readonly,
 
     // Styles
     size,
@@ -41,7 +42,7 @@
   }: NeoAffixProps = $props();
   /* eslint-enable prefer-const */
 
-  const clear = $derived.by(debounced(() => close && !disabled, 100));
+  const clear = $derived.by(debounced(() => close && !disabled && !readonly, 100));
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
