@@ -81,7 +81,7 @@
   }: NeoTooltipProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: triggerTag = 'span', ...triggerRest } = triggerProps ?? {};
+  const { tag: triggerTag = 'span', ...triggerRest } = $derived(triggerProps ?? {});
 
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
   const blur = $derived(coerce(rest?.blur ?? elevation));

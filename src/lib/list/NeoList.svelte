@@ -84,7 +84,7 @@
   }: NeoListProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
+  const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));

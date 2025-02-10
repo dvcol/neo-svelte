@@ -86,11 +86,11 @@
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: contentTag = 'div', ...contentRest } = contentProps ?? {};
-  const { tag: headerTag = 'div', ...headerRest } = headerProps ?? {};
-  const { tag: footerTag = 'div', ...footerRest } = footerProps ?? {};
-  const { tag: actionTag = 'div', ...actionRest } = actionProps ?? {};
-  const { tag: mediaTag = 'div', ...mediaRest } = mediaProps ?? {};
+  const { tag: contentTag = 'div', ...contentRest } = $derived(contentProps ?? {});
+  const { tag: headerTag = 'div', ...headerRest } = $derived(headerProps ?? {});
+  const { tag: footerTag = 'div', ...footerRest } = $derived(footerProps ?? {});
+  const { tag: actionTag = 'div', ...actionRest } = $derived(actionProps ?? {});
+  const { tag: mediaTag = 'div', ...mediaRest } = $derived(mediaProps ?? {});
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(rest?.hover ?? 0));

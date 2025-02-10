@@ -118,8 +118,8 @@
   }: NeoTextareaProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: afterTag = afterProps?.onclick ? 'button' : 'span', ...afterRest } = afterProps ?? {};
-  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
+  const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
+  const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   let initial = $state(value);
   let validationMessage: string | undefined = $state(ref?.validationMessage);

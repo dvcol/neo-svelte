@@ -51,8 +51,8 @@
   };
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
-  const text = $derived(elevation >= 0 || !rest.pressed);
-  const style = $derived(computeButtonShadows(elevation, text));
+  const template = $derived(computeButtonStyle(elevation, rest?.pressed));
+  const style = $derived(computeButtonShadows(elevation, template));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle picker',
     title: 'Toggle picker',

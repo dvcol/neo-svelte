@@ -19,7 +19,7 @@
   }: NeoBadgeProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
+  const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const offset = $derived.by<{ x?: string; y?: string }>(() => {
     if (typeof _offset === 'string') {

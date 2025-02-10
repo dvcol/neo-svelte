@@ -31,7 +31,7 @@
   }: NeoValidationProps<T, V> = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: messageTag = 'div', ...messageRest } = messageProps ?? {};
+  const { tag: messageTag = 'div', ...messageRest } = $derived(messageProps ?? {});
 
   const innerContext = $derived<NeoValidationContext<T, V>>({
     messageId,

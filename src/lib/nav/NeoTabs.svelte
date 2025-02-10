@@ -50,7 +50,7 @@
   }: NeoTabsProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
+  const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
   const slideElevation = $derived(coerce(rest?.slideElevation ?? getDefaultSlideElevation(elevation)));

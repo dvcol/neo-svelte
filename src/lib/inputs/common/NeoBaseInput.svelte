@@ -70,7 +70,7 @@
   }: NeoBaseInputProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: displayTag = 'span', ...displayRest } = displayProps ?? {};
+  const { tag: displayTag = 'span', ...displayRest } = $derived(displayProps ?? {});
 
   const getValue = () => {
     if (rest.type === 'file') return files;

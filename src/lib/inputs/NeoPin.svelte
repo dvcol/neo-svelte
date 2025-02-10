@@ -84,9 +84,9 @@
   }: NeoPinProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: afterTag = afterProps?.onclick ? 'button' : 'span', ...afterRest } = afterProps ?? {};
-  const { tag: beforeTag = beforeProps?.onclick ? 'button' : 'span', ...beforeRest } = beforeProps ?? {};
-  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
+  const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
+  const { tag: beforeTag = 'span', ...beforeRest } = $derived(beforeProps ?? {});
+  const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const labelId = $derived(label ? `neo-pin-label-${getUUID()}` : undefined);
 

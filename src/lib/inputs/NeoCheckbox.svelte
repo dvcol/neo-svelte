@@ -63,7 +63,8 @@
     ...rest
   }: NeoCheckboxProps = $props();
   /* eslint-enable prefer-const */
-  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
+
+  const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const labelId = $derived(label ? `neo-checkbox-label-${getUUID()}` : undefined);
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
