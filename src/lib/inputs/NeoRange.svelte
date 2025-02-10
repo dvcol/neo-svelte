@@ -64,18 +64,17 @@
     // Other props
     labelRef = $bindable(),
     labelProps,
-    messageTag = 'div',
     messageProps,
-    containerTag = 'div',
     containerProps,
     wrapperRef = $bindable(),
-    wrapperTag = 'div',
     wrapperProps,
     floatingProps,
     floatingOptions,
     ...rest
   }: NeoRangeProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
 
@@ -117,22 +116,22 @@
 
   const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    containerProps?.onpointerenter?.(e);
+    containerRest?.onpointerenter?.(e);
   };
 
   const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    containerProps?.onpointerleave?.(e);
+    containerRest?.onpointerleave?.(e);
   };
 
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     focused = true;
-    containerProps?.onfocusin?.(e);
+    containerRest?.onfocusin?.(e);
   };
 
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     focused = false;
-    containerProps?.onfocusout?.(e);
+    containerRest?.onfocusout?.(e);
   };
 
   const setValue = (v: number, index = 0) => {
@@ -344,14 +343,12 @@
 </script>
 
 <NeoInputValidation
-  tag={wrapperTag}
   bind:ref={wrapperRef}
   {valid}
   {validation}
   {error}
   {context}
   {message}
-  {messageTag}
   {messageProps}
   {rounded}
   in={inAction}
@@ -369,7 +366,7 @@
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
-    {...containerProps}
+    {...containerRest}
     onpointerenter={onPointerEnter}
     onpointerleave={onPointerLeave}
     onfocusin={onFocusIn}

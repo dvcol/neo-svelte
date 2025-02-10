@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLLabelAttributes } from 'svelte/elements';
 import type { HTMLUseProps } from '~/utils/action.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export type NeoLabelProps = {
   // Snippets
@@ -35,14 +35,9 @@ export type NeoLabelProps = {
    */
   containerRef?: HTMLRefProps['ref'];
   /**
-   * The HTML tag to use for the container.
-   * @default div
-   */
-  containerTag?: keyof HTMLElementTagNameMap;
-  /**
    * The props to pass to the label container.
    */
-  containerProps?: HTMLNeoBaseElement;
+  containerProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & HTMLRefProps<HTMLLabelElement> &
   HTMLLabelAttributes &
   HTMLUseProps;

@@ -107,20 +107,19 @@
     labelProps,
     afterRef = $bindable(),
     afterProps,
-    afterTag = afterProps?.onclick ? 'button' : 'span',
     affixRef = $bindable(),
     affixProps,
     containerRef = $bindable(),
     containerProps,
-    containerTag = 'div',
     wrapperRef = $bindable(),
     wrapperProps,
-    wrapperTag = 'div',
     messageProps,
-    messageTag = 'div',
     ...rest
   }: NeoTextareaProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: afterTag = afterProps?.onclick ? 'button' : 'span', ...afterRest } = afterProps ?? {};
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   let initial = $state(value);
   let validationMessage: string | undefined = $state(ref?.validationMessage);
@@ -139,12 +138,12 @@
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
     focusin = true;
-    containerProps?.onfocusin?.(e);
+    containerRest?.onfocusin?.(e);
   };
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     timeout = setTimeout(() => {
       focusin = false;
-      containerProps?.onfocusout?.(e);
+      containerRest?.onfocusout?.(e);
     }, 0);
   };
 
@@ -167,12 +166,12 @@
 
   const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    containerProps?.onpointerenter?.(e);
+    containerRest?.onpointerenter?.(e);
   };
 
   const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    containerProps?.onpointerleave?.(e);
+    containerRest?.onpointerleave?.(e);
   };
 
   const onFocus: FocusEventHandler<HTMLTextAreaElement> = e => {
@@ -390,7 +389,7 @@
 
   <!--  Suffix  -->
   {#if after}
-    <svelte:element this={afterTag} bind:this={afterRef} class:neo-textarea-after={true} {disabled} {readonly} {...afterProps}>
+    <svelte:element this={afterTag} bind:this={afterRef} class:neo-textarea-after={true} {disabled} {readonly} {...afterRest}>
       {@render after(context)}
     </svelte:element>
   {/if}
@@ -472,7 +471,7 @@
     style:--neo-textarea-label-width={labelWidth}
     out:outFn={outProps}
     in:inFn={inProps}
-    {...containerProps}
+    {...containerRest}
     onpointerenter={onPointerEnter}
     onpointerleave={onPointerLeave}
     onfocusin={onFocusIn}
@@ -509,7 +508,6 @@
 {/snippet}
 
 <NeoInputValidation
-  tag={wrapperTag}
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
@@ -520,7 +518,6 @@
   {rounded}
   {context}
   {message}
-  {messageTag}
   {messageProps}
   in={inAction}
   out={outAction}

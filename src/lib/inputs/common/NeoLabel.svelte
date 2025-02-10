@@ -20,17 +20,18 @@
 
     // Other props
     containerRef = $bindable(),
-    containerTag = 'div',
     containerProps,
     ...rest
   }: NeoLabelProps = $props();
   /* eslint-enable prefer-const */
 
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
+
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 </script>
 
-<svelte:element this={containerTag} bind:this={containerRef} class:neo-label-container={true} {...containerProps}>
+<svelte:element this={containerTag} bind:this={containerRef} class:neo-label-container={true} {...containerRest}>
   <label
     bind:this={ref}
     class:neo-label={true}

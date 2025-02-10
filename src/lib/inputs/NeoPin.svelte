@@ -73,21 +73,20 @@
     labelRef = $bindable(),
     labelProps,
     afterProps,
-    afterTag = 'div',
     beforeProps,
-    beforeTag = 'div',
     containerRef = $bindable(),
     containerProps,
-    containerTag = 'div',
     wrapperRef = $bindable(),
     wrapperProps,
-    wrapperTag,
     messageProps,
-    messageTag,
     groupProps,
     ...rest
   }: NeoPinProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: afterTag = afterProps?.onclick ? 'button' : 'span', ...afterRest } = afterProps ?? {};
+  const { tag: beforeTag = beforeProps?.onclick ? 'button' : 'span', ...beforeRest } = beforeProps ?? {};
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const labelId = $derived(label ? `neo-pin-label-${getUUID()}` : undefined);
 
@@ -274,12 +273,12 @@
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
     focused = true;
-    containerProps?.onfocusin?.(e);
+    containerRest?.onfocusin?.(e);
   };
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     timeout = setTimeout(() => {
       focused = false;
-      containerProps?.onfocusout?.(e);
+      containerRest?.onfocusout?.(e);
 
       if (changed === value) return;
       validate();
@@ -305,11 +304,11 @@
 
   const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    containerProps?.onpointerenter?.(e);
+    containerRest?.onpointerenter?.(e);
   };
   const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    containerProps?.onpointerleave?.(e);
+    containerRest?.onpointerleave?.(e);
   };
 
   const affix = $derived(clearable || loading !== undefined || validation);
@@ -363,14 +362,14 @@
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
-    {...containerProps}
+    {...containerRest}
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
     onpointerenter={onPointerEnter}
     onpointerleave={onPointerLeave}
   >
     {#if before}
-      <svelte:element this={beforeTag} class:neo-pin-before={true} class:neo-vertical={vertical} {...beforeProps}>
+      <svelte:element this={beforeTag} class:neo-pin-before={true} class:neo-vertical={vertical} {...beforeRest}>
         {@render before(context)}
       </svelte:element>
     {/if}
@@ -436,7 +435,7 @@
       {/each}
     </div>
     {#if affix || after}
-      <svelte:element this={afterTag} class:neo-pin-after={true} class:neo-vertical={vertical} {...afterProps}>
+      <svelte:element this={afterTag} class:neo-pin-after={true} class:neo-vertical={vertical} {...afterRest}>
         <!--  Affix (loafing, clear, placeholder) -->
         {#if affix}
           <NeoAffix
@@ -457,7 +456,6 @@
 
 {#snippet validationGroup()}
   <NeoInputValidation
-    tag={wrapperTag}
     bind:ref={wrapperRef}
     bind:visible
     bind:messageId
@@ -468,7 +466,6 @@
     rounded={rest.rounded}
     {context}
     {message}
-    {messageTag}
     {messageProps}
     in={inAction}
     out={outAction}

@@ -75,12 +75,13 @@
 
     // Other props
     triggerRef = $bindable(),
-    triggerTag = 'span',
     triggerProps,
 
     ...rest
   }: NeoTooltipProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: triggerTag = 'span', ...triggerRest } = triggerProps ?? {};
 
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
   const blur = $derived(coerce(rest?.blur ?? elevation));
@@ -261,7 +262,7 @@
     onfocusin={triggerHandler?.onfocus}
     onfocusout={triggerHandler?.onblur}
     {...triggerHandler}
-    {...triggerProps}
+    {...triggerRest}
   >
     {@render children?.(floating)}
   </svelte:element>

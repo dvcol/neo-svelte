@@ -46,11 +46,12 @@
     buttonProps,
     groupProps,
     containerRef = $bindable(),
-    containerTag = 'div',
     containerProps,
     ...rest
   }: NeoNumberStepProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const increment = (e: MouseEvent) => {
     if (!ref || ref?.disabled) return;
@@ -97,12 +98,12 @@
   let timeout: ReturnType<typeof setTimeout>;
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
-    containerProps?.onfocusin?.(e);
+    containerRest?.onfocusin?.(e);
   };
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     timeout = setTimeout(() => {
       ref?.validate?.();
-      containerProps?.onfocusout?.(e);
+      containerRest?.onfocusout?.(e);
     }, 0);
   };
 
@@ -146,7 +147,7 @@
   class:neo-affix={affix}
   out:outFn={outProps}
   in:inFn={inProps}
-  {...containerProps}
+  {...containerRest}
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}
 >

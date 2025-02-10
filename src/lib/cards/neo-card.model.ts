@@ -3,7 +3,7 @@ import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
-import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -136,31 +136,6 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    * @default 'div'
    */
   tag?: Tag | keyof HTMLElementTagNameMap;
-  /**
-   * The HTML tag to use for the card content.
-   * @default 'div'
-   */
-  contentTag?: keyof HTMLElementTagNameMap;
-  /**
-   * The HTML tag to use for the card header.
-   * @default 'div'
-   */
-  headerTag?: keyof HTMLElementTagNameMap;
-  /**
-   * The HTML tag to use for the card action.
-   * @default 'div'
-   */
-  actionTag?: keyof HTMLElementTagNameMap;
-  /**
-   * The HTML tag to use for the card footer.
-   * @default 'div'
-   */
-  footerTag?: keyof HTMLElementTagNameMap;
-  /**
-   * The HTML tag to use for the card media.
-   * @default 'div'
-   */
-  mediaTag?: keyof HTMLElementTagNameMap;
 
   // Styles
   /**
@@ -181,23 +156,23 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   /**
    * Props for the card content.
    */
-  contentProps?: HTMLNeoBaseElement;
+  contentProps?: HTMLNeoBaseElement & HTMLTagProps;
   /**
    * Props for the card header.
    */
-  headerProps?: HTMLNeoBaseElement;
+  headerProps?: HTMLNeoBaseElement & HTMLTagProps;
   /**
    * Props for the card action
    */
-  actionProps?: HTMLActionProps;
+  actionProps?: HTMLActionProps & HTMLTagProps;
   /**
    * Props for the card footer.
    */
-  footerProps?: HTMLNeoBaseElement;
+  footerProps?: HTMLNeoBaseElement & HTMLTagProps;
   /**
    * Props for the card media.
    */
-  mediaProps?: HTMLNeoBaseElement;
+  mediaProps?: HTMLNeoBaseElement & HTMLTagProps;
   /**
    * Props for the devider.
    */

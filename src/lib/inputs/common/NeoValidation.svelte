@@ -26,11 +26,12 @@
 
     // Other props
     messageProps,
-    messageTag = 'div',
     messageId = $bindable(messageProps?.id ?? `neo-validation-message-${getUUID()}`),
     ...rest
   }: NeoValidationProps<T, V> = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: messageTag = 'div', ...messageRest } = messageProps ?? {};
 
   const innerContext = $derived<NeoValidationContext<T, V>>({
     messageId,
@@ -54,7 +55,7 @@
         class:neo-validation-error={true}
         in:fly={{ duration: defaultDuration, delay: message ? defaultDuration / 2 : 0, y: '-50%' }}
         out:fly={{ duration: defaultDuration, y: message ? '50%' : '-50%' }}
-        {...messageProps}
+        {...messageRest}
       >
         {#if typeof error === 'string'}
           {error}
@@ -69,7 +70,7 @@
         class:neo-validation-description={true}
         in:fly={{ duration: defaultDuration, delay: defaultDuration / 2, y: '-50%' }}
         out:fly={{ duration: defaultDuration, y: '50%' }}
-        {...messageProps}
+        {...messageRest}
       >
         {#if typeof message === 'string'}
           {message}

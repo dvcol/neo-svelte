@@ -50,11 +50,12 @@
     labelRef = $bindable(),
     labelProps,
     buttonProps,
-    containerTag = 'div',
     containerProps,
     ...rest
   }: NeoRadioProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const labelId = $derived(label ? `neo-radio-label-${getUUID()}` : undefined);
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
@@ -66,12 +67,12 @@
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
     focusin = true;
-    containerProps?.onfocusin?.(e);
+    containerRest?.onfocusin?.(e);
   };
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     timeout = setTimeout(() => {
       focusin = false;
-      containerProps?.onfocusout?.(e);
+      containerRest?.onfocusout?.(e);
     }, 0);
   };
 </script>
@@ -82,7 +83,7 @@
   class:neo-radio-container={true}
   class:neo-rounded={rounded}
   class:neo-flat={!elevation}
-  {...containerProps}
+  {...containerRest}
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}
 >

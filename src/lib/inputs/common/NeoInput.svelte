@@ -81,23 +81,22 @@
     labelProps,
     afterRef = $bindable(),
     afterProps,
-    afterTag = afterProps?.onclick ? 'button' : 'span',
     affixRef = $bindable(),
     affixProps,
     beforeRef = $bindable(),
     beforeProps,
-    beforeTag = beforeProps?.onclick ? 'button' : 'span',
     containerRef = $bindable(),
     containerProps,
-    containerTag = 'div',
     wrapperRef = $bindable(),
     wrapperProps,
-    wrapperTag = 'div',
     messageProps,
-    messageTag = 'div',
     ...rest
   }: NeoInputProps<NeoInputHTMLElement> = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: afterTag = afterProps?.onclick ? 'button' : 'span', ...afterRest } = afterProps ?? {};
+  const { tag: beforeTag = beforeProps?.onclick ? 'button' : 'span', ...beforeRest } = beforeProps ?? {};
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const getValue = () => {
     if (rest?.type === 'file') return files;
@@ -120,12 +119,12 @@
 
   const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;
-    containerProps?.onpointerenter?.(e);
+    containerRest?.onpointerenter?.(e);
   };
 
   const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
     hovered = false;
-    containerProps?.onpointerleave?.(e);
+    containerRest?.onpointerleave?.(e);
   };
 
   const typedValue = $derived(getValue());
@@ -141,12 +140,12 @@
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
     focusin = true;
-    containerProps?.onfocusin?.(e);
+    containerRest?.onfocusin?.(e);
   };
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     timeout = setTimeout(() => {
       focusin = false;
-      containerProps?.onfocusout?.(e);
+      containerRest?.onfocusout?.(e);
     }, 0);
   };
 
@@ -257,7 +256,7 @@
       {disabled}
       {readonly}
       use:resize={updateRefs}
-      {...beforeProps}
+      {...beforeRest}
     >
       {@render before(context)}
     </svelte:element>
@@ -300,7 +299,7 @@
       {disabled}
       {readonly}
       use:resize={updateRefs}
-      {...afterProps}
+      {...afterRest}
     >
       {@render after(context)}
     </svelte:element>
@@ -383,7 +382,7 @@
     style:--neo-input-affix-width={affixWidth}
     out:outFn={outProps}
     in:inFn={inProps}
-    {...containerProps}
+    {...containerRest}
     onpointerenter={onPointerEnter}
     onpointerleave={onPointerLeave}
     onfocusin={onFocusIn}
@@ -426,7 +425,6 @@
 
 <NeoInputValidation
   bind:ref={wrapperRef}
-  tag={wrapperTag}
   bind:visible
   bind:messageId
   {valid}
@@ -436,7 +434,6 @@
   {rounded}
   {context}
   {message}
-  {messageTag}
   {messageProps}
   in={inAction}
   out={outAction}

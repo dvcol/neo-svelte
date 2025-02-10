@@ -66,10 +66,11 @@
 
     // Other props
     displayProps,
-    displayTag = 'span',
     ...rest
   }: NeoBaseInputProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: displayTag = 'span', ...displayRest } = displayProps ?? {};
 
   const getValue = () => {
     if (rest.type === 'file') return files;
@@ -265,7 +266,7 @@
     style:min-height={height?.min}
     style:max-height={height?.max}
     use:useFn={useProps}
-    {...displayProps}
+    {...displayRest}
   >
     {#if typeof display === 'function'}
       {@render display(currentState)}

@@ -138,7 +138,6 @@
     }
   };
 
-  // TODO - rework container/wrapper tags
   // TODO - rework focus highlights
   // TODO - button rework css top match elevation / pressed (in place of hover)
 </script>
@@ -194,8 +193,8 @@
     ...affixProps,
     closeProps: { onclick: onClear, ...affixProps?.closeProps },
   }}
-  containerTag="button"
   containerProps={{
+    tag: 'button',
     role: null,
     onclick: toggle,
     onkeydown,

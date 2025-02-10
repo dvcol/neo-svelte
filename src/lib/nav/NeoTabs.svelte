@@ -45,11 +45,12 @@
     onadd,
 
     // Other props
-    containerTag = 'div',
     containerProps,
     ...rest
   }: NeoTabsProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
   const slideElevation = $derived(coerce(rest?.slideElevation ?? getDefaultSlideElevation(elevation)));
@@ -78,7 +79,7 @@
   }
 
   const translate = $derived(slide ? transform(context.position) : undefined);
-  const style = $derived(toStyle(containerProps?.style, translate));
+  const style = $derived(toStyle(containerRest?.style, translate));
 
   // reflect component active to context
   $effect(() => {
@@ -110,13 +111,13 @@
 
   const slideShadow = $derived(computeShadowElevation(slideElevation, { glass: rest.glass }));
 
-  const inFn = $derived(toTransition(containerProps?.in ?? containerProps?.transition));
-  const inProps = $derived(toTransitionProps(containerProps?.in ?? containerProps?.transition));
-  const outFn = $derived(toTransition(containerProps?.out ?? containerProps?.transition));
-  const outProps = $derived(toTransitionProps(containerProps?.out ?? containerProps?.transition));
+  const inFn = $derived(toTransition(containerRest?.in ?? containerRest?.transition));
+  const inProps = $derived(toTransitionProps(containerRest?.in ?? containerRest?.transition));
+  const outFn = $derived(toTransition(containerRest?.out ?? containerRest?.transition));
+  const outProps = $derived(toTransitionProps(containerRest?.out ?? containerRest?.transition));
 
-  const useFn = $derived(toAction(containerProps?.use));
-  const useProps = $derived(toActionProps(containerProps?.use));
+  const useFn = $derived(toAction(containerRest?.use));
+  const useProps = $derived(toActionProps(containerRest?.use));
 </script>
 
 {#snippet icon()}
@@ -138,7 +139,7 @@
     class:neo-rounded={rest.rounded}
     class:neo-dim={dim}
     style:--neo-tabs-slide-box-shadow={slideShadow}
-    {...containerProps}
+    {...containerRest}
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}

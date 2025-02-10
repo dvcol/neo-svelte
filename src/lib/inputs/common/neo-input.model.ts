@@ -8,10 +8,10 @@ import type { HTMLInputAttributes, HTMLSelectAttributes, HTMLTextareaAttributes 
 import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
-import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
+import type { NeoValidationFieldContext, NeoValidationProps, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -239,15 +239,9 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement |
 
   // Other props
   /**
-   * The HTML tag to use for the input display wrapper.
-   *
-   * @default div
-   */
-  displayTag?: keyof HTMLElementTagNameMap;
-  /**
    * The props to pass to the input display wrapper.
    */
-  displayProps?: HTMLNeoBaseElement;
+  displayProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & HTMLUseProps &
   HTMLRefProps<T> &
   NeoInputState<T> &
@@ -331,46 +325,28 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    */
   wrapperRef?: HTMLRefProps['ref'];
   /**
-   * The HTML tag to use for the wrapper component (when message or error are shown).
-   */
-  wrapperTag?: keyof HTMLElementTagNameMap;
-  /**
    * The props to pass to the wrapper component.
    */
-  wrapperProps?: HTMLNeoBaseElement;
+  wrapperProps?: NeoInputValidationProps<T>;
 
   /**
    * The ref to bind to the input container.
    */
   containerRef?: HTMLRefProps['ref'];
   /**
-   * The HTML tag to use for the container.
-   * @default div
-   */
-  containerTag?: keyof HTMLElementTagNameMap;
-  /**
    * The props to pass to the input container.
    */
-  containerProps?: HTMLNeoBaseElement & { tag?: keyof HTMLElementTagNameMap };
+  containerProps?: HTMLNeoBaseElement & HTMLTagProps;
 
-  /**
-   * The HTML tag to use for the message and error components.
-   */
-  messageTag?: keyof HTMLElementTagNameMap;
   /**
    * The props to pass to the message and error components.
    */
-  messageProps?: HTMLNeoBaseElement;
+  messageProps?: NeoValidationProps<T>['messageProps'];
 
-  /*
-   * The HTML tag to use for the suffix.
-   * @default span
-   */
-  afterTag?: keyof HTMLElementTagNameMap;
   /**
    * The props to pass to the suffix.
    */
-  afterProps?: HTMLNeoBaseElement;
+  afterProps?: HTMLNeoBaseElement & HTMLTagProps;
   /**
    * The ref to bind to the suffix.
    */
@@ -417,14 +393,9 @@ export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoIn
   // Other props
 
   /**
-   * The HTML tag to use for the prefix.
-   * @default span
-   */
-  beforeTag?: keyof HTMLElementTagNameMap;
-  /**
    * The props to pass to the prefix.
    */
-  beforeProps?: HTMLNeoBaseElement;
+  beforeProps?: HTMLNeoBaseElement & HTMLTagProps;
   /**
    * The ref to bind to the prefix.
    */
@@ -465,7 +436,7 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
    * @default true
    */
   autoResize?: boolean | NeoTextAreaResize;
-} & Omit<NeoInputGroupProps<T>, 'hide' | 'display' | 'displayTag' | 'displayProps'> &
+} & Omit<NeoInputGroupProps<T>, 'hide' | 'display' | 'displayProps'> &
   HTMLTextareaAttributes;
 
 export type NeoInputHTMLElement<T extends HTMLInputElement = HTMLInputElement> = T & Partial<NeoInputMethods<T>>;

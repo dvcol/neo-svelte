@@ -55,17 +55,15 @@
     labelRef = $bindable(),
     labelProps,
     buttonProps,
-    messageTag = 'div',
     messageProps,
     containerRef = $bindable(),
-    containerTag = 'div',
     containerProps,
     wrapperRef = $bindable(),
-    wrapperTag = 'div',
     wrapperProps,
     ...rest
   }: NeoCheckboxProps = $props();
   /* eslint-enable prefer-const */
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const labelId = $derived(label ? `neo-checkbox-label-${getUUID()}` : undefined);
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
@@ -119,7 +117,6 @@
 </script>
 
 <NeoInputValidation
-  tag={wrapperTag}
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
@@ -130,7 +127,6 @@
   {rounded}
   {context}
   {message}
-  {messageTag}
   {messageProps}
   in={inAction}
   out={outAction}
@@ -144,7 +140,7 @@
     class:neo-checkbox-container={true}
     class:neo-rounded={rounded}
     class:neo-flat={!elevation}
-    {...containerProps}
+    {...containerRest}
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
   >

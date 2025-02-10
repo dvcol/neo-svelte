@@ -20,15 +20,13 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     | 'labelRef'
     | 'labelProps'
     | 'containerRef'
-    | 'containerTag'
     | 'containerProps'
     | 'wrapperRef'
-    | 'wrapperTag'
     | 'wrapperProps'
   > &
   NeoCommonCheckboxProps &
   Pick<NeoLabelProps, 'label'> &
-  Pick<NeoValidationProps, 'error' | 'message' | 'messageTag' | 'messageProps'> & {
+  Pick<NeoValidationProps, 'error' | 'message' | 'messageProps'> & {
     /**
      * Props to be passed to the checkbox button.
      */

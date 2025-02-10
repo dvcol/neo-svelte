@@ -10,7 +10,7 @@ import type {
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -179,13 +179,9 @@ export type NeoTooltipProps = {
    */
   triggerRef?: HTMLRefProps<NeoTooltipHTMLElement>['ref'];
   /**
-   * The HTML tag to use for the trigger element.
-   */
-  triggerTag?: keyof HTMLElementTagNameMap;
-  /**
    * Properties to pass to the trigger element.
    */
-  triggerProps?: HTMLNeoBaseElement;
+  triggerProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & HTMLRefProps<NeoTooltipHTMLElement> &
   HTMLActionProps &
   Omit<HTMLNeoBaseElement, 'children'>;

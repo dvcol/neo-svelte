@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export type NeoValidationValue = string | string[] | number | boolean | boolean[] | FileList | any;
 export type NeoValidationState<T extends NeoValidationValue = NeoValidationValue> = {
@@ -58,6 +58,7 @@ export type NeoValidationProps<
   Tag extends keyof HTMLElementTagNameMap = 'div',
 > = {
   // Snippets
+
   /**
    * The component to wrap with the validation context.
    */
@@ -77,6 +78,7 @@ export type NeoValidationProps<
   context: C;
 
   // Styles
+
   /**
    * If true, the wrapper will adjust spacing to match rounded styles.
    */
@@ -85,13 +87,9 @@ export type NeoValidationProps<
   // Other props
 
   /**
-   * The HTML tag to use for the message and error components.
-   */
-  messageTag?: keyof HTMLElementTagNameMap;
-  /**
    * The props to pass to the message and error components.
    */
-  messageProps?: HTMLNeoBaseElement;
+  messageProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & HTMLTransitionProps &
   HTMLRefProps &
   NeoValidationContext<T, V, C> &

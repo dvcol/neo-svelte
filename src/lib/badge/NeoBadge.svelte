@@ -14,11 +14,12 @@
     placement = 'top-right',
 
     // Other props
-    containerTag = 'div',
     containerProps,
     ...rest
   }: NeoBadgeProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const offset = $derived.by<{ x?: string; y?: string }>(() => {
     if (typeof _offset === 'string') {
@@ -40,7 +41,7 @@
   data-placement={placement}
   style:--neo-badge-offset-x={offset?.x}
   style:--neo-badge-offset-y={offset?.y}
-  {...containerProps}
+  {...containerRest}
 >
   <NeoPill class="neo-badge-pill" size="medium" glass elevation="2" tinted {...rest}>
     {#if typeof value === 'function'}

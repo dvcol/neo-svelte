@@ -5,7 +5,7 @@ import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 
 export type NeoRangeValue = number | [number, number];
@@ -98,7 +98,7 @@ export type NeoRangeTooltipContext = {
   context: NeoRangeContext;
 };
 
-export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation' | 'error' | 'context' | 'message' | 'messageTag' | 'messageProps'> &
+export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation' | 'error' | 'context' | 'message' | 'messageProps'> &
   NeoValidationState<NeoRangeValue> & {
     // Snippets
     /**
@@ -124,23 +124,14 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
      */
     wrapperRef?: HTMLRefProps['ref'];
     /**
-     * The HTML tag to use for the wrapper component (when message or error are shown).
-     */
-    wrapperTag?: keyof HTMLElementTagNameMap;
-    /**
      * The props to pass to the wrapper component.
      */
-    wrapperProps?: HTMLNeoBaseElement;
+    wrapperProps?: NeoInputValidationProps;
 
-    /**
-     * The HTML tag to use for the container.
-     * @default div
-     */
-    containerTag?: keyof HTMLElementTagNameMap;
     /**
      * The props to pass to the input container.
      */
-    containerProps?: HTMLNeoBaseElement;
+    containerProps?: HTMLNeoBaseElement & HTMLTagProps;
 
     /**
      * The props to pass to the label.

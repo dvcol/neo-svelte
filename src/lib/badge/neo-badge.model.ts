@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { NeoPillProps } from '~/pill/neo-pill.model.js';
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export const NeoBadgePlacement = {
   Top: 'top' as const,
@@ -40,13 +40,8 @@ export type NeoBadgeProps = {
    * @default top-right
    */
   placement?: NeoBadgePlacements;
-
-  /**
-   * The tag to use for the relative container.
-   */
-  containerTag?: keyof HTMLElementTagNameMap;
   /**
    * Props to pass to the relative container.
    */
-  containerProps?: HTMLNeoBaseElement;
+  containerProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & NeoPillProps;

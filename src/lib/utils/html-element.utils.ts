@@ -9,6 +9,14 @@ export type HTMLRefProps<T extends HTMLElement = HTMLElement> = {
   ref?: T;
 };
 
+export type HTMLTagProps<T extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
+  /**
+   * The HTML tag to use for the element.
+   * @default 'div'
+   */
+  tag?: T;
+};
+
 export type HTMLFlexProps = {
   /**
    * Overrides the default flex value.

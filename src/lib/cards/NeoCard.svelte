@@ -75,21 +75,22 @@
     onpointerleave,
 
     // Other props
-    contentTag = 'div',
     contentProps,
-    headerTag = 'div',
     headerProps,
-    footerTag = 'div',
     footerProps,
-    actionTag = 'div',
     actionProps,
-    mediaTag = 'div',
     mediaProps,
     dividerProps,
     closeProps,
     ...rest
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: contentTag = 'div', ...contentRest } = contentProps ?? {};
+  const { tag: headerTag = 'div', ...headerRest } = headerProps ?? {};
+  const { tag: footerTag = 'div', ...footerRest } = footerProps ?? {};
+  const { tag: actionTag = 'div', ...actionRest } = actionProps ?? {};
+  const { tag: mediaTag = 'div', ...mediaRest } = mediaProps ?? {};
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(rest?.hover ?? 0));
@@ -238,13 +239,13 @@
       class:neo-scroll={scrollbar}
       class:neo-cover={cover}
       class:neo-inset={elevation < 0 || hoverElevation < 0}
-      {...mediaProps}
+      {...mediaRest}
     >
       {@render media?.(context)}
     </svelte:element>
   {/if}
   {#if header || (!horizontal && close)}
-    <svelte:element this={headerTag} class:neo-card-segment={true} class:neo-card-header={true} class:neo-scroll={scrollbar} {...headerProps}>
+    <svelte:element this={headerTag} class:neo-card-segment={true} class:neo-card-header={true} class:neo-scroll={scrollbar} {...headerRest}>
       {@render header?.(context)}
       {#if !horizontal}
         {@render closeBtn()}
@@ -254,7 +255,7 @@
   {#if segments}
     {@render divider()}
     {#if content}
-      <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} class:neo-scroll={scrollbar} {...contentProps}>
+      <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} class:neo-scroll={scrollbar} {...contentRest}>
         {@render content?.(context)}
       </svelte:element>
     {/if}
@@ -263,13 +264,13 @@
   {/if}
   {#if footer}
     {@render divider()}
-    <svelte:element this={footerTag} class:neo-card-segment={true} class:neo-card-footer={true} class:neo-scroll={scrollbar} {...footerProps}>
+    <svelte:element this={footerTag} class:neo-card-segment={true} class:neo-card-footer={true} class:neo-scroll={scrollbar} {...footerRest}>
       {@render footer?.(context)}
     </svelte:element>
   {/if}
   {#if action || (horizontal && close)}
     {@render divider()}
-    <svelte:element this={actionTag} class:neo-card-segment={true} class:neo-card-action={true} class:neo-scroll={scrollbar} {...actionProps}>
+    <svelte:element this={actionTag} class:neo-card-segment={true} class:neo-card-action={true} class:neo-scroll={scrollbar} {...actionRest}>
       {#if horizontal}
         {@render closeBtn()}
       {/if}

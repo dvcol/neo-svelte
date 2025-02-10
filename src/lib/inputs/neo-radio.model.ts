@@ -14,7 +14,6 @@ export type NeoRadioProps = NeoBaseInputProps &
     | 'labelRef'
     | 'labelProps'
     | 'containerRef'
-    | 'containerTag'
     | 'containerProps'
     | 'color'
     | 'tinted'

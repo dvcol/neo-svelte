@@ -60,17 +60,16 @@
     labelRef = $bindable(),
     labelProps,
     buttonProps,
-    messageTag = 'div',
     messageProps,
     containerRef = $bindable(),
-    containerTag = 'div',
     containerProps,
     wrapperRef = $bindable(),
-    wrapperTag = 'div',
     wrapperProps,
     ...rest
   }: NeoSwitchProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const labelId = $derived(label ? `neo-switch-label-${getUUID()}` : undefined);
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
@@ -109,18 +108,17 @@
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
     focusin = true;
-    containerProps?.onfocusin?.(e);
+    containerRest?.onfocusin?.(e);
   };
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     timeout = setTimeout(() => {
       focusin = false;
-      containerProps?.onfocusout?.(e);
+      containerRest?.onfocusout?.(e);
     }, 0);
   };
 </script>
 
 <NeoInputValidation
-  tag={wrapperTag}
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
@@ -131,7 +129,6 @@
   {rounded}
   {context}
   {message}
-  {messageTag}
   {messageProps}
   in={inAction}
   out={outAction}
@@ -144,7 +141,7 @@
     bind:this={containerRef}
     class:neo-switch-container={true}
     class:neo-flat={!elevation}
-    {...containerProps}
+    {...containerRest}
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
   >

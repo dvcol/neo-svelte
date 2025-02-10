@@ -76,17 +76,16 @@
     cardProps,
     buttonProps,
     groupProps,
-    messageTag = 'div',
     messageProps,
     containerRef = $bindable(),
-    containerTag = 'div',
     containerProps,
     wrapperRef = $bindable(),
-    wrapperTag = 'div',
     wrapperProps,
     ...rest
   }: NeoFilePickerProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(pressed)));
@@ -274,12 +273,12 @@
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
     focusin = true;
-    containerProps?.onfocusin?.(e);
+    containerRest?.onfocusin?.(e);
   };
   const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
     timeout = setTimeout(() => {
       focusin = false;
-      containerProps?.onfocusout?.(e);
+      containerRest?.onfocusout?.(e);
     }, 0);
   };
 </script>
@@ -325,7 +324,6 @@
     {labelProps}
     {error}
     {message}
-    {messageTag}
     {messageProps}
     after={after ?? upload}
     {before}
@@ -338,7 +336,6 @@
     {rounded}
     {pressed}
     {validation}
-    {wrapperTag}
     {wrapperProps}
     {elevation}
     {hover}
@@ -450,14 +447,13 @@
   bind:this={containerRef}
   class:neo-file-picker={true}
   class:neo-expanded={expanded}
-  {...containerProps}
+  {...containerRest}
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}
 >
   {#if drop && expanded}
     <!-- Expanded picker -->
     <NeoInputValidation
-      tag={wrapperTag}
       bind:ref={wrapperRef}
       bind:visible
       bind:messageId
@@ -468,7 +464,6 @@
       {rounded}
       {context}
       {message}
-      {messageTag}
       {messageProps}
       in={inAction}
       out={outAction}

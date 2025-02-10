@@ -21,17 +21,15 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'labelRef'
     | 'labelProps'
     | 'containerRef'
-    | 'containerTag'
     | 'containerProps'
     | 'wrapperRef'
-    | 'wrapperTag'
     | 'wrapperProps'
     | 'color'
     | 'tinted'
   > &
   NeoCommonSwitchProps &
   Pick<NeoLabelProps, 'label'> &
-  Pick<NeoValidationProps, 'error' | 'message' | 'messageTag' | 'messageProps'> & {
+  Pick<NeoValidationProps, 'error' | 'message' | 'messageProps'> & {
     /**
      * Props to be passed to the switch button.
      */

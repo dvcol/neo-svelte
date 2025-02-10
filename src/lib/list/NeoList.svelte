@@ -74,7 +74,6 @@
     onselect,
 
     // Other props
-    containerTag = 'div',
     containerProps,
     loaderProps,
     buttonProps,
@@ -84,6 +83,8 @@
     ...rest
   }: NeoListProps = $props();
   /* eslint-enable prefer-const */
+
+  const { tag: containerTag = 'div', ...containerRest } = containerProps ?? {};
 
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
@@ -368,7 +369,7 @@
   style:height={height?.absolute}
   style:min-height={height?.min}
   style:max-height={height?.max}
-  {...containerProps}
+  {...containerRest}
 >
   {@render before?.(context)}
   {#if !empty || loading || skeleton}

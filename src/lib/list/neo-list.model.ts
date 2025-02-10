@@ -5,7 +5,7 @@ import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
 import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoListDividerOption = { top?: boolean; bottom?: boolean };
@@ -344,14 +344,9 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
 
   // Other Props
   /**
-   * The HTML tag to use for the list container.
-   * @default div
-   */
-  containerTag?: keyof HTMLElementTagNameMap;
-  /**
    * The props to pass to the list container.
    */
-  containerProps?: HTMLNeoBaseElement;
+  containerProps?: HTMLNeoBaseElement & HTMLTagProps;
   /**
    * The props to pass to the loader.
    */
