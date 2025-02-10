@@ -87,11 +87,12 @@ export type NeoThemeProviderProps = {
 
 export const NeoThemeRoot = 'neo-theme-root';
 
-export const NeoThemeStorageKey: Record<string, `neo-${keyof INeoThemeProviderContext}`> = {
+export const NeoThemeStorageKey: Record<string, `neo-${keyof INeoThemeProviderContext | 'transition'}`> = {
   Reset: 'neo-reset' as const,
   Theme: 'neo-theme' as const,
   Source: 'neo-source' as const,
   Remember: 'neo-remember' as const,
+  Transition: 'neo-transition' as const,
 } as const;
 
 export type NeoThemeStorageKeys = (typeof NeoThemeStorageKey)[keyof typeof NeoThemeStorageKey];

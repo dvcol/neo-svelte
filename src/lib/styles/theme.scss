@@ -31,6 +31,14 @@
       background-color: var(--neo-text-highlight-color);
     }
 
+    &[neo-transition='false'] {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+      }
+    }
+
     /* override semantic color if dark mode is enabled */
     &[neo-theme='dark'] {
       @include colors.dark-theme;

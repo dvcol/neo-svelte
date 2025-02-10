@@ -1,3 +1,4 @@
+import { wait } from '@dvcol/common-utils/common/promise';
 import { getContext, setContext, untrack } from 'svelte';
 
 import {
@@ -73,14 +74,32 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     });
   }
 
+  private async setTheme(theme: INeoThemeProviderContext['theme']) {
+    if (!this.root) throw new NeoErrorThemeTargetNotFound();
+    if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
+    if (this.theme === this.root.getAttribute(NeoThemeStorageKey.Theme)) return;
+
+    this.root.setAttribute(NeoThemeStorageKey.Transition, 'false');
+    this.root.setAttribute(NeoThemeStorageKey.Theme, theme);
+    await wait();
+    this.root.removeAttribute(NeoThemeStorageKey.Transition);
+  }
+
+  private setSource(source: INeoThemeProviderContext['source']) {
+    if (!this.root) throw new NeoErrorThemeTargetNotFound();
+    if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
+    if (this.source === this.root.getAttribute(NeoThemeStorageKey.Source)) return;
+
+    this.root.setAttribute(NeoThemeStorageKey.Source, source);
+  }
+
   sync() {
     if (!this.root) throw new NeoErrorThemeTargetNotFound();
     if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
 
     this.root.setAttribute(NeoThemeRoot, '');
-
-    this.root.setAttribute(NeoThemeStorageKey.Theme, this.theme);
-    this.root.setAttribute(NeoThemeStorageKey.Source, this.source);
+    this.setTheme(this.theme);
+    this.setSource(this.source);
 
     if (this.reset) this.root.setAttribute(NeoThemeStorageKey.Reset, '');
     else this.root.removeAttribute(NeoThemeStorageKey.Reset);
