@@ -1,4 +1,5 @@
 <script lang="ts">
+  import IconTextHighlight from '~/icons/IconTextHighlight.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoEllipsis from '~/text/NeoEllipsis.svelte';
@@ -25,7 +26,11 @@
 <div class="row">
   <div class="column content">
     <span class="label">Mark</span>
-    <NeoInput bind:value={filter} placeholder="Highlight text" rounded size="30" clearable />
+    <NeoInput bind:value={filter} placeholder="Highlight text" rounded size="30" clearable>
+      {#snippet before()}
+        <IconTextHighlight size="1.25rem" />
+      {/snippet}
+    </NeoInput>
     <NeoMark
       {filter}
       value="Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin tincidunt
