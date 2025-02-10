@@ -12,6 +12,7 @@
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
+  import { displayValue } from '~/inputs/neo-select.model';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { DefaultShadowElevation, getDefaultElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
@@ -115,6 +116,8 @@
     placeholder="Select color"
     position="left"
     floating={false}
+    color={options.color}
+    display={displayValue}
     size="10"
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}

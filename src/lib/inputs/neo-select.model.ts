@@ -51,7 +51,7 @@ export type NeoSelectProps<Value = unknown> = {
    * Transform the selected item(s) into a displayable string.
    * @param selection
    */
-  display?: (selection?: Value | Value[]) => NeoInputProps['display'];
+  display?: (selection?: NeoListSelectedItem<Value> | NeoListSelectedItem<Value>[]) => NeoInputProps['display'];
   /**
    * Extract the selected item(s) value.
    * @param selection
@@ -112,12 +112,12 @@ export type NeoSelectProps<Value = unknown> = {
   buttonProps?: NeoButtonProps;
 } & NeoInputProps;
 
-export const displayValue = <Value = unknown>(selection?: Value | Value[]): undefined | string => {
+export const displayValue = <Value = unknown>(selection?: NeoListSelectedItem<Value> | NeoListSelectedItem<Value>[]): undefined | string => {
   if (Array.isArray(selection)) {
     if (selection?.length > 2) return `${selection?.length} items selected`;
-    return selection?.join(', ');
+    return selection?.map(s => s.item?.label ?? s.item?.value?.toString()).join(', ');
   }
-  return selection?.toString();
+  return selection?.item?.label ?? selection?.item?.value?.toString();
 };
 
 export const transformValue = <Value = unknown>(

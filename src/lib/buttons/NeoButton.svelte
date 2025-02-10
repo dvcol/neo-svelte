@@ -196,7 +196,7 @@
     padding: var(--neo-btn-padding, 0.25rem 0.75rem);
     color: var(--neo-btn-text-color, inherit);
     font: inherit;
-    text-decoration: inherit;
+    text-decoration: none;
     background-color: var(--neo-btn-bg-color, transparent);
     border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;
     border-radius: var(--neo-btn-border-radius, var(--neo-border-radius));

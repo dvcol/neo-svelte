@@ -89,6 +89,8 @@
   }: NeoPinProps = $props();
   /* eslint-enable prefer-const */
 
+  const labelId = $derived(label ? `neo-pin-label-${getUUID()}` : undefined);
+
   const refs = $state<NeoInputHTMLElement[][]>(Array(Number(groups)).fill([]));
   const values = $state<string[][]>(Array(Number(groups)).fill(Array(Number(count)).fill('')));
   const touches = $state<boolean[][]>(Array(Number(groups)).fill(Array(Number(count)).fill(false)));
@@ -393,14 +395,17 @@
         bind:value
         oninvalid={onInvalid}
       />
-      {#each Array(Number(groups)) as _, i}
+      {#each { length: Number(groups) } as _, i}
         <div class="neo-pin-group">
-          {#each Array(Number(count)) as __, j}
+          {#each { length: Number(count) } as __, j}
             <NeoInput
               bind:ref={refs[i][j]}
               bind:value={values[i][j]}
               bind:dirty={dirtiness[i][j]}
               bind:touched={touches[i][j]}
+              data-group={i + 1}
+              data-count={j + 1}
+              aria-labelledby={labelId}
               size={1}
               maxlength={1}
               minlength={1}
@@ -485,6 +490,7 @@
 {#if label}
   <NeoLabel
     for={id}
+    id={labelId}
     bind:ref={labelRef}
     {required}
     label={labelGroup}

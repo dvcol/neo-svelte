@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
+
   import type { FormEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
@@ -74,12 +76,15 @@
     ref?.dispatchEvent(new InputEvent(e.type, e));
     pickerProps?.onchange?.(e);
   };
+
+  const labelId = $derived(rest?.label ? `neo-color-picker-label-${getUUID()}` : undefined);
 </script>
 
 {#snippet before()}
   <NeoColorPickerSelector
     bind:ref={pickerRef}
     bind:value
+    aria-labelledby={labelId}
     height="100%"
     rounded={rest.rounded}
     disabled={rest.disabled}
@@ -122,4 +127,5 @@
   {minlength}
   {maxlength}
   {...rest}
+  labelProps={{ id: labelId, ...rest.labelProps }}
 />

@@ -253,10 +253,11 @@
   /**
    * Change the value of the input
    */
-  export const change: NeoInputMethods<HTMLTextAreaElement>['change'] = (_value: NeoInputValue<HTMLTextAreaElement>, event?: InputEvent) => {
-    if (event) ref?.dispatchEvent(event);
+  export const change: NeoInputMethods<HTMLTextAreaElement>['change'] = async (_value: NeoInputValue<HTMLTextAreaElement>, event?: InputEvent) => {
     value = _value;
     focus();
+    await tick();
+    if (event) ref?.dispatchEvent(event);
     return validate();
   };
 

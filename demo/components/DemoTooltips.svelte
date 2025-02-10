@@ -18,6 +18,7 @@
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import { displayValue } from '~/inputs/neo-select.model';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
@@ -155,6 +156,8 @@
     placeholder="Select color"
     position="left"
     floating={false}
+    color={options.color}
+    display={displayValue}
     size="10"
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}

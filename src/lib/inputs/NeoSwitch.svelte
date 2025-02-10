@@ -72,6 +72,7 @@
   }: NeoSwitchProps = $props();
   /* eslint-enable prefer-const */
 
+  const labelId = $derived(label ? `neo-switch-label-${getUUID()}` : undefined);
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
 
   let initial = $state(checked);
@@ -172,6 +173,7 @@
       class={['neo-switch-input', rest.class]}
     />
     <NeoSwitchButton
+      aria-labelledby={labelId}
       {handle}
       {off}
       {on}
@@ -189,7 +191,7 @@
       onclick={() => ref?.click()}
       {...buttonProps}
     />
-    <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
+    <NeoLabel bind:ref={labelRef} id={labelId} for={id} {label} {disabled} {required} {...labelProps} />
     {#if loading !== undefined}
       <span class="neo-switch-suffix">
         {#if loading}

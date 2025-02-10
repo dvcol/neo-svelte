@@ -154,13 +154,14 @@
   /**
    * Change the state of the input
    */
-  export const change: NeoInputMethods<HTMLInputElement>['change'] = (_value: NeoInputValue<HTMLInputElement>, event?: InputEvent) => {
+  export const change: NeoInputMethods<HTMLInputElement>['change'] = async (_value: NeoInputValue<HTMLInputElement>, event?: InputEvent) => {
     if (rest.type === 'checkbox' || rest.type === 'radio') {
       checked = !!_value;
     } else {
       value = _value?.toString();
     }
     focus();
+    await tick();
     if (event) ref?.dispatchEvent(event);
     return validate();
   };
@@ -253,7 +254,6 @@
   />
   <svelte:element
     this={displayTag}
-    {id}
     class:neo-input={true}
     class:neo-after={after}
     class:neo-before={before}

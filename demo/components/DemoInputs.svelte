@@ -557,6 +557,8 @@
     placeholder="Select color"
     position="left"
     floating={false}
+    color={options.color}
+    display={displayValue}
     size="10"
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}
@@ -577,7 +579,7 @@
 {/snippet}
 
 {#snippet after()}
-  <NeoButton text rounded={options.rounded} disabled={options.disabled} readonly={options.readonly}>
+  <NeoButton text aria-label="After button snippet" rounded={options.rounded} disabled={options.disabled} readonly={options.readonly}>
     {#snippet icon()}
       <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
     {/snippet}
@@ -771,7 +773,6 @@
         required
         label="Custom Select"
         placeholder="Select multiple"
-        display={displayValue}
         options={items}
         multiple
         bind:ref={selectCustomMultipleState.ref}
@@ -1145,6 +1146,7 @@
 {#snippet beforeRange()}
   <NeoButton
     rounded
+    aria-label="Increment range"
     glass={options.glass}
     disabled={options.disabled}
     readonly={options.readonly}
@@ -1160,6 +1162,7 @@
 {#snippet afterRange()}
   <NeoButton
     rounded
+    aria-label="Decrement range"
     glass={options.glass}
     disabled={options.disabled}
     readonly={options.readonly}

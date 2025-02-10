@@ -10,6 +10,7 @@
   import IconMail from '~/icons/IconMail.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
+  import { displayValue } from '~/inputs/neo-select.model';
   import NeoPill from '~/pill/NeoPill.svelte';
 
   const options = $state({
@@ -97,6 +98,8 @@
     placeholder="Select color"
     position="left"
     floating={false}
+    color={options.color}
+    display={displayValue}
     size="10"
     bind:value={options.color}
     rounded={options.rounded}

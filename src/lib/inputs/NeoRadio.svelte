@@ -56,6 +56,7 @@
   }: NeoRadioProps = $props();
   /* eslint-enable prefer-const */
 
+  const labelId = $derived(label ? `neo-radio-label-${getUUID()}` : undefined);
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
 
   let initial = $state(checked);
@@ -108,6 +109,7 @@
     class={['neo-radio-input', rest.class]}
   />
   <NeoRadioButton
+    aria-labelledby={labelId}
     {checked}
     {touched}
     {rounded}
@@ -121,7 +123,7 @@
     onclick={() => ref?.click()}
     {...buttonProps}
   />
-  <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
+  <NeoLabel bind:ref={labelRef} id={labelId} for={id} {label} {disabled} {required} {...labelProps} />
   {#if loading !== undefined}
     <span class="neo-radio-suffix">
       {#if loading}

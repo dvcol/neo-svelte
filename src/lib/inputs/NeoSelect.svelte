@@ -138,6 +138,7 @@
     }
   };
 
+  // TODO - rework container/wrapper tags
   // TODO - rework focus highlights
   // TODO - button rework css top match elevation / pressed (in place of hover)
 </script>
@@ -171,7 +172,7 @@
   bind:focused
   bind:focusin
   bind:value
-  display={(display ?? customDisplay) ? (customDisplay ?? display?.(value)) : undefined}
+  display={(display ?? customDisplay) ? (customDisplay ?? display?.(selected)) : undefined}
   {rounded}
   {floating}
   {clearable}
@@ -193,9 +194,9 @@
     ...affixProps,
     closeProps: { onclick: onClear, ...affixProps?.closeProps },
   }}
+  containerTag="button"
   containerProps={{
-    role: 'select',
-    tabindex: 0,
+    role: null,
     onclick: toggle,
     onkeydown,
     ...rest.containerProps,

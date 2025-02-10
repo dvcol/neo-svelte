@@ -16,6 +16,7 @@
   import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
+  import { displayValue } from '~/inputs/neo-select.model';
 
   const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
 
@@ -94,6 +95,8 @@
       placeholder="Select color"
       position="left"
       floating={false}
+      color={options.color}
+      display={displayValue}
       size="10"
       bind:value={options.color}
       containerProps={{ style: 'margin-left: 6rem' }}

@@ -67,6 +67,7 @@
   }: NeoCheckboxProps = $props();
   /* eslint-enable prefer-const */
 
+  const labelId = $derived(label ? `neo-checkbox-label-${getUUID()}` : undefined);
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
 
   let initial = $state(checked);
@@ -172,6 +173,7 @@
       class={['neo-checkbox-input', rest.class]}
     />
     <NeoCheckboxButton
+      aria-labelledby={labelId}
       {indeterminate}
       {checked}
       {touched}
@@ -186,7 +188,7 @@
       onclick={() => ref?.click()}
       {...buttonProps}
     />
-    <NeoLabel bind:ref={labelRef} for={id} {label} {disabled} {required} {...labelProps} />
+    <NeoLabel bind:ref={labelRef} id={labelId} for={id} {label} {disabled} {required} {...labelProps} />
     {#if loading !== undefined}
       <span class="neo-checkbox-suffix">
         {#if loading}

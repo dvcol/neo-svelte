@@ -13,6 +13,7 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
+  import { displayValue } from '~/inputs/neo-select.model';
   import { DefaultShadowElevation } from '~/utils/shadow.utils';
 
   const { onClick, loading: loading$, onLoading } = useButtonState('DemoGroupClicked');
@@ -74,6 +75,8 @@
     placeholder="Select color"
     position="left"
     floating={false}
+    color={options.color}
+    display={displayValue}
     size="10"
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}

@@ -4,10 +4,9 @@
    *********************/
   --neo-white: oklch(100% 0 0deg);
   --neo-white-soft: oklch(from var(--neo-white) calc(l - 0.07) calc(c + 0.009) calc(h + 280));
-  --neo-white-soft-dark: oklch(from var(--neo-white-soft) calc(l - 0.075) c h);
   --neo-black: oklch(0% 0 0deg);
   --neo-grey: oklch(from var(--neo-black) calc(l + 0.33) c calc(h + 266));
-  --neo-grey-dark: oklch(from var(--neo-grey) calc(l + 0.2) c h);
+  --neo-grey-dark: oklch(from var(--neo-grey) calc(l + 0.05) c h);
   --neo-blue: oklch(50% 0.302 264.206deg);
   --neo-blue-dark: oklch(from var(--neo-blue) calc(l + 0.35) c h);
   --neo-purple-light: oklch(from var(--neo-purple) calc(l + 0.35) c h);
@@ -109,7 +108,7 @@
    *********************/
 
   // Text
-  --neo-dark-text-color: var(--neo-white-soft-dark);
+  --neo-dark-text-color: var(--neo-white-soft);
   --neo-dark-text-color-inverse: var(--neo-grey);
   --neo-dark-text-color-secondary: color-mix(in srgb, currentcolor, black 20%);
   --neo-dark-text-color-highlight: oklch(from currentcolor calc(l + 0.15) c h);

@@ -109,7 +109,7 @@ export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement | H
    * @param value
    * @param event
    */
-  change: (value: NeoInputValue<T>, event?: InputEvent | SvelteEvent<InputEvent>) => NeoInputState<T>;
+  change: (value: NeoInputValue<T>, event?: InputEvent | SvelteEvent<InputEvent>) => Promise<NeoInputState<T>>;
   /**
    * Check the input validity.
    * @param update whether to check the input dirty and/or valid state.
@@ -351,7 +351,7 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
   /**
    * The props to pass to the input container.
    */
-  containerProps?: HTMLNeoBaseElement;
+  containerProps?: HTMLNeoBaseElement & { tag?: keyof HTMLElementTagNameMap };
 
   /**
    * The HTML tag to use for the message and error components.

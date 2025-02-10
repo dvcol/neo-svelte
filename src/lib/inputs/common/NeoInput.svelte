@@ -453,9 +453,11 @@
   .neo-input-before,
   .neo-input-after {
     display: inline-flex;
+    align-items: center;
     box-sizing: border-box;
     min-width: min-content;
     font: inherit;
+    text-align: start;
     text-decoration: none;
     outline: none;
     transition:
@@ -468,6 +470,7 @@
       border-color 0.3s ease,
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
+    appearance: none;
   }
 
   .neo-input {
