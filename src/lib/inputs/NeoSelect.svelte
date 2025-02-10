@@ -181,9 +181,8 @@
   {multiple}
   {...rest}
   readonly
-  hidden
+  inert
   tabindex={-1}
-  aria-hidden
   affixProps={{
     close,
     readonly,

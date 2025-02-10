@@ -271,15 +271,7 @@
     {#if typeof display === 'function'}
       {@render display(currentState)}
     {:else}
-      <input
-        aria-hidden="true"
-        tabindex="-1"
-        class="neo-input-display-content"
-        readonly
-        value={display}
-        placeholder={rest?.placeholder}
-        size={rest?.size}
-      />
+      <input inert tabindex="-1" class="neo-input-display-content" readonly value={display} placeholder={rest?.placeholder} size={rest?.size} />
     {/if}
   </svelte:element>
 {:else if rest.type === 'select'}
@@ -518,10 +510,6 @@
       padding-right: 0;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
-    }
-
-    &[hidden] {
-      pointer-events: none;
     }
 
     &[type='password']:not(:placeholder-shown) {
