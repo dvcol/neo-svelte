@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import { type NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import IconCalendar from '~/icons/IconCalendar.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { coerce, computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, computeButtonStyle, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -42,8 +42,8 @@
   };
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
-  const text = $derived(elevation >= 0 || !rest.pressed);
-  const style = $derived(computeButtonShadows(elevation, text));
+  const template = $derived(computeButtonStyle(elevation, rest?.pressed));
+  const style = $derived(computeButtonShadows(elevation, template));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle picker',
     title: 'Toggle picker',
@@ -52,8 +52,8 @@
     rounded: rest.rounded,
     glass: rest.glass,
     start: rest.start,
-    text,
     style,
+    ...template,
     ...buttonProps,
     onclick,
   });

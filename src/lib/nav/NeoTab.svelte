@@ -187,6 +187,7 @@
     &:focus-visible :global(> .neo-icon-close) {
       color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
       background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
+      outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       opacity: 1;
       transition: none;
     }

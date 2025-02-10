@@ -91,8 +91,6 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
-
-  // TODO - sizing: small, medium, large (font, line-height, padding)
 </script>
 
 <svelte:element
@@ -113,6 +111,7 @@
   class:neo-flat-hover={flatHover}
   class:neo-flat={!elevation}
   class:neo-inset={elevation < 0}
+  class:neo-inset-hover={elevation + hover < 0}
   style:--neo-pill-glass-blur={filter}
   style:--neo-pill-box-shadow={boxShadow}
   style:--neo-pill-hover-shadow={hoverShadow}
@@ -239,11 +238,12 @@
       background-color: var(--neo-pill-bg-color, var(--neo-glass-background-color));
       backdrop-filter: var(--neo-pill-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
 
+      &.neo-inset-hover:hover,
       &.neo-inset {
         border-color: var(--neo-pill-border-color, transparent);
       }
 
-      &:not(.neo-inset, .neo-borderless, .neo-flat, .neo-disabled, .neo-filled) {
+      &:not(.neo-inset, .neo-inset-hover:hover, .neo-borderless, .neo-flat, .neo-disabled, .neo-filled) {
         border-color: var(
           --neo-pill-border-color,
           var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
@@ -251,6 +251,8 @@
         );
       }
 
+      &.neo-hover.neo-flat-hover.neo-hovered,
+      &.neo-hover.neo-flat-hover:hover,
       &.neo-flat:not(.neo-borderless, .neo-filled) {
         border-color: var(--neo-pill-border-color, var(--neo-glass-border-color-flat));
       }

@@ -265,7 +265,7 @@
       }
 
       &:focus-visible {
-        border-color: var(--neo-radio-border-color-focused, var(--neo-border-color-focused));
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       }
 
       &:active {

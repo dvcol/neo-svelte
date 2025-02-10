@@ -4,6 +4,17 @@ import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 
+import {
+  type ShadowElevation,
+  type ShadowElevationString,
+  type ShadowHoverElevation,
+  type ShadowHoverElevationsString,
+} from '~/utils/shadow.utils.js';
+
+export type NeoButtonElevation = ShadowElevation | ShadowElevationString;
+export type NeoButtonHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
+export type NeoButtonActiveElevation = ShadowHoverElevation | ShadowHoverElevationsString;
+
 export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> = {
   // Snippets
 
@@ -75,17 +86,50 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   color?: Color;
   /**
-   If true, only the button content will be displayed.
+   * If true, button specific styles will be removed (padding, text align & justification).
+   *
+   * @defaults`{ elevation: 0, hover: -1, active: -2, pressed: false, scale: false, borderless: true }`
    */
   ghost?: boolean;
   /**
-   * If true, the button will be displayed with no elevation or border.
+   * Shorthand for a flat borderless inset button.
+   *
+   * @defaults`{ elevation: 0, hover: -1, active: -3, pressed: false, borderless: true }`
    */
   text?: boolean;
   /**
+   * Input elevation.
+   * @default 3
+   */
+  elevation?: NeoButtonElevation;
+  /**
+   * Weather to increase/decrease the elevation when hovered/focused.
+   *
+   * @default -1 (relative to base elevation)
+   */
+  hover?: NeoButtonHoverElevation;
+  /**
+   * Weather to increase/decrease the elevation when active.
+   *
+   * @default -2 (relative to base elevation)
+   */
+  active?: NeoButtonActiveElevation;
+  /**
+   * Weather the pressed state should be displayed as recessed or pressed.
+   *
+   * @default true if `elevation` + `hover` > 0 && `active` < 0
+   */
+  pressed?: boolean;
+  /**
+   * Weather to scale the button content on active state.
+   *
+   * @default true
+   */
+  scale?: boolean;
+  /**
    * If true, the button will be displayed with no elevation.
    */
-  flat?: boolean;
+  borderless?: boolean;
   /**
    * If true, the button will be displayed with a glass effect.
    */
@@ -98,14 +142,6 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * If true, the button will have a rounded border.
    */
   rounded?: boolean;
-  /**
-   * If true, the button will be inset instead of pressed when active.
-   */
-  inset?: boolean;
-  /**
-   * If true, the button will be displayed with a shallower elevation when pressed.
-   */
-  shallow?: boolean;
   /**
    * If true, the flex direction of the button will be reversed.
    */
@@ -153,3 +189,28 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
       'onclick' | 'onkeydown' | 'onkeyup'
     >
   >;
+
+export type NeoButtonTemplate = Pick<
+  NeoButtonProps,
+  'elevation' | 'hover' | 'active' | 'pressed' | 'borderless' | 'glass' | 'tinted' | 'rounded' | 'reverse' | 'coalesce' | 'pulse'
+>;
+
+export const NeoRaisedButton: NeoButtonTemplate = {
+  elevation: 0,
+  hover: 1,
+  active: -1,
+  pressed: true,
+  borderless: true,
+};
+
+export const NeoFlatButton: NeoButtonTemplate = {
+  elevation: 0,
+  hover: -1,
+  active: -2,
+  pressed: false,
+};
+
+export const NeoTextButton: NeoButtonTemplate = {
+  ...NeoFlatButton,
+  borderless: true,
+};

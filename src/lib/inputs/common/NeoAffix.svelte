@@ -156,8 +156,7 @@
         background-color 0.3s ease;
 
       &:focus-visible {
-        color: var(--neo-close-color-focused, rgb(255 0 0 / 50%));
-        background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       }
 
       &:hover {

@@ -2,16 +2,16 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
 
   import type { FormEventHandler } from 'svelte/elements';
-  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
   import type { NeoColorPickerProps } from '~/inputs/neo-color-picker.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import { type NeoButtonProps } from '~/buttons/neo-button.model.js';
   import IconPaint from '~/icons/IconPaint.svelte';
   import NeoColorPickerSelector from '~/inputs/NeoColorPickerSelector.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { HexColorRegexString } from '~/utils/regex.utils.js';
-  import { coerce, computeButtonShadows, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, computeButtonStyle, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -61,11 +61,13 @@
     rounded: rest.rounded,
     glass: rest.glass,
     start: rest.start,
-    text,
     style,
+    ...template,
     ...buttonProps,
     onclick,
   });
+
+  $inspect(afterProps);
 
   const oninput: FormEventHandler<HTMLInputElement> = e => {
     ref?.dispatchEvent(new InputEvent(e.type, e));

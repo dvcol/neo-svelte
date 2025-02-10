@@ -95,7 +95,7 @@
 {/snippet}
 
 {#snippet after()}
-  <NeoButton text rounded shallow {title} aria-label="Change sorting order" {onclick}>
+  <NeoButton text rounded {title} aria-label="Change sorting order" {onclick}>
     {#snippet icon()}
       {#if invert === undefined}
         <IconAlignMiddle size="1.25rem" stroke="1.5" />

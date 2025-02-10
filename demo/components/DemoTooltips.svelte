@@ -232,7 +232,7 @@
       width="min"
       tooltipProps={{ ...options, openOnFocus: false, openOnHover: false }}
     >
-      <NeoButton flat ghost shallow rounded={options.rounded} bind:checked={open} toggle>
+      <NeoButton ghost rounded={options.rounded} bind:checked={open} toggle hover={options.elevation} active="-1" pressed>
         <NeoTransitionContainer overflow="hidden" style="min-width: 252px; margin: 0.5rem">
           {#key complexSelected?.item?.id}
             <div

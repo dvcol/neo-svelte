@@ -520,6 +520,10 @@
       border-bottom-right-radius: 0;
     }
 
+    &[hidden] {
+      pointer-events: none;
+    }
+
     &[type='password']:not(:placeholder-shown) {
       letter-spacing: 0.2em;
       -webkit-text-stroke-width: 0.15em;

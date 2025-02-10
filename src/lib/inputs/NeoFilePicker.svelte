@@ -15,7 +15,7 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
-  import { coerce, computeButtonShadows, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, computeButtonStyle, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -90,8 +90,8 @@
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(pressed)));
 
-  const text = $derived(elevation >= 0 || !pressed);
-  const style = $derived(computeButtonShadows(elevation, text));
+  const template = $derived(computeButtonStyle(elevation, pressed));
+  const style = $derived(computeButtonShadows(elevation, template));
   const isDragging = $derived(drop && dragging && !disabled);
 
   let dragRef = $state<HTMLDivElement>();
@@ -136,8 +136,8 @@
     rounded: expanded || rounded,
     glass: rest.glass,
     start: rest.start,
-    text,
     style,
+    ...template,
     ...buttonProps,
     class: ['neo-file-picker-button', buttonProps?.class],
     onclick,
@@ -564,10 +564,6 @@
           --neo-glass-box-shadow-raised-3: var(--neo-glass-box-shadow-pressed-3);
           --neo-glass-box-shadow-raised-4: var(--neo-glass-box-shadow-pressed-4);
           --neo-glass-box-shadow-raised-5: var(--neo-glass-box-shadow-pressed-4);
-
-          :global(.neo-file-picker-button) {
-            --neo-btn-box-shadow: var(--neo-box-shadow-flat) !important;
-          }
         }
 
         :global(> *) {

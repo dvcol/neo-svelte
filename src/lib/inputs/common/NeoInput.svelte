@@ -365,7 +365,8 @@
     class:neo-validation={showInputValidation}
     class:neo-disabled={disabled}
     class:neo-raised={elevation > 3 || elevation + hover > 3}
-    class:neo-inset={elevation < 0 || elevation + hover < 0}
+    class:neo-inset={elevation < 0}
+    class:neo-inset-hover={elevation + hover < 0}
     class:neo-deep={elevation < -3 || elevation + hover < -3}
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
@@ -498,7 +499,7 @@
         cursor: pointer;
 
         &:focus-visible {
-          color: var(--neo-input-focus-color, var(--neo-text-color-focused));
+          outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
         }
 
         &:hover {
@@ -525,7 +526,6 @@
         --neo-btn-padding: 0.5rem 0.75rem;
         --neo-btn-margin: auto;
         --neo-btn-min-width: 2.375rem;
-        --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
         --neo-btn-bg-color: transparent;
         --neo-btn-backdrop-filter: none;
       }
@@ -554,6 +554,10 @@
       border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
       box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
       cursor: var(--neo-input-cursor, text);
+
+      &:focus-visible {
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+      }
 
       &.neo-readonly {
         cursor: inherit;
@@ -836,11 +840,7 @@
         background-color: var(--neo-input-bg-color, var(--neo-glass-background-color));
         backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
 
-        &.neo-inset {
-          border-color: var(--neo-input-border-color, transparent);
-        }
-
-        &:not(.neo-inset, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+        &:not(.neo-inset, .neo-inset-hover:hover, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
           border-color: var(
             --neo-input-border-color,
             var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)

@@ -7,7 +7,7 @@
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { coerce, computeButtonShadows, getDefaultElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonShadows, computeButtonStyle, getDefaultElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -43,8 +43,8 @@
   const _type = $derived(show ? 'text' : type);
 
   const elevation = $derived(coerce<ShadowElevation>(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
-  const text = $derived(elevation >= 0 || !rest.pressed || pin);
-  const style = $derived(computeButtonShadows(elevation, text));
+  const template = $derived(computeButtonStyle(elevation, rest?.pressed, pin));
+  const style = $derived(computeButtonShadows(elevation, template));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle password visibility',
     title: 'Toggle password visibility',
@@ -53,8 +53,8 @@
     rounded: rest.rounded,
     glass: rest.glass,
     start: rest.start,
-    text,
     style,
+    ...template,
     ...buttonProps,
     toggle: true,
     class: ['neo-password-toggle', buttonProps?.class],

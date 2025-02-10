@@ -109,8 +109,8 @@
         box-shadow: var(--neo-radio-checked-shadow, var(--neo-box-shadow-pressed-2));
       }
 
-      &.neo-inset:focus-visible {
-        border-color: var(--neo-checkbox-border-color-focused, var(--neo-border-color-focused));
+      &:focus-visible {
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       }
 
       &.neo-disabled {

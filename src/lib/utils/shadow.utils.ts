@@ -1,10 +1,13 @@
 import { clamp } from '@dvcol/common-utils/common/math';
 
+import { type NeoButtonTemplate, NeoTextButton } from '~/buttons/neo-button.model.js';
+
 export const MaxShadowElevation = 5;
 export const MinShadowElevation = -5;
 export const DefaultShallowMinMaxElevation: { min: ShadowElevation; max: ShadowElevation } = { max: 2, min: -2 };
 
 export const DefaultShadowElevation = 3;
+export const DefaultShadowActiveElevation = -2;
 export const DefaultShadowPressedElevation = -2;
 
 export const ShadowElevations = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5] as const;
@@ -93,8 +96,8 @@ export const computeGlassFilter = (
   return `var(--neo-blur-${Math.abs(_elevation)}) var(--neo-saturate-${saturation})`;
 };
 
-export const computeButtonShadows = (elevation: number | ShadowElevation, text?: boolean) => {
-  if (text) return;
+export const computeButtonShadows = (elevation: number | ShadowElevation, template?: NeoButtonTemplate) => {
+  if (!template?.elevation) return;
   return `
       --neo-btn-box-shadow: var(--neo-box-shadow-raised-${Math.min(Math.abs(elevation), 3)});
       --neo-btn-box-shadow-hover: var(--neo-box-shadow-raised-${clamp(Math.abs(elevation) - 1, 1, 2)});
@@ -102,4 +105,9 @@ export const computeButtonShadows = (elevation: number | ShadowElevation, text?:
       --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-${clamp(Math.abs(elevation) - 1, 1, 2)});
       --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-${clamp(Math.abs(elevation) - 1, 1, 2)});
       `;
+};
+
+export const computeButtonStyle = (elevation: number | ShadowElevation, pressed?: boolean, text?: boolean): NeoButtonTemplate => {
+  if (text || !pressed || (pressed && elevation >= 0)) return NeoTextButton;
+  return { elevation: Math.max(1, Math.abs(elevation)) as ShadowElevation, hover: 0, active: -2, borderless: true };
 };

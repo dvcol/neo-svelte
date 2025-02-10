@@ -166,7 +166,7 @@
     <div class="neo-card-close">
       <NeoButton aria-label="Close card" rounded text onclick={onClose} {...closeProps}>
         {#snippet icon()}
-          <IconClose />
+          <IconClose size="1rem" />
         {/snippet}
       </NeoButton>
     </div>
@@ -201,7 +201,8 @@
   class:neo-hovered={hovered}
   class:neo-start={start}
   class:neo-raised={elevation > 3 || hoverElevation > 3}
-  class:neo-inset={elevation < 0 || hoverElevation < 0}
+  class:neo-inset={elevation < 0}
+  class:neo-inset-hover={hoverElevation < 0}
   class:neo-deep={elevation < -3 || hoverElevation < -3}
   class:neo-flat={!elevation}
   class:neo-hover-flat={hoverFlat}
@@ -391,14 +392,12 @@
     }
 
     .neo-card-close {
+      flex: 0 0 auto;
       align-self: flex-start;
       margin-left: auto;
       opacity: 0;
       transition: opacity 0.3s ease;
 
-      --neo-btn-text-color-focused: var(--neo-close-color-focused, rgb(255 0 0 / 50%));
-      --neo-btn-text-color-focused-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
-      --neo-text-color-focused-active: var(--neo-close-color, rgb(255 0 0));
       --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
       --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
     }
@@ -442,11 +441,20 @@
       backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
 
       &.neo-convex,
-      &.neo-inset {
+      &.neo-inset,
+      &.neo-inset-hover:hover {
         border-color: var(--neo-card-border-color, transparent);
       }
 
-      &:not(.neo-inset, .neo-convex, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+      &:not(
+          .neo-inset,
+          .neo-inset-hover:hover,
+          .neo-convex,
+          .neo-borderless,
+          .neo-hover-flat:hover,
+          .neo-hover-flat.neo-hovered,
+          .neo-hover-flat:focus-within
+        ) {
         border-color: var(
           --neo-card-border-color,
           var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)

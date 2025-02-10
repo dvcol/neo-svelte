@@ -14,6 +14,7 @@
   import NeoCheckboxButton from '~/buttons/NeoCheckboxButton.svelte';
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
   import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
+  import { NeoFlatButton, NeoRaisedButton, NeoTextButton } from '~/buttons/neo-button.model.js';
   import IconAccount from '~/icons/IconAccount.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
@@ -24,8 +25,6 @@
     disabled: false,
     skeleton: false,
     loading: false,
-    inset: false,
-    shallow: false,
     glass: false,
     tinted: false,
     color: '',
@@ -35,10 +34,15 @@
 
   const columns = [
     { label: 'Default' },
-    { label: 'Rounded', props: { rounded: true, shallow: true } },
-    { label: 'Flat', props: { flat: true, shallow: true } },
-    { label: 'Text', props: { text: true, shallow: true } },
+    { label: 'Rounded', props: { rounded: true } },
+    { label: 'Flat', props: NeoFlatButton },
+    { label: 'Text', props: NeoTextButton },
+    { label: 'Raise', props: NeoRaisedButton },
   ];
+
+  // TODO : button group
+  // TODO : select for hover, active, elevation
+  // TODO - support override
 </script>
 
 {#snippet icon()}
@@ -83,8 +87,6 @@
     <NeoButtonGroup>
       <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
       <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
-      <NeoButton toggle bind:checked={options.inset}>Inset</NeoButton>
-      <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
       <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
       <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>

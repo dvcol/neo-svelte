@@ -532,7 +532,7 @@
       }
 
       &:focus-visible {
-        border-color: var(--neo-range-handle-border-color-focused, var(--neo-border-color-focused));
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       }
 
       &-before,
@@ -582,7 +582,6 @@
       height: var(--neo-range-height);
       margin: 0;
       padding: 0;
-      overflow: hidden;
       color: var(--neo-range-color, inherit);
       text-decoration: none;
       background: transparent;

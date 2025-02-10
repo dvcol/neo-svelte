@@ -1,11 +1,21 @@
 <script lang="ts">
   import { width } from '@dvcol/svelte-utils/transition';
 
-  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+  import { type NeoButtonProps, NeoTextButton } from '~/buttons/neo-button.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
+  import {
+    coerce,
+    computeGlassFilter,
+    computeHoverShadowElevation,
+    computeShadowElevation,
+    DefaultShadowActiveElevation,
+    DefaultShadowElevation,
+    DefaultShadowHoverElevation,
+    isShadowFlat,
+  } from '~/utils/shadow.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -30,17 +40,16 @@
     // Styles
     start,
     color,
-    ghost,
     text,
-    flat,
+    ghost,
     glass,
     tinted,
     rounded,
-    inset,
-    shallow,
+    borderless = text || ghost,
     reverse,
     coalesce,
     pulse,
+    scale = !ghost,
 
     // Flex
     justify,
@@ -63,21 +72,50 @@
     use,
 
     // Other props
-    ...rest
+    ..._rest
   }: NeoButtonProps = $props();
   /* eslint-enable prefer-const */
 
+  // TODO - Rework button group / nav
+
+  const {
+    elevation: _elevation = DefaultShadowElevation,
+    hover: _hover = DefaultShadowHoverElevation,
+    active: _active = DefaultShadowActiveElevation,
+    pressed: _pressed,
+    ...rest
+  } = $derived.by(() => {
+    if (text || ghost) return { ...NeoTextButton, ..._rest };
+    return _rest;
+  });
+
+  const elevation = $derived(coerce(_elevation));
+  const hover = $derived(coerce(_hover));
+  const active = $derived(coerce(_active));
+  const activePressed = $derived(_pressed ?? elevation + hover > 0);
+
+  const filter = $derived(computeGlassFilter(elevation, glass));
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass }));
+  const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
+  const activeShadow = $derived(
+    computeShadowElevation(active, { glass, pressed: !glass && activePressed, active: glass && activePressed }) ?? boxShadow,
+  );
+
+  const activeFlat = $derived(isShadowFlat(activeShadow));
+  const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
+  const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
+
   let enter = $state(false);
-  let active = $state(false);
-  const pressed = $derived(enter || active || checked);
+  let clicked = $state(false);
+  const pressed = $derived(enter || clicked || checked);
   const empty = $derived(only || (!children && !label));
 
   let timeout: ReturnType<typeof setTimeout>;
   const onActive = () => {
     clearTimeout(timeout);
-    active = true;
+    clicked = true;
     timeout = setTimeout(() => {
-      active = false;
+      clicked = false;
     }, 150);
   };
 
@@ -139,15 +177,24 @@
   class:neo-skeleton={skeleton}
   class:neo-start={start}
   class:neo-glass={glass}
+  class:neo-scale={scale}
   class:neo-tinted={tinted}
-  class:neo-flat={flat || text || ghost}
+  class:neo-flat={!elevation}
+  class:neo-hover={hover}
+  class:neo-hover-flat={hoverFlat}
+  class:neo-flat-hover={flatHover}
+  class:neo-flat-active={activeFlat}
   class:neo-ghost={ghost}
-  class:neo-borderless={text || (ghost && !flat)}
-  class:neo-inset={inset}
-  class:neo-shallow={shallow}
+  class:neo-borderless={borderless}
+  class:neo-inset={elevation < 0}
+  class:neo-inset-hover={elevation + hover < 0}
   class:neo-rounded={rounded}
   class:neo-empty={empty}
   style:--neo-btn-text-color={getColorVariable(color)}
+  style:--neo-btn-backdrop-filter={filter}
+  style:--neo-btn-box-shadow={boxShadow}
+  style:--neo-btn-box-shadow-hover={hoverShadow}
+  style:--neo-btn-box-shadow-active={activeShadow}
   style:justify-content={justify}
   style:align-items={align}
   style:flex
@@ -220,19 +267,6 @@
       cursor: wait;
     }
 
-    &.neo-inset {
-      --neo-btn-box-shadow-active: var(--neo-box-shadow-inset-1);
-      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-inset-1);
-    }
-
-    &.neo-shallow {
-      --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-1);
-      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-1);
-      --neo-btn-box-shadow-active-flat: var(--neo-box-shadow-inset-2);
-      --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
-      --neo-btn-scale-pressed: 1;
-    }
-
     .neo-icon,
     .neo-content {
       display: inline-flex;
@@ -266,6 +300,7 @@
 
     &.neo-ghost {
       justify-content: unset;
+      margin: var(--neo-btn-margin, 0);
       padding: var(--neo-btn-padding, 0);
 
       .neo-content {
@@ -274,16 +309,24 @@
       }
     }
 
+    &:focus-visible {
+      outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+    }
+
+    &:focus-visible,
     &:hover {
       box-shadow: var(--neo-btn-box-shadow-hover, var(--neo-box-shadow-raised-2));
     }
 
+    &:focus-visible .neo-content,
     &:hover .neo-content {
       color: var(--neo-btn-text-color-hover, var(--neo-text-color-hover));
     }
 
-    &:focus-visible .neo-content {
-      color: var(--neo-btn-text-color-focused, var(--neo-text-color-focused));
+    &:disabled .neo-content,
+    &[disabled]:not([disabled='false']) .neo-content {
+      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled));
+      scale: 1;
     }
 
     &.neo-pressed,
@@ -298,47 +341,9 @@
         border-radius 0.3s ease,
         box-shadow 0.15s ease-out;
 
-      .neo-content {
+      &.neo-scale .neo-content {
         color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
         scale: var(--neo-btn-scale-pressed, 0.98);
-      }
-    }
-
-    &:disabled:disabled .neo-content,
-    &[disabled]:not([disabled='false']) .neo-content {
-      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled));
-      scale: 1;
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: var(--neo-btn-box-shadow-focus, var(--neo-box-shadow-raised-2));
-      transition:
-        opacity 0.3s ease,
-        color 0.3s ease,
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        backdrop-filter 0.3s ease,
-        border-radius 0.3s ease,
-        box-shadow 0.15s ease-out;
-
-      &:not(:hover) .neo-content {
-        transition:
-          color 0s ease,
-          scale 0.3s ease;
-      }
-
-      &:hover .neo-content {
-        color: var(--neo-btn-text-color-focused-hover, var(--neo-text-color-focused));
-      }
-
-      &.neo-pressed,
-      &:active:not(.neo-loading) {
-        box-shadow: var(--neo-btn-box-shadow-focus-active, var(--neo-box-shadow-pressed-2));
-
-        .neo-content {
-          color: var(--neo-btn-text-color-focused-active, var(--neo-text-color-focused-active));
-        }
       }
     }
 
@@ -346,62 +351,48 @@
       border-color: transparent !important;
     }
 
-    &.neo-flat {
-      --neo-coalesce-box-shadow: var(--neo-box-shadow-raised-2);
-      --neo-pulse-box-shadow: var(--neo-box-shadow-raised-2);
-
-      margin: var(--neo-btn-margin, 0);
+    &.neo-hover.neo-flat-hover.neo-hovered,
+    &.neo-hover.neo-flat-hover:focus-visible:not(:active, .neo-pressed),
+    &.neo-hover.neo-flat-hover:hover:not(:active, .neo-pressed),
+    &.neo-flat-active.neo-pressed,
+    &.neo-flat-active:active,
+    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-visible, .neo-hover-flat.neo-hovered, .neo-pressed, :active) {
       border-color: var(--neo-btn-border-color, var(--neo-border-color));
-      box-shadow: var(--neo-box-shadow-flat);
-
-      &:focus-visible,
-      &:hover {
-        border-color: transparent;
-        box-shadow: var(--neo-btn-box-shadow-hover-flat, var(--neo-box-shadow-inset-1));
-      }
-
-      &.neo-pressed,
-      &:active:not(.neo-loading) {
-        border-color: transparent;
-        box-shadow: var(--neo-btn-box-shadow-active-flat, var(--neo-box-shadow-inset-3));
-
-        &.neo-toggle {
-          box-shadow: var(--neo-btn-box-shadow-active-flat-toggle, var(--neo-box-shadow-inset-3));
-        }
-      }
     }
 
     &.neo-glass {
-      --neo-box-shadow-inset-1: var(--neo-glass-box-shadow-inset-1);
-      --neo-box-shadow-inset-2: var(--neo-glass-box-shadow-inset-2);
-      --neo-box-shadow-inset-3: var(--neo-glass-box-shadow-inset-3);
-      --neo-box-shadow-flat: var(--neo-glass-box-shadow-flat);
-      --neo-box-shadow-pressed-1: var(--neo-glass-box-shadow-active-1);
-      --neo-box-shadow-pressed-2: var(--neo-glass-box-shadow-active-2);
-      --neo-box-shadow-raised-2: var(--neo-glass-box-shadow-raised-2);
-      --neo-box-shadow-raised-3: var(--neo-glass-box-shadow-raised-3);
       --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
+      --neo-skeleton-color: var(--neo-glass-skeleton-color);
+      --neo-border-color: var(--neo-glass-border-color);
 
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
-      border-color: var(
-        --neo-btn-border-color,
-        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
-      );
       backdrop-filter: var(--neo-btn-backdrop-filter, var(--neo-blur-2) var(--neo-saturate-3));
 
-      &.neo-pressed,
-      &:active:not(.neo-loading) {
-        &.neo-inset {
-          border-color: transparent;
-        }
+      &:not(
+          .neo-inset,
+          .neo-inset-hover:hover,
+          .neo-inset-hover:focus-visible,
+          .neo-borderless,
+          .neo-hover-flat:hover,
+          .neo-hover-flat:focus-visible,
+          .neo-hover-flat.neo-hovered,
+          .neo-pressed,
+          :active
+        ) {
+        border-color: var(
+          --neo-btn-border-color,
+          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+            var(--neo-glass-left-border-color)
+        );
       }
 
-      &.neo-flat:not(.neo-pressed, :active:not(.neo-loading)) {
+      &.neo-hover.neo-flat-hover.neo-hovered,
+      &.neo-hover.neo-flat-hover:focus-visible:not(:active, .neo-pressed),
+      &.neo-hover.neo-flat-hover:hover:not(:active, .neo-pressed),
+      &.neo-flat-active.neo-pressed,
+      &.neo-flat-active:active,
+      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-visible, .neo-hover-flat.neo-hovered, .neo-pressed, :active) {
         border-color: var(--neo-btn-border-color, var(--neo-glass-border-color-flat));
-
-        &:hover {
-          border-color: transparent;
-        }
       }
     }
 

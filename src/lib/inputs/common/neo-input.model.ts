@@ -1,8 +1,3 @@
-// TODO: movie this to dedicate input like Password, FilePicker, DatePicker & Number
-// &::-webkit-calendar-picker-indicator {
-//   display: none;
-// }
-
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLSelectAttributes, HTMLTextareaAttributes } from 'svelte/elements';
 import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';

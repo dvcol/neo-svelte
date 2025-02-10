@@ -111,7 +111,9 @@
     data-select={checked}
     aria-labelledby={labelId}
     ghost
-    shallow
+    elevation="0"
+    hover="-1"
+    active="-2"
     {readonly}
     {disabled}
     href={item?.href}
