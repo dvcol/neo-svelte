@@ -341,6 +341,8 @@
 
       :global(> .neo-list:only-child) {
         --neo-list-scrollbar-padding: 0.75rem;
+
+        clip-path: inset(0 round var(--neo-tooltip-border-radius, var(--neo-border-radius)));
       }
     }
   }
