@@ -8,7 +8,6 @@
     computeGlassFilter,
     computeHoverShadowElevation,
     computeShadowElevation,
-    DefaultShadowActiveElevation,
     DefaultShadowElevation,
     DefaultShadowHoverElevation,
     getDefaultElevation,
@@ -34,7 +33,6 @@
     glass,
     tinted,
     rounded,
-    shallow,
     pulse,
     coalesce,
     vertical,
@@ -58,24 +56,18 @@
   }: NeoButtonGroupProps = $props();
   /* eslint-enable prefer-const */
 
-  const {
-    elevation: _elevation = DefaultShadowElevation,
-    buttonHover: _hover = DefaultShadowHoverElevation,
-    buttonActive: _active = DefaultShadowActiveElevation,
-    blur: _blur,
-    ...rest
-  } = $derived(_rest);
+  const { elevation: _elevation = DefaultShadowElevation, blur: _blur, button, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
-  const hover = $derived(coerce(_hover));
-  const active = $derived(coerce(_active));
+  const hover = $derived(coerce(button?.hover ?? DefaultShadowHoverElevation));
+  const active = $derived(coerce(button?.active ?? -3));
 
   const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }));
-  const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
-  const activeShadow = $derived(computeShadowElevation(active, { glass, pressed: false, active: glass }) ?? boxShadow);
+  const hoverShadow = $derived(computeHoverShadowElevation(0, hover, { glass }) ?? boxShadow);
+  const activeShadow = $derived(computeShadowElevation(active, { glass, pressed: button?.pressed }) ?? boxShadow);
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -98,7 +90,6 @@
     color,
     glass,
     tinted,
-    shallow,
     pulse,
     coalesce,
     vertical,
@@ -118,7 +109,6 @@
   class:neo-glass={glass}
   class:neo-tinted={tinted}
   class:neo-rounded={rounded}
-  class:neo-shallow={shallow}
   class:neo-pulse={pulse}
   class:neo-coalesce={coalesce}
   class:neo-skeleton={skeleton}
@@ -244,19 +234,19 @@
     }
 
     :global(.neo-button:not(.neo-flat, :active:not(.neo-loading), .neo-pressed):hover) {
-      box-shadow: var(--neo-box-shadow-inset-1);
+      box-shadow: var(--neo-btn-group-box-shadow-hover);
     }
 
     :global(.neo-button.neo-pressed),
     :global(.neo-button:active:not(.neo-loading)) {
-      --neo-box-shadow-pressed-2: var(--neo-box-shadow-inset-3);
+      box-shadow: var(--neo-btn-group-box-shadow-active);
     }
 
     &.neo-pulse {
       @include mixin.pulse(
         $scaleX: var(--neo-btn-group-scale-x, 1.2),
         $scaleY: var(--neo-btn-group-scale-y, 2),
-        $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-box-shadow-raised-3))
+        $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-btn-group-box-shadow))
       );
     }
 
@@ -264,7 +254,7 @@
       @include mixin.coalesce(
         $scaleX: var(--neo-btn-group-scale-x, 1.2),
         $scaleY: var(--neo-btn-group-scale-y, 2),
-        $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-raised-3))
+        $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-btn-group-box-shadow))
       );
     }
 

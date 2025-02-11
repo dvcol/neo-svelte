@@ -77,8 +77,6 @@
   }: NeoButtonProps = $props();
   /* eslint-enable prefer-const */
 
-  // TODO - Rework button group / nav
-
   const {
     elevation: _elevation = DefaultShadowElevation,
     hover: _hover = DefaultShadowHoverElevation,

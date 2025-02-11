@@ -29,17 +29,28 @@ export type NeoButtonGroupContext = {
    */
   blur?: NeoButtonBlur;
   /**
-   * Button hover elevation.
-   *
-   * @default -1 (relative to base elevation)
+   * Shadow elevation for the buttons (hover, active, pressed).
    */
-  buttonHover?: NeoButtonHoverElevation;
-  /**
-   * Button active elevation.
-   *
-   * @default -2 (relative to base elevation)
-   */
-  buttonActive?: NeoButtonActiveElevation;
+  button?: {
+    /**
+     * Button hover elevation.
+     *
+     * @default -1 (relative to base elevation)
+     */
+    hover?: NeoButtonHoverElevation;
+    /**
+     * Button active elevation.
+     *
+     * @default -2 (relative to base elevation)
+     */
+    active?: NeoButtonActiveElevation;
+    /**
+     * Weather the pressed state should be displayed as recessed or pressed.
+     *
+     * @default true if `elevation` + `hover` > 0 && `active` < 0
+     */
+    pressed?: boolean;
+  };
   /**
    * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
    */
@@ -56,10 +67,6 @@ export type NeoButtonGroupContext = {
    * If true, the button group will have a rounded border.
    */
   rounded?: boolean;
-  /**
-   * If true, the button group will be displayed with a shallower elevation when pressed.
-   */
-  shallow?: boolean;
   /**
    * Text color to use for the button.
    */

@@ -23,18 +23,18 @@
     rounded: false,
     vertical: false,
     elevation: DefaultShadowElevation,
-    shallow: false,
     glass: false,
     color: '',
     tinted: false,
   });
 
-  const columns = [
+  const columns: { label: string; props: NeoButtonGroupProps }[] = [
     { label: 'Default' },
     { label: 'Flat', props: { elevation: 0 } },
     { label: 'Text', props: { elevation: 0, borderless: true } },
     { label: 'Inset', props: { elevation: -2 } },
     { label: 'Pressed', props: { elevation: -2, pressed: true } },
+    { label: 'Raised', props: { elevation: -2, button: { hover: 1, active: -1, pressed: true } } },
     { label: 'Convex', props: { elevation: 2, convex: true } },
   ];
 </script>
@@ -64,7 +64,6 @@
   <NeoButtonGroup>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
-    <NeoButton toggle bind:checked={options.shallow}>Shallow</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
     <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>

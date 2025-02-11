@@ -44,7 +44,7 @@
   --neo-text-color-disabled: oklch(from currentcolor l c h / 60%);
 
   // Highlight
-  --neo-text-highlight-color: oklch(from var(--neo-text-color) calc(l + 0.3) c h / 50%);
+  --neo-text-highlight-color: oklch(from currentcolor calc(l + 0.3) c h / 20%);
 
   // Border
   --neo-border-color: oklch(from currentcolor l c h / 20%);
@@ -114,9 +114,6 @@
   --neo-dark-text-color-hover: oklch(from currentcolor calc(l - 0.075) c h);
   --neo-dark-text-color-hover-active: color-mix(in srgb, var(--neo-dark-text-color-hover), black 10%);
   --neo-dark-text-color-disabled: oklch(from currentcolor l c h / 40%);
-
-  // Highlight
-  --neo-dark-text-highlight-color: oklch(from var(--neo-dark-text-color) calc(l - 0.3) c h / 50%);
 
   // Border
   --neo-dark-border-color: oklch(from currentcolor l c h / 20%);
@@ -188,9 +185,6 @@
   --neo-text-color-hover: var(--neo-dark-text-color-hover);
   --neo-text-color-hover-active: var(--neo-dark-text-color-hover-active);
   --neo-text-color-disabled: var(--neo-dark-text-color-disabled);
-
-  // Highlight
-  --neo-text-highlight-color: var(--neo-dark-text-highlight-color);
 
   // Border
   --neo-border-color: var(--neo-dark-border-color);

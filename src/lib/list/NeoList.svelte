@@ -25,6 +25,7 @@
   } from '~/list/neo-list.model.js';
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
+  import { NeoErrorListSelectDisabled } from '~/utils/error.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickCircOutProps, quickDurationProps, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
 
@@ -131,7 +132,7 @@
 
   const selectItem: NeoListMethods['selectItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
     if (disabled || readonly || !selection?.length) return;
-    if (!select) throw new Error('Selection is disabled.'); // TODO custom error
+    if (!select) throw new NeoErrorListSelectDisabled();
 
     const previous = cloneSelection();
     if (isMultiple(selected)) {
@@ -145,7 +146,7 @@
 
   const clearItem: NeoListMethods['clearItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
     if (disabled || readonly) return;
-    if (!select) throw new Error('Selection is disabled.'); // TODO custom error
+    if (!select) throw new NeoErrorListSelectDisabled();
 
     const previous = cloneSelection();
     if (isMultiple(selected)) {

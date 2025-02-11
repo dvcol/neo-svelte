@@ -1,6 +1,7 @@
 export const NeoErrorType = {
   NeoError: 'NeoError' as const,
   NeoThemeProvider: 'NeoThemeProvider' as const,
+  NeoList: 'NeoList' as const,
 } as const;
 
 export type NeoErrorTypes = (typeof NeoErrorType)[keyof typeof NeoErrorType];
@@ -40,5 +41,11 @@ export class NeoErrorThemeInvalidTarget extends NeoErrorThemeProvider {
 export class NeoErrorThemeContextNotFound extends NeoErrorThemeProvider {
   constructor() {
     super('No theme context found. Did you forget to wrap your component with `NeoThemeProvider`?');
+  }
+}
+
+export class NeoErrorListSelectDisabled extends NeoError {
+  constructor() {
+    super('Cannot select an item in a disabled list.', NeoErrorType.NeoList);
   }
 }
