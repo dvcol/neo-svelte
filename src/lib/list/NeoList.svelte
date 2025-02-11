@@ -297,65 +297,80 @@
   </li>
 {/snippet}
 
+{#snippet emptyItem()}
+  {#if customEmpty}
+    {@render customEmpty(context)}
+  {:else}
+    <div class="neo-list-empty-content">
+      <IconList size="3rem" stroke="1" />
+      <div>No items</div>
+    </div>
+  {/if}
+{/snippet}
+
 {#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
   {@const visible = array
     ?.map((item, index) => ({ item, index }))
     .filter(({ item }) => filter(item))
     .sort((a, b) => sort(a.item, b.item))}
-  <!-- Items -->
-  {#each visible as { item, index } (item.id ?? index)}
-    {@const checked = !isSection(item) && isChecked({ index, item, sectionIndex, section })}
-    <svelte:element
-      this={item.tag ?? 'li'}
-      role={select ? 'option' : 'listitem'}
-      data-index={index}
-      data-section={sectionIndex}
-      aria-selected={checked}
-      aria-posinset={index + 1}
-      aria-setsize={array.length}
-      class:neo-list-item={true}
-      class:neo-skeleton={skeleton}
-      class:neo-checked={checked}
-      class:neo-list-item-select={select}
-      style:--neo-list-item-color={getColorVariable(item.color)}
-      {...item.containerProps}
-      animate:animateFn={{ ...animateProps, enabled: !section }}
-      out:inFn={inProps}
-      in:outFn={outProps}
-    >
-      {#if index && showDivider(item, 'top')}
-        <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
-      {/if}
-      {#if isSection(item)}
-        {@const sectionContext = { items: item.items, section: item, index, context }}
-        {#if customSection && !item.render}
-          {@render customSection(list, sectionContext)}
-        {:else}
-          <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} {...sectionProps} />
+  {#if !visible?.length}
+    {@render emptyItem()}
+  {:else}
+    <!-- Items -->
+    {#each visible as { item, index } (item.id ?? index)}
+      {@const checked = !isSection(item) && isChecked({ index, item, sectionIndex, section })}
+      <svelte:element
+        this={item.tag ?? 'li'}
+        role={select ? 'option' : 'listitem'}
+        data-index={index}
+        data-section={sectionIndex}
+        aria-selected={checked}
+        aria-posinset={index + 1}
+        aria-setsize={array.length}
+        class:neo-list-item={true}
+        class:neo-skeleton={skeleton}
+        class:neo-checked={checked}
+        class:neo-list-item-select={select}
+        style:--neo-list-item-color={getColorVariable(item.color)}
+        {...item.containerProps}
+        animate:animateFn={{ ...animateProps, enabled: !section }}
+        out:inFn={inProps}
+        in:outFn={outProps}
+      >
+        {#if index && showDivider(item, 'top')}
+          <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
-      {:else if customItem && !item.render}
-        {@render customItem({ item, index, context })}
-      {:else}
-        <NeoListBaseItem
-          {item}
-          {index}
-          {context}
-          {skeleton}
-          {checked}
-          {select}
-          {highlight}
-          {buttonProps}
-          disabled={item.disabled || disabled}
-          readonly={item.readonly || readonly}
-          {...itemProps}
-          onclick={() => toggleItem({ index, item, sectionIndex, section }, checked)}
-        />
-      {/if}
-      {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1].item, 'bottom')}
-        <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
-      {/if}
-    </svelte:element>
-  {/each}
+        {#if isSection(item)}
+          {@const sectionContext = { items: item.items, section: item, index, context }}
+          {#if customSection && !item.render}
+            {@render customSection(list, sectionContext)}
+          {:else}
+            <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} {...sectionProps} />
+          {/if}
+        {:else if customItem && !item.render}
+          {@render customItem({ item, index, context })}
+        {:else}
+          <NeoListBaseItem
+            {item}
+            {index}
+            {context}
+            {skeleton}
+            {checked}
+            {select}
+            {highlight}
+            {buttonProps}
+            disabled={item.disabled || disabled}
+            readonly={item.readonly || readonly}
+            {...itemProps}
+            onclick={() => toggleItem({ index, item, sectionIndex, section }, checked)}
+          />
+        {/if}
+        {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1].item, 'bottom')}
+          <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
+        {/if}
+      </svelte:element>
+    {/each}
+  {/if}
 {/snippet}
 
 <svelte:element
@@ -398,14 +413,7 @@
       in:fade={quickDurationProps}
       {...rest}
     >
-      {#if customEmpty}
-        {@render customEmpty(context)}
-      {:else}
-        <div class="neo-list-empty-content">
-          <IconList size="3rem" stroke="1" />
-          <div>No items</div>
-        </div>
-      {/if}
+      {@render emptyItem()}
     </svelte:element>
   {/if}
   {@render after?.(context)}
