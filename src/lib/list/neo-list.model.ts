@@ -139,6 +139,10 @@ export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagName
    */
   render?: NeoListSectionRender<Value>;
   /**
+   * Optional snippet to display when the section is empty.
+   */
+  empty?: Snippet<[NeoListContext]>;
+  /**
    * Optional props to pass to the section container.
    */
   sectionProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

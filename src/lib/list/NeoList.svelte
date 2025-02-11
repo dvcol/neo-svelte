@@ -18,6 +18,7 @@
     type NeoListMethods,
     type NeoListProps,
     type NeoListRenderContext,
+    type NeoListSection,
     type NeoListSelectedItem,
     type NeoListSelectEvent,
     showDivider,
@@ -297,9 +298,9 @@
   </li>
 {/snippet}
 
-{#snippet emptyItem()}
-  {#if customEmpty}
-    {@render customEmpty(context)}
+{#snippet emptyItem(itemEmpty: NeoListSection['empty'] = customEmpty)}
+  {#if itemEmpty}
+    {@render itemEmpty(context)}
   {:else}
     <div class="neo-list-empty-content">
       <IconList size="3rem" stroke="1" />
@@ -314,7 +315,7 @@
     .filter(({ item }) => filter(item))
     .sort((a, b) => sort(a.item, b.item))}
   {#if !visible?.length}
-    {@render emptyItem()}
+    {@render emptyItem(section?.empty)}
   {:else}
     <!-- Items -->
     {#each visible as { item, index } (item.id ?? index)}
