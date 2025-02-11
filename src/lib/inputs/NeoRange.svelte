@@ -70,13 +70,14 @@
     wrapperProps,
     floatingProps,
     floatingOptions,
-    ...rest
+    ..._rest
   }: NeoRangeProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
+  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
-  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
+  const elevation = $derived(coerce(_elevation));
 
   const isArray = $derived(Array.isArray(value));
   const initial = $state<NeoRangeValue>(Array.isArray(value) ? [...value] : value);

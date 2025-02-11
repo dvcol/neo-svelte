@@ -81,6 +81,9 @@
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
   const template = $derived(computeButtonTemplate(elevation, rest?.pressed));
 
+  const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(rest?.pressed)));
+  const tooltipElevation = $derived((rest?.pressed ? Math.abs(elevation + hover) : elevation + hover) as NeoTooltipElevation);
+
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle select dropdown',
     title: 'Toggle select dropdown',
@@ -107,9 +110,6 @@
       next: () => ref?.validate?.(),
     },
   );
-
-  const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(rest?.pressed)));
-  const tooltipElevation = $derived((rest?.pressed ? Math.abs(elevation + hover) : elevation + hover) as NeoTooltipElevation);
 
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
   const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);

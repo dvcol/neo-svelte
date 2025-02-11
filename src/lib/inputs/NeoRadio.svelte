@@ -51,14 +51,15 @@
     labelProps,
     buttonProps,
     containerProps,
-    ...rest
+    ..._rest
   }: NeoRadioProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
+  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
+  const elevation = $derived(coerce(_elevation));
   const labelId = $derived(label ? `neo-radio-label-${getUUID()}` : undefined);
-  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
 
   let initial = $state(checked);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');

@@ -46,14 +46,15 @@
 
     // Other props
     containerProps,
-    ...rest
+    ..._rest
   }: NeoTabsProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
+  const { elevation: _elevation, slideElevation: _slideElevation, ...rest } = $derived(_rest);
 
-  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
-  const slideElevation = $derived(coerce(rest?.slideElevation ?? getDefaultSlideElevation(elevation)));
+  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
+  const slideElevation = $derived(coerce(_slideElevation ?? getDefaultSlideElevation(elevation)));
 
   // reflect context active to component
   const onChange: OnChange = (_tabId, _new, _old) => {

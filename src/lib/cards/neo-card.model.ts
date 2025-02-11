@@ -4,9 +4,17 @@ import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
-import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
+import type {
+  BlurElevation,
+  BlurElevationString,
+  ShadowElevation,
+  ShadowElevationString,
+  ShadowHoverElevation,
+  ShadowHoverElevationsString,
+} from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
+export type NeoCardBlur = BlurElevation | BlurElevationString;
 export type NeoCardElevation = ShadowElevation | ShadowElevationString;
 export type NeoCardHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 
@@ -29,6 +37,13 @@ export type NeoCardContext = {
    * @default 0
    */
   hover?: NeoCardHoverElevation;
+  /**
+   * The blur level to apply when in glass mode.
+   *
+   * @default elevation, min: 1, max: 5
+   * @see glass
+   */
+  blur?: NeoCardBlur;
   /**
    * If the card is currently hovered.
    */

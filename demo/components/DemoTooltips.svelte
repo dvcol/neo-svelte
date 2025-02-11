@@ -142,7 +142,7 @@
     position="left"
     center
     bind:value={options.elevation}
-    min={1}
+    min={0}
     max={MaxShadowElevation}
     defaultValue={DefaultShadowShallowElevation}
     rounded={options.rounded}

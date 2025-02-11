@@ -25,12 +25,13 @@
     skeleton = false,
 
     // Other props
-    ...rest
+    ..._rest
   }: NeoCheckboxButtonProps = $props();
   /* eslint-enable prefer-const */
 
-  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
+  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
+  const elevation = $derived(coerce(_elevation));
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, active: glass }, DefaultShallowMinMaxElevation));
   const checkedShadow = $derived(
     computeShadowElevation(-Math.abs(elevation), { glass, active: glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation),

@@ -4,13 +4,16 @@ import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
 
-import {
-  type ShadowElevation,
-  type ShadowElevationString,
-  type ShadowHoverElevation,
-  type ShadowHoverElevationsString,
+import type {
+  BlurElevation,
+  BlurElevationString,
+  ShadowElevation,
+  ShadowElevationString,
+  ShadowHoverElevation,
+  ShadowHoverElevationsString,
 } from '~/utils/shadow.utils.js';
 
+export type NeoButtonBlur = BlurElevation | BlurElevationString;
 export type NeoButtonElevation = ShadowElevation | ShadowElevationString;
 export type NeoButtonHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 export type NeoButtonActiveElevation = ShadowHoverElevation | ShadowHoverElevationsString;
@@ -114,6 +117,13 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * @default -2 (relative to base elevation)
    */
   active?: NeoButtonActiveElevation;
+  /**
+   * The blur level to apply to the button when in glass mode.
+   *
+   * @default elevation, min: 1, max: 5
+   * @see glass
+   */
+  blur?: NeoButtonBlur;
   /**
    * Weather the pressed state should be displayed as recessed or pressed.
    *

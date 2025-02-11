@@ -3,7 +3,7 @@ import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
-import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
+import type { BlurElevation, BlurElevationString, ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 
 export const NeoPillSize = {
   Small: 'small' as const,
@@ -13,6 +13,7 @@ export const NeoPillSize = {
 
 export type NeoPillSizes = (typeof NeoPillSize)[keyof typeof NeoPillSize];
 
+export type NeoPillBlur = BlurElevation | BlurElevationString;
 export type NeoPillElevation = ShadowShallowElevation | ShadowShallowElevationString;
 export type NeoPillContext = {
   // State
@@ -50,6 +51,13 @@ export type NeoPillContext = {
    * Pill elevation on hover (-2 to 2).
    */
   hover?: NeoPillElevation;
+  /**
+   * The blur level to apply when in glass mode.
+   *
+   * @default elevation, min: 1, max: 5
+   * @see glass
+   */
+  blur?: NeoPillBlur;
 
   // Styles
   /**

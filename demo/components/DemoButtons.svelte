@@ -83,28 +83,26 @@
 {/snippet}
 
 <div class="row">
-  <div class="column">
-    <NeoButtonGroup>
-      <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
-      <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
-      <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
-      <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
-      <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
-    </NeoButtonGroup>
+  <NeoButtonGroup>
+    <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
+    <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
+    <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
+    <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
+  </NeoButtonGroup>
 
-    <NeoSelect
-      label="Color"
-      placeholder="Select color"
-      position="left"
-      floating={false}
-      color={options.color}
-      display={displayValue}
-      size="10"
-      bind:value={options.color}
-      containerProps={{ style: 'margin-left: 6rem' }}
-      options={colorOptions}
-    />
-  </div>
+  <NeoSelect
+    label="Color"
+    placeholder="Select color"
+    position="left"
+    floating={false}
+    color={options.color}
+    display={displayValue}
+    size="10"
+    bind:value={options.color}
+    containerProps={{ style: 'margin-left: 6rem' }}
+    options={colorOptions}
+  />
 </div>
 
 <div class="row">

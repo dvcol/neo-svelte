@@ -1,3 +1,5 @@
+import { clamp } from '@dvcol/common-utils/common/math';
+
 import { type NeoButtonTemplate, NeoTextButton } from '~/buttons/neo-button.model.js';
 
 export const MaxShadowElevation = 5;
@@ -28,6 +30,10 @@ export const PositiveShadowElevations = [0, 1, 2, 3, 4, 5] as const;
 export type PositiveShadowElevation = (typeof PositiveShadowElevations)[number];
 export type PositiveShadowElevationString = `${PositiveShadowElevation}`;
 
+export const BlurElevations = [1, 2, 3, 4, 5] as const;
+export type BlurElevation = (typeof BlurElevations)[number];
+export type BlurElevationString = `${BlurElevation}`;
+
 export type ShadowModifier = { glass?: boolean; convex?: boolean; pressed?: boolean; active?: boolean };
 export const ShadowFlatRegex = /^.*flat\)?;?$/;
 
@@ -43,8 +49,10 @@ export const getDefaultSlideElevation = (elevation: ShadowElevation, fallback: S
   return fallback;
 };
 
-export const coerce = <Elevation extends number = ShadowElevation>(elevation: Elevation | `${Elevation}`): Elevation =>
-  Number(elevation) as Elevation;
+export function coerce<Elevation extends number = ShadowElevation>(elevation: Elevation | `${Elevation}`): Elevation {
+  if (elevation === undefined || elevation === null) return elevation;
+  return Number(elevation) as Elevation;
+}
 
 export const isShadowFlat = (shadow: string) => ShadowFlatRegex.test(shadow);
 
@@ -86,12 +94,10 @@ export const computeHoverShadowElevation = (
 export const computeGlassFilter = (
   elevation: number | ShadowElevation,
   glass?: boolean,
-  { max = MaxShadowElevation, saturation = DefaultSaturation }: { max?: ShadowElevation; saturation?: number } = {},
+  { min = 1, max = MaxShadowElevation, saturation = DefaultSaturation }: { min?: ShadowElevation; max?: ShadowElevation; saturation?: number } = {},
 ) => {
   if (!glass) return;
-  const _elevation = Math.abs(elevation);
-  if (_elevation > max) return `var(--neo-blur-${max}) var(--neo-saturate-${saturation})`;
-  return `var(--neo-blur-${Math.abs(_elevation)}) var(--neo-saturate-${saturation})`;
+  return `var(--neo-blur-${clamp(Math.abs(elevation), min, max)}) var(--neo-saturate-${saturation})`;
 };
 
 export const computeButtonTemplate = (elevation: number | ShadowElevation, pressed?: boolean, text?: boolean): NeoButtonTemplate => {

@@ -1,6 +1,5 @@
 <script lang="ts">
   import { toStyle } from '@dvcol/common-utils/common/class';
-  import { clamp } from '@dvcol/common-utils/common/math';
   import {
     autoPlacement,
     flip,
@@ -22,7 +21,7 @@
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
-  import { coerce, DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeGlassFilter, computeShadowElevation, DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
   import { type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
   import { quickScaleProps } from '~/utils/transition.utils.js';
 
@@ -77,14 +76,19 @@
     triggerRef = $bindable(),
     triggerProps,
 
-    ...rest
+    ..._rest
   }: NeoTooltipProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: triggerTag = 'span', ...triggerRest } = $derived(triggerProps ?? {});
+  const { elevation: _elevation = DefaultShadowShallowElevation, blur: _blur, ...rest } = $derived(_rest);
 
-  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
-  const blur = $derived(coerce(rest?.blur ?? elevation));
+  const elevation = $derived(coerce(_elevation ?? DefaultShadowShallowElevation));
+  const blur = $derived(coerce(_blur ?? elevation));
+
+  const tooltipBlur = $derived(computeGlassFilter(blur, true));
+  // const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${clamp(elevation, 0, MaxShadowElevation)})`);
+  const tooltipShadow = $derived(computeShadowElevation(elevation, { glass: true }, { min: 0, max: MaxShadowElevation }));
 
   const host = $derived.by(() => {
     if (!target) return;
@@ -180,9 +184,6 @@
     if (floating.placement.startsWith('right')) return floating.placement.replace('right', 'left');
     return floating.placement;
   });
-
-  const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${clamp(elevation, 1, MaxShadowElevation)})`);
-  const tooltipBlur = $derived(`var(--neo-blur-${clamp(blur, 1, MaxShadowElevation)})`);
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));

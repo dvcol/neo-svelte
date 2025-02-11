@@ -13,6 +13,7 @@
     computeShadowElevation,
     DefaultShallowMinMaxElevation,
     isShadowFlat,
+    type ShadowElevation,
   } from '~/utils/shadow.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
@@ -52,20 +53,23 @@
 
     // Other props
     affixProps,
-    ...rest
+    ..._rest
   }: NeoPillProps = $props();
   /* eslint-enable prefer-const */
 
-  const elevation = $derived(coerce(rest?.elevation ?? 1));
-  const hover = $derived(coerce(rest?.hover ?? 0));
+  const { elevation: _elevation = 1, hover: _hover = 0, blur: _blur, ...rest } = $derived(_rest);
+
+  const elevation = $derived(coerce(_elevation));
+  const hover = $derived(coerce(_hover));
+
+  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }, DefaultShallowMinMaxElevation));
   const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed }, DefaultShallowMinMaxElevation) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
-
-  const filter = $derived(computeGlassFilter(elevation, glass));
 
   const context = $derived<NeoPillContext>({
     close,

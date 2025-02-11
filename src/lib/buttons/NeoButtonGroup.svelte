@@ -3,7 +3,17 @@
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
-  import { coerce, computeGlassFilter, computeShadowElevation, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import {
+    coerce,
+    computeGlassFilter,
+    computeHoverShadowElevation,
+    computeShadowElevation,
+    DefaultShadowActiveElevation,
+    DefaultShadowElevation,
+    DefaultShadowHoverElevation,
+    getDefaultElevation,
+    type ShadowElevation,
+  } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -44,14 +54,28 @@
     use,
 
     // Other props
-    ...rest
+    ..._rest
   }: NeoButtonGroupProps = $props();
   /* eslint-enable prefer-const */
 
-  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
+  const {
+    elevation: _elevation = DefaultShadowElevation,
+    buttonHover: _hover = DefaultShadowHoverElevation,
+    buttonActive: _active = DefaultShadowActiveElevation,
+    blur: _blur,
+    ...rest
+  } = $derived(_rest);
 
-  const filter = $derived(computeGlassFilter(elevation, glass));
+  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
+  const hover = $derived(coerce(_hover));
+  const active = $derived(coerce(_active));
+
+  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const filter = $derived(computeGlassFilter(blur, glass));
+
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }));
+  const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
+  const activeShadow = $derived(computeShadowElevation(active, { glass, pressed: false, active: glass }) ?? boxShadow);
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -102,6 +126,8 @@
   class:neo-nowrap={nowrap}
   style:--neo-btn-group-text-color={getColorVariable(color)}
   style:--neo-btn-group-box-shadow={boxShadow}
+  style:--neo-btn-group-box-shadow-hover={hoverShadow}
+  style:--neo-btn-group-box-shadow-active={activeShadow}
   style:--neo-btn-group-glass-blur={filter}
   style:justify-content={justify}
   style:align-items={align}

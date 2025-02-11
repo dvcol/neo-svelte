@@ -14,6 +14,7 @@
     computeShadowElevation,
     getDefaultElevation,
     isShadowFlat,
+    type ShadowElevation,
   } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
@@ -82,7 +83,7 @@
     mediaProps,
     dividerProps,
     closeProps,
-    ...rest
+    ..._rest
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
 
@@ -92,10 +93,13 @@
   const { tag: actionTag = 'div', ...actionRest } = $derived(actionProps ?? {});
   const { tag: mediaTag = 'div', ...mediaRest } = $derived(mediaProps ?? {});
 
-  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
-  const hover = $derived(coerce(rest?.hover ?? 0));
+  const { elevation: _elevation, hover: _hover = 0, blur: _blur, ...rest } = $derived(_rest);
 
-  const filter = $derived(computeGlassFilter(elevation, glass));
+  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
+  const hover = $derived(coerce(_hover));
+
+  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }));
   const hoverElevation = $derived(elevation + hover);

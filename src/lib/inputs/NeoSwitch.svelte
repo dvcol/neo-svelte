@@ -65,14 +65,15 @@
     containerProps,
     wrapperRef = $bindable(),
     wrapperProps,
-    ...rest
+    ..._rest
   }: NeoSwitchProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
+  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
   const labelId = $derived(label ? `neo-switch-label-${getUUID()}` : undefined);
-  const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowShallowElevation));
+  const elevation = $derived(coerce(_elevation));
 
   let initial = $state(checked);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');

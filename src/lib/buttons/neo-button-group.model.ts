@@ -1,3 +1,4 @@
+import type { NeoButtonActiveElevation, NeoButtonBlur, NeoButtonHoverElevation } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
@@ -20,6 +21,25 @@ export type NeoButtonGroupContext = {
    * @default 3
    */
   elevation?: NeoButtonGroupElevation;
+  /**
+   * The blur level to apply.
+   *
+   * @default elevation, min: 1, max: 5
+   * @see glass
+   */
+  blur?: NeoButtonBlur;
+  /**
+   * Button hover elevation.
+   *
+   * @default -1 (relative to base elevation)
+   */
+  buttonHover?: NeoButtonHoverElevation;
+  /**
+   * Button active elevation.
+   *
+   * @default -2 (relative to base elevation)
+   */
+  buttonActive?: NeoButtonActiveElevation;
   /**
    * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
    */

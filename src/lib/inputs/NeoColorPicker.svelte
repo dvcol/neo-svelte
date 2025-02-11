@@ -65,8 +65,6 @@
     onclick,
   });
 
-  $inspect(afterProps);
-
   const oninput: FormEventHandler<HTMLInputElement> = e => {
     ref?.dispatchEvent(new InputEvent(e.type, e));
     pickerProps?.oninput?.(e);

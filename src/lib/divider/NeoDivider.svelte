@@ -16,10 +16,12 @@
     rounded = true,
 
     // Other props
-    ...rest
+    ..._rest
   }: NeoDividerProps = $props();
 
-  const elevation = $derived(coerce(rest?.elevation ?? 0));
+  const { elevation: _elevation = 0, ...rest } = $derived(_rest);
+
+  const elevation = $derived(coerce(_elevation));
   const boxShadow = $derived(computeShadowElevation(elevation));
 
   const minimum = $derived.by(() => {

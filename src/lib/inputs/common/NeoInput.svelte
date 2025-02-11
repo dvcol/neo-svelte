@@ -23,6 +23,7 @@
     getDefaultElevation,
     getDefaultHoverElevation,
     isShadowFlat,
+    type ShadowElevation,
   } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -90,13 +91,27 @@
     wrapperRef = $bindable(),
     wrapperProps,
     messageProps,
-    ...rest
+    ..._rest
   }: NeoInputProps<NeoInputHTMLElement> = $props();
   /* eslint-enable prefer-const */
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: beforeTag = 'span', ...beforeRest } = $derived(beforeProps ?? {});
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
+
+  const { elevation: _elevation, hover: _hover, blur: _blur, ...rest } = $derived(_rest);
+
+  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
+  const hover = $derived(coerce(_hover ?? getDefaultHoverElevation(pressed)));
+
+  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const filter = $derived(computeGlassFilter(blur, glass));
+
+  const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }));
+  const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed }) ?? boxShadow);
+
+  const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
+  const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
   const getValue = () => {
     if (rest?.type === 'file') return files;
@@ -106,16 +121,6 @@
 
   let initial = $state(getValue());
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
-
-  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
-  const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(pressed)));
-
-  const filter = $derived(computeGlassFilter(elevation, glass));
-  const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }));
-  const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed }) ?? boxShadow);
-
-  const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
-  const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
   const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
     hovered = true;

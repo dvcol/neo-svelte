@@ -7,7 +7,14 @@ import type { NeoValidationFieldContext, NeoValidationProps, NeoValidationState 
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps, SvelteEvent } from '~/utils/html-element.utils.js';
-import type { ShadowElevation, ShadowElevationString, ShadowHoverElevation, ShadowHoverElevationsString } from '~/utils/shadow.utils.js';
+import type {
+  BlurElevation,
+  BlurElevationString,
+  ShadowElevation,
+  ShadowElevationString,
+  ShadowHoverElevation,
+  ShadowHoverElevationsString,
+} from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoInputValue<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = T extends HTMLTextAreaElement
@@ -40,6 +47,13 @@ export type NeoInputStyles = {
    * @default 0
    */
   hover?: NeoInputHoverElevation;
+  /**
+   * The blur level to apply when in glass mode.
+   *
+   * @default elevation, min: 1, max: 5
+   * @see glass
+   */
+  blur?: NeoInputBlur;
   /**
    * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
    */
@@ -112,6 +126,7 @@ export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement | H
   validate: (update?: { dirty?: boolean; valid?: boolean }) => NeoInputState<T>;
 };
 
+export type NeoInputBlur = BlurElevation | BlurElevationString;
 export type NeoInputElevation = ShadowElevation | ShadowElevationString;
 export type NeoInputHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = NeoValidationFieldContext<T, NeoInputValue<T>> &

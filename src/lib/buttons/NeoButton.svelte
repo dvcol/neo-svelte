@@ -15,6 +15,7 @@
     DefaultShadowElevation,
     DefaultShadowHoverElevation,
     isShadowFlat,
+    type ShadowElevation,
   } from '~/utils/shadow.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
@@ -83,6 +84,7 @@
     hover: _hover = DefaultShadowHoverElevation,
     active: _active = DefaultShadowActiveElevation,
     pressed: _pressed,
+    blur: _blur,
     ...rest
   } = $derived.by(() => {
     if (text || ghost) return { ...NeoTextButton, ..._rest };
@@ -94,7 +96,9 @@
   const active = $derived(coerce(_active));
   const activePressed = $derived(_pressed ?? elevation + hover > 0);
 
-  const filter = $derived(computeGlassFilter(elevation, glass));
+  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const filter = $derived(computeGlassFilter(blur, glass));
+
   const boxShadow = $derived(computeShadowElevation(elevation, { glass }));
   const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass }) ?? boxShadow);
   const activeShadow = $derived(

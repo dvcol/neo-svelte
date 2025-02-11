@@ -30,6 +30,7 @@
     getDefaultElevation,
     getDefaultHoverElevation,
     isShadowFlat,
+    type ShadowElevation,
   } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
@@ -114,25 +115,29 @@
     wrapperRef = $bindable(),
     wrapperProps,
     messageProps,
-    ...rest
+    ..._rest
   }: NeoTextareaProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
-  let initial = $state(value);
-  let validationMessage: string | undefined = $state(ref?.validationMessage);
+  const { elevation: _elevation, hover: _hover, blur: _blur, ...rest } = $derived(_rest);
 
-  const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
-  const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(pressed)));
+  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
+  const hover = $derived(coerce(_hover ?? getDefaultHoverElevation(pressed)));
 
-  const filter = $derived(computeGlassFilter(elevation, glass));
+  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const filter = $derived(computeGlassFilter(blur, glass));
+
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }));
   const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed }) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
+
+  let initial = $state(value);
+  let validationMessage: string | undefined = $state(ref?.validationMessage);
 
   let timeout: ReturnType<typeof setTimeout>;
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
