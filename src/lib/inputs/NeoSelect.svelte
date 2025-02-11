@@ -14,7 +14,7 @@
   import { type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import { getNextFocusableElement } from '~/utils/html-element.utils.js';
-  import { coerce, computeButtonShadows, computeButtonStyle, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -79,8 +79,8 @@
   };
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
-  const template = $derived(computeButtonStyle(elevation, rest?.pressed));
-  const style = $derived(computeButtonShadows(elevation, template));
+  const template = $derived(computeButtonTemplate(elevation, rest?.pressed));
+
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle select dropdown',
     title: 'Toggle select dropdown',
@@ -89,7 +89,6 @@
     glass: rest.glass,
     start: rest.start,
     rounded,
-    style,
     onclick: toggle,
     ...template,
     ...buttonProps,

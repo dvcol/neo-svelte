@@ -169,14 +169,6 @@
       }
     }
 
-    &.neo-shallow {
-      --neo-btn-box-shadow-active: var(--neo-box-shadow-inset-2);
-      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-inset-2);
-      --neo-btn-box-shadow-active-flat: var(--neo-box-shadow-inset-2);
-      --neo-btn-box-shadow-active-flat-toggle: var(--neo-box-shadow-inset-2);
-      --neo-btn-scale-pressed: 1;
-    }
-
     &.neo-glass {
       --neo-box-shadow-flat: var(--neo-glass-box-shadow-flat);
       --neo-box-shadow-inset-1: var(--neo-glass-box-shadow-inset-1);

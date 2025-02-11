@@ -5,7 +5,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { coerce, computeButtonShadows, computeButtonStyle, getDefaultElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -39,8 +39,7 @@
   const items = $derived(options?.map(i => (typeof i === 'object' ? i : { value: i })));
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
-  const template = $derived(computeButtonStyle(elevation, rest?.pressed));
-  const style = $derived(computeButtonShadows(elevation, template));
+  const template = $derived(computeButtonTemplate(elevation, rest?.pressed));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle select dropdown',
     title: 'Toggle select dropdown',
@@ -49,7 +48,6 @@
     rounded: rest.rounded,
     glass: rest.glass,
     start: rest.start,
-    style,
     onclick: () => {
       ref?.focus?.();
       ref?.click?.();

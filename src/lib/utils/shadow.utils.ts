@@ -1,5 +1,3 @@
-import { clamp } from '@dvcol/common-utils/common/math';
-
 import { type NeoButtonTemplate, NeoTextButton } from '~/buttons/neo-button.model.js';
 
 export const MaxShadowElevation = 5;
@@ -96,18 +94,7 @@ export const computeGlassFilter = (
   return `var(--neo-blur-${Math.abs(_elevation)}) var(--neo-saturate-${saturation})`;
 };
 
-export const computeButtonShadows = (elevation: number | ShadowElevation, template?: NeoButtonTemplate) => {
-  if (!template?.elevation) return;
-  return `
-      --neo-btn-box-shadow: var(--neo-box-shadow-raised-${Math.min(Math.abs(elevation), 3)});
-      --neo-btn-box-shadow-hover: var(--neo-box-shadow-raised-${clamp(Math.abs(elevation) - 1, 1, 2)});
-      --neo-btn-box-shadow-focus: var(--neo-box-shadow-raised-${clamp(Math.abs(elevation) - 1, 1, 2)});
-      --neo-btn-box-shadow-active: var(--neo-box-shadow-pressed-${clamp(Math.abs(elevation) - 1, 1, 2)});
-      --neo-btn-box-shadow-focus-active: var(--neo-box-shadow-pressed-${clamp(Math.abs(elevation) - 1, 1, 2)});
-      `;
-};
-
-export const computeButtonStyle = (elevation: number | ShadowElevation, pressed?: boolean, text?: boolean): NeoButtonTemplate => {
-  if (text || !pressed || (pressed && elevation >= 0)) return NeoTextButton;
-  return { elevation: Math.max(1, Math.abs(elevation)) as ShadowElevation, hover: 0, active: -2, borderless: true };
+export const computeButtonTemplate = (elevation: number | ShadowElevation, pressed?: boolean, text?: boolean): NeoButtonTemplate => {
+  if (text || elevation >= 0) return NeoTextButton;
+  return { elevation: Math.min(Math.abs(elevation), 3) as ShadowElevation, hover: 0, active: -2, pressed: true, borderless: true };
 };

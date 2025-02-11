@@ -15,7 +15,7 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
-  import { coerce, computeButtonShadows, computeButtonStyle, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -90,8 +90,7 @@
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(pressed)));
 
-  const template = $derived(computeButtonStyle(elevation, pressed));
-  const style = $derived(computeButtonShadows(elevation, template));
+  const template = $derived(computeButtonTemplate(elevation, pressed));
   const isDragging = $derived(drop && dragging && !disabled);
 
   let dragRef = $state<HTMLDivElement>();
@@ -136,7 +135,6 @@
     rounded: expanded || rounded,
     glass: rest.glass,
     start: rest.start,
-    style,
     ...template,
     ...buttonProps,
     class: ['neo-file-picker-button', buttonProps?.class],
