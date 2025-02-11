@@ -435,7 +435,7 @@
       padding-inline: var(--neo-list-padding, 0.25rem);
 
       &.neo-scroll {
-        padding-block: var(--neo-list-scroll-padding, 0.625rem);
+        padding-block: var(--neo-list-scroll-padding, 0.75rem);
 
         &.neo-shadow {
           @include mixin.fade-scroll(1rem);
@@ -521,8 +521,11 @@
       justify-content: end;
 
       .neo-list-items {
-        flex-direction: column-reverse;
-        justify-content: end;
+        // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
+        @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
+          flex-direction: column-reverse;
+          justify-content: end;
+        }
       }
     }
   }

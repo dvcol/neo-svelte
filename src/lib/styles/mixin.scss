@@ -293,9 +293,16 @@
     background-clip: border-box;
   }
 
-  @document url-prefix() {
+  // TODO: remove when Firefox supports scrollbar customization
+  @supports not selector(::-webkit-scrollbar) {
     scrollbar-width: thin;
     scrollbar-color: $thumb-color;
+    padding-inline: calc($width * 2);
+  }
+
+  // TODO: remove when Safari  implement scrollbar-gutter correctly
+  @supports (hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none) {
+    padding-inline: calc($width * 2);
   }
 }
 
