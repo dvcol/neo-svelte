@@ -69,6 +69,11 @@
       text-wrap: stable;
       text-overflow: ellipsis;
       cursor: inherit;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--neo-label-color-hover, var(--neo-text-color-highlight));
+      }
 
       &.neo-required::after {
         margin-left: 0.1rem;

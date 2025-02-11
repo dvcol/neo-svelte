@@ -2,7 +2,7 @@
   const { scale = 1, size = '1em', checked = false, circle = false, enter = true, ...rest } = $props();
 
   const circlePath = 'M3 12c0 -4.97 4.03 -9 9 -9c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9Z';
-  const squarePath = 'M 4 12 V 8 C 4 5 5 4 8 4 h 9 c 3 0 4 1 4 4 V 17 C 21 20 20 21 17 21 h -9 C 5 21 4 20 4 17 Z';
+  const squarePath = 'm 3 12 v -4 c 0 -3 1 -5 4 -5 H 16 c 3 0 5 2 5 5 V 16 C 21 19 19 21 16 21 h -8 C 5 21 3 19 3 16 Z';
 </script>
 
 {#key [checked, circle, enter]}

@@ -200,16 +200,24 @@
       }
 
       &.neo-valid {
-        --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 30%);
+        --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 40%);
+
+        &:hover {
+          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-green-light)) 50%);
+        }
       }
 
       &.neo-invalid {
-        --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 30%);
+        --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 40%);
+
+        &:hover {
+          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 50%);
+        }
       }
 
       &.neo-indeterminate {
         .neo-switch-rail {
-          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 10%));
+          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 20%));
         }
 
         .neo-switch-toggle {
@@ -219,7 +227,7 @@
 
       &.neo-checked {
         .neo-switch-rail {
-          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
+          background-color: var(--neo-switch-checked-background, color-mix(in srgb, transparent, currentcolor 40%));
         }
 
         .neo-switch-toggle {
@@ -264,6 +272,14 @@
             background-color: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 20%);
           }
         }
+      }
+
+      &:hover {
+        color: var(--neo-switch-color-hover, var(--neo-text-color-highlight));
+      }
+
+      &.neo-flat:hover {
+        border-color: var(--neo-switch-border-color-hover, var(--neo-border-color-highlight));
       }
 
       &:focus-visible {

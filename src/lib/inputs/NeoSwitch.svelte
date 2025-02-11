@@ -219,6 +219,24 @@
       &.neo-flat {
         --neo-label-margin: 0 0 0 0.625rem;
       }
+
+      &:hover {
+        :global(> .neo-switch-button) {
+          color: var(--neo-switch-color-hover, var(--neo-text-color-highlight));
+        }
+
+        :global(> .neo-switch-button.neo-flat) {
+          border-color: var(--neo-switch-border-color-hover, var(--neo-border-color-highlight));
+        }
+
+        :global(> .neo-switch-button.neo-valid:not(.neo-disabled, .neo-flat)) {
+          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-green-light)) 50%);
+        }
+
+        :global(> .neo-switch-button.neo-invalid:not(.neo-disabled, .neo-flat)) {
+          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 50%);
+        }
+      }
     }
 
     &-suffix {

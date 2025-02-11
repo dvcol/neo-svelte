@@ -294,11 +294,15 @@
           z-index: var(--neo-z-index-behind, -1) !important;
           transition:
             box-shadow 0.3s ease,
-            background-color 0.3s ease;
+            background-color 0.3s linear;
         }
 
         :global(> .neo-tabs-group .neo-tab.neo-active::before) {
           background-color: var(--neo-tab-bg-color, var(--neo-background-color-secondary));
+        }
+
+        &:hover :global(> .neo-tabs-group .neo-tab.neo-active::before) {
+          background-color: var(--neo-tab-bg-color-hover, var(--neo-background-color-secondary-hover));
         }
       }
 

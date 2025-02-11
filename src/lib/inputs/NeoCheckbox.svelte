@@ -224,6 +224,20 @@
       &.neo-flat {
         --neo-label-margin: 0 0 0 0.625rem;
       }
+
+      &:hover {
+        :global(> .neo-checkbox-button) {
+          color: var(--neo-checkbox-color-hover, var(--neo-text-color-highlight));
+        }
+
+        :global(> .neo-checkbox-button.neo-flat) {
+          border-color: var(--neo-checkbox-border-color-hover, var(--neo-border-color-highlight));
+        }
+
+        :global(> .neo-checkbox-button:not(.neo-disabled, .neo-flat)) {
+          box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
+        }
+      }
     }
 
     &-suffix {

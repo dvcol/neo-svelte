@@ -86,7 +86,7 @@
       cursor: pointer;
       transition:
         color 0.3s ease,
-        box-shadow 0.3s ease,
+        box-shadow 0.3s ease-out,
         border-radius 0.3s ease,
         border-color 0.3s ease,
         background-color 0.3s ease;
@@ -105,13 +105,26 @@
         border-color: var(--neo-radio-border-color, var(--neo-border-color));
       }
 
-      &:focus-visible,
-      &.neo-checked {
-        box-shadow: var(--neo-radio-checked-shadow, var(--neo-box-shadow-pressed-2));
+      &:hover {
+        color: var(--neo-radio-color-hover, var(--neo-text-color-highlight));
+      }
+
+      &.neo-flat:hover {
+        border-color: var(--neo-radio-border-color-hover, var(--neo-border-color-highlight));
       }
 
       &:focus-visible {
         outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+      }
+
+      &:hover:not(.neo-disabled) {
+        color: var(--neo-radio-color-hover, var(--neo-text-color-highlight));
+      }
+
+      &:hover:not(.neo-disabled, .neo-flat),
+      &:focus-visible,
+      &.neo-checked {
+        box-shadow: var(--neo-radio-checked-shadow, var(--neo-box-shadow-pressed-2));
       }
 
       &.neo-disabled {

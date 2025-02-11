@@ -737,7 +737,8 @@
 
     :global(.neo-label-container.neo-floating) {
       :global(.neo-label) {
-        --neo-label-color: var(--neo-textarea-floating-label-color, var(--neo-text-color-disabled));
+        --neo-label-color: var(--neo-input-floating-label-color, var(--neo-text-color-secondary));
+        --neo-label-color-hover: var(--neo-input-floating-label-color, var(--neo-text-color-secondary-hover));
         --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
 
         translate: 0 calc(50% + 0.75rem - var(--neo-textarea-label-height) / 2);

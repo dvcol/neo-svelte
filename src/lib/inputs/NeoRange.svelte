@@ -595,7 +595,12 @@
         color 0.3s ease,
         box-shadow 0.3s ease,
         border-radius 0.3s ease,
-        border-color 0.3s ease;
+        border-color 0.3s ease,
+        background-color 0.3s ease;
+
+      &:hover {
+        color: var(--neo-range-color-hover, var(--neo-text-color-highlight));
+      }
 
       &.neo-rounded {
         border-radius: calc(var(--neo-range-height) / 2);
@@ -623,6 +628,10 @@
         box-shadow: var(--neo-box-shadow-flat);
         cursor: not-allowed;
         opacity: var(--neo-range-opacity-disabled, var(--neo-opacity-disabled));
+      }
+
+      &.neo-flat:hover {
+        border-color: var(--neo-range-border-color-hover, var(--neo-border-color-highlight));
       }
 
       &.neo-disabled,

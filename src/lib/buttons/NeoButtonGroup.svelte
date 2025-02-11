@@ -151,6 +151,7 @@
     box-shadow: var(--neo-btn-group-box-shadow, var(--neo-box-shadow-flat));
     transition:
       color 0.3s ease,
+      border-color 0.3s linear,
       background-color 0.3s ease,
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
@@ -172,7 +173,11 @@
     }
 
     &.neo-flat:not(.neo-borderless) {
-      border-color: var(--neo-btn-groupborder-color, var(--neo-border-color));
+      border-color: var(--neo-btn-group-border-color, var(--neo-border-color));
+
+      &:hover {
+        border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-highlight));
+      }
     }
 
     &.neo-start {
@@ -180,7 +185,7 @@
         box-shadow: var(--neo-box-shadow-flat);
 
         &:not(.neo-glass, .neo-borderless) {
-          border-color: var(--neo-btn-groupborder-color, var(--neo-border-color));
+          border-color: var(--neo-btn-group-border-color, var(--neo-border-color));
         }
       }
     }
@@ -195,7 +200,7 @@
 
       background-color: var(--neo-btn-groupbg-color, var(--neo-glass-background-color));
       border-color: var(
-        --neo-btn-groupborder-color,
+        --neo-btn-group-border-color,
         var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
       );
       backdrop-filter: var(--neo-btn-group-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
@@ -207,11 +212,15 @@
 
       &.neo-convex,
       &.neo-inset {
-        border-color: var(--neo-btn-groupborder-color, transparent);
+        border-color: var(--neo-btn-group-border-color, transparent);
       }
 
       &.neo-flat {
-        border-color: var(--neo-btn-groupborder-color, var(--neo-glass-border-color-flat));
+        border-color: var(--neo-btn-group-border-color, var(--neo-glass-border-color-flat));
+
+        &:hover {
+          border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-color-flat-highlight));
+        }
       }
     }
 

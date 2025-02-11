@@ -332,7 +332,7 @@
     }
 
     &.neo-pressed,
-    &:active:not(.neo-loading) {
+    &:active:not(.neo-loading, :disabled) {
       box-shadow: var(--neo-btn-box-shadow-active, var(--neo-box-shadow-pressed-2));
       transition:
         opacity 0.3s ease,
@@ -412,7 +412,7 @@
       background-color: var(--neo-btn-bg-color, var(--neo-background-color-tinted));
     }
 
-    &:disabled:disabled,
+    &:disabled,
     &[disabled]:not([disabled='false']) {
       cursor: not-allowed;
       opacity: var(--neo-btn-opacity-disabled, var(--neo-opacity-disabled));

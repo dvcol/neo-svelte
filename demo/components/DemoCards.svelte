@@ -164,7 +164,7 @@
 
 {#snippet header()}
   <NeoSkeletonText loading={skeleton} title paragraphs="0">
-    <h3 style="margin: 0 0.25rem">NeoCard Header</h3>
+    <h3 style="margin: 0">NeoCard Header</h3>
   </NeoSkeletonText>
 {/snippet}
 

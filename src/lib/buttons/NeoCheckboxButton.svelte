@@ -88,7 +88,7 @@
       cursor: pointer;
       transition:
         color 0.3s ease,
-        box-shadow 0.3s ease,
+        box-shadow 0.3s ease-out,
         border-radius 0.3s ease,
         border-color 0.3s ease,
         background-color 0.3s ease;
@@ -107,13 +107,22 @@
         border-color: var(--neo-input-border-color, var(--neo-border-color));
       }
 
-      &:focus-visible,
-      &.neo-checked {
-        box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
+      &:hover {
+        color: var(--neo-checkbox-color-hover, var(--neo-text-color-highlight));
+      }
+
+      &.neo-flat:hover {
+        border-color: var(--neo-checkbox-border-color-hover, var(--neo-border-color-highlight));
       }
 
       &:focus-visible {
         outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+      }
+
+      &:hover:not(.neo-disabled, .neo-flat),
+      &:focus-visible,
+      &.neo-checked {
+        box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
       }
 
       &.neo-disabled {

@@ -162,6 +162,20 @@
       &.neo-flat {
         --neo-label-margin: 0 0 0 0.625rem;
       }
+
+      &:hover {
+        :global(> .neo-radio-button) {
+          color: var(--neo-radio-color-hover, var(--neo-text-color-highlight));
+        }
+
+        :global(> .neo-radio-button.neo-flat) {
+          border-color: var(--neo-radio-border-color-hover, var(--neo-border-color-highlight));
+        }
+
+        :global(> .neo-radio-button:not(.neo-disabled, .neo-flat)) {
+          box-shadow: var(--neo-radio-checked-shadow, var(--neo-box-shadow-pressed-2));
+        }
+      }
     }
 
     &-suffix {
