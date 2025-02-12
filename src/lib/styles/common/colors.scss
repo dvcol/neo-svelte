@@ -87,7 +87,7 @@
 
   // Border
   --neo-floating-border-color: var(--neo-shadow-color-light);
-  --neo-glass-border-color: color-mix(in srgb, oklch(from var(--neo-shadow-color-light) l c h / 80%), currentcolor 5%);
+  --neo-glass-border-color: color-mix(in srgb, var(--neo-shadow-color-light), currentcolor 5%);
   --neo-glass-border-color-flat: color-mix(in srgb, var(--neo-glass-shadow-color-dark), currentcolor 10%);
   --neo-border-color-color-flat-highlight: color-mix(in srgb, var(--neo-glass-shadow-color-dark), currentcolor 30%);
 
@@ -157,7 +157,7 @@
 
   // Border
   --neo-dark-floating-border-color: var(--neo-dark-shadow-color-light);
-  --neo-dark-glass-border-color: color-mix(in srgb, var(--neo-dark-glass-shadow-color-light), currentcolor 5%);
+  --neo-dark-glass-border-color: color-mix(in srgb, oklch(from var(--neo-dark-shadow-color-light) l c h / 5%), currentcolor 5%);
   --neo-dark-glass-border-color-flat: color-mix(in srgb, var(--neo-dark-glass-shadow-color-light), currentcolor 10%);
   --neo-dark-border-color-color-flat-highlight: color-mix(in srgb, var(--neo-dark-glass-shadow-color-light), currentcolor 30%);
 
