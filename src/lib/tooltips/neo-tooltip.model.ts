@@ -85,6 +85,14 @@ export type NeoTooltipProps = {
    */
   filled?: boolean;
   /**
+   * Whether to show a shadow mask on the scroll container
+   */
+  shadow?: boolean;
+  /**
+   * Whether to show a custom scrollbar
+   */
+  scrollbar?: boolean;
+  /**
    * Text color to use for the tooltip.
    */
   color?: Color;

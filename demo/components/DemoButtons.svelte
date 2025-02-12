@@ -126,6 +126,20 @@
       <NeoSwitchButton indeterminate {...options} />
     </SphereBackdrop>
   </div>
+  <div class="column">
+    <span class="label">Checkbox</span>
+    <SphereBackdrop glass={options.glass}>
+      <NeoCheckboxButton elevation="0" indeterminate {...options} />
+    </SphereBackdrop>
+    <span class="label">Radio</span>
+    <SphereBackdrop glass={options.glass}>
+      <NeoRadioButton elevation="0" {...options} />
+    </SphereBackdrop>
+    <span class="label">Switch</span>
+    <SphereBackdrop glass={options.glass}>
+      <NeoSwitchButton elevation="0" indeterminate {...options} />
+    </SphereBackdrop>
+  </div>
 </div>
 
 <style lang="scss">

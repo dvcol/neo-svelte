@@ -97,12 +97,12 @@
 
   const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(_hover));
+  const hoverElevation = $derived(elevation + hover);
 
   const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }));
-  const hoverElevation = $derived(elevation + hover);
   const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed, convex }) ?? boxShadow);
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
@@ -214,7 +214,7 @@
   class:neo-glass={glass}
   class:neo-tinted={tinted}
   style:--neo-card-text-color={getColorVariable(color)}
-  style:--neo-card-hover-shadow={hoverShadow}
+  style:--neo-card-box-shadow-hover={hoverShadow}
   style:--neo-card-box-shadow={boxShadow}
   style:--neo-card-glass-blur={filter}
   style:--neo-card-spacing={spacing}
@@ -338,12 +338,17 @@
     &.neo-hover.neo-flat-hover:focus-within,
     &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
       border-color: var(--neo-card-border-color, var(--neo-border-color));
+
+      &:focus-within,
+      &:hover {
+        border-color: var(--neo-card-border-color-hover, var(--neo-border-color-highlight));
+      }
     }
 
     &:focus-within,
     &.neo-hover:hover,
     &.neo-hover.neo-hovered {
-      box-shadow: var(--neo-card-hover-shadow, var(--neo-card-box-shadow));
+      box-shadow: var(--neo-card-box-shadow-hover, var(--neo-card-box-shadow));
     }
 
     .neo-card-divider {
@@ -471,6 +476,11 @@
       &.neo-hover.neo-flat-hover:focus-within,
       &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
         border-color: var(--neo-card-border-color, var(--neo-glass-border-color-flat));
+
+        &:focus-within,
+        &:hover {
+          border-color: var(--neo-card-border-color-hover, var(--neo-border-color-flat-highlight));
+        }
       }
     }
 

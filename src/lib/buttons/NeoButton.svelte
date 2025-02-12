@@ -92,7 +92,9 @@
   const elevation = $derived(coerce(_elevation));
   const hover = $derived(coerce(_hover));
   const active = $derived(coerce(_active));
-  const activePressed = $derived(_pressed ?? elevation + hover > 0);
+
+  const hoverElevation = $derived(elevation + hover);
+  const activePressed = $derived(_pressed ?? hoverElevation > 0);
 
   const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
@@ -189,7 +191,7 @@
   class:neo-ghost={ghost}
   class:neo-borderless={borderless}
   class:neo-inset={elevation < 0}
-  class:neo-inset-hover={elevation + hover < 0}
+  class:neo-inset-hover={hoverElevation < 0}
   class:neo-rounded={rounded}
   class:neo-empty={empty}
   style:--neo-btn-text-color={getColorVariable(color)}
@@ -313,6 +315,7 @@
 
     &:focus-visible {
       outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+      outline-offset: var(--neo-outline-offset-width, -1px);
     }
 
     &:focus-visible,
@@ -360,6 +363,11 @@
     &.neo-flat-active:active,
     &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-visible, .neo-hover-flat.neo-hovered, .neo-pressed, :active) {
       border-color: var(--neo-btn-border-color, var(--neo-border-color));
+
+      &:focus-visible,
+      &:hover {
+        border-color: var(--neo-btn-border-color-hover, var(--neo-border-color-highlight));
+      }
     }
 
     &.neo-glass {
@@ -395,6 +403,11 @@
       &.neo-flat-active:active,
       &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-visible, .neo-hover-flat.neo-hovered, .neo-pressed, :active) {
         border-color: var(--neo-btn-border-color, var(--neo-glass-border-color-flat));
+
+        &:focus-visible,
+        &:hover {
+          border-color: var(--neo-btn-border-color-hover, var(--neo-border-color-flat-highlight));
+        }
       }
     }
 

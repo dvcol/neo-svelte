@@ -47,6 +47,8 @@
     tinted,
     padding,
     rounded,
+    shadow = true,
+    scrollbar,
     width: inputWith,
     height: inputHeight,
 
@@ -277,6 +279,9 @@
     class:neo-rounded={rounded}
     class:neo-tinted={tinted}
     class:neo-filled={filled}
+    class:neo-scroll={scrollbar}
+    class:neo-shadow={shadow}
+    class:neo-flat={!elevation}
     style:--neo-tooltip-text-color={getColorVariable(color)}
     style:--neo-tooltip-box-shadow={tooltipShadow}
     style:--neo-tooltip-backdrop-filter={tooltipBlur}
@@ -326,14 +331,25 @@
 
     &.neo-filled {
       background-color: var(--neo-tooltip-bg-color, var(--neo-background-color));
+      border-color: var(
+        --neo-tooltip-border-color,
+        var(--neo-floating-top-border-color) var(--neo-floating-right-border-color) var(--neo-floating-bottom-border-color)
+          var(--neo-floating-left-border-color)
+      );
+    }
 
-      &:not(.neo-tinted) {
-        border-color: var(
-          --neo-tooltip-border-color,
-          var(--neo-floating-top-border-color) var(--neo-floating-right-border-color) var(--neo-floating-bottom-border-color)
-            var(--neo-floating-left-border-color)
-        );
+    &.neo-flat {
+      border-color: var(--neo-tooltip-border-color, var(--neo-glass-border-color-flat));
+    }
+
+    &.neo-scroll {
+      clip-path: inset(0 round var(--neo-tooltip-border-radius, var(--neo-border-radius)));
+
+      &.neo-shadow {
+        @include mixin.fade-scroll(1rem);
       }
+
+      @include mixin.scrollbar;
     }
 
     &.neo-rounded {

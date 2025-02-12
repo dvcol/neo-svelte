@@ -118,7 +118,7 @@
   class:neo-inset-hover={elevation + hover < 0}
   style:--neo-pill-glass-blur={filter}
   style:--neo-pill-box-shadow={boxShadow}
-  style:--neo-pill-hover-shadow={hoverShadow}
+  style:--neo-pill-box-shadow-hover={hoverShadow}
   style:--neo-pill-text-color={getColorVariable(color)}
   use:useFn={useProps}
   out:outFn={outProps}
@@ -201,7 +201,7 @@
 
     &:focus-within,
     &.neo-hover:hover {
-      box-shadow: var(--neo-pill-hover-shadow, var(--neo-box-shadow-flat));
+      box-shadow: var(--neo-pill-box-shadow-hover, var(--neo-box-shadow-flat));
     }
 
     :global(> .neo-pill-affix) {
@@ -215,6 +215,11 @@
     &.neo-hover.neo-flat-hover:focus-within,
     &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-within) {
       border-color: var(--neo-pill-border-color, var(--neo-border-color));
+
+      &:focus-within,
+      &:hover {
+        border-color: var(--neo-pill-border-color-color-hover, var(--neo-border-color-highlight));
+      }
     }
 
     &.neo-disabled {
@@ -259,6 +264,11 @@
       &.neo-hover.neo-flat-hover:hover,
       &.neo-flat:not(.neo-borderless, .neo-filled) {
         border-color: var(--neo-pill-border-color, var(--neo-glass-border-color-flat));
+
+        &:focus-within,
+        &:hover {
+          border-color: var(--neo-pill-border-color-hover, var(--neo-border-color-flat-highlight));
+        }
       }
     }
 

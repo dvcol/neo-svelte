@@ -180,14 +180,14 @@
 <div class="row">
   <div class="column content">
     <span class="label">Tooltip</span>
-    <NeoTooltip {tooltip} width {...options}>
+    <NeoTooltip height="unset" {tooltip} width {...options}>
       <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
     </NeoTooltip>
   </div>
 
   <div class="column content">
     <span class="label">Tooltip (string)</span>
-    <NeoTooltip tooltip="This is a string tooltip" {...options}>
+    <NeoTooltip height="unset" tooltip="This is a string tooltip" {...options}>
       <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
     </NeoTooltip>
   </div>
@@ -197,7 +197,7 @@
 
     <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" rounded={options.rounded} />
 
-    <NeoTooltip {tooltip} target={containerRef} offset={8} width="min" {...options} />
+    <NeoTooltip height="unset" {tooltip} target={containerRef} offset={8} width="min" {...options} />
   </div>
 </div>
 

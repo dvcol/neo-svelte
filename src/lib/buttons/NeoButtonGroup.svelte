@@ -191,6 +191,7 @@
     &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
       border-color: var(--neo-btn-group-border-color, var(--neo-border-color));
 
+      &:focus-within,
       &:hover {
         border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-highlight));
       }
@@ -242,8 +243,9 @@
       &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-within) {
         border-color: var(--neo-btn-group-border-color, var(--neo-glass-border-color-flat));
 
+        &:focus-within,
         &:hover {
-          border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-color-flat-highlight));
+          border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-flat-highlight));
         }
       }
     }

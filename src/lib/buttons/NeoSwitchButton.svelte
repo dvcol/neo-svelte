@@ -284,6 +284,7 @@
 
       &:focus-visible {
         outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+        outline-offset: var(--neo-outline-offset-width, -1px);
       }
 
       &:active {
@@ -304,6 +305,10 @@
 
         &.neo-flat {
           border-color: var(--neo-switch-border-color, var(--neo-glass-border-color-flat));
+
+          &:hover {
+            border-color: var(--neo-switch-border-color-hover, var(--neo-border-color-flat-highlight));
+          }
         }
       }
 

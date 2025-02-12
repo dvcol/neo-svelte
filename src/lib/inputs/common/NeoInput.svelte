@@ -103,6 +103,7 @@
 
   const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(_hover ?? getDefaultHoverElevation(pressed)));
+  const hoverElevation = $derived(elevation + hover);
 
   const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
@@ -369,17 +370,17 @@
     class:neo-skeleton={skeleton}
     class:neo-validation={showInputValidation}
     class:neo-disabled={disabled}
-    class:neo-raised={elevation > 3 || elevation + hover > 3}
+    class:neo-raised={elevation > 3 || hoverElevation > 3}
     class:neo-inset={elevation < 0}
-    class:neo-inset-hover={elevation + hover < 0}
-    class:neo-deep={elevation < -3 || elevation + hover < -3}
+    class:neo-inset-hover={hoverElevation < 0}
+    class:neo-deep={elevation < -3 || hoverElevation < -3}
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
     class:neo-flat-hover={flatHover}
     style:--neo-input-text-color={getColorVariable(color)}
     style:--neo-input-glass-blur={filter}
     style:--neo-input-box-shadow={boxShadow}
-    style:--neo-input-hover-shadow={hoverShadow}
+    style:--neo-input-box-shadow-hover={hoverShadow}
     style:--neo-input-label-container-height={labelContainerHeight}
     style:--neo-input-label-height={labelHeight}
     style:--neo-input-label-width={labelWidth}
@@ -586,12 +587,17 @@
       &.neo-hover.neo-flat-hover:focus-within,
       &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
         border-color: var(--neo-input-border-color, var(--neo-border-color));
+
+        &:focus-visible,
+        &:hover {
+          border-color: var(--neo-input-border-color-hover, var(--neo-border-color-highlight));
+        }
       }
 
       &:focus-within,
       &.neo-hover:hover,
       &.neo-hover.neo-hovered {
-        box-shadow: var(--neo-input-hover-shadow, var(--neo-box-shadow-flat));
+        box-shadow: var(--neo-input-box-shadow-hover, var(--neo-box-shadow-flat));
       }
 
       :global(.neo-input:is(select) option) {
@@ -859,6 +865,11 @@
         &.neo-hover.neo-flat-hover:focus-within,
         &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
           border-color: var(--neo-input-border-color, var(--neo-glass-border-color-flat));
+
+          &:focus-visible,
+          &:hover {
+            border-color: var(--neo-input-border-color-hover, var(--neo-border-color-flat-highlight));
+          }
         }
       }
 

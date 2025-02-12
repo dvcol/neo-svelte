@@ -89,7 +89,7 @@
   --neo-floating-border-color: var(--neo-shadow-color-light);
   --neo-glass-border-color: color-mix(in srgb, var(--neo-shadow-color-light), currentcolor 5%);
   --neo-glass-border-color-flat: color-mix(in srgb, var(--neo-glass-shadow-color-dark), currentcolor 10%);
-  --neo-border-color-color-flat-highlight: color-mix(in srgb, var(--neo-glass-shadow-color-dark), currentcolor 30%);
+  --neo-border-color-flat-highlight: color-mix(in srgb, var(--neo-glass-shadow-color-dark), currentcolor 30%);
 
   // Skeleton
   --neo-glass-skeleton-color: oklch(from var(--neo-text-color) l c h / 40%);
@@ -228,7 +228,7 @@
   --neo-floating-border-color: var(--neo-dark-floating-border-color);
   --neo-glass-border-color: var(--neo-dark-glass-border-color);
   --neo-glass-border-color-flat: var(--neo-dark-glass-border-color-flat);
-  --neo-border-color-color-flat-highlight: var(--neo-dark-border-color-color-flat-highlight);
+  --neo-border-color-flat-highlight: var(--neo-dark-border-color-color-flat-highlight);
 
   // Background
   --neo-glass-background-color: var(--neo-dark-glass-background-color);

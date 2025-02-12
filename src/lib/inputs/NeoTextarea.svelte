@@ -126,6 +126,7 @@
 
   const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(_hover ?? getDefaultHoverElevation(pressed)));
+  const hoverElevation = $derived(elevation + hover);
 
   const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
@@ -462,17 +463,17 @@
     class:neo-skeleton={skeleton}
     class:neo-validation={showInputValidation}
     class:neo-disabled={disabled}
-    class:neo-raised={elevation > 3 || elevation + hover > 3}
+    class:neo-raised={elevation > 3 || hoverElevation > 3}
     class:neo-inset={elevation < 0}
-    class:neo-inset-hover={elevation + hover < 0}
-    class:neo-deep={elevation < -3 || elevation + hover < -3}
+    class:neo-inset-hover={hoverElevation < 0}
+    class:neo-deep={elevation < -3 || hoverElevation < -3}
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
     class:neo-flat-hover={flatHover}
     style:--neo-textarea-text-color={getColorVariable(color)}
     style:--neo-textarea-glass-blur={filter}
     style:--neo-textarea-box-shadow={boxShadow}
-    style:--neo-textarea-hover-shadow={hoverShadow}
+    style:--neo-textarea-box-shadow-hover={hoverShadow}
     style:--neo-textarea-label-height={labelHeight}
     style:--neo-textarea-label-width={labelWidth}
     out:outFn={outProps}
@@ -679,12 +680,17 @@
     &.neo-hover.neo-flat-hover:focus-within,
     &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered .neo-hover-flat:focus-within) {
       border-color: var(--neo-textarea-border-color, var(--neo-border-color));
+
+      &:focus-visible,
+      &:hover {
+        border-color: var(--neo-textarea-border-color-hover, var(--neo-border-color-highlight));
+      }
     }
 
     &:focus-within,
     &.neo-hover:hover,
     &.neo-hover.neo-hovered {
-      box-shadow: var(--neo-textarea-hover-shadow, var(--neo-box-shadow-flat));
+      box-shadow: var(--neo-textarea-box-shadow-hover, var(--neo-box-shadow-flat));
     }
 
     &.neo-disabled {
@@ -893,7 +899,12 @@
       &.neo-hover.neo-flat-hover:hover,
       &.neo-hover.neo-flat-hover:focus-within,
       &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered .neo-hover-flat:focus-within) {
-        border-color: var(--neo-extarea-border-color, var(--neo-glass-border-color-flat));
+        border-color: var(--neo-textarea-border-color, var(--neo-glass-border-color-flat));
+
+        &:focus-visible,
+        &:hover {
+          border-color: var(--neo-textarea-color-hover, var(--neo-border-color-flat-highlight));
+        }
       }
     }
 

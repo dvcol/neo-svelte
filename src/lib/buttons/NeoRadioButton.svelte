@@ -115,6 +115,7 @@
 
       &:focus-visible {
         outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+        outline-offset: var(--neo-outline-offset-width, -1px);
       }
 
       &:hover:not(.neo-disabled) {
@@ -147,6 +148,10 @@
 
         &.neo-flat {
           border-color: var(--neo-radio-border-color, var(--neo-glass-border-color-flat));
+
+          &:hover {
+            border-color: var(--neo-radio-border-color-hover, var(--neo-border-color-flat-highlight));
+          }
         }
 
         &:not(.neo-flat, .neo-inset) {
