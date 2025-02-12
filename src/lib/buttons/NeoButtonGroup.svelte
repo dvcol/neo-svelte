@@ -11,6 +11,7 @@
     DefaultShadowElevation,
     DefaultShadowHoverElevation,
     getDefaultElevation,
+    isShadowFlat,
     type ShadowElevation,
   } from '~/utils/shadow.utils.js';
 
@@ -56,18 +57,26 @@
   }: NeoButtonGroupProps = $props();
   /* eslint-enable prefer-const */
 
-  const { elevation: _elevation = DefaultShadowElevation, blur: _blur, button, ...rest } = $derived(_rest);
+  const { elevation: _elevation = DefaultShadowElevation, hover: _hover = 0, blur: _blur, button, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
-  const hover = $derived(coerce(button?.hover ?? DefaultShadowHoverElevation));
-  const active = $derived(coerce(button?.active ?? -3));
+  const hover = $derived(coerce(_hover));
+  const hoverElevation = $derived(elevation + hover);
+
+  const buttonHover = $derived(coerce(button?.hover ?? DefaultShadowHoverElevation));
+  const buttonActive = $derived(coerce(button?.active ?? -3));
 
   const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed, convex }));
-  const hoverShadow = $derived(computeHoverShadowElevation(0, hover, { glass }) ?? boxShadow);
-  const activeShadow = $derived(computeShadowElevation(active, { glass, pressed: button?.pressed }) ?? boxShadow);
+  const hoverShadow = $derived(computeHoverShadowElevation(elevation, hover, { glass, pressed, convex }) ?? boxShadow);
+
+  const buttonHoverShadow = $derived(computeHoverShadowElevation(0, buttonHover, { glass }) ?? boxShadow);
+  const buttonActiveShadow = $derived(computeShadowElevation(buttonActive, { glass, pressed: button?.pressed }) ?? boxShadow);
+
+  const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
+  const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -103,9 +112,13 @@
   class:neo-button-group={true}
   class:neo-borderless={borderless}
   class:neo-start={start}
-  class:neo-flat={!elevation}
-  class:neo-convex={convex}
   class:neo-inset={elevation < 0}
+  class:neo-hover={hover}
+  class:neo-inset-hover={hoverElevation < 0}
+  class:neo-flat={!elevation}
+  class:neo-hover-flat={hoverFlat}
+  class:neo-flat-hover={flatHover}
+  class:neo-convex={convex}
   class:neo-glass={glass}
   class:neo-tinted={tinted}
   class:neo-rounded={rounded}
@@ -117,7 +130,8 @@
   style:--neo-btn-group-text-color={getColorVariable(color)}
   style:--neo-btn-group-box-shadow={boxShadow}
   style:--neo-btn-group-box-shadow-hover={hoverShadow}
-  style:--neo-btn-group-box-shadow-active={activeShadow}
+  style:--neo-btn-group-box-shadow-btn-hover={buttonHoverShadow}
+  style:--neo-btn-group-box-shadow-btn-active={buttonActiveShadow}
   style:--neo-btn-group-glass-blur={filter}
   style:justify-content={justify}
   style:align-items={align}
@@ -172,12 +186,19 @@
       padding: 0.375rem;
     }
 
-    &.neo-flat:not(.neo-borderless) {
+    &.neo-hover.neo-flat-hover:hover,
+    &.neo-hover.neo-flat-hover:focus-within,
+    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
       border-color: var(--neo-btn-group-border-color, var(--neo-border-color));
 
       &:hover {
         border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-highlight));
       }
+    }
+
+    &:focus-within,
+    &.neo-hover:hover {
+      box-shadow: var(--neo-btn-group-box-shadow-hover, var(--neo-btn-group-box-shadow));
     }
 
     &.neo-start {
@@ -211,11 +232,14 @@
       }
 
       &.neo-convex,
-      &.neo-inset {
+      &.neo-inset,
+      &.neo-inset-hover:hover {
         border-color: var(--neo-btn-group-border-color, transparent);
       }
 
-      &.neo-flat {
+      &.neo-hover.neo-flat-hover:hover,
+      &.neo-hover.neo-flat-hover:focus-within,
+      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-within) {
         border-color: var(--neo-btn-group-border-color, var(--neo-glass-border-color-flat));
 
         &:hover {
@@ -243,12 +267,12 @@
     }
 
     :global(.neo-button:not(.neo-flat, :active:not(.neo-loading), .neo-pressed):hover) {
-      box-shadow: var(--neo-btn-group-box-shadow-hover);
+      box-shadow: var(--neo-btn-group-box-shadow-btn-hover);
     }
 
     :global(.neo-button.neo-pressed),
     :global(.neo-button:active:not(.neo-loading)) {
-      box-shadow: var(--neo-btn-group-box-shadow-active);
+      box-shadow: var(--neo-btn-group-box-shadow-btn-active);
     }
 
     &.neo-pulse {

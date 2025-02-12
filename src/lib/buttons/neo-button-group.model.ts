@@ -22,6 +22,12 @@ export type NeoButtonGroupContext = {
    */
   elevation?: NeoButtonGroupElevation;
   /**
+   * Group hover elevation.
+   *
+   * @default 0 (relative to base elevation)
+   */
+  hover?: NeoButtonHoverElevation;
+  /**
    * The blur level to apply.
    *
    * @default elevation, min: 1, max: 5
