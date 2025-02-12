@@ -54,6 +54,12 @@ export type NeoRangeStates = {
 
 export type NeoRangeStyles = {
   /**
+   * If true, the input will show step markers.
+   *
+   * @see step
+   */
+  ticks?: boolean;
+  /**
    * If true, the input value will be displayed as tooltip on hover/focus.
    *
    * @default true
@@ -95,7 +101,11 @@ export type NeoRangeTooltipContext = {
   lower?: boolean;
   upper?: boolean;
   value?: number;
-  context: NeoRangeContext;
+};
+
+export type NeoRangeTickContext = {
+  index: number;
+  filled?: boolean;
 };
 
 export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation' | 'error' | 'context' | 'message' | 'messageProps'> &
@@ -108,7 +118,11 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
     /**
      * A snippet to display as value labels.
      */
-    tooltip?: Snippet<[NeoRangeTooltipContext]>;
+    tooltip?: Snippet<[NeoRangeTooltipContext, NeoValidationFieldContext]>;
+    /**
+     * A snippet to display as a tick mark.
+     */
+    mark?: Snippet<[NeoRangeTickContext, NeoValidationFieldContext]>;
     /**
      * A snippet to display as the input prefix.
      */

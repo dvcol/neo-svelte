@@ -1143,6 +1143,43 @@
   </div>
 </div>
 
+<!-- Range inputs -->
+<div class="row">
+  <div class="column content">
+    <span class="label">Tick Range</span>
+    {@render validationState(rangeSteppedState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoRange
+        label="Tick Stepped"
+        step={10}
+        ticks
+        bind:touched={rangeSteppedState.touched}
+        bind:dirty={rangeSteppedState.dirty}
+        bind:valid={rangeSteppedState.valid}
+        bind:value={rangeSteppedState.value}
+        {...options}
+      />
+    </SphereBackdrop>
+  </div>
+
+  <div class="column content">
+    <span class="label">Tick Interval</span>
+    {@render validationState(rangeArrayState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoRange
+        label="Tick Interval"
+        step={10}
+        ticks
+        bind:touched={rangeArrayState.touched}
+        bind:dirty={rangeArrayState.dirty}
+        bind:valid={rangeArrayState.valid}
+        bind:value={rangeArrayState.value}
+        {...options}
+      />
+    </SphereBackdrop>
+  </div>
+</div>
+
 {#snippet beforeRange()}
   <NeoButton
     rounded

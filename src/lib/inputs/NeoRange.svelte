@@ -26,6 +26,7 @@
     error,
     before,
     after,
+    mark,
 
     // State
     id = label ? `neo-range-${getUUID()}` : undefined,
@@ -43,6 +44,7 @@
     min = 0,
     max = 100,
     step,
+    ticks,
 
     // Styles
     start,
@@ -87,7 +89,15 @@
   // TODO - vertical
 
   const lowerProgress = $derived(((lower - min) / (max - min)) * 100);
-  const upperProgress = $derived(upper ? ((upper - min) / (max - min)) * 100 : undefined);
+  const upperProgress = $derived(upper ? ((upper - min) / (max - min)) * 100 : lowerProgress);
+
+  const steps = $derived(ticks ? Math.round((max - min) / (step ?? 1)) : 0);
+
+  const isFilled = (tick: number) => {
+    const tickProgress = (tick / steps) * 100;
+    if (isArray) return tickProgress >= lowerProgress && tickProgress <= upperProgress;
+    return tickProgress <= lowerProgress;
+  };
 
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
 
@@ -275,6 +285,7 @@
     disabled,
     readonly,
 
+    initial,
     loading,
     min,
     max,
@@ -286,9 +297,12 @@
     valid,
 
     // Styles
+    ticks,
+    color,
     tooltips,
     rounded,
     glass,
+    tinted,
     start,
     skeleton,
     elevation,
@@ -384,7 +398,7 @@
         style={toStyle(lowerTooltip.floatingStyles, floatingProps?.style)}
       >
         {#if tooltip}
-          {@render tooltip({ lower: true, upper: false, value: lower, context })}
+          {@render tooltip({ lower: true, upper: false, value: lower }, context)}
         {:else}
           {lower}
         {/if}
@@ -400,7 +414,7 @@
         style={toStyle(upperTooltip.floatingStyles, floatingProps?.style)}
       >
         {#if tooltip}
-          {@render tooltip({ lower: false, upper: true, value: upper, context })}
+          {@render tooltip({ lower: false, upper: true, value: upper }, context)}
         {:else}
           {upper}
         {/if}
@@ -425,6 +439,7 @@
           class:neo-flat={!elevation}
           class:neo-valid={validation && valid}
           class:neo-invalid={validation && !valid}
+          style:--neo-range-tick-count={steps}
           style:--neo-range-color={getColorVariable(color)}
           style:--neo-range-box-shadow={boxShadow}
           style:--neo-range-progress="{lowerProgress}%"
@@ -455,6 +470,20 @@
             <span class="neo-range-handle-after">
               <!--   handle after   -->
             </span>
+            {#if steps > 1}
+              {#each { length: (steps ?? 0) + 1 } as _, i}
+                {@const filled = isFilled(i)}
+                <div class="neo-range-tick" style:--neo-range-tick-index={i}>
+                  {#if mark}
+                    {@render mark({ index: i, filled }, context)}
+                  {:else}
+                    <span class="neo-range-tick-mark" class:neo-filled={filled}>
+                      <!--  tick content  -->
+                    </span>
+                  {/if}
+                </div>
+              {/each}
+            {/if}
           </span>
         </span>
         {#if loading !== undefined || after !== undefined}
@@ -494,6 +523,7 @@
     }
 
     &-rail {
+      position: relative;
       display: inline-flex;
       align-items: center;
       box-sizing: border-box;
@@ -504,6 +534,24 @@
       background-color: var(--neo-range-rail-background, transparent);
       border-radius: var(--neo-range-border-radius, var(--neo-border-radius-sm));
       transition: background-color 0.3s ease;
+    }
+
+    &-tick {
+      position: absolute;
+      translate: -50%;
+      left: calc((var(--neo-range-tick-index) * 100% / var(--neo-range-tick-count)));
+
+      &-mark {
+        display: block;
+        width: 0.25rem;
+        height: 0.25rem;
+        background-color: var(--neo-range-mark-background, color-mix(in srgb, transparent, currentcolor 15%));
+        border-radius: 50%;
+
+        &.neo-filled {
+          background-color: var(--neo-range-mark-background, currentcolor);
+        }
+      }
     }
 
     &-handle {
@@ -700,7 +748,7 @@
       }
 
       &.neo-tinted {
-        background-color: var(--neo-input-bg-color, var(--neo-background-color-tinted));
+        background-color: var(--neo-range-bg-color, var(--neo-background-color-tinted));
       }
 
       &.neo-skeleton {
