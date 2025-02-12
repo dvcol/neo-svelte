@@ -39,14 +39,13 @@
   const items = $derived(options?.map(i => (typeof i === 'object' ? i : { value: i })));
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
-  const template = $derived(computeButtonTemplate(elevation, rest?.pressed));
+  const template = $derived(computeButtonTemplate(elevation, rest?.pressed, rest?.glass));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle select dropdown',
     title: 'Toggle select dropdown',
     skeleton: rest.skeleton,
     disabled: rest.disabled,
     rounded: rest.rounded,
-    glass: rest.glass,
     start: rest.start,
     onclick: () => {
       ref?.focus?.();

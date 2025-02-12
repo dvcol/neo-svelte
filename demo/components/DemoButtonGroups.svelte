@@ -32,9 +32,9 @@
     { label: 'Default' },
     { label: 'Flat', props: { elevation: 0 } },
     { label: 'Text', props: { elevation: 0, borderless: true } },
+    { label: 'Raised', props: { elevation: 0, borderless: true, button: { hover: 1, active: -1, pressed: true } } },
     { label: 'Inset', props: { elevation: -2 } },
     { label: 'Pressed', props: { elevation: -2, pressed: true } },
-    { label: 'Raised', props: { elevation: -2, button: { hover: 1, active: -1, pressed: true } } },
     { label: 'Convex', props: { elevation: 2, convex: true } },
   ];
 </script>

@@ -79,7 +79,7 @@
   };
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
-  const template = $derived(computeButtonTemplate(elevation, rest?.pressed));
+  const template = $derived(computeButtonTemplate(elevation, rest?.pressed, rest?.glass));
 
   const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(rest?.pressed)));
   const tooltipElevation = $derived((rest?.pressed ? Math.abs(elevation + hover) : elevation + hover) as NeoTooltipElevation);
@@ -89,7 +89,6 @@
     title: 'Toggle select dropdown',
     skeleton: rest.skeleton,
     disabled: rest.disabled,
-    glass: rest.glass,
     start: rest.start,
     rounded,
     onclick: toggle,

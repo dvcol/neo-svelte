@@ -43,14 +43,13 @@
   const _type = $derived(show ? 'text' : type);
 
   const elevation = $derived(coerce<ShadowElevation>(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
-  const template = $derived(computeButtonTemplate(elevation, rest?.pressed, pin));
+  const template = $derived(computeButtonTemplate(elevation, rest?.pressed, pin || rest?.glass));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle password visibility',
     title: 'Toggle password visibility',
     skeleton: rest.skeleton,
     disabled: rest.disabled,
     rounded: rest.rounded,
-    glass: rest.glass,
     start: rest.start,
     ...template,
     ...buttonProps,

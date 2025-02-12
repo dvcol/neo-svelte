@@ -90,7 +90,7 @@
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
   const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(pressed)));
 
-  const template = $derived(computeButtonTemplate(elevation, pressed));
+  const template = $derived(computeButtonTemplate(elevation, pressed, rest?.glass));
   const isDragging = $derived(drop && dragging && !disabled);
 
   let dragRef = $state<HTMLDivElement>();
@@ -133,7 +133,6 @@
     skeleton,
     disabled,
     rounded: expanded || rounded,
-    glass: rest.glass,
     start: rest.start,
     ...template,
     ...buttonProps,

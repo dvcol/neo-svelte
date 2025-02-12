@@ -82,12 +82,11 @@
   };
 
   const elevation = $derived(coerce(rest?.elevation ?? DefaultShadowElevation));
-  const template = $derived(computeButtonTemplate(elevation, rest?.pressed));
+  const template = $derived(computeButtonTemplate(elevation, rest?.pressed, rest?.glass));
   const buttonsProps = $derived<NeoButtonProps>({
     skeleton: rest.skeleton,
     disabled: rest.disabled,
     rounded: rest.rounded,
-    glass: rest.glass,
     start: rest.start,
     ...template,
     ...buttonProps,

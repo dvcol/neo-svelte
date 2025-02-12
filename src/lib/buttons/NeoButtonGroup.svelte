@@ -187,17 +187,17 @@
     }
 
     &.neo-hover.neo-flat-hover:hover,
-    &.neo-hover.neo-flat-hover:focus-within,
-    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+    &.neo-hover.neo-flat-hover:global(:has(> *:focus-visible)),
+    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:global(:has(> *:focus-visible))) {
       border-color: var(--neo-btn-group-border-color, var(--neo-border-color));
 
-      &:focus-within,
+      &:global(:has(> *:focus-visible)),
       &:hover {
         border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-highlight));
       }
     }
 
-    &:focus-within,
+    &:global(:has(> *:focus-visible)),
     &.neo-hover:hover {
       box-shadow: var(--neo-btn-group-box-shadow-hover, var(--neo-btn-group-box-shadow));
     }
@@ -239,11 +239,11 @@
       }
 
       &.neo-hover.neo-flat-hover:hover,
-      &.neo-hover.neo-flat-hover:focus-within,
-      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-within) {
+      &.neo-hover.neo-flat-hover:global(:has(> *:focus-visible)),
+      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:global(:has(> *:focus-visible))) {
         border-color: var(--neo-btn-group-border-color, var(--neo-glass-border-color-flat));
 
-        &:focus-within,
+        &:global(:has(> *:focus-visible)),
         &:hover {
           border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-flat-highlight));
         }
