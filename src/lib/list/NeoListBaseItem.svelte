@@ -114,6 +114,7 @@
     elevation="0"
     hover="-1"
     active="-2"
+    checked={buttonProps?.toggle ? checked : undefined}
     {readonly}
     {disabled}
     href={item?.href}
