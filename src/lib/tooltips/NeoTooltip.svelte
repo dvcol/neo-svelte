@@ -307,10 +307,10 @@
     style:max-height={height?.max}
     style={toStyle(tooltipStyle, rest.style)}
   >
-    {#if typeof tooltip === 'string'}
-      {tooltip}
-    {:else}
+    {#if typeof tooltip === 'function'}
       {@render tooltip?.(floating)}
+    {:else}
+      {tooltip}
     {/if}
   </svelte:element>
 {/if}

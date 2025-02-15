@@ -433,10 +433,10 @@
 {/snippet}
 
 {#snippet labelGroup()}
-  {#if typeof label === 'string'}
-    {label}
-  {:else if label}
+  {#if typeof label === 'function'}
     {@render label(context)}
+  {:else if label !== undefined}
+    {label}
   {/if}
 {/snippet}
 

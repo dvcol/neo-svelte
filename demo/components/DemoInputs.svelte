@@ -1136,8 +1136,12 @@
         bind:value={rangeMinMaxState.value}
         {...options}
       >
-        {#snippet tooltip({ value, upper })}
-          {value} / {upper ? 200 : -200}
+        {#snippet tooltip({ value, upper }, { min, max })}
+          {#if upper}
+            {value} / {max}
+          {:else}
+            {min} / {value}
+          {/if}
         {/snippet}
       </NeoRange>
     </SphereBackdrop>

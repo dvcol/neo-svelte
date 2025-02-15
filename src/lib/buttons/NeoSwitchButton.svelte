@@ -61,7 +61,7 @@
 {#snippet label(content: NeoSwitchButtonProps['on'])}
   {#if content && typeof content === 'function'}
     {@render content?.(context)}
-  {:else if content}
+  {:else if content !== undefined}
     {content}
   {/if}
 {/snippet}

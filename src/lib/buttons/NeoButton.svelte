@@ -223,10 +223,10 @@
       </span>
     {/if}
     {#if !empty}
-      {#if typeof label === 'string'}
-        <span class="neo-label">{label}</span>
-      {:else}
+      {#if typeof label === 'function'}
         {@render label?.()}
+      {:else}
+        <span class="neo-label">{label}</span>
       {/if}
       {@render children?.()}
     {/if}

@@ -42,10 +42,10 @@
     use:useFn={useProps}
     {...rest}
   >
-    {#if typeof label === 'string'}
-      {label}
-    {:else}
+    {#if typeof label === 'function'}
       {@render label?.()}
+    {:else}
+      {label}
     {/if}
   </label>
   {@render children?.()}

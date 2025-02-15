@@ -57,10 +57,10 @@
         out:fly={{ duration: defaultDuration, y: message ? '50%' : '-50%' }}
         {...messageRest}
       >
-        {#if typeof error === 'string'}
-          {error}
-        {:else}
+        {#if typeof error === 'function'}
           {@render error(context)}
+        {:else}
+          {error}
         {/if}
       </svelte:element>
     {:else if message}
@@ -72,10 +72,10 @@
         out:fly={{ duration: defaultDuration, y: '50%' }}
         {...messageRest}
       >
-        {#if typeof message === 'string'}
-          {message}
-        {:else}
+        {#if typeof message === 'function'}
           {@render message(context)}
+        {:else}
+          {message}
         {/if}
       </svelte:element>
     {/if}
