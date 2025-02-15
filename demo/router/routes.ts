@@ -14,6 +14,7 @@ export const Route = {
   Inputs: 'inputs' as const,
   Tooltips: 'tooltips' as const,
   Lists: 'lists' as const,
+  Progress: 'progress' as const,
 } as const;
 
 export type Routes = (typeof Route)[keyof typeof Route];
@@ -31,6 +32,7 @@ export const Path: Record<keyof typeof Route, string> = {
   Inputs: '/inputs' as const,
   Tooltips: '/tooltips' as const,
   Lists: '/lists' as const,
+  Progress: '/progress' as const,
   Any: '*' as const,
 } as const;
 
@@ -99,6 +101,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.Lists,
       path: Path.Lists,
       component: () => import('../components/DemoLists.svelte'),
+    },
+    {
+      name: Route.Progress,
+      path: Path.Progress,
+      component: () => import('../components/DemoProgress.svelte'),
     },
     {
       name: Route.Any,

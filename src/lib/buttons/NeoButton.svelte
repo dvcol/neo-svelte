@@ -51,6 +51,7 @@
     coalesce,
     pulse,
     scale = !ghost,
+    ratio,
 
     // Flex
     justify,
@@ -202,6 +203,7 @@
   style:justify-content={justify}
   style:align-items={align}
   style:flex
+  style:aspect-ratio={ratio}
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}
@@ -262,10 +264,6 @@
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out;
     appearance: none;
-
-    &.neo-empty {
-      padding: var(--neo-btn-padding-empty, 0.5rem);
-    }
 
     &.neo-loading {
       cursor: wait;
@@ -451,7 +449,12 @@
     }
 
     &.neo-rounded {
+      padding: var(--neo-btn-padding, 0.3125rem 0.75rem);
       border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
+    }
+
+    &.neo-empty {
+      padding: var(--neo-btn-padding-empty, 0.5rem);
     }
 
     &.neo-pulse {

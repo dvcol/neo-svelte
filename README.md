@@ -113,17 +113,16 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] sort
   - [ ] tree
 
-- [ ] progress
-  - [ ] vertical
+- [x] progress
+  - [x] vertical
   - [ ] circular
   - [ ] ticks
-  - [ ] min/max
-  - [ ] indeterminate
+  - [x] min/max
+  - [x] indeterminate
   - [ ] disabled
-  - [ ] color/background
-  - [ ] rail color/background
-  - [ ] duration/timeout
-  - [ ] start/stop/cancel/finish/reset
+  - [x] color/background
+  - [x] duration/timeout
+  - [x] start/stop/cancel/finish/reset
 
 - [ ] stepper
   - [ ] vertical

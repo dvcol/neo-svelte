@@ -4,11 +4,10 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconImage from '~/icons/IconImage.svelte';
-  import IconMoon from '~/icons/IconMoon.svelte';
   import IconSave from '~/icons/IconSave.svelte';
   import IconSaveOff from '~/icons/IconSaveOff.svelte';
   import IconSun from '~/icons/IconSun.svelte';
-  import IconSunFull from '~/icons/IconSunFull.svelte';
+  import IconSunMoon from '~/icons/IconSunMoon.svelte';
   import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
   import { NeoSource, NeoTheme } from '~/providers/neo-theme-provider.model.js';
 
@@ -66,7 +65,7 @@
     >
       {#snippet icon()}
         <span class="neo-source-icon" style:--neo-source-rotate="{angle}deg">
-          <IconSunFull />
+          <IconSun />
         </span>
       {/snippet}
     </NeoButton>
@@ -82,11 +81,7 @@
       {...themeProps}
     >
       {#snippet icon()}
-        {#if dark}
-          <IconMoon />
-        {:else}
-          <IconSun />
-        {/if}
+        <IconSunMoon state={dark ? 'moon' : 'sun'} />
       {/snippet}
     </NeoButton>
   {/if}

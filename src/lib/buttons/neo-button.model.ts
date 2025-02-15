@@ -166,6 +166,12 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * The waves will reverse direction on hover or active states.
    */
   pulse?: boolean;
+  /**
+   * Aspect ratio of the button.
+   *
+   * @see [aspect-ratio](https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio)
+   */
+  ratio?: CSSStyleDeclaration['aspectRatio'];
 
   // Events
 
