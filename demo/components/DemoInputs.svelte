@@ -563,6 +563,7 @@
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
+    openOnFocus
   />
 </div>
 

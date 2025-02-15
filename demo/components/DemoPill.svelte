@@ -91,6 +91,7 @@
     rounded={options.rounded}
     containerProps={{ style: 'margin-left: 4rem' }}
     options={['large', 'medium', 'small']}
+    openOnFocus
   />
 
   <NeoSelect
@@ -105,6 +106,7 @@
     rounded={options.rounded}
     containerProps={{ style: 'margin-left: 4rem' }}
     options={colorOptions}
+    openOnFocus
   />
 </div>
 

@@ -41,6 +41,10 @@
     filled,
     tinted,
     elevation,
+    openDelay,
+    hoverDelay,
+    openOnFocus,
+    openOnHover,
 
     // Other Props
     tooltipProps,
@@ -108,6 +112,10 @@
   {filled}
   {tinted}
   {elevation}
+  {openDelay}
+  {hoverDelay}
+  {openOnFocus}
+  {openOnHover}
   {...tooltipProps}
 >
   {#snippet children(floating: UseFloatingReturn)}

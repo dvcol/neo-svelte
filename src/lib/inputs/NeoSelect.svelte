@@ -59,6 +59,10 @@
     open = $bindable(false),
     width,
     height,
+    openDelay,
+    hoverDelay = 300,
+    openOnHover = false,
+    openOnFocus = false,
 
     // Other props
     containerRef = $bindable(),
@@ -215,8 +219,11 @@
   {height}
   {color}
   {tinted}
+  {openDelay}
+  {hoverDelay}
+  {openOnFocus}
+  {openOnHover}
   filled={!rest?.glass}
   elevation={tooltipElevation}
   {...listProps}
-  tooltipProps={{ openOnHover: false, openOnFocus: false, ...listProps?.tooltipProps }}
 />

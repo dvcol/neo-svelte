@@ -55,6 +55,8 @@
     // Hover
     openOnHover = true,
     keepOpenOnHover = false,
+    hoverDelay = 500,
+    openDelay = 100,
     hoverOptions,
 
     // Focus
@@ -157,7 +159,12 @@
       return openOnHover;
     },
     move: false,
-    delay: 100,
+    get restMs() {
+      return hoverDelay;
+    },
+    get delay() {
+      return openDelay;
+    },
     ...hoverOptions,
   });
   const _focus = useFocus(floating.context, {
@@ -312,7 +319,7 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-tooltip {
-    @include mixin.tooltip;
+    @include mixin.floating;
 
     color: var(--neo-tooltip-text-color, inherit);
 

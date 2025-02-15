@@ -135,6 +135,7 @@
     containerProps={{ style: 'margin-left: 6.75rem' }}
     options={position}
     size="15"
+    openOnFocus
   />
 
   <NeoNumberStep
@@ -162,6 +163,7 @@
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
+    openOnFocus
   />
 </div>
 

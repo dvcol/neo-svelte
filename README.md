@@ -82,7 +82,9 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [X] inset
   - [x] custom before-after
   - [x] steps
+  - [x] ticks
   - [ ] vertical
+  - [ ] circular
   - [ ] rating (stars)
 - [x] select
   - [x] native
@@ -111,9 +113,39 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] sort
   - [ ] tree
 
+- [ ] progress
+  - [ ] vertical
+  - [ ] circular
+  - [ ] ticks
+  - [ ] min/max
+  - [ ] indeterminate
+  - [ ] disabled
+  - [ ] color/background
+  - [ ] rail color/background
+  - [ ] duration/timeout
+  - [ ] start/stop/cancel/finish/reset
+
 - [ ] stepper
   - [ ] vertical
   - [ ] progress/dots
+
+- [ ] Modal/dialog
+  - [ ] HTML Dialog
+  - [ ] HTML Popover
+  - [ ] Drawer
+    - [ ] animation
+    - [ ] buffer
+    - [ ] placement (top, bottom, left, right)
+    - [ ] size (width, height)
+    - [ ] scrollable
+    - [ ] close button
+    - [ ] dismissible
+    - [ ] resizable (drag, handle, min/max)
+    - [ ] backdrop
+    - [ ] inert
+    - [ ] click outside
+    - [ ] focus trap
+
 
 - [ ] Chat
   - [ ] infinite scroll 
@@ -135,14 +167,6 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] custom cards (contact, etc.)
   - [ ] custom bubbles
   - [ ] custom input
-
-- [ ] Modal/dialog
-- [ ] drawer/panel
-  - [ ] collapsible
-  - [ ] position
-  - [ ] backdrop
-  - [ ] click outside
-
 - [ ] table
 - [ ] pagination
 

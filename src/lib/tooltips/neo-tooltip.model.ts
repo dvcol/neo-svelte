@@ -146,6 +146,18 @@ export type NeoTooltipProps = {
    */
   keepOpenOnHover?: boolean;
   /**
+   * The delay in milliseconds before the tooltip opens on hover.
+   *
+   * @default 500
+   */
+  hoverDelay?: UseHoverOptions['restMs'];
+  /**
+   * The delay in milliseconds before the tooltip open state changes.
+   *
+   * @default 100
+   */
+  openDelay?: UseHoverOptions['delay'];
+  /**
    * Options to pass to the useHover hook.
    */
   hoverOptions?: UseHoverOptions;

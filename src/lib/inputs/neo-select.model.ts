@@ -100,6 +100,26 @@ export type NeoSelectProps<Value = unknown> = {
    * The tooltip open state.
    */
   open?: NeoPopSelectProps<Value>['open'];
+  /**
+   * The delay in milliseconds before the tooltip opens on hover.
+   *
+   * @default 500
+   */
+  hoverDelay?: NeoPopSelectProps<Value>['hoverDelay'];
+  /**
+   * The delay in milliseconds before the tooltip open state changes.
+   *
+   * @default 100
+   */
+  openDelay?: NeoPopSelectProps<Value>['openDelay'];
+  /**
+   * Whether to open the tooltip on focus.
+   */
+  openOnFocus?: NeoPopSelectProps<Value>['openOnFocus'];
+  /**
+   * Whether to open the tooltip on hover.
+   */
+  openOnHover?: NeoPopSelectProps<Value>['openOnHover'];
 
   // OtherProps
   /**
