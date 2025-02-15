@@ -281,7 +281,8 @@
       @include mixin.pulse(
         $scaleX: var(--neo-btn-group-scale-x, 1.2),
         $scaleY: var(--neo-btn-group-scale-y, 2),
-        $box-shadow-reverse: var(--neo-pulse-box-shadow-reverse, var(--neo-btn-group-box-shadow))
+        $box-shadow: var(--neo-btn-group-box-shadow),
+        $box-shadow-reverse: var(--neo-btn-group-box-shadow)
       );
     }
 
@@ -289,7 +290,8 @@
       @include mixin.coalesce(
         $scaleX: var(--neo-btn-group-scale-x, 1.2),
         $scaleY: var(--neo-btn-group-scale-y, 2),
-        $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-btn-group-box-shadow))
+        $box-shadow: var(--neo-btn-group-box-shadow),
+        $box-shadow-reverse: var(--neo-btn-group-box-shadow)
       );
     }
 

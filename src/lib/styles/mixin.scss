@@ -23,7 +23,8 @@
   $scaleX: var(--neo-pulse-scale-x, 2),
   $scaleY: var(--neo-pulse-scale-y, 2),
   $opacity-start: 1,
-  $opacity-end: 0
+  $opacity-end: 0,
+  $reverse: false
 ) {
   position: relative;
 
@@ -43,25 +44,26 @@
     animation: pulse $duration linear calc(#{$delay} + #{$interval}) $iteration;
   }
 
-  &.pressed,
-  &:focus-visible,
-  &:hover,
-  &:active {
-    &::after,
-    &::before {
-      box-shadow: $box-shadow-reverse;
-      animation-name: coalesce;
-      animation-timing-function: ease-out;
+  @if $reverse {
+    &.neo-pressed,
+    &:active {
+      &::after,
+      &::before {
+        box-shadow: $box-shadow-reverse;
+        animation-name: coalesce;
+        animation-timing-function: ease-out;
+      }
     }
+
+    @include animation.coalesce($scaleX, $scaleY, $opacity-start, $opacity-end);
   }
 
   @include animation.pulse($scaleX, $scaleY, $opacity-start, $opacity-end);
-  @include animation.coalesce($scaleX, $scaleY, $opacity-start, $opacity-end);
 }
 
 @mixin coalesce(
-  $box-shadow: var(--neo-coalesce-box-shadow, var(--neo-box-shadow-raised-3)),
-  $box-shadow-reverse: var(--neo-coalesce-box-shadow-reverse, var(--neo-box-shadow-inset-2)),
+  $box-shadow: var(--neo-box-shadow-raised-3),
+  $box-shadow-reverse: var(--neo-box-shadow-inset-2),
   $duration: var(--neo-coalesce-duration, 6s),
   $delay: var(--neo-coalesce-delay, 1s),
   $interval: var(--neo-coalesce-interval, 3s),
@@ -69,7 +71,8 @@
   $scaleX: var(--neo-coalesce-scale-x, 2),
   $scaleY: var(--neo-coalesce-scale-y, 2),
   $opacity-start: 1,
-  $opacity-end: 0
+  $opacity-end: 0,
+  $reverse: false
 ) {
   position: relative;
 
@@ -77,7 +80,7 @@
   &::before {
     @extend %after-before;
 
-    box-shadow: $box-shadow;
+    box-shadow: var(--neo-coalesce-box-shadow, #{$box-shadow});
     will-change: transform, opacity;
   }
 
@@ -89,19 +92,20 @@
     animation: coalesce $duration ease-out calc(#{$delay} + #{$interval}) $iteration;
   }
 
-  &.pressed,
-  &:focus-visible,
-  &:hover,
-  &:active {
-    &::after,
-    &::before {
-      box-shadow: $box-shadow-reverse;
-      animation-name: pulse;
-      animation-timing-function: linear;
+  @if $reverse {
+    &.neo-pressed,
+    &:active {
+      &::after,
+      &::before {
+        box-shadow: var(--neo-coalesce-box-shadow-reverse, #{$box-shadow-reverse});
+        animation-name: pulse;
+        animation-timing-function: linear;
+      }
     }
+
+    @include animation.pulse($scaleX, $scaleY, $opacity-start, $opacity-end);
   }
 
-  @include animation.pulse($scaleX, $scaleY, $opacity-start, $opacity-end);
   @include animation.coalesce($scaleX, $scaleY, $opacity-start, $opacity-end);
 }
 
@@ -130,11 +134,11 @@
     pointer-events: none;
   }
 
-  &.filled {
+  &.neo-filled {
     --neo-source-color: var(--neo-target-color);
   }
 
-  &.empty {
+  &.neo-empty {
     --neo-target-color: transparent;
   }
 
@@ -351,7 +355,7 @@
   --neo-skeleton-color: var(--neo-glass-skeleton-color);
 }
 
-@mixin tooltip(
+@mixin floating(
   $padding: --neo-tooltip-padding,
   $background-color: --neo-tooltip-bg-color,
   $border-color: --neo-tooltip-border-color,

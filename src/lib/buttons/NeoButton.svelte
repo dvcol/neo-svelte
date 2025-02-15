@@ -276,6 +276,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      vertical-align: middle;
     }
 
     .neo-content {
@@ -454,11 +455,11 @@
     }
 
     &.neo-pulse {
-      @include mixin.pulse;
+      @include mixin.pulse($box-shadow: var(--neo-btn-box-shadow), $box-shadow-reverse: var(--neo-btn-box-shadow-active));
     }
 
     &.neo-coalesce {
-      @include mixin.coalesce;
+      @include mixin.coalesce($box-shadow: var(--neo-btn-box-shadow), $box-shadow-reverse: var(--neo-btn-box-shadow-active));
     }
   }
 </style>

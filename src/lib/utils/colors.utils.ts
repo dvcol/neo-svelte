@@ -16,7 +16,7 @@ export const ColorVariables = {
   [Colors.Error]: '--neo-color-error',
 } as const;
 
-export const getColorVariable = (color?: Color): string | undefined => {
-  if (!color || !ColorVariables[color]) return color;
-  return `var(${ColorVariables[color]})`;
+export const getColorVariable = (color?: Color | string): string | undefined => {
+  if (!color || !ColorVariables[color as Color]) return color;
+  return `var(${ColorVariables[color as Color]})`;
 };

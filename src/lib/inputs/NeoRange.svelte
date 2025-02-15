@@ -87,6 +87,7 @@
   const upper = $derived(typeof value === 'number' ? undefined : value?.[1]);
 
   // TODO - vertical
+  // TODO - circular
 
   const lowerProgress = $derived(((lower - min) / (max - min)) * 100);
   const upperProgress = $derived(upper ? ((upper - min) / (max - min)) * 100 : lowerProgress);
@@ -787,7 +788,7 @@
       --neo-tooltip-z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
       --neo-tooltip-padding: 0.125rem 0.375rem;
 
-      @include mixin.tooltip;
+      @include mixin.floating;
 
       &.neo-rounded {
         --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));

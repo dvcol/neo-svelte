@@ -106,7 +106,9 @@
 
   const currentState = $derived<NeoInputState<HTMLInputElement>>({ touched, dirty, valid, value: typedValue, initial });
 
-  const validate: NeoInputMethods<HTMLInputElement>['validate'] = (update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true }) => {
+  export const validate: NeoInputMethods<HTMLInputElement>['validate'] = (
+    update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true },
+  ) => {
     if (update.dirty) dirty = !Object.is(typedValue, initial);
     if (!update.valid) return { ...currentState };
     if (readonly) ref?.removeAttribute('readonly');
