@@ -40,6 +40,11 @@
     filled,
     start,
 
+    // Shadow
+    elevation: _elevation = pressed ? -1 : 1,
+    hover: _hover = 0,
+    blur: _blur,
+
     // Transition
     in: inAction,
     out: outAction,
@@ -53,11 +58,9 @@
 
     // Other props
     affixProps,
-    ..._rest
+    ...rest
   }: NeoPillProps = $props();
   /* eslint-enable prefer-const */
-
-  const { elevation: _elevation = 1, hover: _hover = 0, blur: _blur, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation));
   const hover = $derived(coerce(_hover));

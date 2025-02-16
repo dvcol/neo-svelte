@@ -51,6 +51,11 @@
     horizontal,
     scrollbar,
 
+    // Shadow
+    elevation: _elevation = getDefaultElevation(pressed),
+    hover: _hover = 0,
+    blur: _blur,
+
     // Flex
     justify,
     align,
@@ -83,7 +88,7 @@
     mediaProps,
     dividerProps,
     closeProps,
-    ..._rest
+    ...rest
   }: NeoCardProps = $props();
   /* eslint-enable prefer-const */
 
@@ -93,9 +98,7 @@
   const { tag: actionTag = 'div', ...actionRest } = $derived(actionProps ?? {});
   const { tag: mediaTag = 'div', ...mediaRest } = $derived(mediaProps ?? {});
 
-  const { elevation: _elevation, hover: _hover = 0, blur: _blur, ...rest } = $derived(_rest);
-
-  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
+  const elevation = $derived(coerce(_elevation));
   const hover = $derived(coerce(_hover));
   const hoverElevation = $derived(elevation + hover);
 

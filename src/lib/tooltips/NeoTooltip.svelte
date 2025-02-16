@@ -52,6 +52,10 @@
     width: inputWith,
     height: inputHeight,
 
+    // Shadow
+    elevation: _elevation = DefaultShadowShallowElevation,
+    blur: _blur,
+
     // Hover
     openOnHover = true,
     keepOpenOnHover = false,
@@ -80,12 +84,11 @@
     triggerRef = $bindable(),
     triggerProps,
 
-    ..._rest
+    ...rest
   }: NeoTooltipProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: triggerTag = 'span', ...triggerRest } = $derived(triggerProps ?? {});
-  const { elevation: _elevation = DefaultShadowShallowElevation, blur: _blur, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation ?? DefaultShadowShallowElevation));
   const blur = $derived(coerce(_blur ?? elevation));

@@ -39,6 +39,10 @@
     pressed,
     dim = true,
 
+    // Shadow
+    elevation: _elevation = getDefaultElevation(pressed),
+    slideElevation: _slideElevation,
+
     // Events
     onchange,
     onclose,
@@ -46,14 +50,13 @@
 
     // Other props
     containerProps,
-    ..._rest
+    ...rest
   }: NeoTabsProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
-  const { elevation: _elevation, slideElevation: _slideElevation, ...rest } = $derived(_rest);
 
-  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
+  const elevation = $derived(coerce(_elevation));
   const slideElevation = $derived(coerce(_slideElevation ?? getDefaultSlideElevation(elevation)));
 
   // reflect context active to component

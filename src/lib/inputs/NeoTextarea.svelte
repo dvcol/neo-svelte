@@ -86,6 +86,11 @@
     validation,
     validationIcon,
 
+    // Shadow
+    elevation: _elevation = getDefaultElevation(pressed),
+    hover: _hover = getDefaultHoverElevation(pressed),
+    blur: _blur,
+
     // Transition
     in: inAction,
     out: outAction,
@@ -115,17 +120,15 @@
     wrapperRef = $bindable(),
     wrapperProps,
     messageProps,
-    ..._rest
+    ...rest
   }: NeoTextareaProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
-  const { elevation: _elevation, hover: _hover, blur: _blur, ...rest } = $derived(_rest);
-
-  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
-  const hover = $derived(coerce(_hover ?? getDefaultHoverElevation(pressed)));
+  const elevation = $derived(coerce(_elevation));
+  const hover = $derived(coerce(_hover));
   const hoverElevation = $derived(elevation + hover);
 
   const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));

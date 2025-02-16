@@ -14,6 +14,7 @@
     DefaultShadowActiveElevation,
     DefaultShadowElevation,
     DefaultShadowHoverElevation,
+    getDefaultElevation,
     isShadowFlat,
     type ShadowElevation,
   } from '~/utils/shadow.utils.js';
@@ -87,7 +88,7 @@
     ...rest
   } = $derived.by(() => {
     if (text || ghost) return { ...NeoTextButton, ..._rest };
-    return _rest;
+    return { ..._rest, elevation: _rest.elevation ?? getDefaultElevation(_rest.pressed) };
   });
 
   const elevation = $derived(coerce(_elevation));

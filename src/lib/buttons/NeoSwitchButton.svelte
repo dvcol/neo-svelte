@@ -20,6 +20,9 @@
     valid,
     disabled,
 
+    // Shadow
+    elevation: _elevation = DefaultShadowShallowElevation,
+
     // Styles
     start,
     glass,
@@ -29,11 +32,9 @@
     skeleton = false,
 
     // Other props
-    ..._rest
+    ...rest
   }: NeoSwitchButtonProps = $props();
   /* eslint-enable prefer-const */
-
-  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation));
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));

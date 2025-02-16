@@ -43,6 +43,9 @@
     loading,
     validation,
 
+    // Shadow
+    elevation: _elevation = DefaultShadowShallowElevation,
+
     // Styles
     start,
     glass,
@@ -65,12 +68,11 @@
     containerProps,
     wrapperRef = $bindable(),
     wrapperProps,
-    ..._rest
+    ...rest
   }: NeoSwitchProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
-  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
   const labelId = $derived(label ? `neo-switch-label-${getUUID()}` : undefined);
   const elevation = $derived(coerce(_elevation));

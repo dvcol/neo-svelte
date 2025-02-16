@@ -8,7 +8,6 @@
     computeGlassFilter,
     computeHoverShadowElevation,
     computeShadowElevation,
-    DefaultShadowElevation,
     DefaultShadowHoverElevation,
     getDefaultElevation,
     isShadowFlat,
@@ -39,6 +38,12 @@
     vertical,
     nowrap,
 
+    // Shadow
+    elevation: _elevation = getDefaultElevation(pressed),
+    hover: _hover = 0,
+    blur: _blur,
+    button,
+
     // Flex
     justify,
     align,
@@ -53,13 +58,11 @@
     use,
 
     // Other props
-    ..._rest
+    ...rest
   }: NeoButtonGroupProps = $props();
   /* eslint-enable prefer-const */
 
-  const { elevation: _elevation = DefaultShadowElevation, hover: _hover = 0, blur: _blur, button, ...rest } = $derived(_rest);
-
-  const elevation = $derived(coerce(_elevation ?? getDefaultElevation(pressed)));
+  const elevation = $derived(coerce(_elevation));
   const hover = $derived(coerce(_hover));
   const hoverElevation = $derived(elevation + hover);
 

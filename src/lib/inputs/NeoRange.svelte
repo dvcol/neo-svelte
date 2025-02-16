@@ -55,6 +55,9 @@
     tooltips = true,
     skeleton = false,
 
+    // Shadow
+    elevation: _elevation = DefaultShadowShallowElevation,
+
     // Actions
     in: inAction,
     out: outAction,
@@ -72,12 +75,11 @@
     wrapperProps,
     floatingProps,
     floatingOptions,
-    ..._rest
+    ...rest
   }: NeoRangeProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
-  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation));
 

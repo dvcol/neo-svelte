@@ -16,6 +16,9 @@
     touched = $bindable(false),
     disabled,
 
+    // Shadow
+    elevation: _elevation = DefaultShadowShallowElevation,
+
     // Styles
     start,
     glass,
@@ -25,11 +28,9 @@
     skeleton = false,
 
     // Other props
-    ..._rest
+    ...rest
   }: NeoCheckboxButtonProps = $props();
   /* eslint-enable prefer-const */
-
-  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation));
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, active: glass }, DefaultShallowMinMaxElevation));

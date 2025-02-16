@@ -32,6 +32,9 @@
     required,
     loading,
 
+    // Shadow
+    elevation: _elevation = DefaultShadowShallowElevation,
+
     // Styles
     start,
     glass,
@@ -51,12 +54,11 @@
     labelProps,
     buttonProps,
     containerProps,
-    ..._rest
+    ...rest
   }: NeoRadioProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
-  const { elevation: _elevation = DefaultShadowShallowElevation, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation));
   const labelId = $derived(label ? `neo-radio-label-${getUUID()}` : undefined);

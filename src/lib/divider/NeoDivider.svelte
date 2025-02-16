@@ -8,6 +8,9 @@
     vertical = false,
     skeleton = false,
 
+    // Shadow
+    elevation: _elevation = 0,
+
     // Styles
     margin,
     height,
@@ -16,10 +19,8 @@
     rounded = true,
 
     // Other props
-    ..._rest
+    ...rest
   }: NeoDividerProps = $props();
-
-  const { elevation: _elevation = 0, ...rest } = $derived(_rest);
 
   const elevation = $derived(coerce(_elevation));
   const boxShadow = $derived(computeShadowElevation(elevation));
