@@ -108,6 +108,18 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
    */
   high?: number;
   /**
+   * Width of the progress bar.
+   *
+   * @default 100% (right, left), 0.375rem (top, bottom)
+   */
+  width?: CSSStyleDeclaration['width'];
+  /**
+   * Height of the progress bar.
+   *
+   * @default 0.375rem (right, left), 100% (top, bottom)
+   */
+  height?: CSSStyleDeclaration['height'];
+  /**
    * The color or background to use for the progress.
    * If color is an array, the first color will be used for the low threshold, the second for the middle and the third for the high threshold.
    *

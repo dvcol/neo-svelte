@@ -10,8 +10,6 @@
   let {
     // Snippets
     children,
-    label, // TODO: add label support
-    tooltip, // TODO: add tooltip support
 
     // State
     tag = 'div',
@@ -31,6 +29,8 @@
     // Styles
     low, // threshold for tinting
     high, // threshold for tinting
+    width,
+    height,
     color,
     direction = NeoProgressDirection.Right,
 
@@ -40,7 +40,6 @@
   /* eslint-enable prefer-const */
 
   // TODO: circular progress
-  // TODO: progress ticks & custom mark
 
   const buffered = $derived((buffer ?? 0) > value ? buffer : value);
 
@@ -153,6 +152,8 @@
   data-low={low}
   data-high={high}
   data-value={value}
+  style:width
+  style:height
   style:--neo-progress-background={background}
   {...rest}
 >
@@ -168,9 +169,9 @@
     position: relative;
     box-sizing: border-box;
     overflow: hidden;
-    background-color: var(--neo-progress-bg-color, var(--neo-background-color-secondary));
+    background: var(--neo-progress-track-background, var(--neo-background-color-secondary));
     border: var(--neo-border-width, 1px) solid transparent;
-    border-radius: var(--neo-border-radius);
+    border-radius: inherit;
     transition: background-color 1s ease;
     appearance: none;
 
@@ -185,11 +186,11 @@
     }
 
     &-value {
-      background-color: var(--neo-progress-background, currentColor);
+      background: var(--neo-progress-background, currentColor);
     }
 
     &-buffer {
-      background-color: var(--neo-progress-buffer-color, color-mix(in srgb, var(--neo-progress-background, currentColor), transparent 85%));
+      background: var(--neo-progress-buffer-background, color-mix(in srgb, var(--neo-progress-background, currentColor), transparent 85%));
     }
 
     &.neo-controlled {
@@ -204,7 +205,7 @@
     &[data-direction='right'],
     &[data-direction='left'] {
       width: 100%;
-      height: 0.5rem;
+      height: 0.375rem;
     }
 
     &[data-direction='right'] {
@@ -239,7 +240,7 @@
 
     &[data-direction='top'],
     &[data-direction='bottom'] {
-      width: 0.5rem;
+      width: 0.375rem;
       height: 100%;
     }
 
@@ -276,45 +277,66 @@
     &.neo-indeterminate {
       .neo-progress-buffer,
       .neo-progress-value {
-        animation-duration: var(--neo-progress-indeterminate-duration, 1.6s);
+        background-color: var(--neo-progress-indeterminate-background, var(--neo-progress-background, currentColor));
+        animation-duration: var(--neo-progress-indeterminate-duration, 3s);
         animation-timing-function: var(--neo-progress-indeterminate-timing, linear);
         animation-iteration-count: var(--neo-progress-indeterminate-iteration, infinite);
         translate: 0;
       }
 
       &[data-direction='right'] {
-        .neo-progress-buffer,
-        .neo-progress-value {
-          animation-name: indeterminate-right;
+        .neo-progress-buffer {
+          animation-name: indeterminate-fast-right;
 
-          @include animation.indeterminate(right, X);
+          @include animation.indeterminate-fast(right, X);
+        }
+
+        .neo-progress-value {
+          animation-name: indeterminate-slow-right;
+
+          @include animation.indeterminate-slow(right, X);
         }
       }
 
       &[data-direction='left'] {
-        .neo-progress-buffer,
-        .neo-progress-value {
-          animation-name: indeterminate-left;
+        .neo-progress-buffer {
+          animation-name: indeterminate-fast-left;
 
-          @include animation.indeterminate(left, X, negative);
+          @include animation.indeterminate-fast(left, X, negative);
+        }
+
+        .neo-progress-value {
+          animation-name: indeterminate-slow-left;
+
+          @include animation.indeterminate-slow(left, X, negative);
         }
       }
 
       &[data-direction='top'] {
-        .neo-progress-buffer,
-        .neo-progress-value {
-          animation-name: indeterminate-top;
+        .neo-progress-buffer {
+          animation-name: indeterminate-fast-top;
 
-          @include animation.indeterminate(top, Y, negative);
+          @include animation.indeterminate-fast(top, Y, negative);
+        }
+
+        .neo-progress-value {
+          animation-name: indeterminate-slow-top;
+
+          @include animation.indeterminate-slow(top, Y, negative);
         }
       }
 
       &[data-direction='bottom'] {
-        .neo-progress-buffer,
-        .neo-progress-value {
-          animation-name: indeterminate-bottom;
+        .neo-progress-buffer {
+          animation-name: indeterminate-fast-bottom;
 
-          @include animation.indeterminate(bottom, Y);
+          @include animation.indeterminate-fast(bottom, Y);
+        }
+
+        .neo-progress-value {
+          animation-name: indeterminate-slow-bottom;
+
+          @include animation.indeterminate-slow(bottom, Y);
         }
       }
     }

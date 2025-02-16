@@ -60,26 +60,37 @@
   }
 }
 
-@mixin indeterminate($name: right, $axis: X, $polarity: positive) {
-  @keyframes indeterminate-#{$name} {
+@mixin indeterminate-slow($name: right, $axis: X, $polarity: positive) {
+  @keyframes indeterminate-slow-#{$name} {
     0% {
       transform: translate#{$axis }(0) scale#{$axis }(0);
     }
 
-    20% {
-      transform: translate#{$axis }(0) scale#{$axis }(0.6);
+    10% {
+      transform: translate#{$axis }(0) scale#{$axis }(0.4);
+    }
+
+    60%,
+    100% {
+      transform: translate#{$axis }(#{if($polarity == positive, 100%, -100%)}) scale#{$axis }(0.6);
+    }
+  }
+}
+
+@mixin indeterminate-fast($name: right, $axis: X, $polarity: positive, $size: grow) {
+  @keyframes indeterminate-fast-#{$name} {
+    0%,
+    40% {
+      transform: translate#{$axis }(0) scale#{$axis }(0);
     }
 
     60% {
-      transform: translate#{$axis }(#{if($polarity == positive, 80%, -80%)}) scale#{$axis }(0.8);
+      transform: translate#{$axis }(0) scale#{$axis }(0.6);
     }
 
-    80% {
-      transform: translate#{$axis }(#{if($polarity == positive, 100%, -100%)}) scale#{$axis }(1);
-    }
-
+    90%,
     100% {
-      transform: translate#{$axis }(#{if($polarity == positive, 110%, -110%)}) scale#{$axis }(0);
+      transform: translate#{$axis }(#{if($polarity == positive, 100%, -100%)}) scale#{$axis }(0.1);
     }
   }
 }
