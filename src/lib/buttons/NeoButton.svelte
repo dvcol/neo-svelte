@@ -413,10 +413,6 @@
     &.neo-start {
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
-
-        &:not(.neo-borderless, .neo-glass) {
-          border-color: var(--neo-btn-border-color, var(--neo-border-color));
-        }
       }
     }
 

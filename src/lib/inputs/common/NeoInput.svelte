@@ -892,10 +892,6 @@
       &.neo-start {
         @starting-style {
           box-shadow: var(--neo-box-shadow-flat);
-
-          &:not(.neo-borderless) {
-            border-color: var(--neo-input-border-color, var(--neo-border-color));
-          }
         }
       }
 

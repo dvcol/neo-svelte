@@ -179,6 +179,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [ ] image
   - [ ] videos
   - [ ] carousel
+  - [ ] parallax
 - [ ] avatar
   - [ ] badge
 - [ ] Progress/Loading

@@ -218,7 +218,7 @@
 
       &:focus-within,
       &:hover {
-        border-color: var(--neo-pill-border-color-color-hover, var(--neo-border-color-highlight));
+        border-color: var(--neo-pill-border-color-hover, var(--neo-border-color-highlight));
       }
     }
 
@@ -275,10 +275,6 @@
     &.neo-start {
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
-
-        &:not(.neo-borderless) {
-          border-color: var(--neo-pill-border-color, var(--neo-border-color));
-        }
       }
     }
 

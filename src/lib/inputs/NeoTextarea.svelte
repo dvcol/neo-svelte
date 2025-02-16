@@ -925,10 +925,6 @@
     &.neo-start {
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
-
-        &:not(.neo-borderless) {
-          border-color: var(--neo-textarea-border-color, var(--neo-border-color));
-        }
       }
     }
 
