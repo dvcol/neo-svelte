@@ -49,7 +49,7 @@
     start,
     skeleton = false,
     horizontal,
-    scrollbar = true,
+    scrollbar,
 
     // Flex
     justify,
@@ -257,7 +257,7 @@
       {/if}
     </svelte:element>
   {/if}
-  {#if segments}
+  {#if segments || scrollbar}
     {@render divider()}
     {#if content}
       <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} class:neo-scroll={scrollbar} {...contentRest}>
@@ -356,7 +356,12 @@
     }
 
     .neo-card-segment {
-      &:not(.neo-card-media) {
+      &:only-child {
+        padding: $full-spacing;
+        border-radius: inherit;
+      }
+
+      &:not(.neo-card-media, :only-child) {
         padding: $half-spacing $full-spacing;
 
         &:first-child {
@@ -427,6 +432,7 @@
       }
     }
 
+    &.neo-scroll,
     &.neo-segments {
       padding: 0;
     }
@@ -436,7 +442,7 @@
         padding: $full-spacing;
       }
 
-      .neo-card-segment:not(.neo-card-media, :last-child) {
+      .neo-card-segment:not(.neo-card-media, :last-child, :only-child) {
         border-bottom: var(--neo-border-width, 1px) solid var(--neo-card-border-color, var(--neo-border-color));
       }
     }
@@ -525,7 +531,7 @@
         border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
       }
 
-      .neo-card-segment:not(.neo-card-media) {
+      .neo-card-segment:not(.neo-card-media, :only-child) {
         padding: $full-spacing $half-spacing;
 
         &:first-child {
@@ -555,7 +561,7 @@
         }
       }
 
-      .neo-card-segment:not(.neo-card-media) {
+      .neo-card-segment:not(.neo-card-media, :only-child) {
         &:first-child {
           border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0;
         }
@@ -566,7 +572,7 @@
       }
 
       &.neo-horizontal {
-        .neo-card-segment:not(.neo-card-media) {
+        .neo-card-segment:not(.neo-card-media, :only-child) {
           &:first-child {
             border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg));
           }
@@ -591,18 +597,7 @@
   }
 
   .neo-card-content.neo-scroll {
-    @include mixin.scrollbar($gutter: auto, $transition: border-radius 0.3s ease);
-  }
-
-  .neo-card.neo-scroll:not(.neo-segments) {
-    @include mixin.scrollbar(
-      $gutter: auto,
-      $transition: #{margin 0.3s ease,
-      background-color 0.3s ease,
-      border-color 0.3s ease,
-      border-radius 0.3s ease,
-      backdrop-filter 0.3s ease,
-      box-shadow 0.3s ease-out}
-    );
+    @include mixin.fade-scroll;
+    @include mixin.scrollbar($gutter: auto, $padding: none, $transition: border-radius 0.3s ease);
   }
 </style>

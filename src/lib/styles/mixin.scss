@@ -220,6 +220,7 @@
   $button-height: var(--neo-scrollbar-button-height, 0.125rem),
   $timing: 0.3s,
   $delay: 0.1s,
+  $padding: calc($width * 2),
   $transition: false
 ) {
   scrollbar-gutter: $gutter;
@@ -301,12 +302,17 @@
   @supports not selector(::-webkit-scrollbar) {
     scrollbar-width: thin;
     scrollbar-color: $thumb-color;
-    padding-inline: calc($width * 2);
+
+    @if $padding != none {
+      padding-inline: $padding;
+    }
   }
 
   // TODO: remove when Safari  implement scrollbar-gutter correctly
-  @supports (hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none) {
-    padding-inline: calc($width * 2);
+  @if $padding != none {
+    @supports (hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none) {
+      padding-inline: $padding;
+    }
   }
 }
 
