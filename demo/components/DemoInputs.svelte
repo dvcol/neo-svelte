@@ -526,7 +526,7 @@
 
   <NeoNumberStep
     label="Elevation"
-    position="left"
+    placement="left"
     center
     bind:value={options.elevation}
     min={MinShadowElevation}
@@ -540,7 +540,7 @@
   />
   <NeoNumberStep
     label="Hover"
-    position="left"
+    placement="left"
     center
     bind:value={options.hover}
     min={MinShadowElevation - options.elevation}
@@ -555,7 +555,7 @@
   <NeoSelect
     label="Color"
     placeholder="Select color"
-    position="left"
+    placement="left"
     floating={false}
     color={options.color}
     display={displayValue}

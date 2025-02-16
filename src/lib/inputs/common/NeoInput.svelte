@@ -11,7 +11,7 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { NeoInputLabelPosition } from '~/inputs/common/neo-input.model.js';
+  import { NeoInputLabelPlacement } from '~/inputs/common/neo-input.model.js';
 
   import { type ActionWithProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -57,7 +57,7 @@
     loading,
     clearable,
 
-    position = NeoInputLabelPosition.Inside,
+    placement = NeoInputLabelPlacement.Inside,
 
     // Styles
     borderless,
@@ -160,7 +160,7 @@
   const affix = $derived(clearable || loading !== undefined || showAffixValidation);
   const close = $derived(clearable && (focusin || focused || hovered) && hasValue);
   const isFloating = $derived(floating && !hasValue && (!focused || disabled || readonly));
-  const inside = $derived(position === NeoInputLabelPosition.Inside && label);
+  const inside = $derived(placement === NeoInputLabelPlacement.Inside && label);
 
   const onClear = () => {
     if (disabled || readonly) return;
@@ -352,7 +352,7 @@
     this={containerTag}
     bind:this={containerRef}
     role="none"
-    data-position={position}
+    data-placement={placement}
     data-touched={touched}
     data-dirty={dirty}
     data-valid={valid}
@@ -738,7 +738,7 @@
         }
       }
 
-      &[data-position='left'] {
+      &[data-placement='left'] {
         --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.625rem) * 2 + var(--neo-input-label-width, auto));
 
         margin-left: var(--neo-input-margin-left);
@@ -758,7 +758,7 @@
         }
       }
 
-      &[data-position='right'] {
+      &[data-placement='right'] {
         --neo-input-margin-right: calc(var(--neo-shadow-margin, 0.625rem) * 2 + var(--neo-input-label-width, auto));
 
         margin-right: var(--neo-input-margin-right);
@@ -782,7 +782,7 @@
         }
       }
 
-      &[data-position='inside'] {
+      &[data-placement='inside'] {
         :global(.neo-label-container .neo-input) {
           padding: 0 1rem 0.5rem;
         }
@@ -814,7 +814,7 @@
         }
       }
 
-      &[data-position='top'][data-position='top'] {
+      &[data-placement='top'][data-placement='top'] {
         --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-input-label-height, var(--neo-line-height)));
 
         margin-top: var(--neo-input-margin-top);
@@ -830,9 +830,9 @@
         }
       }
 
-      &[data-position='top'],
-      &[data-position='left'],
-      &[data-position='right'] {
+      &[data-placement='top'],
+      &[data-placement='left'],
+      &[data-placement='right'] {
         :global(.neo-label-container.neo-floating .neo-label) {
           top: calc(50% - var(--neo-input-label-height) / 2);
         }

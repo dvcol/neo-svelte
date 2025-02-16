@@ -128,7 +128,7 @@
   <NeoSelect
     label="Placement"
     placeholder="Select placement"
-    position="left"
+    placement="left"
     floating={false}
     bind:value={options.placement}
     rounded={options.rounded}
@@ -140,7 +140,7 @@
 
   <NeoNumberStep
     label="Elevation"
-    position="left"
+    placement="left"
     center
     bind:value={options.elevation}
     min={0}
@@ -155,7 +155,7 @@
   <NeoSelect
     label="Color"
     placeholder="Select color"
-    position="left"
+    placement="left"
     floating={false}
     color={options.color}
     display={displayValue}

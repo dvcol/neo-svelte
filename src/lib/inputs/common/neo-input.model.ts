@@ -132,14 +132,14 @@ export type NeoInputHoverElevation = ShadowHoverElevation | ShadowHoverElevation
 export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = NeoValidationFieldContext<T, NeoInputValue<T>> &
   Partial<NeoInputStyles & NeoInputMethods<T>>;
 
-export const NeoInputLabelPosition = {
+export const NeoInputLabelPlacement = {
   Inside: 'inside' as const,
   Top: 'top' as const,
   Left: 'left' as const,
   Right: 'right' as const,
 } as const;
 
-export type NeoInputLabelPositions = (typeof NeoInputLabelPosition)[keyof typeof NeoInputLabelPosition];
+export type NeoInputLabelPlacements = (typeof NeoInputLabelPlacement)[keyof typeof NeoInputLabelPlacement];
 
 export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement = NeoInputHTMLElement> = {
   // Snippets
@@ -320,13 +320,13 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    */
   floating?: boolean;
   /**
-   * Label position.
+   * Label placement.
    * When set to outside (`top`, `left`, `right`), the label will be displayed within the input container's margin.
    * Make sure to set the container's margin appropriately to avoid collision or content shift.
    *
    * @default 'inside'
    */
-  position?: NeoInputLabelPositions;
+  placement?: NeoInputLabelPlacements;
 
   // Other props
 

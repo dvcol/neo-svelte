@@ -13,7 +13,7 @@
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import {
     type NeoInputContext,
-    NeoInputLabelPosition,
+    NeoInputLabelPlacement,
     type NeoInputMethods,
     type NeoInputState,
     type NeoInputValue,
@@ -64,7 +64,7 @@
     dirtyOnBlur,
     validateOnInput,
     validateOnBlur,
-    position = NeoInputLabelPosition.Inside,
+    placement = NeoInputLabelPlacement.Inside,
 
     // Size
     width: _width,
@@ -285,9 +285,9 @@
   $effect(() => {
     if (first) waitForTick();
     if (!labelRef) return;
-    if (position === NeoInputLabelPosition.Inside && !floating) return;
+    if (placement === NeoInputLabelPlacement.Inside && !floating) return;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
-    if (position !== NeoInputLabelPosition.Left && position !== NeoInputLabelPosition.Right) return;
+    if (placement !== NeoInputLabelPlacement.Left && placement !== NeoInputLabelPlacement.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
   });
 
@@ -445,7 +445,7 @@
     this={containerTag}
     bind:this={containerRef}
     role="none"
-    data-position={position}
+    data-placement={placement}
     data-touched={touched}
     data-dirty={dirty}
     data-valid={valid}
@@ -790,7 +790,7 @@
       }
     }
 
-    &[data-position='left'] {
+    &[data-placement='left'] {
       --neo-textarea-margin-left: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
 
       margin-left: var(--neo-textarea-margin-left);
@@ -814,7 +814,7 @@
       }
     }
 
-    &[data-position='right'] {
+    &[data-placement='right'] {
       --neo-textarea-margin-right: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
 
       margin-right: var(--neo-textarea-margin-right);
@@ -838,7 +838,7 @@
       }
     }
 
-    &[data-position='inside'] {
+    &[data-placement='inside'] {
       :global(.neo-label-container .neo-textarea) {
         padding-top: 0.25rem;
       }
@@ -857,7 +857,7 @@
       }
     }
 
-    &[data-position='top'][data-position='top'] {
+    &[data-placement='top'][data-placement='top'] {
       --neo-textarea-margin-top: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-height, var(--neo-line-height)));
 
       margin-top: var(--neo-textarea-margin-top);
@@ -868,9 +868,9 @@
       }
     }
 
-    &[data-position='top'] :global(.neo-label-container.neo-floating .neo-label),
-    &[data-position='left'] :global(.neo-label-container.neo-floating .neo-label),
-    &[data-position='right'] :global(.neo-label-container.neo-floating .neo-label) {
+    &[data-placement='top'] :global(.neo-label-container.neo-floating .neo-label),
+    &[data-placement='left'] :global(.neo-label-container.neo-floating .neo-label),
+    &[data-placement='right'] :global(.neo-label-container.neo-floating .neo-label) {
       top: 0;
     }
 

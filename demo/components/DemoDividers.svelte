@@ -29,7 +29,7 @@
 
   <NeoNumberStep
     label="Elevation"
-    position="left"
+    placement="left"
     center
     bind:value={options.elevation}
     min={MinShadowElevation}

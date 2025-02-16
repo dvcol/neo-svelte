@@ -94,7 +94,7 @@
   <NeoSelect
     label="Color"
     placeholder="Select color"
-    position="left"
+    placement="left"
     floating={false}
     color={options.color}
     display={displayValue}

@@ -54,7 +54,7 @@
 <div class="row">
   <NeoNumberStep
     label="Elevation"
-    position="left"
+    placement="left"
     center
     bind:value={options.elevation}
     min={-2}
@@ -69,7 +69,7 @@
 
   <NeoNumberStep
     label="Hover"
-    position="left"
+    placement="left"
     center
     bind:value={options.hover}
     min={-2 - options.elevation}
@@ -84,7 +84,7 @@
   <NeoSelect
     label="Size"
     placeholder="Select size"
-    position="left"
+    placement="left"
     floating={false}
     size="10"
     bind:value={options.size}
@@ -97,7 +97,7 @@
   <NeoSelect
     label="Color"
     placeholder="Select color"
-    position="left"
+    placement="left"
     floating={false}
     color={options.color}
     display={displayValue}

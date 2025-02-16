@@ -48,7 +48,8 @@
 <div class="row">
   <NeoNumberStep
     label="Value"
-    position="left"
+    placement="left"
+    center
     floating={false}
     bind:value={options.value}
     min={0}
@@ -58,7 +59,8 @@
   />
   <NeoNumberStep
     label="Buffer"
-    position="left"
+    placement="left"
+    center
     bind:value={options.buffer}
     min={options.value}
     max={100}
@@ -69,7 +71,7 @@
   <NeoSelect
     label="Direction"
     placeholder="Direction"
-    position="left"
+    placement="left"
     floating={false}
     color={options.direction}
     display={displayValue}
@@ -83,7 +85,7 @@
   <NeoSelect
     label="Color"
     placeholder="Select color"
-    position="left"
+    placement="left"
     floating={false}
     color={options.color}
     display={displayValue}

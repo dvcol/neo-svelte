@@ -12,7 +12,7 @@ export { default as NeoRadio } from './NeoRadio.svelte';
 export { default as NeoRange } from './NeoRange.svelte';
 export { default as NeoSwitch } from './NeoSwitch.svelte';
 
-export { NeoInputLabelPosition } from './common/neo-input.model.js';
+export { NeoInputLabelPlacement } from './common/neo-input.model.js';
 
 export type * from './common/neo-input.model.js';
 

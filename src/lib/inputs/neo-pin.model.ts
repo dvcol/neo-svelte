@@ -34,7 +34,7 @@ export type NeoPinState = {
 };
 
 export type NeoPinProps = NeoPinState &
-  Omit<NeoInputProps, 'floating' | 'position'> & {
+  Omit<NeoInputProps, 'floating' | 'placement'> & {
     /**
      * Input Group properties to pass to the input group container.
      */
