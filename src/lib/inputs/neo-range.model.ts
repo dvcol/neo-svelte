@@ -55,10 +55,11 @@ export type NeoRangeStates = {
 export type NeoRangeStyles = {
   /**
    * If true, the input will show step markers.
+   * If an array is provided, the input will show the markers at the given values.
    *
    * @see step
    */
-  ticks?: boolean;
+  ticks?: boolean | number[];
   /**
    * If true, the input value will be displayed as tooltip on hover/focus.
    *
@@ -80,7 +81,7 @@ export type NeoRangeStyles = {
   /**
    * Text color to use for the input.
    */
-  color?: Color;
+  color?: Color | CSSStyleDeclaration['color'];
   /**
    * If true, the input input start as flat on first render.
    * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support

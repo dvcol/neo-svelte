@@ -16,7 +16,7 @@
     DefaultShadowHoverElevation,
     getDefaultElevation,
     isShadowFlat,
-    type ShadowElevation,
+    parseBlur,
   } from '~/utils/shadow.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
@@ -45,6 +45,7 @@
     text,
     ghost,
     glass,
+    filled,
     tinted,
     rounded,
     borderless = text || ghost,
@@ -98,7 +99,7 @@
   const hoverElevation = $derived(elevation + hover);
   const activePressed = $derived(_pressed ?? hoverElevation > 0);
 
-  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const blur = $derived(parseBlur(_blur, elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass }));
@@ -114,7 +115,7 @@
   let enter = $state(false);
   let clicked = $state(false);
   const pressed = $derived(enter || clicked || checked);
-  const empty = $derived(only || (!children && !label));
+  const empty = $derived(only || (!children && label === undefined));
 
   let timeout: ReturnType<typeof setTimeout>;
   const onActive = () => {
@@ -185,6 +186,7 @@
   class:neo-glass={glass}
   class:neo-scale={scale}
   class:neo-tinted={tinted}
+  class:neo-filled={filled}
   class:neo-flat={!elevation}
   class:neo-hover={hover}
   class:neo-hover-flat={hoverFlat}
@@ -252,7 +254,7 @@
     font: inherit;
     text-decoration: none;
     background-color: var(--neo-btn-bg-color, transparent);
-    border: var(--neo-border-width, 1px) var(--neo-btn-border-color, transparent) solid;
+    border: var(--neo-btn-border-with, var(--neo-border-width, 1px)) var(--neo-btn-border-color, transparent) solid;
     border-radius: var(--neo-btn-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-btn-box-shadow, var(--neo-box-shadow-raised-3));
     cursor: pointer;
@@ -286,6 +288,7 @@
         color 0.3s ease,
         scale 0.3s ease;
       scale: 1;
+      will-change: scale, color;
 
       .neo-icon:not(.neo-only) {
         margin-right: var(--neo-btn-icon-gap, 0.35rem);
@@ -415,6 +418,10 @@
       @starting-style {
         box-shadow: var(--neo-box-shadow-flat);
       }
+    }
+
+    &.neo-filled {
+      background-color: var(--neo-btn-bg-color, var(--neo-background-color));
     }
 
     &.neo-tinted {

@@ -102,6 +102,12 @@
     return tickProgress <= lowerProgress;
   };
 
+  const showTick = (tick: number) => {
+    const tickProgress = (tick / steps) * 100;
+    if (Array.isArray(ticks)) return ticks.includes(tickProgress);
+    return ticks === true;
+  };
+
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
 
   const show = $derived(tooltips && (focused || hovered));
@@ -475,16 +481,18 @@
             </span>
             {#if steps > 1}
               {#each { length: (steps ?? 0) + 1 } as _, i}
-                {@const filled = isFilled(i)}
-                <div class="neo-range-tick" style:--neo-range-tick-index={i}>
-                  {#if mark}
-                    {@render mark({ index: i, filled }, context)}
-                  {:else}
-                    <span class="neo-range-tick-mark" class:neo-filled={filled}>
-                      <!--  tick content  -->
-                    </span>
-                  {/if}
-                </div>
+                {#if showTick(i)}
+                  {@const filled = isFilled(i)}
+                  <div class="neo-range-tick" style:--neo-range-tick-index={i}>
+                    {#if mark}
+                      {@render mark({ index: i, filled }, context)}
+                    {:else}
+                      <span class="neo-range-tick-mark" class:neo-filled={filled}>
+                        <!--  tick content  -->
+                      </span>
+                    {/if}
+                  </div>
+                {/if}
               {/each}
             {/if}
           </span>

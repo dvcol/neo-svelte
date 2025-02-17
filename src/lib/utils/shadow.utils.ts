@@ -54,6 +54,11 @@ export function coerce<Elevation extends number = ShadowElevation>(elevation: El
   return Number(elevation) as Elevation;
 }
 
+export function parseBlur(blur?: BlurElevation | BlurElevationString, elevation?: ShadowElevation | ShadowElevationString): BlurElevation {
+  if (!blur || elevation === undefined) return 1;
+  return clamp(coerce<ShadowElevation>(blur ?? elevation), 1, 5) as BlurElevation;
+}
+
 export const isShadowFlat = (shadow: string) => ShadowFlatRegex.test(shadow);
 
 export const computeElevation = (

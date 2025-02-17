@@ -69,6 +69,22 @@ export type NeoProgressContext = {
    * Optional timeout in milliseconds to complete the progress, regardless of value, buffer, tick rate or step size.
    */
   timeout?: number;
+
+  // Styles
+  /**
+   * The color or background to use for the progress.
+   * If color is an array, the first color will be used for the low threshold, the second for the middle and the third for the high threshold.
+   *
+   * @see low
+   * @see high
+   */
+  color?: Color | CSSStyleDeclaration['background'];
+  /**
+   * The direction to display the progress.
+   *
+   * @default right
+   */
+  direction?: NeoProgressDirections;
 };
 
 export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = NeoProgressContext & {
@@ -77,14 +93,6 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
    * Optional content to display inside the progress.
    */
   children?: Snippet;
-  /**
-   * Optional label to display above the progress.
-   */
-  label?: Snippet | string;
-  /**
-   * Optional tooltip to display on progress state.
-   */
-  tooltip?: Snippet | string;
 
   // State
   /**
@@ -119,20 +127,6 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
    * @default 0.375rem (right, left), 100% (top, bottom)
    */
   height?: CSSStyleDeclaration['height'];
-  /**
-   * The color or background to use for the progress.
-   * If color is an array, the first color will be used for the low threshold, the second for the middle and the third for the high threshold.
-   *
-   * @see low
-   * @see high
-   */
-  color?: Color | CSSStyleDeclaration['background'];
-  /**
-   * The direction to display the progress.
-   *
-   * @default right
-   */
-  direction?: NeoProgressDirections;
 } & HTMLRefProps<HTMLElementTagNameMap[Tag]> &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
@@ -145,7 +139,7 @@ export type NeoProgressMethods = {
    * @param pending Whether to switch to a pending indeterminate state when max is reached. (defaults to {@link NeoProgressProps.indeterminate})
    * @param expire Whether to switch to a completed state when timeout is reached. (defaults to {@link NeoProgressProps.timeout})
    */
-  start: (pending?: boolean, expire?: boolean) => void;
+  start: (pending?: boolean, expire?: number) => void;
   /**
    * Stops the progress and sets the state to {@link NeoProgressState.Idle}.
    */
@@ -168,6 +162,14 @@ export type NeoProgressMethods = {
    * Reset the progress and sets the state to {@link NeoProgressState.Paused}.
    */
   cancel: () => void;
+  /**
+   * Cancels timeout and interval and sets value and buffer;
+   * Also sets the state to {@link NeoProgressState.Idle}.
+   * @param value The new value of the progress.
+   * @param buffer The new buffer value of the progress.
+   */
+  change: (value?: number, buffer?: number) => void;
 };
 
-export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] & NeoProgressMethods;
+export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] &
+  NeoProgressMethods & { readonly context: NeoProgressContext };

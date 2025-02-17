@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { NeoProgressProps } from '~/progress/neo-progress.model.js';
+import type { NeoProgressContext, NeoProgressProps } from '~/progress/neo-progress.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
@@ -7,35 +7,7 @@ import type { SizeInput } from '~/utils/style.utils.js';
 export type NeoProgressBlur = BlurElevation | BlurElevationString;
 export type NeoProgressElevation = ShadowShallowElevation | ShadowShallowElevationString;
 
-export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div', ContainerTag extends keyof HTMLElementTagNameMap = 'div'> = {
-  // Snippets
-  /**
-   * Optional label to display above the progress.
-   */
-  label?: Snippet | string;
-  /**
-   * Optional tooltip to display on progress state.
-   */
-  tooltip?: Snippet | string;
-  /**
-   * Optional mark to display on progress threshold.
-   */
-  mark?: Snippet | string;
-
-  // State
-
-  marks?: number[];
-
-  // Size
-  /**
-   * Optional width constraints.
-   */
-  width?: SizeInput<'width'>;
-  /**
-   * Optional height constraints.
-   */
-  height?: SizeInput<'height'>;
-
+type NeoProgressBarStyle = {
   // Shadow
 
   /**
@@ -72,7 +44,47 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
    * Display the progress as flat on first render.
    */
   start?: boolean;
+};
+
+export type NeoProgressBarContext = NeoProgressContext & NeoProgressBarStyle;
+
+export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div', ContainerTag extends keyof HTMLElementTagNameMap = 'div'> = {
+  // Snippets
+  /**
+   * Optional content to display inside the progress.
+   */
+  children?: Snippet<[NeoProgressBarContext]>;
+  /**
+   * Optional label to display above the progress.
+   */
+  before?: Snippet<[NeoProgressBarContext]> | string;
+  /**
+   * Optional label to display above the progress.
+   */
+  after?: Snippet<[NeoProgressBarContext]> | string;
+  /**
+   * Optional mark to display on progress threshold.
+   */
+  mark?: Snippet<[number, NeoProgressBarContext]> | string;
+
+  // State
+
+  /**
+   * An array of threshold values to display marks on the progress line.
+   */
+  marks?: number[];
+
+  // Size
+  /**
+   * Optional width constraints.
+   */
+  width?: SizeInput<'width'>;
+  /**
+   * Optional height constraints.
+   */
+  height?: SizeInput<'height'>;
 
   // Other Props
   containerProps: HTMLNeoBaseElement<HTMLElementTagNameMap[ContainerTag]> & HTMLTagProps<ContainerTag>;
-} & NeoProgressProps<Tag>;
+} & NeoProgressBarStyle &
+  Omit<NeoProgressProps<Tag>, 'children'>;

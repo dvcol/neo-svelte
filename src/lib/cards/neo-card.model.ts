@@ -84,7 +84,7 @@ export type NeoCardContext = {
   /**
    * Text color to use for the card.
    */
-  color?: Color;
+  color?: Color | CSSStyleDeclaration['color'];
   /**
    * If true, a border will separate the card content from the header, footer, and action.
    * If a number is provided, a raised/inset divider will be displayed instead.

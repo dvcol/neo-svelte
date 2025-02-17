@@ -78,7 +78,7 @@ export type NeoInputStyles = {
   /**
    * Text color to use for the input.
    */
-  color?: Color;
+  color?: Color | CSSStyleDeclaration['color'];
   /**
    * If true, the input input start as flat on first render.
    * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support

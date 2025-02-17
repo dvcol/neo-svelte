@@ -95,7 +95,7 @@ export type NeoTooltipProps = {
   /**
    * Text color to use for the tooltip.
    */
-  color?: Color;
+  color?: Color | CSSStyleDeclaration['color'];
   /**
    * The shadow elevation of the tooltip.
    *

@@ -87,7 +87,7 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
   /**
    * Text color to use for the button.
    */
-  color?: Color;
+  color?: Color | CSSStyleDeclaration['color'];
   /**
    * If true, button specific styles will be removed (padding, text align & justification).
    *
@@ -102,7 +102,8 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
   text?: boolean;
   /**
    * Input elevation.
-   * @default 3
+   *
+   * @default 3 (absolute value)
    */
   elevation?: NeoButtonElevation;
   /**
@@ -114,7 +115,7 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
   /**
    * Weather to increase/decrease the elevation when active.
    *
-   * @default -2 (relative to base elevation)
+   * @default -2 (absolute value)
    */
   active?: NeoButtonActiveElevation;
   /**
@@ -144,6 +145,10 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * If true, the button will be displayed with a glass effect.
    */
   glass?: boolean;
+  /**
+   * Set the button to be filled with the background color.
+   */
+  filled?: boolean;
   /**
    * Tints the button with the current color.
    */

@@ -1,29 +1,32 @@
 <script lang="ts">
-  import type { NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
+  import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 
   import NeoProgress from '~/progress/NeoProgress.svelte';
-  import { coerce, computeGlassFilter, computeShadowElevation, DefaultShallowMinMaxElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
+  import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
+  import { coerce, computeGlassFilter, computeShadowElevation, DefaultShallowMinMaxElevation, parseBlur } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
-    label, // TODO: add label support
-    tooltip, // TODO: add tooltip support
-    mark, // TODO: progress ticks & custom mark
+    children,
+    before,
+    after,
+    mark,
 
     // State
     ref = $bindable(),
     state = $bindable(),
     value = $bindable(0),
     buffer = $bindable(0),
-    marks, // TODO: progress ticks & custom mark
+    marks = [], // TODO: progress ticks & custom mark
 
     // Size
     width: _width,
     height: _height,
 
     // Styles
+    direction = NeoProgressDirection.Right,
     borderless,
     rounded,
     pressed,
@@ -43,16 +46,51 @@
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const elevation = $derived(coerce(_elevation));
-  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const blur = $derived(parseBlur(_blur, elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }, DefaultShallowMinMaxElevation));
 
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
+
+  const context = $derived<NeoProgressBarContext>({
+    state,
+
+    value,
+    buffer,
+    min: rest?.min ?? 0,
+    max: rest?.max ?? 100,
+    indeterminate: rest?.indeterminate,
+
+    step: rest?.step ?? 1,
+    tick: rest?.tick ?? 500,
+    timeout: rest?.timeout,
+
+    color: rest?.color,
+    direction,
+
+    // Styles
+    borderless,
+    rounded,
+    pressed,
+    glass,
+    start,
+
+    // Shadow
+    elevation,
+    blur,
+  });
 </script>
+
+{#if typeof before === 'function'}
+  {@render before(context)}
+{:else if before !== undefined}
+  {before}
+{/if}
 
 <svelte:element
   this={containerTag}
+  data-direction={direction}
   class:neo-progress-bar={true}
   class:neo-borderless={borderless}
   class:neo-flat={!elevation}
@@ -70,14 +108,37 @@
   style:--neo-progress-bar-box-shadow={boxShadow}
   {...containerRest}
 >
-  <NeoProgress bind:ref bind:state bind:value bind:buffer {...rest} />
+  <NeoProgress bind:ref bind:state bind:value bind:buffer {direction} {...rest} />
+  {#each marks as position}
+    {#if position !== undefined}
+      <span class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">
+        {#if typeof mark === 'function'}
+          {@render mark(position, context)}
+        {:else if mark !== undefined}
+          {mark}
+        {:else}
+          {position}
+        {/if}
+      </span>
+    {/if}
+  {/each}
+
+  {@render children?.(context)}
 </svelte:element>
+
+{#if typeof after === 'function'}
+  {@render after(context)}
+{:else if after !== undefined}
+  {after}
+{/if}
 
 <style lang="scss">
   .neo-progress-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
-    width: 100%;
-    height: 100%;
     margin: 0;
     padding: 0;
     color: var(--neo-progress-bar-text-color, inherit);
@@ -92,16 +153,34 @@
       backdrop-filter 0.3s ease,
       box-shadow 0.3s ease-out;
 
-    &.neo-rounded {
-      border-radius: var(--neo-pill-border-radius, var(--neo-border-radius-lg));
+    &-mark {
+      position: absolute;
+      left: var(--neo-progress-bar-mark-position, 0%);
+      translate: -50%;
     }
 
-    &:not(.neo-flat.neo-borderless) :global(.neo-progress) {
+    &[data-direction='right'],
+    &[data-direction='left'] {
+      width: 100%;
+      height: 0.5rem;
+    }
+
+    &[data-direction='top'],
+    &[data-direction='bottom'] {
+      width: 0.5rem;
+      height: 100%;
+    }
+
+    :global(> .neo-progress) {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:not(.neo-flat.neo-borderless) :global(> .neo-progress) {
       background: var(--neo-progress-track-background, transparent);
     }
 
     &.neo-flat:not(.neo-borderless) {
-      padding: 0.0625rem;
       border-color: var(--neo-progress-bar-border-color, var(--neo-border-color));
 
       &:focus-within,
@@ -109,6 +188,10 @@
         color: var(--neo-progress-bar-text-color-hover, var(--neo-text-color-highlight));
         border-color: var(--neo-progress-bar-border-color-hover, var(--neo-border-color-highlight));
       }
+    }
+
+    &.neo-rounded {
+      border-radius: var(--neo-pill-border-radius, var(--neo-border-radius-lg));
     }
 
     &.neo-glass {

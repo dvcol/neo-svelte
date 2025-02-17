@@ -1168,6 +1168,23 @@
   </div>
 
   <div class="column content">
+    <span class="label">Tick every 20</span>
+    {@render validationState(rangeSteppedState, true)}
+    <SphereBackdrop glass={options.glass}>
+      <NeoRange
+        label="Tick every 20"
+        step={10}
+        ticks={[0, 20, 40, 60, 80, 100]}
+        bind:touched={rangeSteppedState.touched}
+        bind:dirty={rangeSteppedState.dirty}
+        bind:valid={rangeSteppedState.valid}
+        bind:value={rangeSteppedState.value}
+        {...options}
+      />
+    </SphereBackdrop>
+  </div>
+
+  <div class="column content">
     <span class="label">Tick Interval</span>
     {@render validationState(rangeArrayState, true)}
     <SphereBackdrop glass={options.glass}>

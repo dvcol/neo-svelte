@@ -11,8 +11,8 @@
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { displayValue, type NeoSelectOption } from '~/inputs/neo-select.model';
-  import NeoProgress from '~/progress/NeoProgress.svelte';
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
+  import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoProgressDirection, type NeoProgressHTMLElement, type NeoProgressProps, NeoProgressState } from '~/progress/neo-progress.model';
   import { getDefaultElevation } from '~/utils/shadow.utils';
 
@@ -60,6 +60,29 @@
     bar.elevation = getDefaultElevation(bar.pressed, -1);
   };
 </script>
+
+<div class="row">
+  <NeoButtonGroup rounded>
+    <NeoButton toggle bind:checked={bar.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={bar.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={bar.pressed} onclick={onPressed}>Pressed</NeoButton>
+    <NeoButton toggle bind:checked={bar.glass}>Glass</NeoButton>
+  </NeoButtonGroup>
+
+  <NeoNumberStep
+    label="Elevation"
+    placement="left"
+    center
+    bind:value={bar.elevation}
+    min={-2}
+    max={2}
+    defaultValue={0}
+    rounded
+    nullable={false}
+    floating={false}
+    groupProps={{ style: 'margin-left: 6rem' }}
+  />
+</div>
 
 <div class="row">
   <NeoNumberStep
@@ -116,56 +139,69 @@
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Default</span>
-    <NeoProgress {...options} buffer={undefined} />
+    <NeoProgressBar {...options} {...bar} buffer={undefined} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Buffer</span>
-    <NeoProgress {...options} />
+    <NeoProgressBar {...options} {...bar} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Min 40</span>
-    <NeoProgress min="40" {...options} />
+    <NeoProgressBar min="40" {...options} {...bar} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Min 40 Max 80</span>
-    <NeoProgress min="40" max="80" {...options} />
+    <NeoProgressBar min="40" max="80" {...options} {...bar} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Low 20</span>
-    <NeoProgress low="10" {...options} color={['error', options.color]} />
+    <NeoProgressBar low="10" {...options} {...bar} color={['error', options.color]} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">High 90</span>
-    <NeoProgress high="90" {...options} color={[options.color, 'success']} />
+    <NeoProgressBar high="90" {...options} {...bar} color={[options.color, 'success']} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Low 20 High 90</span>
-    <NeoProgress low="10" high="90" {...options} color={['error', options.color, 'success']} />
+    <NeoProgressBar low="10" high="90" {...options} {...bar} color={['error', options.color, 'success']} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Indeterminate</span>
-    <NeoProgress indeterminate {...options} />
+    <NeoProgressBar indeterminate {...options} {...bar} />
+  </div>
+</div>
+
+<div class="row">
+  <div class="column content" class:vertical>
+    <span class="label">Label</span>
+    <div class="progress-label">
+      <NeoProgressBar {...options} {...bar} buffer={undefined}>
+        {#snippet before(ctx)}
+          <span class="progress-label-value" data-placement={ctx.direction}>{ctx.value}%</span>
+        {/snippet}
+      </NeoProgressBar>
+    </div>
   </div>
 </div>
 
@@ -198,37 +234,25 @@
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Controlled</span>
-    <NeoProgress bind:ref={controlled} bind:state={controlledState} direction={options.direction} />
+    <NeoProgressBar bind:ref={controlled} bind:state={controlledState} direction={options.direction} {...bar} />
   </div>
 </div>
 
 <div class="row">
-  <NeoButtonGroup rounded>
-    <NeoButton toggle bind:checked={bar.borderless}>Borderless</NeoButton>
-    <NeoButton toggle bind:checked={bar.rounded}>Rounded</NeoButton>
-    <NeoButton toggle bind:checked={bar.pressed} onclick={onPressed}>Pressed</NeoButton>
-    <NeoButton toggle bind:checked={bar.glass}>Glass</NeoButton>
-  </NeoButtonGroup>
-
-  <NeoNumberStep
-    label="Elevation"
-    placement="left"
-    center
-    bind:value={bar.elevation}
-    min={-2}
-    max={2}
-    defaultValue={0}
-    rounded
-    nullable={false}
-    floating={false}
-    groupProps={{ style: 'margin-left: 6rem' }}
-  />
-</div>
-
-<div class="row">
   <div class="column content" class:vertical>
-    <span class="label">Progress bar</span>
-    <NeoProgressBar {...options} {...bar} />
+    <span class="label">Marks</span>
+    <NeoProgressBar {...options} {...bar} buffer={undefined} marks={[0, 25, 50, 75, 100]}>
+      {#snippet mark(position, context)}
+        <NeoProgressMark
+          {position}
+          {context}
+          glass={bar.glass}
+          onclick={() => {
+            options.value = position;
+          }}
+        />
+      {/snippet}
+    </NeoProgressBar>
   </div>
 </div>
 
@@ -258,6 +282,33 @@
 
     &:not(.vertical) {
       width: max(80vw, 20rem);
+    }
+
+    .progress-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+
+      &-value {
+        margin: 0.125rem;
+        font-size: var(--neo-font-size-sm);
+        line-height: var(--neo-line-height-sm);
+
+        &[data-placement='left'] {
+          margin-inline-start: auto;
+        }
+
+        &[data-placement='right'] {
+          margin-inline-end: auto;
+        }
+
+        &[data-placement='top'],
+        &[data-placement='bottom'] {
+          margin-inline-start: 2ch;
+        }
+      }
     }
   }
 

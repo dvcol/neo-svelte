@@ -3,7 +3,13 @@
 
   import { clamp } from '@dvcol/common-utils/common/math';
 
-  import { type NeoProgressContext, NeoProgressDirection, type NeoProgressProps, NeoProgressState } from '~/progress/neo-progress.model.js';
+  import {
+    type NeoProgressContext,
+    NeoProgressDirection,
+    type NeoProgressMethods,
+    type NeoProgressProps,
+    NeoProgressState,
+  } from '~/progress/neo-progress.model.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -73,19 +79,27 @@
     clearTimeout(timeoutId);
   };
 
-  export const stop = () => {
+  export const change: NeoProgressMethods['change'] = (newValue?: number, newBuffer = buffer) => {
+    if (newValue === undefined && newBuffer === undefined) return;
+    clear();
+    if (newValue !== undefined) value = newValue;
+    if (newBuffer !== undefined) buffer = newBuffer;
+    state = NeoProgressState.Idle;
+  };
+
+  export const stop: NeoProgressMethods['stop'] = () => {
     clear();
     state = NeoProgressState.Paused;
   };
 
-  export const complete = (pending = indeterminate) => {
+  export const complete: NeoProgressMethods['complete'] = (pending = indeterminate) => {
     clear();
     value = max ?? 100;
     buffer = max ?? 100;
     state = pending ? NeoProgressState.Indeterminate : NeoProgressState.Completed;
   };
 
-  export const start = (pending = indeterminate, expire = timeout) => {
+  export const start: NeoProgressMethods['start'] = (pending = indeterminate, expire = timeout) => {
     state = NeoProgressState.Active;
     clear();
     intervalId = setInterval(() => {
@@ -95,7 +109,7 @@
     if (expire) timeoutId = setTimeout(() => complete(), expire);
   };
 
-  export const reset = (restart = state === NeoProgressState.Active) => {
+  export const reset: NeoProgressMethods['reset'] = (restart = state === NeoProgressState.Active) => {
     clear();
     value = min ?? 0;
     buffer = min ?? 0;
@@ -103,7 +117,7 @@
     else state = NeoProgressState.Idle;
   };
 
-  export const cancel = () => {
+  export const cancel: NeoProgressMethods['cancel'] = () => {
     clear();
     reset(false);
   };
@@ -112,7 +126,7 @@
     state,
 
     value,
-    buffer: buffered,
+    buffer,
     min,
     max,
     indeterminate,
@@ -120,6 +134,9 @@
     step,
     tick,
     timeout,
+
+    color,
+    direction,
   });
 
   $effect(() => {
@@ -132,6 +149,7 @@
       stop,
       reset,
       cancel,
+      change,
       complete,
     });
   });

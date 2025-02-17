@@ -116,16 +116,20 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [x] progress
   - [x] vertical
   - [ ] circular
-  - [ ] ticks
+  - [x] ticks
   - [x] min/max
   - [x] indeterminate
-  - [ ] disabled
   - [x] color/background
   - [x] duration/timeout
   - [x] start/stop/cancel/finish/reset
 
+- [ ] collapse
+  - [ ] summary
+  - [ ] details (html semantic tags)
+
 - [ ] stepper
   - [ ] vertical
+  - [ ] animation (slider, fade or collapse)
   - [ ] progress/dots
 
 - [ ] Modal/dialog
@@ -187,9 +191,6 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] circle
   - [ ] border
   - [ ] background
-- [ ] accordion
-  - [ ] summary
-  - [ ] details (html semantic tags)
 
 - [ ] text
   - [ ] elevation

@@ -23,7 +23,7 @@
     getDefaultElevation,
     getDefaultHoverElevation,
     isShadowFlat,
-    type ShadowElevation,
+    parseBlur,
   } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -108,7 +108,7 @@
   const hover = $derived(coerce(_hover));
   const hoverElevation = $derived(elevation + hover);
 
-  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const blur = $derived(parseBlur(_blur, elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }));

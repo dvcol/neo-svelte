@@ -30,7 +30,7 @@
     getDefaultElevation,
     getDefaultHoverElevation,
     isShadowFlat,
-    type ShadowElevation,
+    parseBlur,
   } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
@@ -131,7 +131,7 @@
   const hover = $derived(coerce(_hover));
   const hoverElevation = $derived(elevation + hover);
 
-  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const blur = $derived(parseBlur(_blur, elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }));

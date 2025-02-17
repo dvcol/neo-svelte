@@ -30,7 +30,7 @@ export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = 
   /**
    * Text color to use for the item.
    */
-  color?: Color;
+  color?: Color | CSSStyleDeclaration['color'];
   /**
    * If true, the list section will display a divider above the title.
    */

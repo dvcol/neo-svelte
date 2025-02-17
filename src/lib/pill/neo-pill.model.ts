@@ -24,7 +24,7 @@ export type NeoPillContext = {
   /**
    * Color to use for the pill.
    */
-  color?: Color;
+  color?: Color | CSSStyleDeclaration['color'];
   /**
    * Display a loading indicator in the pill.
    */

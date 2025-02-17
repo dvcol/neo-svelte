@@ -47,7 +47,7 @@ export type NeoButtonGroupContext = {
     /**
      * Button active elevation.
      *
-     * @default -2 (relative to base elevation)
+     * @default -2 (absolute value)
      */
     active?: NeoButtonActiveElevation;
     /**
@@ -76,7 +76,7 @@ export type NeoButtonGroupContext = {
   /**
    * Text color to use for the button.
    */
-  color?: Color;
+  color?: Color | CSSStyleDeclaration['color'];
   /**
    * If true, the buttongroup  will be displayed with a glass effect.
    */

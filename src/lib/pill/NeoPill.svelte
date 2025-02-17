@@ -13,7 +13,7 @@
     computeShadowElevation,
     DefaultShallowMinMaxElevation,
     isShadowFlat,
-    type ShadowElevation,
+    parseBlur,
   } from '~/utils/shadow.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
@@ -65,7 +65,7 @@
   const elevation = $derived(coerce(_elevation));
   const hover = $derived(coerce(_hover));
 
-  const blur = $derived(coerce<ShadowElevation>(_blur ?? elevation));
+  const blur = $derived(parseBlur(_blur, elevation));
   const filter = $derived(computeGlassFilter(blur, glass));
 
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, pressed }, DefaultShallowMinMaxElevation));
@@ -265,7 +265,7 @@
 
       &.neo-hover.neo-flat-hover.neo-hovered,
       &.neo-hover.neo-flat-hover:hover,
-      &.neo-flat:not(.neo-borderless, .neo-filled) {
+      &.neo-flat:not(.neo-borderless) {
         border-color: var(--neo-pill-border-color, var(--neo-glass-border-color-flat));
 
         &:focus-within,
@@ -289,8 +289,8 @@
       color: var(--neo-pill-text-color-filled, var(--neo-text-color-inverse));
       background-color: var(--neo-pill-text-color, var(--neo-text-color));
 
-      &:not(.neo-borderless) {
-        border-color: var(--neo-pill-border-color, var(--neo-text-color-inverse));
+      &.neo-glass {
+        background-color: color-mix(in srgb, var(--neo-pill-text-color, var(--neo-text-color)), transparent 40%);
       }
     }
 
