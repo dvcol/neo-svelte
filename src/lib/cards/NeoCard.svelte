@@ -302,6 +302,7 @@
     padding: var(--neo-card-padding, $full-spacing);
     color: var(--neo-card-text-color, inherit);
     background-color: var(--neo-card-bg-color, transparent);
+    background-clip: padding-box;
     border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
     border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-card-box-shadow, var(--neo-box-shadow-flat));

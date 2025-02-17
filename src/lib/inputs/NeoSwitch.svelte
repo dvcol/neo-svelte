@@ -224,7 +224,7 @@
 
       &:hover {
         :global(> .neo-switch-button) {
-          color: var(--neo-switch-color-hover, var(--neo-text-color-highlight));
+          color: var(--neo-switch-color-hover, oklch(from var(--neo-switch-color, currentcolor) calc(l - 0.1) c h));
         }
 
         :global(> .neo-switch-button.neo-flat) {
@@ -232,7 +232,7 @@
         }
 
         :global(> .neo-switch-button.neo-valid:not(.neo-disabled, .neo-flat)) {
-          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-green-light)) 50%);
+          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 50%);
         }
 
         :global(> .neo-switch-button.neo-invalid:not(.neo-disabled, .neo-flat)) {

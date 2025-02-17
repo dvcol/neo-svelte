@@ -449,13 +449,12 @@
           class:neo-valid={validation && valid}
           class:neo-invalid={validation && !valid}
           style:--neo-range-tick-count={steps}
-          style:--neo-range-color={getColorVariable(color)}
           style:--neo-range-box-shadow={boxShadow}
           style:--neo-range-progress="{lowerProgress}%"
           style:--neo-range-array-progress="{upperProgress}%"
           {...rest}
         >
-          <span role="region" class="neo-range-rail" bind:this={rail} onpointerdown={onClick}>
+          <span role="region" class="neo-range-rail" style:--neo-range-color={getColorVariable(color)} bind:this={rail} onpointerdown={onClick}>
             <span class="neo-range-handle-before" class:neo-array={isArray}>
               <!--   handle before   -->
             </span>
@@ -542,6 +541,7 @@
       height: 100%;
       margin-right: calc(var(--neo-range-min-width) - var(--neo-range-spacing));
       margin-left: var(--neo-range-min-width);
+      color: var(--neo-range-color, inherit);
       background-color: var(--neo-range-rail-background, transparent);
       border-radius: var(--neo-range-border-radius, var(--neo-border-radius-sm));
       transition: background-color 0.3s ease;
@@ -642,9 +642,10 @@
       height: var(--neo-range-height);
       margin: 0;
       padding: 0;
-      color: var(--neo-range-color, inherit);
+      color: inherit;
       text-decoration: none;
       background: transparent;
+      background-clip: padding-box;
       border: var(--neo-range-border-width, var(--neo-border-width, 1px)) var(--neo-range-border-color, transparent) solid;
       border-radius: var(--neo-range-border-radius, var(--neo-border-radius));
       outline: none;

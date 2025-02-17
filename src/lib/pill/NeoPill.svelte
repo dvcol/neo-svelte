@@ -158,6 +158,7 @@
     min-width: 1.875rem;
     margin: 0;
     color: var(--neo-pill-text-color, inherit);
+    background-clip: padding-box;
     border: var(--neo-pill-border-width, var(--neo-border-width, 1px)) var(--neo-pill-border-color, transparent) solid;
     border-radius: var(--neo-pill-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-pill-box-shadow, var(--neo-box-shadow-flat));

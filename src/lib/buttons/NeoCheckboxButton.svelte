@@ -82,6 +82,7 @@
       font: inherit;
       text-decoration: none;
       background-color: color-mix(in srgb, transparent, currentcolor 1%);
+      background-clip: padding-box;
       border: var(--neo-checkbox-border-width, var(--neo-border-width, 1px)) var(--neo-checkbox-border-color, transparent) solid;
       border-radius: var(--neo-border-radius-xs);
       outline: none;
@@ -109,7 +110,7 @@
       }
 
       &:hover {
-        color: var(--neo-checkbox-color-hover, var(--neo-text-color-highlight));
+        color: var(--neo-checkbox-color-hover, oklch(from var(--neo-checkbox-color, currentcolor) calc(l - 0.1) c h));
       }
 
       &.neo-flat:hover {

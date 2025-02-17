@@ -652,6 +652,7 @@
     margin: var(--neo-shadow-margin, 0.625rem);
     color: var(--neo-textarea-text-color, inherit);
     background-color: var(--neo-textarea-bg-color, inherit);
+    background-clip: padding-box;
     border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;
     border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-textarea-box-shadow, var(--neo-box-shadow-flat));

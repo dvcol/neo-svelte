@@ -229,7 +229,7 @@
 
       &:hover {
         :global(> .neo-checkbox-button) {
-          color: var(--neo-checkbox-color-hover, var(--neo-text-color-highlight));
+          color: var(--neo-checkbox-color-hover, oklch(from var(--neo-checkbox-color, currentcolor) calc(l - 0.1) c h));
         }
 
         :global(> .neo-checkbox-button.neo-flat) {

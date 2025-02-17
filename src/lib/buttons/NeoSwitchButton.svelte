@@ -180,6 +180,7 @@
       color: var(--neo-switch-color, inherit);
       text-decoration: none;
       background: transparent;
+      background-clip: padding-box;
       border: var(--neo-switch-border-width, var(--neo-border-width, 1px)) var(--neo-switch-border-color, transparent) solid;
       border-radius: var(--neo-switch-border-radius, var(--neo-border-radius));
       outline: none;
@@ -204,7 +205,7 @@
         --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 40%);
 
         &:hover {
-          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-green-light)) 50%);
+          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 50%);
         }
       }
 
@@ -266,7 +267,7 @@
           background-color: color-mix(in srgb, transparent, currentcolor 10%);
 
           &.neo-valid {
-            background-color: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-green-light)) 20%);
+            background-color: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 20%);
           }
 
           &.neo-invalid {
@@ -276,7 +277,7 @@
       }
 
       &:hover {
-        color: var(--neo-switch-color-hover, var(--neo-text-color-highlight));
+        color: var(--neo-switch-color-hover, oklch(from var(--neo-switch-color, currentcolor) calc(l - 0.1) c h));
       }
 
       &.neo-flat:hover {

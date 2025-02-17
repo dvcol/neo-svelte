@@ -167,7 +167,7 @@
 
       &:hover {
         :global(> .neo-radio-button) {
-          color: var(--neo-radio-color-hover, var(--neo-text-color-highlight));
+          color: var(--neo-radio-color-hover, oklch(from var(--neo-radio-color, currentcolor) calc(l - 0.1) c h));
         }
 
         :global(> .neo-radio-button.neo-flat) {

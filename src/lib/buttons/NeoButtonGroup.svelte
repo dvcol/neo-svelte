@@ -163,6 +163,7 @@
     padding: 0.25rem;
     color: var(--neo-btn-group-text-color, inherit);
     background-color: var(--neo-btn-group-bg-color, transparent);
+    background-clip: padding-box;
     border: var(--neo-border-width, 1px) var(--neo-btn-group-border-color, transparent) solid;
     border-radius: calc(var(--neo-btn-group-border-radius, var(--neo-border-radius)) + 0.25rem);
     box-shadow: var(--neo-btn-group-box-shadow, var(--neo-box-shadow-flat));

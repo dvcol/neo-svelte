@@ -254,6 +254,7 @@
     font: inherit;
     text-decoration: none;
     background-color: var(--neo-btn-bg-color, transparent);
+    background-clip: padding-box;
     border: var(--neo-btn-border-with, var(--neo-border-width, 1px)) var(--neo-btn-border-color, transparent) solid;
     border-radius: var(--neo-btn-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-btn-box-shadow, var(--neo-box-shadow-raised-3));
@@ -287,8 +288,8 @@
       transition:
         color 0.3s ease,
         scale 0.3s ease;
-      scale: 1;
       will-change: scale, color;
+      scale: 1;
 
       .neo-icon:not(.neo-only) {
         margin-right: var(--neo-btn-icon-gap, 0.35rem);
