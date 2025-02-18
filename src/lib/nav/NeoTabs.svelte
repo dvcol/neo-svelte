@@ -240,6 +240,10 @@
         box-shadow: var(--neo-box-shadow-flat) !important;
       }
 
+      :global(> .neo-tabs-group .neo-tab .neo-tab-button > .neo-content) {
+        scale: 1 !important;
+      }
+
       :global(> .neo-tabs-group .neo-tab) {
         position: relative;
       }

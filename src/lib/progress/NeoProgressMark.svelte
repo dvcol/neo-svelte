@@ -7,8 +7,8 @@
   const { position = 0, context, elevation: _elevation, color: _color, ...rest }: NeoProgressMarkProps = $props();
 
   const value = $derived(context?.value ?? 0);
-  const color = $derived(_color ?? context?.color);
   const checked = $derived(position <= value);
+  const color = $derived(checked ? (_color ?? context?.color) : 'var(--neo-text-color-disabled)');
 
   const elevation = $derived(Math.max(-1, coerce<ShadowElevation>(_elevation ?? context?.elevation ?? 0)) as ShadowElevation);
   const active = $derived.by(() => {
@@ -21,6 +21,7 @@
 <NeoButton
   rounded
   filled
+  scale
   hover="0"
   {elevation}
   {active}
