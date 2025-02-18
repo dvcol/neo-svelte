@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { debounced } from '@dvcol/svelte-utils';
+  import { debounced } from '@dvcol/svelte-utils/debounce';
   import { fade } from 'svelte/transition';
 
   import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';

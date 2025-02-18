@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { watch } from '@dvcol/svelte-utils';
+  import { watch } from '@dvcol/svelte-utils/watch';
 
   import { tick } from 'svelte';
 

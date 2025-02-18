@@ -1,8 +1,8 @@
 <script lang="ts">
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
-  import { flipToggle, scaleFreeze, watch } from '@dvcol/svelte-utils';
-  import { emptyAnimation, emptyTransition } from '@dvcol/svelte-utils/transition';
+  import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze } from '@dvcol/svelte-utils/transition';
+  import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
@@ -335,7 +335,7 @@
         class:neo-list-item-select={select}
         style:--neo-list-item-color={getColorVariable(item.color)}
         {...item.containerProps}
-        animate:animateFn={{ ...animateProps, enabled: !section }}
+        animate:animateFn={{ ...animateProps, skip: section }}
         out:inFn={inProps}
         in:outFn={outProps}
       >

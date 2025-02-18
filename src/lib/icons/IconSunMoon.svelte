@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { watch } from '@dvcol/svelte-utils';
+  import { watch } from '@dvcol/svelte-utils/watch';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { watch } from '@dvcol/svelte-utils';
+  import { watch } from '@dvcol/svelte-utils/watch';
 
   import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
   import type { NeoListContext, NeoListItemOrSection } from '~/list/neo-list.model.js';

@@ -230,8 +230,8 @@
     {#if !empty}
       {#if typeof label === 'function'}
         {@render label?.()}
-      {:else}
-        <span class="neo-label">{label}</span>
+      {:else if label !== undefined}
+        {label}
       {/if}
       {@render children?.()}
     {/if}
@@ -354,6 +354,10 @@
         color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
         scale: var(--neo-btn-scale-pressed, 0.98);
       }
+    }
+
+    &:is(a):visited:not(:disabled, .neo-pressed, :active:not(.neo-loading, :disabled)) .neo-content {
+      color: var(--neo-btn-text-color-visited, var(--neo-text-color-secondary));
     }
 
     &.neo-borderless {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { watch } from '@dvcol/svelte-utils';
   import { emptyTransition, height, width } from '@dvcol/svelte-utils/transition';
+  import { watch } from '@dvcol/svelte-utils/watch';
 
   import { tick } from 'svelte';
 
