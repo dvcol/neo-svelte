@@ -139,64 +139,64 @@
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Default</span>
-    <NeoProgressBar {...options} {...bar} buffer={undefined} />
+    <NeoProgressBar aria-label="Default" {...options} {...bar} buffer={undefined} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Buffer</span>
-    <NeoProgressBar {...options} {...bar} />
+    <NeoProgressBar aria-label="Buffer" {...options} {...bar} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Min 40</span>
-    <NeoProgressBar min="40" {...options} {...bar} />
+    <NeoProgressBar aria-label="Min 40" min="40" {...options} {...bar} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Min 40 Max 80</span>
-    <NeoProgressBar min="40" max="80" {...options} {...bar} />
+    <NeoProgressBar aria-label="Min 40 Max 80" min="40" max="80" {...options} {...bar} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Low 20</span>
-    <NeoProgressBar low="10" {...options} {...bar} color={['error', options.color]} />
+    <NeoProgressBar aria-label="Low 20" low="10" {...options} {...bar} color={['error', options.color]} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">High 90</span>
-    <NeoProgressBar high="90" {...options} {...bar} color={[options.color, 'success']} />
+    <NeoProgressBar aria-label="High 90" high="90" {...options} {...bar} color={[options.color, 'success']} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Low 20 High 90</span>
-    <NeoProgressBar low="10" high="90" {...options} {...bar} color={['error', options.color, 'success']} />
+    <NeoProgressBar aria-label="Low 20 High 90" low="10" high="90" {...options} {...bar} color={['error', options.color, 'success']} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
     <span class="label">Indeterminate</span>
-    <NeoProgressBar indeterminate {...options} {...bar} />
+    <NeoProgressBar aria-label="Indeterminate" indeterminate {...options} {...bar} />
   </div>
 </div>
 
 <div class="row">
   <div class="column content" class:vertical>
-    <span class="label">Label</span>
+    <span class="label">Controlled & Label</span>
     <div class="progress-label">
-      <NeoProgressBar {...options} {...bar} buffer={undefined}>
+      <NeoProgressBar aria-label="Controlled and label" bind:ref={controlled} bind:state={controlledState} direction={options.direction} {...bar}>
         {#snippet before(ctx)}
           <span class="progress-label-value" data-placement={ctx.direction}>{ctx.value}%</span>
         {/snippet}
@@ -205,7 +205,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row control-group">
   <NeoButtonGroup
     rounded
     pulse={[NeoProgressState.Active, NeoProgressState.Paused].includes(controlledState)}
@@ -213,7 +213,7 @@
     button={{ active: -1 }}
     class={{ 'neo-stop': controlledState === NeoProgressState.Paused }}
   >
-    <NeoButton rounded onclick={() => controlled?.cancel()} ratio="1/1" aria-lable="cancel" title="cancel">
+    <NeoButton rounded onclick={() => controlled?.cancel()} ratio="1/1" aria-label="cancel" title="cancel">
       {#snippet icon()}
         <IconDoubleChevronLeft />
       {/snippet}
@@ -233,15 +233,8 @@
 
 <div class="row">
   <div class="column content" class:vertical>
-    <span class="label">Controlled</span>
-    <NeoProgressBar bind:ref={controlled} bind:state={controlledState} direction={options.direction} {...bar} />
-  </div>
-</div>
-
-<div class="row">
-  <div class="column content" class:vertical>
     <span class="label">Marks</span>
-    <NeoProgressBar {...options} {...bar} buffer={undefined} marks={[0, 25, 50, 75, 100]}>
+    <NeoProgressBar aria-label="Custom marks" {...options} {...bar} buffer={undefined} marks={[0, 25, 50, 75, 100]}>
       {#snippet mark(position, context)}
         <NeoProgressMark
           {position}
@@ -265,7 +258,7 @@
     word-break: break-all;
   }
 
-  .content {
+  .control-group {
     :global(.neo-button-group) {
       --neo-btn-group-scale-x: 2;
       --neo-btn-group-scale-y: 3;
@@ -275,7 +268,9 @@
     :global(.neo-button-group.neo-stop::before) {
       animation-play-state: paused;
     }
+  }
 
+  .content {
     &.vertical {
       height: min(50vw, 20rem);
     }
