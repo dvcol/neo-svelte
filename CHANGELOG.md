@@ -2,6 +2,75 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/dvcol/neo-svelte/compare/v0.1.7...v0.1.8) (2025-02-19)
+
+
+### Features
+
+* **badge:** adds badge component ([0a8c71b](https://github.com/dvcol/neo-svelte/commit/0a8c71b13bdac40e102f35ce9a6b9fb3578dbd11))
+* **blur:** adds blur as props ([cceacc4](https://github.com/dvcol/neo-svelte/commit/cceacc4ffbe250fff0fa10b6b887130d794cce39))
+* **button:** adds button group colour & add tint support ([0a551ed](https://github.com/dvcol/neo-svelte/commit/0a551ede0ac9234fc0822d3ff5f8a894a9c6309b))
+* **button:** adds custom hover/active to groups ([c2e227a](https://github.com/dvcol/neo-svelte/commit/c2e227ad2be66277e5c716e062eb82fa292513b3))
+* **button:** rework of button elevation ([edb2cba](https://github.com/dvcol/neo-svelte/commit/edb2cba204dd09b02f2795ce620f16c6b7a64cbe))
+* **buttons:** adds hover support to group itself ([d2ccdc3](https://github.com/dvcol/neo-svelte/commit/d2ccdc33cea572be351d2a634109ba78910287ee))
+* **card:** adds tint & colour support ([4dba81b](https://github.com/dvcol/neo-svelte/commit/4dba81b1700d93945c6f561acabac2b58c1cf413))
+* **input:** adds colour and tint support to inputs ([7973653](https://github.com/dvcol/neo-svelte/commit/7973653c9e20c11e0a5d94ae6cd1136bb7b98600))
+* **input:** adds first draft of custom select ([5839709](https://github.com/dvcol/neo-svelte/commit/58397096f07592213a9870ac9a950e92df19b558))
+* **input:** adds hidden support directly to basic input ([c7ba00c](https://github.com/dvcol/neo-svelte/commit/c7ba00cefe81f3379a00fb4b555c7efc0ae7760d))
+* **list:** adds custom empty snippet support for sections ([d60fe7b](https://github.com/dvcol/neo-svelte/commit/d60fe7bc91ccde60c7d8a06d73ad4b7b0e9f543e))
+* **list:** fix aria issues ([278bd04](https://github.com/dvcol/neo-svelte/commit/278bd049a27e05e4ca1ee5162adaea272076bd83))
+* **list:** show empty snippet when list is filtered ([a3ec707](https://github.com/dvcol/neo-svelte/commit/a3ec7076c0e1717cbd2b85eaf4dc20446b36600c))
+* **pill:** adds pills component ([8a3abb3](https://github.com/dvcol/neo-svelte/commit/8a3abb3ff937cec1875c27bc31e74869b9483e3a))
+* **progress:** adds initial progress component ([2cb8925](https://github.com/dvcol/neo-svelte/commit/2cb89255f65453f7deb0968af5aa5795ab6a6c73))
+* **progress:** adds progress bar component ([8d3003f](https://github.com/dvcol/neo-svelte/commit/8d3003f399b82e37fe1ce482aefbad40741436aa))
+* **progress:** adds progress buttons ([bcfbada](https://github.com/dvcol/neo-svelte/commit/bcfbadad83b27947053b00ab733c059c9ac2470e))
+* **range:** adds tick markers ([516cf1f](https://github.com/dvcol/neo-svelte/commit/516cf1f651fda943fb194157978e3cd81db2bf0e))
+* **select:** adds custom display support ([eaddfe6](https://github.com/dvcol/neo-svelte/commit/eaddfe6774899861b3b74a17673f851ab497a58d))
+* **select:** support arrowUp/Down selection ([a12c2c4](https://github.com/dvcol/neo-svelte/commit/a12c2c43b5a933f844dc5c8104a0950a110be808))
+* **select:** support custom display snippet ([4b8f79d](https://github.com/dvcol/neo-svelte/commit/4b8f79dbdd5efe3b5f74aa646469d489e04fa034))
+* **size:** adds customisable min/max size ([1b35dce](https://github.com/dvcol/neo-svelte/commit/1b35dce056fe0d671794255d5d0efae86657f7cd))
+* **tabs:** adds hover effect ([646384e](https://github.com/dvcol/neo-svelte/commit/646384e95fec6c8eb3d71f56091305be08005a96))
+* **text:** adds demo for texts and improve scroll-shadow ([f52500d](https://github.com/dvcol/neo-svelte/commit/f52500df22cf285b7e331285d111ca8287569961))
+* **theme:** disable transitions during theme switch ([58e0d77](https://github.com/dvcol/neo-svelte/commit/58e0d77e702acfc24f6dd4b87fe29026dbea8cdf))
+* **tooltip:** adds colour & tint support ([6659707](https://github.com/dvcol/neo-svelte/commit/665970727c231120c2fb3153b2bd9fd47971cb7f))
+* **tooltip:** adds complex pop select example ([706ecfc](https://github.com/dvcol/neo-svelte/commit/706ecfc2ad7d6c5325ea183eadf3853b6ad7ba5f))
+* **tooltip:** adds filled background option ([2966853](https://github.com/dvcol/neo-svelte/commit/29668533c57ed21bce119f912250b78bb332bbfd))
+* **tooltip:** adds pop select ([86d7a8d](https://github.com/dvcol/neo-svelte/commit/86d7a8df7e4bf0abc2ae736dfea4f136656a6b04))
+* **tooltip:** fix positionning in auto ([9619859](https://github.com/dvcol/neo-svelte/commit/9619859d0809e3820a05bd0eb8c2b197fc32ca89))
+* **tooltip:** rework tooltip and input sizing api ([7090740](https://github.com/dvcol/neo-svelte/commit/7090740cc161017f577776d7c64a310c95b35f6e))
+
+
+### Bug Fixes
+
+* **affix:** rework affix transiitons timing ([1c26919](https://github.com/dvcol/neo-svelte/commit/1c26919104b22a9d15bec84370413816c22220a5))
+* **browser:** add custom scrollbar to firefox ([2b42707](https://github.com/dvcol/neo-svelte/commit/2b42707628827833a641afd0b352f1d45844f91e))
+* **card:** correct scrollbar padding in safari ([b5c4b66](https://github.com/dvcol/neo-svelte/commit/b5c4b66c76798f2187f5299c338c0cefc0fdfb7b))
+* **css:** adds hover effect to borders ([9b0dfbe](https://github.com/dvcol/neo-svelte/commit/9b0dfbebf48f8908ef7b5f7fbdcd563fec4fc7d6))
+* **css:** adds safari & firefox fallbacks ([30ed289](https://github.com/dvcol/neo-svelte/commit/30ed289f09adcfc1a8bbf6243f2147447ff9cf60))
+* **css:** change background-clip to exclude padding ([bd7c623](https://github.com/dvcol/neo-svelte/commit/bd7c623952c96f8fe56490a1b40606501713dd98))
+* **css:** remove scale override & add unchecked colour to mark ([eb010b2](https://github.com/dvcol/neo-svelte/commit/eb010b2c7117071f9b167e0d4b6e6f433bd4aa79))
+* **css:** remove starting-style border ([fae7140](https://github.com/dvcol/neo-svelte/commit/fae71402dc89592b646e604062580403d227c46f))
+* **demo:** update sizing for dividers ([f534e2a](https://github.com/dvcol/neo-svelte/commit/f534e2a222ec94fefd99b3562d5844beb52ba7c2))
+* **dim:** change hover-dim to be on focus-visible ([1c54cc8](https://github.com/dvcol/neo-svelte/commit/1c54cc8c4f07e97687d081e7a2bd0d375cc7dcff))
+* **glass:** adds offset box-shadow in glass mode ([0e1a7c9](https://github.com/dvcol/neo-svelte/commit/0e1a7c916d958458e13c5f1c50ce295b19ee1f8b))
+* **input:** adds border colour on validation ([35f6a13](https://github.com/dvcol/neo-svelte/commit/35f6a13592073c030de84f6f99bac1ae89222d81))
+* **input:** adds hover colour tint to various inputs ([f0b8a37](https://github.com/dvcol/neo-svelte/commit/f0b8a371053a676ac9acac66f6cc8db2c2fb3a4f))
+* **input:** fix accessibility issues ([11fee58](https://github.com/dvcol/neo-svelte/commit/11fee5864dd89eda7d2c19ae4f315daaad4412ef))
+* **inputs:** force buttons to text when in glass mode ([942f6a3](https://github.com/dvcol/neo-svelte/commit/942f6a31c2500d78e144b47d6061717f5dc716eb))
+* **input:** switch to inert for select display input ([d0512fe](https://github.com/dvcol/neo-svelte/commit/d0512fe158881a2f6f1a29541b35303565dadc5a))
+* **input:** update validation styling & support readonly validation ([bc8c72e](https://github.com/dvcol/neo-svelte/commit/bc8c72eb5c3caa0e666fb5b2b00e12dd486e640f))
+* **label:** inverse condition to support less strict inputs ([baac658](https://github.com/dvcol/neo-svelte/commit/baac658cf5d19b2cfd4ddc19d2033d52e4d3d707))
+* **list:** search mirrors loading/skeleton state from list ([321b706](https://github.com/dvcol/neo-svelte/commit/321b7063003ee7dac09ee4cb423b4bf7fc355a36))
+* **list:** support toggle button style ([9a7b815](https://github.com/dvcol/neo-svelte/commit/9a7b81526efcf500ba4dd91a35795fa86fef8443))
+* **select:** adds clearable support ([0833a4f](https://github.com/dvcol/neo-svelte/commit/0833a4f0421d212c5835741b8bbd6b06139e0879))
+* **skeleton:** change skeleton default to explicit false ([6d97feb](https://github.com/dvcol/neo-svelte/commit/6d97feb28ade813e48c791b8f7f765768f6b6644))
+* **skeleton:** simplify skeleton container ([9b2f189](https://github.com/dvcol/neo-svelte/commit/9b2f18903ebca94bd776921f6849d8402cb73658))
+* **style:** better scoping of :global selectors ([8fb9aea](https://github.com/dvcol/neo-svelte/commit/8fb9aea7f316e08dbeb24d3c04e2286270e81d62))
+* **tags:** make tags reactive ([8637080](https://github.com/dvcol/neo-svelte/commit/863708038d96a0aff2137d5dde88e2d65068c574))
+* **tooltip:** adjust clip path ([38ca8f0](https://github.com/dvcol/neo-svelte/commit/38ca8f0c54ad7a74088a2c1da5d3425fc230664b))
+* **tooltip:** adjust padding & sizing on tooltips with lists ([7e0a27f](https://github.com/dvcol/neo-svelte/commit/7e0a27f24799e3b86f86b2d6c88f93d7ecfe2993))
+* **tooltip:** remove tint when filled & un-tinted ([8ced754](https://github.com/dvcol/neo-svelte/commit/8ced754a6632dbc693d930588f3e680d11272d4c))
+
 ### [0.1.7](https://github.com/dvcol/neo-svelte/compare/v0.1.6...v0.1.7) (2025-02-03)
 
 
