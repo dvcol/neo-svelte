@@ -1,3 +1,4 @@
+export * from './badge/index.js';
 export * from './buttons/index.js';
 export * from './cards/index.js';
 export * from './containers/index.js';
