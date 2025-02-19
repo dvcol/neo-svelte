@@ -1,5 +1,5 @@
-@use '~/styles/reset' as reset;
-@use '~/styles/theme' as theme;
+@use '../styles/reset' as reset;
+@use '../styles/theme' as theme;
 
 // Inject reset styles
 @include reset.nested;
