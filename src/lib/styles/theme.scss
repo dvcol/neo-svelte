@@ -1,10 +1,10 @@
-@use 'src/lib/styles/common/colors' as colors;
-@use 'src/lib/styles/common/easing' as easing;
-@use 'src/lib/styles/common/typography' as typography;
-@use 'src/lib/styles/common/shadows' as shadows;
-@use 'src/lib/styles/common/spacing' as spacing;
-@use 'src/lib/styles/common/utils' as utils;
-@use 'src/lib/styles/common/properties';
+@use './common/colors' as colors;
+@use './common/easing' as easing;
+@use './common/typography' as typography;
+@use './common/shadows' as shadows;
+@use './common/spacing' as spacing;
+@use './common/utils' as utils;
+@use './common/properties';
 
 @mixin theme($root: neo-theme-root) {
   [#{$root}] {
