@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/dvcol/neo-svelte/compare/v0.1.8...v0.1.9) (2025-02-19)
+
+
+### Bug Fixes
+
+* **provider:** change scss to use relative path for packaging ([b5f1acf](https://github.com/dvcol/neo-svelte/commit/b5f1acf7130e5dc0605569139d04574cc3690902))
+
 ### [0.1.8](https://github.com/dvcol/neo-svelte/compare/v0.1.7...v0.1.8) (2025-02-19)
 
 
