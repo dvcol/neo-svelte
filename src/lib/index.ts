@@ -5,6 +5,8 @@ export * from './divider/index.js';
 export * from './inputs/index.js';
 export * from './list/index.js';
 export * from './nav/index.js';
+export * from './pill/index.js';
+export * from './progress/index.js';
 export * from './providers/index.js';
 export * from './skeletons/index.js';
 export * from './text/index.js';

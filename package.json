@@ -64,6 +64,14 @@
       "types": "./dist/nav/index.d.ts",
       "svelte": "./dist/nav/index.js"
     },
+    "./pill": {
+      "types": "./dist/pill/index.d.ts",
+      "svelte": "./dist/pill/index.js"
+    },
+    "./progress": {
+      "types": "./dist/progress/index.d.ts",
+      "svelte": "./dist/progress/index.js"
+    },
     "./providers": {
       "types": "./dist/providers/index.d.ts",
       "svelte": "./dist/providers/index.js"
