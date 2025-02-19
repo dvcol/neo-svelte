@@ -16,6 +16,7 @@ export { default as NeoSelect } from './NeoSelect.svelte';
 export { default as NeoNativeSelect } from './NeoNativeSelect.svelte';
 
 export { NeoInputLabelPlacement } from './common/neo-input.model.js';
+export { displayValue, transformValue } from './neo-select.model.js';
 
 export type * from './common/neo-input.model.js';
 

@@ -130,9 +130,11 @@ export type NeoSelectProps<Value = unknown> = {
    * Button properties to pass to the show/hide dropdown button.
    */
   buttonProps?: NeoButtonProps;
-} & NeoInputProps;
+} & Omit<NeoInputProps, 'display'>;
 
-export const displayValue = <Value = unknown>(selection?: NeoListSelectedItem<Value> | NeoListSelectedItem<Value>[]): undefined | string => {
+export const displayValue: NeoSelectProps['display'] = <Value = unknown>(
+  selection?: NeoListSelectedItem<Value> | NeoListSelectedItem<Value>[],
+): NeoInputProps['display'] => {
   if (Array.isArray(selection)) {
     if (selection?.length > 2) return `${selection?.length} items selected`;
     return selection?.map(s => s.item?.label ?? s.item?.value?.toString()).join(', ');
@@ -140,7 +142,7 @@ export const displayValue = <Value = unknown>(selection?: NeoListSelectedItem<Va
   return selection?.item?.label ?? selection?.item?.value?.toString();
 };
 
-export const transformValue = <Value = unknown>(
+export const transformValue: NeoSelectProps['transform'] = <Value = unknown>(
   selection?: NeoListSelectedItem<Value> | NeoListSelectedItem<Value>[],
 ): undefined | Value | Value[] => {
   if (Array.isArray(selection)) return selection?.map?.(s => s?.item?.value) ?? [];

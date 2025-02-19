@@ -104,7 +104,7 @@
   const space = $derived(open ? 8 : 6);
   watch(
     () => {
-      value = transform(selected);
+      value = transform ? transform(selected) : selected;
       touched = true;
     },
     () => selected,
@@ -170,7 +170,7 @@
   bind:focused
   bind:focusin
   bind:value
-  display={(display ?? customDisplay) ? (customDisplay ?? display?.(selected)) : undefined}
+  display={(customDisplay ?? display) ? (customDisplay ?? display?.(selected)) : undefined}
   {rounded}
   {floating}
   {clearable}
