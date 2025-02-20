@@ -82,7 +82,7 @@
     start,
     floating = true,
     skeleton = false,
-    scrollbar = true,
+    scrollbar = !autoResize || !!(typeof autoResize === 'object' && autoResize.max),
     validation,
     validationIcon,
 
@@ -566,7 +566,7 @@
     min-width: fit-content;
     max-width: 100%;
     min-height: fit-content;
-    padding: 0.75rem 0.625rem;
+    padding: 0.75rem 0.95rem;
     overflow: auto;
     color: var(--neo-textarea-text-color, inherit);
     text-overflow: ellipsis;
@@ -580,7 +580,7 @@
     }
 
     &.neo-affix {
-      padding: 0.75rem 2.25rem 0.75rem 0.625rem;
+      padding: 0.75rem 2.25rem 0.75rem 0.95rem;
     }
 
     &-after {
@@ -773,11 +773,11 @@
       .neo-textarea {
         --neo-scrollbar-button-height: 0.75rem;
 
-        padding: 0.75rem 0.875rem;
+        padding: 0.75rem 1rem;
         border-radius: var(--neo-border-radius-lg, 2rem);
 
         &.neo-affix {
-          padding: 0.75rem 2.75rem 0.75rem 0.875rem;
+          padding: 0.75rem 2.75rem 0.75rem 1.25rem;
         }
 
         &-after {
@@ -945,7 +945,7 @@
 
     .neo-textarea.neo-scroll {
       @include mixin.fade-scroll($fade-height: 0.5rem);
-      @include mixin.scrollbar;
+      @include mixin.scrollbar($gutter: stable, $padding: none);
     }
   }
 </style>
