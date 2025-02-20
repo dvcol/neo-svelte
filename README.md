@@ -18,6 +18,12 @@
   </a>
 </p>
 
+## Description
+
+Neo Svelte is a modern UI library for Svelte 5, designed to bring a sleek, soft, and futuristic look to web applications with neumorphism and glassmorphism design elements.
+
+It provides a collection of pre-styled, accessible, and highly customizable components that make it easy to build visually appealing UIs with minimal effort.
+
 ## Prerequisites
 
 Note: Svelte Simple Router is a svelte 5 native library, and will not work with prior versions of svelte.
