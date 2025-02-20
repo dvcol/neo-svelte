@@ -155,6 +155,7 @@
 {#snippet media({ horizontal }: NeoCardContext)}
   <NeoSkeletonMedia loading={skeleton} type="image" ratio="1.5" transitionProps={{ style: horizontal ? 'max-width: 30dvw' : undefined }}>
     <img
+      class="demo-card-media"
       height="100%"
       width="100%"
       src="https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
@@ -220,6 +221,11 @@
 
   .content {
     overflow: unset;
+
+    .demo-card-media {
+      max-width: 86ch;
+      border-radius: inherit;
+    }
   }
 
   .column-item {
