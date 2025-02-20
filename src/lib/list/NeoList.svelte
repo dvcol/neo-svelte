@@ -53,6 +53,7 @@
 
     select = false,
     multiple = false,
+    nullable = true,
     selected = $bindable(),
     disabled,
     readonly,
@@ -91,6 +92,11 @@
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
+  const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
+    multiple && (Array.isArray(list) || list === undefined);
+
+  const isNullable = $derived(multiple ? nullable || (isMultiple(selected) && (selected?.length ?? 0) > 1) : nullable);
+
   const scrollTop: NeoListMethods['scrollTop'] = debounce((options?: ScrollToOptions) => {
     if (!ref) return false;
     ref.scrollTo({ top: 0, behavior: 'smooth', ...options });
@@ -118,9 +124,6 @@
     if (!reverse || !ref) return;
     scrollReverse();
   });
-
-  const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
-    multiple && (Array.isArray(list) || list === undefined);
 
   const isSameIndex = (left: NeoListSelectedItem, right: NeoListSelectedItem) =>
     left?.index === right?.index && left?.sectionIndex === right?.sectionIndex;
@@ -226,6 +229,7 @@
 
     select,
     multiple,
+    nullable,
     selected,
 
     loading,
@@ -362,7 +366,7 @@
             {highlight}
             {buttonProps}
             disabled={item.disabled || disabled}
-            readonly={item.readonly || readonly}
+            readonly={item.readonly || readonly || (!isNullable && checked)}
             {...itemProps}
             onclick={() => toggleItem({ index, item, sectionIndex, section }, checked)}
           />

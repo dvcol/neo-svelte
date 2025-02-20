@@ -104,7 +104,7 @@
   const space = $derived(open ? 8 : 6);
   watch(
     () => {
-      value = transform ? transform(selected) : selected;
+      value = (transform ? transform(selected) : selected) ?? rest?.defaultValue;
       touched = true;
     },
     () => selected,

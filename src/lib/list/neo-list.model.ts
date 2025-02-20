@@ -215,6 +215,10 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    */
   multiple?: boolean;
   /**
+   * Whether to allow deselecting items if it will result in an empty selection.
+   */
+  nullable?: boolean;
+  /**
    * The currently selected item(s).
    */
   selected?: Selected;

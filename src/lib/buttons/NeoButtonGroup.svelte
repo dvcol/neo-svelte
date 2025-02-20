@@ -319,6 +319,7 @@
 
     &.neo-vertical {
       flex-direction: column;
+      min-width: max-content;
 
       :global(.neo-divider) {
         max-width: calc(100% - 0.5rem);

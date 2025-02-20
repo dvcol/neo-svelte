@@ -20,6 +20,7 @@
     skeleton: false,
     shadow: true,
     scrollToLoader: false,
+    nullable: true,
     disabled: false,
     readonly: false,
     reverse: false,
@@ -181,6 +182,7 @@
     <NeoButton toggle bind:checked={options.scrollToLoader}>Scroll to loader</NeoButton>
     <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.nullable}>Nullable</NeoButton>
     <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
     <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
     <NeoButton toggle bind:checked={options.dim}>Dim</NeoButton>
