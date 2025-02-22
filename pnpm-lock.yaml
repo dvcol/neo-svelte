@@ -34,8 +34,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(postcss-html@0.36.0)(postcss-scss@4.0.9(postcss@8.5.1))(postcss@8.5.1)(prettier@3.3.3)(stylelint@16.9.0(typescript@5.5.4))
       '@dvcol/svelte-simple-router':
-        specifier: ^1.10.3
-        version: 1.10.3(svelte@5.19.3)
+        specifier: ^1.11.0
+        version: 1.11.0(svelte@5.19.3)
       '@sveltejs/adapter-auto':
         specifier: ^4.0.0
         version: 4.0.0(@sveltejs/kit@2.17.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.19.3)(vite@6.1.0(@types/node@22.5.4)(jiti@2.4.2)(sass@1.83.4)(sugarss@2.0.0)(yaml@2.7.0)))(svelte@5.19.3)(vite@6.1.0(@types/node@22.5.4)(jiti@2.4.2)(sass@1.83.4)(sugarss@2.0.0)(yaml@2.7.0)))
@@ -393,6 +393,10 @@ packages:
     resolution: {integrity: sha512-S4yUqrUyaKtOhiNevbGhxbozLQARWk3dlDOvzizug5QXJyJZAsNbmHPo52Vs7c0ngPKNuE0EEAWUZ9GB1bkQbg==}
     engines: {node: '>=20', pnpm: '>= 8'}
 
+  '@dvcol/common-utils@1.23.1':
+    resolution: {integrity: sha512-ul6zo/TWr5M6+KKTO23IWAGSa4ruZh2lq4oQe16hgBbNMze3I9b8fMLZ1/H/dvUUtFFGr/zRNxUNx6F+/UPu0w==}
+    engines: {node: '>=20', pnpm: '>= 8'}
+
   '@dvcol/eslint-plugin-presets@1.3.11':
     resolution: {integrity: sha512-kZ926sQcW65hy8NCt9A5CJSdFMH4Rj1IePby5sAJ/5OzqDKx8/Zhpns+So2xDpR9fghuSQwhG0h5zYY86x5WNg==}
     engines: {node: ' >=14.13.1 || >=16', yarn: '>= 3.2.0'}
@@ -489,14 +493,20 @@ packages:
       postcss-scss:
         optional: true
 
-  '@dvcol/svelte-simple-router@1.10.3':
-    resolution: {integrity: sha512-Tf/OhZXQfPQT1Ke2d3M96gXrGurTqfbpuF6q2oAo2ZTOp60H6PHgrtcyUgdNlY61ul3WwDGtnXpsdYAiemPH0g==}
+  '@dvcol/svelte-simple-router@1.11.0':
+    resolution: {integrity: sha512-qUZRcb9xNOjrjxaFnC1idNB3lOGLDBqPCyB3MMe2Hsu3wTOXD6nG4By7kjyX+DVGhx6OQYQXMeoHQ3nUH3Rn7g==}
     engines: {node: '>=20', pnpm: '>= 8'}
     peerDependencies:
       svelte: '>=5'
 
   '@dvcol/svelte-utils@1.13.0':
     resolution: {integrity: sha512-PDbWlAtpNFfAnnETfEgVmu/bR9yEkgAGZVVYMmtyUIbIUj64wbYd1pFR1NpAowlF3RMmjpdQWQ4paCpeEaCRAg==}
+    engines: {node: '>=20', pnpm: '>= 8'}
+    peerDependencies:
+      svelte: '>=5'
+
+  '@dvcol/svelte-utils@1.13.1':
+    resolution: {integrity: sha512-5CmvfScRnUI3/sHgcFKOP+Q+5lYz3HXfWphqVw+y9cqQxU4IKTp1VNlkrPrslO6KIiTgZTb8UqSsUQTYuTAUaA==}
     engines: {node: '>=20', pnpm: '>= 8'}
     peerDependencies:
       svelte: '>=5'
@@ -5327,6 +5337,11 @@ snapshots:
       pretty-bytes: 6.1.1
       uuid: 11.0.5
 
+  '@dvcol/common-utils@1.23.1':
+    dependencies:
+      pretty-bytes: 6.1.1
+      uuid: 11.0.5
+
   '@dvcol/eslint-plugin-presets@1.3.11(6rxjw5nxhyfk5jl4vfqo45gou4)':
     dependencies:
       chalk: 4.1.2
@@ -5378,15 +5393,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@dvcol/svelte-simple-router@1.10.3(svelte@5.19.3)':
+  '@dvcol/svelte-simple-router@1.11.0(svelte@5.19.3)':
     dependencies:
-      '@dvcol/common-utils': 1.23.0
-      '@dvcol/svelte-utils': 1.13.0(svelte@5.19.3)
+      '@dvcol/common-utils': 1.23.1
+      '@dvcol/svelte-utils': 1.13.1(svelte@5.19.3)
       svelte: 5.19.3
 
   '@dvcol/svelte-utils@1.13.0(svelte@5.19.3)':
     dependencies:
       '@dvcol/common-utils': 1.23.0
+      svelte: 5.19.3
+
+  '@dvcol/svelte-utils@1.13.1(svelte@5.19.3)':
+    dependencies:
+      '@dvcol/common-utils': 1.23.1
       svelte: 5.19.3
 
   '@esbuild/aix-ppc64@0.24.2':

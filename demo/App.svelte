@@ -3,6 +3,7 @@
 
   import { RouterView } from '@dvcol/svelte-simple-router/components';
 
+  import { resolveComponent } from '@dvcol/svelte-utils';
   import { fade } from 'svelte/transition';
 
   import { router } from './router/router.js';
@@ -56,6 +57,13 @@
     if (id === undefined || id === active) return;
     router.push({ name: id });
   };
+
+  const onHover = async (id?: Routes) => {
+    if (id === undefined || id === active) return;
+    const resolved = await router.resolve({ name: id });
+    if (!resolved?.route) return;
+    return resolveComponent(resolved.route.component);
+  };
 </script>
 
 <NeoThemeProvider>
@@ -63,7 +71,7 @@
     <header class="row header">
       <NeoTabs rounded pressed tag="nav" {active} onchange={onClick}>
         {#each routes as route}
-          <NeoTab tabId={route}>{sentenceCase(route)}</NeoTab>
+          <NeoTab tabId={route} onpointerenter={() => onHover(route)}>{sentenceCase(route)}</NeoTab>
         {/each}
 
         <NeoTabDivider aria-hidden="true" />

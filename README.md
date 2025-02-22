@@ -198,6 +198,11 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] border
   - [ ] background
 
+- [ ] PointerTracker (Pointer Events)
+  - [ ] track cursor
+  - [ ] grow to tabindex targets
+  - [ ] height, twist, tilt & pressure support
+
 - [ ] text
   - [ ] elevation
   - [x] ellipsis
