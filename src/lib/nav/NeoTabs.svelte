@@ -15,6 +15,7 @@
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, computeShadowElevation, getDefaultElevation, getDefaultSlideElevation } from '~/utils/shadow.utils.js';
+  import { shortFreezeTransition } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -152,7 +153,7 @@
     <NeoButtonGroup role="tablist" {pressed} {elevation} {...rest} class={['neo-tabs-group', rest.class]}>
       {@render children?.(ctx)}
       {#if add}
-        <div transition:transition={{ duration: 200, css: `overflow: hidden; white-space: nowrap` }}>
+        <div transition:transition={shortFreezeTransition}>
           <NeoButton aria-label="Add new tab" onclick={onadd} {icon} />
         </div>
       {/if}

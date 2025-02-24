@@ -2,6 +2,8 @@ export const NeoErrorType = {
   NeoError: 'NeoError' as const,
   NeoThemeProvider: 'NeoThemeProvider' as const,
   NeoList: 'NeoList' as const,
+  NeoTab: 'NeoTab' as const,
+  NeoCollapse: 'NeoCollapse' as const,
 } as const;
 
 export type NeoErrorTypes = (typeof NeoErrorType)[keyof typeof NeoErrorType];
@@ -47,5 +49,23 @@ export class NeoErrorThemeContextNotFound extends NeoErrorThemeProvider {
 export class NeoErrorListSelectDisabled extends NeoError {
   constructor() {
     super('Cannot select an item in a disabled list.', NeoErrorType.NeoList);
+  }
+}
+
+export class NeoErrorMissingId extends NeoError {
+  constructor(message = 'A unique ID is required.', type: NeoErrorTypes) {
+    super(message, type);
+  }
+}
+
+export class NeoErrorMissingTabId extends NeoErrorMissingId {
+  constructor(message?: string) {
+    super(message, NeoErrorType.NeoTab);
+  }
+}
+
+export class NeoErrorMissingCollapseId extends NeoErrorMissingId {
+  constructor(message?: string) {
+    super(message, NeoErrorType.NeoCollapse);
   }
 }

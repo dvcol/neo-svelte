@@ -33,6 +33,10 @@ export type NeoCollapseContext = {
    * Whether the collapse can be toggled.
    */
   disabled?: boolean;
+  /**
+   * If true, the collapse will ignore any collapse group context.
+   */
+  standalone?: boolean;
 };
 
 export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'> = {
@@ -77,7 +81,7 @@ export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'
    * Props to pass to the collapse container.
    */
   containerProps?: HTMLNeoBaseElement & HTMLTagProps;
-} & Omit<NeoCollapseContext, 'trigger' | 'triggerId'> &
+} & Partial<Omit<NeoCollapseContext, 'trigger' | 'triggerId'>> &
   HTMLRefProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 

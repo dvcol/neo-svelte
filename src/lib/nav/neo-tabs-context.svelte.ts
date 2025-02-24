@@ -5,6 +5,7 @@ import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 import type { TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabContextValue, OnChange, OnClose } from '~/nav/neo-tabs.model.js';
 
+import { NeoErrorMissingTabId } from '~/utils/error.utils.js';
 import { Logger } from '~/utils/logger.utils.js';
 
 export type NeoTabContextPosition = { id: TabId; top: number; left: number; width: number; height: number };
@@ -148,6 +149,7 @@ export class NeoTabContext<T = unknown> {
   }
 
   register(tabId: TabId, value: Omit<NeoTabContextValue<T>, 'index'>) {
+    if (!tabId) throw new NeoErrorMissingTabId();
     if (this.#tabs.has(tabId)) {
       return Logger.warn(`Tab ID '${String(tabId)}' already exists. Tab registration ignored.`, { existing: this.getValue(tabId), ignored: value });
     }

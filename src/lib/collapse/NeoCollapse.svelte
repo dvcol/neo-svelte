@@ -1,9 +1,12 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { height, width } from '@dvcol/svelte-utils/transition';
+  import { untrack } from 'svelte';
   import { cubicIn, sineInOut } from 'svelte/easing';
 
   import type { NeoCollapseContext, NeoCollapseProps } from '~/collapse/neo-collapse.model.js';
+
+  import { getNeoCollapseGroupContext } from '~/collapse/neo-collapse-context.svelte.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -18,7 +21,8 @@
     ref = $bindable(),
     open = $bindable(false),
     horizontal = false,
-    disabled = false,
+    disabled: _disabled = false,
+    standalone = false,
 
     // Transition
     transition: _transition,
@@ -33,12 +37,12 @@
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
   const { tag: triggerTag = 'button', ...triggerRest } = $derived(triggerProps ?? {});
+
+  const group = getNeoCollapseGroupContext();
+
+  const disabled = $derived(!!(_disabled || group?.disabled));
   const role = $derived(!['button', 'a'].includes(triggerTag) ? 'button' : undefined);
   const tabindex = $derived(!disabled && role ? 0 : undefined);
-
-  const toggle = () => {
-    open = !open;
-  };
 
   const transition = $derived(horizontal ? width : height);
   const transitionProps = $derived({ duration: 200, easing: sineInOut, opacity: horizontal ? false : { easing: cubicIn }, ..._transition });
@@ -47,6 +51,13 @@
   const triggerId = $derived(trigger ? (triggerProps?.id ?? `neo-collapse-trigger-${getUUID()}`) : undefined);
 
   const context = $derived<NeoCollapseContext>({ id, open, trigger, triggerId, horizontal, disabled });
+
+  const toggle = (state = !open) => {
+    if (disabled) return;
+    open = state;
+    if (standalone) return;
+    group?.update(id);
+  };
 
   $effect(() => {
     if (!ref) return;
@@ -73,6 +84,26 @@
       toggle,
     });
   });
+
+  $effect(() => {
+    if (standalone || !group) return;
+    untrack(() =>
+      group.register(id, {
+        id,
+        get disabled() {
+          return disabled;
+        },
+        get open() {
+          return open;
+        },
+        set open(value) {
+          open = value;
+        },
+        changed: Date.now(),
+      }),
+    );
+    return () => group.remove(id);
+  });
 </script>
 
 {#snippet renderTriggerContent(snip: NeoCollapseProps['label'] | NeoCollapseProps['description'])}
@@ -98,7 +129,7 @@
       aria-expanded={open}
       aria-controls={id}
       class:neo-collapse-trigger={true}
-      onclick={toggle}
+      onclick={() => toggle()}
       {...triggerRest}
     >
       {#if label && description}

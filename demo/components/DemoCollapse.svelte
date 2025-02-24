@@ -1,99 +1,51 @@
 <script lang="ts">
-  import { colorOptions } from '../utils/color.utils';
+  import NeoNumberStep from '../../src/lib/inputs/NeoNumberStep.svelte';
+
+  import type { NeoCollapseGroupProps } from '~/collapse/neo-collapse-group.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCollapse from '~/collapse/NeoCollapse.svelte';
-  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
-  import NeoSelect from '~/inputs/NeoSelect.svelte';
-  import { displayValue } from '~/inputs/neo-select.model';
+  import NeoCollapseGroup from '~/collapse/NeoCollapseGroup.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
-  import {
-    DefaultShadowElevation,
-    DefaultShadowHoverElevation,
-    getDefaultElevation,
-    getDefaultHoverElevation,
-    MaxShadowElevation,
-    MinShadowElevation,
-  } from '~/utils/shadow.utils';
 
-  const options = $state({
-    borderless: false,
-    rounded: false,
-    pressed: false,
-    glass: false,
-    tinted: false,
+  const options = $state<NeoCollapseGroupProps>({
     disabled: false,
-    skeleton: false,
-
-    elevation: 0,
-    hover: 0,
+    min: 0,
+    max: 3,
   });
-
-  const onPressed = () => {
-    options.elevation = getDefaultElevation(options.pressed);
-    options.hover = getDefaultHoverElevation(options.pressed);
-  };
-
-  const onElevation = () => {
-    if (options.elevation + options.hover < MinShadowElevation) options.hover += 1;
-    if (options.elevation + options.hover > MaxShadowElevation) options.hover -= 1;
-  };
 
   let controlled = $state(false);
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded>
-    <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
-    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
-    <NeoButton toggle bind:checked={options.pressed} onclick={onPressed}>Pressed</NeoButton>
-    <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
-    <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
-    <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
-    <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
-  </NeoButtonGroup>
+  <NeoButton rounded toggle bind:checked={options.disabled}>Disabled</NeoButton>
 
   <NeoNumberStep
-    label="Elevation"
+    label="Minimum"
     placement="left"
     center
-    bind:value={options.elevation}
-    min={MinShadowElevation}
-    max={MaxShadowElevation}
-    defaultValue={DefaultShadowElevation}
-    rounded={options.rounded}
-    oninput={onElevation}
+    bind:value={options.min}
+    min={0}
+    max={3}
+    defaultValue={0}
+    rounded
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
   />
+
   <NeoNumberStep
-    label="Hover"
+    label="Maximum"
     placement="left"
     center
-    bind:value={options.hover}
-    min={MinShadowElevation - options.elevation}
-    max={MaxShadowElevation - options.elevation}
-    defaultValue={DefaultShadowHoverElevation}
-    rounded={options.rounded}
+    bind:value={options.max}
+    min={0}
+    max={3}
+    defaultValue={3}
+    rounded
     nullable={false}
     floating={false}
-    groupProps={{ style: 'margin-left: 4rem' }}
-  />
-
-  <NeoSelect
-    label="Color"
-    placeholder="Select color"
-    placement="left"
-    floating={false}
-    color={options.color}
-    display={displayValue}
-    size="10"
-    bind:value={options.color}
-    containerProps={{ style: 'margin-left: 6rem' }}
-    options={colorOptions}
-    openOnFocus
+    groupProps={{ style: 'margin-left: 6rem' }}
   />
 </div>
 
@@ -107,18 +59,22 @@
 <div class="row">
   <div class="column content">
     <span class="label">Default</span>
-    <NeoCollapse label="Click Me" children={content} {...options}></NeoCollapse>
-    <NeoCollapse label="Click Me" children={content} {...options}></NeoCollapse>
-    <NeoCollapse label="Click Me" children={content} {...options}></NeoCollapse>
+    <NeoCollapseGroup {...options}>
+      <NeoCollapse label="Section 1" children={content} />
+      <NeoCollapse label="Section 2" children={content} />
+      <NeoCollapse label="Section 3" children={content} />
+    </NeoCollapseGroup>
   </div>
 </div>
 
 <div class="row">
   <div class="column content">
     <span class="label">Description</span>
-    <NeoCollapse label="Click Me" description="This is a description" children={content} {...options}></NeoCollapse>
-    <NeoCollapse label="Click Me" description="This is a description" children={content} {...options}></NeoCollapse>
-    <NeoCollapse label="Click Me" description="This is a description" children={content} {...options}></NeoCollapse>
+    <NeoCollapseGroup {...options}>
+      <NeoCollapse id="section 1" label="Section 1" description="This is a description" children={content} />
+      <NeoCollapse id="section 2" label="Section 2" description="This is a description" children={content} />
+      <NeoCollapse id="section 3" label="Section 3" description="This is a description" children={content} />
+    </NeoCollapseGroup>
   </div>
 </div>
 
@@ -126,7 +82,9 @@
   <div class="column">
     <span class="label">Controlled</span>
     <NeoButton text toggle hover="-1" active="-2" bind:checked={controlled}>Toggle</NeoButton>
-    <NeoCollapse children={content} {...options} open={controlled}></NeoCollapse>
+    <NeoCollapseGroup {...options}>
+      <NeoCollapse children={content} open={controlled} />
+    </NeoCollapseGroup>
   </div>
 </div>
 
@@ -138,9 +96,11 @@
   <div class="column content">
     <span class="label">Horizontal</span>
     <div class="row content">
-      <NeoCollapse horizontal label="Click Me" description="Section 1" children={horizontalContent} {...options}></NeoCollapse>
-      <NeoCollapse horizontal label="Click Me" description="Section 2" children={horizontalContent} {...options}></NeoCollapse>
-      <NeoCollapse horizontal label="Click Me" description="Section 3" children={horizontalContent} {...options}></NeoCollapse>
+      <NeoCollapseGroup {...options}>
+        <NeoCollapse horizontal label="Click Me" description="Section 1" children={horizontalContent} />
+        <NeoCollapse horizontal label="Click Me" description="Section 2" children={horizontalContent} />
+        <NeoCollapse horizontal label="Click Me" description="Section 3" children={horizontalContent} />
+      </NeoCollapseGroup>
     </div>
   </div>
 </div>
