@@ -9,7 +9,7 @@ export const quickDuration = 200;
 export const shortFreezeTransition: TransitionProps = {
   duration: shortDuration,
   freeze: true,
-  css: `overflow: hidden; white-space: nowrap`,
+  css: `white-space: nowrap`,
 };
 
 export const quickDurationProps: TransitionProps = { duration: quickDuration };

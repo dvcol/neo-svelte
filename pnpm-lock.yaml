@@ -12,8 +12,8 @@ importers:
         specifier: ^1.23.0
         version: 1.23.0
       '@dvcol/svelte-utils':
-        specifier: ^1.13.0
-        version: 1.13.0(svelte@5.19.3)
+        specifier: ^1.14.0
+        version: 1.14.0(svelte@5.19.3)
       '@skeletonlabs/floating-ui-svelte':
         specifier: ^0.3.9
         version: 0.3.9(svelte@5.19.3)
@@ -499,14 +499,8 @@ packages:
     peerDependencies:
       svelte: '>=5'
 
-  '@dvcol/svelte-utils@1.13.0':
-    resolution: {integrity: sha512-PDbWlAtpNFfAnnETfEgVmu/bR9yEkgAGZVVYMmtyUIbIUj64wbYd1pFR1NpAowlF3RMmjpdQWQ4paCpeEaCRAg==}
-    engines: {node: '>=20', pnpm: '>= 8'}
-    peerDependencies:
-      svelte: '>=5'
-
-  '@dvcol/svelte-utils@1.13.1':
-    resolution: {integrity: sha512-5CmvfScRnUI3/sHgcFKOP+Q+5lYz3HXfWphqVw+y9cqQxU4IKTp1VNlkrPrslO6KIiTgZTb8UqSsUQTYuTAUaA==}
+  '@dvcol/svelte-utils@1.14.0':
+    resolution: {integrity: sha512-iXDrb7MfzOYNgqSJ1DapTTjJ/uBg9IDqMc3tKT95FmRkOKRCM7LKDaR5AoarsD7vzCZJMvCqfPw9Ze3msAn0Mw==}
     engines: {node: '>=20', pnpm: '>= 8'}
     peerDependencies:
       svelte: '>=5'
@@ -5396,15 +5390,10 @@ snapshots:
   '@dvcol/svelte-simple-router@1.11.0(svelte@5.19.3)':
     dependencies:
       '@dvcol/common-utils': 1.23.1
-      '@dvcol/svelte-utils': 1.13.1(svelte@5.19.3)
+      '@dvcol/svelte-utils': 1.14.0(svelte@5.19.3)
       svelte: 5.19.3
 
-  '@dvcol/svelte-utils@1.13.0(svelte@5.19.3)':
-    dependencies:
-      '@dvcol/common-utils': 1.23.0
-      svelte: 5.19.3
-
-  '@dvcol/svelte-utils@1.13.1(svelte@5.19.3)':
+  '@dvcol/svelte-utils@1.14.0(svelte@5.19.3)':
     dependencies:
       '@dvcol/common-utils': 1.23.1
       svelte: 5.19.3

@@ -69,9 +69,7 @@
 
   /* Declare as container for container queries */
   :host > :is(header, main, footer),
-  body > :is(header, main, footer),
-  section,
-  article {
+  body > :is(header, main, footer) {
     container-type: inline-size;
   }
 
