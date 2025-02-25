@@ -170,6 +170,8 @@
 
 <style lang="scss">
   .neo-collapse {
+    box-sizing: border-box;
+    border: var(--neo-border-width, 1px) solid var(--neo-collapse-border-color, transparent);
     transition: border-color 0.3s ease;
 
     &-trigger,
@@ -181,6 +183,7 @@
       margin: 0;
       padding: 0;
       color: inherit;
+      font: inherit;
       text-align: start;
       text-decoration: none;
       background: none;

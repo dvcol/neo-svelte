@@ -130,8 +130,16 @@
       &:hover {
         border-color: var(--neo-accordion-border-color-hover, var(--neo-border-color-highlight));
 
-        &.neo-segmented :global(> .neo-collapse:not(:last-child, :only-child)) {
-          border-color: var(--neo-accordion-border-color-hover, var(--neo-border-color-highlight));
+        &:not(.neo-horizontal) {
+          &.neo-segmented :global(> .neo-collapse:not(:last-child, :only-child)) {
+            border-bottom: var(--neo-border-width, 1px) solid var(--neo-accordion-border-color, var(--neo-border-color-highlight));
+          }
+        }
+
+        &.neo-horizontal {
+          &.neo-segmented :global(> .neo-collapse:not(:last-child, :only-child)) {
+            border-right: var(--neo-border-width, 1px) solid var(--neo-accordion-border-color, var(--neo-border-color-highlight));
+          }
         }
       }
     }
