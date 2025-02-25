@@ -33,7 +33,7 @@ export type NeoCardContext = {
    */
   spacing?: CSSStyleDeclaration['padding'];
   /**
-   * Weather to increase/decrease the elevation when hovered/focused.
+   * Whether to increase/decrease the elevation when hovered/focused.
    * @default 0
    */
   hover?: NeoCardHoverElevation;

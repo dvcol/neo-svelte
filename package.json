@@ -48,6 +48,10 @@
       "types": "./dist/cards/index.d.ts",
       "svelte": "./dist/cards/index.js"
     },
+    "./collapse": {
+      "types": "./dist/collapse/index.d.ts",
+      "svelte": "./dist/collapse/index.js"
+    },
     "./containers": {
       "types": "./dist/containers/index.d.ts",
       "svelte": "./dist/containers/index.js"

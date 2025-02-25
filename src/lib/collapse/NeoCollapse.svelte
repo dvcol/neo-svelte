@@ -170,6 +170,13 @@
 
 <style lang="scss">
   .neo-collapse {
+    transition: border-color 0.3s ease;
+
+    &-trigger,
+    &-content {
+      transition: padding 0.3s ease;
+    }
+
     &-trigger {
       margin: 0;
       padding: 0;
@@ -210,11 +217,12 @@
       width: 100%;
 
       .neo-collapse-trigger {
+        width: 100%;
         padding-block: var(--neo-collapse-trigger-gap, var(--neo-gap-xs, 0.625rem));
       }
 
       .neo-collapse-content {
-        padding-block: var(--neo-collapse-content-gap, var(--neo-gap-xxxs, 0.3125rem));
+        padding-block-end: var(--neo-collapse-content-gap, var(--neo-gap-xs, 0.625rem));
       }
     }
 
@@ -227,7 +235,17 @@
       }
 
       .neo-collapse-content {
-        padding-inline: var(--neo-collapse-content-gap, var(--neo-gap-sm, 0.75rem));
+        padding-inline-end: var(--neo-collapse-content-gap, var(--neo-gap, 1rem));
+      }
+    }
+
+    &:only-child {
+      &:not(.neo-horizontal) .neo-collapse-content {
+        padding-block-start: var(--neo-collapse-content-gap, var(--neo-gap-xs, 0.625rem));
+      }
+
+      &.neo-horizontal .neo-collapse-content {
+        padding-inline-start: var(--neo-collapse-content-gap, var(--neo-gap, 1rem));
       }
     }
   }

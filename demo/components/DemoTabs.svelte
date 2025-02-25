@@ -150,7 +150,7 @@
   @use 'src/lib/styles/common/flex' as flex;
 
   .column {
-    @include flex.column($center: true, $gap: var(--neo-gap-lg));
+    @include flex.column($center: true, $gap: var(--neo-gap-xl));
   }
 
   .values,

@@ -122,7 +122,7 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: var(--neo-skeleton-gap, var(--neo-gap-lg));
+    gap: var(--neo-skeleton-gap, var(--neo-gap-xl));
 
     &.neo-glass {
       --neo-skeleton-color: var(--neo-glass-skeleton-color);

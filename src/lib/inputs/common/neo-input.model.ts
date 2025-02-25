@@ -43,7 +43,7 @@ export type NeoInputStyles = {
    */
   elevation?: NeoInputElevation;
   /**
-   * Weather to increase/decrease the elevation when hovered/focused.
+   * Whether to increase/decrease the elevation when hovered/focused.
    * @default 0
    */
   hover?: NeoInputHoverElevation;
@@ -293,7 +293,7 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    */
   hovered?: boolean;
   /**
-   * Weather the input group has focus (input, affixes or label).
+   * Whether the input group has focus (input, affixes or label).
    */
   focusin?: boolean;
   /**

@@ -1,5 +1,6 @@
 import type { HeightParams, WidthParams } from '@dvcol/svelte-utils/transition';
 import type { Snippet } from 'svelte';
+import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export type NeoCollapseContext = {
@@ -42,7 +43,7 @@ export type NeoCollapseContext = {
    */
   standalone?: boolean;
   /**
-   * Weather to show a divider between the trigger and the content.
+   * Whether to show a divider between the trigger and the content.
    *
    * Note: Only works if the collapse has an internal trigger.
    */
@@ -87,6 +88,14 @@ export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'
    * Props to pass to the internal trigger element if it exists.
    */
   triggerProps?: HTMLNeoBaseElement & HTMLTagProps;
+  /**
+   * Props to pass to the divider element if it exists
+   * and the collapse has an internal trigger.
+   *
+   * @see divider
+   * @see trigger
+   */
+  dividerProps?: NeoDividerProps;
   /**
    * Props to pass to the collapse container.
    */

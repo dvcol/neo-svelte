@@ -115,7 +115,7 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: var(--neo-skeleton-gap, var(--neo-gap-lg));
+    gap: var(--neo-skeleton-gap, var(--neo-gap-xl));
     width: 100%;
     border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius));
 

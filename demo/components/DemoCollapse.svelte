@@ -1,30 +1,103 @@
 <script lang="ts">
   import NeoNumberStep from '../../src/lib/inputs/NeoNumberStep.svelte';
 
-  import type { NeoCollapseGroupProps } from '~/collapse/neo-collapse-group.model';
+  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
+
+  import type { NeoAccordionProps } from '~/collapse/neo-accordion.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import NeoAccordion from '~/collapse/NeoAccordion.svelte';
   import NeoCollapse from '~/collapse/NeoCollapse.svelte';
   import NeoCollapseGroup from '~/collapse/NeoCollapseGroup.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
+  import {
+    DefaultShadowElevation,
+    DefaultShadowHoverElevation,
+    getDefaultElevation,
+    getDefaultHoverElevation,
+    MaxShadowElevation,
+    MinShadowElevation,
+  } from '~/utils/shadow.utils';
 
-  const options = $state<NeoCollapseGroupProps>({
+  const options = $state<NeoAccordionProps>({
     disabled: false,
-    min: 0,
-    max: 3,
+    readonly: false,
+    segmented: true,
+
+    borderless: false,
+    rounded: false,
+    pressed: false,
+    glass: false,
+    tinted: false,
+
+    elevation: 0,
+    hover: 0,
+
+    group: {
+      min: 0,
+      max: 3,
+    },
   });
+
+  const onPressed = () => {
+    options.elevation = getDefaultElevation(options.pressed);
+    options.hover = getDefaultHoverElevation(options.pressed);
+  };
+
+  const onElevation = () => {
+    if (options.elevation + options.hover < MinShadowElevation) options.hover += 1;
+    if (options.elevation + options.hover > MaxShadowElevation) options.hover -= 1;
+  };
 
   let controlled = $state(false);
 </script>
 
 <div class="row">
-  <NeoButton rounded toggle bind:checked={options.disabled}>Disabled</NeoButton>
+  <NeoButtonGroup rounded={options.rounded}>
+    <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
+    <NeoButton toggle bind:checked={options.segmented}>Segmented</NeoButton>
+    <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.pressed} onclick={onPressed}>Pressed</NeoButton>
+    <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
+    <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
+  </NeoButtonGroup>
+
+  <NeoNumberStep
+    label="Elevation"
+    placement="left"
+    center
+    bind:value={options.elevation}
+    min={MinShadowElevation}
+    max={MaxShadowElevation}
+    defaultValue={DefaultShadowElevation}
+    rounded={options.rounded}
+    oninput={onElevation}
+    nullable={false}
+    floating={false}
+    groupProps={{ style: 'margin-left: 6rem' }}
+  />
+  <NeoNumberStep
+    label="Hover"
+    placement="left"
+    center
+    bind:value={options.hover}
+    min={MinShadowElevation - options.elevation}
+    max={MaxShadowElevation - options.elevation}
+    defaultValue={DefaultShadowHoverElevation}
+    rounded={options.rounded}
+    nullable={false}
+    floating={false}
+    groupProps={{ style: 'margin-left: 4rem' }}
+  />
 
   <NeoNumberStep
     label="Minimum"
     placement="left"
     center
-    bind:value={options.min}
+    bind:value={options.group.min}
     min={0}
     max={3}
     defaultValue={0}
@@ -38,7 +111,7 @@
     label="Maximum"
     placement="left"
     center
-    bind:value={options.max}
+    bind:value={options.group.max}
     min={0}
     max={3}
     defaultValue={3}
@@ -59,32 +132,59 @@
 <div class="row">
   <div class="column content">
     <span class="label">Default</span>
-    <NeoCollapseGroup {...options}>
-      <NeoCollapse label="Section 1" children={content} />
-      <NeoCollapse label="Section 2" children={content} />
-      <NeoCollapse label="Section 3" children={content} />
-    </NeoCollapseGroup>
+
+    <SphereBackdrop glass={options.glass} style="width: 100%">
+      <NeoAccordion {...options}>
+        <NeoCollapse label="Section 1" children={content} />
+        <NeoCollapse label="Section 2" children={content} />
+        <NeoCollapse label="Section 3" children={content} />
+      </NeoAccordion>
+    </SphereBackdrop>
   </div>
 </div>
 
 <div class="row">
   <div class="column content">
     <span class="label">Description</span>
-    <NeoCollapseGroup {...options}>
-      <NeoCollapse id="section 1" label="Section 1" description="This is a description" children={content} />
-      <NeoCollapse id="section 2" label="Section 2" description="This is a description" children={content} />
-      <NeoCollapse id="section 3" label="Section 3" description="This is a description" children={content} />
-    </NeoCollapseGroup>
+    <SphereBackdrop glass={options.glass} style="width: 100%">
+      <NeoAccordion {...options}>
+        <NeoCollapse id="section 1" label="Section 1" description="This is a description" children={content} />
+        <NeoCollapse id="section 2" label="Section 2" description="This is a description" children={content} />
+        <NeoCollapse id="section 3" label="Section 3" description="This is a description" children={content} />
+      </NeoAccordion>
+    </SphereBackdrop>
   </div>
 </div>
 
 <div class="row">
-  <div class="column">
-    <span class="label">Controlled</span>
+  <div class="column content">
+    <span class="label">Separated</span>
+
+    <SphereBackdrop glass={options.glass} style="width: 100%">
+      <NeoCollapseGroup {...options.group}>
+        <NeoAccordion {...options} group={undefined}>
+          <NeoCollapse label="Section 1" children={content} />
+        </NeoAccordion>
+        <NeoAccordion {...options} group={undefined}>
+          <NeoCollapse label="Section 2" children={content} />
+        </NeoAccordion>
+        <NeoAccordion {...options} group={undefined}>
+          <NeoCollapse label="Section 3" children={content} />
+        </NeoAccordion>
+      </NeoCollapseGroup>
+    </SphereBackdrop>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column content">
+    <span class="label">External trigger</span>
     <NeoButton text toggle hover="-1" active="-2" bind:checked={controlled}>Toggle</NeoButton>
-    <NeoCollapseGroup {...options}>
-      <NeoCollapse children={content} open={controlled} />
-    </NeoCollapseGroup>
+    <SphereBackdrop glass={options.glass} style="width: 100%">
+      <NeoAccordion {...options}>
+        <NeoCollapse children={content} open={controlled} />
+      </NeoAccordion>
+    </SphereBackdrop>
   </div>
 </div>
 
@@ -93,15 +193,15 @@
 {/snippet}
 
 <div class="row">
-  <div class="column content">
+  <div class="column horizontal">
     <span class="label">Horizontal</span>
-    <div class="row content">
-      <NeoCollapseGroup {...options}>
+    <SphereBackdrop glass={options.glass}>
+      <NeoAccordion horizontal {...options}>
         <NeoCollapse horizontal label="Click Me" description="Section 1" children={horizontalContent} />
         <NeoCollapse horizontal label="Click Me" description="Section 2" children={horizontalContent} />
         <NeoCollapse horizontal label="Click Me" description="Section 3" children={horizontalContent} />
-      </NeoCollapseGroup>
-    </div>
+      </NeoAccordion>
+    </SphereBackdrop>
   </div>
 </div>
 
@@ -119,16 +219,17 @@
     &.content {
       width: min(80vw, 80ch);
     }
+
+    &.horizontal {
+      :global(.neo-accordion .neo-collapse-trigger) {
+        min-height: 15rem;
+      }
+    }
   }
 
   .row {
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     margin: 2rem 0;
-
-    &.content {
-      flex-wrap: nowrap;
-      height: 20rem;
-    }
   }
 </style>

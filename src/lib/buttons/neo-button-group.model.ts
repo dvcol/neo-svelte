@@ -51,7 +51,7 @@ export type NeoButtonGroupContext = {
      */
     active?: NeoButtonActiveElevation;
     /**
-     * Weather the pressed state should be displayed as recessed or pressed.
+     * Whether the pressed state should be displayed as recessed or pressed.
      *
      * @default true if `elevation` + `hover` > 0 && `active` < 0
      */

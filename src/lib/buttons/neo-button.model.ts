@@ -107,13 +107,13 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   elevation?: NeoButtonElevation;
   /**
-   * Weather to increase/decrease the elevation when hovered/focused.
+   * Whether to increase/decrease the elevation when hovered/focused.
    *
    * @default -1 (relative to base elevation)
    */
   hover?: NeoButtonHoverElevation;
   /**
-   * Weather to increase/decrease the elevation when active.
+   * Whether to increase/decrease the elevation when active.
    *
    * @default -2 (absolute value)
    */
@@ -126,13 +126,13 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   blur?: NeoButtonBlur;
   /**
-   * Weather the pressed state should be displayed as recessed or pressed.
+   * Whether the pressed state should be displayed as recessed or pressed.
    *
    * @default true if `elevation` + `hover` > 0 && `active` < 0
    */
   pressed?: boolean;
   /**
-   * Weather to scale the button content on active state.
+   * Whether to scale the button content on active state.
    *
    * @default true
    */

@@ -26,7 +26,7 @@ export type NeoListBaseLoaderProps = {
   out: HTMLTransitionProps['out'];
 
   /**
-   * Weather to style each 2n item as a description.
+   * Whether to style each 2n item as a description.
    */
   description?: string;
   /**
