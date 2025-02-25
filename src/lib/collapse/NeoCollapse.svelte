@@ -7,6 +7,7 @@
   import type { NeoCollapseContext, NeoCollapseProps } from '~/collapse/neo-collapse.model.js';
 
   import { getNeoCollapseGroupContext } from '~/collapse/neo-collapse-context.svelte.js';
+  import NeoDivider from '~/divider/NeoDivider.svelte';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -22,7 +23,9 @@
     open = $bindable(false),
     horizontal = false,
     disabled: _disabled = false,
+    readonly: _readonly = false,
     standalone = false,
+    divider = false,
 
     // Transition
     transition: _transition,
@@ -30,6 +33,7 @@
     // Other props
     triggerRef = $bindable(),
     triggerProps,
+    dividerProps,
     containerProps,
     ...rest
   }: NeoCollapseProps = $props();
@@ -41,6 +45,7 @@
   const group = getNeoCollapseGroupContext();
 
   const disabled = $derived(!!(_disabled || group?.disabled));
+  const readonly = $derived(!!(_readonly || group?.readonly));
   const role = $derived(!['button', 'a'].includes(triggerTag) ? 'button' : undefined);
   const tabindex = $derived(!disabled && role ? 0 : undefined);
 
@@ -50,10 +55,10 @@
   const trigger = $derived(!!(label || description));
   const triggerId = $derived(trigger ? (triggerProps?.id ?? `neo-collapse-trigger-${getUUID()}`) : undefined);
 
-  const context = $derived<NeoCollapseContext>({ id, open, trigger, triggerId, horizontal, disabled });
+  const context = $derived<NeoCollapseContext>({ id, open, trigger, triggerId, horizontal, disabled, readonly, standalone, divider });
 
   const toggle = (state = !open) => {
-    if (disabled) return;
+    if (disabled || readonly) return;
     open = state;
     if (standalone) return;
     group?.update(id);
@@ -90,8 +95,8 @@
     untrack(() =>
       group.register(id, {
         id,
-        get disabled() {
-          return disabled;
+        get editable() {
+          return !disabled && !readonly;
         },
         get open() {
           return open;
@@ -129,18 +134,22 @@
       aria-expanded={open}
       aria-controls={id}
       class:neo-collapse-trigger={true}
+      class:neo-readonly={readonly}
       onclick={() => toggle()}
       {...triggerRest}
     >
-      {#if label && description}
-        <div class="neo-collapse-label">
+      <div class="neo-collapse-label">
+        {#if label && description}
           <div class="neo-collapse-label-label">{@render renderTriggerContent(label)}</div>
           <div class="neo-collapse-label-description">{@render renderTriggerContent(description)}</div>
-        </div>
-      {:else}
-        {@render renderTriggerContent(label ?? description)}
-      {/if}
+        {:else}
+          {@render renderTriggerContent(label ?? description)}
+        {/if}
+      </div>
     </svelte:element>
+  {/if}
+  {#if divider}
+    <NeoDivider vertical={horizontal} {...dividerProps} />
   {/if}
   {#if open}
     <svelte:element
@@ -162,7 +171,6 @@
 <style lang="scss">
   .neo-collapse {
     &-trigger {
-      flex: 0 0 auto;
       margin: 0;
       padding: 0;
       color: inherit;
@@ -172,19 +180,55 @@
       border: none;
       appearance: none;
 
+      &:not(.neo-readonly) {
+        cursor: pointer;
+      }
+
       &:disabled,
       &[disabled]:not([disabled='false']) {
+        color: var(--neo-text-color-disabled);
         cursor: not-allowed;
+      }
+    }
+
+    &-label {
+      transition: color 0.3s ease;
+
+      &-description {
+        color: var(--neo-collapse-description-color, var(--neo-text-color-secondary));
+        font-size: var(--neo-font-size-sm);
+        line-height: var(--neo-line-height-sm);
+      }
+
+      &:focus,
+      &:hover {
+        color: var(--neo-collapse-trigger-color-hover, var(--neo-text-color-highlight));
       }
     }
 
     &:not(.neo-horizontal) {
       width: 100%;
+
+      .neo-collapse-trigger {
+        padding-block: var(--neo-collapse-trigger-gap, var(--neo-gap-xs, 0.625rem));
+      }
+
+      .neo-collapse-content {
+        padding-block: var(--neo-collapse-content-gap, var(--neo-gap-xxxs, 0.3125rem));
+      }
     }
 
     &.neo-horizontal {
-      display: flex;
-      flex-direction: row;
+      display: inline-flex;
+
+      .neo-collapse-trigger {
+        min-width: max-content;
+        padding-inline: var(--neo-collapse-trigger-gap, var(--neo-gap, 1rem));
+      }
+
+      .neo-collapse-content {
+        padding-inline: var(--neo-collapse-content-gap, var(--neo-gap-sm, 0.75rem));
+      }
     }
   }
 </style>

@@ -24,7 +24,7 @@ export type NeoCollapseGroupProps = {
   /**
    * The maximum number of collapses that can be open at any time.
    *
-   * Note: If 0, the group will be disabled.
+   * Note: If 0, the group will be readonly.
    *
    * @default Infinity
    */
@@ -34,4 +34,9 @@ export type NeoCollapseGroupProps = {
    * Whether the whole group is disabled.
    */
   disabled?: boolean;
+
+  /**
+   * Whether the whole group is readonly.
+   */
+  readonly?: boolean;
 };

@@ -14,6 +14,7 @@
     min = 0,
     max = Infinity,
     disabled = false,
+    readonly = false,
   }: NeoCollapseGroupProps = $props();
 
   const group = setCollapseGroupContext({
@@ -27,7 +28,10 @@
       return max;
     },
     get disabled() {
-      return disabled || max === 0;
+      return disabled;
+    },
+    get readonly() {
+      return readonly || max === 0;
     },
   });
 </script>

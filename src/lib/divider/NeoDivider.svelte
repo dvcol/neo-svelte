@@ -68,7 +68,7 @@
     width: calc(var(--neo-divider-width, 100%) - var(--neo-divider-margin) * 2);
     height: calc(max(var(--neo-divider-minimum), var(--neo-divider-height, 1px) - var(--neo-divider-margin) * 2));
     margin: var(--neo-divider-margin, var(--neo-shadow-margin, 0.625rem));
-    border: var(--neo-border-width, 1px) solid var(--neo-divider-color, transparent);
+    border: none;
     border-radius: var(--neo-divider-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
     transition:

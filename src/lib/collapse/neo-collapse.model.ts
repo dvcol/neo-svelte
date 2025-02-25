@@ -34,9 +34,19 @@ export type NeoCollapseContext = {
    */
   disabled?: boolean;
   /**
+   * Whether the collapse is readonly.
+   */
+  readonly?: boolean;
+  /**
    * If true, the collapse will ignore any collapse group context.
    */
   standalone?: boolean;
+  /**
+   * Weather to show a divider between the trigger and the content.
+   *
+   * Note: Only works if the collapse has an internal trigger.
+   */
+  divider?: boolean;
 };
 
 export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'> = {

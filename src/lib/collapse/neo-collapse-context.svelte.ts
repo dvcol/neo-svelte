@@ -9,11 +9,12 @@ export type NeoCollapseGroupState = {
   readonly min: number;
   readonly max: number;
   readonly disabled?: boolean;
+  readonly readonly?: boolean;
 };
 
 export type NeoCollapseSection = {
   readonly id: string;
-  readonly disabled?: boolean;
+  readonly editable?: boolean;
   open: boolean;
   changed: number;
 };
@@ -26,6 +27,10 @@ export class NeoCollapseContext {
 
   get disabled() {
     return this.#group.disabled;
+  }
+
+  get readonly() {
+    return this.#group.readonly;
   }
 
   get min() {
@@ -71,8 +76,8 @@ export class NeoCollapseContext {
       let index = -1;
       while (nb > 0 && this.opened >= Math.abs(index)) {
         const last = this.#opened.at(index);
-        // If the last section is not disabled, close it
-        if (last && !last.disabled) {
+        // If the last section is editable, close it
+        if (last && last.editable) {
           last.open = false;
           nb -= 1;
         }
@@ -86,8 +91,8 @@ export class NeoCollapseContext {
       let index = -1;
       while (nb > 0 && this.closed >= Math.abs(index)) {
         const first = this.#closed.at(index);
-        // If the first section is not disabled, open it
-        if (first && !first.disabled) {
+        // If the first section is editable, open it
+        if (first && first.editable) {
           first.open = true;
           nb -= 1;
         }
