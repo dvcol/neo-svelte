@@ -1,5 +1,8 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
+import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
+
+export type NeoProgressMarkElevation = ShadowShallowElevation | ShadowShallowElevationString;
 
 export type NeoProgressMarkProps = {
   /**
@@ -14,4 +17,10 @@ export type NeoProgressMarkProps = {
    * The progress state context from the parent progress.
    */
   context?: NeoProgressBarContext;
-} & NeoButtonProps;
+  /**
+   * Input elevation.
+   *
+   * @default context?.elevation ?? 0
+   */
+  elevation?: NeoProgressMarkElevation;
+} & Omit<NeoButtonProps, 'elevation'>;

@@ -267,7 +267,7 @@
     cursor: pointer;
     transition:
       opacity 0.3s ease,
-      color 0.3s ease,
+      color 0.15s ease,
       background-color 0.3s ease,
       border-color 0.3s ease,
       backdrop-filter 0.3s ease,
@@ -292,7 +292,7 @@
       height: 100%;
       backface-visibility: hidden;
       transition:
-        color 0.3s ease,
+        color 0.15s ease,
         scale 0.3s ease;
       will-change: scale, color;
       scale: 1;
@@ -349,7 +349,7 @@
       box-shadow: var(--neo-btn-box-shadow-active, var(--neo-box-shadow-pressed-2));
       transition:
         opacity 0.3s ease,
-        color 0.3s ease,
+        color 0.15s ease,
         background-color 0.3s ease,
         border-color 0.3s ease,
         backdrop-filter 0.3s ease,

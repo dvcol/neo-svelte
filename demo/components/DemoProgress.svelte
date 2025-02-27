@@ -76,7 +76,7 @@
     bind:value={bar.elevation}
     min={-2}
     max={2}
-    defaultValue={0}
+    defaultValue={-1}
     rounded
     nullable={false}
     floating={false}

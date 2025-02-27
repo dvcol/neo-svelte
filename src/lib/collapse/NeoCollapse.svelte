@@ -90,7 +90,7 @@
     });
   });
 
-  $effect(() => {
+  $effect.pre(() => {
     if (standalone || !group) return;
     untrack(() =>
       group.register(id, {

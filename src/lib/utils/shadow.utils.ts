@@ -4,7 +4,12 @@ import { type NeoButtonTemplate, NeoTextButton } from '~/buttons/neo-button.mode
 
 export const MaxShadowElevation = 5;
 export const MinShadowElevation = -5;
-export const DefaultShallowMinMaxElevation: { min: ShadowElevation; max: ShadowElevation } = { max: 2, min: -2 };
+export const MaxShallowShadowElevation = 2;
+export const MinShallowShadowElevation = -2;
+export const DefaultShallowMinMaxElevation: { min: ShadowElevation; max: ShadowElevation } = {
+  max: MaxShallowShadowElevation,
+  min: MinShallowShadowElevation,
+};
 
 export const DefaultShadowElevation = 3;
 export const DefaultShadowActiveElevation = -2;

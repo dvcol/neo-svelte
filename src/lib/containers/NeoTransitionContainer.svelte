@@ -9,7 +9,7 @@
 
     // States
     tag = 'div',
-    keys,
+    key,
 
     // Styles
     overflow,
@@ -45,8 +45,8 @@
   in:inFn={inProps}
   {...rest}
 >
-  {#if keys}
-    {#key keys}
+  {#if key}
+    {#key key}
       {@render children?.()}
     {/key}
   {:else}

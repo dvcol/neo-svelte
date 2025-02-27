@@ -63,6 +63,7 @@ export const toTransitionProps = <T extends TransitionProps, F extends Transitio
 ): T | undefined => {
   if (!transition) return fallback;
   if (isTransitionWithProps(transition)) return transition.props;
+  return fallback;
 };
 
 export type HTMAnimationProps<T extends TransitionProps = TransitionProps> = {

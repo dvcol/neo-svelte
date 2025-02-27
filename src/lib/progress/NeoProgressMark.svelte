@@ -1,8 +1,10 @@
 <script lang="ts">
+  import { clamp } from '@dvcol/common-utils/common/math';
+
   import type { NeoProgressMarkProps } from '~/progress/neo-progress-mark.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import { coerce, type ShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, MaxShallowShadowElevation, MinShallowShadowElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
 
   const { index, position = 0, context, elevation: _elevation, color: _color, ...rest }: NeoProgressMarkProps = $props();
 
@@ -10,7 +12,9 @@
   const checked = $derived(position <= value);
   const color = $derived(checked ? (_color ?? context?.color) : 'var(--neo-text-color-disabled)');
 
-  const elevation = $derived(Math.max(-1, coerce<ShadowElevation>(_elevation ?? context?.elevation ?? 0)) as ShadowElevation);
+  const elevation = $derived(
+    clamp(coerce<ShadowElevation>(_elevation ?? context?.elevation ?? 0), MinShallowShadowElevation, MaxShallowShadowElevation) as ShadowElevation,
+  );
   const active = $derived.by(() => {
     if (!elevation) return 0;
     if (elevation < 0) return -2;

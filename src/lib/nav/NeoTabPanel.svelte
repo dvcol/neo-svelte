@@ -7,6 +7,7 @@
 
   import { getTabsCardContext } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
+  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -21,6 +22,11 @@
 
     // Styles
     animate,
+
+    // Transition
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
 
     // Other props
     ...rest
@@ -40,12 +46,17 @@
   const ctx = getTabsCardContext();
   const animated = $derived(animate || (animate !== false && ctx?.animate));
 
-  const transition = $derived(animated ? fly : emptyTransition);
-  const inProps = $derived(animated ? { [orientation]: `${-100 * direction}%`, duration: 600, delay: 100 } : undefined);
-  const outProps = $derived(animated ? { [orientation]: `${100 * direction}%`, duration: 600 } : undefined);
+  const inFn = $derived(toTransition(inAction ?? transitionAction, animated ? fly : emptyTransition));
+  const inProps = $derived(
+    toTransitionProps(inAction ?? transitionAction, animated ? { [orientation]: `${-100 * direction}%`, duration: 600, delay: 100 } : undefined),
+  );
+  const outFn = $derived(toTransition(outAction ?? transitionAction, animated ? fly : emptyTransition));
+  const outProps = $derived(
+    toTransitionProps(outAction ?? transitionAction, animated ? { [orientation]: `${100 * direction}%`, duration: 600 } : undefined),
+  );
 
   const paneId = $derived(tabId ? `neo-tab-panel-${String(tabId)}` : undefined);
-  $effect(() => {
+  $effect.pre(() => {
     untrack(() => {
       if (!tabId || !paneId) return;
       context?.registerPane(tabId, paneId);
@@ -67,8 +78,8 @@
     bind:this={ref}
     class:neo-tab-panel={true}
     {...rest}
-    in:transition={inProps}
-    out:transition={outProps}
+    in:inFn={inProps}
+    out:outFn={outProps}
   >
     {@render children?.(context?.state)}
   </svelte:element>

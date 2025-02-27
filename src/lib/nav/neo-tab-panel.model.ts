@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
+import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoTabPanelProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
@@ -37,4 +38,5 @@ export type NeoTabPanelProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    */
   animate?: boolean;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  HTMLRefProps;
+  HTMLRefProps &
+  HTMLTransitionProps;
