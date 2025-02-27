@@ -68,7 +68,7 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   disabled?: boolean;
   /**
-   * If true, the button will ignore click events for the toggle state.
+   * If true, the button will ignore click events like a disabled button, but will still be interactive.
    */
   readonly?: boolean;
   /**

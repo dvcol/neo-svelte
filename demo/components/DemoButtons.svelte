@@ -23,6 +23,7 @@
 
   const options = $state<NeoButtonProps>({
     disabled: false,
+    readonly: false,
     skeleton: false,
     loading: false,
     glass: false,
@@ -87,6 +88,7 @@
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
   </NeoButtonGroup>

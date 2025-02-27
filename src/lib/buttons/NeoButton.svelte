@@ -128,8 +128,9 @@
 
   const onClick: NeoButtonProps['onclick'] = e => {
     if (loading || disabled) return;
+    if (readonly) return onActive();
     if (toggle) {
-      if (!readonly) checked = !checked;
+      checked = !checked;
       onchecked?.(checked);
       onclick?.(e, checked);
       return;
@@ -140,14 +141,14 @@
   };
 
   const onKeydownEnter: NeoButtonProps['onkeydown'] = e => {
-    if (loading || disabled) return;
+    if (loading || disabled || readonly) return;
     if (e.key === 'Enter') enter = true;
     onkeydown?.(e);
   };
 
   const onKeyUpEnter: NeoButtonProps['onkeydown'] = e => {
     if (e.key === 'Enter') enter = false;
-    if (loading || disabled) return;
+    if (loading || disabled || readonly) return;
     onkeyup?.(e);
   };
 
@@ -158,7 +159,10 @@
 
   const element = $derived(tag ?? (href ? 'a' : 'button'));
   const role = $derived(!['button', 'a'].includes(element) ? 'button' : undefined);
-  const tabindex = $derived(!disabled && role ? 0 : undefined);
+  const tabindex = $derived.by(() => {
+    if (readonly) return -1;
+    if (!disabled && role) return 0;
+  });
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -172,10 +176,12 @@
 <svelte:element
   this={element}
   bind:this={ref}
-  href={loading || disabled ? undefined : href}
+  href={loading || disabled || readonly ? undefined : href}
+  aria-disabled={readonly && !disabled}
   {role}
   {tabindex}
   class:neo-button={true}
+  class:neo-readonly={readonly}
   class:neo-pulse={pulse}
   class:neo-coalesce={coalesce}
   class:neo-pressed={pressed}
@@ -436,9 +442,8 @@
     &:disabled,
     &[disabled]:not([disabled='false']) {
       cursor: not-allowed;
-      opacity: var(--neo-btn-opacity-disabled, var(--neo-opacity-disabled));
 
-      &:not(.neo-pressed) {
+      &:not(.neo-pressed, .neo-readonly) {
         border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled));
         box-shadow: var(--neo-box-shadow-flat);
       }

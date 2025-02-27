@@ -104,7 +104,6 @@
     aria-controls={pane}
     aria-selected={active}
     toggle
-    readonly
     checked={active}
     onclick={onClick}
     empty={!children}
