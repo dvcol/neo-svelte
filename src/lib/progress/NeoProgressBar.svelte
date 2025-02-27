@@ -58,6 +58,7 @@
     if (!refs?.length) return;
     const size = { height: 0, width: 0 };
     refs.forEach(r => {
+      if (!r) return;
       const { offsetWidth, offsetHeight } = r;
       if (offsetHeight && offsetHeight > size.height) size.height = offsetHeight;
       if (offsetWidth && offsetWidth > size.width) size.width = offsetWidth;

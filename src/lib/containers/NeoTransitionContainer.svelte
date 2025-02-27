@@ -45,7 +45,7 @@
   in:inFn={inProps}
   {...rest}
 >
-  {#if key}
+  {#if key !== undefined}
     {#key key}
       {@render children?.()}
     {/key}

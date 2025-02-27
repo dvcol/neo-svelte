@@ -16,7 +16,7 @@
   import { NeoProgressDirection, type NeoProgressHTMLElement, type NeoProgressProps, NeoProgressState } from '~/progress/neo-progress.model';
   import { getDefaultElevation } from '~/utils/shadow.utils';
 
-  const options = $state<NeoProgressProps>({ value: 40, buffer: 60 });
+  const options = $state<NeoProgressProps>({ value: 40, buffer: 60, direction: NeoProgressDirection.Right });
   const vertical = $derived([NeoProgressDirection.Top, NeoProgressDirection.Bottom].includes(options.direction));
 
   const directionOptions: NeoSelectOption[] = [
