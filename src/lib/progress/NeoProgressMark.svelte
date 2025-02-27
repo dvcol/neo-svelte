@@ -4,7 +4,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import { coerce, type ShadowElevation } from '~/utils/shadow.utils.js';
 
-  const { position = 0, context, elevation: _elevation, color: _color, ...rest }: NeoProgressMarkProps = $props();
+  const { index, position = 0, context, elevation: _elevation, color: _color, ...rest }: NeoProgressMarkProps = $props();
 
   const value = $derived(context?.value ?? 0);
   const checked = $derived(position <= value);
@@ -27,8 +27,8 @@
   {active}
   {color}
   {checked}
-  label={position?.toString()}
-  aria-label="Progress marker at {position}%"
-  title={position?.toString()}
+  label={index?.toString() ?? position?.toString()}
+  aria-label="Progress marker{index !== undefined ? ` n°${index + 1}` : `at ${position}%`}"
+  title={(index !== undefined ? index + 1 : position)?.toString()}
   {...rest}
 />

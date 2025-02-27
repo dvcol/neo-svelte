@@ -47,6 +47,7 @@ type NeoProgressBarStyle = {
 };
 
 export type NeoProgressBarContext = NeoProgressContext & NeoProgressBarStyle;
+export type NeoProgressBarMarkContext = { index: number; position: number; context: NeoProgressBarContext };
 
 export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div', ContainerTag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
@@ -65,7 +66,7 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
   /**
    * Optional mark to display on progress threshold.
    */
-  mark?: Snippet<[number, NeoProgressBarContext]> | string;
+  mark?: Snippet<[NeoProgressBarMarkContext]> | string;
 
   // State
 
@@ -73,6 +74,10 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
    * An array of threshold values to display marks on the progress line.
    */
   marks?: number[];
+  /**
+   * An array of references to the progress marks wrappers.
+   */
+  refs?: HTMLSpanElement[];
 
   // Size
   /**
@@ -85,6 +90,6 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
   height?: SizeInput<'height'>;
 
   // Other Props
-  containerProps: HTMLNeoBaseElement<HTMLElementTagNameMap[ContainerTag]> & HTMLTagProps<ContainerTag>;
+  containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[ContainerTag]> & HTMLTagProps<ContainerTag>;
 } & NeoProgressBarStyle &
   Omit<NeoProgressProps<Tag>, 'children'>;

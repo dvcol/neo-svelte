@@ -3,6 +3,10 @@ import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-
 
 export type NeoProgressMarkProps = {
   /**
+   * The index of the mark in the parent progress's mark array.
+   */
+  index?: number;
+  /**
    * The position of the mark (0-100).
    */
   position: NeoProgressBarProps['value'];

@@ -4,7 +4,7 @@
   import NeoProgress from '~/progress/NeoProgress.svelte';
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShallowMinMaxElevation, parseBlur } from '~/utils/shadow.utils.js';
-  import { toSize } from '~/utils/style.utils.js';
+  import { toPixel, toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -16,10 +16,11 @@
 
     // State
     ref = $bindable(),
+    refs = $bindable([]),
     state = $bindable(),
     value = $bindable(0),
     buffer = $bindable(0),
-    marks = [], // TODO: progress ticks & custom mark
+    marks = [],
 
     // Size
     width: _width,
@@ -52,6 +53,20 @@
 
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
+
+  const margin = $derived.by(() => {
+    if (!refs?.length) return;
+    const size = { height: 0, width: 0 };
+    refs.forEach(r => {
+      const { offsetWidth, offsetHeight } = r;
+      if (offsetHeight && offsetHeight > size.height) size.height = offsetHeight;
+      if (offsetWidth && offsetWidth > size.width) size.width = offsetWidth;
+    });
+    return {
+      height: toPixel((size.height - (ref?.offsetHeight ?? 0)) / 2),
+      width: toPixel(size.width / 2),
+    };
+  });
 
   const context = $derived<NeoProgressBarContext>({
     state,
@@ -104,16 +119,18 @@
   style:height={height?.absolute}
   style:min-height={height?.min}
   style:max-height={height?.max}
+  style:--neo-progress-mark-margin-block={margin?.height}
+  style:--neo-progress-mark-margin-inline={margin?.width}
   style:--neo-progress-bar-glass-blur={filter}
   style:--neo-progress-bar-box-shadow={boxShadow}
   {...containerRest}
 >
   <NeoProgress bind:ref bind:state bind:value bind:buffer {direction} {...rest} />
-  {#each marks as position}
+  {#each marks as position, index}
     {#if position !== undefined}
-      <span class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">
+      <span bind:this={refs[index]} class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">
         {#if typeof mark === 'function'}
-          {@render mark(position, context)}
+          {@render mark({ index, position, context })}
         {:else if mark !== undefined}
           {mark}
         {:else}
@@ -139,7 +156,8 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    margin: 0;
+    margin-block: var(--neo-progress-margin-block, var(--neo-progress-mark-margin-block, 0));
+    margin-inline: var(--neo-progress-margin-inline, var(--neo-progress-mark-margin-inline, 0));
     padding: 0;
     color: var(--neo-progress-bar-text-color, inherit);
     border: var(--neo-progress-bar-border-width, var(--neo-border-width, 1px)) var(--neo-progress-bar-border-color, transparent) solid;
@@ -155,20 +173,38 @@
 
     &-mark {
       position: absolute;
-      left: var(--neo-progress-bar-mark-position, 0%);
-      translate: -50%;
     }
 
     &[data-direction='right'],
     &[data-direction='left'] {
-      width: 100%;
+      width: calc(100% - (var(--neo-progress-margin-inline, var(--neo-progress-mark-margin-inline, 0px)) * 2));
       height: 0.5rem;
+    }
+
+    &[data-direction='right'] .neo-progress-bar-mark {
+      left: var(--neo-progress-bar-mark-position, 0%);
+      translate: -50%;
+    }
+
+    &[data-direction='left'] .neo-progress-bar-mark {
+      right: var(--neo-progress-bar-mark-position, 0%);
+      translate: 50%;
     }
 
     &[data-direction='top'],
     &[data-direction='bottom'] {
       width: 0.5rem;
       height: 100%;
+    }
+
+    &[data-direction='top'] .neo-progress-bar-mark {
+      bottom: var(--neo-progress-bar-mark-position, 0%);
+      translate: 0 50%;
+    }
+
+    &[data-direction='bottom'] .neo-progress-bar-mark {
+      top: var(--neo-progress-bar-mark-position, 0%);
+      translate: 0 -50%;
     }
 
     :global(> .neo-progress) {

@@ -235,13 +235,12 @@
   <div class="column content" class:vertical>
     <span class="label">Marks</span>
     <NeoProgressBar aria-label="Custom marks" {...options} {...bar} buffer={undefined} marks={[0, 25, 50, 75, 100]}>
-      {#snippet mark(position, context)}
+      {#snippet mark(ctx)}
         <NeoProgressMark
-          {position}
-          {context}
+          {...ctx}
           glass={bar.glass}
           onclick={() => {
-            options.value = position;
+            options.value = ctx.position;
           }}
         />
       {/snippet}
