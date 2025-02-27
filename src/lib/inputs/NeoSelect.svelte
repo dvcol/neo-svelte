@@ -12,7 +12,7 @@
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
-  import { findByValueInList } from '~/list/neo-list.model.js';
+  import { findByValueInList, type NeoListItemOrSection } from '~/list/neo-list.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import { getNextFocusableElement } from '~/utils/html-element.utils.js';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
@@ -25,7 +25,7 @@
     icon: customIcon,
 
     // State
-    options: items = [],
+    options = [],
     display,
     transform = transformValue,
 
@@ -75,6 +75,8 @@
     ...rest
   }: NeoSelectProps = $props();
   /* eslint-enable prefer-const */
+
+  const items = $derived<NeoListItemOrSection[]>(options?.map(i => (typeof i === 'object' ? i : { value: i })));
 
   const toggle: FormEventHandler<HTMLElement> = e => {
     if (rest?.disabled || readonly) return;
