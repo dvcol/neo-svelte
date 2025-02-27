@@ -9,6 +9,7 @@
 
     // States
     tag = 'div',
+    keys,
 
     // Styles
     overflow,
@@ -44,7 +45,13 @@
   in:inFn={inProps}
   {...rest}
 >
-  {@render children?.()}
+  {#if keys}
+    {#key keys}
+      {@render children?.()}
+    {/key}
+  {:else}
+    {@render children?.()}
+  {/if}
 </svelte:element>
 
 <style lang="scss">

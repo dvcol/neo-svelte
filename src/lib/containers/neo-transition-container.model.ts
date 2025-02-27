@@ -17,6 +17,10 @@ export type NeoTransitionContainerProps<Tag extends keyof HTMLElementTagNameMap 
    * @default 'div'
    */
   tag?: Tag | keyof HTMLElementTagNameMap;
+  /**
+   * Optional keys to key the transitions.
+   */
+  keys?: unknown | unknown[];
 
   // Styles
 
