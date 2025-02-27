@@ -148,7 +148,7 @@ export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagName
   sectionProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 } & NeoListItemCommon<Tag>;
 
-export const isSection = (item: NeoListItem | NeoListSection): item is NeoListSection => 'items' in item;
+export const isSection = <Value = unknown>(item: NeoListItem<Value> | NeoListSection<Value>): item is NeoListSection<Value> => 'items' in item;
 
 export type NeoListSelectedItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   index: number;
@@ -381,3 +381,49 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
 
 export type NeoListHTMLElement<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   NeoListMethods<Value>;
+
+export const findByIdInList = <Value = unknown>(
+  selection: NeoListSelectedItem<Value>,
+  array: NeoListItemOrSection<Value>[],
+): NeoListSelectedItem<Value> | undefined => {
+  const result: NeoListSelectedItem<Value> = { index: -1 } as NeoListSelectedItem<Value>;
+  const search = array?.some((item, index) => {
+    if (isSection(item)) {
+      // if section differs, skip
+      if (selection?.section?.id !== item.id) return false;
+      const sectionIndex = item?.items?.findIndex(sub => Object.is(sub, selection?.item) || sub.id === selection?.item?.id);
+      if (sectionIndex < 0) return false;
+      result.index = sectionIndex;
+      result.item = item.items[sectionIndex];
+      result.section = item;
+      result.sectionIndex = index;
+      return true;
+    }
+    if (item.id !== selection?.item?.id) return false;
+    if (item?.id === undefined && !Object.is(item, selection?.item)) return false;
+    result.index = index;
+    result.item = item;
+    return true;
+  });
+  return search ? result : undefined;
+};
+
+export const findByValueInList = <Value = unknown>(value: Value, array: NeoListItemOrSection<Value>[]): NeoListSelectedItem<Value> | undefined => {
+  const result: NeoListSelectedItem<Value> = { index: -1 } as NeoListSelectedItem<Value>;
+  const search = array.some((item, index) => {
+    if (isSection(item)) {
+      const sectionIndex = item.items?.findIndex(si => si.value === value);
+      if (sectionIndex < 0) return false;
+      result.index = sectionIndex;
+      result.item = item.items[sectionIndex];
+      result.section = item;
+      result.sectionIndex = index;
+      return true;
+    }
+    if (item.value !== value) return false;
+    result.index = index;
+    result.item = item;
+    return true;
+  });
+  return search ? result : undefined;
+};

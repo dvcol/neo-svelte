@@ -12,9 +12,9 @@
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
   import {
+    findByIdInList,
     isSection,
     type NeoListContext,
-    type NeoListItemOrSection,
     type NeoListMethods,
     type NeoListProps,
     type NeoListRenderContext,
@@ -173,29 +173,6 @@
     return isSameIndex(selected, item);
   };
 
-  const findInList = (selection: NeoListSelectedItem, array: NeoListItemOrSection[]): NeoListSelectedItem | undefined => {
-    const result: Partial<NeoListSelectedItem> = {};
-    const search = array?.some((item, index) => {
-      if (isSection(item)) {
-        // if section differs, skip
-        if (selection?.section?.id !== item.id) return false;
-        const sectionIndex = item?.items?.findIndex(sub => Object.is(sub, selection?.item) || sub.id === selection?.item?.id);
-        if (sectionIndex < 0) return false;
-        result.index = sectionIndex;
-        result.item = item.items[sectionIndex];
-        result.section = item;
-        result.sectionIndex = index;
-        return true;
-      }
-      if (item.id !== selection?.item?.id) return false;
-      if (item?.id === undefined && !Object.is(item, selection?.item)) return false;
-      result.index = index;
-      result.item = item;
-      return true;
-    });
-    return search ? (result as NeoListSelectedItem) : undefined;
-  };
-
   /**
    * Re-selects the previous selection if it still exists in the list
    */
@@ -206,9 +183,9 @@
     clearItem();
     if (multiple && !Array.isArray(previous)) return;
     if (isMultiple(previous)) {
-      selected = previous?.map(item => findInList(item, items)).filter<NeoListSelectedItem>(item => !!item) ?? [];
+      selected = previous?.map(item => findByIdInList(item, items)).filter<NeoListSelectedItem>(item => !!item) ?? [];
     } else {
-      selected = findInList(previous, items);
+      selected = findByIdInList(previous, items);
     }
     const event: NeoListSelectEvent = { type: 're-select', previous, current: cloneSelection() };
     onselect?.(event);

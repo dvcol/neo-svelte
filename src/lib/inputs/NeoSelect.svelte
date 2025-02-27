@@ -1,7 +1,7 @@
 <script lang="ts">
   import { watch } from '@dvcol/svelte-utils/watch';
 
-  import { tick } from 'svelte';
+  import { tick, untrack } from 'svelte';
 
   import type { FormEventHandler, KeyboardEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
@@ -12,6 +12,7 @@
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
+  import { findByValueInList } from '~/list/neo-list.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import { getNextFocusableElement } from '~/utils/html-element.utils.js';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
@@ -113,6 +114,13 @@
       next: () => ref?.validate?.(),
     },
   );
+
+  $effect.pre(() => {
+    untrack(() => {
+      if (selected) return;
+      selected = findByValueInList(value, items);
+    });
+  });
 
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
   const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);
