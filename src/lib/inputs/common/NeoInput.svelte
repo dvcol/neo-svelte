@@ -1,7 +1,6 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { resize } from '@dvcol/svelte-utils/resize';
 
   import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
 
@@ -13,7 +12,7 @@
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { NeoInputLabelPlacement } from '~/inputs/common/neo-input.model.js';
 
-  import { type ActionWithProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
@@ -264,7 +263,6 @@
       class:neo-deep={elevation < -3}
       {disabled}
       {readonly}
-      use:resize={updateRefs}
       {...beforeRest}
     >
       {@render before(context)}
@@ -307,7 +305,6 @@
       class:neo-deep={elevation < -3}
       {disabled}
       {readonly}
-      use:resize={updateRefs}
       {...afterRest}
     >
       {@render after(context)}
@@ -420,7 +417,6 @@
         required={rest.required}
         {disabled}
         onclick={onLabelClick}
-        use={{ use: resize, props: updateRefs } as ActionWithProps}
         {...labelProps}
       >
         {@render input()}
