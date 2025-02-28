@@ -49,6 +49,7 @@
     rounded,
     shadow = true,
     scrollbar,
+    flex,
     width: inputWith,
     height: inputHeight,
 
@@ -302,6 +303,7 @@
     {...rest}
     style:transform-origin={tooltipOrigin}
     style:--neo-tooltip-padding={padding}
+    style:flex
     style:width={width?.absolute}
     style:min-width={width?.min}
     style:max-width={width?.max}

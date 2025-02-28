@@ -16,6 +16,7 @@
     overflow,
 
     // Size
+    flex,
     width: _width,
     height: _height,
     shadowSize,
@@ -38,6 +39,7 @@
   class:neo-shadow={shadow}
   class:neo-horizontal={direction === 'right'}
   class:neo-vertical={direction !== 'right'}
+  style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
   style:max-width={width?.max}

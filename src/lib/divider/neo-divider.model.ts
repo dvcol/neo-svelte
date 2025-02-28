@@ -22,6 +22,10 @@ export type NeoDividerProps = {
    */
   elevation?: NeoDividerElevation;
   /**
+   * Optional flex strategy for the container
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
    * Divider height.
    */
   height?: CSSStyleDeclaration['height'];

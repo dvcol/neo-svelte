@@ -35,6 +35,7 @@
     // Styles
     low, // threshold for tinting
     high, // threshold for tinting
+    flex,
     width,
     height,
     color,
@@ -167,6 +168,7 @@
   data-low={low}
   data-high={high}
   data-value={value}
+  style:flex
   style:width
   style:height
   style:--neo-progress-background={background}

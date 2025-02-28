@@ -332,6 +332,10 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    */
   scrollToLoader?: boolean;
   /**
+   * Optional flex strategy for the container
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
    * Optional list width constraints.
    */
   width?: SizeInput<'width'>;

@@ -27,6 +27,7 @@
     isShadowFlat,
     parseBlur,
   } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -60,6 +61,11 @@
     clearable,
 
     placement = NeoInputLabelPlacement.Inside,
+
+    // Size
+    flex,
+    width: _width,
+    height: _height,
 
     // Styles
     borderless,
@@ -102,6 +108,8 @@
     ...rest
   }: NeoInputProps<NeoInputHTMLElement> = $props();
   /* eslint-enable prefer-const */
+
+  // TODO all width/height props for group
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: beforeTag = 'span', ...beforeRest } = $derived(beforeProps ?? {});
@@ -262,6 +270,9 @@
     state: { valid, dirty, touched, value: typedValue, initial },
   });
 
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -394,6 +405,13 @@
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
     class:neo-flat-hover={flatHover}
+    style:flex
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     style:--neo-input-text-color={getColorVariable(color)}
     style:--neo-input-glass-blur={filter}
     style:--neo-input-box-shadow={boxShadow}

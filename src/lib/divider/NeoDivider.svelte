@@ -15,6 +15,7 @@
     margin,
     height,
     width,
+    flex,
     glass,
     rounded = true,
 
@@ -48,6 +49,7 @@
   class:neo-glass={glass}
   class:neo-rounded={rounded}
   class:neo-skeleton={skeleton}
+  style:flex
   style:--neo-divider-height={height}
   style:--neo-divider-width={width}
   style:--neo-divider-margin={margin}

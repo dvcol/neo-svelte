@@ -81,6 +81,10 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
 
   // Size
   /**
+   * Optional flex strategy for the container
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
    * Optional width constraints.
    */
   width?: SizeInput<'width'>;

@@ -505,7 +505,7 @@
       border-bottom-right-radius: 0;
     }
 
-    &[type='password']:not(:placeholder-shown) {
+    &[type='password']:not(:placeholder-shown, :-webkit-autofill:focus, :-webkit-autofill:active) {
       letter-spacing: 0.2em;
       -webkit-text-stroke-width: 0.15em;
 

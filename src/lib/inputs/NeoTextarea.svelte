@@ -69,8 +69,10 @@
     register,
 
     // Size
+    flex,
     width: _width,
     height: _height,
+    resize,
     autoResize = true,
     fitContent,
 
@@ -312,7 +314,7 @@
     return autoResize.max * lineHeight;
   });
 
-  const resize = () => {
+  const resizeHeight = () => {
     if (!autoResize || !ref) return;
 
     const isScrolled = ref.scrollHeight && ref.scrollHeight > ref.clientHeight;
@@ -330,7 +332,7 @@
   $effect(() => {
     // eslint-disable-next-line no-unused-expressions -- used to trigger resize textarea on value change
     value;
-    resize();
+    resizeHeight();
   });
 
   let visible = $state(false);
@@ -428,12 +430,7 @@
     class:neo-scroll={scrollbar}
     class:neo-affix={affix || after}
     class:neo-fit-content={fitContent}
-    style:width={width?.absolute}
-    style:min-width={width?.min}
-    style:max-width={width?.max}
-    style:height={height?.absolute}
-    style:min-height={height?.min}
-    style:max-height={height?.max}
+    style:resize
     {rows}
     onblur={onBlur}
     onfocus={onFocus}
@@ -484,6 +481,13 @@
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
     class:neo-flat-hover={flatHover}
+    style:flex
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     style:--neo-textarea-text-color={getColorVariable(color)}
     style:--neo-textarea-glass-blur={filter}
     style:--neo-textarea-box-shadow={boxShadow}

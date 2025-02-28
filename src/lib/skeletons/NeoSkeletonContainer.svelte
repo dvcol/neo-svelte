@@ -22,6 +22,7 @@
     loading = true,
 
     // Styles
+    flex,
     width,
     height,
 
@@ -68,6 +69,7 @@
       <svelte:element
         this={tag}
         class:neo-skeleton-container={true}
+        style:flex
         style:--neo-skeleton-content-width={context?.width}
         style:--neo-skeleton-content-height={context?.height}
         {...rest}

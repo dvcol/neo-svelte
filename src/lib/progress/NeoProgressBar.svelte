@@ -23,6 +23,7 @@
     marks = [],
 
     // Size
+    flex,
     width: _width,
     height: _height,
 
@@ -114,6 +115,7 @@
   class:neo-glass={glass}
   class:neo-inset={elevation < 0}
   class:neo-rounded={rounded}
+  style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
   style:max-width={width?.max}

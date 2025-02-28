@@ -192,6 +192,10 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement |
 
   // Sizing
   /**
+   * Optional flex strategy for the container
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
    * Optional width constraints.
    */
   width?: SizeInput<'width'>;
@@ -453,6 +457,10 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
    * @default neo-textarea-{uuid}
    */
   id?: HTMLElement['id'];
+  /**
+   * The resize strategy of the textarea.
+   */
+  resize?: CSSStyleDeclaration['resize'];
   /**
    * Automatically increments/decrements the textarea rows to fit the content.
    *

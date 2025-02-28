@@ -65,6 +65,7 @@
     scrollbar = true,
 
     // Size
+    flex,
     width: _width,
     height: _height,
 
@@ -361,6 +362,7 @@
   class:neo-list={true}
   class:neo-empty={empty}
   class:neo-reverse={reverse}
+  style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
   style:max-width={width?.max}

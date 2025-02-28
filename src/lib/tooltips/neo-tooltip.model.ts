@@ -109,6 +109,10 @@ export type NeoTooltipProps = {
    */
   blur?: NeoTooltipElevation;
   /**
+   * Optional flex strategy for the container
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
    * Width strategy for the tooltip.
    * - `match`: the tooltip will match the width of the trigger.
    * - `min`: the tooltip will be at least as wide as the trigger.

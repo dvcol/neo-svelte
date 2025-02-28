@@ -116,6 +116,10 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
    */
   high?: number;
   /**
+   * Optional flex strategy for the container
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
    * Width of the progress bar.
    *
    * @default 100% (right, left), 0.375rem (top, bottom)
