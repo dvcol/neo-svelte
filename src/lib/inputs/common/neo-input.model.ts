@@ -311,6 +311,10 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    * If `true`, and `validation` is enabled, the validation state will be displayed with an icon.
    */
   validationIcon?: boolean;
+  /**
+   * If false, the input will not be registered with the form context.
+   */
+  register?: NeoInputValidationProps<T>['register'];
 
   // Styles
 

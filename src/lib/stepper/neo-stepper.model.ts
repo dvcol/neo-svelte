@@ -1,3 +1,4 @@
+import type { TransitionProps } from '@dvcol/svelte-utils/transition';
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
@@ -233,6 +234,10 @@ export type NeoStepperProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   onStep?: (event: NeoStepperEvent) => void;
 
   // OtherProps
+  /**
+   * Optional props to pass to the transition container.
+   */
+  transitionProps?: TransitionProps;
   /**
    * Optional props to pass to the stepper controls.
    */

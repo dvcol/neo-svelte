@@ -6,6 +6,7 @@
 
   import type { EventHandler, FocusEventHandler, FormEventHandler, PointerEventHandler } from 'svelte/elements';
 
+  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
@@ -65,6 +66,7 @@
     validateOnInput,
     validateOnBlur,
     placement = NeoInputLabelPlacement.Inside,
+    register,
 
     // Size
     width: _width,
@@ -366,6 +368,15 @@
     skeleton,
   });
 
+  const inputForm = $derived<NeoFormContextField>({
+    id,
+    ref,
+    name: rest?.name,
+    form: rest?.form,
+    type: 'textarea',
+    state: { valid, dirty, touched, value, initial },
+  });
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -521,7 +532,8 @@
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
-  input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
+  input={inputForm}
+  {register}
   {valid}
   {validation}
   {validationMessage}

@@ -4,6 +4,7 @@
 
   import type { DragEventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -42,6 +43,7 @@
     focusin = $bindable(false),
     placeholder = 'Choose a file',
 
+    type = 'file',
     loading,
     clearable,
     validation,
@@ -50,6 +52,7 @@
     readonly,
     rounded,
     pressed,
+    register,
 
     // File picker
     append,
@@ -268,6 +271,15 @@
     color: rest.color,
   });
 
+  const inputForm = $derived<NeoFormContextField>({
+    id,
+    ref,
+    name: rest?.name,
+    form: rest?.form,
+    type,
+    state: { valid, dirty, touched, value: files, initial },
+  });
+
   let timeout: ReturnType<typeof setTimeout>;
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
@@ -317,7 +329,7 @@
     bind:hovered
     bind:focused
     bind:labelRef
-    type="file"
+    {type}
     {id}
     {label}
     {labelProps}
@@ -335,6 +347,7 @@
     {rounded}
     {pressed}
     {validation}
+    {register}
     {wrapperProps}
     {elevation}
     {hover}
@@ -361,7 +374,7 @@
     bind:initial
     bind:touched
     bind:validationMessage
-    type="file"
+    {type}
     aria-invalid={valid === undefined ? undefined : !valid}
     aria-describedby={visible ? messageId : undefined}
     {id}
@@ -457,7 +470,8 @@
       bind:ref={wrapperRef}
       bind:visible
       bind:messageId
-      input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
+      input={inputForm}
+      {register}
       {valid}
       {validation}
       {validationMessage}

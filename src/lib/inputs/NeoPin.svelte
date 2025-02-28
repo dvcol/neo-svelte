@@ -3,6 +3,7 @@
   import { doubleBind } from '@dvcol/svelte-utils/watch';
 
   import type { EventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
+  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
   import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -37,8 +38,10 @@
     focused = $bindable(false),
     loading,
     clearable,
+    register,
 
     // Validation
+    type = 'text',
     step = 1,
     min = 0,
     max = 9,
@@ -337,6 +340,15 @@
     clear,
   });
 
+  const inputForm = $derived<NeoFormContextField>({
+    id,
+    ref,
+    name: rest?.name,
+    form: rest?.form,
+    type,
+    state: { valid, dirty, touched, value, initial },
+  });
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -411,7 +423,8 @@
               {step}
               {min}
               {max}
-              type="text"
+              {type}
+              register={false}
               containerProps={groupProps}
               {...rest}
               class={['neo-input-pin', rest.class]}
@@ -459,7 +472,8 @@
     bind:ref={wrapperRef}
     bind:visible
     bind:messageId
-    input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
+    input={inputForm}
+    {register}
     {valid}
     {validation}
     {validationMessage}

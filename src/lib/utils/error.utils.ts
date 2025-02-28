@@ -4,6 +4,7 @@ export const NeoErrorType = {
   NeoList: 'NeoList' as const,
   NeoTab: 'NeoTab' as const,
   NeoCollapse: 'NeoCollapse' as const,
+  NeoForm: 'NeoForm' as const,
 } as const;
 
 export type NeoErrorTypes = (typeof NeoErrorType)[keyof typeof NeoErrorType];
@@ -67,5 +68,17 @@ export class NeoErrorMissingTabId extends NeoErrorMissingId {
 export class NeoErrorMissingCollapseId extends NeoErrorMissingId {
   constructor(message?: string) {
     super(message, NeoErrorType.NeoCollapse);
+  }
+}
+
+export class NeoErrorFormMissingId extends NeoErrorMissingId {
+  constructor(message?: string) {
+    super(message, NeoErrorType.NeoForm);
+  }
+}
+
+export class NeoErrorFormDuplicateId extends NeoError {
+  constructor() {
+    super('Field id already exists', NeoErrorType.NeoForm);
   }
 }

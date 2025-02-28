@@ -4,6 +4,7 @@
   import { fade } from 'svelte/transition';
 
   import type { FocusEventHandler } from 'svelte/elements';
+  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoCheckboxProps } from '~/inputs/neo-checkbox.model.js';
 
@@ -37,6 +38,7 @@
     required,
     loading,
     validation,
+    register,
 
     // Shadow
     elevation: _elevation = DefaultShadowShallowElevation,
@@ -106,6 +108,15 @@
     elevation,
   });
 
+  const inputForm = $derived<NeoFormContextField>({
+    id,
+    ref,
+    name: rest?.name,
+    form: rest?.form,
+    type,
+    state: { valid, dirty, touched, value: checked, initial },
+  });
+
   let timeout: ReturnType<typeof setTimeout>;
   const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
     clearTimeout(timeout);
@@ -124,7 +135,8 @@
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
-  input={{ id, ref, state: { valid, dirty, touched, value: checked, initial } }}
+  input={inputForm}
+  {register}
   {valid}
   {validation}
   {validationMessage}

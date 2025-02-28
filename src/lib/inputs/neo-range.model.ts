@@ -1,5 +1,6 @@
 import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
+import type { NeoFormType } from '~/inputs/common/neo-form-context.svelte.js';
 import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
@@ -139,6 +140,18 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
      * @default neo-range-{uuid}
      */
     id?: HTMLElement['id'];
+    /**
+     * Optional name of the input (for validation purposes).
+     */
+    name?: HTMLInputElement['name'];
+    /**
+     * Optional form id for validation.
+     */
+    form?: NeoFormType;
+    /**
+     * If false, the input will not be registered with the form context.
+     */
+    register?: NeoInputValidationProps['register'];
 
     // Other props
     /**

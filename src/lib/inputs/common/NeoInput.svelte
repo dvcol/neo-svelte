@@ -2,8 +2,11 @@
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
+  import { innerWidth } from 'svelte/reactivity/window';
+
   import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
 
+  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
@@ -70,6 +73,7 @@
     skeleton = false,
     validation,
     validationIcon,
+    register,
 
     // Shadow
     elevation: _elevation = getDefaultElevation(pressed),
@@ -210,6 +214,10 @@
     waitForTick();
   });
 
+  $effect(() => {
+    if (innerWidth.current) updateRefs();
+  });
+
   let visible = $state(false);
   let messageId = $state(`neo-textarea-message-${getUUID()}`);
 
@@ -243,6 +251,15 @@
     tinted,
     start,
     skeleton,
+  });
+
+  const inputForm = $derived<NeoFormContextField>({
+    id,
+    ref,
+    name: rest?.name,
+    form: rest?.form,
+    type: rest.type,
+    state: { valid, dirty, touched, value: typedValue, initial },
   });
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
@@ -433,7 +450,8 @@
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
-  input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
+  input={inputForm}
+  {register}
   {valid}
   {validation}
   {validationMessage}

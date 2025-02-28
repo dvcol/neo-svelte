@@ -3,10 +3,12 @@
   import { clamp } from '@dvcol/common-utils/common/math';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { flip, offset, useFloating } from '@skeletonlabs/floating-ui-svelte';
+  import { untrack } from 'svelte';
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
 
   import type { DragEventHandler, FocusEventHandler, KeyboardEventHandler, PointerEventHandler } from 'svelte/elements';
+  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
   import type { NeoRangeContext, NeoRangeHTMLElement, NeoRangeProps, NeoRangeValidationState, NeoRangeValue } from '~/inputs/neo-range.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -45,6 +47,9 @@
     max = 100,
     step,
     ticks,
+    name,
+    form,
+    register,
 
     // Styles
     start,
@@ -155,10 +160,11 @@
   };
 
   const setValue = (v: number, index = 0) => {
-    if (!Array.isArray(value)) value = v;
-    else if (index === 0 && v >= value[1]) value = [value[1], value[1]];
-    else if (index === 1 && v <= value[0]) value = [value[0], value[0]];
-    else value[index] = v;
+    const clamped = clamp(v, min, max);
+    if (!Array.isArray(value)) value = clamped;
+    else if (index === 0 && clamped >= value[1]) value = [value[1], value[1]];
+    else if (index === 1 && clamped <= value[0]) value = [value[0], value[0]];
+    else value = [index ? value[0] : clamped, index ? clamped : value[1]];
     updateTooltips();
     return value;
   };
@@ -271,13 +277,14 @@
   };
 
   $effect(() => {
-    if (Array.isArray(value)) {
-      value[0] = clamp(value[0], min, max);
-      value[1] = clamp(value[1], min, max);
-    } else {
-      value = clamp(value, min, max);
-    }
-    updateTooltips();
+    untrack(() => {
+      if (Array.isArray(value)) {
+        value = [clamp(value[0], min, max), clamp(value[1], min, max)];
+      } else {
+        value = clamp(value, min, max);
+      }
+      updateTooltips();
+    });
   });
 
   $effect(() => {
@@ -321,6 +328,15 @@
     stepDown,
   });
 
+  const inputForm = $derived<NeoFormContextField>({
+    id,
+    ref,
+    name,
+    form,
+    type: 'range',
+    state: { valid, dirty, touched, value, initial },
+  });
+
   $effect(() => {
     if (!ref) return;
     Object.assign(ref, {
@@ -350,7 +366,8 @@
 
 <NeoInputValidation
   bind:ref={wrapperRef}
-  input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
+  input={inputForm}
+  {register}
   {valid}
   {validation}
   {error}

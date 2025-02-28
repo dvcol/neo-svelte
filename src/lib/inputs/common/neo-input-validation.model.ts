@@ -29,5 +29,9 @@ export type NeoInputValidationProps<
   /**
    * The input field context to use for form validation.
    */
-  input?: Pick<NeoFormContextField, 'id' | 'ref' | 'state'>;
+  input?: Omit<NeoFormContextField, 'error' | 'message'>;
+  /**
+   * If false, the input will not be registered with the form context.
+   */
+  register?: boolean;
 };

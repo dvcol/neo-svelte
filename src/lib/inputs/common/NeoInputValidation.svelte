@@ -24,6 +24,7 @@
     valid,
 
     input,
+    register,
 
     // Other props
     messageProps,
@@ -47,7 +48,7 @@
 
   const form = getNeoFormContext();
   $effect.pre(() => {
-    if (!form || !input?.id) return;
+    if (!form || !input?.id || register === false) return;
     untrack(() =>
       form.register({
         ...input,

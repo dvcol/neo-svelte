@@ -15,6 +15,7 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'readonly'
     | 'loading'
     | 'validation'
+    | 'register'
     | 'focusin'
     | 'in'
     | 'out'

@@ -49,6 +49,7 @@
     onStep, // current step, & previous step (forward or backward)
 
     // Other props
+    transitionProps,
     controlsProps,
     previousProps,
     cancelProps,
@@ -73,9 +74,9 @@
   const direction = $derived(active > last ? -1 : 1);
   const orientation = $derived(vertical ? 'y' : 'x');
   const inFn = $derived(toTransition(inAction ?? transitionAction, fly));
-  const inProps = $derived(toTransitionProps(inAction ?? transitionAction, { [orientation]: `${-50 * direction}%`, duration: 900, delay: 100 }));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction, { [orientation]: `${-100 * direction}%`, duration: 900, delay: 100 }));
   const outFn = $derived(toTransition(outAction ?? transitionAction, fly));
-  const outProps = $derived(toTransitionProps(outAction ?? transitionAction, { [orientation]: `${50 * direction}%`, duration: 900 }));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction, { [orientation]: `${100 * direction}%`, duration: 900 }));
 
   const step = $derived({
     current: steps[active],
@@ -226,7 +227,7 @@
 {/snippet}
 
 {#snippet content()}
-  <NeoTransitionContainer key={active}>
+  <NeoTransitionContainer overflow="hidden" key={active} {...transitionProps}>
     <div class="neo-stepper-content-step" in:inFn={inProps} out:outFn={outProps}>
       {#if step.current?.render}
         {@render step.current?.render(context)}
