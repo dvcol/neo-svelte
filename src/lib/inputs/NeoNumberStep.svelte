@@ -41,7 +41,7 @@
     onStepDown,
 
     // Other props
-    wrapperRef = $bindable(),
+    validationRef = $bindable(),
     labelRef = $bindable(),
     buttonProps,
     groupProps,
@@ -151,7 +151,7 @@
   <NeoInput
     bind:ref
     bind:containerRef
-    bind:wrapperRef
+    bind:validationRef
     bind:labelRef
     bind:value
     bind:valid

@@ -23,8 +23,8 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     | 'labelProps'
     | 'containerRef'
     | 'containerProps'
-    | 'wrapperRef'
-    | 'wrapperProps'
+    | 'validationRef'
+    | 'validationProps'
   > &
   NeoCommonCheckboxProps &
   Pick<NeoLabelProps, 'label'> &

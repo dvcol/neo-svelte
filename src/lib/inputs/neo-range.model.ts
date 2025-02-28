@@ -157,11 +157,11 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
     /**
      * The HTML tag to use for the validation container.
      */
-    wrapperRef?: HTMLRefProps['ref'];
+    validationRef?: HTMLRefProps['ref'];
     /**
-     * The props to pass to the wrapper component.
+     * The props to pass to the validation component.
      */
-    wrapperProps?: NeoInputValidationProps;
+    validationProps?: NeoInputValidationProps;
 
     /**
      * The props to pass to the input container.

@@ -76,8 +76,8 @@
     labelProps,
     messageProps,
     containerProps,
-    wrapperRef = $bindable(),
-    wrapperProps,
+    validationRef = $bindable(),
+    validationProps,
     floatingProps,
     floatingOptions,
     ...rest
@@ -365,7 +365,7 @@
 </script>
 
 <NeoInputValidation
-  bind:ref={wrapperRef}
+  bind:ref={validationRef}
   input={inputForm}
   {register}
   {valid}
@@ -378,8 +378,8 @@
   in={inAction}
   out={outAction}
   transition={transitionAction}
-  {...wrapperProps}
-  style={toStyle('--neo-validation-padding: 0', wrapperProps?.style)}
+  {...validationProps}
+  style={toStyle('--neo-validation-padding: 0', validationProps?.style)}
 >
   <svelte:element
     this={containerTag}

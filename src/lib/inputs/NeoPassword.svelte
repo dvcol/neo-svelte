@@ -31,7 +31,7 @@
 
     // Other props
     containerRef = $bindable(),
-    wrapperRef = $bindable(),
+    validationRef = $bindable(),
     labelRef = $bindable(),
     buttonProps,
     ...rest
@@ -76,7 +76,7 @@
   <NeoPin
     bind:ref
     bind:containerRef
-    bind:wrapperRef
+    bind:validationRef
     bind:labelRef
     bind:value
     bind:valid
@@ -93,7 +93,7 @@
   <NeoInput
     bind:ref
     bind:containerRef
-    bind:wrapperRef
+    bind:validationRef
     bind:labelRef
     bind:value
     bind:valid

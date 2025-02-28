@@ -34,7 +34,7 @@
 
     // Other props
     containerRef = $bindable(),
-    wrapperRef = $bindable(),
+    validationRef = $bindable(),
     labelRef = $bindable(),
     buttonProps,
     pickerRef = $bindable(),
@@ -107,7 +107,7 @@
 <NeoInput
   bind:ref
   bind:containerRef
-  bind:wrapperRef
+  bind:validationRef
   bind:labelRef
   bind:value
   bind:valid

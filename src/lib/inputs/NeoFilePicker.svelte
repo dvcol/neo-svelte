@@ -82,8 +82,8 @@
     messageProps,
     containerRef = $bindable(),
     containerProps,
-    wrapperRef = $bindable(),
-    wrapperProps,
+    validationRef = $bindable(),
+    validationProps,
     ...rest
   }: NeoFilePickerProps = $props();
   /* eslint-enable prefer-const */
@@ -320,7 +320,7 @@
 {#snippet input()}
   <NeoInput
     bind:ref
-    bind:wrapperRef
+    bind:validationRef
     bind:files
     bind:value
     bind:valid
@@ -348,7 +348,7 @@
     {pressed}
     {validation}
     {register}
-    {wrapperProps}
+    {validationProps}
     {elevation}
     {hover}
     {multiple}
@@ -389,7 +389,7 @@
     onchange={mirrorChange}
   />
   <NeoFilePickerCard
-    bind:ref={wrapperRef}
+    bind:ref={validationRef}
     bind:hovered
     bind:focused
     bind:labelRef
@@ -467,7 +467,7 @@
   {#if drop && expanded}
     <!-- Expanded picker -->
     <NeoInputValidation
-      bind:ref={wrapperRef}
+      bind:ref={validationRef}
       bind:visible
       bind:messageId
       input={inputForm}
@@ -483,8 +483,8 @@
       in={inAction}
       out={outAction}
       transition={transitionAction}
-      {...wrapperProps}
-      class={['neo-file-picker-validation', wrapperProps?.class]}
+      {...validationProps}
+      class={['neo-file-picker-validation', validationProps?.class]}
     >
       {@render drag()}
     </NeoInputValidation>

@@ -79,8 +79,8 @@
     beforeProps,
     containerRef = $bindable(),
     containerProps,
-    wrapperRef = $bindable(),
-    wrapperProps,
+    validationRef = $bindable(),
+    validationProps,
     messageProps,
     groupProps,
     ...rest
@@ -469,7 +469,7 @@
 
 {#snippet validationGroup()}
   <NeoInputValidation
-    bind:ref={wrapperRef}
+    bind:ref={validationRef}
     bind:visible
     bind:messageId
     input={inputForm}
@@ -485,7 +485,7 @@
     in={inAction}
     out={outAction}
     transition={transitionAction}
-    {...wrapperProps}
+    {...validationProps}
   >
     {@render group()}
   </NeoInputValidation>

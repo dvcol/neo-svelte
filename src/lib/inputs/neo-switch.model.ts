@@ -24,8 +24,8 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'labelProps'
     | 'containerRef'
     | 'containerProps'
-    | 'wrapperRef'
-    | 'wrapperProps'
+    | 'validationRef'
+    | 'validationProps'
     | 'color'
     | 'tinted'
   > &

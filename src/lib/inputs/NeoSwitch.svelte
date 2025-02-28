@@ -68,8 +68,8 @@
     messageProps,
     containerRef = $bindable(),
     containerProps,
-    wrapperRef = $bindable(),
-    wrapperProps,
+    validationRef = $bindable(),
+    validationProps,
     ...rest
   }: NeoSwitchProps = $props();
   /* eslint-enable prefer-const */
@@ -133,7 +133,7 @@
 </script>
 
 <NeoInputValidation
-  bind:ref={wrapperRef}
+  bind:ref={validationRef}
   bind:visible
   bind:messageId
   input={inputForm}
@@ -149,8 +149,8 @@
   in={inAction}
   out={outAction}
   transition={transitionAction}
-  {...wrapperProps}
-  style={toStyle('--neo-validation-padding: 0', wrapperProps?.style)}
+  {...validationProps}
+  style={toStyle('--neo-validation-padding: 0', validationProps?.style)}
 >
   <svelte:element
     this={containerTag}

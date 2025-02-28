@@ -96,8 +96,8 @@
     beforeProps,
     containerRef = $bindable(),
     containerProps,
-    wrapperRef = $bindable(),
-    wrapperProps,
+    validationRef = $bindable(),
+    validationProps,
     messageProps,
     ...rest
   }: NeoInputProps<NeoInputHTMLElement> = $props();
@@ -447,7 +447,7 @@
 {/snippet}
 
 <NeoInputValidation
-  bind:ref={wrapperRef}
+  bind:ref={validationRef}
   bind:visible
   bind:messageId
   input={inputForm}
@@ -463,7 +463,7 @@
   in={inAction}
   out={outAction}
   transition={transitionAction}
-  {...wrapperProps}
+  {...validationProps}
 >
   {@render inputGroup()}
 </NeoInputValidation>
@@ -536,7 +536,7 @@
         }
 
         &:disabled {
-          color: var(--neo-text-color-disabled);
+          color: var(--neo-input-disabled-color, var(--neo-text-color-disabled));
           cursor: not-allowed;
           scale: 1;
         }
@@ -623,33 +623,34 @@
 
       :global(.neo-input:is(select) option) {
         padding: 0.375rem 0.5rem;
+        color: var(--neo-input-text-color, inherit);
+        -webkit-text-fill-color: var(--neo-input-text-color, inherit);
+        background-color: transparent;
         background-clip: text;
         border-radius: var(--neo-input-border-radius, var(--neo-border-radius-sm));
         cursor: pointer;
         transition:
-          color 0.1s ease,
+          -webkit-text-fill-color 0.15s ease,
+          color 0.15s ease,
           box-shadow 0.3s ease;
         margin-inline: -0.5rem;
         margin-block: 0.375rem;
       }
 
       :global(.neo-input:is(select) option:disabled) {
-        color: var(--neo-text-color-disabled);
+        color: var(--neo-input-disabled-color, var(--neo-text-color-disabled));
         cursor: not-allowed;
       }
 
-      :global(.neo-input:is(select) option:checked) {
-        color: var(--neo-select-text-color-checked, var(--neo-text-color-active));
-        background-color: unset;
-        box-shadow: var(--neo-box-shadow-inset-1);
-      }
-
       :global(.neo-input:is(select) option:hover) {
-        color: var(--neo-select-text-color-hover, var(--neo-text-color-hover));
+        color: var(--neo-input-hover-color, var(--neo-text-color-hover));
       }
 
+      :global(.neo-input:is(select) option:checked),
       :global(.neo-input:is(select) option:active) {
-        color: var(--neo-select-text-color-active, var(--neo-text-color-hover-active));
+        -webkit-text-fill-color: var(--neo-input-active-color, var(--neo-input-text-color));
+        color: var(--neo-input-active-color, var(--neo-input-text-color));
+        box-shadow: var(--neo-box-shadow-inset-1);
       }
 
       :global(.neo-label-container) {
