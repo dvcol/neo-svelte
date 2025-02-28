@@ -284,6 +284,10 @@
       justify-content: space-between;
     }
 
+    :global(> .neo-progress-bar > .neo-progress-bar-mark) {
+      white-space: nowrap;
+    }
+
     &:not(.neo-vertical) {
       :global(> .neo-progress-bar) {
         min-width: calc(4rem * var(--neo-stepper-steps, 1));

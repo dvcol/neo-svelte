@@ -194,8 +194,8 @@
 
     &[data-direction='top'],
     &[data-direction='bottom'] {
+      flex: 1 1 100%;
       width: 0.5rem;
-      height: 100%;
     }
 
     &[data-direction='top'] .neo-progress-bar-mark {
@@ -206,11 +206,6 @@
     &[data-direction='bottom'] .neo-progress-bar-mark {
       top: var(--neo-progress-bar-mark-position, 0%);
       translate: 0 -50%;
-    }
-
-    :global(> .neo-progress) {
-      width: 100%;
-      height: 100%;
     }
 
     &:not(.neo-flat.neo-borderless) :global(> .neo-progress) {
