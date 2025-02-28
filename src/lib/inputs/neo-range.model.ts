@@ -198,13 +198,4 @@ export type NeoRangeContext<T extends NeoRangeValue = NeoRangeValue> = NeoValida
   NeoRangeStyles &
   NeoRangeMethods<T>;
 
-export type NeoRangeState<T extends NeoRangeValue = NeoRangeValue> = {
-  value: T;
-  initial: T;
-  isArray: boolean;
-  upper: number;
-  lower: number;
-  validity: NeoValidationState<T>;
-} & NeoRangeMethods<T>;
-
-export type NeoRangeHTMLElement<T extends NeoRangeValue = NeoRangeValue> = HTMLElement & NeoRangeState<T>;
+export type NeoRangeHTMLElement<T extends NeoRangeValue = NeoRangeValue> = HTMLElement & NeoRangeMethods<T>;

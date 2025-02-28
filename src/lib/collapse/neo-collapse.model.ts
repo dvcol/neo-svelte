@@ -110,8 +110,4 @@ export type NeoCollapseHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'se
    * @param open
    */
   toggle: (open?: boolean) => void;
-  /**
-   * State of the collapsed section.
-   */
-  context: NeoCollapseContext;
 };

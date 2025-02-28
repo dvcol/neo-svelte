@@ -92,7 +92,7 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
   /**
    * Optional content to display inside the progress.
    */
-  children?: Snippet;
+  children?: Snippet<[NeoProgressContext]>;
 
   // State
   /**
@@ -171,5 +171,4 @@ export type NeoProgressMethods = {
   change: (value?: number, buffer?: number) => void;
 };
 
-export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] &
-  NeoProgressMethods & { readonly context: NeoProgressContext };
+export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] & NeoProgressMethods;

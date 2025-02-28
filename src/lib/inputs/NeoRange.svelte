@@ -324,24 +324,6 @@
   $effect(() => {
     if (!ref) return;
     Object.assign(ref, {
-      get value() {
-        return value;
-      },
-      get initial() {
-        return initial;
-      },
-      get isArray() {
-        return isArray;
-      },
-      get lower() {
-        return lower;
-      },
-      get upper() {
-        return upper;
-      },
-      get validity() {
-        return validity;
-      },
       stepUp,
       stepDown,
     } satisfies Partial<NeoRangeHTMLElement>);
@@ -385,6 +367,12 @@
   <svelte:element
     this={containerTag}
     bind:this={ref}
+    data-value={value}
+    data-array={isArray}
+    data-lower={lower}
+    data-upper={upper}
+    data-min={min}
+    data-max={max}
     role="none"
     class:neo-range-container={true}
     style:--neo-range-height={rangeHeight}

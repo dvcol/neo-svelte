@@ -67,9 +67,6 @@
   $effect(() => {
     if (!ref) return;
     Object.assign(ref, {
-      get context() {
-        return context;
-      },
       get trigger() {
         return triggerRef;
       },
@@ -80,9 +77,6 @@
   $effect(() => {
     if (!triggerRef) return;
     Object.assign(triggerRef, {
-      get context() {
-        return context;
-      },
       get section() {
         return ref;
       },
@@ -133,6 +127,7 @@
       bind:this={triggerRef}
       aria-expanded={open}
       aria-controls={id}
+      data-open={open}
       class:neo-collapse-trigger={true}
       class:neo-readonly={readonly}
       onclick={() => toggle()}
@@ -158,6 +153,7 @@
       {id}
       role="region"
       aria-labelledby={triggerId}
+      data-open={open}
       in:transition={transitionProps}
       out:transition={transitionProps}
       class:neo-collapse-content={true}

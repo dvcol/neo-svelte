@@ -14,6 +14,7 @@
     // States
     ref = $bindable(),
     id = `neo-form-${getUUID()}`,
+    context: ctx = $bindable(),
 
     // Legend
     legend,
@@ -33,30 +34,10 @@
 
   $effect(() => {
     if (!ref) return;
+    ctx = context;
     Object.assign(ref, {
-      get fields() {
-        return context.fields;
-      },
-      get values() {
-        return context.values;
-      },
-      get initials() {
-        return context.initials;
-      },
-      get touched() {
-        return context.touched;
-      },
-      get dirty() {
-        return context.dirty;
-      },
-      get valid() {
-        return context.valid;
-      },
-      get messages() {
-        return context.messages;
-      },
-      get errors() {
-        return context.errors;
+      get context() {
+        return context;
       },
     });
   });

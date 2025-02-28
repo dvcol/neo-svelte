@@ -16,6 +16,10 @@ export type NeoFormProps = {
    * @default neo-form-{uuid}
    */
   id?: HTMLElement['id'];
+  /**
+   * Reflect the inner form context to external binding.
+   */
+  context?: NeoFormContext;
 
   // Legend
   /**
@@ -42,3 +46,5 @@ export type NeoFormProps = {
   borderless?: NeoFieldsetProps['borderless'];
 } & HTMLNeoBaseElement<HTMLFormElement> &
   HTMLRefProps<HTMLFormElement>;
+
+export type NeoFormHTMLElement = HTMLFormElement & Pick<NeoFormProps, 'context'>;

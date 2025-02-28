@@ -142,9 +142,6 @@
   $effect(() => {
     if (!ref) return;
     Object.assign(ref, {
-      get context() {
-        return context;
-      },
       start,
       stop,
       reset,
@@ -177,7 +174,7 @@
 >
   <span class="neo-progress-value" style:--neo-progress-value={valueProgress}></span>
   <span class="neo-progress-buffer" style:--neo-progress-buffer={bufferProgress}></span>
-  {@render children?.()}
+  {@render children?.(context)}
 </svelte:element>
 
 <style lang="scss">
