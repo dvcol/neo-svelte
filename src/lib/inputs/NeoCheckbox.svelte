@@ -24,7 +24,7 @@
 
     // State
     type = 'checkbox',
-    id = label ? `neo-checkbox-${getUUID()}` : undefined,
+    id = `neo-checkbox-${getUUID()}`,
     ref = $bindable(),
     group = $bindable(),
     checked = $bindable(false),
@@ -124,6 +124,7 @@
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
+  input={{ id, ref, state: { valid, dirty, touched, value: checked, initial } }}
   {valid}
   {validation}
   {validationMessage}

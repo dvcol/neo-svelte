@@ -19,7 +19,7 @@
 
     // State
     type = 'radio',
-    id = label ? `neo-radio-${getUUID()}` : undefined,
+    id = `neo-radio-${getUUID()}`,
     ref = $bindable(),
     group = $bindable(),
     checked = $bindable(false),

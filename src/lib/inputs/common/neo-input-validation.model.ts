@@ -1,3 +1,4 @@
+import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
 import type { NeoValidationFieldContext, NeoValidationProps, NeoValidationValue } from '~/inputs/common/neo-validation.model.js';
 
 export type NeoInputValidationProps<
@@ -25,4 +26,8 @@ export type NeoInputValidationProps<
    * Note: This will be overridden by the error message if it is set.
    */
   validationMessage?: string;
+  /**
+   * The input field context to use for form validation.
+   */
+  input?: Pick<NeoFormContextField, 'id' | 'ref' | 'state'>;
 };

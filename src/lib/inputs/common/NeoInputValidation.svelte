@@ -1,9 +1,12 @@
 <script lang="ts" generics="T extends HTMLElement, V extends any">
   import { getUUID } from '@dvcol/common-utils/common/string';
 
+  import { untrack } from 'svelte';
+
   import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 
   import NeoValidation from '~/inputs/common/NeoValidation.svelte';
+  import { getNeoFormContext } from '~/inputs/common/neo-form-context.svelte.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -19,6 +22,8 @@
 
     message,
     valid,
+
+    input,
 
     // Other props
     messageProps,
@@ -38,6 +43,19 @@
 
   $effect(() => {
     visible = !!showMessage;
+  });
+
+  const form = getNeoFormContext();
+  $effect.pre(() => {
+    if (!form || !input?.id) return;
+    untrack(() =>
+      form.register({
+        ...input,
+        error: errorMessage,
+        message,
+      }),
+    );
+    return () => form?.remove(input.id);
   });
 </script>
 

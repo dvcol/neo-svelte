@@ -27,7 +27,7 @@
     icon,
 
     // State
-    id = label ? `neo-pin-input-${getUUID()}` : undefined,
+    id = `neo-pin-input-${getUUID()}`,
     ref = $bindable(),
     value = $bindable(''),
     valid = $bindable(),
@@ -459,6 +459,7 @@
     bind:ref={wrapperRef}
     bind:visible
     bind:messageId
+    input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
     {valid}
     {validation}
     {validationMessage}

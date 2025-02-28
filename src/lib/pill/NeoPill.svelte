@@ -163,7 +163,7 @@
     border-radius: var(--neo-pill-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-pill-box-shadow, var(--neo-box-shadow-flat));
     transition:
-      color 0.3s ease,
+      color 0.15s ease,
       padding 0.3s ease,
       border-color 0.3s ease,
       border-radius 0.3s ease,

@@ -168,7 +168,7 @@
     border-radius: calc(var(--neo-btn-group-border-radius, var(--neo-border-radius)) + 0.25rem);
     box-shadow: var(--neo-btn-group-box-shadow, var(--neo-box-shadow-flat));
     transition:
-      color 0.3s ease,
+      color 0.15s ease,
       border-color 0.3s linear,
       background-color 0.3s ease,
       border-radius 0.3s ease,

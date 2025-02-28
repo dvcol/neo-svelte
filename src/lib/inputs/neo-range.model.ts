@@ -133,6 +133,13 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
      */
     after?: Snippet<[NeoValidationFieldContext]>;
 
+    // States
+    /**
+     * Unique identifier of the input.
+     * @default neo-range-{uuid}
+     */
+    id?: HTMLElement['id'];
+
     // Other props
     /**
      * The HTML tag to use for the validation container.

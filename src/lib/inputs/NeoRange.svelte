@@ -29,7 +29,7 @@
     mark,
 
     // State
-    id = label ? `neo-range-${getUUID()}` : undefined,
+    id = `neo-range-${getUUID()}`,
     ref = $bindable(),
     value = $bindable(0),
     valid = $bindable(),
@@ -368,6 +368,7 @@
 
 <NeoInputValidation
   bind:ref={wrapperRef}
+  input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
   {valid}
   {validation}
   {error}

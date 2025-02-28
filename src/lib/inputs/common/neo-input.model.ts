@@ -400,6 +400,13 @@ export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoIn
    */
   inner?: Snippet<[NeoInputContext<T>]>;
 
+  // States
+  /**
+   * Unique identifier of the input.
+   * @default neo-input-{uuid}
+   */
+  id?: HTMLElement['id'];
+
   // Other props
 
   /**
@@ -437,6 +444,11 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
    * Overrides the default scrollbars.
    */
   scrollbar?: boolean;
+  /**
+   * Unique identifier of the textarea.
+   * @default neo-textarea-{uuid}
+   */
+  id?: HTMLElement['id'];
   /**
    * Automatically increments/decrements the textarea rows to fit the content.
    *

@@ -11,6 +11,7 @@ import type { NeoValidationProps } from '~/inputs/common/neo-validation.model.js
 export type NeoSwitchProps = NeoBaseInputProps &
   Pick<
     NeoInputProps,
+    | 'id'
     | 'readonly'
     | 'loading'
     | 'validation'

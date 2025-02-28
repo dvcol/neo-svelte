@@ -38,7 +38,7 @@
     children,
 
     // States
-    id = label ? `neo-input-${getUUID()}` : undefined,
+    id = `neo-input-${getUUID()}`,
     ref = $bindable(),
     files = $bindable(), // type="file"
     value = $bindable(),
@@ -437,6 +437,7 @@
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
+  input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
   {valid}
   {validation}
   {validationMessage}

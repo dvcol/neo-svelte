@@ -202,7 +202,7 @@
     }
 
     &-label {
-      transition: color 0.3s ease;
+      transition: color 0.15s ease;
 
       &-description {
         color: var(--neo-collapse-description-color, var(--neo-text-color-secondary));

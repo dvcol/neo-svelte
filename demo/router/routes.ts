@@ -16,6 +16,7 @@ export const Route = {
   Lists: 'lists' as const,
   Progress: 'progress' as const,
   Collapse: 'collapse' as const,
+  Stepper: 'stepper' as const,
 } as const;
 
 export type Routes = (typeof Route)[keyof typeof Route];
@@ -35,6 +36,7 @@ export const Path: Record<keyof typeof Route, string> = {
   Lists: '/lists' as const,
   Progress: '/progress' as const,
   Collapse: '/collapse' as const,
+  Stepper: '/stepper' as const,
   Any: '*' as const,
 } as const;
 
@@ -113,6 +115,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.Collapse,
       path: Path.Collapse,
       component: () => import('../components/DemoCollapse.svelte'),
+    },
+    {
+      name: Route.Stepper,
+      path: Path.Stepper,
+      component: () => import('../components/DemoStepper.svelte'),
     },
     {
       name: Route.Any,

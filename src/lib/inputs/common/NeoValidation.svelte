@@ -95,7 +95,7 @@
       font-size: var(--neo-font-size-sm, 0.875rem);
       line-height: var(--neo-line-height-xs, 1rem);
       transition:
-        color 0.3s ease,
+        color 0.15s ease,
         padding 0.3s ease,
         margin 0.3s ease;
 

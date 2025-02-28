@@ -30,7 +30,7 @@
     iconUpload,
 
     // States
-    id = label ? `neo-file-picker-${getUUID()}` : undefined,
+    id = `neo-file-picker-${getUUID()}`,
     ref = $bindable(),
     files = $bindable(),
     value = $bindable(),
@@ -235,6 +235,7 @@
   let messageId = $state(`neo-file-picker-message-${getUUID()}`);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
+  let initial = $state();
   const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
     // Ref
     ref,
@@ -246,6 +247,7 @@
     validate: ref?.validate,
 
     // State
+    initial,
     value: files,
     touched,
     dirty,
@@ -356,6 +358,7 @@
     bind:value
     bind:valid
     bind:dirty
+    bind:initial
     bind:touched
     bind:validationMessage
     type="file"
@@ -454,6 +457,7 @@
       bind:ref={wrapperRef}
       bind:visible
       bind:messageId
+      input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
       {valid}
       {validation}
       {validationMessage}

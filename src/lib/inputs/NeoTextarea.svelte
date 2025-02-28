@@ -44,7 +44,7 @@
     children,
 
     // States
-    id = label ? `neo-textarea-${getUUID()}` : undefined,
+    id = `neo-textarea-${getUUID()}`,
     ref = $bindable(),
 
     value = $bindable(),
@@ -521,6 +521,7 @@
   bind:ref={wrapperRef}
   bind:visible
   bind:messageId
+  input={{ id, ref, state: { valid, dirty, touched, value, initial } }}
   {valid}
   {validation}
   {validationMessage}
