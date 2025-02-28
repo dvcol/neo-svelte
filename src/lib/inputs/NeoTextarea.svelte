@@ -561,6 +561,10 @@
     font: inherit;
     text-decoration: none;
     outline: none;
+  }
+
+  .neo-textarea-group,
+  .neo-textarea-after {
     transition:
       color 0.3s ease,
       margin 0.3s ease,
@@ -657,6 +661,24 @@
       cursor: not-allowed;
       resize: none;
     }
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      color: var(--neo-textarea-text-color, var(--neo-text-color, inherit)) !important;
+      text-decoration: none;
+      background-clip: text;
+      box-shadow: none;
+      appearance: none;
+      text-decoration-color: inherit;
+      caret-color: var(--neo-textarea-text-color, var(--neo-text-color, inherit));
+      -webkit-text-fill-color: var(--neo-textarea-text-color, var(--neo-text-color, inherit));
+
+      &::selection {
+        background-color: oklch(from var(--neo-textarea-text-color, var(--neo-text-color, inherit)) calc(l + 0.3) c h / 20%);
+      }
+    }
   }
 
   .neo-textarea-group {
@@ -671,7 +693,9 @@
     box-shadow: var(--neo-textarea-box-shadow, var(--neo-box-shadow-flat));
     cursor: text;
 
-    &:focus-visible {
+    &:focus-visible,
+    &:has(.neo-textarea:-webkit-autofill:focus),
+    &:has(.neo-textarea:-webkit-autofill:active) {
       outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
     }
 
@@ -736,6 +760,7 @@
         --neo-label-padding: 0 1rem;
         --neo-label-margin: 0;
         --neo-label-color: var(--neo-textarea-label-color, inherit);
+        --neo-label-color-hover: var(--neo-textarea-label-color-hover, var(--neo-textarea-label-color, inherit));
 
         min-height: var(--neo-textarea-label-height);
         transition:
@@ -928,12 +953,14 @@
     &.neo-validation {
       &[data-valid='false'] {
         --neo-textarea-label-color: var(--neo-textarea-label-color-error, var(--neo-color-error));
+        --neo-textarea-label-color-hover: var(--neo-textarea-label-color-error, var(--neo-color-error-highlight));
         --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-error, var(--neo-color-error-50));
         --neo-label-disabled-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
       }
 
       &[data-valid='true'] {
         --neo-textarea-label-color: var(--neo-textarea-label-color-success, var(--neo-color-success));
+        --neo-textarea-label-color-hover: var(--neo-textarea-label-color-success, var(--neo-color-success-highlight));
         --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-success, var(--neo-color-success-50));
         --neo-label-disabled-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
       }

@@ -580,7 +580,9 @@
       box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
       cursor: var(--neo-input-cursor, text);
 
-      &:focus-visible {
+      &:focus-visible,
+      &:has(:global(.neo-input:-webkit-autofill:focus)),
+      &:has(:global(.neo-input:-webkit-autofill:active)) {
         outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       }
 
@@ -621,6 +623,7 @@
 
       :global(.neo-input:is(select) option) {
         padding: 0.375rem 0.5rem;
+        background-clip: text;
         border-radius: var(--neo-input-border-radius, var(--neo-border-radius-sm));
         cursor: pointer;
         transition:
@@ -895,6 +898,7 @@
       &.neo-validation {
         &[data-valid='false'] {
           --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
+          --neo-label-color-hover: var(--neo-input-label-color-error-hover, var(--neo-color-error-highlight));
           --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
           --neo-label-disabled-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
           --neo-border-color: var(--neo-input-border-color-error, var(--neo-color-error));
@@ -902,6 +906,7 @@
 
         &[data-valid='true'] {
           --neo-input-label-color: var(--neo-input-label-color-success, var(--neo-color-success));
+          --neo-label-color-hover: var(--neo-input-label-color-success-hover, var(--neo-color-success-highlight));
           --neo-input-floating-label-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
           --neo-label-disabled-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
           --neo-border-color: var(--neo-input-border-color-success, var(--neo-color-success));

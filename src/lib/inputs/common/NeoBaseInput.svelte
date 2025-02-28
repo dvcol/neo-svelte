@@ -450,7 +450,7 @@
     appearance: none;
 
     &::placeholder {
-      color: var(--neo-input-placeholder-color, var(--neo-text-color-disabled));
+      color: var(--neo-input-color-placeholder, var(--neo-text-color-disabled));
       transition: opacity 0.3s ease;
     }
 
@@ -459,7 +459,7 @@
     }
 
     &:disabled {
-      color: var(--neo-text-color-disabled);
+      color: var(--neo-input-color-disabled, var(--neo-text-color-disabled));
       cursor: not-allowed;
     }
   }
@@ -477,15 +477,6 @@
     min-height: var(--neo-input-min-height, fit-content);
     padding: var(--neo-input-padding, 0.75rem);
     border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
-    transition:
-      color 0.3s ease,
-      margin 0.3s ease,
-      padding 0.3s ease,
-      background-color 0.3s ease,
-      backdrop-filter 0.3s ease,
-      border-color 0.3s ease,
-      border-radius 0.3s ease,
-      box-shadow 0.3s ease-out;
 
     &-display-content {
       @extend %input;
@@ -518,9 +509,10 @@
       letter-spacing: 0.2em;
       -webkit-text-stroke-width: 0.15em;
 
-      @supports (-webkit-touch-callout: none) {
+      @supports (-webkit-touch-callout: none) or (hanging-punctuation: first) or (-moz-appearance: none) {
         font: small-caption;
         font-size: var(--neo-font-size-xs, 0.75rem);
+        line-height: var(--neo-line-height, 1.5rem);
       }
     }
 
@@ -529,6 +521,25 @@
     &[type='search']::-webkit-search-results-button,
     &[type='search']::-webkit-search-results-decoration {
       appearance: none;
+    }
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      color: var(--neo-input-text-color, var(--neo-text-color, inherit)) !important;
+      text-decoration: none;
+      background-clip: text;
+      box-shadow: none;
+      appearance: none;
+      text-decoration-color: inherit;
+      caret-color: var(--neo-input-text-color, var(--neo-text-color, inherit));
+      -webkit-text-fill-color: var(--neo-input-text-color, var(--neo-text-color, inherit));
+      -webkit-text-stroke-color: var(--neo-input-text-color, var(--neo-text-color, inherit));
+
+      &::selection {
+        background-color: oklch(from var(--neo-input-text-color, var(--neo-text-color, inherit)) calc(l + 0.3) c h / 20%);
+      }
     }
   }
 </style>

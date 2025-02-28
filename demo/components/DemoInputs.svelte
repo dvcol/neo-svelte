@@ -265,7 +265,7 @@
       label: 'Top',
       props: {
         label: 'Top',
-        position: 'top',
+        placement: 'top',
         placeholder: 'Placeholder',
         defaultValue: 'Fallback',
         after,
@@ -283,7 +283,7 @@
         before,
 
         label: 'Left',
-        position: 'left',
+        placement: 'left',
         placeholder: 'Placeholder',
         defaultValue: 'Fallback',
         containerProps: { style: 'margin-left: 4rem;' },
@@ -300,7 +300,7 @@
         before,
 
         label: 'Right',
-        position: 'right',
+        placement: 'right',
         placeholder: 'Placeholder',
         defaultValue: 'Fallback',
         containerProps: { style: 'margin-right: 4rem;' },
@@ -326,7 +326,7 @@
       label: 'Message',
       props: {
         label: 'Description',
-        position: 'top',
+        placement: 'top',
         placeholder: 'Placeholder',
         defaultValue: 'Fallback',
         message: 'This is a short description.',

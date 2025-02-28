@@ -25,9 +25,11 @@
   --neo-color-error: var(--neo-red);
   --neo-color-error-50: oklch(from var(--neo-color-error) l c h / 50%);
   --neo-color-error-75: oklch(from var(--neo-color-error) l c h / 75%);
+  --neo-color-error-highlight: oklch(from var(--neo-color-error) calc(l - 0.15) c h);
   --neo-color-warning: var(--neo-orange);
   --neo-color-success: var(--neo-green);
   --neo-color-success-50: oklch(from var(--neo-color-success) l c h / 50%);
+  --neo-color-success-highlight: oklch(from var(--neo-color-success) calc(l - 0.15) c h);
 
   /*********************
    ** semantic colors **
