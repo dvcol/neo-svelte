@@ -155,15 +155,6 @@
     word-break: break-all;
   }
 
-  .column {
-    @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
-
-    &.content {
-      flex: 0 1 45%;
-      max-width: 50%;
-    }
-  }
-
   .row {
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
@@ -171,11 +162,6 @@
   }
 
   @media (width < 1200px) {
-    .column.content {
-      flex: 0 1 90%;
-      max-width: 90%;
-    }
-
     .row {
       margin: 2rem 0;
     }

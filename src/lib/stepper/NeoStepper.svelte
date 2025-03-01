@@ -240,34 +240,25 @@
 
 <svelte:element
   this={tag}
+  data-placement={placement}
   class:neo-stepper={true}
   class:neo-vertical={vertical}
   class:neo-marks={progressMarks}
   style:--neo-stepper-steps={steps.length}
   {...rest}
 >
-  {#if placement === NeoStepperPlacement.End}
-    <div class:neo-stepper-content={true}>
-      {#if vertical}
-        {@render content()}
-        {@render buttons()}
-      {:else}
-        {@render buttons()}
-        {@render content()}
-      {/if}
-    </div>
-    {@render progressBar()}
-  {:else}
-    {@render progressBar()}
-    <div class:neo-stepper-content={true}>
-      {@render content()}
-      {@render buttons()}
-    </div>
-  {/if}
+  {@render progressBar()}
+  <div class:neo-stepper-content={true}>
+    {@render content()}
+    {@render buttons()}
+  </div>
 </svelte:element>
 
 <style lang="scss">
   .neo-stepper {
+    display: flex;
+    flex-direction: column;
+
     &-content {
       display: flex;
       flex-direction: column;
@@ -296,10 +287,15 @@
       &:not(.neo-marks) :global(> .neo-progress-bar) {
         --neo-progress-margin-inline: var(--neo-shadow-margin, 0.625rem);
       }
+
+      &[data-placement='end'],
+      &[data-placement='end'] .neo-stepper-content {
+        flex-direction: column-reverse;
+      }
     }
 
     &.neo-vertical {
-      display: flex;
+      flex-direction: row;
 
       :global(> .neo-progress-bar) {
         min-height: calc(4rem * var(--neo-stepper-steps, 1));
@@ -307,6 +303,10 @@
 
       &:not(.neo-marks) :global(> .neo-progress-bar) {
         --neo-progress-margin-block: var(--neo-shadow-margin, 0.625rem);
+      }
+
+      &[data-placement='end'] {
+        flex-direction: row-reverse;
       }
     }
   }

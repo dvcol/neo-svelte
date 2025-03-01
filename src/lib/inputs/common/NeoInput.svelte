@@ -2,8 +2,6 @@
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import { innerWidth } from 'svelte/reactivity/window';
-
   import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
 
   import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
@@ -108,8 +106,6 @@
     ...rest
   }: NeoInputProps<NeoInputHTMLElement> = $props();
   /* eslint-enable prefer-const */
-
-  // TODO all width/height props for group
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: beforeTag = 'span', ...beforeRest } = $derived(beforeProps ?? {});
@@ -218,12 +214,8 @@
   };
 
   $effect(() => {
-    if (!first) return updateRefs();
-    waitForTick();
-  });
-
-  $effect(() => {
-    if (innerWidth.current) updateRefs();
+    if (first) waitForTick();
+    updateRefs();
   });
 
   let visible = $state(false);

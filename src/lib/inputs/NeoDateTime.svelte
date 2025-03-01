@@ -91,6 +91,8 @@
 
 <style lang="scss">
   .neo-date-time {
+    display: contents;
+
     &.neo-picker {
       :global(.neo-input.neo-input-date-time::-webkit-calendar-picker-indicator) {
         display: none; /* Hide the default date icon in WebKit browsers */

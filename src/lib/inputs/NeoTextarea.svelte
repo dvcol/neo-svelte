@@ -2,6 +2,7 @@
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
+  import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
 
   import type { EventHandler, FocusEventHandler, FormEventHandler, PointerEventHandler } from 'svelte/elements';
@@ -48,7 +49,7 @@
     id = `neo-textarea-${getUUID()}`,
     ref = $bindable(),
 
-    value = $bindable(),
+    value = $bindable(''),
     valid = $bindable(),
     dirty = $bindable(false),
     touched = $bindable(false),
@@ -278,9 +279,6 @@
     Object.assign(ref, { mark, clear, change, validate });
   });
 
-  let labelHeight = $state<string>();
-  let labelWidth = $state<string>();
-
   let first = $state(true);
   // Skip enter transition on first render for floating label
   const waitForTick = async () => {
@@ -289,13 +287,20 @@
     first = false;
   };
 
-  $effect(() => {
-    if (first) waitForTick();
+  let labelHeight = $state<string>();
+  let labelWidth = $state<string>();
+
+  const updateRefs = () => {
     if (!labelRef) return;
     if (placement === NeoInputLabelPlacement.Inside && !floating) return;
     labelHeight = `${labelRef?.clientHeight ?? 0}px`;
     if (placement !== NeoInputLabelPlacement.Left && placement !== NeoInputLabelPlacement.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
+  };
+
+  $effect(() => {
+    if (first) waitForTick();
+    updateRefs();
   });
 
   const rows = $derived.by(() => {
@@ -329,11 +334,10 @@
     else ref.style.height = `${scrollHeight}px`;
   };
 
-  $effect(() => {
-    // eslint-disable-next-line no-unused-expressions -- used to trigger resize textarea on value change
-    value;
-    resizeHeight();
-  });
+  watch(
+    () => resizeHeight,
+    () => value,
+  );
 
   let visible = $state(false);
   let messageId = $state(`neo-textarea-message-${getUUID()}`);

@@ -80,10 +80,6 @@
     word-break: break-all;
   }
 
-  .neo-tooltip-content {
-    @include flex.column($center: true, $gap: var(--neo-gap-xxs));
-  }
-
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg));
 

@@ -174,6 +174,8 @@
 
 <style lang="scss">
   .neo-number-step {
+    display: contents;
+
     :global(.neo-input-number-step.neo-input[type='number']) {
       /* Hide arrows -Firefox */
       appearance: textfield;
