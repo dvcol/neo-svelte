@@ -11,6 +11,7 @@
     NeoProgressState,
   } from '~/progress/neo-progress.model.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -36,8 +37,8 @@
     low, // threshold for tinting
     high, // threshold for tinting
     flex,
-    width,
-    height,
+    width: _width,
+    height: _height,
     color,
     direction = NeoProgressDirection.Right,
 
@@ -123,6 +124,9 @@
     reset(false);
   };
 
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
+
   const context = $derived<NeoProgressContext>({
     state,
 
@@ -169,8 +173,12 @@
   data-high={high}
   data-value={value}
   style:flex
-  style:width
-  style:height
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
   style:--neo-progress-background={background}
   {...rest}
 >

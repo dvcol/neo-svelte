@@ -2,7 +2,6 @@ import type { Snippet } from 'svelte';
 import type { NeoProgressContext, NeoProgressProps } from '~/progress/neo-progress.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
-import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoProgressBlur = BlurElevation | BlurElevationString;
 export type NeoProgressElevation = ShadowShallowElevation | ShadowShallowElevationString;
@@ -78,20 +77,6 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
    * An array of references to the progress marks wrappers.
    */
   refs?: HTMLSpanElement[];
-
-  // Size
-  /**
-   * Optional flex strategy for the container
-   */
-  flex?: CSSStyleDeclaration['flex'];
-  /**
-   * Optional width constraints.
-   */
-  width?: SizeInput<'width'>;
-  /**
-   * Optional height constraints.
-   */
-  height?: SizeInput<'height'>;
 
   // Other Props
   containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[ContainerTag]> & HTMLTagProps<ContainerTag>;

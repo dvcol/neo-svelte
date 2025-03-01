@@ -128,7 +128,7 @@
   style:--neo-progress-bar-box-shadow={boxShadow}
   {...containerRest}
 >
-  <NeoProgress bind:ref bind:state bind:value bind:buffer {direction} {...rest} />
+  <NeoProgress bind:ref bind:state bind:value bind:buffer {direction} {width} {height} {...rest} />
   {#each marks as position, index}
     {#if position !== undefined}
       <span bind:this={refs[index]} class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">

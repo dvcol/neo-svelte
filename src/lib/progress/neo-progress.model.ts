@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export const NeoProgressState = {
   Active: 'active' as const,
@@ -124,13 +125,13 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
    *
    * @default 100% (right, left), 0.375rem (top, bottom)
    */
-  width?: CSSStyleDeclaration['width'];
+  width?: SizeInput<'width'>;
   /**
    * Height of the progress bar.
    *
    * @default 0.375rem (right, left), 100% (top, bottom)
    */
-  height?: CSSStyleDeclaration['height'];
+  height?: SizeInput<'height'>;
 } & HTMLRefProps<HTMLElementTagNameMap[Tag]> &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
