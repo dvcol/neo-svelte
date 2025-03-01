@@ -504,7 +504,7 @@
         expanded: true,
         append: true,
         drop: true,
-        containerProps: { style: 'min-width: min(25rem, 100%)' },
+        width: 'min(25rem, 100%)',
       },
       state: expandedFileState,
       input: true,
@@ -1009,8 +1009,8 @@
             label="Checkbox"
             required
             validation
-            wrapperProps={{ style: 'min-width: 20rem' }}
             {...options}
+            width="18rem"
           />
         </SphereBackdrop>
       </div>
@@ -1062,7 +1062,7 @@
       </div>
     </div>
 
-    <!-- Radio inputs -->
+    <!-- Switch inputs -->
     <div class="row">
       <div class="column content">
         <span class="label">Switch</span>
@@ -1079,7 +1079,7 @@
               required
               validation
               {...options}
-              wrapperProps={{ style: 'min-width: 20rem' }}
+              width="18rem"
             />
           </div>
         </SphereBackdrop>

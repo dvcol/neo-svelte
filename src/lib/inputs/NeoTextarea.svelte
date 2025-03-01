@@ -71,7 +71,7 @@
     register,
 
     // Size
-    flex,
+    flex: _flex,
     width: _width,
     height: _height,
     resize,
@@ -392,8 +392,9 @@
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 
-  const width = $derived(toSize(_width));
-  const height = $derived(toSize(_height));
+  const flex = $derived(visible ? undefined : _flex);
+  const width = $derived(visible ? undefined : toSize(_width));
+  const height = $derived(visible ? undefined : toSize(_height));
 </script>
 
 {#snippet suffix()}
@@ -552,6 +553,9 @@
   {context}
   {message}
   {messageProps}
+  flex={_flex}
+  width={_width}
+  height={_height}
   in={inAction}
   out={outAction}
   transition={transitionAction}

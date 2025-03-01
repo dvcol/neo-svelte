@@ -119,6 +119,7 @@
     flex-direction: column;
 
     .neo-validation-message {
+      z-index: var(--neo-validation-z-index, var(--neo-z-index-behind, -1));
       min-height: var(--neo-line-height-sm, 1.25rem);
       margin: var(--neo-validation-margin, 0.25rem var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem));
       font-size: var(--neo-font-size-sm, 0.875rem);

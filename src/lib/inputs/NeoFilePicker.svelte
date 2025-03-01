@@ -17,6 +17,7 @@
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -63,6 +64,11 @@
     dropText = `Drop${multiple ? ' ' : ' a '}File${multiple ? 's' : ''} here`,
     expandText,
     expandHeight,
+
+    // Size
+    flex,
+    width: _width,
+    height: _height,
 
     // Events
     oninput,
@@ -292,6 +298,9 @@
       containerRest?.onfocusout?.(e);
     }, 0);
   };
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 </script>
 
 {#snippet upload()}
@@ -460,6 +469,13 @@
   bind:this={containerRef}
   class:neo-file-picker={true}
   class:neo-expanded={expanded}
+  style:flex
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
   {...containerRest}
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}

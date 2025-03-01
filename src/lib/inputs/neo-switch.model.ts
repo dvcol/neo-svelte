@@ -28,6 +28,9 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'validationProps'
     | 'color'
     | 'tinted'
+    | 'flex'
+    | 'width'
+    | 'height'
   > &
   NeoCommonSwitchProps &
   Pick<NeoLabelProps, 'label'> &

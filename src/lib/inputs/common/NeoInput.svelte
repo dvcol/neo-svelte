@@ -61,7 +61,7 @@
     placement = NeoInputLabelPlacement.Inside,
 
     // Size
-    flex,
+    flex: _flex,
     width: _width,
     height: _height,
 
@@ -262,8 +262,9 @@
     state: { valid, dirty, touched, value: typedValue, initial },
   });
 
-  const width = $derived(toSize(_width));
-  const height = $derived(toSize(_height));
+  const flex = $derived(visible ? undefined : _flex);
+  const width = $derived(visible ? undefined : toSize(_width));
+  const height = $derived(visible ? undefined : toSize(_height));
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -470,6 +471,9 @@
   {context}
   {message}
   {messageProps}
+  flex={_flex}
+  width={_width}
+  height={_height}
   in={inAction}
   out={outAction}
   transition={transitionAction}

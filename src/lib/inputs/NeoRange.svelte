@@ -17,6 +17,7 @@
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -59,6 +60,11 @@
     rounded = true,
     tooltips = true,
     skeleton = false,
+
+    // Size
+    flex: _flex,
+    width: _width,
+    height: _height,
 
     // Shadow
     elevation: _elevation = DefaultShadowShallowElevation,
@@ -355,6 +361,11 @@
   };
   $effect(updateSize);
 
+  let visible = $state(false);
+  const flex = $derived(visible ? undefined : _flex);
+  const width = $derived(visible ? undefined : toSize(_width));
+  const height = $derived(visible ? undefined : toSize(_height));
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -366,6 +377,7 @@
 
 <NeoInputValidation
   bind:ref={validationRef}
+  bind:visible
   input={inputForm}
   {register}
   {valid}
@@ -375,6 +387,9 @@
   {message}
   {messageProps}
   {rounded}
+  flex={_flex}
+  width={_width}
+  height={_height}
   in={inAction}
   out={outAction}
   transition={transitionAction}
@@ -392,6 +407,13 @@
     data-max={max}
     role="none"
     class:neo-range-container={true}
+    style:flex
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     style:--neo-range-height={rangeHeight}
     use:useFn={useProps}
     out:outFn={outProps}
@@ -539,7 +561,6 @@
 
       display: inline-flex;
       align-items: center;
-      width: fit-content;
       min-width: min(calc(var(--neo-range-height) * 12), 20rem);
       margin: 0;
       padding: calc(0.375rem + var(--neo-range-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;

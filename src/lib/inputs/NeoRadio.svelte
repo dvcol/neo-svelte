@@ -10,6 +10,7 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { coerce, DefaultShadowShallowElevation } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -42,6 +43,11 @@
     tinted,
     rounded = true,
     skeleton = false,
+
+    // Size
+    flex,
+    width: _width,
+    height: _height,
 
     // Actions
     in: inAction,
@@ -78,6 +84,9 @@
       containerRest?.onfocusout?.(e);
     }, 0);
   };
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 </script>
 
 <svelte:element
@@ -86,6 +95,13 @@
   class:neo-radio-container={true}
   class:neo-rounded={rounded}
   class:neo-flat={!elevation}
+  style:flex
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
   {...containerRest}
   onfocusin={onFocusIn}
   onfocusout={onFocusOut}

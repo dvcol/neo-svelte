@@ -17,6 +17,9 @@ export type NeoRadioProps = NeoBaseInputProps &
     | 'containerProps'
     | 'color'
     | 'tinted'
+    | 'flex'
+    | 'width'
+    | 'height'
   > &
   Pick<NeoLabelProps, 'label'> &
   NeoCommonRadioProps & {

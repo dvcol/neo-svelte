@@ -8,6 +8,7 @@ import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoRangeValue = number | [number, number];
 export type NeoRangeElevation = ShadowShallowElevation | ShadowShallowElevationString;
@@ -152,6 +153,20 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
      * If false, the input will not be registered with the form context.
      */
     register?: NeoInputValidationProps['register'];
+
+    // Sizing
+    /**
+     * Optional flex strategy for the container
+     */
+    flex?: CSSStyleDeclaration['flex'];
+    /**
+     * Optional width constraints.
+     */
+    width?: SizeInput<'width'>;
+    /**
+     * Optional height constraints.
+     */
+    height?: SizeInput<'height'>;
 
     // Other props
     /**

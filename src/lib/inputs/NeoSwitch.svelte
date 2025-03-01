@@ -15,6 +15,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { coerce, DefaultShadowShallowElevation } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -55,6 +56,11 @@
     tinted,
     rounded = true,
     skeleton = false,
+
+    // Size
+    flex: _flex,
+    width: _width,
+    height: _height,
 
     // Actions
     in: inAction,
@@ -130,6 +136,10 @@
       containerRest?.onfocusout?.(e);
     }, 0);
   };
+
+  const flex = $derived(visible ? undefined : _flex);
+  const width = $derived(visible ? undefined : toSize(_width));
+  const height = $derived(visible ? undefined : toSize(_height));
 </script>
 
 <NeoInputValidation
@@ -146,6 +156,9 @@
   {context}
   {message}
   {messageProps}
+  flex={_flex}
+  width={_width}
+  height={_height}
   in={inAction}
   out={outAction}
   transition={transitionAction}
@@ -157,6 +170,13 @@
     bind:this={containerRef}
     class:neo-switch-container={true}
     class:neo-flat={!elevation}
+    style:flex
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
     {...containerRest}
     onfocusin={onFocusIn}
     onfocusout={onFocusOut}
