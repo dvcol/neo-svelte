@@ -49,7 +49,7 @@
     id = `neo-textarea-${getUUID()}`,
     ref = $bindable(),
 
-    value = $bindable(''),
+    value = $bindable(),
     valid = $bindable(),
     dirty = $bindable(false),
     touched = $bindable(false),
@@ -61,6 +61,7 @@
     loading,
     clearable,
     nullable = true,
+    defaultValue = '',
 
     dirtyOnInput,
     dirtyOnBlur,
@@ -209,7 +210,7 @@
   const fallback = () => {
     if (nullable) return value;
     if (hasValue) return value;
-    value = rest?.defaultValue ?? '';
+    value = defaultValue ?? '';
     return value;
   };
 
@@ -252,7 +253,7 @@
     state?: NeoInputState<HTMLTextAreaElement>,
     event?: InputEvent | SvelteEvent<InputEvent>,
   ) => {
-    value = nullable ? '' : (rest?.defaultValue ?? '');
+    value = nullable ? '' : (defaultValue ?? '');
     await tick();
     focus();
     if (state) mark({ touched: false, dirty: false, ...state });
@@ -436,6 +437,7 @@
     class:neo-fit-content={fitContent}
     style:resize
     {rows}
+    {defaultValue}
     onblur={onBlur}
     onfocus={onFocus}
     oninput={onInput}

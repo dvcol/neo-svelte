@@ -8,9 +8,17 @@ import type { NeoValidationState } from '~/inputs/common/neo-validation.model.js
 
 import { NeoErrorFormDuplicateId, NeoErrorFormMissingId } from '~/utils/error.utils.js';
 
+export type NeoFormContextFieldHTMLElement<Element extends HTMLElement = HTMLElement> = Element & {
+  /**
+   * Check the input validity.
+   * @param update whether to check the input dirty and/or valid state.
+   */
+  validate?: (update?: { dirty?: boolean; valid?: boolean }) => NeoValidationState<unknown>;
+};
+
 export type NeoFormType = HTMLInputTypeAttribute | 'range' | 'switch' | null;
 
-export type NeoFormContextField<Value = unknown, Element = HTMLElement> = {
+export type NeoFormContextField<Value = unknown, Element extends NeoFormContextFieldHTMLElement = NeoFormContextFieldHTMLElement> = {
   id: string;
   ref?: Element;
   name?: string | null;
@@ -105,6 +113,11 @@ export class NeoFormContext {
 
   remove(id: NeoFormContextField['id']) {
     this.#fields.delete(id);
+  }
+
+  validate(): NeoValidationState {
+    this.#fields.forEach(field => field.ref?.validate?.());
+    return { touched: this.touched, dirty: this.dirty, valid: this.valid, value: this.values, initial: this.initials };
   }
 }
 

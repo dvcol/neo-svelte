@@ -39,6 +39,9 @@
       get context() {
         return context;
       },
+      validate() {
+        return context.validate();
+      },
     });
   });
 </script>

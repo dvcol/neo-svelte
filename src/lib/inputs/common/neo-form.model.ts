@@ -47,4 +47,4 @@ export type NeoFormProps = {
 } & HTMLNeoBaseElement<HTMLFormElement> &
   HTMLRefProps<HTMLFormElement>;
 
-export type NeoFormHTMLElement = HTMLFormElement & Pick<NeoFormProps, 'context'>;
+export type NeoFormHTMLElement = HTMLFormElement & Pick<NeoFormProps, 'context'> & Pick<NeoFormContext, 'validate'>;

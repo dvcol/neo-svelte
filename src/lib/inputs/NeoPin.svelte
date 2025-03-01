@@ -349,6 +349,11 @@
     state: { valid, dirty, touched, value, initial },
   });
 
+  $effect(() => {
+    if (!ref) return;
+    Object.assign(ref, { clear, validate });
+  });
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
