@@ -5,6 +5,7 @@
   import type { NeoValidationContext, NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
 
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
   import { defaultDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -18,6 +19,12 @@
     ref = $bindable(),
     tag = 'div',
     context,
+    disabled,
+
+    // Size
+    flex,
+    width: _width,
+    height: _height,
 
     // Transition
     in: inAction,
@@ -34,10 +41,14 @@
   const { tag: messageTag = 'div', ...messageRest } = $derived(messageProps ?? {});
 
   const innerContext = $derived<NeoValidationContext<T, V>>({
+    disabled,
     messageId,
     message,
     error,
   });
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -45,42 +56,60 @@
   const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
 </script>
 
-<svelte:element this={tag} bind:this={ref} class:neo-validation-group-wrapper={true} out:outFn={outProps} in:inFn={inProps} {...rest}>
+{#if disabled}
   {@render children?.(innerContext)}
-  <div class="neo-validation-message">
-    {#if error}
-      <svelte:element
-        this={messageTag}
-        id={messageId}
-        class:neo-validation-error={true}
-        in:fly={{ duration: defaultDuration, delay: message ? defaultDuration / 2 : 0, y: '-50%' }}
-        out:fly={{ duration: defaultDuration, y: message ? '50%' : '-50%' }}
-        {...messageRest}
-      >
-        {#if typeof error === 'function'}
-          {@render error(context)}
-        {:else}
-          {error}
-        {/if}
-      </svelte:element>
-    {:else if message}
-      <svelte:element
-        this={messageTag}
-        id={messageId}
-        class:neo-validation-description={true}
-        in:fly={{ duration: defaultDuration, delay: defaultDuration / 2, y: '-50%' }}
-        out:fly={{ duration: defaultDuration, y: '50%' }}
-        {...messageRest}
-      >
-        {#if typeof message === 'function'}
-          {@render message(context)}
-        {:else}
-          {message}
-        {/if}
-      </svelte:element>
-    {/if}
-  </div>
-</svelte:element>
+{:else}
+  <svelte:element
+    this={tag}
+    bind:this={ref}
+    class:neo-validation-group-wrapper={true}
+    style:flex
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
+    out:outFn={outProps}
+    in:inFn={inProps}
+    {...rest}
+  >
+    {@render children?.(innerContext)}
+    <div class="neo-validation-message">
+      {#if error}
+        <svelte:element
+          this={messageTag}
+          id={messageId}
+          class:neo-validation-error={true}
+          in:fly={{ duration: defaultDuration, delay: message ? defaultDuration / 2 : 0, y: '-50%' }}
+          out:fly={{ duration: defaultDuration, y: message ? '50%' : '-50%' }}
+          {...messageRest}
+        >
+          {#if typeof error === 'function'}
+            {@render error(context)}
+          {:else}
+            {error}
+          {/if}
+        </svelte:element>
+      {:else if message}
+        <svelte:element
+          this={messageTag}
+          id={messageId}
+          class:neo-validation-description={true}
+          in:fly={{ duration: defaultDuration, delay: defaultDuration / 2, y: '-50%' }}
+          out:fly={{ duration: defaultDuration, y: '50%' }}
+          {...messageRest}
+        >
+          {#if typeof message === 'function'}
+            {@render message(context)}
+          {:else}
+            {message}
+          {/if}
+        </svelte:element>
+      {/if}
+    </div>
+  </svelte:element>
+{/if}
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;

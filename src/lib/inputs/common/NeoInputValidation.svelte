@@ -13,15 +13,15 @@
     // Snippets
     children,
     error,
+    message,
 
     // States
     ref = $bindable(),
     visible = $bindable(false),
+
+    valid,
     validation,
     validationMessage,
-
-    message,
-    valid,
 
     input,
     register,
@@ -34,34 +34,22 @@
   /* eslint-enable prefer-const */
 
   const errorMessage = $derived.by(() => {
-    if (valid !== false) return;
-    if (error) return error;
-    if (!validation || validation === 'success') return;
-    return validationMessage;
+    if (!validation || validation === 'success' || valid !== false) return;
+    return error ?? validationMessage;
   });
 
-  const showMessage = $derived(message || errorMessage || error || validation);
+  const disabled = $derived(!validation && !(message || errorMessage));
 
   $effect(() => {
-    visible = !!showMessage;
+    visible = !disabled;
   });
 
   const form = getNeoFormContext();
   $effect.pre(() => {
     if (!form || !input?.id || register === false) return;
-    untrack(() =>
-      form.register({
-        ...input,
-        error: errorMessage,
-        message,
-      }),
-    );
+    untrack(() => form.register({ ...input, error: errorMessage, message }));
     return () => form?.remove(input.id);
   });
 </script>
 
-{#if showMessage}
-  <NeoValidation bind:ref bind:messageId error={errorMessage} {message} {messageProps} {children} {...rest} />
-{:else}
-  {@render children?.({ messageId, message, error })}
-{/if}
+<NeoValidation bind:ref bind:messageId {disabled} error={errorMessage} {message} {messageProps} {children} {...rest} />

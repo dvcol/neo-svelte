@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoValidationValue = string | string[] | number | boolean | boolean[] | FileList | any;
 export type NeoValidationState<T extends NeoValidationValue = NeoValidationValue> = {
@@ -34,6 +35,10 @@ export type NeoValidationContext<
   V extends NeoValidationValue = NeoValidationValue,
   C extends NeoValidationFieldContext<T, V> = NeoValidationFieldContext<T, V>,
 > = {
+  /**
+   * If true, all validation messages are hidden.
+   */
+  disabled?: boolean;
   /**
    * The message's element id.
    */
@@ -76,6 +81,20 @@ export type NeoValidationProps<
    * The context to pass to the snippets.
    */
   context: C;
+
+  // Sizing
+  /**
+   * Optional flex strategy for the container
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
+   * Optional width constraints.
+   */
+  width?: SizeInput<'width'>;
+  /**
+   * Optional height constraints.
+   */
+  height?: SizeInput<'height'>;
 
   // Styles
 
