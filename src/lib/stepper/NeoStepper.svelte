@@ -10,9 +10,15 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
-  import { type NeoStepperContext, type NeoStepperElevation, NeoStepperPlacement, type NeoStepperProps } from '~/stepper/neo-stepper.model.js';
+  import { type NeoStepperContext, NeoStepperPlacement, type NeoStepperProps } from '~/stepper/neo-stepper.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { coerce, DefaultShadowShallowElevation, MaxShallowShadowElevation, MinShallowShadowElevation } from '~/utils/shadow.utils.js';
+  import {
+    coerce,
+    DefaultShadowShallowElevation,
+    MaxShallowShadowElevation,
+    MinShallowShadowElevation,
+    type ShadowShallowElevation,
+  } from '~/utils/shadow.utils.js';
   import { quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -39,6 +45,7 @@
     vertical = false,
     placement = NeoStepperPlacement.Start,
     elevation: _elevation = DefaultShadowShallowElevation,
+    borderless,
 
     // Transition
     in: inAction,
@@ -62,7 +69,7 @@
 
   const { tag: controlsTag = 'div', ...controlsRest } = $derived(controlsProps ?? {});
 
-  const elevation = $derived(clamp(coerce(_elevation), MinShallowShadowElevation, MaxShallowShadowElevation) as NeoStepperElevation);
+  const elevation = $derived(clamp(coerce(_elevation), MinShallowShadowElevation, MaxShallowShadowElevation) as ShadowShallowElevation);
 
   // TODO - compress marks when more than x steps & animate ?
 
@@ -88,6 +95,12 @@
   const canCancel = $derived(step.current?.cancel ?? cancel);
   const canNext = $derived(step.current?.next ?? next);
 
+  const emitStepEvent = (stepEvent = { previous: last, current: active, step: steps[active] }) => {
+    onStep?.(stepEvent);
+    step.current?.onStep?.(stepEvent);
+    return stepEvent;
+  };
+
   /**
    * This is imperative navigation, it will not check if next or previous constraints are met.
    * But, it will check if the target step is disabled.
@@ -96,7 +109,7 @@
     if (!target || target?.disabled) return;
     last = active;
     active = index;
-    onStep?.({ previous: last, current: active, step: target });
+    return emitStepEvent();
   };
 
   const goPrevious = () => {
@@ -154,6 +167,7 @@
   {@const _disabled = isMarkDisabled(ctx.index)}
   <NeoProgressMark
     {...ctx}
+    {borderless}
     disabled={_disabled}
     readonly={_disabled}
     glass={progressProps?.glass}
@@ -172,6 +186,7 @@
       mark={progressMarks ? mark : undefined}
       {marks}
       {elevation}
+      {borderless}
       direction={vertical ? NeoProgressDirection.Bottom : NeoProgressDirection.Right}
       {...progressProps}
     />
@@ -183,7 +198,10 @@
     <svelte:element this={controlsTag} class:neo-stepper-controls={true} {...controlsRest}>
       {#if cancel}
         <NeoButton
-          {elevation}
+          type="reset"
+          {borderless}
+          elevation={elevation > 0 ? elevation : 0}
+          active={elevation > 0 ? -1 : -2}
           disabled={isControlDisabled('cancel')}
           label="Cancel"
           aria-label="Cancel stepper"
@@ -198,7 +216,9 @@
       <div>
         {#if active > 0 || loop}
           <NeoButton
-            {elevation}
+            {borderless}
+            elevation={elevation > 0 ? elevation : 0}
+            active={elevation > 0 ? -1 : -2}
             disabled={isControlDisabled('previous')}
             label="Previous"
             aria-label="Go to previous step"
@@ -211,7 +231,10 @@
           />
         {/if}
         <NeoButton
-          {elevation}
+          type={active === steps.length - 1 ? 'submit' : 'button'}
+          {borderless}
+          elevation={elevation > 0 ? elevation : 0}
+          active={elevation > 0 ? -1 : -2}
           disabled={isControlDisabled('next')}
           label="Next"
           aria-label="Go to next step"

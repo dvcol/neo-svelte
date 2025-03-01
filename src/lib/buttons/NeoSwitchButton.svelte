@@ -68,6 +68,7 @@
 {/snippet}
 
 <button
+  type="button"
   role="switch"
   aria-checked={indeterminate ? 'mixed' : checked}
   class:neo-switch-button={true}

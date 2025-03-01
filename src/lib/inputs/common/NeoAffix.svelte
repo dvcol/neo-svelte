@@ -69,7 +69,7 @@
       {/if}
     </span>
   {:else if clear}
-    <button {disabled} class:neo-affix-clear={true} aria-label="clear" transition:fade={quickDurationProps} {...closeProps}>
+    <button type="button" {disabled} class:neo-affix-clear={true} aria-label="clear" transition:fade={quickDurationProps} {...closeProps}>
       {#if reset}
         {@render reset({ size })}
       {:else}

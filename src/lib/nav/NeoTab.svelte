@@ -115,6 +115,7 @@
   </NeoButton>
   {#if closeable}
     <button
+      type="button"
       class="neo-tab-close"
       aria-label="Close tab"
       class:neo-disabled={disabled}

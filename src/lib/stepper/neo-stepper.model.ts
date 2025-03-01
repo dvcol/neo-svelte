@@ -14,7 +14,7 @@ export const NeoStepperPlacement = {
 
 export type NeoStepperPlacements = (typeof NeoStepperPlacement)[keyof typeof NeoStepperPlacement];
 
-export type NeoStepperContext = {
+export type NeoStepperContext<Value = unknown> = {
   /**
    * Step cursor containing the current, next and previous steps.
    */
@@ -22,15 +22,15 @@ export type NeoStepperContext = {
     /**
      * The active step.
      */
-    current: NeoStepperStep;
+    current: NeoStepperStep<Value>;
     /**
      * The next step (active + 1).
      */
-    next?: NeoStepperStep;
+    next?: NeoStepperStep<Value>;
     /**
      * The previous step (active - 1).
      */
-    previous?: NeoStepperStep;
+    previous?: NeoStepperStep<Value>;
   };
   /**
    * Index of the active step.
@@ -50,7 +50,7 @@ export type NeoStepperContext = {
    * @param step - index of the step to navigate to.
    * @param target - Optional step instance (extracted from the steps array if not provided).
    */
-  goToStep: (step: number, target?: NeoStepperStep) => void;
+  goToStep: (step: number, target?: NeoStepperStep<Value>) => void;
   /**
    * Method to navigate to the next step if possible.
    * This will check if the next step is disabled, if the current step allows forward navigation and if loop navigation is enabled.
@@ -63,9 +63,9 @@ export type NeoStepperContext = {
   goNext: () => void;
 };
 
-export type NeoStepperEvent = { previous: number; current: number; step: NeoStepperStep };
+export type NeoStepperEvent<Value = unknown> = { previous: number; current: number; step: NeoStepperStep<Value> };
 
-export type NeoStepperStep = {
+export type NeoStepperStep<Value = unknown> = {
   /**
    * Unique identifier for the step.
    */
@@ -73,7 +73,7 @@ export type NeoStepperStep = {
   /**
    * Optional snippet to render in place of the step content.
    */
-  render?: Snippet<[NeoStepperContext]>;
+  render?: Snippet<[NeoStepperContext<Value>]>;
 
   /**
    * Disable all navigation to this step.
@@ -109,7 +109,7 @@ export type NeoStepperStep = {
    * Optional hook to run when the step is activated.
    * @param event
    */
-  onStep?: (event: NeoStepperEvent) => void;
+  onStep?: (event: NeoStepperEvent<Value>) => void;
 
   /**
    * Optional props to pass to the previous button when this step is active.
@@ -139,16 +139,20 @@ export type NeoStepperStep = {
    * @see NeoStepperProps.markProps
    */
   markProps?: NeoProgressMarkProps;
+  /**
+   * Optional value to store in the step.
+   */
+  value?: Value;
 };
 
 export type NeoStepperElevation = ShadowShallowElevation | ShadowShallowElevationString;
 
-export type NeoStepperProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
+export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
   /**
    * Snippet to render in place of the stepper content.
    */
-  children?: Snippet<[NeoStepperContext]>;
+  children?: Snippet<[NeoStepperContext<Value>]>;
 
   // States
   /**
@@ -159,7 +163,7 @@ export type NeoStepperProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   /**
    * Array of steps to render in the stepper.
    */
-  steps: NeoStepperStep[];
+  steps: NeoStepperStep<Value>[];
   /**
    * Index of the currently active step.
    */
@@ -225,13 +229,17 @@ export type NeoStepperProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    * Elevation style for the stepper.
    */
   elevation?: NeoStepperElevation;
+  /**
+   * Whether to render the stepper without borders (progress & buttons).
+   */
+  borderless?: boolean;
 
   // Methods
   /**
    * Optional hook to run when a step is activated.
    * @param event
    */
-  onStep?: (event: NeoStepperEvent) => void;
+  onStep?: (event: NeoStepperEvent<Value>) => void;
 
   // OtherProps
   /**

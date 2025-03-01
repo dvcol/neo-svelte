@@ -45,6 +45,7 @@
 </script>
 
 <button
+  type="button"
   role="radio"
   aria-checked={checked}
   class:neo-radio-button={true}

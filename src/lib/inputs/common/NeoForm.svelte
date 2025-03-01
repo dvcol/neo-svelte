@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
 
+  import type { EventHandler, FormEventHandler } from 'svelte/elements';
   import type { NeoFormProps } from '~/inputs/common/neo-form.model.js';
 
   import NeoFieldSet from '~/inputs/common/NeoFieldSet.svelte';
@@ -25,12 +26,26 @@
     // Styles
     borderless,
 
+    // Events
+    onreset,
+    onsubmit,
+
     // Other props
     ...rest
   }: NeoFormProps = $props();
   /* eslint-enable prefer-const */
 
   const context = setNeoFormContext(id);
+
+  const onReset: FormEventHandler<HTMLFormElement> = e => {
+    context.validate();
+    onreset?.(e);
+  };
+
+  const onSubmit: EventHandler<SubmitEvent, HTMLFormElement> = e => {
+    context.validate();
+    onsubmit?.(e);
+  };
 
   $effect(() => {
     if (!ref) return;
@@ -46,7 +61,7 @@
   });
 </script>
 
-<form bind:this={ref} {id} class:neo-form={true} aria-labelledby={legendId} {...rest}>
+<form bind:this={ref} {id} class:neo-form={true} aria-labelledby={legendId} {...rest} onreset={onReset} onsubmit={onSubmit}>
   {#if legend !== undefined}
     <NeoFieldSet id={legendId} {legend} {borderless} {legendProps} {...fieldsetProps}>
       {@render children?.(context)}

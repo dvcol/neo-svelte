@@ -466,6 +466,7 @@
             </span>
             <button
               bind:this={lowerTooltip.elements.reference}
+              type="button"
               class="neo-range-handle"
               style:--neo-range-handler-z-index={lastIndex ? 0 : 1}
               aria-label="Drag to set {isArray ? 'lower ' : ''}value"
@@ -477,7 +478,13 @@
               <span class="neo-range-handle-before neo-range">
                 <!--   handle before   -->
               </span>
-              <button bind:this={upperTooltip.elements.reference} class="neo-range-handle" aria-label="Drag to set upper value" {...progressHandler}>
+              <button
+                bind:this={upperTooltip.elements.reference}
+                type="button"
+                class="neo-range-handle"
+                aria-label="Drag to set upper value"
+                {...progressHandler}
+              >
                 <!--   handle handle   -->
               </button>
             {/if}

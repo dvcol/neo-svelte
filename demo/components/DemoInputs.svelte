@@ -374,6 +374,7 @@
         required: true,
         minLength: 5,
         placeholder: 'Placeholder',
+        validation: true,
         error: 'Custom error: min length 5',
         message: 'This is only visible when valid or untouched.',
         name: 'custom-error',
@@ -383,11 +384,12 @@
       input: true,
     },
     {
-      label: 'Valid',
+      label: 'Only Valid',
       props: {
         label: 'No Restrictions',
         placeholder: 'Placeholder',
-        validation: true,
+        required: true,
+        validation: 'success',
         wrapperProps: { style: 'max-width: 20.5rem' },
         name: 'valid',
       },
@@ -396,13 +398,13 @@
       input: true,
     },
     {
-      label: 'Invalid',
+      label: 'Only Invalid',
       props: {
         label: 'Required',
         required: true,
         minLength: 5,
         placeholder: 'Placeholder',
-        validation: true,
+        validation: 'error',
         wrapperProps: { style: 'max-width: 20.5rem' },
         message: 'This is only visible when valid or untouched.',
         name: 'invalid',

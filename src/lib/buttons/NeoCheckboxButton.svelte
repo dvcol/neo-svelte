@@ -47,6 +47,7 @@
 </script>
 
 <button
+  type="button"
   class="neo-checkbox-button"
   role="checkbox"
   aria-checked={indeterminate ? 'mixed' : checked}

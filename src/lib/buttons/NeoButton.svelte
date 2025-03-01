@@ -159,6 +159,7 @@
 
   const element = $derived(tag ?? (href ? 'a' : 'button'));
   const role = $derived(!['button', 'a'].includes(element) ? 'button' : undefined);
+  const type = $derived(element === 'button' ? 'button' : undefined);
   const tabindex = $derived.by(() => {
     if (readonly) return -1;
     if (!disabled && role) return 0;
@@ -178,6 +179,7 @@
   bind:this={ref}
   href={loading || disabled || readonly ? undefined : href}
   aria-disabled={readonly && !disabled}
+  {type}
   {role}
   {tabindex}
   class:neo-button={true}
