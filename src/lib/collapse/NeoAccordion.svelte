@@ -4,6 +4,7 @@
   import NeoCollapseGroup from '~/collapse/NeoCollapseGroup.svelte';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeHoverShadowElevation, computeShadowElevation, isShadowFlat, parseBlur } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   const {
     // Snippets
@@ -30,6 +31,11 @@
     color,
     start,
 
+    // Size
+    flex,
+    width: _width,
+    height: _height,
+
     // Other props
     group,
     ...rest
@@ -47,6 +53,9 @@
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 </script>
 
 <svelte:element
@@ -64,6 +73,13 @@
   class:neo-inset-hover={hoverElevation < 0}
   class:neo-glass={glass}
   class:neo-start={start}
+  style:flex
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
   style:--neo-accordion-box-shadow-hover={hoverShadow}
   style:--neo-accordion-box-shadow={boxShadow}
   style:--neo-accordion-glass-blur={filter}

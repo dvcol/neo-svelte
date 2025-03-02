@@ -10,6 +10,7 @@ import type {
   ShadowHoverElevation,
   ShadowHoverElevationsString,
 } from '~/utils/shadow.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoAccordionBlur = BlurElevation | BlurElevationString;
 export type NeoAccordionElevation = ShadowElevation | ShadowElevationString;
@@ -99,6 +100,21 @@ export type NeoAccordionProps<Tag extends keyof HTMLElementTagNameMap = 'div'> =
    */
   start?: boolean;
 
+  // Size
+  /**
+   * Overrides the default flex value.
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
+   * Optional width constraints.
+   */
+  width?: SizeInput<'width'>;
+  /**
+   * Optional height constraints.
+   */
+  height?: SizeInput<'height'>;
+
+  // Other props
   /**
    * The group settings to pass to the inner collapse group.
    */

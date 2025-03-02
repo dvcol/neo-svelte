@@ -215,8 +215,6 @@
     }
 
     &:not(.neo-horizontal) {
-      width: 100%;
-
       .neo-collapse-trigger {
         width: 100%;
         padding-block: var(--neo-collapse-trigger-gap, var(--neo-gap-xs, 0.625rem));
