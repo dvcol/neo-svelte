@@ -526,7 +526,8 @@
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
-    &:-webkit-autofill:active {
+    &:-webkit-autofill:active,
+    &:-webkit-autofill::first-line {
       color: var(--neo-input-text-color, var(--neo-text-color, inherit)) !important;
       text-decoration: none;
       background-clip: text;

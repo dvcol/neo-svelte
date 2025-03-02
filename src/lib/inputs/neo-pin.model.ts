@@ -39,6 +39,10 @@ export type NeoPinProps = NeoPinState &
      * Input Group properties to pass to the input group container.
      */
     groupProps?: NeoInputProps['containerProps'];
+    /**
+     * Array of input properties to pass to each pin input in sequence.
+     */
+    pinProps?: NeoInputProps[];
   };
 
 export type NeoPinMethods = {

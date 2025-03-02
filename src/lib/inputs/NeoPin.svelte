@@ -51,6 +51,7 @@
     maxlength,
     dirtyOnInput,
     validateOnInput,
+    autocomplete,
 
     // Styles
     groups = 1,
@@ -83,6 +84,7 @@
     validationProps,
     messageProps,
     groupProps,
+    pinProps,
     ...rest
   }: NeoPinProps = $props();
   /* eslint-enable prefer-const */
@@ -392,13 +394,14 @@
     {/if}
     <div class="neo-pin-group-wrapper" class:neo-vertical={vertical}>
       <input
-        class="neo-pin-hidden"
+        class:neo-pin-hidden={!autocomplete}
+        class:neo-pin-autocomplete={!!autocomplete}
         bind:this={ref}
         {id}
         aria-hidden="true"
         aria-invalid={valid === undefined ? undefined : !valid}
         aria-describedby={visible ? messageId : undefined}
-        hidden
+        hidden={!autocomplete}
         type="text"
         tabindex="-1"
         {step}
@@ -408,6 +411,7 @@
         {minlength}
         {maxlength}
         {pattern}
+        {autocomplete}
         bind:value
         oninvalid={onInvalid}
       />
@@ -432,6 +436,7 @@
               register={false}
               containerProps={groupProps}
               {...rest}
+              {...pinProps?.[i * 2 + j]}
               class={['neo-input-pin', rest.class]}
               oninput={() => onInput(i, j)}
               onkeydown={e => onKeydown(e, i, j)}
@@ -534,14 +539,30 @@
     align-items: center;
   }
 
-  .neo-pin-hidden {
-    display: none;
-  }
-
   .neo-pin-group-wrapper,
   .neo-pin-group {
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .neo-pin-group-wrapper {
+    position: relative;
+  }
+
+  .neo-pin-autocomplete {
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    inset: 0;
+  }
+
+  .neo-pin-hidden {
+    display: none;
   }
 
   .neo-pin-separator {

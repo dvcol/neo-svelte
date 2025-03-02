@@ -679,7 +679,8 @@
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
-    &:-webkit-autofill:active {
+    &:-webkit-autofill:active,
+    &:-webkit-autofill::first-line {
       color: var(--neo-textarea-text-color, var(--neo-text-color, inherit)) !important;
       text-decoration: none;
       background-clip: text;
@@ -797,7 +798,7 @@
       padding-right: 3.25rem; // 2.5rem + 0.75rem
     }
 
-    :global(.neo-label-container.neo-floating) {
+    :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill))) {
       :global(.neo-label) {
         --neo-label-color: var(--neo-input-floating-label-color, var(--neo-text-color-secondary));
         --neo-label-color-hover: var(--neo-input-floating-label-color, var(--neo-text-color-secondary-hover));
@@ -865,7 +866,7 @@
         left: calc(2.25rem - var(--neo-textarea-margin-left));
       }
 
-      :global(.neo-label-container.neo-floating .neo-label) {
+      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
         left: 0;
       }
     }
@@ -885,11 +886,11 @@
         right: calc(0% - var(--neo-textarea-margin-right));
       }
 
-      :global(.neo-label-container.neo-floating .neo-label) {
+      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
         right: calc(100% - var(--neo-textarea-label-width));
       }
 
-      :global(.neo-label-container.neo-floating.neo-rounded .neo-label) {
+      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)).neo-rounded .neo-label) {
         right: calc(100% - 0.5rem - var(--neo-textarea-label-width));
       }
     }
@@ -908,6 +909,7 @@
         padding: 0.75rem 1rem 0.1875rem 1.25rem;
       }
 
+      :global(.neo-label-container:has(.neo-textarea:-webkit-autofill) .neo-label),
       :global(.neo-label-container:not(.neo-floating) .neo-label) {
         font-size: var(--neo-font-size-sm, 0.875rem);
       }
@@ -924,10 +926,12 @@
       }
     }
 
-    &[data-placement='top'] :global(.neo-label-container.neo-floating .neo-label),
-    &[data-placement='left'] :global(.neo-label-container.neo-floating .neo-label),
-    &[data-placement='right'] :global(.neo-label-container.neo-floating .neo-label) {
-      top: 0;
+    &[data-placement='top'],
+    &[data-placement='left'],
+    &[data-placement='right'] {
+      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
+        top: 0;
+      }
     }
 
     &.neo-glass {

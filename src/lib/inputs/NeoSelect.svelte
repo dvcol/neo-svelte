@@ -11,7 +11,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
+  import { displayValue, type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
   import { findByValueInList, type NeoListItemOrSection } from '~/list/neo-list.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import { getNextFocusableElement } from '~/utils/html-element.utils.js';
@@ -26,7 +26,7 @@
 
     // State
     options = [],
-    display,
+    display = displayValue,
     transform = transformValue,
 
     // Input Props
@@ -45,6 +45,7 @@
     clearable,
     color,
     tinted,
+    autocomplete,
 
     // Pop Select Props
     listRef = $bindable(),
@@ -58,8 +59,6 @@
     tooltipRef = $bindable(),
     triggerRef = $bindable(),
     open = $bindable(false),
-    width,
-    height,
     openDelay,
     hoverDelay = 300,
     openOnHover = false,
@@ -117,10 +116,15 @@
     },
   );
 
+  const reflectValue = () => {
+    selected = findByValueInList(value, items);
+    if (selected === undefined) value = undefined;
+  };
+
   $effect.pre(() => {
     untrack(() => {
       if (selected) return;
-      selected = findByValueInList(value, items);
+      untrack(reflectValue);
     });
   });
 
@@ -191,6 +195,7 @@
   {after}
   {children}
   {multiple}
+  {autocomplete}
   {...rest}
   readonly
   inert
@@ -210,6 +215,10 @@
   }}
 />
 
+{#if autocomplete}
+  <input aria-hidden="true" type="text" class="neo-select-autocomplete-hidden" {autocomplete} bind:value onchange={() => reflectValue()} />
+{/if}
+
 <NeoPopSelect
   target={containerRef}
   bind:listRef
@@ -225,8 +234,6 @@
   multiple={!!multiple}
   {rounded}
   {search}
-  {width}
-  {height}
   {color}
   {tinted}
   {openDelay}
@@ -237,3 +244,16 @@
   elevation={tooltipElevation}
   {...listProps}
 />
+
+<style lang="scss">
+  .neo-select-autocomplete-hidden {
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    inset: 0;
+  }
+</style>

@@ -708,7 +708,7 @@
         padding-right: 0;
       }
 
-      :global(.neo-label-container.neo-floating) {
+      :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill))) {
         :global(.neo-label) {
           --neo-label-color: var(--neo-input-floating-label-color, var(--neo-text-color-secondary));
           --neo-label-color-hover: var(--neo-input-floating-label-color, var(--neo-text-color-secondary-hover));
@@ -790,7 +790,7 @@
           left: calc(0% - var(--neo-input-margin-left));
         }
 
-        :global(.neo-label-container.neo-floating .neo-label) {
+        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
           left: calc(0.25rem + var(--neo-input-before-width));
         }
       }
@@ -810,11 +810,11 @@
           right: calc(0% - var(--neo-input-margin-right));
         }
 
-        :global(.neo-label-container.neo-floating .neo-label) {
+        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
           right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-before-width));
         }
 
-        :global(.neo-label-container.neo-floating.neo-rounded:not(.neo-before) .neo-label) {
+        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)).neo-rounded:not(.neo-before) .neo-label) {
           right: calc(100% - var(--neo-input-label-width) - 0.75rem - var(--neo-input-before-width));
         }
       }
@@ -842,10 +842,11 @@
           padding-left: 0;
         }
 
-        :global(.neo-label-container.neo-floating .neo-label) {
+        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
           translate: 0 calc((var(--neo-input-label-container-height) / 2) - 50% - 0.25rem);
         }
 
+        :global(.neo-label-container:has(.neo-input:-webkit-autofill) .neo-label),
         :global(.neo-label-container:not(.neo-floating) .neo-label) {
           font-size: var(--neo-font-size-sm, 0.875rem);
         }
@@ -870,7 +871,7 @@
       &[data-placement='top'],
       &[data-placement='left'],
       &[data-placement='right'] {
-        :global(.neo-label-container.neo-floating .neo-label) {
+        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
           top: calc(50% - var(--neo-input-label-height) / 2);
         }
 
