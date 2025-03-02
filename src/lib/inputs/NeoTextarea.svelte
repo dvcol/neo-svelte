@@ -275,11 +275,6 @@
     return validate();
   };
 
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, { mark, clear, change, validate });
-  });
-
   let first = $state(true);
   // Skip enter transition on first render for floating label
   const waitForTick = async () => {
@@ -298,11 +293,6 @@
     if (placement !== NeoInputLabelPlacement.Left && placement !== NeoInputLabelPlacement.Right) return;
     labelWidth = `${labelRef?.clientWidth ?? 0}px`;
   };
-
-  $effect(() => {
-    if (first) waitForTick();
-    updateRefs();
-  });
 
   const rows = $derived.by(() => {
     if (typeof autoResize === 'boolean' || !autoResize) return after ? 3 : undefined;
@@ -337,8 +327,18 @@
 
   watch(
     () => resizeHeight,
-    () => value,
+    () => [value, autoResize, first],
   );
+
+  $effect(() => {
+    if (first) waitForTick();
+    updateRefs();
+  });
+
+  $effect(() => {
+    if (!ref) return;
+    Object.assign(ref, { mark, clear, change, validate, resize: resizeHeight });
+  });
 
   let visible = $state(false);
   let messageId = $state(`neo-textarea-message-${getUUID()}`);

@@ -2,7 +2,7 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
 
-  import type { NeoListItem, NeoListProps, NeoListSection } from '~/list/neo-list.model.js';
+  import type { NeoListItem, NeoListItemRenderContext, NeoListProps, NeoListSection } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -220,9 +220,9 @@
   </NeoSkeletonText>
 {/snippet}
 
-{#snippet avatar()}
+{#snippet avatar(ctx: NeoListItemRenderContext)}
   <span class="custom-item-avatar">
-    <IconAccount size="1.5rem" />
+    <IconAccount size="1.5rem" filled={!!ctx?.checked} />
   </span>
 {/snippet}
 

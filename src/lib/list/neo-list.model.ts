@@ -52,6 +52,7 @@ export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = 
 export type NeoListItemRenderContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   item: NeoListItem<Value, Tag>;
   index: number;
+  checked?: boolean;
   context: NeoListContext;
 };
 export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = Snippet<[NeoListItemRenderContext<Value, Tag>]>;
@@ -87,12 +88,12 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    * Snippet to display before the list item.
    * e.g. an icon or avatar.
    */
-  before?: Snippet<[NeoListItemRenderContext<Value, Tag>]>;
+  before?: NeoListItemRender<Value, Tag>;
   /**
    * Snippet to display after the list item.
    * e.g. a badge or action button.
    */
-  after?: Snippet<[NeoListItemRenderContext<Value, Tag>]>;
+  after?: NeoListItemRender<Value, Tag>;
   /**
    * The url to navigate to when the anchor is clicked.
    */

@@ -81,7 +81,7 @@
   <div class:neo-list-item-content={true} class:neo-disabled={disabled} class:neo-description={description}>
     {#if item.before ?? before}
       <div class="neo-list-item-before" class:neo-skeleton={skeleton}>
-        {@render (item.before ?? before)?.({ item, index, context })}
+        {@render (item.before ?? before)?.({ item, index, checked, context })}
       </div>
     {/if}
 
@@ -98,14 +98,14 @@
 
     {#if item.after ?? after}
       <div class="neo-list-item-after" class:neo-skeleton={skeleton}>
-        {@render (item.after ?? after)?.({ item, index, context })}
+        {@render (item.after ?? after)?.({ item, index, checked, context })}
       </div>
     {/if}
   </div>
 {/snippet}
 
 {#if item?.render}
-  {@render item?.render({ item, index, context })}
+  {@render item?.render({ item, index, checked, context })}
 {:else if item?.href || item?.onclick || select}
   <NeoButton
     data-select={checked}

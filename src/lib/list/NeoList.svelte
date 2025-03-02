@@ -332,7 +332,7 @@
             <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} {...sectionProps} />
           {/if}
         {:else if customItem && !item.render}
-          {@render customItem({ item, index, context })}
+          {@render customItem({ item, index, checked, context })}
         {:else}
           <NeoListBaseItem
             {item}

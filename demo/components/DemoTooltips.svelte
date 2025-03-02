@@ -6,7 +6,7 @@
 
   import { colorOptions } from '../utils/color.utils';
 
-  import type { NeoListSelectedItem } from '~/list/neo-list.model.js';
+  import type { NeoListItemRenderContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
 
   import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
 
@@ -99,9 +99,9 @@
   let open = $state(false);
 </script>
 
-{#snippet avatar()}
+{#snippet avatar(ctx: NeoListItemRenderContext)}
   <span class="custom-item-avatar">
-    <IconAccount size="1.5rem" />
+    <IconAccount size="1.5rem" filled={!!ctx?.checked} />
   </span>
 {/snippet}
 
@@ -241,7 +241,11 @@
               in:fly={{ duration: defaultDuration, y: complexSelected?.item ? '-50%' : '50%' }}
               out:fly={{ duration: quickDuration, y: complexSelected?.item ? '50%' : '-50%' }}
             >
-              <NeoListBaseItem before={question} item={complexSelected?.item ?? { label: 'None Selected', description: 'Please select a profile' }} />
+              <NeoListBaseItem
+                before={question}
+                checked={true}
+                item={complexSelected?.item ?? { label: 'None Selected', description: 'Please select a profile' }}
+              />
             </div>
           {/key}
         </NeoTransitionContainer>
@@ -257,6 +261,15 @@
     max-width: 80vw;
     white-space: pre-line;
     word-break: break-all;
+  }
+
+  .custom-item-avatar {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem;
+    border: 1px currentcolor solid;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
   }
 
   .neo-tooltip-content {
