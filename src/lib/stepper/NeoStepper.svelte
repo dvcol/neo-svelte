@@ -72,6 +72,7 @@
   const elevation = $derived(clamp(coerce(_elevation), MinShallowShadowElevation, MaxShallowShadowElevation) as ShadowShallowElevation);
 
   // TODO - compress marks when more than x steps & animate ?
+  // TODO - touch slide ?
 
   const stepValue = $derived(100 / (steps.length - 1));
   const marks = $derived(progressMarks ? Array.from({ length: steps.length }, (_, i) => i * stepValue) : undefined);

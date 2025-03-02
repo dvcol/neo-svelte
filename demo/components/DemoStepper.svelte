@@ -196,7 +196,7 @@
   <div class="column content">
     <span class="label">Default</span>
     <NeoForm bind:context bind:ref>
-      <NeoStepper {steps} {...options}>
+      <NeoStepper {steps} {...options} transitionProps={{ overflow: options.vertical ? 'hidden' : 'initial' }}>
         {#snippet children()}
           <NeoTextarea name="address" label="Address" autocomplete="street-address" resize="none" width="100%" />
         {/snippet}
