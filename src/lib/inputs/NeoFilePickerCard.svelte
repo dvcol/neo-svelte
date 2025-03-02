@@ -162,15 +162,15 @@
     >
       <div class="neo-expanded-button">
         <NeoButton aria-label="Add files" title="Add files" text rounded {skeleton} {disabled} onclick={onEdit} {...addButtonProps}>
-          {#snippet icon()}
+          {#snippet icon(ctx)}
             {#if dragging && iconDownload}
-              {@render iconDownload()}
+              {@render iconDownload(ctx)}
             {:else if dragging}
               <IconDownload size="2rem" scale="1.25" stroke="0.5" />
             {:else if loading}
               <IconCircleLoading size="2rem" scale="1" />
             {:else if iconUpload}
-              {@render iconUpload()}
+              {@render iconUpload(ctx)}
             {:else}
               <IconFileUpload size="2rem" scale="1" stroke="0.5" />
             {/if}

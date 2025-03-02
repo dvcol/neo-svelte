@@ -305,13 +305,13 @@
 
 {#snippet upload()}
   <NeoButton {...afterProps}>
-    {#snippet icon()}
+    {#snippet icon(ctx)}
       {#if isDragging && iconDownload}
-        {@render iconDownload()}
+        {@render iconDownload(ctx)}
       {:else if isDragging}
         <IconDownload size="1.25rem" scale="1.5" stroke="1" />
       {:else if iconUpload}
-        {@render iconUpload()}
+        {@render iconUpload(ctx)}
       {:else}
         <IconFileUpload size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}

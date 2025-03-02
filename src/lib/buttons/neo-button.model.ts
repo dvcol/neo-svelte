@@ -18,51 +18,17 @@ export type NeoButtonElevation = ShadowElevation | ShadowElevationString;
 export type NeoButtonHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 export type NeoButtonActiveElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 
-export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> = {
-  // Snippets
-
-  /**
-   * Snippet to display as the button content.
-   */
-  children?: Snippet;
-  /**
-   * Optional snippet or text to display as the button label.
-   */
-  label?: Snippet | string;
-  /**
-   * Optional icon snippet to display before the text.
-   */
-  icon?: Snippet;
-
-  // States
-
-  /**
-   * The HTML tag to use for the button.
-   * If an `href` is provided, the tag will default to `'a'`.
-   * @default 'button'
-   */
-  tag?: Tag | keyof HTMLElementTagNameMap;
+export type NeoButtonStates = {
   /**
    * The url to navigate to when the anchor is clicked.
    */
   href?: string;
+
   /**
    * If true, the button will be disabled and a spinner will be displayed alongside the text.
    * If an icon is provided, the spinner will replace the icon.
    */
   loading?: boolean;
-  /**
-   * If true, the button will be disabled and a loading skeleton will be displayed instead of the text.
-   */
-  skeleton?: boolean;
-  /**
-   * If true, only the icon (if any) will be displayed.
-   */
-  empty?: boolean;
-  /**
-   * If true, the button will act as a toggle button.
-   */
-  toggle?: boolean;
   /**
    * Disables all button interactions.
    */
@@ -72,10 +38,60 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   readonly?: boolean;
   /**
+   * If true, the button will be disabled and a loading skeleton will be displayed instead of the text.
+   */
+  skeleton?: boolean;
+
+  /**
+   * If true, only the icon (if any) will be displayed.
+   */
+  empty?: boolean;
+  /**
+   * If true, the button will act as a toggle button.
+   */
+  toggle?: boolean;
+  /**
    * Bindable value for the toggle state.
    * @bindable
    */
   checked?: boolean;
+};
+
+export type NeoButtonContext = NeoButtonStates & {
+  /**
+   * Reference to the button HTML element.
+   */
+  ref?: HTMLRefProps['ref'];
+  /**
+   * The current state of the button.
+   */
+  pressed: boolean;
+};
+
+export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> = {
+  // Snippets
+
+  /**
+   * Snippet to display as the button content.
+   */
+  children?: Snippet<[NeoButtonContext]>;
+  /**
+   * Optional snippet or text to display as the button label.
+   */
+  label?: Snippet<[NeoButtonContext]> | string;
+  /**
+   * Optional icon snippet to display before the text.
+   */
+  icon?: Snippet<[NeoButtonContext]>;
+
+  // States
+
+  /**
+   * The HTML tag to use for the button.
+   * If an `href` is provided, the tag will default to `'a'`.
+   * @default 'button'
+   */
+  tag?: Tag | keyof HTMLElementTagNameMap;
 
   // Styles
 
@@ -201,7 +217,8 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * @param e
    */
   onkeyup?: (e: SvelteEvent<KeyboardEvent>) => unknown;
-} & HTMLFlexProps &
+} & NeoButtonStates &
+  HTMLFlexProps &
   HTMLActionProps &
   HTMLRefProps &
   Partial<

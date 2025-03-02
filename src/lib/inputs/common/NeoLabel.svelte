@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
+  import type { NeoLabelContext, NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 
   import { toAction, toActionProps } from '~/utils/action.utils.js';
 
@@ -27,6 +27,8 @@
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
+  const context = $derived<NeoLabelContext>({ ref, valid, required, disabled });
+
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 </script>
@@ -43,12 +45,12 @@
     {...rest}
   >
     {#if typeof label === 'function'}
-      {@render label?.()}
+      {@render label?.(context)}
     {:else}
       {label}
     {/if}
   </label>
-  {@render children?.()}
+  {@render children?.(context)}
 </svelte:element>
 
 <style lang="scss">

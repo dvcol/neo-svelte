@@ -58,9 +58,9 @@
 
 {#snippet after()}
   <NeoButton {...afterProps}>
-    {#snippet icon()}
+    {#snippet icon(ctx)}
       {#if customIcon}
-        {@render customIcon()}
+        {@render customIcon(ctx)}
       {:else}
         <IconCalendar size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}

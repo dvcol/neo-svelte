@@ -157,9 +157,9 @@
 
 {#snippet after()}
   <NeoButton {...afterProps}>
-    {#snippet icon()}
+    {#snippet icon(ctx)}
       {#if customIcon}
-        {@render customIcon()}
+        {@render customIcon(ctx)}
       {:else}
         <IconDoubleChevron {space} />
       {/if}

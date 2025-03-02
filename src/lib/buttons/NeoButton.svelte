@@ -1,7 +1,7 @@
 <script lang="ts">
   import { width } from '@dvcol/svelte-utils/transition';
 
-  import { type NeoButtonProps, NeoTextButton } from '~/buttons/neo-button.model.js';
+  import { type NeoButtonContext, type NeoButtonProps, NeoTextButton } from '~/buttons/neo-button.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -165,6 +165,22 @@
     if (!disabled && role) return 0;
   });
 
+  const context = $derived<NeoButtonContext>({
+    ref,
+    href,
+
+    loading,
+    disabled,
+    readonly,
+    skeleton,
+
+    empty,
+    toggle,
+
+    checked,
+    pressed,
+  });
+
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -231,17 +247,17 @@
         {#if loading}
           <IconCircleLoading />
         {:else}
-          {@render icon?.()}
+          {@render icon?.(context)}
         {/if}
       </span>
     {/if}
     {#if !empty}
       {#if typeof label === 'function'}
-        {@render label?.()}
+        {@render label?.(context)}
       {:else if label !== undefined}
         {label}
       {/if}
-      {@render children?.()}
+      {@render children?.(context)}
     {/if}
   </div>
 </svelte:element>
