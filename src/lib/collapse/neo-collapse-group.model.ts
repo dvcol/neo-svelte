@@ -19,7 +19,7 @@ export type NeoCollapseGroupProps = {
    *
    * @default 0
    */
-  min?: number;
+  min?: NeoCollapseContext['min'];
 
   /**
    * The maximum number of collapses that can be open at any time.
@@ -28,15 +28,24 @@ export type NeoCollapseGroupProps = {
    *
    * @default Infinity
    */
-  max?: number;
+  max?: NeoCollapseContext['max'];
 
   /**
    * Whether the whole group is disabled.
    */
-  disabled?: boolean;
+  disabled?: NeoCollapseContext['disabled'];
 
   /**
    * Whether the whole group is readonly.
    */
-  readonly?: boolean;
+  readonly?: NeoCollapseContext['readonly'];
+
+  /**
+   * The strategy to use when the group has reached the maximum/minimum number of open collapses.
+   * - `readonly`: The group will be readonly and won't allow any more collapses to be opened/closed.
+   * - `oldest`: The oldest opened/closed collapses will be toggled.
+   *
+   * @default { min: 'readonly', max: 'oldest' }
+   */
+  strategy?: NeoCollapseContext['strategy'];
 };

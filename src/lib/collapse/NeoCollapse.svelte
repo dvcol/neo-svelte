@@ -45,7 +45,8 @@
   const group = getNeoCollapseGroupContext();
 
   const disabled = $derived(!!(_disabled || group?.disabled));
-  const readonly = $derived(!!(_readonly || group?.readonly));
+  const readonly = $derived(!!(_readonly || group?.readonly || (!open && group?.canOpen === false) || (open && group?.canClose === false)));
+
   const role = $derived(!['button', 'a'].includes(triggerTag) ? 'button' : undefined);
   const tabindex = $derived(!disabled && role ? 0 : undefined);
   const type = $derived(triggerTag === 'button' ? 'button' : undefined);

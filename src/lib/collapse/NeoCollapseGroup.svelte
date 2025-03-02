@@ -3,7 +3,7 @@
 
   import type { NeoCollapseGroupProps } from '~/collapse/neo-collapse-group.model.js';
 
-  import { setCollapseGroupContext } from '~/collapse/neo-collapse-context.svelte.js';
+  import { defaultCollapseGroupStrategy, setCollapseGroupContext } from '~/collapse/neo-collapse-context.svelte.js';
 
   const {
     // Snippets
@@ -15,6 +15,7 @@
     max = Infinity,
     disabled = false,
     readonly = false,
+    strategy = defaultCollapseGroupStrategy,
   }: NeoCollapseGroupProps = $props();
 
   const group = setCollapseGroupContext({
@@ -32,6 +33,9 @@
     },
     get readonly() {
       return readonly || max === 0;
+    },
+    get strategy() {
+      return strategy;
     },
   });
 </script>

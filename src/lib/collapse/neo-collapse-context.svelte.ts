@@ -4,12 +4,30 @@ import { SvelteMap } from 'svelte/reactivity';
 import { NeoErrorMissingCollapseId } from '~/utils/error.utils.js';
 import { Logger } from '~/utils/logger.utils.js';
 
+export const NeoCollapseGroupStrategy = {
+  Readonly: 'readonly' as const,
+  Oldest: 'oldest' as const,
+} as const;
+
+export type NeoCollapseGroupStrategies = (typeof NeoCollapseGroupStrategy)[keyof typeof NeoCollapseGroupStrategy];
+
+export const defaultCollapseGroupStrategy: { min: NeoCollapseGroupStrategies; max: NeoCollapseGroupStrategies } = {
+  min: NeoCollapseGroupStrategy.Readonly,
+  max: NeoCollapseGroupStrategy.Oldest,
+} as const;
+
 export type NeoCollapseGroupState = {
   readonly id: string;
   readonly min: number;
   readonly max: number;
   readonly disabled?: boolean;
   readonly readonly?: boolean;
+  readonly strategy?:
+    | NeoCollapseGroupStrategies
+    | {
+        min?: NeoCollapseGroupStrategies;
+        max?: NeoCollapseGroupStrategies;
+      };
 };
 
 export type NeoCollapseSection = {
@@ -17,6 +35,30 @@ export type NeoCollapseSection = {
   readonly editable?: boolean;
   open: boolean;
   changed: number;
+};
+
+/**
+ * Toggle the oldest changed sections.
+ * @param count - The number of sections to close
+ * @param fields - The fields in order of newest to oldest
+ * @param open - Whether to open or close the sections
+ */
+const toggleOldestChanged = (count: number, fields: NeoCollapseSection[], open = false) => {
+  let nb = count;
+  let index = -1;
+  while (nb > 0 && fields.length >= Math.abs(index)) {
+    // Last changed section
+    const last = fields.at(index);
+    // If the last section is editable, close it
+    if (last && last.editable) {
+      last.open = open;
+      nb -= 1;
+    }
+    // else, move to the next section
+    else {
+      index -= 1;
+    }
+  }
 };
 
 export class NeoCollapseContext {
@@ -49,6 +91,26 @@ export class NeoCollapseContext {
     return this.#closed.length;
   }
 
+  get strategy() {
+    if (typeof this.#group.strategy === 'object') return this.#group.strategy;
+    return {
+      min: this.#group.strategy,
+      max: this.#group.strategy,
+    };
+  }
+
+  get canOpen() {
+    if (this.strategy.max === NeoCollapseGroupStrategy.Oldest) return true;
+    if (this.max) return this.opened < this.max;
+    return true;
+  }
+
+  get canClose() {
+    if (this.strategy.min === NeoCollapseGroupStrategy.Oldest) return true;
+    if (this.min) return this.opened > this.min;
+    return true;
+  }
+
   constructor(group: NeoCollapseGroupState) {
     this.#group = group;
   }
@@ -72,35 +134,9 @@ export class NeoCollapseContext {
 
   #enforce() {
     if (this.max && this.opened > this.max) {
-      let nb = this.opened - this.max;
-      let index = -1;
-      while (nb > 0 && this.opened >= Math.abs(index)) {
-        const last = this.#opened.at(index);
-        // If the last section is editable, close it
-        if (last && last.editable) {
-          last.open = false;
-          nb -= 1;
-        }
-        // else, move to the next section
-        else {
-          index -= 1;
-        }
-      }
+      toggleOldestChanged(this.opened - this.max, this.#opened);
     } else if (this.min && this.opened < this.min) {
-      let nb = this.min - this.opened;
-      let index = -1;
-      while (nb > 0 && this.closed >= Math.abs(index)) {
-        const first = this.#closed.at(index);
-        // If the first section is editable, open it
-        if (first && first.editable) {
-          first.open = true;
-          nb -= 1;
-        }
-        // else, move to the next section
-        else {
-          index -= 1;
-        }
-      }
+      toggleOldestChanged(this.min - this.opened, this.#closed, true);
     }
   }
 
