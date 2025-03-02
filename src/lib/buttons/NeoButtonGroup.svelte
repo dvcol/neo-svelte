@@ -13,6 +13,7 @@
     isShadowFlat,
     parseBlur,
   } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -48,6 +49,10 @@
     justify,
     align,
     flex,
+
+    // Size
+    width: _width,
+    height: _height,
 
     // Transition
     in: inAction,
@@ -107,6 +112,9 @@
     vertical,
     start,
   });
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 </script>
 
 <svelte:element
@@ -139,6 +147,12 @@
   style:justify-content={justify}
   style:align-items={align}
   style:flex
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}

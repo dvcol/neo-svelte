@@ -4,6 +4,7 @@ import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoButtonGroupElevation = ShadowElevation | ShadowElevationString;
 export type NeoButtonGroupContext = {
@@ -125,6 +126,16 @@ export type NeoButtonGroupProps<Tag extends keyof HTMLElementTagNameMap = 'div'>
    * If true, the buttons will not wrap to the next line.
    */
   nowrap?: boolean;
+
+  // Size
+  /**
+   * Optional width constraints.
+   */
+  width?: SizeInput<'width'>;
+  /**
+   * Optional height constraints.
+   */
+  height?: SizeInput<'height'>;
 } & NeoButtonGroupContext &
   HTMLFlexProps &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &

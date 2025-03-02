@@ -173,9 +173,7 @@
 
 <style lang="scss">
   .neo-tabs {
-    display: inline-flex;
-    flex: 0 1 auto;
-    flex-flow: row wrap;
+    display: contents;
 
     :global(> .neo-tabs-group .neo-tabs-add) {
       min-width: 1rem;
