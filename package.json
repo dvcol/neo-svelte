@@ -60,6 +60,10 @@
       "types": "./dist/divider/index.d.ts",
       "svelte": "./dist/divider/index.js"
     },
+    "./form": {
+      "types": "./dist/form/index.d.ts",
+      "svelte": "./dist/form/index.js"
+    },
     "./inputs": {
       "types": "./dist/inputs/index.d.ts",
       "svelte": "./dist/inputs/index.js"

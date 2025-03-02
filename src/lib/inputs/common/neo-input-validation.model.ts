@@ -1,4 +1,4 @@
-import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
+import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
 import type { NeoValidationFieldContext, NeoValidationProps, NeoValidationValue } from '~/inputs/common/neo-validation.model.js';
 
 export type NeoInputValidationProps<

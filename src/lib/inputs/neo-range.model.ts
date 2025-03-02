@@ -1,6 +1,6 @@
 import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
-import type { NeoFormType } from '~/inputs/common/neo-form-context.svelte.js';
+import type { NeoFormType } from '~/form/neo-form-context.svelte.js';
 import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationState } from '~/inputs/common/neo-validation.model.js';

@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 
-import type { NeoFieldsetProps } from '~/inputs/common/neo-fieldset.model.js';
-import type { NeoFormContext } from '~/inputs/common/neo-form-context.svelte.js';
+import type { NeoFieldsetProps } from '~/form/neo-fieldset.model.js';
+import type { NeoFormContext } from '~/form/neo-form-context.svelte.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoFormProps = {

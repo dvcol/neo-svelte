@@ -4,7 +4,7 @@
   import { fade } from 'svelte/transition';
 
   import type { FocusEventHandler } from 'svelte/elements';
-  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
 
   import type { NeoSwitchProps } from '~/inputs/neo-switch.model.js';

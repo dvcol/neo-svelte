@@ -1,7 +1,9 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { NeoFieldsetProps } from '~/inputs/common/neo-fieldset.model.js';
+  import type { NeoFieldsetProps } from '~/form/neo-fieldset.model.js';
+
+  import { toSize } from '~/utils/style.utils.js';
 
   const {
     // Snippets
@@ -14,13 +16,32 @@
     // Styles
     borderless,
 
+    // Size
+    flex,
+    width: _width,
+    height: _height,
+
     // Other props
     legendProps,
     ...rest
   }: NeoFieldsetProps = $props();
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 </script>
 
-<fieldset class:neo-fieldset={true} class:neo-borderless={borderless} {...rest}>
+<fieldset
+  class:neo-fieldset={true}
+  class:neo-borderless={borderless}
+  style:flex
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
+  {...rest}
+>
   {#if legend !== undefined}
     <legend class:neo-fieldset-legend={true} {id} {...legendProps}>
       {#if typeof legend === 'function'}

@@ -5,8 +5,8 @@
 
   import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 
+  import { getNeoFormContext } from '~/form/neo-form-context.svelte.js';
   import NeoValidation from '~/inputs/common/NeoValidation.svelte';
-  import { getNeoFormContext } from '~/inputs/common/neo-form-context.svelte.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {

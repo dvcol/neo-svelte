@@ -8,7 +8,7 @@
   import { fade } from 'svelte/transition';
 
   import type { DragEventHandler, FocusEventHandler, KeyboardEventHandler, PointerEventHandler } from 'svelte/elements';
-  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoRangeContext, NeoRangeHTMLElement, NeoRangeProps, NeoRangeValidationState, NeoRangeValue } from '~/inputs/neo-range.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';

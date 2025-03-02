@@ -4,7 +4,7 @@
 
   import type { DragEventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
-  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';

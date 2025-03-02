@@ -2,10 +2,11 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
 
   import type { EventHandler, FormEventHandler } from 'svelte/elements';
-  import type { NeoFormProps } from '~/inputs/common/neo-form.model.js';
+  import type { NeoFormProps } from '~/form/neo-form.model.js';
 
-  import NeoFieldSet from '~/inputs/common/NeoFieldSet.svelte';
-  import { setNeoFormContext } from '~/inputs/common/neo-form-context.svelte.js';
+  import NeoFieldSet from '~/form/NeoFieldSet.svelte';
+
+  import { setNeoFormContext } from '~/form/neo-form-context.svelte.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -70,3 +71,9 @@
     {@render children?.(context)}
   {/if}
 </form>
+
+<style lang="scss">
+  .neo-form {
+    display: contents;
+  }
+</style>

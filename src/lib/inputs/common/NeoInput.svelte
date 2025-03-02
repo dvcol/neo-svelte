@@ -4,7 +4,7 @@
 
   import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
 
-  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';

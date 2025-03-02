@@ -6,7 +6,9 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import { coerce, MaxShallowShadowElevation, MinShallowShadowElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
 
-  const { index, position = 0, context, elevation: _elevation, color: _color, ...rest }: NeoProgressMarkProps = $props();
+  /* eslint-disable prefer-const -- necessary for binding */
+  let { ref = $bindable(), index, position = 0, context, elevation: _elevation, color: _color, ...rest }: NeoProgressMarkProps = $props();
+  /* eslint-enable prefer-const */
 
   const value = $derived(context?.value ?? 0);
   const checked = $derived(position <= value);
@@ -23,6 +25,7 @@
 </script>
 
 <NeoButton
+  bind:ref
   rounded
   filled
   scale

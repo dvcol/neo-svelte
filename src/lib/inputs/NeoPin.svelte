@@ -3,7 +3,7 @@
   import { doubleBind } from '@dvcol/svelte-utils/watch';
 
   import type { EventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
-  import type { NeoFormContextField } from '~/inputs/common/neo-form-context.svelte.js';
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';

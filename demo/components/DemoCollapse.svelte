@@ -10,6 +10,7 @@
   import NeoAccordion from '~/collapse/NeoAccordion.svelte';
   import NeoCollapse from '~/collapse/NeoCollapse.svelte';
   import NeoCollapseGroup from '~/collapse/NeoCollapseGroup.svelte';
+  import { defaultCollapseGroupStrategy } from '~/collapse/neo-collapse-context.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import {
     DefaultShadowElevation,
@@ -37,6 +38,7 @@
     group: {
       min: 0,
       max: 3,
+      strategy: defaultCollapseGroupStrategy,
     },
   });
 

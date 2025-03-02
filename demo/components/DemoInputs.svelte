@@ -17,6 +17,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import NeoForm from '~/form/NeoForm.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconMinus from '~/icons/IconMinus.svelte';
@@ -34,7 +35,6 @@
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoSwitch from '~/inputs/NeoSwitch.svelte';
   import NeoTextArea from '~/inputs/NeoTextarea.svelte';
-  import NeoForm from '~/inputs/common/NeoForm.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { displayValue } from '~/inputs/neo-select.model.js';
   import NeoPill from '~/pill/NeoPill.svelte';
@@ -1297,7 +1297,7 @@
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
 
-    :global(> .neo-form) {
+    :global(> .neo-form > .neo-fieldset) {
       width: 100%;
     }
 
