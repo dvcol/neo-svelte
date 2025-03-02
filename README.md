@@ -95,6 +95,10 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [x] select
   - [x] native
   - [x] custom
+- [x] form
+  - [x] validation
+  - [x] fieldset
+
 - [x] tooltip
   - [ ] popconfirm
   - [x] popselect
@@ -129,14 +133,18 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] duration/timeout
   - [x] start/stop/cancel/finish/reset
 
-- [ ] collapse
-  - [ ] summary
-  - [ ] details (html semantic tags)
+- [x] collapse
+  - [x] description
+  - [x] vertical
+  - [x] accordion
+  - [x] controlled (min, max, toggle)
 
-- [ ] stepper
-  - [ ] vertical
-  - [ ] animation (slider, fade or collapse)
-  - [ ] progress/dots
+- [x] stepper
+  - [x] vertical
+  - [ ] collapse
+  - [x] progress/dots
+  - [x] controls (cancel, next, prev, finish)
+  - [ ] touch swipe
 
 - [ ] Modal/dialog
   - [ ] HTML Dialog
@@ -191,12 +199,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] carousel
   - [ ] parallax
 - [ ] avatar
-  - [ ] badge
-- [ ] Progress/Loading
-  - [ ] bar
-  - [ ] circle
-  - [ ] border
-  - [ ] background
+  - [x] badge
 
 - [ ] PointerTracker (Pointer Events)
   - [ ] track cursor

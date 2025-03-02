@@ -73,6 +73,7 @@
 
   // TODO - compress marks when more than x steps & animate ?
   // TODO - touch slide ?
+  // TODO - sizing props
 
   const stepValue = $derived(100 / (steps.length - 1));
   const marks = $derived(progressMarks ? Array.from({ length: steps.length }, (_, i) => i * stepValue) : undefined);
@@ -130,9 +131,11 @@
     if (index < active) {
       if (typeof canPrevious === 'boolean') return canPrevious === false;
       if (typeof canPrevious === 'number') return canPrevious < active - index;
+      if (canPrevious !== undefined && canPrevious !== null) return !canPrevious;
     } else if (index > active) {
       if (typeof canNext === 'boolean') return canNext === false;
       if (typeof canNext === 'number') return canNext < index - active;
+      if (canNext !== undefined && canNext !== null) return !canNext;
     }
     return false;
   };
