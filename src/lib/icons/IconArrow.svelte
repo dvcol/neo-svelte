@@ -107,5 +107,29 @@
         }
       }
     }
+
+    @media (hover: none) and (pointer: coarse) {
+      .neo-icon-arrow-line {
+        display: none;
+      }
+
+      .neo-icon-arrow-chevron.neo-expanded {
+        &[data-direction='right'] {
+          translate: -15%;
+        }
+
+        &[data-direction='left'] {
+          translate: 15%;
+        }
+
+        &[data-direction='up'] {
+          translate: 0 15%;
+        }
+
+        &[data-direction='down'] {
+          translate: 0 -15%;
+        }
+      }
+    }
   </style>
 </svg>

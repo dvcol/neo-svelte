@@ -98,13 +98,6 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [x] form
   - [x] validation
   - [x] fieldset
-
-- [x] tooltip
-  - [ ] popconfirm
-  - [x] popselect
-  - [ ] menu
-  - [ ] nested menus
-  - [ ] menu pane (multi column)
   
 - [x] list
   - [x] select
@@ -144,7 +137,14 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] collapse
   - [x] progress/dots
   - [x] controls (cancel, next, prev, finish)
-  - [ ] touch swipe
+  - [x] touch swipe
+
+- [x] tooltip
+  - [ ] popconfirm
+  - [x] popselect
+  - [ ] menu
+  - [ ] nested menus
+  - [ ] menu pane (multi column)
 
 - [ ] Modal/dialog
   - [ ] HTML Dialog
