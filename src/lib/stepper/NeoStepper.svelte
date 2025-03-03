@@ -6,7 +6,7 @@
   import { fly, scale } from 'svelte/transition';
 
   import type { SwipeDirections } from '@dvcol/common-utils';
-  import type { NeoProgressBarMarkContext } from '~/progress/neo-progress-bar.model.js';
+  import type { NeoProgressBarMarkContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
@@ -22,7 +22,7 @@
     MinShallowShadowElevation,
     type ShadowShallowElevation,
   } from '~/utils/shadow.utils.js';
-  import { toSize } from '~/utils/style.utils.js';
+  import { toPixel, toSize } from '~/utils/style.utils.js';
   import { quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -196,6 +196,18 @@
     goNext,
   });
 
+  let marksRefs = $state<NeoProgressBarProps['refs']>([]);
+
+  const markMargin = $derived.by(() => {
+    if (!marksRefs?.length || marksRefs.length < (marks?.length ?? 0)) return;
+    return {
+      start: toPixel((marksRefs[0]?.offsetWidth ?? 0) / 2),
+      end: toPixel((marksRefs[marksRefs.length - 1]?.offsetWidth ?? 0) / 2),
+    };
+  });
+
+  $inspect(markMargin);
+
   $effect(() => {
     if (!ref) return;
     Object.assign(ref, {
@@ -235,6 +247,7 @@
       {borderless}
       direction={vertical ? NeoProgressDirection.Bottom : NeoProgressDirection.Right}
       {...progressProps}
+      bind:refs={marksRefs}
     />
   {/if}
 {/snippet}
@@ -321,6 +334,8 @@
   style:min-height={height?.min}
   style:max-height={height?.max}
   style:--neo-stepper-steps={steps.length}
+  style:--neo-stepper-mark-margin-start={markMargin?.start}
+  style:--neo-stepper-mark-margin-end={markMargin?.end}
   {...rest}
   use:swipe={swipeOptions}
 >
@@ -359,6 +374,8 @@
     &:not(.neo-vertical) {
       :global(> .neo-progress-bar) {
         min-width: calc(4rem * var(--neo-stepper-steps, 1));
+
+        --neo-progress-margin-inline: var(--neo-stepper-mark-margin-start) var(--neo-stepper-mark-margin-end);
       }
 
       &:not(.neo-marks) :global(> .neo-progress-bar) {

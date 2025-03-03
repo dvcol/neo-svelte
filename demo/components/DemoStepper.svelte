@@ -5,6 +5,7 @@
 
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
 
+  import NeoCard from '~/cards/NeoCard.svelte';
   import NeoForm from '~/form/NeoForm.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import IconAddress from '~/icons/IconAddress.svelte';
@@ -224,13 +225,15 @@
 <div class="row">
   <div class="column content">
     <span class="label">Default</span>
-    <NeoForm>
-      <NeoStepper bind:active {steps} {...options}>
-        {#snippet children()}
-          <span>Error: Unknown Step !</span>
-        {/snippet}
-      </NeoStepper>
-    </NeoForm>
+    <NeoCard rounded elevation={-options.elevation}>
+      <NeoForm>
+        <NeoStepper bind:active {steps} {...options}>
+          {#snippet children()}
+            <span>Error: Unknown Step !</span>
+          {/snippet}
+        </NeoStepper>
+      </NeoForm>
+    </NeoCard>
   </div>
 </div>
 

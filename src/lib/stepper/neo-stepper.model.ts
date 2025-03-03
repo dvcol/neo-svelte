@@ -304,7 +304,7 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
   /**
    * Optional props to pass to the progress bar.
    */
-  progressProps?: NeoProgressBarProps;
+  progressProps?: Omit<NeoProgressBarProps, 'refs'>;
   /**
    * Optional props to pass to the progress bar marks.
    *
