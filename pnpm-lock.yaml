@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@dvcol/common-utils':
-        specifier: ^1.23.0
-        version: 1.23.0
+        specifier: ^1.24.1
+        version: 1.24.1
       '@dvcol/svelte-utils':
-        specifier: ^1.14.0
-        version: 1.14.0(svelte@5.19.3)
+        specifier: ^1.16.1
+        version: 1.16.1(svelte@5.19.3)
       '@skeletonlabs/floating-ui-svelte':
         specifier: ^0.3.9
         version: 0.3.9(svelte@5.19.3)
@@ -389,12 +389,8 @@ packages:
   '@dual-bundle/import-meta-resolve@4.1.0':
     resolution: {integrity: sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg==}
 
-  '@dvcol/common-utils@1.23.0':
-    resolution: {integrity: sha512-S4yUqrUyaKtOhiNevbGhxbozLQARWk3dlDOvzizug5QXJyJZAsNbmHPo52Vs7c0ngPKNuE0EEAWUZ9GB1bkQbg==}
-    engines: {node: '>=20', pnpm: '>= 8'}
-
-  '@dvcol/common-utils@1.23.1':
-    resolution: {integrity: sha512-ul6zo/TWr5M6+KKTO23IWAGSa4ruZh2lq4oQe16hgBbNMze3I9b8fMLZ1/H/dvUUtFFGr/zRNxUNx6F+/UPu0w==}
+  '@dvcol/common-utils@1.24.1':
+    resolution: {integrity: sha512-KGtuqYD6W0vflsv6IzDH9v+Md+WwOnLbl36rtxa35xQEZiG0qWKTn5sqCK6q4xXxVRosHSPwTTkU/V6H0xka8w==}
     engines: {node: '>=20', pnpm: '>= 8'}
 
   '@dvcol/eslint-plugin-presets@1.3.11':
@@ -499,8 +495,8 @@ packages:
     peerDependencies:
       svelte: '>=5'
 
-  '@dvcol/svelte-utils@1.14.0':
-    resolution: {integrity: sha512-iXDrb7MfzOYNgqSJ1DapTTjJ/uBg9IDqMc3tKT95FmRkOKRCM7LKDaR5AoarsD7vzCZJMvCqfPw9Ze3msAn0Mw==}
+  '@dvcol/svelte-utils@1.16.1':
+    resolution: {integrity: sha512-LLQcYaXY0990SpSGbtHnkBlFbYd7wHGnvzV8CawrkoLDBXxmDn8AOz1js/vqRxJmMdosEz9qpx+uxFdJ8gpQig==}
     engines: {node: '>=20', pnpm: '>= 8'}
     peerDependencies:
       svelte: '>=5'
@@ -5326,12 +5322,7 @@ snapshots:
 
   '@dual-bundle/import-meta-resolve@4.1.0': {}
 
-  '@dvcol/common-utils@1.23.0':
-    dependencies:
-      pretty-bytes: 6.1.1
-      uuid: 11.0.5
-
-  '@dvcol/common-utils@1.23.1':
+  '@dvcol/common-utils@1.24.1':
     dependencies:
       pretty-bytes: 6.1.1
       uuid: 11.0.5
@@ -5389,13 +5380,13 @@ snapshots:
 
   '@dvcol/svelte-simple-router@1.11.0(svelte@5.19.3)':
     dependencies:
-      '@dvcol/common-utils': 1.23.1
-      '@dvcol/svelte-utils': 1.14.0(svelte@5.19.3)
+      '@dvcol/common-utils': 1.24.1
+      '@dvcol/svelte-utils': 1.16.1(svelte@5.19.3)
       svelte: 5.19.3
 
-  '@dvcol/svelte-utils@1.14.0(svelte@5.19.3)':
+  '@dvcol/svelte-utils@1.16.1(svelte@5.19.3)':
     dependencies:
-      '@dvcol/common-utils': 1.23.1
+      '@dvcol/common-utils': 1.24.1
       svelte: 5.19.3
 
   '@esbuild/aix-ppc64@0.24.2':

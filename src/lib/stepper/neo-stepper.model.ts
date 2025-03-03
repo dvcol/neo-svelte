@@ -1,11 +1,13 @@
+import type { SwipeOptions } from '@dvcol/svelte-utils/swipe';
 import type { TransitionProps } from '@dvcol/svelte-utils/transition';
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 import type { NeoProgressMarkProps } from '~/progress/neo-progress-mark.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
-import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export const NeoStepperPlacement = {
   Start: 'start' as const,
@@ -208,8 +210,16 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
   /**
    * Whether to loop the stepper navigation when boundaries are reached.
    * If set to true, pressing next on the last step will navigate to the first step, and pressing previous on the first step will navigate to the last step.
+   *
+   * @default false
    */
   loop?: boolean;
+  /**
+   * Whether to enable swipe navigation.
+   *
+   * @default true
+   */
+  swipe?: boolean;
 
   /**
    * Disable all stepper navigation.
@@ -234,6 +244,20 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    */
   borderless?: boolean;
 
+  // Sizing
+  /**
+   * Overrides the default flex value.
+   */
+  flex?: CSSStyleDeclaration['flex'];
+  /**
+   * Optional width constraints.
+   */
+  width?: SizeInput<'width'>;
+  /**
+   * Optional height constraints.
+   */
+  height?: SizeInput<'height'>;
+
   // Methods
   /**
    * Optional hook to run when a step is activated.
@@ -242,6 +266,12 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
   onStep?: (event: NeoStepperEvent<Value>) => void;
 
   // OtherProps
+  /**
+   * Optional props to pass to the swipe action.
+   *
+   * Tolerances defaults to 50% of the stepper's width for horizontal swipes and 50% of the stepper's height for vertical swipes.
+   */
+  swipeProps?: SwipeOptions;
   /**
    * Optional props to pass to the transition container.
    */
@@ -283,4 +313,5 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    */
   markProps?: NeoProgressMarkProps;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  HTMLTransitionProps;
+  HTMLTransitionProps &
+  HTMLRefProps;

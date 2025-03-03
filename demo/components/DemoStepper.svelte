@@ -225,7 +225,7 @@
   <div class="column content">
     <span class="label">Default</span>
     <NeoForm>
-      <NeoStepper bind:active {steps} {...options} transitionProps={{ overflow: options.vertical ? 'hidden' : 'initial' }}>
+      <NeoStepper bind:active {steps} {...options}>
         {#snippet children()}
           <span>Error: Unknown Step !</span>
         {/snippet}

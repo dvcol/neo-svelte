@@ -1,13 +1,16 @@
 <script lang="ts">
   import { clamp } from '@dvcol/common-utils/common/math';
+  import { SwipeDirection } from '@dvcol/common-utils/common/touch';
+
+  import { swipe, type SwipeOptions } from '@dvcol/svelte-utils/swipe';
   import { fly, scale } from 'svelte/transition';
 
-  import NeoTransitionContainer from '../containers/NeoTransitionContainer.svelte';
-  import NeoProgressBar from '../progress/NeoProgressBar.svelte';
-
+  import type { SwipeDirections } from '@dvcol/common-utils';
   import type { NeoProgressBarMarkContext } from '~/progress/neo-progress-bar.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
+  import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
   import { type NeoStepperContext, NeoStepperPlacement, type NeoStepperProps } from '~/stepper/neo-stepper.model.js';
@@ -19,6 +22,7 @@
     MinShallowShadowElevation,
     type ShadowShallowElevation,
   } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
   import { quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -26,6 +30,7 @@
     children,
 
     // States
+    ref = $bindable(),
     tag = 'div',
     steps = [],
     active = $bindable(0),
@@ -38,6 +43,7 @@
     cancel = true,
     next,
     loop = false,
+    swipe: swipeEnabled = true,
 
     disabled,
 
@@ -46,6 +52,11 @@
     placement = NeoStepperPlacement.Start,
     elevation: _elevation = DefaultShadowShallowElevation,
     borderless,
+
+    // Size
+    flex,
+    width: _width,
+    height: _height,
 
     // Transition
     in: inAction,
@@ -56,6 +67,7 @@
     onStep, // current step, & previous step (forward or backward)
 
     // Other props
+    swipeProps,
     transitionProps,
     controlsProps,
     previousProps,
@@ -70,10 +82,6 @@
   const { tag: controlsTag = 'div', ...controlsRest } = $derived(controlsProps ?? {});
 
   const elevation = $derived(clamp(coerce(_elevation), MinShallowShadowElevation, MaxShallowShadowElevation) as ShadowShallowElevation);
-
-  // TODO - compress marks when more than x steps & animate ?
-  // TODO - touch slide ?
-  // TODO - sizing props
 
   const stepValue = $derived(100 / (steps.length - 1));
   const marks = $derived(progressMarks ? Array.from({ length: steps.length }, (_, i) => i * stepValue) : undefined);
@@ -156,6 +164,28 @@
     return false;
   };
 
+  const onSwipe = (swipeDirection: SwipeDirections) => {
+    if (!swipeEnabled) return;
+    if (swipeDirection === SwipeDirection.Left) goNext();
+    else if (swipeDirection === SwipeDirection.Right) goPrevious();
+    else if (vertical) {
+      if (swipeDirection === SwipeDirection.Up) goNext();
+      else if (swipeDirection === SwipeDirection.Down) goPrevious();
+    }
+  };
+
+  const swipeOptions = $derived<SwipeOptions>({
+    ...swipeProps,
+    tolerances: {
+      right: '50%',
+      left: '50%',
+      up: '50%',
+      down: '50%',
+      ...swipeProps?.tolerances,
+    },
+    onSwipe,
+  });
+
   const context = $derived<NeoStepperContext>({
     step,
     active,
@@ -165,6 +195,18 @@
     goPrevious,
     goNext,
   });
+
+  $effect(() => {
+    if (!ref) return;
+    Object.assign(ref, {
+      goTo: goToStep,
+      previous: goPrevious,
+      next: goNext,
+    });
+  });
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 </script>
 
 {#snippet mark(ctx: NeoProgressBarMarkContext)}
@@ -271,8 +313,16 @@
   class:neo-stepper={true}
   class:neo-vertical={vertical}
   class:neo-marks={progressMarks}
+  style:flex
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
   style:--neo-stepper-steps={steps.length}
   {...rest}
+  use:swipe={swipeOptions}
 >
   {@render progressBar()}
   <div class:neo-stepper-content={true}>
