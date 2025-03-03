@@ -316,16 +316,16 @@
       scale: 1;
 
       .neo-icon:not(.neo-only) {
-        margin-right: var(--neo-btn-icon-gap, 0.35rem);
-        margin-left: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
+        margin-right: var(--neo-btn-icon-gap, 0.3125rem);
+        margin-left: var(--neo-btn-icon-offset, calc(0% - var(--neo-btn-icon-gap, 0.3125rem)));
       }
 
       &.neo-reverse {
         flex-direction: row-reverse;
 
         .neo-icon:not(.neo-only) {
-          margin-right: var(--neo-btn-icon-offset, calc(0.25rem - var(--neo-btn-icon-gap, 0.5rem)));
-          margin-left: var(--neo-btn-icon-gap, 0.35rem);
+          margin-right: var(--neo-btn-icon-offset, calc(0% - var(--neo-btn-icon-gap, 0.3125rem)));
+          margin-left: var(--neo-btn-icon-gap, 0.3125rem);
         }
       }
     }

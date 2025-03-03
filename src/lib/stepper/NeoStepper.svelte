@@ -8,8 +8,10 @@
   import type { SwipeDirections } from '@dvcol/common-utils';
   import type { NeoProgressBarMarkContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 
+  import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
+  import IconCancel from '~/icons/IconCancel.svelte';
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
@@ -252,6 +254,10 @@
   {/if}
 {/snippet}
 
+{#snippet icon()}
+  <IconCancel />
+{/snippet}
+
 {#snippet buttons()}
   {#if controls}
     <svelte:element this={controlsTag} class:neo-stepper-controls={true} {...controlsRest}>
@@ -267,14 +273,15 @@
           title="Cancel stepper"
           onclick={() => goToStep(0)}
           transition={{ use: scale, props: { duration: quickDuration, start: 0.95 } }}
+          {icon}
           {...cancelProps}
           {...step.current?.cancelProps}
           class={['neo-stepper-controls-previous', cancelProps?.class, step.current?.cancelProps?.class]}
         />
       {/if}
-      <div>
+      <div class="neo-stepper-controls-lr">
         {#if active > 0 || loop}
-          <NeoButton
+          <NeoArrowButton
             {borderless}
             elevation={elevation > 0 ? elevation : 0}
             active={elevation > 0 ? -1 : -2}
@@ -284,12 +291,13 @@
             title="Go to previous step"
             onclick={goPrevious}
             transition={{ use: scale, props: { duration: shortDuration, start: 0.95 } }}
+            direction={vertical ? 'up' : 'left'}
             {...previousProps}
             {...step.current?.previousProps}
             class={['neo-stepper-controls-previous', previousProps?.class, step.current?.previousProps?.class]}
           />
         {/if}
-        <NeoButton
+        <NeoArrowButton
           type={active === steps.length - 1 ? 'submit' : 'button'}
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
@@ -299,6 +307,7 @@
           aria-label="Go to next step"
           title="Go to next step"
           onclick={goNext}
+          direction={vertical ? 'down' : 'right'}
           {...nextProps}
           {...step.current?.nextProps}
           class={['neo-stepper-controls-next', nextProps?.class, step.current?.nextProps?.class]}
@@ -365,6 +374,12 @@
     &-controls {
       display: flex;
       justify-content: space-between;
+
+      &-lr {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+      }
     }
 
     :global(> .neo-progress-bar > .neo-progress-bar-mark) {

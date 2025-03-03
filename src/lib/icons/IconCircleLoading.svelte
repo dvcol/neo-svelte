@@ -1,8 +1,10 @@
 <script lang="ts">
-  export const { size = '1em', scale, stroke = 1.5, animate = true, speed = 1.2, ...rest } = $props();
+  import type { IconCircleLoadingProps } from '~/icons/icon.model.js';
+
+  export const { size = '1em', scale, stroke = 1.5, animate = true, speed = 1.2, ...rest }: IconCircleLoadingProps = $props();
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" {...rest} style:scale scale={undefined}>
+<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" style:scale {...rest}>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width={stroke}>
     <path stroke-dasharray="16" stroke-dashoffset="16" d="M12 3c4.97 0 9 4.03 9 9">
       <animate fill="freeze" attributeName="stroke-dashoffset" dur="{speed / 4}s" values="16;0" />

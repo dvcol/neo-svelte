@@ -1,15 +1,18 @@
 <script lang="ts">
+  import type { IconBouncingDotsProps } from '~/icons/icon.model.js';
+
   const {
     size = '1rem',
+    stroke = 1.5,
     scale = 1.5,
     fill = 'currentColor',
     steps = [1, 0.5, 1],
 
     ...rest
-  } = $props();
+  }: IconBouncingDotsProps = $props();
 </script>
 
-<svg viewBox="0 0 90 24" width={size} height={size} xmlns="http://www.w3.org/2000/svg" style:scale {...rest}>
+<svg viewBox="0 0 90 24" width={size} height={size} xmlns="http://www.w3.org/2000/svg" style:scale stroke-width={stroke} {...rest}>
   <circle cx="15" cy="15" r="8" {fill}>
     <animate
       attributeName="cy"

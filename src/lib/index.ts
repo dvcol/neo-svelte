@@ -12,5 +12,6 @@ export * from './pill/index.js';
 export * from './progress/index.js';
 export * from './providers/index.js';
 export * from './skeletons/index.js';
+export * from './stepper/index.js';
 export * from './text/index.js';
 export * from './tooltips/index.js';

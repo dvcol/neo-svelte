@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { IconCheckboxProps } from '~/icons/icon.model.js';
+
   const {
     box = 1.25,
     check = 2,
@@ -11,48 +13,7 @@
     checked = false,
     indeterminate = false,
     ...rest
-  }: {
-    /**
-     * The stroke width of the border.
-     */
-    box?: number;
-    /**
-     * The stroke width of the checkmark.
-     */
-    check?: number;
-    /**
-     * The scale of the icon.
-     */
-    scale?: number;
-    /**
-     * The size (width and height) of the icon.
-     */
-    size?: string;
-    /**
-     * Whether to render the border.
-     */
-    border?: boolean;
-    /**
-     * Whether to render a square or circle checkbox.
-     */
-    circle?: boolean;
-    /**
-     * Whether to draw the border on enter.
-     */
-    draw?: boolean;
-    /**
-     * Whether to animate on enter.
-     */
-    enter?: boolean;
-    /**
-     * If the checkbox is checked.
-     */
-    checked?: boolean;
-    /**
-     * If the checkbox is indeterminate.
-     */
-    indeterminate?: boolean;
-  } = $props();
+  }: IconCheckboxProps = $props();
 
   const circlePath = 'M3 12c0 -4.97 4.03 -9 9 -9c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9Z';
   const squarePath = 'M4 12v-7c0 -0.55 0.45 -1 1 -1h14c0.55 0 1 0.45 1 1v14c0 0.55 -0.45 1 -1 1h-14c-0.55 0 -1 -0.45 -1 -1Z';

@@ -1,6 +1,8 @@
 <script lang="ts">
   import { watch } from '@dvcol/svelte-utils/watch';
 
+  import type { IconSunMoonProps } from '~/icons/icon.model.js';
+
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     size = '1em',
@@ -11,7 +13,7 @@
     enter = $bindable(true),
 
     ...rest
-  } = $props();
+  }: IconSunMoonProps = $props();
   /* eslint-enable prefer-const */
 
   watch(
