@@ -307,6 +307,7 @@
           active={elevation > 0 ? -1 : -2}
           disabled={isControlDisabled('cancel') || (isLoading && !loading.cancel)}
           loading={loading.cancel}
+          checked={loading.cancel}
           label="Cancel"
           aria-label="Cancel stepper"
           title="Cancel stepper"
@@ -326,6 +327,7 @@
             active={elevation > 0 ? -1 : -2}
             disabled={isControlDisabled('previous') || (isLoading && !loading.previous)}
             loading={loading.previous}
+            checked={loading.previous}
             label="Previous"
             aria-label="Go to previous step"
             title="Go to previous step"
@@ -344,6 +346,7 @@
           active={elevation > 0 ? -1 : -2}
           disabled={isControlDisabled('next') || (isLoading && !loading.next)}
           loading={loading.next}
+          checked={loading.next}
           label="Next"
           aria-label="Go to next step"
           title="Go to next step"

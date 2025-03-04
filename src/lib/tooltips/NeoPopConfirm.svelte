@@ -130,6 +130,7 @@
       <NeoButton
         {rounded}
         loading={loading.cancel}
+        checked={loading.cancel}
         disabled={typeof disabled === 'object' ? disabled.cancel : disabled}
         elevation="0"
         label="Cancel"
@@ -143,6 +144,7 @@
       <NeoButton
         {rounded}
         loading={loading.confirm}
+        checked={loading.confirm}
         disabled={typeof disabled === 'object' ? disabled.confirm : disabled}
         elevation="0"
         label="Confirm"

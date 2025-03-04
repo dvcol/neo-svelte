@@ -271,6 +271,7 @@
       tooltip={lorem}
       header="Confirm tooltip"
       width={{ max: '40rem' }}
+      height={{ min: '18rem' }}
       onOpen={() => console.info('Confirm tooltip opened')}
       onClose={() => console.info('Confirm tooltip closed')}
       onConfirm={async () => {
