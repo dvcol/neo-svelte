@@ -140,8 +140,9 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] touch swipe
 
 - [x] tooltip
-  - [ ] popconfirm
+  - [x] popconfirm
   - [x] popselect
+  - [ ] popstepper
   - [ ] menu
   - [ ] nested menus
   - [ ] menu pane (multi column)

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { toStyle } from '@dvcol/common-utils/common/class';
+  import { watch } from '@dvcol/svelte-utils/watch';
   import {
     autoPlacement,
     flip,
@@ -17,7 +18,7 @@
 
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-  import { type NeoTooltipProps, NeoTooltipSizeStrategy } from '~/tooltips/neo-tooltip.model.js';
+  import { type NeoTooltipProps, NeoTooltipSizeStrategy, type NeoTooltipToggle } from '~/tooltips/neo-tooltip.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -33,7 +34,7 @@
 
     // States
     role,
-    tag = 'span',
+    tag = 'div',
     ref = $bindable(),
     open = $bindable(false),
     offset: spacing = 6,
@@ -73,6 +74,11 @@
     closeOnDismiss = true,
     dismissOptions,
 
+    // Events
+    onChange,
+    onOpen,
+    onClose,
+
     // Actions
     in: inAction,
     out: outAction,
@@ -84,12 +90,11 @@
     // Other props
     triggerRef = $bindable(),
     triggerProps,
-
     ...rest
   }: NeoTooltipProps = $props();
   /* eslint-enable prefer-const */
 
-  const { tag: triggerTag = 'span', ...triggerRest } = $derived(triggerProps ?? {});
+  const { tag: triggerTag = 'div', ...triggerRest } = $derived(triggerProps ?? {});
 
   const elevation = $derived(coerce(_elevation ?? DefaultShadowShallowElevation));
   const blur = $derived(coerce(_blur ?? elevation));
@@ -234,20 +239,18 @@
     return () => triggerRef?.removeAttribute('aria-describedby');
   });
 
+  const toggle: NeoTooltipToggle = (state = !open) => {
+    open = state;
+    return open;
+  };
+
   const addMethods = <T extends HTMLElement>(element?: T) => {
     if (!element) return;
     if (!Object.hasOwn(element, 'toggle')) {
-      Object.assign(element, {
-        toggle: (state = !open) => {
-          open = state;
-          return open;
-        },
-      });
+      Object.assign(element, { toggle });
     }
     if (!Object.hasOwn(element, 'update')) {
-      Object.assign(element, {
-        update: () => floating.update(),
-      });
+      Object.assign(element, { update: () => floating.update() });
     }
   };
 
@@ -266,6 +269,16 @@
 
   const width = $derived(computeSize(inputWith, 'width'));
   const height = $derived(computeSize(inputHeight, 'height'));
+
+  watch(
+    () => {
+      onChange?.(open);
+      if (open) onOpen?.();
+      else onClose?.();
+    },
+    () => open,
+    { skip: 1 },
+  );
 </script>
 
 {#if !target}
@@ -278,7 +291,7 @@
     {...triggerHandler}
     {...triggerRest}
   >
-    {@render children?.(floating)}
+    {@render children?.(floating, toggle)}
   </svelte:element>
 {/if}
 
@@ -313,7 +326,7 @@
     style={toStyle(tooltipStyle, rest.style)}
   >
     {#if typeof tooltip === 'function'}
-      {@render tooltip?.(floating)}
+      {@render tooltip?.(floating, toggle)}
     {:else}
       {tooltip}
     {/if}

@@ -64,6 +64,11 @@
     openOnHover = false,
     openOnFocus = false,
 
+    // Events
+    onSelect,
+    onClose,
+    onOpen,
+
     // Other props
     containerRef = $bindable(),
     validationRef = $bindable(),
@@ -242,6 +247,9 @@
   {openOnHover}
   filled={!rest?.glass}
   elevation={tooltipElevation}
+  {onClose}
+  {onOpen}
+  {onSelect}
   {...listProps}
 />
 

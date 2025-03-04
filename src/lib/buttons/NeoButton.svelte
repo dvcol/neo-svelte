@@ -1,6 +1,8 @@
 <script lang="ts">
   import { width } from '@dvcol/svelte-utils/transition';
 
+  import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
+
   import { type NeoButtonContext, type NeoButtonProps, NeoTextButton } from '~/buttons/neo-button.model.js';
 
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -126,7 +128,7 @@
     }, 150);
   };
 
-  const onClick: NeoButtonProps['onclick'] = e => {
+  const onClick: MouseEventHandler<HTMLButtonElement> = e => {
     if (loading || disabled) return;
     if (readonly) return onActive();
     if (toggle) {
@@ -140,13 +142,13 @@
     onActive();
   };
 
-  const onKeydownEnter: NeoButtonProps['onkeydown'] = e => {
+  const onKeydownEnter: KeyboardEventHandler<HTMLButtonElement> = e => {
     if (loading || disabled || readonly) return;
     if (e.key === 'Enter') enter = true;
     onkeydown?.(e);
   };
 
-  const onKeyUpEnter: NeoButtonProps['onkeydown'] = e => {
+  const onKeyUpEnter: KeyboardEventHandler<HTMLButtonElement> = e => {
     if (e.key === 'Enter') enter = false;
     if (loading || disabled || readonly) return;
     onkeyup?.(e);

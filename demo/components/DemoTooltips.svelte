@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { height } from '@dvcol/svelte-utils/transition';
 
@@ -8,7 +9,7 @@
 
   import type { NeoListItemRenderContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
 
-  import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
+  import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/tooltips/neo-tooltip.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -20,6 +21,7 @@
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
+  import NeoPopConfirm from '~/tooltips/NeoPopConfirm.svelte';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
@@ -212,7 +214,7 @@
       rounded={options.rounded}
       height={'20rem'}
       tooltipProps={options}
-      onselect={e => console.info('selected', e)}
+      onSelect={e => console.info('selected', e)}
     >
       <NeoButton text rounded={options.rounded}>Hover select: {simpleSelected?.item?.value ?? 'none selected'}</NeoButton>
     </NeoPopSelect>
@@ -251,6 +253,44 @@
         </NeoTransitionContainer>
       </NeoButton>
     </NeoPopSelect>
+  </div>
+</div>
+
+{#snippet lorem()}
+  <div>
+    Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin tincidunt
+    mauris eros ex pharetra imperdiet. Nibh facilisi ante vestibulum feugiat facilisi quam risus ex? Malesuada condimentum nulla odio facilisi semper
+    sodales. Dapibus est duis odio tincidunt elementum. Sodales scelerisque venenatis hac ridiculus scelerisque massa vitae.
+  </div>
+{/snippet}
+
+<div class="row">
+  <div class="column content">
+    <NeoPopConfirm
+      rounded={options.rounded}
+      tooltip={lorem}
+      header="Confirm tooltip"
+      width={{ max: '40rem' }}
+      onOpen={() => console.info('Confirm tooltip opened')}
+      onClose={() => console.info('Confirm tooltip closed')}
+      onConfirm={async () => {
+        console.info('Confirm tooltip confirming...');
+        await wait(2000);
+        console.info('Confirm tooltip confirmed');
+        return true;
+      }}
+      onCancel={async () => {
+        console.info('Confirm tooltip cancelling...');
+        await wait(1000);
+        console.info('Confirm tooltip cancelled');
+        return true;
+      }}
+      tooltipProps={{ ...options, openOnHover: false, openOnFocus: false }}
+    >
+      {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
+        <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>
+      {/snippet}
+    </NeoPopConfirm>
   </div>
 </div>
 

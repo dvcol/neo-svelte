@@ -4,6 +4,7 @@ export const Colors = {
   Success: 'success',
   Warning: 'warning',
   Error: 'error',
+  Default: 'default',
 } as const;
 
 export type Color = (typeof Colors)[keyof typeof Colors];
@@ -14,6 +15,7 @@ export const ColorVariables = {
   [Colors.Success]: '--neo-color-success',
   [Colors.Warning]: '--neo-color-warning',
   [Colors.Error]: '--neo-color-error',
+  [Colors.Default]: '--neo-color-default',
 } as const;
 
 export const getColorVariable = (color?: Color | string): string | undefined => {

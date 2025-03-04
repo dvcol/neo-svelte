@@ -353,7 +353,11 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   tag?: Tag | keyof HTMLElementTagNameMap;
 
   // Events
-  onselect?: (event: NeoListSelectEvent<Selected>) => void;
+  /**
+   * Event listener that fires when an item is selected/deselected.
+   * @param event
+   */
+  onSelect?: (event: NeoListSelectEvent<Selected>) => void;
 
   // Other Props
   /**

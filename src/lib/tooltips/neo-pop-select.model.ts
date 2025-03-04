@@ -41,6 +41,11 @@ export type NeoPopSelectProps<Value = unknown> = {
    * Optional props to pass to the search input.
    */
   searchProps?: NeoListSearchProps;
+  /**
+   * Event listener that fires when an item is selected/deselected.
+   * @param event
+   */
+  onSelect?: NeoListProps<Value>['onSelect'];
 
   // Tooltip props
   /**
@@ -82,7 +87,7 @@ export type NeoPopSelectProps<Value = unknown> = {
   /**
    * Optional flex strategy for the container
    */
-  flex?: CSSStyleDeclaration['flex'];
+  flex?: NeoTooltipProps['flex'];
   /**
    * Width strategy for the tooltip.
    * - `match`: the tooltip will match the width of the trigger.
@@ -123,6 +128,16 @@ export type NeoPopSelectProps<Value = unknown> = {
    * @default 2
    */
   elevation?: NeoTooltipProps['elevation'];
+  /**
+   * Event Handlers that fires on open.
+   */
+  onOpen?: NeoTooltipProps['onOpen'];
+  /**
+   * Event Handlers that fires on close.
+   */
+  onClose?: NeoTooltipProps['onClose'];
+
+  // Other props
   /**
    * Optional props to pass to the tooltip.
    */

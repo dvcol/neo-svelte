@@ -331,7 +331,7 @@
       selected={selected[0]}
       {items}
       {...options}
-      onselect={e => console.info('onSelect - single', e)}
+      onSelect={e => console.info('onSelect - single', e)}
       after={values}
     />
   </div>
@@ -347,7 +347,7 @@
       selected={[...selected]}
       {items}
       {...options}
-      onselect={e => console.info('onSelect - multiple', e)}
+      onSelect={e => console.info('onSelect - multiple', e)}
       after={values}
     />
   </div>
@@ -362,7 +362,7 @@
       multiple
       items={withSection}
       {...options}
-      onselect={e => console.info('onSelect - sections', e)}
+      onSelect={e => console.info('onSelect - sections', e)}
       after={values}
     />
   </div>

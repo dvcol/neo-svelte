@@ -120,6 +120,19 @@ export type NeoSelectProps<Value = unknown> = {
    * Whether to open the tooltip on hover.
    */
   openOnHover?: NeoPopSelectProps<Value>['openOnHover'];
+  /**
+   * Event listener that fires when an item is selected/deselected.
+   * @param event
+   */
+  onSelect?: NeoPopSelectProps<Value>['onSelect'];
+  /**
+   * Event Handlers that fires on open.
+   */
+  onOpen?: NeoPopSelectProps<Value>['onOpen'];
+  /**
+   * Event Handlers that fires on close.
+   */
+  onClose?: NeoPopSelectProps<Value>['onClose'];
 
   // OtherProps
   /**

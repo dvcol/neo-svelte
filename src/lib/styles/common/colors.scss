@@ -30,6 +30,7 @@
   --neo-color-success: var(--neo-green);
   --neo-color-success-50: oklch(from var(--neo-color-success) l c h / 50%);
   --neo-color-success-highlight: oklch(from var(--neo-color-success) calc(l - 0.15) c h);
+  --neo-color-default: var(--neo-grey-dark);
 
   /*********************
    ** semantic colors **
@@ -106,6 +107,7 @@
   --neo-dark-color-success: var(--neo-green-light);
   --neo-dark-color-success-50: oklch(from var(--neo-dark-color-success) l c h / 50%);
   --neo-dark-color-warning: var(--neo-orange-light);
+  --neo-dark-color-default: var(--neo-white-soft);
 
   /*********************
    ** dark mode colors **
@@ -181,6 +183,7 @@
   --neo-color-success: var(--neo-dark-color-success);
   --neo-color-success-50: var(--neo-dark-color-success-50);
   --neo-color-warning: var(--neo-dark-color-warning);
+  --neo-color-default: var(--neo-dark-color-default);
 
   /*********************
    ** semantic colors **

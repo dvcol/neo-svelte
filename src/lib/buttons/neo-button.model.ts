@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+import type { HTMLAnchorAttributes, HTMLButtonAttributes, KeyboardEventHandler } from 'svelte/elements';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
@@ -211,12 +211,12 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * Callback function to be called when a key is pressed.
    * @param e
    */
-  onkeydown?: (e: SvelteEvent<KeyboardEvent>) => unknown;
+  onkeydown?: KeyboardEventHandler<HTMLButtonElement>;
   /**
    * Callback function to be called when a key is released.
    * @param e
    */
-  onkeyup?: (e: SvelteEvent<KeyboardEvent>) => unknown;
+  onkeyup?: KeyboardEventHandler<HTMLButtonElement>;
 } & NeoButtonStates &
   HTMLFlexProps &
   HTMLActionProps &

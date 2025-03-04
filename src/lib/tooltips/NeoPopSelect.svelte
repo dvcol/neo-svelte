@@ -2,6 +2,7 @@
   import { watch } from '@dvcol/svelte-utils/watch';
 
   import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
+  import type { NeoTooltipContext, NeoTooltipToggle } from 'src/lib/index.js';
   import type { NeoListContext, NeoListItemOrSection } from '~/list/neo-list.model.js';
   import type { NeoPopSelectProps } from '~/tooltips/neo-pop-select.model.js';
 
@@ -21,6 +22,7 @@
 
     // Styles
     rounded = false,
+    flex,
     width = 'min',
     height = 'min',
 
@@ -45,6 +47,11 @@
     hoverDelay,
     openOnFocus,
     openOnHover,
+
+    // Events
+    onSelect,
+    onClose,
+    onOpen,
 
     // Other Props
     tooltipProps,
@@ -89,6 +96,7 @@
     reverse={floating?.placement?.startsWith('top')}
     before={search ? beforeList : before}
     {items}
+    {onSelect}
     {...rest}
     buttonProps={{ rounded, ...rest.buttonProps }}
     class={['neo-pop-select-list', rest.class]}
@@ -106,6 +114,7 @@
   padding="0"
   {target}
   {rounded}
+  {flex}
   {width}
   {height}
   {color}
@@ -116,9 +125,11 @@
   {hoverDelay}
   {openOnFocus}
   {openOnHover}
+  {onClose}
+  {onOpen}
   {...tooltipProps}
 >
-  {#snippet children(floating: UseFloatingReturn)}
-    {@render trigger?.(floating)}
+  {#snippet children(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}
+    {@render trigger?.(floating, toggle)}
   {/snippet}
 </NeoTooltip>

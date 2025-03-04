@@ -24,17 +24,21 @@ export type NeoTooltipSizeStrategies = (typeof NeoTooltipSizeStrategy)[keyof typ
 
 export type NeoTooltipElevation = PositiveShadowElevation | PositiveShadowElevationString;
 
+export type NeoTooltipContext = UseFloatingReturn;
+
+export type NeoTooltipToggle = (open?: boolean) => boolean;
+
 export type NeoTooltipProps = {
   // Snippets
 
   /**
    * Element(s) to render inside the trigger.
    */
-  children?: Snippet<[UseFloatingReturn]>;
+  children?: Snippet<[NeoTooltipContext, NeoTooltipToggle]>;
   /**
    * A snippet or a string to display as the input label.
    */
-  tooltip?: string | Snippet<[UseFloatingReturn]>;
+  tooltip?: string | Snippet<[NeoTooltipContext, NeoTooltipToggle]>;
 
   // States
 
@@ -195,6 +199,21 @@ export type NeoTooltipProps = {
    * Options to pass to the useDismiss hook.
    */
   dismissOptions?: UseDismissOptions;
+
+  // Events
+  /**
+   * Event Handlers that fires on state change.
+   * @param open
+   */
+  onChange?: (open: boolean) => void;
+  /**
+   * Event Handlers that fires on open.
+   */
+  onOpen?: () => void;
+  /**
+   * Event Handlers that fires on close.
+   */
+  onClose?: () => void;
 
   // Other props
 

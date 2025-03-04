@@ -75,7 +75,7 @@
     animate = { use: flipToggle, props: quickCircOutProps },
 
     // Events
-    onselect,
+    onSelect,
 
     // Other props
     containerProps,
@@ -166,7 +166,7 @@
   const toggleItem = (item: NeoListSelectedItem, clear = false) => {
     if (disabled || readonly) return;
     const event = clear ? clearItem(item) : selectItem(item);
-    if (event) onselect?.(event);
+    if (event) onSelect?.(event);
   };
 
   const isChecked = (item: NeoListSelectedItem) => {
@@ -189,7 +189,7 @@
       selected = findByIdInList(previous, items);
     }
     const event: NeoListSelectEvent = { type: 're-select', previous, current: cloneSelection() };
-    onselect?.(event);
+    onSelect?.(event);
     return event;
   };
 
