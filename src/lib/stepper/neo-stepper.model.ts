@@ -16,6 +16,16 @@ export const NeoStepperPlacement = {
 
 export type NeoStepperPlacements = (typeof NeoStepperPlacement)[keyof typeof NeoStepperPlacement];
 
+export const NeoStepperNavigation = {
+  Navigate: 'navigate' as const,
+  Previous: 'previous' as const,
+  Cancel: 'cancel' as const,
+  Next: 'next' as const,
+} as const;
+
+export type NeoStepperNavigations = (typeof NeoStepperNavigation)[keyof typeof NeoStepperNavigation];
+export type NeoStepperLoadingState = Record<NeoStepperNavigations, boolean>;
+
 export type NeoStepperContext<Value = unknown> = {
   /**
    * Step cursor containing the current, next and previous steps.
@@ -51,21 +61,23 @@ export type NeoStepperContext<Value = unknown> = {
    *
    * @param step - index of the step to navigate to.
    * @param target - Optional step instance (extracted from the steps array if not provided).
+   * @param reason - Optional reason for the navigation.
    */
-  goToStep: (step: number, target?: NeoStepperStep<Value>) => void;
+  goToStep: (step: number, reason?: NeoStepperNavigations, target?: NeoStepperStep<Value>) => Promise<undefined | NeoStepperEvent<Value>>;
   /**
    * Method to navigate to the next step if possible.
    * This will check if the next step is disabled, if the current step allows forward navigation and if loop navigation is enabled.
    */
-  goPrevious: () => void;
+  goPrevious: () => Promise<undefined | NeoStepperEvent<Value>>;
   /**
    * Method to navigate to the previous step if possible.
    * This will check if the previous step is disabled, if the current step allows backward navigation and if loop navigation is enabled.
    */
-  goNext: () => void;
+  goNext: () => Promise<undefined | NeoStepperEvent<Value>>;
 };
 
 export type NeoStepperEvent<Value = unknown> = { previous: number; current: number; step: NeoStepperStep<Value> };
+export type NeoStepperBeforeEvent<Value = unknown> = { current: number; next: number; step: NeoStepperStep<Value> };
 
 export type NeoStepperStep<Value = unknown> = {
   /**
@@ -110,8 +122,15 @@ export type NeoStepperStep<Value = unknown> = {
   /**
    * Optional hook to run when the step is activated.
    * @param event
+   * @param reason
    */
-  onStep?: (event: NeoStepperEvent<Value>) => void;
+  onStep?: (event: NeoStepperEvent<Value>, reason?: NeoStepperNavigations) => void | Promise<void>;
+  /**
+   * Optional hook to run before leaving the step.
+   * @param event
+   * @param reason
+   */
+  onBeforeStep?: (event: NeoStepperBeforeEvent<Value>, reason?: NeoStepperNavigations) => void | Promise<void>;
 
   /**
    * Optional props to pass to the previous button when this step is active.
@@ -170,6 +189,10 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    * Index of the currently active step.
    */
   active?: number;
+  /**
+   * Whether to show the buttons as loading.
+   */
+  loading?: NeoStepperLoadingState;
 
   /**
    * Whether to show the progress bar.
@@ -262,8 +285,15 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
   /**
    * Optional hook to run when a step is activated.
    * @param event
+   * @param reason
    */
-  onStep?: (event: NeoStepperEvent<Value>) => void;
+  onStep?: (event: NeoStepperEvent<Value>, reason?: NeoStepperNavigations) => void | Promise<void>;
+  /**
+   * Optional hook to before leaving a step.
+   * @param event
+   * @param reason
+   */
+  onBeforeStep?: (event: NeoStepperBeforeEvent<Value>, reason?: NeoStepperNavigations) => void | Promise<void>;
 
   // OtherProps
   /**

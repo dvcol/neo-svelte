@@ -15,7 +15,15 @@
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
-  import { type NeoStepperContext, NeoStepperPlacement, type NeoStepperProps } from '~/stepper/neo-stepper.model.js';
+  import {
+    type NeoStepperBeforeEvent,
+    type NeoStepperContext,
+    type NeoStepperEvent,
+    NeoStepperNavigation,
+    type NeoStepperNavigations,
+    NeoStepperPlacement,
+    type NeoStepperProps,
+  } from '~/stepper/neo-stepper.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import {
     coerce,
@@ -36,6 +44,12 @@
     tag = 'div',
     steps = [],
     active = $bindable(0),
+    loading = $bindable({
+      navigate: false,
+      previous: false,
+      cancel: false,
+      next: false,
+    }),
 
     marks: progressMarks = true,
     progress = true,
@@ -66,7 +80,8 @@
     transition: transitionAction,
 
     // Methods
-    onStep, // current step, & previous step (forward or backward)
+    onStep, // On step activation
+    onBeforeStep, // Before step activation
 
     // Other props
     swipeProps,
@@ -107,37 +122,52 @@
   const canCancel = $derived(step.current?.cancel ?? cancel);
   const canNext = $derived(step.current?.next ?? next);
 
-  const emitStepEvent = (stepEvent = { previous: last, current: active, step: steps[active] }) => {
-    onStep?.(stepEvent);
-    step.current?.onStep?.(stepEvent);
-    return stepEvent;
+  const emitStepEvent = async (
+    reason: NeoStepperNavigations = NeoStepperNavigation.Navigate,
+    index?: number,
+  ): Promise<NeoStepperEvent | undefined> => {
+    loading[reason] = true;
+    try {
+      if (index !== undefined) {
+        const event: NeoStepperBeforeEvent = { current: active, next: index, step: steps[active] };
+        await Promise.all([step.current?.onBeforeStep?.(event, reason), onBeforeStep?.(event, reason)]);
+        return;
+      }
+      const event: NeoStepperEvent = { previous: last, current: active, step: steps[active] };
+      await Promise.all([step.current?.onStep?.(event, reason), onStep?.(event, reason)]);
+      return event;
+    } finally {
+      loading[reason] = false;
+    }
   };
 
   /**
    * This is imperative navigation, it will not check if next or previous constraints are met.
    * But, it will check if the target step is disabled.
    */
-  const goToStep = (index: number, target = steps[index]) => {
+  const goToStep: NeoStepperContext['goToStep'] = async (index: number, reason?: NeoStepperNavigations, target = steps[index]) => {
     if (!target || target?.disabled) return;
+    await emitStepEvent(reason, index);
     last = active;
     active = index;
-    return emitStepEvent();
+    return emitStepEvent(reason);
   };
 
-  const goPrevious = () => {
+  const goPrevious: NeoStepperContext['goPrevious'] = async () => {
     if (canPrevious === false) return;
-    if (active > 0) return goToStep(active - 1);
-    if (loop) return goToStep(steps.length - 1);
+    if (active > 0) return goToStep(active - 1, NeoStepperNavigation.Previous);
+    if (loop) return goToStep(steps.length - 1, NeoStepperNavigation.Previous);
   };
 
-  const goNext = () => {
+  const goNext: NeoStepperContext['goNext'] = async () => {
     if (canNext === false) return;
-    if (active < steps.length - 1) return goToStep(active + 1);
-    if (loop) return goToStep(0);
+    if (active < steps.length - 1) return goToStep(active + 1, NeoStepperNavigation.Next);
+    if (loop) return goToStep(0, NeoStepperNavigation.Next);
   };
 
+  const isLoading = $derived(loading?.previous || loading?.next || loading?.cancel);
   const isMarkDisabled = (index: number, target = steps[index]): boolean => {
-    if (disabled || target?.disabled) return true;
+    if (disabled || target?.disabled || isLoading) return true;
     if (index < active) {
       if (typeof canPrevious === 'boolean') return canPrevious === false;
       if (typeof canPrevious === 'number') return canPrevious < active - index;
@@ -208,8 +238,6 @@
     };
   });
 
-  $inspect(markMargin);
-
   $effect(() => {
     if (!ref) return;
     Object.assign(ref, {
@@ -267,11 +295,12 @@
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
           active={elevation > 0 ? -1 : -2}
-          disabled={isControlDisabled('cancel')}
+          disabled={isControlDisabled('cancel') || (isLoading && !loading.cancel)}
+          loading={loading.cancel}
           label="Cancel"
           aria-label="Cancel stepper"
           title="Cancel stepper"
-          onclick={() => goToStep(0)}
+          onclick={() => goToStep(0, NeoStepperNavigation.Cancel)}
           transition={{ use: scale, props: { duration: quickDuration, start: 0.95 } }}
           {icon}
           {...cancelProps}
@@ -285,7 +314,8 @@
             {borderless}
             elevation={elevation > 0 ? elevation : 0}
             active={elevation > 0 ? -1 : -2}
-            disabled={isControlDisabled('previous')}
+            disabled={isControlDisabled('previous') || (isLoading && !loading.previous)}
+            loading={loading.previous}
             label="Previous"
             aria-label="Go to previous step"
             title="Go to previous step"
@@ -302,7 +332,8 @@
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
           active={elevation > 0 ? -1 : -2}
-          disabled={isControlDisabled('next')}
+          disabled={isControlDisabled('next') || (isLoading && !loading.next)}
+          loading={loading.next}
           label="Next"
           aria-label="Go to next step"
           title="Go to next step"

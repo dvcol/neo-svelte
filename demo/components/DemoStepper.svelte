@@ -1,5 +1,7 @@
 <script lang="ts">
-  import type { NeoStepperEvent, NeoStepperPlacements, NeoStepperProps, NeoStepperStep } from '~/stepper/neo-stepper.model.js';
+  import { wait } from '@dvcol/common-utils/common/promise';
+
+  import type { NeoStepperEvent, NeoStepperNavigations, NeoStepperPlacements, NeoStepperProps, NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
 
@@ -49,6 +51,10 @@
       },
       render: step2,
       value: step2Value,
+      onBeforeStep: async (event: NeoStepperEvent, reason?: NeoStepperNavigations) => {
+        if (reason === 'next') await wait(1000);
+        console.info('Stepper before step:', event, reason);
+      },
     },
     {
       markProps: {
@@ -86,9 +92,8 @@
 
     vertical: false,
     placement: NeoStepperPlacement.Start,
-
-    onStep: (event: NeoStepperEvent) => {
-      console.info('Stepper step:', event);
+    onStep: async (event: NeoStepperEvent, reason?: NeoStepperNavigations) => {
+      console.info('Stepper step:', event, reason);
     },
   });
 </script>
