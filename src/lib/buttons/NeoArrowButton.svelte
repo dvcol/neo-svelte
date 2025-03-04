@@ -42,7 +42,7 @@
 </script>
 
 {#snippet icon()}
-  <IconArrow {direction} expanded={(checked || hovered) && (!disabled || !readonly)} {...arrowProps} />
+  <IconArrow {direction} expanded={(checked || hovered) && !disabled && !readonly} {...arrowProps} />
 {/snippet}
 
 <NeoButton bind:checked {icon} {reverse} {disabled} {readonly} {...rest} onpointerenter={onPointerEnter} onpointerleave={onPointerLeave} />

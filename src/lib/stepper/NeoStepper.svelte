@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { clamp } from '@dvcol/common-utils/common/math';
   import { SwipeDirection } from '@dvcol/common-utils/common/touch';
 
@@ -122,35 +123,44 @@
   const canCancel = $derived(step.current?.cancel ?? cancel);
   const canNext = $derived(step.current?.next ?? next);
 
+  const setLoading = debounce((reason: NeoStepperNavigations) => {
+    loading[reason] = true;
+  }, 200);
+
   const emitStepEvent = async (
     reason: NeoStepperNavigations = NeoStepperNavigation.Navigate,
     index?: number,
   ): Promise<NeoStepperEvent | undefined> => {
-    loading[reason] = true;
-    try {
-      if (index !== undefined) {
-        const event: NeoStepperBeforeEvent = { current: active, next: index, step: steps[active] };
-        await Promise.all([step.current?.onBeforeStep?.(event, reason), onBeforeStep?.(event, reason)]);
-        return;
-      }
-      const event: NeoStepperEvent = { previous: last, current: active, step: steps[active] };
-      await Promise.all([step.current?.onStep?.(event, reason), onStep?.(event, reason)]);
-      return event;
-    } finally {
-      loading[reason] = false;
+    if (index !== undefined) {
+      const event: NeoStepperBeforeEvent = { current: active, next: index, step: steps[active] };
+      await Promise.all([step.current?.onBeforeStep?.(event, reason), onBeforeStep?.(event, reason)]);
+      return;
     }
+    const event: NeoStepperEvent = { previous: last, current: active, step: steps[active] };
+    await Promise.all([step.current?.onStep?.(event, reason), onStep?.(event, reason)]);
+    return event;
   };
 
   /**
    * This is imperative navigation, it will not check if next or previous constraints are met.
    * But, it will check if the target step is disabled.
    */
-  const goToStep: NeoStepperContext['goToStep'] = async (index: number, reason?: NeoStepperNavigations, target = steps[index]) => {
+  const goToStep: NeoStepperContext['goToStep'] = async (
+    index: number,
+    reason: NeoStepperNavigations = NeoStepperNavigation.Navigate,
+    target = steps[index],
+  ) => {
     if (!target || target?.disabled) return;
-    await emitStepEvent(reason, index);
-    last = active;
-    active = index;
-    return emitStepEvent(reason);
+    setLoading(reason).catch(console.error);
+    try {
+      await emitStepEvent(reason, index);
+      last = active;
+      active = index;
+      return await emitStepEvent(reason);
+    } finally {
+      setLoading.cancel().catch(console.error);
+      loading[reason] = false;
+    }
   };
 
   const goPrevious: NeoStepperContext['goPrevious'] = async () => {
@@ -165,7 +175,7 @@
     if (loop) return goToStep(0, NeoStepperNavigation.Next);
   };
 
-  const isLoading = $derived(loading?.previous || loading?.next || loading?.cancel);
+  const isLoading = $derived(loading && Object.values(loading).some(Boolean));
   const isMarkDisabled = (index: number, target = steps[index]): boolean => {
     if (disabled || target?.disabled || isLoading) return true;
     if (index < active) {
