@@ -110,21 +110,19 @@ export type NeoPopConfirm = {
    * - `match`: the tooltip will match the width of the trigger.
    * - `min`: the tooltip will be at least as wide as the trigger.
    * - `max`: the tooltip will be at most as wide as the trigger.
+   * - `available`: the tooltip will be at most as wide as the available space.
    * - `string`: a css width value will be applied to the tooltip.
    * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
-   *
-   * @default 'min'
    */
   width?: NeoTooltipProps['width'];
   /**
-   * Width strategy for the tooltip.
-   * - `match`: the tooltip will match the width of the trigger.
-   * - `min`: the tooltip will be at least as wide as the trigger.
-   * - `max`: the tooltip will be at most as wide as the trigger.
-   * - `string`: a css width value will be applied to the tooltip.
+   * Height strategy for the tooltip.
+   * - `match`: the tooltip will match the height of the trigger.
+   * - `min`: the tooltip will be at least as tall as the trigger.
+   * - `max`: the tooltip will be at most as tall as the trigger.
+   * - `available`: the tooltip will be at most as tall as the available space.
+   * - `string`: a css height value will be applied to the tooltip.
    * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
-   *
-   * @default 'min'
    */
   height?: NeoTooltipProps['height'];
 
@@ -163,6 +161,10 @@ export type NeoPopConfirm = {
    * Optional props to pass to the header.
    */
   headerProps?: HTMLNeoBaseElement & HTMLTagProps;
+  /**
+   * Optional props to pass to the content wrapper.
+   */
+  contentProps?: HTMLNeoBaseElement & HTMLTagProps;
   /**
    * Optional props to pass to the close button.
    */

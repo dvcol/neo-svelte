@@ -22,7 +22,13 @@
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
-  import { coerce, computeGlassFilter, computeShadowElevation, DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
+  import {
+    coerce,
+    computeGlassFilter,
+    computeShadowElevation,
+    DefaultShadowShallowElevation,
+    PositibeMinMaxElevation,
+  } from '~/utils/shadow.utils.js';
   import { type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
   import { quickScaleProps } from '~/utils/transition.utils.js';
 
@@ -49,7 +55,6 @@
     padding,
     rounded,
     shadow = true,
-    scrollbar,
     flex,
     width: inputWith,
     height: inputHeight,
@@ -96,12 +101,11 @@
 
   const { tag: triggerTag = 'div', ...triggerRest } = $derived(triggerProps ?? {});
 
-  const elevation = $derived(coerce(_elevation ?? DefaultShadowShallowElevation));
+  const elevation = $derived(coerce(_elevation ?? DefaultShadowShallowElevation, PositibeMinMaxElevation));
   const blur = $derived(coerce(_blur ?? elevation));
 
   const tooltipBlur = $derived(computeGlassFilter(blur, true));
-  // const tooltipShadow = $derived(`var(--neo-glass-box-shadow-raised-${clamp(elevation, 0, MaxShadowElevation)})`);
-  const tooltipShadow = $derived(computeShadowElevation(elevation, { glass: true }, { min: 0, max: MaxShadowElevation }));
+  const tooltipShadow = $derived(computeShadowElevation(elevation, { glass: true }, PositibeMinMaxElevation));
 
   const host = $derived.by(() => {
     if (!target) return;
@@ -261,10 +265,10 @@
     if (!open) return;
     const tSize = dimension === 'width' ? triggerRef?.offsetWidth : triggerRef?.offsetHeight;
     if (value === NeoTooltipSizeStrategy.Match) return { absolute: toPixel(tSize) };
-    if (value === NeoTooltipSizeStrategy.Min) return { max: toPixel(available[dimension]), min: toPixel(tSize) };
+    if (value === NeoTooltipSizeStrategy.Min) return { min: toPixel(tSize) };
     if (value === NeoTooltipSizeStrategy.Max) return { max: toPixel(tSize) };
-    const iSize = toSize(value);
-    return { max: iSize?.absolute ? undefined : toPixel(available[dimension]), ...iSize };
+    if (value === NeoTooltipSizeStrategy.Available) return { max: toPixel(available[dimension]) };
+    return toSize(value);
   };
 
   const width = $derived(computeSize(inputWith, 'width'));
@@ -303,9 +307,9 @@
     class:neo-rounded={rounded}
     class:neo-tinted={tinted}
     class:neo-filled={filled}
-    class:neo-scroll={scrollbar}
     class:neo-shadow={shadow}
     class:neo-flat={!elevation}
+    data-elevation={elevation}
     style:--neo-tooltip-text-color={getColorVariable(color)}
     style:--neo-tooltip-box-shadow={tooltipShadow}
     style:--neo-tooltip-backdrop-filter={tooltipBlur}
@@ -339,6 +343,9 @@
   .neo-tooltip {
     @include mixin.floating;
 
+    display: flex;
+    flex: 1 0 fit-content;
+    flex-direction: column;
     color: var(--neo-tooltip-text-color, inherit);
 
     :global(> .neo-list:only-child) {
@@ -365,16 +372,6 @@
 
     &.neo-flat {
       border-color: var(--neo-tooltip-border-color, var(--neo-glass-border-color-flat));
-    }
-
-    &.neo-scroll {
-      clip-path: inset(0 round var(--neo-tooltip-border-radius, var(--neo-border-radius)));
-
-      &.neo-shadow {
-        @include mixin.fade-scroll(1rem);
-      }
-
-      @include mixin.scrollbar;
     }
 
     &.neo-rounded {

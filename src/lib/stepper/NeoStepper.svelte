@@ -1,6 +1,5 @@
 <script lang="ts">
   import { debounce } from '@dvcol/common-utils/common/debounce';
-  import { clamp } from '@dvcol/common-utils/common/math';
   import { SwipeDirection } from '@dvcol/common-utils/common/touch';
 
   import { swipe, type SwipeOptions } from '@dvcol/svelte-utils/swipe';
@@ -26,13 +25,7 @@
     type NeoStepperProps,
   } from '~/stepper/neo-stepper.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import {
-    coerce,
-    DefaultShadowShallowElevation,
-    MaxShallowShadowElevation,
-    MinShallowShadowElevation,
-    type ShadowShallowElevation,
-  } from '~/utils/shadow.utils.js';
+  import { coerce, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
   import { quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
@@ -99,7 +92,7 @@
 
   const { tag: controlsTag = 'div', ...controlsRest } = $derived(controlsProps ?? {});
 
-  const elevation = $derived(clamp(coerce(_elevation), MinShallowShadowElevation, MaxShallowShadowElevation) as ShadowShallowElevation);
+  const elevation = $derived(coerce(_elevation, DefaultShallowMinMaxElevation));
 
   const stepValue = $derived(100 / (steps.length - 1));
   const marks = $derived(progressMarks ? Array.from({ length: steps.length }, (_, i) => i * stepValue) : undefined);

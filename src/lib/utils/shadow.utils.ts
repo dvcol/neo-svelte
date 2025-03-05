@@ -34,6 +34,7 @@ export type ShadowShallowElevationString = `${ShadowShallowElevation}`;
 export const PositiveShadowElevations = [0, 1, 2, 3, 4, 5] as const;
 export type PositiveShadowElevation = (typeof PositiveShadowElevations)[number];
 export type PositiveShadowElevationString = `${PositiveShadowElevation}`;
+export const PositibeMinMaxElevation: { min: 0; max: ShadowElevation } = { min: 0, max: MaxShadowElevation };
 
 export const BlurElevations = [1, 2, 3, 4, 5] as const;
 export type BlurElevation = (typeof BlurElevations)[number];
@@ -54,9 +55,15 @@ export const getDefaultSlideElevation = (elevation: ShadowElevation, fallback: S
   return fallback;
 };
 
-export function coerce<Elevation extends number = ShadowElevation>(elevation: Elevation | `${Elevation}`): Elevation {
+export function coerce<Elevation extends number = ShadowElevation>(
+  elevation: Elevation | `${Elevation}`,
+  { min, max }: { min?: ShadowElevation; max?: ShadowElevation } = {},
+): Elevation {
   if (elevation === undefined || elevation === null) return elevation;
-  return Number(elevation) as Elevation;
+  const _elevation = Number(elevation);
+  if (min !== undefined && _elevation < min) return min as Elevation;
+  if (max !== undefined && _elevation > max) return max as Elevation;
+  return _elevation as Elevation;
 }
 
 export function parseBlur(blur?: BlurElevation | BlurElevationString, elevation?: ShadowElevation | ShadowElevationString): BlurElevation {

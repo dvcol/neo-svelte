@@ -43,8 +43,8 @@
     tinted,
     elevation,
     flex,
-    width = 'min',
-    height = 'min',
+    width,
+    height,
 
     // Events
     onOpen,
@@ -56,6 +56,7 @@
     tooltipProps,
     controlsProps,
     headerProps,
+    contentProps,
     closeButtonProps,
     cancelButtonProps,
     confirmButtonProps,
@@ -65,6 +66,7 @@
 
   const { tag: headerTag = 'h6', ...headerRest } = $derived(headerProps ?? {});
   const { tag: controlsTag = 'div', ...controlsRest } = $derived(controlsProps ?? {});
+  const { tag: contentTag = 'div', ...contentRest } = $derived(contentProps ?? {});
 
   const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
     open = false;
@@ -120,11 +122,14 @@
         {/snippet}
       </NeoButton>
     </div>
-    {#if typeof content === 'function'}
-      {@render content?.(floating, toggle)}
-    {:else}
-      {content}
-    {/if}
+
+    <svelte:element this={contentTag} class:neo-pop-confirm-content={true} {...contentRest}>
+      {#if typeof content === 'function'}
+        {@render content?.(floating, toggle)}
+      {:else}
+        {content}
+      {/if}
+    </svelte:element>
 
     <svelte:element this={controlsTag} class:neo-pop-confirm-control={true} {...controlsRest}>
       <NeoButton
@@ -190,11 +195,17 @@
 
 <style lang="scss">
   .neo-pop-confirm {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
     padding: var(--neo-pop-confirm-padding, var(--neo-gap-xxs));
+
+    &-content {
+      flex: 1 1 auto;
+    }
 
     &-header {
       display: flex;
-      flex: 1 1 auto;
       align-items: center;
       justify-content: flex-end;
 
@@ -218,7 +229,6 @@
 
     &-control {
       display: flex;
-      flex: 1 1 auto;
       gap: var(--neo-gap-sm);
       justify-content: flex-end;
       padding: var(--neo-gap-xs);

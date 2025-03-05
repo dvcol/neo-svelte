@@ -15,9 +15,14 @@ import type { PositiveShadowElevation, PositiveShadowElevationString } from '~/u
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export const NeoTooltipSizeStrategy = {
+  /** Match the size of the trigger */
   Match: 'match' as const,
+  /** At least as wide/tall as the trigger */
   Min: 'min' as const,
+  /** At most as wide/tall as the trigger */
   Max: 'max' as const,
+  /** At most as wide/tall as the available space */
+  Available: 'available' as const,
 } as const;
 
 export type NeoTooltipSizeStrategies = (typeof NeoTooltipSizeStrategy)[keyof typeof NeoTooltipSizeStrategy];
@@ -93,10 +98,6 @@ export type NeoTooltipProps = {
    */
   shadow?: boolean;
   /**
-   * Whether to show a custom scrollbar
-   */
-  scrollbar?: boolean;
-  /**
    * Text color to use for the tooltip.
    */
   color?: Color | CSSStyleDeclaration['color'];
@@ -121,16 +122,18 @@ export type NeoTooltipProps = {
    * - `match`: the tooltip will match the width of the trigger.
    * - `min`: the tooltip will be at least as wide as the trigger.
    * - `max`: the tooltip will be at most as wide as the trigger.
+   * - `available`: the tooltip will be at most as wide as the available space.
    * - `string`: a css width value will be applied to the tooltip.
    * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
    */
   width?: NeoTooltipSizeStrategies | SizeInput<'width'>;
   /**
-   * Width strategy for the tooltip.
-   * - `match`: the tooltip will match the width of the trigger.
-   * - `min`: the tooltip will be at least as wide as the trigger.
-   * - `max`: the tooltip will be at most as wide as the trigger.
-   * - `string`: a css width value will be applied to the tooltip.
+   * Height strategy for the tooltip.
+   * - `match`: the tooltip will match the height of the trigger.
+   * - `min`: the tooltip will be at least as tall as the trigger.
+   * - `max`: the tooltip will be at most as tall as the trigger.
+   * - `available`: the tooltip will be at most as tall as the available space.
+   * - `string`: a css height value will be applied to the tooltip.
    * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
    */
   height?: NeoTooltipSizeStrategies | SizeInput<'height'>;

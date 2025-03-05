@@ -184,14 +184,14 @@
 <div class="row">
   <div class="column content">
     <span class="label">Tooltip</span>
-    <NeoTooltip height="unset" {tooltip} width {...options}>
+    <NeoTooltip {tooltip} width {...options} scrollbar>
       <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
     </NeoTooltip>
   </div>
 
   <div class="column content">
     <span class="label">Tooltip (string)</span>
-    <NeoTooltip height="unset" tooltip="This is a string tooltip" {...options}>
+    <NeoTooltip tooltip="This is a string tooltip" {...options}>
       <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
     </NeoTooltip>
   </div>
@@ -201,7 +201,7 @@
 
     <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" rounded={options.rounded} />
 
-    <NeoTooltip height="unset" {tooltip} target={containerRef} offset={8} width="min" {...options} />
+    <NeoTooltip {tooltip} target={containerRef} offset={8} width="min" {...options} />
   </div>
 </div>
 
@@ -233,7 +233,6 @@
       items={complexItems}
       rounded={options.rounded}
       height="28rem"
-      width="min"
       tooltipProps={{ ...options, openOnFocus: false, openOnHover: false }}
     >
       <NeoButton ghost rounded={options.rounded} bind:checked={open} toggle hover={options.elevation} active="-1" pressed>
@@ -270,8 +269,8 @@
       rounded={options.rounded}
       tooltip={lorem}
       header="Confirm tooltip"
+      scrollbar
       width={{ max: '40rem' }}
-      height={{ min: '18rem' }}
       onOpen={() => console.info('Confirm tooltip opened')}
       onClose={() => console.info('Confirm tooltip closed')}
       onConfirm={async () => {

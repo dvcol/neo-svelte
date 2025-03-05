@@ -93,6 +93,7 @@ export type NeoPopSelectProps<Value = unknown> = {
    * - `match`: the tooltip will match the width of the trigger.
    * - `min`: the tooltip will be at least as wide as the trigger.
    * - `max`: the tooltip will be at most as wide as the trigger.
+   * - `available`: the tooltip will be at most as wide as the available space.
    * - `string`: a css width value will be applied to the tooltip.
    * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
    *
@@ -100,11 +101,12 @@ export type NeoPopSelectProps<Value = unknown> = {
    */
   width?: NeoTooltipProps['width'];
   /**
-   * Width strategy for the tooltip.
-   * - `match`: the tooltip will match the width of the trigger.
-   * - `min`: the tooltip will be at least as wide as the trigger.
-   * - `max`: the tooltip will be at most as wide as the trigger.
-   * - `string`: a css width value will be applied to the tooltip.
+   * Height strategy for the tooltip.
+   * - `match`: the tooltip will match the height of the trigger.
+   * - `min`: the tooltip will be at least as tall as the trigger.
+   * - `max`: the tooltip will be at most as tall as the trigger.
+   * - `available`: the tooltip will be at most as tall as the available space.
+   * - `string`: a css height value will be applied to the tooltip.
    * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
    *
    * @default 'min'

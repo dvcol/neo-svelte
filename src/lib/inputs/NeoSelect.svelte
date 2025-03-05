@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { clamp } from '@dvcol/common-utils/common/math';
   import { watch } from '@dvcol/svelte-utils/watch';
 
   import { tick, untrack } from 'svelte';
@@ -15,7 +16,7 @@
   import { findByValueInList, type NeoListItemOrSection } from '~/list/neo-list.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import { getNextFocusableElement } from '~/utils/html-element.utils.js';
-  import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
+  import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -93,7 +94,9 @@
   const template = $derived(computeButtonTemplate(elevation, rest?.pressed, rest?.glass));
 
   const hover = $derived(coerce(rest?.hover ?? getDefaultHoverElevation(rest?.pressed)));
-  const tooltipElevation = $derived((rest?.pressed ? Math.abs(elevation + hover) : elevation + hover) as NeoTooltipElevation);
+  const tooltipElevation = $derived(
+    clamp(rest?.pressed ? Math.abs(elevation + hover) : elevation + hover, 1, MaxShadowElevation) as NeoTooltipElevation,
+  );
 
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle select dropdown',
