@@ -22,13 +22,7 @@
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
-  import {
-    coerce,
-    computeGlassFilter,
-    computeShadowElevation,
-    DefaultShadowShallowElevation,
-    PositibeMinMaxElevation,
-  } from '~/utils/shadow.utils.js';
+  import { coerce, computeGlassFilter, computeShadowElevation, DefaultShadowElevation, PositibeMinMaxElevation } from '~/utils/shadow.utils.js';
   import { type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
   import { quickScaleProps } from '~/utils/transition.utils.js';
 
@@ -60,7 +54,7 @@
     height: inputHeight,
 
     // Shadow
-    elevation: _elevation = DefaultShadowShallowElevation,
+    elevation: _elevation = DefaultShadowElevation,
     blur: _blur,
 
     // Hover
@@ -101,7 +95,7 @@
 
   const { tag: triggerTag = 'div', ...triggerRest } = $derived(triggerProps ?? {});
 
-  const elevation = $derived(coerce(_elevation ?? DefaultShadowShallowElevation, PositibeMinMaxElevation));
+  const elevation = $derived(coerce(_elevation, PositibeMinMaxElevation));
   const blur = $derived(coerce(_blur ?? elevation));
 
   const tooltipBlur = $derived(computeGlassFilter(blur, true));

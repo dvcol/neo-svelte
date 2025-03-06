@@ -153,6 +153,7 @@
     {steps}
     {marks}
     {progress}
+    {rounded}
     next
     elevation="0"
     children={stepperContent}

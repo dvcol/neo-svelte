@@ -28,7 +28,7 @@
   import NeoPopStepper from '~/tooltips/NeoPopStepper.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
-  import { DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
+  import { DefaultShadowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
   import { defaultDuration, quickDuration } from '~/utils/transition.utils';
 
   const options = $state<NeoTooltipProps>({
@@ -36,7 +36,7 @@
     filled: false,
     tinted: false,
     rounded: true,
-    elevation: DefaultShadowShallowElevation,
+    elevation: DefaultShadowElevation,
 
     placement: 'bottom',
     openOnHover: true,
@@ -189,7 +189,7 @@
     bind:value={options.elevation}
     min={0}
     max={MaxShadowElevation}
-    defaultValue={DefaultShadowShallowElevation}
+    defaultValue={DefaultShadowElevation}
     rounded={options.rounded}
     nullable={false}
     floating={false}

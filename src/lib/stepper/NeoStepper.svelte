@@ -66,6 +66,7 @@
     placement = NeoStepperPlacement.Start,
     elevation: _elevation = DefaultShadowShallowElevation,
     borderless,
+    rounded,
 
     // Size
     flex,
@@ -262,6 +263,7 @@
   {@const _disabled = isMarkDisabled(ctx.index)}
   <NeoProgressMark
     {...ctx}
+    {rounded}
     {borderless}
     disabled={_disabled}
     readonly={_disabled}
@@ -281,6 +283,7 @@
         value={activeValue}
         mark={progressMarks ? mark : undefined}
         {marks}
+        {rounded}
         {elevation}
         {borderless}
         direction={vertical ? NeoProgressDirection.Bottom : NeoProgressDirection.Right}
@@ -301,6 +304,7 @@
       {#if cancel}
         <NeoButton
           type="reset"
+          {rounded}
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
           active={elevation > 0 ? -1 : -2}
@@ -321,6 +325,7 @@
       <div class="neo-stepper-controls-lr">
         {#if active > 0 || loop}
           <NeoArrowButton
+            {rounded}
             {borderless}
             elevation={elevation > 0 ? elevation : 0}
             active={elevation > 0 ? -1 : -2}
@@ -340,6 +345,7 @@
         {/if}
         <NeoArrowButton
           type={active === steps.length - 1 ? 'submit' : 'button'}
+          {rounded}
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
           active={elevation > 0 ? -1 : -2}

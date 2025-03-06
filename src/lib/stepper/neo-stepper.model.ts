@@ -282,6 +282,10 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    * Whether to render the stepper without borders (progress & buttons).
    */
   borderless?: boolean;
+  /**
+   * Whether to render the stepper's buttons with rounded borders.
+   */
+  rounded?: boolean;
 
   // Sizing
   /**
