@@ -96,10 +96,26 @@
   };
 </script>
 
+{#snippet closeButton()}
+  <NeoButton
+    rounded
+    text
+    class="neo-pop-confirm-control-close-button"
+    aria-label="Close confirmation tooltip"
+    title="Close"
+    {...closeButtonProps}
+    onclick={onCloseButton}
+  >
+    {#snippet icon()}
+      <IconClose size="0.9375rem" />
+    {/snippet}
+  </NeoButton>
+{/snippet}
+
 {#snippet tooltip(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}
   <svelte:element this={tag} class="neo-pop-confirm" class:neo-rounded={rounded} {...rest}>
-    <div class="neo-pop-confirm-header">
-      {#if header}
+    {#if header}
+      <div class="neo-pop-confirm-header">
         <svelte:element this={headerTag} class="neo-pop-confirm-title" {...headerRest}>
           {#if typeof header === 'function'}
             {@render header?.(floating, toggle)}
@@ -107,23 +123,16 @@
             {header}
           {/if}
         </svelte:element>
-      {/if}
-      <NeoButton
-        rounded
-        text
-        class="neo-pop-confirm-control-close-button"
-        aria-label="Close confirmation tooltip"
-        title="Close"
-        {...closeButtonProps}
-        onclick={onCloseButton}
-      >
-        {#snippet icon()}
-          <IconClose size="0.9375rem" />
-        {/snippet}
-      </NeoButton>
-    </div>
+        {@render closeButton()}
+      </div>
+    {/if}
 
     <svelte:element this={contentTag} class:neo-pop-confirm-content={true} {...contentRest}>
+      {#if !header}
+        <div class="neo-pop-confirm-content-close">
+          {@render closeButton()}
+        </div>
+      {/if}
       {#if typeof content === 'function'}
         {@render content?.(floating, toggle)}
       {:else}
@@ -202,6 +211,15 @@
 
     &-content {
       flex: 1 1 auto;
+
+      &:has(> .neo-pop-confirm-content-close) {
+        margin-top: 0.75rem;
+      }
+
+      &-close {
+        float: right;
+        margin-top: -0.875rem;
+      }
     }
 
     &-header {
@@ -209,21 +227,22 @@
       align-items: center;
       justify-content: flex-end;
 
+      .neo-pop-confirm-title {
+        flex: 1 1 auto;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    &-header,
+    &-content-close {
       :global(> .neo-pop-confirm-control-close-button) {
         margin: 0;
         padding: 0.375rem;
+        align-self: flex-start;
 
         --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
         --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
-      }
-
-      .neo-pop-confirm-title {
-        flex: 1 1 auto;
-        margin: 0;
-      }
-
-      &:has(> .neo-pop-confirm-title) {
-        margin-bottom: 0.5rem;
       }
     }
 
@@ -232,7 +251,7 @@
       gap: var(--neo-gap-sm);
       justify-content: flex-end;
       margin-top: var(--neo-gap-xxs);
-      padding: var(--neo-gap-xxs) var(--neo-gap-xs);
+      padding: var(--neo-gap-xxs) var(--neo-gap-xs) var(--neo-gap-tiny);
 
       :global(> .neo-pop-confirm-control-cancel-button),
       :global(> .neo-pop-confirm-control-success-button) {
@@ -241,8 +260,8 @@
     }
 
     &.neo-rounded {
-      .neo-pop-confirm-header {
-        margin-top: 0.375rem;
+      .neo-pop-confirm-content-close {
+        margin-right: -0.25rem;
       }
     }
   }
