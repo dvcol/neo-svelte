@@ -59,11 +59,11 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
    */
   children?: Snippet<[NeoProgressBarContext]>;
   /**
-   * Optional label to display above the progress.
+   * Optional content to display before the progress.
    */
   before?: Snippet<[NeoProgressBarContext]> | string;
   /**
-   * Optional label to display above the progress.
+   * Optional content to display after the progress.
    */
   after?: Snippet<[NeoProgressBarContext]> | string;
   /**

@@ -142,7 +142,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [x] tooltip
   - [x] popconfirm
   - [x] popselect
-  - [ ] popstepper
+  - [x] popstepper
   - [ ] menu
   - [ ] nested menus
   - [ ] menu pane (multi column)

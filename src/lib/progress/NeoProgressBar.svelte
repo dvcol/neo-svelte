@@ -186,6 +186,7 @@
 
     &[data-direction='right'],
     &[data-direction='left'] {
+      flex: 1 1 auto;
       width: calc(100% - (var(--neo-progress-margin-inline, var(--neo-progress-mark-margin-inline, 0px)) * 2));
       height: 0.5rem;
     }
@@ -204,6 +205,7 @@
     &[data-direction='bottom'] {
       flex: 1 1 100%;
       width: 0.5rem;
+      height: calc(100% - (var(--neo-progress-margin-block, var(--neo-progress-mark-margin-block, 0px)) * 2));
     }
 
     &[data-direction='top'] .neo-progress-bar-mark {

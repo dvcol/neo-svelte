@@ -174,6 +174,22 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    * Snippet to render in place of the stepper content.
    */
   children?: Snippet<[NeoStepperContext<Value>]>;
+  /**
+   * Snippet to render before the progress bar.
+   */
+  before?: Snippet<[NeoStepperContext<Value>]>;
+  /**
+   * Snippet to render in between the stepper progress and content.
+   */
+  between?: Snippet<[NeoStepperContext<Value>]>;
+  /**
+   * Snippet to render inside the stepper content.
+   */
+  inside?: Snippet<[NeoStepperContext<Value>]>;
+  /**
+   * Snippet to render after the stepper content.
+   */
+  after?: Snippet<[NeoStepperContext<Value>]>;
 
   // States
   /**
@@ -342,6 +358,6 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    * @see NeoStepperStep.markProps
    */
   markProps?: Partial<NeoProgressMarkProps>;
-} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
+} & Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'> &
   HTMLTransitionProps &
   HTMLRefProps;

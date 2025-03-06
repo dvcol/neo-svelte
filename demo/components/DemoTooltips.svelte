@@ -7,6 +7,7 @@
 
   import { colorOptions } from '../utils/color.utils';
 
+  import type { NeoStepperStep } from '~';
   import type { NeoListItemRenderContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
 
   import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/tooltips/neo-tooltip.model.js';
@@ -15,14 +16,16 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
+  import IconAddress from '~/icons/IconAddress.svelte';
+  import IconListSmall from '~/icons/IconListSmall.svelte';
   import IconQuestionMark from '~/icons/IconQuestionMark.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { displayValue } from '~/inputs/neo-select.model';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoPopConfirm from '~/tooltips/NeoPopConfirm.svelte';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
+  import NeoPopStepper from '~/tooltips/NeoPopStepper.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
   import { DefaultShadowShallowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
@@ -99,6 +102,45 @@
   let complexSelected = $state<NeoListSelectedItem>();
 
   let open = $state(false);
+
+  let active = $state(0);
+  const step1Value = $state({ username: '', password: '' });
+  const step2Value = $state({ address: '', city: '', country: '', zip: '' });
+  const steps: NeoStepperStep[] = [
+    {
+      markProps: {
+        label: 'Account',
+        ariaLabel: 'Step 1',
+        title: 'Step 1',
+        icon: account,
+      },
+      render: lorem,
+      value: step1Value,
+    },
+    {
+      markProps: {
+        label: 'Address',
+        ariaLabel: 'Step 2',
+        title: 'Step 2',
+        icon: address,
+      },
+      render: lorem,
+      value: step2Value,
+    },
+    {
+      markProps: {
+        label: 'Summary',
+        ariaLabel: 'Step 3',
+        title: 'Step 3',
+        icon: summary,
+      },
+      render: lorem,
+      nextProps: {
+        label: 'Confirm',
+        color: 'success',
+      },
+    },
+  ];
 </script>
 
 {#snippet avatar(ctx: NeoListItemRenderContext)}
@@ -160,7 +202,6 @@
     placement="left"
     floating={false}
     color={options.color}
-    display={displayValue}
     size="10"
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}
@@ -184,7 +225,7 @@
 <div class="row">
   <div class="column content">
     <span class="label">Tooltip</span>
-    <NeoTooltip {tooltip} width {...options} scrollbar>
+    <NeoTooltip {tooltip} width {...options}>
       <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
     </NeoTooltip>
   </div>
@@ -259,12 +300,25 @@
   <div>
     Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin tincidunt
     mauris eros ex pharetra imperdiet. Nibh facilisi ante vestibulum feugiat facilisi quam risus ex? Malesuada condimentum nulla odio facilisi semper
-    sodales. Dapibus est duis odio tincidunt elementum. Sodales scelerisque venenatis hac ridiculus scelerisque massa vitae.
+    sodales. Dapibus est duis odio tincidunt elementum. Sodales scelerisque venenatis hac ridiculus scelerisque.
   </div>
+{/snippet}
+
+{#snippet account()}
+  <IconAccount filled={active === 0} />
+{/snippet}
+
+{#snippet address()}
+  <IconAddress filled={active === 1} repeat="1" dot="var(--neo-background-color)" />
+{/snippet}
+
+{#snippet summary()}
+  <IconListSmall filled={active === 2} />
 {/snippet}
 
 <div class="row">
   <div class="column content">
+    <span class="label">Click pop confirm</span>
     <NeoPopConfirm
       rounded={options.rounded}
       tooltip={lorem}
@@ -291,6 +345,37 @@
         <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>
       {/snippet}
     </NeoPopConfirm>
+  </div>
+
+  <div class="column content">
+    <span class="label">Click pop stepper</span>
+    <NeoPopStepper
+      bind:active
+      {steps}
+      rounded={options.rounded}
+      tooltip={lorem}
+      header="Stepper tooltip"
+      width={{ max: '40rem' }}
+      onOpen={() => console.info('Confirm tooltip opened')}
+      onClose={() => console.info('Confirm tooltip closed')}
+      onConfirm={async () => {
+        console.info('Confirm tooltip confirming...');
+        await wait(2000);
+        console.info('Confirm tooltip confirmed');
+        return true;
+      }}
+      onCancel={async () => {
+        console.info('Confirm tooltip cancelling...');
+        await wait(1000);
+        console.info('Confirm tooltip cancelled');
+        return true;
+      }}
+      tooltipProps={{ ...options, openOnHover: false, openOnFocus: false }}
+    >
+      {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
+        <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>
+      {/snippet}
+    </NeoPopStepper>
   </div>
 </div>
 

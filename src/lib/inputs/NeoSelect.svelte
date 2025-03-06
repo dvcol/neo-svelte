@@ -55,6 +55,7 @@
     sort = $bindable(() => 0),
     selected = $bindable(),
     search,
+    nullable,
 
     // Tooltip Props
     tooltipRef = $bindable(),
@@ -203,6 +204,7 @@
   {after}
   {children}
   {multiple}
+  {nullable}
   {autocomplete}
   {...rest}
   readonly
@@ -240,6 +242,7 @@
   {readonly}
   {items}
   multiple={!!multiple}
+  {nullable}
   {rounded}
   {search}
   {color}

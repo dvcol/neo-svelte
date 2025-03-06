@@ -158,7 +158,6 @@
       required
       label="Username"
       autocomplete="username"
-      flex="1 0 100%"
       validation="error"
       elevation={options.elevation}
     />
@@ -168,7 +167,6 @@
       required
       label="Password"
       autocomplete="new-password"
-      flex="1 0 100%"
       validation="error"
       elevation={options.elevation}
     />
@@ -184,17 +182,15 @@
       autocomplete="street-address"
       resize="none"
       rows="1"
-      flex="1 0 100%"
       elevation={options.elevation}
     />
-    <NeoInput bind:value={step2Value.city} name="city" label="City" autocomplete="address-level2" flex="1 0 100%" elevation={options.elevation} />
+    <NeoInput bind:value={step2Value.city} name="city" label="City" autocomplete="address-level2" elevation={options.elevation} />
     <NeoSelect
       bind:value={step2Value.country}
       name="country"
       label="Country"
       placeholder="Country"
       autocomplete="country"
-      flex="1 0 100%"
       options={[
         { label: 'United States', value: 'US' },
         { label: 'Canada', value: 'CA' },

@@ -32,6 +32,10 @@
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     children,
+    between,
+    before,
+    inside,
+    after,
 
     // States
     ref = $bindable(),
@@ -159,13 +163,13 @@
   const goPrevious: NeoStepperContext['goPrevious'] = async () => {
     if (canPrevious === false) return;
     if (active > 0) return goToStep(active - 1, NeoStepperNavigation.Previous);
-    if (loop) return goToStep(steps.length - 1, NeoStepperNavigation.Previous);
+    return goToStep(steps.length - 1, NeoStepperNavigation.Previous);
   };
 
   const goNext: NeoStepperContext['goNext'] = async () => {
     if (canNext === false) return;
     if (active < steps.length - 1) return goToStep(active + 1, NeoStepperNavigation.Next);
-    if (loop) return goToStep(0, NeoStepperNavigation.Next);
+    return goToStep(0, NeoStepperNavigation.Next);
   };
 
   const isLoading = $derived(loading && Object.values(loading).some(Boolean));
@@ -271,17 +275,19 @@
 
 {#snippet progressBar()}
   {#if progress}
-    <NeoProgressBar
-      aria-label="Stepper progress"
-      value={activeValue}
-      mark={progressMarks ? mark : undefined}
-      {marks}
-      {elevation}
-      {borderless}
-      direction={vertical ? NeoProgressDirection.Bottom : NeoProgressDirection.Right}
-      {...progressProps}
-      bind:refs={marksRefs}
-    />
+    <div class="neo-stepper-progress" class:neo-marks={progressMarks}>
+      <NeoProgressBar
+        aria-label="Stepper progress"
+        value={activeValue}
+        mark={progressMarks ? mark : undefined}
+        {marks}
+        {elevation}
+        {borderless}
+        direction={vertical ? NeoProgressDirection.Bottom : NeoProgressDirection.Right}
+        {...progressProps}
+        bind:refs={marksRefs}
+      />
+    </div>
   {/if}
 {/snippet}
 
@@ -371,7 +377,6 @@
   data-placement={placement}
   class:neo-stepper={true}
   class:neo-vertical={vertical}
-  class:neo-marks={progressMarks}
   style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
@@ -385,17 +390,27 @@
   {...rest}
   use:swipe={swipeOptions}
 >
+  {@render before?.(context)}
   {@render progressBar()}
+  {@render between?.(context)}
   <div class:neo-stepper-content={true}>
+    {@render inside?.(context)}
     {@render content()}
     {@render buttons()}
   </div>
+  {@render after?.(context)}
 </svelte:element>
 
 <style lang="scss">
   .neo-stepper {
     display: flex;
     flex-direction: column;
+
+    &-progress {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     &-content {
       display: flex;
@@ -426,35 +441,39 @@
     }
 
     &:not(.neo-vertical) {
-      :global(> .neo-progress-bar) {
-        min-width: calc(4rem * var(--neo-stepper-steps, 1));
-
-        --neo-progress-margin-inline: var(--neo-stepper-mark-margin-start) var(--neo-stepper-mark-margin-end);
-      }
-
-      &:not(.neo-marks) :global(> .neo-progress-bar) {
-        --neo-progress-margin-inline: var(--neo-shadow-margin, 0.625rem);
-      }
-
       &[data-placement='end'],
       &[data-placement='end'] .neo-stepper-content {
         flex-direction: column-reverse;
+      }
+
+      .neo-stepper-progress {
+        :global(> .neo-progress-bar) {
+          min-width: calc(4rem * var(--neo-stepper-steps, 1));
+
+          --neo-progress-margin-inline: var(--neo-stepper-mark-margin-start) var(--neo-stepper-mark-margin-end);
+        }
+
+        &:not(.neo-marks) :global(> .neo-progress-bar) {
+          --neo-progress-margin-inline: var(--neo-shadow-margin, 0.625rem);
+        }
       }
     }
 
     &.neo-vertical {
       flex-direction: row;
 
-      :global(> .neo-progress-bar) {
-        min-height: calc(4rem * var(--neo-stepper-steps, 1));
-      }
-
-      &:not(.neo-marks) :global(> .neo-progress-bar) {
-        --neo-progress-margin-block: var(--neo-shadow-margin, 0.625rem);
-      }
-
       &[data-placement='end'] {
         flex-direction: row-reverse;
+      }
+
+      .neo-stepper-progress {
+        :global(> .neo-progress-bar) {
+          min-height: calc(4rem * var(--neo-stepper-steps, 1));
+        }
+
+        &:not(.neo-marks) :global(> .neo-progress-bar) {
+          --neo-progress-margin-block: var(--neo-shadow-margin, 0.625rem);
+        }
       }
     }
   }

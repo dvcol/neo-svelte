@@ -1,10 +1,12 @@
 <script lang="ts">
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import type { NeoPopConfirm } from '~/tooltips/neo-pop-confirm.model.js';
+  import type { NeoPopConfirmProps } from '~/tooltips/neo-pop-confirm.model.js';
   import type { NeoTooltipContext, NeoTooltipToggle } from '~/tooltips/neo-tooltip.model.js';
 
+  import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import IconCancel from '~/icons/IconCancel.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
@@ -57,11 +59,11 @@
     controlsProps,
     headerProps,
     contentProps,
-    closeButtonProps,
-    cancelButtonProps,
-    confirmButtonProps,
+    closeProps,
+    cancelProps,
+    confirmProps,
     ...rest
-  }: NeoPopConfirm = $props();
+  }: NeoPopConfirmProps = $props();
   /* eslint-enable prefer-const */
 
   const { tag: headerTag = 'h6', ...headerRest } = $derived(headerProps ?? {});
@@ -70,7 +72,7 @@
 
   const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
     open = false;
-    closeButtonProps?.onclick?.(e);
+    closeProps?.onclick?.(e);
   };
 
   const handlePromise = async (result: unknown, button: 'cancel' | 'confirm') => {
@@ -84,32 +86,39 @@
   };
 
   const onCancelButton: MouseEventHandler<HTMLButtonElement> = async e => {
-    cancelButtonProps?.onclick?.(e);
+    cancelProps?.onclick?.(e);
     await handlePromise(onCancel?.(e), 'cancel');
     open = false;
   };
 
   const onConfirmButton: MouseEventHandler<HTMLButtonElement> = async e => {
-    confirmButtonProps?.onclick?.(e);
+    confirmProps?.onclick?.(e);
     await handlePromise(onConfirm?.(e), 'confirm');
     open = false;
   };
 </script>
 
+{#snippet iconClose()}
+  <IconClose size="0.9375rem" />
+{/snippet}
+
 {#snippet closeButton()}
-  <NeoButton
-    rounded
-    text
-    class="neo-pop-confirm-control-close-button"
-    aria-label="Close confirmation tooltip"
-    title="Close"
-    {...closeButtonProps}
-    onclick={onCloseButton}
-  >
-    {#snippet icon()}
-      <IconClose size="0.9375rem" />
-    {/snippet}
-  </NeoButton>
+  <div class="neo-pop-confirm-close">
+    <NeoButton
+      rounded
+      text
+      class="neo-pop-confirm-control-close-button"
+      aria-label="Close confirmation tooltip"
+      title="Close"
+      icon={iconClose}
+      {...closeProps}
+      onclick={onCloseButton}
+    />
+  </div>
+{/snippet}
+
+{#snippet iconCancel()}
+  <IconCancel />
 {/snippet}
 
 {#snippet tooltip(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}
@@ -152,10 +161,11 @@
         class="neo-pop-confirm-control-cancel-button"
         aria-label="Cancel confirmation tooltip"
         title="Confirm"
-        {...cancelButtonProps}
+        icon={iconCancel}
+        {...cancelProps}
         onclick={onCancelButton}
       />
-      <NeoButton
+      <NeoArrowButton
         {rounded}
         loading={loading.confirm}
         checked={loading.confirm}
@@ -167,7 +177,8 @@
         class="neo-pop-confirm-control-success-button"
         aria-label="Confirm confirmation tooltip"
         title="Close"
-        {...confirmButtonProps}
+        direction="right"
+        {...confirmProps}
         onclick={onConfirmButton}
       />
     </svelte:element>
@@ -234,12 +245,13 @@
       }
     }
 
-    &-header,
-    &-content-close {
+    &-close {
+      display: contents;
+
       :global(> .neo-pop-confirm-control-close-button) {
+        align-self: flex-start;
         margin: 0;
         padding: 0.375rem;
-        align-self: flex-start;
 
         --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
         --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));

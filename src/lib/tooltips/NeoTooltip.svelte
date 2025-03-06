@@ -320,6 +320,7 @@
     {...rest}
     style:transform-origin={tooltipOrigin}
     style:--neo-tooltip-padding={padding}
+    style:--neo-tooltip-elevation={elevation}
     style:flex
     style:width={width?.absolute}
     style:min-width={width?.min}
