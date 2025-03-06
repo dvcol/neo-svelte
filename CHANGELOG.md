@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11](https://github.com/dvcol/neo-svelte/compare/v0.1.10...v0.1.11) (2025-03-06)
+
+
+### Features
+
+* **accordion:** adds accordion styling for collapse ([ef3ae15](https://github.com/dvcol/neo-svelte/commit/ef3ae155ee55c1b3b801fc5e5fe68d47db5ec223))
+* **collapse:** adds base neo-collapse ([7038e5d](https://github.com/dvcol/neo-svelte/commit/7038e5d07f89bcebc33bd692db26124908942eee))
+* **collapse:** adds collapse-groups ([2cb2844](https://github.com/dvcol/neo-svelte/commit/2cb28440a3a55272e34bdad8047bd8a411be978b))
+* **collapse:** adds min/max strategy ([0d91033](https://github.com/dvcol/neo-svelte/commit/0d91033ac5f9304b7a79cd0fce62b834fb09928d))
+* **collapse:** style base collapse ([b3a1b99](https://github.com/dvcol/neo-svelte/commit/b3a1b99f3af34fc2d7f47d7a11625ff5683d158c))
+* **form:** adds neo-form & neo-fieldset ([527eeb9](https://github.com/dvcol/neo-svelte/commit/527eeb91039686a698ae2c87489176d6a1be6f2d))
+* **form:** support form name and registration opt-out ([ec854bb](https://github.com/dvcol/neo-svelte/commit/ec854bb379e8fb7f734e6b35289b9ecc64a2d099))
+* **stepper:** adds arrow button & exports ([dce7eef](https://github.com/dvcol/neo-svelte/commit/dce7eefe151f69424a52caf4e7e7654c03d4be12))
+* **stepper:** adds simple stepper component ([389b16d](https://github.com/dvcol/neo-svelte/commit/389b16d400a6ada7c5f18f9f10f2591f7aa0c238))
+* **stepper:** adds support for async step transiitons ([7c7dfc9](https://github.com/dvcol/neo-svelte/commit/7c7dfc9f57c66ab4aa7c45be783e2a362b1dace8))
+* **stepper:** adds touch support ([a9f98ee](https://github.com/dvcol/neo-svelte/commit/a9f98eee7f09e81ffafe829da89e94ec9ad3b1e8))
+* **tooltip:** adds popconfirm ([8f69873](https://github.com/dvcol/neo-svelte/commit/8f69873532d9d76c1fc66ca69b09166a9c652e44))
+
+
+### Bug Fixes
+
+* **accordion:** adds sizing props ([fe2ccec](https://github.com/dvcol/neo-svelte/commit/fe2ccec2eaafdb1ac1c76eb3d0f478016af1542b))
+* **accordion:** adjust collapse border to prevent content shift ([b260a7c](https://github.com/dvcol/neo-svelte/commit/b260a7c53f681897af275ffa47e3aa4436620ef9))
+* **arrow:** disable line on mobile ([3cf3970](https://github.com/dvcol/neo-svelte/commit/3cf3970d586aaba5f2bcdd87426a5af3056645b9))
+* **button:** adds button context to snippets ([d6b88ee](https://github.com/dvcol/neo-svelte/commit/d6b88eed0e340f37edba435ea1d4a8ab5b6c41e9))
+* **button:** rework readonly mode (to be disabled without styling) ([e53561f](https://github.com/dvcol/neo-svelte/commit/e53561f3579d62ed7b4471e4ebef2fa8b40cc858))
+* **buttons:** adds checked state when loading ([da4a571](https://github.com/dvcol/neo-svelte/commit/da4a57177e8e50885653539220996184cee4ff57))
+* **buttons:** adds sizing to button groups ([9f1ceb1](https://github.com/dvcol/neo-svelte/commit/9f1ceb194d05cfaf135a180931cbdb8c35c56059))
+* **buttons:** set type to button to prevent form submit ([025f412](https://github.com/dvcol/neo-svelte/commit/025f4127d3e8e0e1d5f49bfec8d613bad7363070))
+* **form:** adds validate method ([582d0be](https://github.com/dvcol/neo-svelte/commit/582d0beb594fe02370538fba5d0f8bb646ea82a0))
+* **input:** adjust styling & support nullable select ([b4884c0](https://github.com/dvcol/neo-svelte/commit/b4884c0fab593f48504ebe48f7d9568988aed3e1))
+* **input:** fix auto-complete in chrome ([95e5c3d](https://github.com/dvcol/neo-svelte/commit/95e5c3d770e14009093fb49093a7ec6734c00d2c))
+* **input:** fix textarea default binding & fix stepper vertical css ([1e406e5](https://github.com/dvcol/neo-svelte/commit/1e406e57c74bd5db82d650468bdf2cf907165a76))
+* **input:** remove infinite resize hooks ([a5af533](https://github.com/dvcol/neo-svelte/commit/a5af53348be20db9b4aedb379df294390f71026e))
+* **inputs:** corrects autofill styling for webkit ([9db7aeb](https://github.com/dvcol/neo-svelte/commit/9db7aeb03af791de194245dabb55f56ec5657ff3))
+* **progress:** adds track disable & fix css ([3ab6cee](https://github.com/dvcol/neo-svelte/commit/3ab6cee677836091d21bf6656668dd0d11c43494))
+* **progress:** adjust bar sizing ([8da6764](https://github.com/dvcol/neo-svelte/commit/8da67648457b476532591f83b6de2151a18ee308))
+* **progress:** dynamically size margin to fit inner marks ([32af1fe](https://github.com/dvcol/neo-svelte/commit/32af1feb27f2c3fb5665c8d57b3ce6770dc21762))
+* **reactivity:** remove ref binding to reduce unnecessary effects ([aa2a454](https://github.com/dvcol/neo-svelte/commit/aa2a454fe15c5d7772cf2fd2e586c527aac52e3d))
+* **select:** auto-select if value set but not selected ([c431b50](https://github.com/dvcol/neo-svelte/commit/c431b50c18ecc625c61109fc2212f94098bd6c72))
+* **select:** transform items before processing ([89b77e7](https://github.com/dvcol/neo-svelte/commit/89b77e77a625029da3f5a0b4bf3684a3974e69b0))
+* **sizing:** adds sizing binding for various inputs ([afe52f1](https://github.com/dvcol/neo-svelte/commit/afe52f114e274cc3dfeedcac66ea838e5f0e2b8e))
+* **sizing:** adjust sizing options & add flex prop ([ecb37de](https://github.com/dvcol/neo-svelte/commit/ecb37deb3f1af2cd5ba5167e2a39821248c1cbad))
+* **sizing:** move progress to custom sizing props ([e0cfa36](https://github.com/dvcol/neo-svelte/commit/e0cfa367c0388042fb4fe8e1c690c33d1c0c3920))
+* **stepper:** adds debounce to loading state ([cc2a20a](https://github.com/dvcol/neo-svelte/commit/cc2a20a9273c5e96d8f25e5a9d70a66bf7496fe1))
+* **stepper:** adjust margin to align with first and last refs ([4522547](https://github.com/dvcol/neo-svelte/commit/452254779d93b496883ea64c8ff72c792f5e61a8))
+* **textarea:** adjust padding when overflow is set ([e5241b3](https://github.com/dvcol/neo-svelte/commit/e5241b3d07ae1ea0816eb45a2605bac0b6e942fa))
+* **tooltip:** adjust auto-sizing ([bee11b2](https://github.com/dvcol/neo-svelte/commit/bee11b2f0adcab9c2409849d2d15636423f48319))
+* **transition:** adds keys to transition container ([f2a82ed](https://github.com/dvcol/neo-svelte/commit/f2a82eda98269461a8e17f314c0ee6696f76cfc1))
+* **validation:** simplify input validation ([4fa7811](https://github.com/dvcol/neo-svelte/commit/4fa7811a8470a05dd517d0705e91b643096a74c4))
+* **various:** fix textarea default size, account draw animation, ... ([19dc238](https://github.com/dvcol/neo-svelte/commit/19dc238effb950dfd25d29d6a589e92181520ec4))
+
 ### [0.1.10](https://github.com/dvcol/neo-svelte/compare/v0.1.9...v0.1.10) (2025-02-19)
 
 ### [0.1.9](https://github.com/dvcol/neo-svelte/compare/v0.1.8...v0.1.9) (2025-02-19)
