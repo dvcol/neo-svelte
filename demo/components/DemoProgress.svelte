@@ -54,6 +54,7 @@
     rounded: false,
     pressed: false,
     glass: false,
+    track: true,
   });
 
   const onPressed = () => {
@@ -64,6 +65,7 @@
 <div class="row">
   <NeoButtonGroup rounded>
     <NeoButton toggle bind:checked={bar.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={bar.track}>Track</NeoButton>
     <NeoButton toggle bind:checked={bar.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={bar.pressed} onclick={onPressed}>Pressed</NeoButton>
     <NeoButton toggle bind:checked={bar.glass}>Glass</NeoButton>

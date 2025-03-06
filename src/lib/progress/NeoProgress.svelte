@@ -39,6 +39,7 @@
     flex,
     width: _width,
     height: _height,
+    track = true,
     color,
     direction = NeoProgressDirection.Right,
 
@@ -164,6 +165,7 @@
   class:neo-progress={true}
   class:neo-indeterminate={indeterminate || state === NeoProgressState.Indeterminate}
   class:neo-controlled={controlled}
+  class:neo-track={track}
   data-direction={direction}
   data-indeterminate={indeterminate}
   data-state={state}
@@ -194,11 +196,14 @@
     position: relative;
     box-sizing: border-box;
     overflow: hidden;
-    background: var(--neo-progress-track-background, var(--neo-background-color-secondary));
     border: var(--neo-border-width, 1px) solid transparent;
     border-radius: inherit;
     transition: background-color 1s ease;
     appearance: none;
+
+    &.neo-track {
+      background: var(--neo-progress-track-background, var(--neo-background-color-secondary));
+    }
 
     &-buffer,
     &-value {

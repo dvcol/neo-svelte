@@ -34,6 +34,7 @@
     pressed,
     glass,
     start,
+    track = true,
 
     // Shadow
     elevation: _elevation = pressed ? -1 : 1,
@@ -92,6 +93,7 @@
     pressed,
     glass,
     start,
+    track,
 
     // Shadow
     elevation,
@@ -109,12 +111,13 @@
   this={containerTag}
   data-direction={direction}
   class:neo-progress-bar={true}
-  class:neo-borderless={borderless}
+  class:neo-borderless={borderless || !track}
   class:neo-flat={!elevation}
   class:neo-start={start}
   class:neo-glass={glass}
   class:neo-inset={elevation < 0}
   class:neo-rounded={rounded}
+  class:neo-track={track}
   style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
@@ -128,7 +131,7 @@
   style:--neo-progress-bar-box-shadow={boxShadow}
   {...containerRest}
 >
-  <NeoProgress bind:ref bind:state bind:value bind:buffer {direction} {width} {height} {...rest} />
+  <NeoProgress bind:ref bind:state bind:value bind:buffer {direction} {width} {height} {track} {...rest} />
   {#each marks as position, index}
     {#if position !== undefined}
       <span bind:this={refs[index]} class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">
@@ -165,7 +168,6 @@
     color: var(--neo-progress-bar-text-color, inherit);
     border: var(--neo-progress-bar-border-width, var(--neo-border-width, 1px)) var(--neo-progress-bar-border-color, transparent) solid;
     border-radius: var(--neo-progress-bar-border-radius, var(--neo-border-radius));
-    box-shadow: var(--neo-progress-bar-box-shadow, var(--neo-box-shadow-flat));
     transition:
       color 0.3s ease,
       padding 0.3s ease,
@@ -173,6 +175,10 @@
       border-radius 0.3s ease,
       backdrop-filter 0.3s ease,
       box-shadow 0.3s ease-out;
+
+    &.neo-track {
+      box-shadow: var(--neo-progress-bar-box-shadow, var(--neo-box-shadow-flat));
+    }
 
     &-mark {
       position: absolute;

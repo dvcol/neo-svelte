@@ -231,7 +231,8 @@
       display: flex;
       gap: var(--neo-gap-sm);
       justify-content: flex-end;
-      padding: var(--neo-gap-xs);
+      margin-top: var(--neo-gap-xxs);
+      padding: var(--neo-gap-xxs) var(--neo-gap-xs);
 
       :global(> .neo-pop-confirm-control-cancel-button),
       :global(> .neo-pop-confirm-control-success-button) {

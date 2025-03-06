@@ -43,6 +43,10 @@ type NeoProgressBarStyle = {
    * Display the progress as flat on first render.
    */
   start?: boolean;
+  /**
+   * Display the progress with a rail track.
+   */
+  track?: boolean;
 };
 
 export type NeoProgressBarContext = NeoProgressContext & NeoProgressBarStyle;

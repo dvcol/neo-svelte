@@ -341,7 +341,7 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    * Step options will take precedence over these props.
    * @see NeoStepperStep.markProps
    */
-  markProps?: NeoProgressMarkProps;
+  markProps?: Partial<NeoProgressMarkProps>;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   HTMLTransitionProps &
   HTMLRefProps;

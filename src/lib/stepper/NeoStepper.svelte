@@ -403,8 +403,10 @@
 
       &-step {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: var(--neo-shadow-margin, 0.625rem);
       }
     }
 

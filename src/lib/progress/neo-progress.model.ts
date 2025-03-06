@@ -132,6 +132,11 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
    * @default 0.375rem (right, left), 100% (top, bottom)
    */
   height?: SizeInput<'height'>;
+  /**
+   * If false, the progress track will be hidden.
+   * @default true
+   */
+  track?: boolean;
 } & HTMLRefProps<HTMLElementTagNameMap[Tag]> &
   HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
