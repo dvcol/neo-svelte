@@ -52,7 +52,7 @@
   const type = $derived(triggerTag === 'button' ? 'button' : undefined);
 
   const transition = $derived(horizontal ? width : height);
-  const transitionProps = $derived({ duration: 200, easing: sineInOut, opacity: horizontal ? false : { easing: cubicIn }, ..._transition });
+  const transitionProps = $derived({ duration: 300, easing: sineInOut, opacity: horizontal ? false : { easing: cubicIn }, ..._transition });
 
   const trigger = $derived(!!(label || description));
   const triggerId = $derived(trigger ? (triggerProps?.id ?? `neo-collapse-trigger-${getUUID()}`) : undefined);

@@ -89,6 +89,7 @@
 
     elevation: DefaultShadowShallowElevation,
     borderless: false,
+    rounded: true,
 
     vertical: false,
     placement: NeoStepperPlacement.Start,
@@ -107,6 +108,7 @@
     <NeoButton toggle bind:checked={options.loop}>Loop</NeoButton>
     <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
   </NeoButtonGroup>
 
   <NeoNumberStep
@@ -135,6 +137,7 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={placementOptions}
     openOnFocus
+    rounded
   />
 </div>
 
@@ -160,6 +163,7 @@
       autocomplete="username"
       validation="error"
       elevation={options.elevation}
+      rounded={options.rounded}
     />
     <NeoPassword
       bind:value={step1Value.password}
@@ -169,6 +173,7 @@
       autocomplete="new-password"
       validation="error"
       elevation={options.elevation}
+      rounded={options.rounded}
     />
   </div>
 {/snippet}
@@ -183,8 +188,16 @@
       resize="none"
       rows="1"
       elevation={options.elevation}
+      rounded={options.rounded}
     />
-    <NeoInput bind:value={step2Value.city} name="city" label="City" autocomplete="address-level2" elevation={options.elevation} />
+    <NeoInput
+      bind:value={step2Value.city}
+      name="city"
+      label="City"
+      autocomplete="address-level2"
+      elevation={options.elevation}
+      rounded={options.rounded}
+    />
     <NeoSelect
       bind:value={step2Value.country}
       name="country"
@@ -204,14 +217,23 @@
         { label: 'Australia', value: 'AU' },
       ]}
       elevation={options.elevation}
+      rounded={options.rounded}
     />
-    <NeoPin bind:value={step2Value.zip} name="zip" label="Zip Code" count="5" autocomplete="postal-code" elevation={options.elevation} />
+    <NeoPin
+      bind:value={step2Value.zip}
+      name="zip"
+      label="Zip Code"
+      count="5"
+      autocomplete="postal-code"
+      elevation={options.elevation}
+      rounded={options.rounded}
+    />
   </div>
 {/snippet}
 
 {#snippet step3()}
   <div class="form">
-    <NeoInput elevation="0" hover="0" label="Username" value={step1Value.username} readonly />
+    <NeoInput elevation="0" hover="0" label="Username" value={step1Value.username} readonly rounded={options.rounded} />
     <NeoTextarea
       elevation="0"
       hover="0"
@@ -219,6 +241,7 @@
       label="Address"
       value={[step2Value.address, [step2Value.city, step2Value.zip, step2Value.country].filter(Boolean).join(', ')].filter(Boolean).join('\n')}
       readonly
+      rounded={options.rounded}
     />
   </div>
 {/snippet}
@@ -249,7 +272,7 @@
   .form {
     display: flex;
     flex-direction: column;
-    width: clamp(20.75rem, 20.75rem, 80vw);
+    width: clamp(22rem, 22rem, 80vw);
   }
 
   .column {

@@ -615,14 +615,16 @@
       box-shadow: var(--neo-range-handle-box-shadow, var(--neo-box-shadow-convex-2));
       backface-visibility: hidden;
       cursor: grab;
+      scale: 0.9;
       transition: scale 0.3s ease;
       appearance: none;
       touch-action: none;
       aspect-ratio: 1 / 1;
 
+      &:focus-visible,
       &:active {
         cursor: grabbing;
-        scale: 0.95;
+        scale: 0.85;
       }
 
       &:focus-visible {
@@ -676,6 +678,7 @@
       height: var(--neo-range-height);
       margin: 0;
       padding: 0;
+      overflow: hidden;
       color: inherit;
       text-decoration: none;
       background: transparent;
@@ -742,10 +745,7 @@
         .neo-range-handle {
           background-color: var(--neo-range-border-color, currentcolor);
           box-shadow: var(--neo-box-shadow-flat);
-
-          &:active {
-            scale: 1;
-          }
+          scale: 1;
 
           &-after,
           &-before {
