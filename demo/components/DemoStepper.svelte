@@ -1,6 +1,8 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
 
+  import { DefaultShadowElevation, MaxShallowShadowElevation, MinShallowShadowElevation } from '../../src/lib/utils/shadow.utils';
+
   import type { NeoStepperEvent, NeoStepperNavigations, NeoStepperPlacements, NeoStepperProps, NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -22,7 +24,6 @@
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoStepper from '~/stepper/NeoStepper.svelte';
   import { NeoStepperPlacement } from '~/stepper/neo-stepper.model';
-  import { DefaultShadowShallowElevation } from '~/utils/shadow.utils';
 
   let active = $state(0);
   const step1Value = $state({ username: '', password: '' });
@@ -87,7 +88,7 @@
 
     loop: false,
 
-    elevation: DefaultShadowShallowElevation,
+    elevation: DefaultShadowElevation,
     borderless: false,
     rounded: true,
 
@@ -116,9 +117,9 @@
     placement="left"
     center
     bind:value={options.elevation}
-    min={-2}
-    max={2}
-    defaultValue={DefaultShadowShallowElevation}
+    min={MinShallowShadowElevation}
+    max={MaxShallowShadowElevation}
+    defaultValue={DefaultShadowElevation}
     rounded
     nullable={false}
     floating={false}

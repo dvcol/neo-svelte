@@ -25,7 +25,7 @@
     type NeoStepperProps,
   } from '~/stepper/neo-stepper.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
-  import { coerce, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
+  import { coerce, DefaultShadowElevation, DefaultShallowMinMaxElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
   import { quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
@@ -64,7 +64,7 @@
     // Styles
     vertical = false,
     placement = NeoStepperPlacement.Start,
-    elevation: _elevation = DefaultShadowShallowElevation,
+    elevation: _elevation = DefaultShadowElevation,
     borderless,
     rounded,
 
@@ -98,6 +98,7 @@
   const { tag: controlsTag = 'div', ...controlsRest } = $derived(controlsProps ?? {});
 
   const elevation = $derived(coerce(_elevation, DefaultShallowMinMaxElevation));
+  const activeElevation = $derived((elevation > 1 ? -(elevation - 1) : -2) as ShadowElevation);
 
   const stepValue = $derived(100 / (steps.length - 1));
   const marks = $derived(progressMarks ? Array.from({ length: steps.length }, (_, i) => i * stepValue) : undefined);
@@ -307,7 +308,7 @@
           {rounded}
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
-          active={elevation > 0 ? -1 : -2}
+          active={activeElevation}
           disabled={isControlDisabled('cancel') || (isLoading && !loading.cancel)}
           loading={loading.cancel}
           checked={loading.cancel}
@@ -328,7 +329,7 @@
             {rounded}
             {borderless}
             elevation={elevation > 0 ? elevation : 0}
-            active={elevation > 0 ? -1 : -2}
+            active={activeElevation}
             disabled={isControlDisabled('previous') || (isLoading && !loading.previous)}
             loading={loading.previous}
             checked={loading.previous}
@@ -348,7 +349,7 @@
           {rounded}
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
-          active={elevation > 0 ? -1 : -2}
+          active={activeElevation}
           disabled={isControlDisabled('next') || (isLoading && !loading.next)}
           loading={loading.next}
           checked={loading.next}

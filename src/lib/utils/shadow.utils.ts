@@ -4,8 +4,8 @@ import { type NeoButtonTemplate, NeoTextButton } from '~/buttons/neo-button.mode
 
 export const MaxShadowElevation = 5;
 export const MinShadowElevation = -5;
-export const MaxShallowShadowElevation = 2;
-export const MinShallowShadowElevation = -2;
+export const MaxShallowShadowElevation = 3;
+export const MinShallowShadowElevation = -3;
 export const DefaultShallowMinMaxElevation: { min: ShadowElevation; max: ShadowElevation } = {
   max: MaxShallowShadowElevation,
   min: MinShallowShadowElevation,
@@ -27,14 +27,14 @@ export type ShadowHoverElevation = (typeof ShadowHoverElevations)[number];
 export type ShadowHoverElevationsString = `${ShadowHoverElevation}`;
 
 export const DefaultShadowShallowElevation = 2;
-export const ShadowShallowElevations = [-2, -1, 0, 1, 2] as const;
+export const ShadowShallowElevations = [-3, -2, -1, 0, 1, 2, 3] as const;
 export type ShadowShallowElevation = (typeof ShadowShallowElevations)[number];
 export type ShadowShallowElevationString = `${ShadowShallowElevation}`;
 
 export const PositiveShadowElevations = [0, 1, 2, 3, 4, 5] as const;
 export type PositiveShadowElevation = (typeof PositiveShadowElevations)[number];
 export type PositiveShadowElevationString = `${PositiveShadowElevation}`;
-export const PositibeMinMaxElevation: { min: 0; max: ShadowElevation } = { min: 0, max: MaxShadowElevation };
+export const PositiveMinMaxElevation: { min: 0; max: ShadowElevation } = { min: 0, max: MaxShadowElevation };
 
 export const BlurElevations = [1, 2, 3, 4, 5] as const;
 export type BlurElevation = (typeof BlurElevations)[number];
@@ -68,7 +68,7 @@ export function coerce<Elevation extends number = ShadowElevation>(
 
 export function parseBlur(blur?: BlurElevation | BlurElevationString, elevation?: ShadowElevation | ShadowElevationString): BlurElevation {
   if (!blur || elevation === undefined) return 1;
-  return clamp(coerce<ShadowElevation>(blur ?? elevation), 1, 5) as BlurElevation;
+  return coerce<ShadowElevation>(blur ?? elevation, { min: 1, max: 5 }) as BlurElevation;
 }
 
 export const isShadowFlat = (shadow: string) => ShadowFlatRegex.test(shadow);

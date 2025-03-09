@@ -14,7 +14,7 @@
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoProgressDirection, type NeoProgressHTMLElement, type NeoProgressProps, NeoProgressState } from '~/progress/neo-progress.model';
-  import { getDefaultElevation } from '~/utils/shadow.utils';
+  import { getDefaultElevation, MaxShallowShadowElevation, MinShallowShadowElevation } from '~/utils/shadow.utils';
 
   const options = $state<NeoProgressProps>({ value: 40, buffer: 60, direction: NeoProgressDirection.Right });
   const vertical = $derived([NeoProgressDirection.Top, NeoProgressDirection.Bottom].includes(options.direction));
@@ -76,8 +76,8 @@
     placement="left"
     center
     bind:value={bar.elevation}
-    min={-2}
-    max={2}
+    min={MinShallowShadowElevation}
+    max={MaxShallowShadowElevation}
     defaultValue={-1}
     rounded
     nullable={false}

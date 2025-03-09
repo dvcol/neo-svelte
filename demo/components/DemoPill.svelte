@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { MaxShallowShadowElevation, MinShallowShadowElevation } from '../../src/lib/utils/shadow.utils';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import { colorOptions } from '../utils/color.utils';
@@ -57,8 +58,8 @@
     placement="left"
     center
     bind:value={options.elevation}
-    min={-2}
-    max={2}
+    min={MinShallowShadowElevation}
+    max={MaxShallowShadowElevation}
     defaultValue={0}
     oninput={onElevation}
     rounded={options.rounded}
@@ -72,8 +73,8 @@
     placement="left"
     center
     bind:value={options.hover}
-    min={-2 - options.elevation}
-    max={2 - options.elevation}
+    min={MinShallowShadowElevation - options.elevation}
+    max={MaxShallowShadowElevation - options.elevation}
     defaultValue={0}
     rounded={options.rounded}
     nullable={false}
