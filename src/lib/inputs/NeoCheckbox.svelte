@@ -1,9 +1,10 @@
 <script lang="ts">
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { hovering } from '@dvcol/svelte-utils/hovering';
   import { fade } from 'svelte/transition';
 
-  import type { FocusEventHandler } from 'svelte/elements';
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoCheckboxProps } from '~/inputs/neo-checkbox.model.js';
@@ -35,6 +36,7 @@
     dirty = $bindable(false),
     touched = $bindable(false),
     focused = $bindable(false),
+    hovered = $bindable(false),
     disabled,
     required,
     loading,
@@ -123,19 +125,6 @@
     state: { valid, dirty, touched, value: checked, initial },
   });
 
-  let timeout: ReturnType<typeof setTimeout>;
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    clearTimeout(timeout);
-    focused = true;
-    containerProps?.onfocusin?.(e);
-  };
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    timeout = setTimeout(() => {
-      focused = false;
-      containerProps?.onfocusout?.(e);
-    }, 0);
-  };
-
   const flex = $derived(visible ? undefined : _flex);
   const width = $derived(visible ? undefined : toSize(_width));
   const height = $derived(visible ? undefined : toSize(_height));
@@ -177,9 +166,23 @@
     style:height={height?.absolute}
     style:min-height={height?.min}
     style:max-height={height?.max}
+    use:focusing={{
+      get focusin() {
+        return focused;
+      },
+      set focusin(_value) {
+        focused = _value;
+      },
+    }}
+    use:hovering={{
+      get hovered() {
+        return hovered;
+      },
+      set hovered(_value) {
+        hovered = _value;
+      },
+    }}
     {...containerRest}
-    onfocusin={onFocusIn}
-    onfocusout={onFocusOut}
   >
     <NeoBaseInput
       aria-invalid={valid === undefined ? undefined : !valid}

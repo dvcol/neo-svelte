@@ -10,9 +10,7 @@
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { NeoRangeHTMLElement } from '~/inputs/neo-range.model.js';
-
   import type { NeoNativeSelectOption } from '~/inputs/neo-select.model.js';
-
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -34,8 +32,8 @@
   import NeoRange from '~/inputs/NeoRange.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoSwitch from '~/inputs/NeoSwitch.svelte';
-  import NeoTextArea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoTextArea from '~/inputs/common/NeoTextarea.svelte';
   import { displayValue } from '~/inputs/neo-select.model.js';
   import NeoPill from '~/pill/NeoPill.svelte';
   import {

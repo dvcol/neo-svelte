@@ -2,12 +2,14 @@
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { clamp } from '@dvcol/common-utils/common/math';
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { hovering } from '@dvcol/svelte-utils/hovering';
   import { flip, offset, useFloating } from '@skeletonlabs/floating-ui-svelte';
   import { untrack } from 'svelte';
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
 
-  import type { DragEventHandler, FocusEventHandler, KeyboardEventHandler, PointerEventHandler } from 'svelte/elements';
+  import type { DragEventHandler, KeyboardEventHandler, PointerEventHandler } from 'svelte/elements';
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoRangeContext, NeoRangeHTMLElement, NeoRangeProps, NeoRangeValidationState, NeoRangeValue } from '~/inputs/neo-range.model.js';
 
@@ -143,26 +145,6 @@
   const updateTooltips = () => {
     lowerTooltip.update();
     if (isArray) upperTooltip.update();
-  };
-
-  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = true;
-    containerRest?.onpointerenter?.(e);
-  };
-
-  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = false;
-    containerRest?.onpointerleave?.(e);
-  };
-
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    focused = true;
-    containerRest?.onfocusin?.(e);
-  };
-
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    focused = false;
-    containerRest?.onfocusout?.(e);
   };
 
   const setValue = (v: number, index = 0) => {
@@ -418,11 +400,23 @@
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
+    use:focusing={{
+      get focusin() {
+        return focused;
+      },
+      set focusin(_value) {
+        focused = _value;
+      },
+    }}
+    use:hovering={{
+      get hovered() {
+        return hovered;
+      },
+      set hovered(_value) {
+        hovered = _value;
+      },
+    }}
     {...containerRest}
-    onpointerenter={onPointerEnter}
-    onpointerleave={onPointerLeave}
-    onfocusin={onFocusIn}
-    onfocusout={onFocusOut}
   >
     {#if lowerTooltip.open}
       <span

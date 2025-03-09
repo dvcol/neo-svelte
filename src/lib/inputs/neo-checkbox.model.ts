@@ -16,6 +16,7 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     | 'loading'
     | 'validation'
     | 'register'
+    | 'hovered'
     | 'in'
     | 'out'
     | 'transition'

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
-
-  import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { hovering } from '@dvcol/svelte-utils/hovering';
 
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
@@ -133,16 +133,6 @@
   let initial = $state(getValue());
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
-  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = true;
-    containerRest?.onpointerenter?.(e);
-  };
-
-  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = false;
-    containerRest?.onpointerleave?.(e);
-  };
-
   const typedValue = $derived(getValue());
   const hasValue = $derived.by(() => {
     if (rest?.type === 'file') return !!files?.length;
@@ -151,19 +141,6 @@
     if (rest?.multiple && Array.isArray(value)) return !!value.length;
     return value !== undefined && value !== null;
   });
-
-  let timeout: ReturnType<typeof setTimeout>;
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    clearTimeout(timeout);
-    focusin = true;
-    containerRest?.onfocusin?.(e);
-  };
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    timeout = setTimeout(() => {
-      focusin = false;
-      containerRest?.onfocusout?.(e);
-    }, 0);
-  };
 
   const showAffixValidation = $derived(validation && validationIcon);
   const showInputValidation = $derived(validation === true || (validation === 'success' && valid) || (validation === 'error' && !valid));
@@ -417,11 +394,23 @@
     style:--neo-input-affix-width={affixWidth}
     out:outFn={outProps}
     in:inFn={inProps}
+    use:focusing={{
+      get focusin() {
+        return focusin;
+      },
+      set focusin(_value) {
+        focusin = _value;
+      },
+    }}
+    use:hovering={{
+      get hovered() {
+        return hovered;
+      },
+      set hovered(_value) {
+        hovered = _value;
+      },
+    }}
     {...containerRest}
-    onpointerenter={onPointerEnter}
-    onpointerleave={onPointerLeave}
-    onfocusin={onFocusIn}
-    onfocusout={onFocusOut}
   >
     {@render prefix()}
     {#if label}

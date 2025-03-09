@@ -1,11 +1,12 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
-
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { hovering } from '@dvcol/svelte-utils/hovering';
   import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
 
-  import type { EventHandler, FocusEventHandler, FormEventHandler, PointerEventHandler } from 'svelte/elements';
+  import type { EventHandler, FocusEventHandler, FormEventHandler } from 'svelte/elements';
 
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -149,19 +150,6 @@
   let initial = $state(value);
   let validationMessage: string | undefined = $state(ref?.validationMessage);
 
-  let timeout: ReturnType<typeof setTimeout>;
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    clearTimeout(timeout);
-    focusin = true;
-    containerRest?.onfocusin?.(e);
-  };
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    timeout = setTimeout(() => {
-      focusin = false;
-      containerRest?.onfocusout?.(e);
-    }, 0);
-  };
-
   const showAffixValidation = $derived(validation && validationIcon);
   const showInputValidation = $derived(validation === true || (validation === 'success' && valid) || (validation === 'error' && !valid));
   const affix = $derived(clearable || loading !== undefined || showAffixValidation);
@@ -179,24 +167,12 @@
     return { touched, dirty, valid, value };
   };
 
-  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = true;
-    containerRest?.onpointerenter?.(e);
-  };
-
-  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = false;
-    containerRest?.onpointerleave?.(e);
-  };
-
   const onFocus: FocusEventHandler<HTMLTextAreaElement> = e => {
-    focused = true;
     touched = true;
     onfocus?.(e);
   };
 
   const onBlur: FocusEventHandler<HTMLTextAreaElement> = e => {
-    focused = false;
     validate({ dirty: dirtyOnBlur, valid: validateOnBlur });
     onblur?.(e);
   };
@@ -432,6 +408,7 @@
     aria-describedby={visible ? messageId : undefined}
     bind:this={ref}
     bind:value
+    bind:focused
     class:neo-textarea={true}
     class:neo-scroll={scrollbar}
     class:neo-affix={affix || after}
@@ -503,11 +480,23 @@
     style:--neo-textarea-label-width={labelWidth}
     out:outFn={outProps}
     in:inFn={inProps}
+    use:focusing={{
+      get focusin() {
+        return focusin;
+      },
+      set focusin(_value) {
+        focusin = _value;
+      },
+    }}
+    use:hovering={{
+      get hovered() {
+        return hovered;
+      },
+      set hovered(_value) {
+        hovered = _value;
+      },
+    }}
     {...containerRest}
-    onpointerenter={onPointerEnter}
-    onpointerleave={onPointerLeave}
-    onfocusin={onFocusIn}
-    onfocusout={onFocusOut}
   >
     {#if label}
       <NeoLabel

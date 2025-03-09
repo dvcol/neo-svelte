@@ -7,7 +7,7 @@ export type NeoRadioProps = NeoBaseInputProps &
     NeoInputProps,
     | 'readonly'
     | 'loading'
-    | 'focusin'
+    | 'hovered'
     | 'in'
     | 'out'
     | 'transition'

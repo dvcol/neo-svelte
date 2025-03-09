@@ -1,8 +1,10 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { hovering } from '@dvcol/svelte-utils/hovering';
   import { doubleBind } from '@dvcol/svelte-utils/watch';
 
-  import type { EventHandler, FocusEventHandler, PointerEventHandler } from 'svelte/elements';
+  import type { EventHandler } from 'svelte/elements';
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
@@ -274,30 +276,19 @@
   });
 
   let changed = value;
-  let timeout: ReturnType<typeof setTimeout>;
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    clearTimeout(timeout);
-    focused = true;
-    containerRest?.onfocusin?.(e);
-  };
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    timeout = setTimeout(() => {
-      focused = false;
-      containerRest?.onfocusout?.(e);
+  const onFocusChange = () => {
+    if (changed === value) return;
+    validate();
+    dirty = mergedDirty;
 
-      if (changed === value) return;
-      validate();
-      dirty = mergedDirty;
-
-      const event: SvelteEvent<InputEvent> = new InputEvent('change', {
-        bubbles: true,
-        cancelable: false,
-        data: value,
-        inputType: 'insertText',
-      });
-      onchange?.(event);
-      changed = value;
-    }, 0);
+    const event: SvelteEvent<InputEvent> = new InputEvent('change', {
+      bubbles: true,
+      cancelable: false,
+      data: value,
+      inputType: 'insertText',
+    });
+    onchange?.(event);
+    changed = value;
   };
 
   const onInvalid: EventHandler<Event, HTMLInputElement> = e => {
@@ -305,15 +296,6 @@
     validationMessage = ref?.validationMessage;
     e.preventDefault();
     oninvalid?.(e);
-  };
-
-  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = true;
-    containerRest?.onpointerenter?.(e);
-  };
-  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = false;
-    containerRest?.onpointerleave?.(e);
   };
 
   const affix = $derived(clearable || loading !== undefined || validation);
@@ -381,11 +363,24 @@
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
+    use:focusing={{
+      get focusin() {
+        return focused;
+      },
+      set focusin(_value) {
+        focused = _value;
+      },
+      onChange: onFocusChange,
+    }}
+    use:hovering={{
+      get hovered() {
+        return hovered;
+      },
+      set hovered(_value) {
+        hovered = _value;
+      },
+    }}
     {...containerRest}
-    onfocusin={onFocusIn}
-    onfocusout={onFocusOut}
-    onpointerenter={onPointerEnter}
-    onpointerleave={onPointerLeave}
   >
     {#if before}
       <svelte:element this={beforeTag} class:neo-pin-before={true} class:neo-vertical={vertical} {...beforeRest}>

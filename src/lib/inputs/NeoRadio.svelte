@@ -1,8 +1,9 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { hovering } from '@dvcol/svelte-utils/hovering';
   import { fade } from 'svelte/transition';
 
-  import type { FocusEventHandler } from 'svelte/elements';
   import type { NeoRadioProps } from '~/inputs/neo-radio.model.js';
 
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
@@ -28,7 +29,7 @@
     dirty = $bindable(false),
     touched = $bindable(false),
     focused = $bindable(false),
-    focusin = $bindable(false),
+    hovered = $bindable(false),
     disabled,
     required,
     loading,
@@ -72,19 +73,6 @@
   let initial = $state(checked);
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
-  let timeout: ReturnType<typeof setTimeout>;
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    clearTimeout(timeout);
-    focusin = true;
-    containerRest?.onfocusin?.(e);
-  };
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    timeout = setTimeout(() => {
-      focusin = false;
-      containerRest?.onfocusout?.(e);
-    }, 0);
-  };
-
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 </script>
@@ -102,9 +90,23 @@
   style:height={height?.absolute}
   style:min-height={height?.min}
   style:max-height={height?.max}
+  use:focusing={{
+    get focusin() {
+      return focused;
+    },
+    set focusin(_value) {
+      focused = _value;
+    },
+  }}
+  use:hovering={{
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+  }}
   {...containerRest}
-  onfocusin={onFocusIn}
-  onfocusout={onFocusOut}
 >
   <NeoBaseInput
     aria-invalid={valid === undefined ? undefined : !valid}

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { FocusEventHandler } from 'svelte/elements';
+  import { watch } from '@dvcol/svelte-utils/watch';
+
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoNumberStepProps } from '~/inputs/neo-number-step.model.js';
 
@@ -92,18 +93,14 @@
     ...buttonProps,
   });
 
-  let timeout: ReturnType<typeof setTimeout>;
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    clearTimeout(timeout);
-    containerRest?.onfocusin?.(e);
-  };
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    timeout = setTimeout(() => {
+  watch(
+    () => {
+      if (focusin) return;
       ref?.validate?.();
-      containerRest?.onfocusout?.(e);
-    }, 0);
-  };
-
+    },
+    () => focusin,
+    { skip: 1 },
+  );
   const affix = $derived(rest.clearable || rest.loading !== undefined || rest.validation);
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
@@ -145,8 +142,6 @@
   out:outFn={outProps}
   in:inFn={inProps}
   {...containerRest}
-  onfocusin={onFocusIn}
-  onfocusout={onFocusOut}
 >
   <NeoInput
     bind:ref

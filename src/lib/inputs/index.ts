@@ -1,5 +1,5 @@
 export { default as NeoInput } from './common/NeoInput.svelte';
-export { default as NeoTextarea } from './NeoTextarea.svelte';
+export { default as NeoTextarea } from './common/NeoTextarea.svelte';
 
 export { default as NeoCheckbox } from './NeoCheckbox.svelte';
 export { default as NeoColorPicker } from './NeoColorPicker.svelte';

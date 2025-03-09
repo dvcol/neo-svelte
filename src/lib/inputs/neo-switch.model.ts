@@ -16,7 +16,7 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'loading'
     | 'validation'
     | 'register'
-    | 'focusin'
+    | 'hovered'
     | 'in'
     | 'out'
     | 'transition'

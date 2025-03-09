@@ -170,13 +170,11 @@
   };
 
   const onFocus: FocusEventHandler<HTMLElement> = e => {
-    focused = true;
     if (!readonly && !disabled) touched = true;
     onfocus?.(e as SvelteEvent<FocusEvent, HTMLInputElement>);
   };
 
   const onBlur: FocusEventHandler<HTMLElement> = e => {
-    focused = false;
     validate({ dirty: dirtyOnBlur, valid: validateOnBlur });
     onblur?.(e as SvelteEvent<FocusEvent, HTMLInputElement>);
   };
@@ -283,6 +281,7 @@
     {disabled}
     bind:this={ref as any}
     bind:value
+    bind:focused
     class:neo-input={true}
     class:neo-hide={hide}
     class:neo-after={after}
@@ -315,6 +314,7 @@
     bind:files
     bind:value
     bind:group
+    bind:focused
     bind:indeterminate
     class:neo-input={true}
     class:neo-hide={hide}
@@ -348,6 +348,7 @@
     {value}
     bind:this={ref}
     bind:group
+    bind:focused
     bind:checked
     bind:indeterminate
     class:neo-input={true}
@@ -381,6 +382,7 @@
     {value}
     bind:this={ref}
     bind:group
+    bind:focused
     bind:indeterminate
     class:neo-input={true}
     class:neo-hide={hide}
@@ -413,6 +415,7 @@
     bind:this={ref}
     bind:value
     bind:group
+    bind:focused
     bind:indeterminate
     class:neo-input={true}
     class:neo-hide={hide}

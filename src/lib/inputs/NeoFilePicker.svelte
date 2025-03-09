@@ -1,8 +1,9 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
   import { tick } from 'svelte';
 
-  import type { DragEventHandler, FocusEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
+  import type { DragEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
@@ -286,19 +287,6 @@
     state: { valid, dirty, touched, value: files, initial },
   });
 
-  let timeout: ReturnType<typeof setTimeout>;
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    clearTimeout(timeout);
-    focusin = true;
-    containerRest?.onfocusin?.(e);
-  };
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    timeout = setTimeout(() => {
-      focusin = false;
-      containerRest?.onfocusout?.(e);
-    }, 0);
-  };
-
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 </script>
@@ -476,9 +464,15 @@
   style:height={height?.absolute}
   style:min-height={height?.min}
   style:max-height={height?.max}
+  use:focusing={{
+    get focusin() {
+      return focusin;
+    },
+    set focusin(_value) {
+      focusin = _value;
+    },
+  }}
   {...containerRest}
-  onfocusin={onFocusIn}
-  onfocusout={onFocusOut}
 >
   {#if drop && expanded}
     <!-- Expanded picker -->

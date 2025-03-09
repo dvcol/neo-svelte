@@ -17,8 +17,8 @@
   import NeoPassword from '~/inputs/NeoPassword.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
-  import NeoTextarea from '~/inputs/NeoTextarea.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoTextarea from '~/inputs/common/NeoTextarea.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoStepper from '~/stepper/NeoStepper.svelte';
   import { NeoStepperPlacement } from '~/stepper/neo-stepper.model';

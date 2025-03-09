@@ -1,6 +1,5 @@
 <script lang="ts">
   import { focusin } from '@dvcol/svelte-utils/focusin';
-
   import { hovering } from '@dvcol/svelte-utils/hovering';
 
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
@@ -217,7 +216,6 @@
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}
-  {...rest}
   use:focusin={{
     get focusin() {
       return focused;
@@ -234,6 +232,7 @@
       hovered = value;
     },
   }}
+  {...rest}
 >
   {#if media}
     <svelte:element
