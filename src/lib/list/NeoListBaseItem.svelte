@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
   import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
@@ -8,7 +9,6 @@
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
-  import { getNextFocusableElement } from '~/utils/html-element.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -49,16 +49,16 @@
     if (!(element instanceof HTMLElement)) return;
     let li = element?.closest<HTMLElement>('.neo-list-item.neo-list-item-select');
     let next = li?.[sibling];
-    let target = getNextFocusableElement(next);
+    let target = getFocusableElement(next);
     if (target) return target.focus();
     while (next?.[sibling]) {
       if (target) return target.focus();
       next = next?.[sibling];
-      target = getNextFocusableElement(next);
+      target = getFocusableElement(next);
     }
     if (!li?.parentElement || li?.dataset?.section === undefined) return;
     li = li.parentElement.closest<HTMLElement>('.neo-list-item.neo-list-item-select');
-    return getNextFocusableElement(li?.[sibling])?.focus();
+    return getFocusableElement(li?.[sibling])?.focus();
   };
 
   const labelId = $derived(select ? `neo-list-item-label-${getUUID()}` : undefined);

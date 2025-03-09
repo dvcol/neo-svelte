@@ -1,8 +1,8 @@
+import { getClickableAncestor, isClickable } from '@dvcol/common-utils/common/cursor';
+
 import type { Snippet } from 'svelte';
 
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
-
-import { getClickableAncestor, isClickable } from '~/cursor/neo-cursor.util.js';
 
 export type NeoCursorContext = {
   /**

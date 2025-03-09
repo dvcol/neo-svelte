@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { clamp } from '@dvcol/common-utils/common/math';
   import { watch } from '@dvcol/svelte-utils/watch';
 
@@ -15,7 +16,6 @@
   import { displayValue, type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
   import { findByValueInList, type NeoListItemOrSection } from '~/list/neo-list.model.js';
   import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
-  import { getNextFocusableElement } from '~/utils/html-element.utils.js';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -147,7 +147,7 @@
 
   const selectItem = async () => {
     await tick();
-    getNextFocusableElement(listRef)?.focus();
+    getFocusableElement(listRef)?.focus();
   };
 
   const onkeydown: KeyboardEventHandler<HTMLElement> = e => {
@@ -184,12 +184,14 @@
   bind:dirty
   bind:valid
   bind:touched
-  bind:hovered={() => {
-    return hovered || open;
-  }, // eslint-disable-line no-sequences
-  _state => {
-    hovered = _state;
-  }}
+  bind:hovered={
+    () => {
+      return hovered || open;
+    }, // eslint-disable-line no-sequences
+    _state => {
+      hovered = _state;
+    }
+  }
   bind:focused
   bind:focusin
   bind:value

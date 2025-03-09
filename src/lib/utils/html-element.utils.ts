@@ -33,15 +33,3 @@ export type HTMLFlexProps = {
 };
 
 export type SvelteEvent<E extends Event = Event, T extends EventTarget = any> = E & { currentTarget?: EventTarget & T };
-
-export const getNextFocusableElement = (
-  element?: Element | null,
-  targets: string[] = [
-    'button:not([disabled])',
-    '[href]',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])',
-  ],
-): HTMLElement | null | undefined => element?.querySelector<HTMLElement>(targets.join(','));

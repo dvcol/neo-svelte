@@ -1,12 +1,11 @@
 <script lang="ts">
+  import { getCursorState } from '@dvcol/common-utils/common/cursor';
   import { tick } from 'svelte';
 
   import type { NeoCursorContext, NeoCursorPosition, NeoCursorProps, NeoCursorState } from '~/cursor/neo-cursor.model.js';
 
   import NeoCursorPointer from '~/cursor/NeoCursorPointer.svelte';
   import { getClosestClickable, getFirstDataNeoCursor } from '~/cursor/neo-cursor.model.js';
-
-  import { getCursorState } from '~/cursor/neo-cursor.util.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {

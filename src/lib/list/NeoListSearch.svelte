@@ -1,6 +1,8 @@
 <script lang="ts">
   import { debounce } from '@dvcol/common-utils/common/debounce';
 
+  import { getFocusableElement } from '@dvcol/common-utils/common/element';
+
   import type { FormEventHandler, KeyboardEventHandler } from 'svelte/elements';
 
   import type { NeoListItemOrSection } from '~/list/neo-list.model.js';
@@ -12,7 +14,6 @@
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { itemLabelSort, itemSearchFilter, type NeoListSearchProps } from '~/list/neo-list-search.model.js';
-  import { getNextFocusableElement } from '~/utils/html-element.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -61,7 +62,7 @@
     if (e.key !== 'ArrowDown' || !(e.target instanceof HTMLElement)) return;
     const target = e.target.parentElement?.parentElement?.querySelector('.neo-list-item.neo-list-item-select');
     if (target) e.preventDefault();
-    getNextFocusableElement(target)?.focus();
+    getFocusableElement(target)?.focus();
     inputProps?.onkeydown?.(e);
   };
 
