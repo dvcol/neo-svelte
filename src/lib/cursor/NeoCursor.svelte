@@ -2,7 +2,7 @@
   import { getCursorState } from '@dvcol/common-utils/common/cursor';
   import { tick } from 'svelte';
 
-  import type { NeoCursorContext, NeoCursorPosition, NeoCursorProps, NeoCursorState } from '~/cursor/neo-cursor.model.js';
+  import type { NeoCursorContext, NeoCursorProps, NeoCursorState } from '~/cursor/neo-cursor.model.js';
 
   import NeoCursorPointer from '~/cursor/NeoCursorPointer.svelte';
   import { getClosestClickable, getFirstDataNeoCursor } from '~/cursor/neo-cursor.model.js';
@@ -17,7 +17,11 @@
     target = children ? undefined : document.body,
     pointer,
     snap: snapAble = true,
+    delay: snapDelay = 10,
     raw = false,
+
+    value = $bindable(),
+    position = $bindable(),
 
     ...rest
   }: NeoCursorProps = $props();
@@ -25,14 +29,13 @@
 
   const boundary = $derived(target ?? ref);
 
-  let cursorState = $state<NeoCursorState>();
-
   const setState = (state?: NeoCursorState) =>
     requestAnimationFrame(() => {
-      cursorState = state;
+      value = state;
     });
 
   const onPointerMove = async (e: PointerEvent) => {
+    console.info('onPointerMove', e);
     if (pointer && e.pointerType !== pointer) return;
     const cursorStyle = getCursorState(e);
     const element = e.target as Element;
@@ -54,17 +57,22 @@
 
   let transition = $state<'in' | 'out' | false>(false);
   let snap = $state(false);
-  let position = $state<NeoCursorPosition>();
   let timeout: ReturnType<typeof setTimeout>;
 
   const onSnap = async () => {
     clearTimeout(timeout);
-    transition = 'in';
-    await tick();
-    snap = true;
+    if (snap) return;
+    timeout = setTimeout(async () => {
+      if (snap) return;
+      transition = 'in';
+      await tick();
+      snap = true;
+    }, snapDelay);
   };
 
   const onSnapOff = async () => {
+    clearTimeout(timeout);
+    if (!snap) return;
     transition = 'out';
     await tick();
     snap = false;
@@ -81,24 +89,24 @@
   };
 
   $effect(() => {
-    if (!cursorState?.cursor) return;
-    if (!cursorState?.clickable || cursorState?.style === 'text' || !snapAble) {
+    if (!value?.cursor) return;
+    if (!value?.clickable || value?.style === 'text' || !snapAble) {
       if (snap) onSnapOff();
-      position = cursorState.cursor;
+      position = value.cursor;
       return;
     }
-    const { top, left, width, height } = cursorState.clickable.getBoundingClientRect();
+    const { top, left, width, height } = value.clickable.getBoundingClientRect();
     if (!snap) onSnap();
     position = {
       get x() {
-        return snap ? left : (cursorState?.cursor.x ?? 0);
+        return snap ? left : (value?.cursor.x ?? 0);
       },
       get y() {
-        return snap ? top : (cursorState?.cursor.y ?? 0);
+        return snap ? top : (value?.cursor.y ?? 0);
       },
       width,
       height,
-      radius: getComputedStyle(cursorState.clickable).borderRadius,
+      radius: getComputedStyle(value.clickable).borderRadius,
     };
   });
 
@@ -119,7 +127,7 @@
     };
   });
 
-  const context = $derived<NeoCursorContext>({ hidden: !cursorState, cursor: cursorState?.style, position, transition, snap });
+  const context = $derived<NeoCursorContext>({ hidden: !value?.cursor, cursor: value?.style, position, transition, snap });
 </script>
 
 {#if target}
@@ -130,12 +138,10 @@
   </svelte:element>
 {/if}
 
-{#if cursorState?.cursor}
-  {#if cursor}
-    {@render cursor(context)}
-  {:else}
-    <NeoCursorPointer {...context} />
-  {/if}
+{#if cursor}
+  {@render cursor(context)}
+{:else}
+  <NeoCursorPointer {...context} />
 {/if}
 
 <style lang="scss">

@@ -56,6 +56,14 @@ export type NeoCursorProps = {
    */
   target?: HTMLElement;
   /**
+   * Parsed cursor state.
+   */
+  value?: NeoCursorState;
+  /**
+   * Current position of the replacement cursor.
+   */
+  position?: NeoCursorPosition;
+  /**
    * Pointer type (mouse, touch, pen, etc.) to listen for.
    */
   pointer?: PointerEvent['pointerType'];
@@ -63,6 +71,12 @@ export type NeoCursorProps = {
    * Whether to snap the cursor to the closest clickable element.
    */
   snap?: boolean;
+  /**
+   * The delay in milliseconds before the cursor snaps to the closest clickable element.
+   * @default 10
+   * @see snap
+   */
+  delay?: number;
   /**
    * Whether to listen for pointer move, or raw update (when supported).
    *

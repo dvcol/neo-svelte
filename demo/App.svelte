@@ -1,9 +1,9 @@
 <script lang="ts">
   import { sentenceCase } from '@dvcol/common-utils';
-
   import { RouterView } from '@dvcol/svelte-simple-router/components';
 
   import { resolveComponent } from '@dvcol/svelte-utils';
+
   import { fade } from 'svelte/transition';
 
   import { router } from './router/router.js';

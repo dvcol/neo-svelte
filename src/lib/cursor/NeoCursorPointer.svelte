@@ -16,22 +16,24 @@
   }: NeoCursorPointerProps = $props();
 </script>
 
-<span
-  {hidden}
-  class="neo-cursor"
-  style:--neo-cursor-y="{position?.y}px"
-  style:--neo-cursor-x="{position?.x}px"
-  style:--neo-cursor-width="{position?.width ?? 0}px"
-  style:--neo-cursor-height="{position?.height ?? 0}px"
-  style:--neo-cursor-radius={position?.radius ?? 0}
-  data-style={cursor}
-  data-transition={transition}
-  data-snap={snap}
-  {...rest}
-  transition:scale={{ delay: 10 }}
->
-  {@render children?.({ hidden, cursor, position, transition, snap })}
-</span>
+{#if !hidden}
+  <span
+    {hidden}
+    class="neo-cursor"
+    style:--neo-cursor-y="{position?.y}px"
+    style:--neo-cursor-x="{position?.x}px"
+    style:--neo-cursor-width="{position?.width ?? 0}px"
+    style:--neo-cursor-height="{position?.height ?? 0}px"
+    style:--neo-cursor-radius={position?.radius ?? 0}
+    data-style={cursor}
+    data-transition={transition}
+    data-snap={snap}
+    {...rest}
+    transition:scale={{ delay: 10 }}
+  >
+    {@render children?.({ hidden, cursor, position, transition, snap })}
+  </span>
+{/if}
 
 <style lang="scss">
   .neo-cursor {
