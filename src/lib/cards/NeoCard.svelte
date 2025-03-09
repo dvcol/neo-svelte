@@ -1,5 +1,8 @@
 <script lang="ts">
-  import type { FocusEventHandler, PointerEventHandler } from 'svelte/elements';
+  import { focusin } from '@dvcol/svelte-utils/focusin';
+
+  import { hovering } from '@dvcol/svelte-utils/hovering';
+
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -7,6 +10,7 @@
   import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
+
   import {
     coerce,
     computeGlassFilter,
@@ -113,26 +117,6 @@
 
   const segments = $derived([content, header, action, footer, media, close].filter(Boolean).length > 1);
 
-  const onPointerEnter: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = true;
-    onpointerenter?.(e);
-  };
-
-  const onPointerLeave: PointerEventHandler<HTMLDivElement> = e => {
-    hovered = false;
-    onpointerleave?.(e);
-  };
-
-  const onFocusIn: FocusEventHandler<HTMLDivElement> = e => {
-    focused = true;
-    onfocusin?.(e);
-  };
-
-  const onFocusOut: FocusEventHandler<HTMLDivElement> = e => {
-    focused = false;
-    onfocusout?.(e);
-  };
-
   const context = $derived<NeoCardContext>({
     elevation,
     hover,
@@ -234,10 +218,22 @@
   out:outFn={outProps}
   in:inFn={inProps}
   {...rest}
-  onpointerenter={onPointerEnter}
-  onpointerleave={onPointerLeave}
-  onfocusin={onFocusIn}
-  onfocusout={onFocusOut}
+  use:focusin={{
+    get focusin() {
+      return focused;
+    },
+    set focusin(value) {
+      focused = value;
+    },
+  }}
+  use:hovering={{
+    get hovered() {
+      return hovered;
+    },
+    set hovered(value) {
+      hovered = value;
+    },
+  }}
 >
   {#if media}
     <svelte:element

@@ -1,4 +1,4 @@
-import { getClickableAncestor, isClickable } from '@dvcol/common-utils/common/cursor';
+import { getClickableAncestor, isClickable } from '@dvcol/common-utils/common/element';
 
 import type { Snippet } from 'svelte';
 
