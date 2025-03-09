@@ -75,11 +75,15 @@ export const isClickable = (element: Element) => {
 };
 
 // get first clickable ancestor
-export const getClickableAncestor = (element: Element, boundary?: Element | (() => Element)): Element | undefined => {
+export const getClickableAncestor = (
+  element: Element,
+  boundary?: Element | (() => Element),
+  selector: (node: Element) => boolean = isClickable,
+): Element | undefined => {
   if (!element) return;
   if (typeof boundary === 'function' && boundary() === element) return;
   if (boundary === element) return;
-  if (isClickable(element)) return element;
+  if (selector(element)) return element;
   if (!element.parentElement) return;
-  return getClickableAncestor(element.parentElement);
+  return getClickableAncestor(element.parentElement, boundary, selector);
 };
