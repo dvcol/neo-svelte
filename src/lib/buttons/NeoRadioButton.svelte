@@ -153,7 +153,7 @@
           border-color: var(--neo-radio-border-color, var(--neo-glass-border-color-flat));
 
           &:hover {
-            border-color: var(--neo-radio-border-color-hover, var(--neo-border-color-flat-highlight));
+            border-color: var(--neo-radio-border-color-hover, var(--neo-glass-border-color-flat-highlight));
           }
         }
 

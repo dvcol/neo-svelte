@@ -310,7 +310,7 @@
           border-color: var(--neo-switch-border-color, var(--neo-glass-border-color-flat));
 
           &:hover {
-            border-color: var(--neo-switch-border-color-hover, var(--neo-border-color-flat-highlight));
+            border-color: var(--neo-switch-border-color-hover, var(--neo-glass-border-color-flat-highlight));
           }
         }
       }

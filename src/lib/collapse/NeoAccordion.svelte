@@ -188,7 +188,7 @@
 
         &:focus-within,
         &:hover {
-          border-color: var(--neo-accordion-border-color-hover, var(--neo-border-color-flat-highlight));
+          border-color: var(--neo-accordion-border-color-hover, var(--neo-glass-border-color-flat-highlight));
         }
       }
 

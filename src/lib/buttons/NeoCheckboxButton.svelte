@@ -151,7 +151,7 @@
           border-color: var(--neo-checkbox-border-color, var(--neo-glass-border-color-flat));
 
           &:hover {
-            border-color: var(--neo-checkbox-border-color-hover, var(--neo-border-color-flat-highlight));
+            border-color: var(--neo-checkbox-border-color-hover, var(--neo-glass-border-color-flat-highlight));
           }
         }
 
