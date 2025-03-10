@@ -202,10 +202,10 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [ ] avatar
   - [x] badge
 
-- [ ] PointerTracker (Pointer Events)
-  - [ ] track cursor
-  - [ ] grow to tabindex targets
-  - [ ] height, twist, tilt & pressure support
+- [x] PointerTracker (Pointer Events)
+  - [x] track cursor
+  - [x] grow to tabindex targets
+  - [x] twist, tilt & pressure support (for supported pencils)
 
 - [ ] text
   - [ ] elevation

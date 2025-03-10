@@ -6,15 +6,17 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import { NeoCursor } from '~/cursor';
+  import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
 
   const options = $state<NeoCursorProps>({
     snap: true,
     delay: 10,
     disabled: false,
 
-    tilt: true,
-    pressure: true,
+    tilt: false,
+    pressure: false,
     watch: undefined,
   });
 
@@ -101,8 +103,50 @@
   </div>
 </div>
 
+{#snippet after()}
+  <NeoButton text aria-label="After button snippet">
+    {#snippet icon()}
+      <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
+    {/snippet}
+  </NeoButton>
+{/snippet}
+
 <div class="row">
-  <span class="label">Clickable</span>
+  <div class="column">
+    <span class="label">Clickable</span>
+    <NeoButton elevation="0" label="Click me" />
+    <NeoInput elevation="0" label="Type here" {after} />
+  </div>
+
+  <div class="column" data-neo-cursor="snap">
+    <span class="label">Force snap</span>
+    <p>This enforce snapping (if enabled).</p>
+  </div>
+
+  <div class="column">
+    <span class="label">Text</span>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column neo-select">
+    <span class="label">No select</span>
+    <p>This is not selectable, try to use a pen to see tilt & pressure effects !</p>
+  </div>
+
+  <div class="column" data-neo-cursor="none">
+    <span class="label">No cursor</span>
+    <p>This disable the neo-cursor.</p>
+  </div>
+
+  <div class="column" data-neo-cursor="auto">
+    <span class="label">Force auto</span>
+    <p>This enforce the default cursor and ignore text elements.</p>
+  </div>
 </div>
 
 <style lang="scss">
@@ -114,14 +158,24 @@
     word-break: break-all;
   }
 
-  .row {
-    @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
-
-    margin: 4rem 0;
+  .neo-select {
     // stylelint-disable-next-line property-no-vendor-prefix -- still required for Safari
     -webkit-user-select: none;
     user-select: none;
     overscroll-behavior: none;
+  }
+
+  .row {
+    @include flex.row($center: true, $gap: var(--neo-gap-xxl), $flex: 0 1 auto);
+
+    margin: 4rem 0;
+  }
+
+  .column {
+    @include flex.column($center: true, $gap: var(--neo-gap-lg));
+
+    padding: var(--neo-gap-sm);
+    border-radius: var(--neo-border-radius);
   }
 
   @media (width < 1200px) {

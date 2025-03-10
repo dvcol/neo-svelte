@@ -7,6 +7,7 @@
     getClosestClickable,
     getFirstDataNeoCursor,
     type NeoCursorContext,
+    NeoCursorPointerType,
     type NeoCursorProps,
     type NeoCursorState,
     NeoCursorType,
@@ -14,8 +15,23 @@
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
+    // Snippets
+
     children,
     custom,
+
+    // Bindings
+
+    ref = $bindable(),
+    cursor = $bindable(),
+    pointer = $bindable(),
+    contact = $bindable(),
+    position = $bindable(),
+    snapTarget = $bindable(),
+    snapping = $bindable(false),
+    touching = $bindable(false),
+
+    // States
 
     tag = 'div',
     target = children ? undefined : document.body,
@@ -27,15 +43,8 @@
     pressure,
     disabled,
 
-    ref = $bindable(),
-    cursor = $bindable(),
-    pointer = $bindable(),
-    contact = $bindable(),
-    position = $bindable(),
-    snapTarget = $bindable(),
-    snapping = $bindable(false),
-    touching = $bindable(false),
-
+    // Other Props
+    pointerProps,
     ...rest
   }: NeoCursorProps = $props();
   /* eslint-enable prefer-const */
@@ -148,9 +157,6 @@
     };
   });
 
-  // TODO - pressure/height for pen
-  // TODO - tilt for pen
-
   const eventUpdateType = $derived(raw && 'onpointerrawupdate' in window ? 'pointerrawupdate' : 'pointermove');
   $effect(() => {
     if (!boundary) return;
@@ -179,8 +185,8 @@
     contact,
     snapping,
     touching,
-    pressure,
-    tilt,
+    pressure: pressure ?? pointer === NeoCursorPointerType.Pen,
+    tilt: tilt ?? pointer === NeoCursorPointerType.Pen,
   });
 </script>
 
@@ -195,7 +201,7 @@
 {#if custom}
   {@render custom(context)}
 {:else}
-  <NeoCursorPointer {...context} />
+  <NeoCursorPointer {...context} {...pointerProps} />
 {/if}
 
 <style lang="scss">

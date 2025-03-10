@@ -3,6 +3,8 @@
 
   import type { NeoCursorPointerProps } from '~/cursor/neo-cursor-pointer.model.js';
 
+  import { type NeoCursorContact, NeoCursorPointerType } from '~/cursor/neo-cursor.model.js';
+
   import { toPixel } from '~/utils/style.utils.js';
 
   const {
@@ -10,14 +12,15 @@
 
     show,
     cursor,
+    pointer,
     position,
     transition,
     snapping,
     touching,
     contact,
 
-    pressure,
-    tilt,
+    pressure = pointer === NeoCursorPointerType.Pen,
+    tilt = pointer === NeoCursorPointerType.Pen,
 
     ...rest
   }: NeoCursorPointerProps = $props();
@@ -41,14 +44,30 @@
   const scaleY = $derived(getScale('height'));
 
   const rotate = $derived(contact?.twist ? `${contact.twist}deg` : undefined);
-  const offset = $derived(toPixel(((contact?.pressure?.point ?? 0) * 10) ** 1.5));
+  const offset = $derived(toPixel(((contact?.pressure?.point ?? 0) * 10) ** 1.75));
+
+  const getTilt = (angle?: NeoCursorContact['angle'], radius = 100, threshold = 5) => {
+    if (!angle) return;
+    // Convert altitude angle (0° = max tilt, 90° = no tilt) to radius
+    const altitude = (1 - (angle.altitude * (180 / Math.PI)) / 90) * radius;
+    // Below the threshold, the tilt is not visible
+    if (altitude < threshold) return;
+    return {
+      // The radius represents the tilt in pixels
+      radius: toPixel(altitude),
+      // The azimuth is the direction in degrees (converted from radians)
+      angle: `${angle.azimuth * (180 / Math.PI) + 90}deg`,
+    };
+  };
+  const tilting = $derived(tilt ? getTilt(contact?.angle) : undefined);
 </script>
 
 {#if show}
   <span
     hidden={!show}
-    class="neo-cursor"
+    class:neo-cursor={true}
     class:neo-pressure={pressure && touching && contact?.pressure?.point}
+    class:neo-tilt={tilt && touching && tilting?.radius}
     style:--neo-cursor-y={toPixel(position?.y)}
     style:--neo-cursor-x={toPixel(position?.x)}
     style:--neo-cursor-width={width}
@@ -58,6 +77,8 @@
     style:--neo-cursor-scale-y={scaleY}
     style:--neo-cursor-rotate={rotate}
     style:--neo-cursor-offset={offset}
+    style:--neo-cursor-tilt-angle={tilting?.angle}
+    style:--neo-cursor-tilt-radius={tilting?.radius}
     data-cursor={cursor}
     data-transition={transition}
     data-snapping={snapping}
@@ -78,9 +99,10 @@
     height: var(--neo-cursor-height, 1.125rem);
     background-color: var(--neo-cursor-bg-color, var(--neo-text-highlight-color, oklch(from currentcolor calc(l + 0.3) c h / 20%)));
     border-radius: 50%;
-    outline: var(--neo-outline-width, var(--neo-border-width)) var(--neo-cursor-outline-color, transparent) solid;
+    outline: var(--neo-outline-width, var(--neo-border-width-md)) var(--neo-cursor-outline-color, transparent) solid;
     transform-origin: center;
     transition:
+      outline-offset 200ms ease,
       outline-color 200ms ease,
       rotate 200ms ease,
       scale 200ms ease,
@@ -96,9 +118,47 @@
     scale: calc(var(--neo-cursor-scale-x, 1)) calc(var(--neo-cursor-scale-y, 1));
     rotate: var(--neo-cursor-rotate, 0);
 
+    &::before {
+      position: absolute;
+      border-radius: inherit;
+      outline: var(--neo-outline-width, var(--neo-border-width)) transparent dashed;
+      transition:
+        outline-offset 200ms ease,
+        outline-color 200ms ease;
+      content: '';
+      inset: 0;
+      pointer-events: none;
+    }
+
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      background-color: transparent;
+      transition:
+        height 200ms ease,
+        background-color 200ms ease;
+      content: '';
+      pointer-events: none;
+      translate: -50% -50%;
+    }
+
     &.neo-pressure {
-      outline-color: var(--neo-cursor-outline-color, var(--neo-text-color-secondary));
+      outline-color: var(--neo-cursor-pressure-color, oklch(from currentcolor l c h / 50%));
       outline-offset: var(--neo-cursor-offset, 0);
+    }
+
+    &.neo-tilt::before {
+      outline-color: var(--neo-cursor-tilt-color, oklch(from currentcolor l c h / 60%));
+      outline-offset: calc(var(--neo-cursor-offset, 0) + var(--neo-cursor-tilt-radius, 0));
+    }
+
+    &.neo-tilt::after {
+      height: calc(100% + (var(--neo-cursor-offset, 0) + var(--neo-cursor-tilt-radius, 0)) * 2);
+      rotate: var(--neo-cursor-tilt-angle, 0);
+      background-color: var(--neo-cursor-tilt-color, oklch(from currentcolor l c h / 60%));
     }
 
     &[data-cursor='text'] {
@@ -106,6 +166,11 @@
       height: 1.375rem;
       border-radius: 0.25rem;
       scale: 1;
+      outline-color: transparent;
+
+      &::before {
+        outline-color: transparent;
+      }
     }
 
     &[data-cursor='not-allowed'],

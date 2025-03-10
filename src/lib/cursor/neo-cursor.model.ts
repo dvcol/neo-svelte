@@ -2,6 +2,7 @@ import { getClickableAncestor, isClickable } from '@dvcol/common-utils/common/el
 
 import type { Snippet } from 'svelte';
 
+import type { NeoCursorPointerProps } from '~/cursor/neo-cursor-pointer.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export const NeoCursorPointerType = {
@@ -118,7 +119,7 @@ export type NeoCursorProps = {
    */
   touching?: NeoCursorContext['touching'];
 
-  // Other Props
+  // States
 
   /**
    * Optional container HTML tag.
@@ -165,6 +166,12 @@ export type NeoCursorProps = {
    * @see [PointerEvent.update](https://developer.mozilla.org/en-US/docs/Web/API/Element/pointerrawupdate_event)
    */
   raw?: boolean;
+
+  // Other Props
+  /**
+   * Optional pointer properties for the default cursor.
+   */
+  pointerProps?: NeoCursorPointerProps;
 } & Omit<HTMLNeoBaseElement, 'children'>;
 
 export type NeoCursorPosition = {
