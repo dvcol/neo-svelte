@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { resize } from '@dvcol/svelte-utils/resize';
-
   import type { NeoSwitchButtonContext, NeoSwitchButtonProps } from '~/buttons/neo-switch-button.model.js';
 
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -48,15 +46,6 @@
   };
 
   let toggleWidth = $state<string>();
-  let toggleRef = $state<HTMLSpanElement>();
-  const updateSize = () => {
-    if (!toggleRef) return;
-    const width = toggleRef?.getBoundingClientRect().width;
-    if (!width) return;
-    toggleWidth = `${width}px`;
-  };
-
-  $effect(updateSize);
 </script>
 
 {#snippet label(content: NeoSwitchButtonProps['on'])}
@@ -85,8 +74,7 @@
   class:neo-invalid={valid === false}
   style:--neo-switch-color={getColorVariable(color)}
   style:--neo-switch-box-shadow={boxShadow}
-  style:--neo-switch-toggle-width={toggleWidth}
-  use:resize={updateSize}
+  style:--neo-switch-toggle-width="{toggleWidth}px"
   {onclick}
   {...rest}
 >
@@ -95,7 +83,7 @@
     <span class="neo-switch-on" class:neo-visible={checked}>
       {@render label(on)}
     </span>
-    <span class="neo-switch-toggle" bind:this={toggleRef}>
+    <span class="neo-switch-toggle" bind:offsetWidth={toggleWidth}>
       <!--   Toggle handle   -->
       {@render label(handle)}
     </span>
