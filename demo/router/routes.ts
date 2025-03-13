@@ -18,6 +18,7 @@ export const Route = {
   Collapse: 'collapse' as const,
   Stepper: 'stepper' as const,
   Cursor: 'cursor' as const,
+  Dialog: 'dialog' as const,
 } as const;
 
 export type Routes = (typeof Route)[keyof typeof Route];
@@ -39,6 +40,7 @@ export const Path: Record<keyof typeof Route, string> = {
   Collapse: '/collapse' as const,
   Stepper: '/stepper' as const,
   Cursor: '/cursor' as const,
+  Dialog: '/dialog' as const,
   Any: '*' as const,
 } as const;
 
@@ -127,6 +129,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.Cursor,
       path: Path.Cursor,
       component: () => import('../components/DemoCursor.svelte'),
+    },
+    {
+      name: Route.Dialog,
+      path: Path.Dialog,
+      component: () => import('../components/DemoDialog.svelte'),
     },
     {
       name: Route.Any,

@@ -45,7 +45,7 @@
     indeterminate = false;
   };
 
-  let toggleWidth = $state<string>();
+  let toggleWidth = $state();
 </script>
 
 {#snippet label(content: NeoSwitchButtonProps['on'])}

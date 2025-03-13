@@ -36,7 +36,7 @@ export type PositiveShadowElevation = (typeof PositiveShadowElevations)[number];
 export type PositiveShadowElevationString = `${PositiveShadowElevation}`;
 export const PositiveMinMaxElevation: { min: 0; max: ShadowElevation } = { min: 0, max: MaxShadowElevation };
 
-export const BlurElevations = [1, 2, 3, 4, 5] as const;
+export const BlurElevations = [0, 1, 2, 3, 4, 5] as const;
 export type BlurElevation = (typeof BlurElevations)[number];
 export type BlurElevationString = `${BlurElevation}`;
 
@@ -66,9 +66,13 @@ export function coerce<Elevation extends number = ShadowElevation>(
   return _elevation as Elevation;
 }
 
-export function parseBlur(blur?: BlurElevation | BlurElevationString, elevation?: ShadowElevation | ShadowElevationString): BlurElevation {
-  if (!blur || elevation === undefined) return 1;
-  return coerce<ShadowElevation>(blur ?? elevation, { min: 1, max: 5 }) as BlurElevation;
+export function parseBlur(
+  blur?: BlurElevation | BlurElevationString,
+  elevation?: ShadowElevation | ShadowElevationString,
+  minMax: { min?: BlurElevation; max?: BlurElevation } = { min: 1, max: 5 },
+): BlurElevation {
+  if (!blur || elevation === undefined) return minMax.min ?? 1;
+  return coerce<ShadowElevation>(blur ?? elevation, minMax) as BlurElevation;
 }
 
 export const isShadowFlat = (shadow: string) => ShadowFlatRegex.test(shadow);

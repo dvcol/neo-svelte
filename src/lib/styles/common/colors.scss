@@ -68,6 +68,7 @@
   --neo-background-color-tinted: color-mix(in srgb, var(--neo-background-color), currentcolor 2%);
   --neo-background-color-secondary: color-mix(in srgb, var(--neo-background-color), black 5%);
   --neo-background-color-secondary-hover: color-mix(in srgb, var(--neo-background-color), black 8%);
+  --neo-background-color-backdrop: color-mix(in srgb, transparent, black 10%);
   --neo-shadow-color-light: oklch(from var(--neo-background-color) calc(l + 0.05) c h);
   --neo-shadow-color-dark: oklch(from var(--neo-background-color) calc(l - 0.075) c h);
 
