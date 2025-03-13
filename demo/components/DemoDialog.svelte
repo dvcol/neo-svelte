@@ -11,7 +11,7 @@
     modal: true,
     fade: true,
     disableBodyScroll: true,
-    closeOnClickedOutside: true,
+    closeOnClickOutside: true,
     returnValue: undefined,
   });
 </script>
@@ -21,7 +21,7 @@
     <NeoButton toggle bind:checked={options.modal}>Modal</NeoButton>
     <NeoButton toggle bind:checked={options.fade}>Fade</NeoButton>
     <NeoButton toggle bind:checked={options.disableBodyScroll}>Body Scroll</NeoButton>
-    <NeoButton toggle bind:checked={options.closeOnClickedOutside}>Clicked Outside</NeoButton>
+    <NeoButton toggle bind:checked={options.closeOnClickOutside}>Click Outside</NeoButton>
   </NeoButtonGroup>
 </div>
 
@@ -29,7 +29,10 @@
   <div class="column">
     <span class="label">Default</span>
     <NeoButton toggle bind:checked={options.open}>Open</NeoButton>
-    <NeoDialog {...options} bind:open={options.open} bind:returnValue={options.returnValue}>
+    {#if options.returnValue !== undefined}
+      <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
+    {/if}
+    <NeoDialog {...options} bind:open={options.open} bind:modal={options.modal} bind:returnValue={options.returnValue}>
       <div class="column">
         <p>
           Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin

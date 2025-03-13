@@ -16,27 +16,11 @@ export type HTMLDialogElementRef = HTMLDialogElement & {
 
 export type NeoDialogBlur = BlurElevation | BlurElevationString;
 
-export type NeoDialogProps = {
-  /**
-   * The dialog content.
-   */
-  children?: Snippet;
+export type NeoDialogContext = {
   /**
    * The dialog element reference.
    */
   ref?: HTMLDialogElementRef;
-
-  // style
-  /**
-   * The blur level to apply to the backdrop (0 to 5) when open.
-   *
-   * @default 1
-   * @see glass
-   */
-  blur?: NeoDialogBlur;
-
-  // State
-
   /**
    * Whether the dialog is open or not.
    * A change in this prop will trigger the dialog to open or close.
@@ -49,25 +33,19 @@ export type NeoDialogProps = {
    */
   modal?: boolean;
   /**
-   * Whether the dialog should transition in/out with a fade effect.
-   *
-   * @default true
-   */
-  fade?: boolean;
-  /**
-   * Manages the dialog's closing behavior on supported platforms.
-   * If set, disables custom closeOnClickedOutside logic.
-   *
-   * @see [support](https://caniuse.com/mdn-html_elements_dialog_closedby)
-   * @see closeOnClickedOutside
-   */
-  closedby?: 'any' | 'closerequest' | 'none';
-  /**
    * The return value when the dialog is closed.
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/returnValue)
    */
   returnValue?: string;
+  /**
+   * Manages the dialog's closing behavior on supported platforms.
+   * If set, disables custom closeOnClickOutside logic.
+   *
+   * @see [support](https://caniuse.com/mdn-html_elements_dialog_closedby)
+   * @see closeOnClickOutside
+   */
+  closedby?: 'any' | 'closerequest' | 'none';
   /**
    * Disables the window.body scroll overflow when the dialog is open.
    * @default mirror the `modal` prop
@@ -79,5 +57,28 @@ export type NeoDialogProps = {
    * @see closedby
    * @default true
    */
-  closeOnClickedOutside?: boolean;
-} & HTMLDialogAttributes;
+  closeOnClickOutside?: boolean;
+};
+
+export type NeoDialogProps = {
+  /**
+   * The dialog content.
+   */
+  children?: Snippet<[NeoDialogContext]>;
+
+  // style
+  /**
+   * The blur level to apply to the backdrop (0 to 5) when open.
+   *
+   * @default 1
+   * @see glass
+   */
+  blur?: NeoDialogBlur;
+  /**
+   * Whether the dialog should transition in/out with a fade effect.
+   *
+   * @default true
+   */
+  fade?: boolean;
+} & NeoDialogContext &
+  HTMLDialogAttributes;
