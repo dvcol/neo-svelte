@@ -379,7 +379,7 @@
     }
 
     &.neo-rounded {
-      --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));
+      --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-rounded, var(--neo-border-radius-lg));
       --neo-tooltip-padding: 0.625rem 1rem;
 
       :global(> .neo-list:only-child) {

@@ -69,7 +69,7 @@
 </script>
 
 {#snippet iconClose()}
-  <IconClose size="0.9375rem" />
+  <IconClose size="0.875rem" />
 {/snippet}
 
 {#snippet closeButton()}
@@ -181,7 +181,7 @@
 
       .neo-confirm-title {
         flex: 1 1 auto;
-        margin-top: 0.5rem;
+        margin-top: var(--neo-gap-xxxs);
         margin-bottom: 1rem;
       }
     }
@@ -189,7 +189,7 @@
     &-close {
       --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
       --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
-      --neo-btn-padding-empty: 0.375rem;
+      --neo-btn-padding-empty: var(--neo-gap-xxxs);
       --neo-btn-margin: 0;
 
       align-self: flex-start;
@@ -206,7 +206,8 @@
       gap: var(--neo-gap-sm);
       justify-content: flex-end;
       margin-top: var(--neo-gap-sm);
-      padding: var(--neo-gap-tiny);
+      margin-bottom: var(--neo-gap-tiny);
+      padding-inline: var(--neo-gap-xxxs);
       opacity: 0.8;
       transition: opacity 0.3s ease;
 
@@ -225,6 +226,10 @@
     &.neo-rounded {
       .neo-confirm-content-close {
         margin-right: -0.25rem;
+      }
+
+      .neo-confirm-control {
+        margin-bottom: 0;
       }
     }
   }

@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { MouseEventHandler } from 'svelte/elements';
   import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
-  import type { NeoPopStepperProps } from '~/floating/tooltips/neo-pop-stepper.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconClose from '~/icons/IconClose.svelte';
@@ -58,7 +57,7 @@
   const marks = $derived<boolean>(_marks ?? steps?.some(s => s?.markProps) ?? !!rest?.markProps);
   const last = $derived<boolean>(active === steps.length - 1);
 
-  const onBeforeStepHandler: NeoPopStepperProps['onBeforeStep'] = async (event: NeoStepperBeforeEvent, reason?: NeoStepperNavigations) => {
+  const onBeforeStepHandler: NeoFloatingStepperProps['onBeforeStep'] = async (event: NeoStepperBeforeEvent, reason?: NeoStepperNavigations) => {
     await onBeforeStep?.(event, reason);
     if (reason === NeoStepperNavigation.Cancel) {
       await onCancel?.(event, reason);
@@ -74,15 +73,15 @@
 </script>
 
 {#snippet icon()}
-  <IconClose size="0.9375rem" />
+  <IconClose size="0.875rem" />
 {/snippet}
 
 {#snippet closeButton()}
-  <div class="neo-pop-stepper-close" class:neo-rounded={rounded} class:neo-inside={!header && !progress}>
+  <div class="neo-floating-stepper-close" class:neo-rounded={rounded} class:neo-inside={!header && !progress}>
     <NeoButton
       rounded
       text
-      class="neo-pop-stepper-control-close-button"
+      class="neo-floating-stepper-control-close-button"
       aria-label="Close confirmation tooltip"
       title="Close"
       {icon}
@@ -95,8 +94,8 @@
 
 {#snippet headerContent(context: NeoStepperContext)}
   {#if header}
-    <div class="neo-pop-stepper-header" class:neo-progress={progress}>
-      <svelte:element this={headerTag} class="neo-pop-stepper-title" {...headerRest}>
+    <div class="neo-floating-stepper-header" class:neo-progress={progress}>
+      <svelte:element this={headerTag} class="neo-floating-stepper-title" {...headerRest}>
         {#if typeof header === 'function'}
           {@render header?.(context)}
         {:else}
@@ -110,7 +109,7 @@
   {/if}
 {/snippet}
 
-<div class="neo-pop-stepper">
+<div class="neo-floating-stepper">
   <NeoStepper
     bind:ref
     bind:active
@@ -137,13 +136,17 @@
 </div>
 
 <style lang="scss">
-  .neo-pop-stepper {
+  .neo-floating-stepper {
     display: contents;
+
+    :global(> .neo-stepper .neo-stepper-controls) {
+      margin-bottom: 0.25rem;
+    }
 
     &-close {
       --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
       --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
-      --neo-btn-padding-empty: 0.375rem;
+      --neo-btn-padding-empty: var(--neo-gap-xxxs);
       --neo-btn-margin: 0;
 
       opacity: 0.8;
@@ -163,15 +166,15 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      margin-inline: var(--neo-pop-stepper-margin-inline, var(--neo-shadow-margin, 0.625rem));
-      margin-block: 0.325rem;
+      margin-inline: var(--neo-floating-stepper-margin-inline, var(--neo-shadow-margin, 0.625rem));
+      margin-block: var(--neo-gap-xxxs);
 
-      .neo-pop-stepper-title {
+      .neo-floating-stepper-title {
         flex: 1 1 auto;
         margin: 0;
       }
 
-      .neo-pop-stepper-close {
+      .neo-floating-stepper-close {
         margin-right: -0.375rem;
       }
     }
@@ -185,7 +188,7 @@
     &:focus,
     &:hover {
       :global(.neo-stepper-controls),
-      .neo-pop-stepper-close {
+      .neo-floating-stepper-close {
         opacity: 1;
       }
     }
