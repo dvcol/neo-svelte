@@ -25,6 +25,7 @@
     type NeoStepperProps,
   } from '~/stepper/neo-stepper.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { Logger } from '~/utils/logger.utils.js';
   import { coerce, DefaultShadowElevation, DefaultShallowMinMaxElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
   import { quickDuration, shortDuration } from '~/utils/transition.utils.js';
@@ -167,14 +168,14 @@
     target = steps[index],
   ) => {
     if (!target || target?.disabled) return;
-    setLoading(reason).catch(console.error);
+    setLoading(reason).catch(Logger.error);
     try {
       await emitStepEvent(reason, index);
       last = active;
       active = index;
       return await emitStepEvent(reason);
     } finally {
-      setLoading.cancel().catch(console.error);
+      setLoading.cancel().catch(Logger.error);
       loading[reason] = false;
     }
   };

@@ -7,6 +7,9 @@
 
   import { colorOptions } from '../utils/color.utils';
 
+  import type { NeoPopConfirmProps } from '~/floating/tooltips/neo-pop-confirm.model.js';
+  import type { NeoPopStepperProps } from '~/floating/tooltips/neo-pop-stepper.model.js';
+
   import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
   import type { NeoListItemRenderContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
   import type { NeoStepperStep } from '~/stepper/neo-stepper.model.js';
@@ -102,6 +105,26 @@
 
   let open = $state(false);
 
+  const confirmOptions: NeoPopConfirmProps = {
+    tooltip: lorem,
+    header: 'Confirm tooltip',
+    width: { max: '40rem' },
+    onOpen: () => console.info('Confirm tooltip opened'),
+    onClose: () => console.info('Confirm tooltip closed'),
+    onConfirm: async () => {
+      console.info('Confirm tooltip confirming...');
+      await wait(2000);
+      console.info('Confirm tooltip confirmed');
+      return true;
+    },
+    onCancel: async () => {
+      console.info('Confirm tooltip cancelling...');
+      await wait(1000);
+      console.info('Confirm tooltip cancelled');
+      return true;
+    },
+  };
+
   let active = $state(0);
   const step1Value = $state({ username: '', password: '' });
   const step2Value = $state({ address: '', city: '', country: '', zip: '' });
@@ -136,6 +159,27 @@
       render: lorem,
     },
   ];
+
+  const stepperOptions: NeoPopStepperProps = {
+    steps,
+    tooltip: lorem,
+    header: 'Stepper tooltip',
+    width: { max: '40rem' },
+    onOpen: () => console.info('Confirm tooltip opened'),
+    onClose: () => console.info('Confirm tooltip closed'),
+    onConfirm: async () => {
+      console.info('Confirm tooltip confirming...');
+      await wait(2000);
+      console.info('Confirm tooltip confirmed');
+      return true;
+    },
+    onCancel: async () => {
+      console.info('Confirm tooltip cancelling...');
+      await wait(1000);
+      console.info('Confirm tooltip cancelled');
+      return true;
+    },
+  };
 </script>
 
 {#snippet avatar(ctx: NeoListItemRenderContext)}
@@ -318,26 +362,9 @@
     <span class="label">Click pop confirm</span>
     <NeoPopConfirm
       rounded={options.rounded}
-      tooltip={lorem}
-      header="Confirm tooltip"
       closable={options.closeOnDismiss}
-      scrollbar
-      width={{ max: '40rem' }}
-      onOpen={() => console.info('Confirm tooltip opened')}
-      onClose={() => console.info('Confirm tooltip closed')}
-      onConfirm={async () => {
-        console.info('Confirm tooltip confirming...');
-        await wait(2000);
-        console.info('Confirm tooltip confirmed');
-        return true;
-      }}
-      onCancel={async () => {
-        console.info('Confirm tooltip cancelling...');
-        await wait(1000);
-        console.info('Confirm tooltip cancelled');
-        return true;
-      }}
       tooltipProps={{ ...options, openOnHover: false, openOnFocus: false }}
+      {...confirmOptions}
     >
       {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
         <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>
@@ -349,27 +376,10 @@
     <span class="label">Click pop stepper</span>
     <NeoPopStepper
       bind:active
-      {steps}
       rounded={options.rounded}
-      tooltip={lorem}
-      header="Stepper tooltip"
       closable={options.closeOnDismiss}
-      width={{ max: '40rem' }}
-      onOpen={() => console.info('Confirm tooltip opened')}
-      onClose={() => console.info('Confirm tooltip closed')}
-      onConfirm={async () => {
-        console.info('Confirm tooltip confirming...');
-        await wait(2000);
-        console.info('Confirm tooltip confirmed');
-        return true;
-      }}
-      onCancel={async () => {
-        console.info('Confirm tooltip cancelling...');
-        await wait(1000);
-        console.info('Confirm tooltip cancelled');
-        return true;
-      }}
       tooltipProps={{ ...options, openOnHover: false, openOnFocus: false }}
+      {...stepperOptions}
     >
       {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
         <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>

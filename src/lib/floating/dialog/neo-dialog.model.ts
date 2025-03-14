@@ -81,4 +81,4 @@ export type NeoDialogProps = {
    */
   fade?: boolean;
 } & NeoDialogContext &
-  HTMLDialogAttributes;
+  Omit<HTMLDialogAttributes, 'children'>;

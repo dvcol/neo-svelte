@@ -71,14 +71,22 @@
     if (!ref || ref.open === open) return;
     if (open && modal) return ref.showModal();
     if (open) return ref.show();
+    if (ref.requestClose) return ref.requestClose();
     ref.close();
   });
 
   $effect(() => {
     if (!ref) return;
-
+    Object.defineProperty(ref, 'returnValue', {
+      get() {
+        return returnValue;
+      },
+      set(val?: any) {
+        returnValue = val;
+      },
+    });
     // Monkey patch dialog methods to sync modal, open and returnValue
-    const { close, requestClose, show, showModal } = ref;
+    const { close, requestClose, show, showModal, dispatchEvent } = ref;
     ref.show = () => {
       modal = false;
       open = true;
@@ -94,20 +102,20 @@
       open = false;
       return close.call(ref, returnVal);
     };
-    if (!requestClose) return;
-    ref.requestClose = (returnVal?: any) => {
-      if (returnVal !== undefined) returnValue = returnVal;
-      open = false;
-      return requestClose.call(ref, returnVal);
-    };
-    Object.defineProperty(ref, 'returnValue', {
-      get() {
-        return returnValue;
-      },
-      set(val?: any) {
-        returnValue = val;
-      },
-    });
+    if (!requestClose) {
+      ref.requestClose = (returnVal?: any) => {
+        if (returnVal !== undefined) returnValue = returnVal;
+        open = false;
+        dispatchEvent.call(ref, new Event('cancel', { bubbles: false, cancelable: true }));
+        return close.call(ref, returnVal);
+      };
+    } else {
+      ref.requestClose = (returnVal?: any) => {
+        if (returnVal !== undefined) returnValue = returnVal;
+        open = false;
+        return requestClose.call(ref, returnVal);
+      };
+    }
   });
 
   const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside });

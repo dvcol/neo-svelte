@@ -26,6 +26,7 @@
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { NeoErrorListSelectDisabled } from '~/utils/error.utils.js';
+  import { Logger } from '~/utils/logger.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickCircOutProps, quickDurationProps, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
 
@@ -142,7 +143,7 @@
     if (isMultiple(selected)) {
       selected = [...(selected ?? []), ...selection];
     } else {
-      if (selection.length > 1) console.warn('Multiple selection is disabled. Only the first selection will be considered.');
+      if (selection.length > 1) Logger.warn('Multiple selection is disabled. Only the first selection will be considered.');
       [selected] = selection;
     }
     return { type: 'select', previous, current: cloneSelection(), added: selection };

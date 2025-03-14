@@ -53,9 +53,6 @@
 
     // Other Props
     tooltipProps,
-    closeProps,
-    cancelProps,
-    confirmProps,
     ...rest
   }: NeoPopConfirmProps = $props();
   /* eslint-enable prefer-const */
@@ -86,27 +83,25 @@
 </script>
 
 {#snippet tooltip(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}
+  {#snippet header()}
+    {#if typeof title === 'function'}
+      {@render title?.(floating, toggle)}
+    {:else}
+      {title}
+    {/if}
+  {/snippet}
+
   <NeoConfirm
     bind:loading
     bind:disabled
     {closable}
     {rounded}
-    {closeProps}
-    {cancelProps}
-    {confirmProps}
+    header={title ? header : undefined}
     onClose={onCloseButton}
     onCancel={onCancelButton}
     onConfirm={onConfirmButton}
     {...rest}
   >
-    {#snippet header()}
-      {#if typeof title === 'function'}
-        {@render title?.(floating, toggle)}
-      {:else}
-        {title}
-      {/if}
-    {/snippet}
-
     {#if typeof content === 'function'}
       {@render content?.(floating, toggle)}
     {:else}

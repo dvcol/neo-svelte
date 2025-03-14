@@ -14,6 +14,7 @@
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { itemLabelSort, itemSearchFilter, type NeoListSearchProps } from '~/list/neo-list-search.model.js';
+  import { Logger } from '~/utils/logger.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -49,7 +50,7 @@
   /* eslint-enable prefer-const */
 
   const setFilter = debounce((_value: string) => {
-    if (!context) return console.warn('NeoListSearch: No `highlight` context is missing or invalid.', context);
+    if (!context) return Logger.warn('NeoListSearch: No `highlight` context is missing or invalid.', context);
     context.highlight = _value;
   }, delay);
 

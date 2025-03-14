@@ -122,6 +122,7 @@ export type NeoPopStepperProps = {
   onClose?: NeoTooltipProps['onClose'];
   /**
    * Event Handlers that fires on cancel.
+   * If a promise is returned, the loading state will be set to true until the promise resolves.
    * If the function rejects, the tooltip will not close.
    */
   onCancel?: NeoPopStepperProps['onBeforeStep'];

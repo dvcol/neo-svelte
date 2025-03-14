@@ -1,7 +1,6 @@
 import type { MouseEventHandler } from 'svelte/elements';
-import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
-import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export type NeoPopConfirmProps = {
   // Snippet
@@ -12,18 +11,13 @@ export type NeoPopConfirmProps = {
   /**
    * Element(s) to render inside the tooltip once open.
    */
-  tooltip?: NeoTooltipProps['children'];
+  tooltip?: NeoTooltipProps['children'] | string;
   /**
    * Element(s) to render inside the header once open.
    */
-  header?: NeoTooltipProps['children'];
+  header?: NeoTooltipProps['children'] | string;
 
   // States
-  /**
-   * The HTML tag to render the content wrapper as.
-   * @default 'div'
-   */
-  tag?: keyof HTMLElementTagNameMap;
   /**
    * The loading state of the confirm & cancel buttons.
    */
@@ -144,6 +138,7 @@ export type NeoPopConfirmProps = {
   onClose?: NeoTooltipProps['onClose'];
   /**
    * Event Handlers that fires on cancel.
+   * If a promise is returned, the loading state will be set to true until the promise resolves.
    * If the function rejects, the tooltip will not close.
    */
   onCancel?: MouseEventHandler<HTMLButtonElement>;
@@ -160,32 +155,4 @@ export type NeoPopConfirmProps = {
    * Optional props to pass to the tooltip.
    */
   tooltipProps?: Omit<NeoTooltipProps, 'ref' | 'triggerRef' | 'open' | 'children'>;
-  /**
-   * Optional props to pass to the controls.
-   */
-  controlsProps?: HTMLNeoBaseElement & HTMLTagProps;
-  /**
-   * Optional props to pass to the header.
-   */
-  headerProps?: HTMLNeoBaseElement & HTMLTagProps;
-  /**
-   * Optional props to pass to the content wrapper.
-   */
-  contentProps?: HTMLNeoBaseElement & HTMLTagProps;
-  /**
-   * Optional props to pass to the close button.
-   */
-  closeProps?: NeoButtonProps;
-  /**
-   * Optional props to pass to the cancel button.
-   */
-  cancelProps?: NeoButtonProps;
-  /**
-   * Optional props to pass to the confirm button.
-   */
-  confirmProps?: NeoButtonProps;
-  /**
-   * Optional props to pass to all buttons.
-   */
-  buttonProps?: NeoButtonProps;
-} & HTMLNeoBaseElement;
+} & Omit<NeoConfirmProps, 'children' | 'header'>;
