@@ -3,12 +3,12 @@
 
   import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
   import type { NeoTooltipContext, NeoTooltipToggle } from 'src/lib/index.js';
+  import type { NeoPopSelectProps } from '~/floating/tooltips/neo-pop-select.model.js';
   import type { NeoListContext, NeoListItemOrSection } from '~/list/neo-list.model.js';
-  import type { NeoPopSelectProps } from '~/tooltips/neo-pop-select.model.js';
 
+  import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
   import NeoList from '~/list/NeoList.svelte';
   import NeoListSearch from '~/list/NeoListSearch.svelte';
-  import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -106,10 +106,12 @@
 <NeoTooltip
   bind:ref={tooltipRef}
   bind:triggerRef
-  bind:open={() => open || focused, // eslint-disable-line no-sequences
-  value => {
-    open = value;
-  }}
+  bind:open={
+    () => open || focused, // eslint-disable-line no-sequences
+    value => {
+      open = value;
+    }
+  }
   {tooltip}
   padding="0"
   {target}

@@ -1,8 +1,10 @@
+import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
-import type { NeoTooltipProps } from '~/tooltips/neo-tooltip.model.js';
+import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
+import type { NeoStepperContext, NeoStepperProps } from '~/stepper/neo-stepper.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
-export type NeoPopConfirmProps = {
+export type NeoPopStepperProps = {
   // Snippet
   /**
    * Element(s) to render inside the trigger.
@@ -11,34 +13,11 @@ export type NeoPopConfirmProps = {
   /**
    * Element(s) to render inside the tooltip once open.
    */
-  tooltip?: NeoTooltipProps['children'];
+  tooltip?: Snippet<[NeoTooltipContext, NeoTooltipToggle, NeoStepperContext]>;
   /**
    * Element(s) to render inside the header once open.
    */
-  header?: NeoTooltipProps['children'];
-
-  // States
-  /**
-   * The HTML tag to render the content wrapper as.
-   * @default 'div'
-   */
-  tag?: keyof HTMLElementTagNameMap;
-  /**
-   * The loading state of the confirm & cancel buttons.
-   */
-  loading?: {
-    confirm?: boolean;
-    cancel?: boolean;
-  };
-  /**
-   * The disabled state of the confirm & cancel buttons.
-   */
-  disabled?:
-    | boolean
-    | {
-        confirm?: boolean;
-        cancel?: boolean;
-      };
+  header?: Snippet<[NeoTooltipContext, NeoTooltipToggle, NeoStepperContext]>;
 
   // Tooltip props
   /**
@@ -145,14 +124,14 @@ export type NeoPopConfirmProps = {
    * Event Handlers that fires on cancel.
    * If the function rejects, the tooltip will not close.
    */
-  onCancel?: (e: MouseEvent) => Promise<unknown> | unknown;
+  onCancel?: NeoPopStepperProps['onBeforeStep'];
   /**
    * Event Handlers that fires on confirm.
    * If a promise is returned, the loading state will be set to true until the promise resolves.
    * If the promise rejects, the tooltip will not close.
    * @param e
    */
-  onConfirm?: (e: MouseEvent) => Promise<unknown> | unknown;
+  onConfirm?: NeoPopStepperProps['onBeforeStep'];
 
   // Other props
   /**
@@ -175,12 +154,4 @@ export type NeoPopConfirmProps = {
    * Optional props to pass to the close button.
    */
   closeProps?: NeoButtonProps;
-  /**
-   * Optional props to pass to the cancel button.
-   */
-  cancelProps?: NeoButtonProps;
-  /**
-   * Optional props to pass to the confirm button.
-   */
-  confirmProps?: NeoButtonProps;
-} & HTMLNeoBaseElement;
+} & NeoStepperProps;

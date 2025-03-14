@@ -8,14 +8,14 @@
   import type { FormEventHandler, KeyboardEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
-  import type { NeoTooltipElevation } from '~/tooltips/neo-tooltip.model.js';
+  import type { NeoTooltipElevation } from '~/floating/tooltips/neo-tooltip.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoPopSelect from '~/floating/tooltips/NeoPopSelect.svelte';
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { displayValue, type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
   import { findByValueInList, type NeoListItemOrSection } from '~/list/neo-list.model.js';
-  import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */

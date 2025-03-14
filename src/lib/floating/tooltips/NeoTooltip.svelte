@@ -19,7 +19,7 @@
 
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-  import { type NeoTooltipProps, NeoTooltipSizeStrategy, type NeoTooltipToggle } from '~/tooltips/neo-tooltip.model.js';
+  import { type NeoTooltipProps, NeoTooltipSizeStrategy, type NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';

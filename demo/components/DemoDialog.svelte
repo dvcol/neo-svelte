@@ -1,10 +1,9 @@
 <script lang="ts">
-  import NeoDialog from '../../src/lib/dialog/NeoDialog.svelte';
-
-  import type { NeoDialogProps } from '~/dialog/neo-dialog.model';
+  import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import NeoDialog from '~/floating/dialog/NeoDialog.svelte';
 
   const options = $state<NeoDialogProps>({
     open: false,
@@ -14,6 +13,8 @@
     closeOnClickOutside: true,
     returnValue: undefined,
   });
+
+  // TODO move PopConfirm & PopStepper to cards & factorise with dialog
 </script>
 
 <div class="row">
@@ -28,7 +29,7 @@
 <div class="row content">
   <div class="column">
     <span class="label">Default</span>
-    <NeoButton toggle bind:checked={options.open}>Open</NeoButton>
+    <NeoButton rounded toggle bind:checked={options.open}>Open</NeoButton>
     {#if options.returnValue !== undefined}
       <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
     {/if}

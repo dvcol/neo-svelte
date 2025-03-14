@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import type { NeoPopConfirmProps } from '~/tooltips/neo-pop-confirm.model.js';
-  import type { NeoTooltipContext, NeoTooltipToggle } from '~/tooltips/neo-tooltip.model.js';
+  import type { NeoPopConfirmProps } from '~/floating/tooltips/neo-pop-confirm.model.js';
+  import type { NeoTooltipContext, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
 
   import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
   import IconCancel from '~/icons/IconCancel.svelte';
   import IconClose from '~/icons/IconClose.svelte';
-  import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {

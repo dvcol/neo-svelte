@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { NeoDialogContext, NeoDialogProps } from '~/dialog/neo-dialog.model.js';
+  import type { NeoDialogContext, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { coerce, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';

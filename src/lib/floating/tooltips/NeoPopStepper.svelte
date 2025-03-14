@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import type { NeoPopStepperProps } from '~/tooltips/neo-pop-stepper.model.js';
-  import type { NeoTooltipContext, NeoTooltipToggle } from '~/tooltips/neo-tooltip.model.js';
+  import type { NeoPopStepperProps } from '~/floating/tooltips/neo-pop-stepper.model.js';
+  import type { NeoTooltipContext, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
   import IconClose from '~/icons/IconClose.svelte';
   import NeoStepper from '~/stepper/NeoStepper.svelte';
   import {
@@ -13,7 +14,6 @@
     NeoStepperNavigation,
     type NeoStepperNavigations,
   } from '~/stepper/neo-stepper.model.js';
-  import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {

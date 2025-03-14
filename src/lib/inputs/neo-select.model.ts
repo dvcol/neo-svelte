@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { HTMLOptionAttributes } from 'svelte/elements';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoPopSelectProps } from '~/floating/tooltips/neo-pop-select.model.js';
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoListItemOrSection, NeoListSelectedItem } from '~/list/neo-list.model.js';
-import type { NeoPopSelectProps } from '~/tooltips/neo-pop-select.model.js';
 
 export type NeoNativeSelectOption<Value = unknown> =
   | string

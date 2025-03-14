@@ -7,14 +7,17 @@
 
   import { colorOptions } from '../utils/color.utils';
 
-  import type { NeoStepperStep } from '~';
+  import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
   import type { NeoListItemRenderContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
-
-  import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/tooltips/neo-tooltip.model.js';
+  import type { NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
+  import NeoPopConfirm from '~/floating/tooltips/NeoPopConfirm.svelte';
+  import NeoPopSelect from '~/floating/tooltips/NeoPopSelect.svelte';
+  import NeoPopStepper from '~/floating/tooltips/NeoPopStepper.svelte';
+  import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import IconAddress from '~/icons/IconAddress.svelte';
   import IconListSmall from '~/icons/IconListSmall.svelte';
@@ -23,10 +26,6 @@
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
-  import NeoPopConfirm from '~/tooltips/NeoPopConfirm.svelte';
-  import NeoPopSelect from '~/tooltips/NeoPopSelect.svelte';
-  import NeoPopStepper from '~/tooltips/NeoPopStepper.svelte';
-  import NeoTooltip from '~/tooltips/NeoTooltip.svelte';
 
   import { DefaultShadowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
   import { defaultDuration, quickDuration } from '~/utils/transition.utils';

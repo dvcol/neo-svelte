@@ -67,15 +67,25 @@
       "import": "./dist/cursor/index.js",
       "svelte": "./dist/cursor/index.js"
     },
-    "./dialog": {
-      "types": "./dist/dialog/index.d.ts",
-      "import": "./dist/dialog/index.js",
-      "svelte": "./dist/dialog/index.js"
-    },
     "./divider": {
       "types": "./dist/divider/index.d.ts",
       "import": "./dist/divider/index.js",
       "svelte": "./dist/divider/index.js"
+    },
+    "./floating": {
+      "types": "./dist/floating/index.d.ts",
+      "import": "./dist/floating/index.js",
+      "svelte": "./dist/floating/index.js"
+    },
+    "./floating/dialog": {
+      "types": "./dist/floating/dialog/index.d.ts",
+      "import": "./dist/floating/dialog/index.js",
+      "svelte": "./dist/floating/dialog/index.js"
+    },
+    "./floating/tooltips": {
+      "types": "./dist/floating/tooltips/index.d.ts",
+      "import": "./dist/floating/tooltips/index.js",
+      "svelte": "./dist/floating/tooltips/index.js"
     },
     "./form": {
       "types": "./dist/form/index.d.ts",
@@ -126,11 +136,6 @@
       "types": "./dist/text/index.d.ts",
       "import": "./dist/text/index.js",
       "svelte": "./dist/text/index.js"
-    },
-    "./tooltips": {
-      "types": "./dist/tooltips/index.d.ts",
-      "import": "./dist/tooltips/index.js",
-      "svelte": "./dist/tooltips/index.js"
     }
   },
   "files": [
