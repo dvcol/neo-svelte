@@ -3,6 +3,8 @@ export * from './buttons/index.js';
 export * from './cards/index.js';
 export * from './collapse/index.js';
 export * from './containers/index.js';
+export * from './cursor/index.js';
+export * from './dialog/index.js';
 export * from './divider/index.js';
 export * from './form/index.js';
 export * from './inputs/index.js';

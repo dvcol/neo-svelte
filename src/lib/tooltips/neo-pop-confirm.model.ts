@@ -77,6 +77,12 @@ export type NeoPopConfirmProps = {
    * Whether to open the tooltip on hover.
    */
   openOnHover?: NeoTooltipProps['openOnHover'];
+  /**
+   * Whether the tooltip can be dismissed and a close button shown.
+   *
+   * @default true
+   */
+  closable?: NeoTooltipProps['closeOnDismiss'];
 
   // Styles
   /**

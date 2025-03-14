@@ -158,11 +158,13 @@
     <NeoButton toggle bind:checked={options.openOnFocus}>Focus</NeoButton>
     <NeoButton
       toggle
-      bind:checked={() => options.keepOpenOnHover, // eslint-disable-line no-sequences
-      value => {
-        options.keepOpenOnHover = value;
-        options.keepOpenOnFocus = value;
-      }}
+      bind:checked={
+        () => options.keepOpenOnHover, // eslint-disable-line no-sequences
+        value => {
+          options.keepOpenOnHover = value;
+          options.keepOpenOnFocus = value;
+        }
+      }
     >
       Keep Open
     </NeoButton>
@@ -323,6 +325,7 @@
       rounded={options.rounded}
       tooltip={lorem}
       header="Confirm tooltip"
+      closable={options.closeOnDismiss}
       scrollbar
       width={{ max: '40rem' }}
       onOpen={() => console.info('Confirm tooltip opened')}
@@ -355,6 +358,7 @@
       rounded={options.rounded}
       tooltip={lorem}
       header="Stepper tooltip"
+      closable={options.closeOnDismiss}
       width={{ max: '40rem' }}
       onOpen={() => console.info('Confirm tooltip opened')}
       onClose={() => console.info('Confirm tooltip closed')}

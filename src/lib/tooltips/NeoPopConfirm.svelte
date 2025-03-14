@@ -37,6 +37,7 @@
     hoverDelay,
     openOnFocus,
     openOnHover,
+    closable = true,
 
     // Styles
     rounded = false,
@@ -132,12 +133,14 @@
             {header}
           {/if}
         </svelte:element>
-        {@render closeButton()}
+        {#if closable}
+          {@render closeButton()}
+        {/if}
       </div>
     {/if}
 
     <svelte:element this={contentTag} class:neo-pop-confirm-content={true} {...contentRest}>
-      {#if !header}
+      {#if !header && closable}
         <div class="neo-pop-confirm-content-close">
           {@render closeButton()}
         </div>
@@ -190,6 +193,7 @@
   bind:triggerRef
   bind:open
   keepOpenOnFocus
+  closeOnDismiss={closable}
   {tooltip}
   {target}
   {rounded}
@@ -246,15 +250,16 @@
     }
 
     &-close {
-      display: contents;
+      --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
+      --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
+      --neo-btn-padding-empty: 0.375rem;
+      --neo-btn-margin: 0;
+
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
 
       :global(> .neo-pop-confirm-control-close-button) {
         align-self: flex-start;
-        margin: 0;
-        padding: 0.375rem;
-
-        --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
-        --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
       }
     }
 
@@ -264,10 +269,18 @@
       justify-content: flex-end;
       margin-top: var(--neo-gap-xxs);
       padding: var(--neo-gap-xxs) var(--neo-gap-xs) var(--neo-gap-tiny);
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
 
-      :global(> .neo-pop-confirm-control-cancel-button),
-      :global(> .neo-pop-confirm-control-success-button) {
-        margin: 0;
+      --neo-btn-margin: 0;
+    }
+
+    &:focus-within,
+    &:focus,
+    &:hover {
+      .neo-pop-confirm-control,
+      .neo-pop-confirm-close {
+        opacity: 1;
       }
     }
 

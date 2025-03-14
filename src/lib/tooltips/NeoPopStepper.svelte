@@ -44,6 +44,7 @@
     hoverDelay,
     openOnFocus,
     openOnHover,
+    closable = true,
 
     // Styles
     rounded = false,
@@ -141,29 +142,33 @@
             {header}
           {/if}
         </svelte:element>
-        {@render closeButton()}
+        {#if closable}
+          {@render closeButton()}
+        {/if}
       </div>
     {/if}
   {/snippet}
 
-  <NeoStepper
-    bind:ref
-    bind:active
-    bind:loading
-    {steps}
-    {marks}
-    {progress}
-    {rounded}
-    next
-    elevation="0"
-    children={stepperContent}
-    before={headerContent}
-    inside={header || progress ? undefined : closeButton}
-    onBeforeStep={onBeforeStepHandler}
-    progressProps={{ elevation: -1, after: header ? undefined : closeButton, ...progressProps }}
-    cancelProps={{ color: 'error', ...cancelProps }}
-    {...rest}
-  />
+  <div class="neo-pop-stepper">
+    <NeoStepper
+      bind:ref
+      bind:active
+      bind:loading
+      {steps}
+      {marks}
+      {progress}
+      {rounded}
+      next
+      elevation="0"
+      children={stepperContent}
+      before={headerContent}
+      inside={header || progress || !closable ? undefined : closeButton}
+      onBeforeStep={onBeforeStepHandler}
+      progressProps={{ elevation: -1, after: header ? undefined : closeButton, ...progressProps }}
+      cancelProps={{ color: 'error', ...cancelProps }}
+      {...rest}
+    />
+  </div>
 {/snippet}
 
 <NeoTooltip
@@ -196,14 +201,16 @@
 
 <style lang="scss">
   .neo-pop-stepper {
-    &-close {
-      :global(> .neo-pop-stepper-control-close-button) {
-        margin: 0;
-        padding: 0.375rem;
+    display: contents;
 
-        --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
-        --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
-      }
+    &-close {
+      --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
+      --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
+      --neo-btn-padding-empty: 0.375rem;
+      --neo-btn-margin: 0;
+
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
 
       &.neo-inside {
         align-self: flex-end;
@@ -229,6 +236,20 @@
 
       .neo-pop-stepper-close {
         margin-right: -0.375rem;
+      }
+    }
+
+    :global(.neo-stepper-controls) {
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+
+    &:focus-within,
+    &:focus,
+    &:hover {
+      :global(.neo-stepper-controls),
+      .neo-pop-stepper-close {
+        opacity: 1;
       }
     }
   }

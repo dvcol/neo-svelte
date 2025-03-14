@@ -62,6 +62,16 @@
       "import": "./dist/containers/index.js",
       "svelte": "./dist/containers/index.js"
     },
+    "./cursor": {
+      "types": "./dist/cursor/index.d.ts",
+      "import": "./dist/cursor/index.js",
+      "svelte": "./dist/cursor/index.js"
+    },
+    "./dialog": {
+      "types": "./dist/dialog/index.d.ts",
+      "import": "./dist/dialog/index.js",
+      "svelte": "./dist/dialog/index.js"
+    },
     "./divider": {
       "types": "./dist/divider/index.d.ts",
       "import": "./dist/divider/index.js",

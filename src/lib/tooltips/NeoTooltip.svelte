@@ -14,6 +14,7 @@
     useRole,
   } from '@skeletonlabs/floating-ui-svelte';
 
+  import { innerHeight, innerWidth } from 'svelte/reactivity/window';
   import { scale } from 'svelte/transition';
 
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
@@ -267,6 +268,14 @@
 
   const width = $derived(computeSize(inputWith, 'width'));
   const height = $derived(computeSize(inputHeight, 'height'));
+
+  watch(
+    () => {
+      if (!open) return;
+      floating?.update();
+    },
+    () => [innerWidth.current, innerHeight.current],
+  );
 
   watch(
     () => {

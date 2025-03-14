@@ -126,6 +126,22 @@
     loading[reason] = true;
   }, 200);
 
+  const isControlDisabled = (control: 'previous' | 'cancel' | 'next'): boolean => {
+    if (disabled || step.current?.disabled) return true;
+    if (control === 'cancel') return canCancel === false;
+    if (control === 'previous') {
+      if (step.previous?.disabled) return true;
+      if (canPrevious !== undefined) return !canPrevious;
+      if (active === 0 && !loop) return true;
+    }
+    if (control === 'next') {
+      if (step.next?.disabled) return true;
+      if (canNext !== undefined) return !canNext;
+      if (active === steps.length - 1 && !loop) return true;
+    }
+    return false;
+  };
+
   const emitStepEvent = async (
     reason: NeoStepperNavigations = NeoStepperNavigation.Navigate,
     index?: number,
@@ -163,13 +179,13 @@
   };
 
   const goPrevious: NeoStepperContext['goPrevious'] = async () => {
-    if (canPrevious === false) return;
+    if (isControlDisabled('previous')) return;
     if (active > 0) return goToStep(active - 1, NeoStepperNavigation.Previous);
     return goToStep(steps.length - 1, NeoStepperNavigation.Previous);
   };
 
   const goNext: NeoStepperContext['goNext'] = async () => {
-    if (canNext === false) return;
+    if (isControlDisabled('next')) return;
     if (active < steps.length - 1) return goToStep(active + 1, NeoStepperNavigation.Next);
     return goToStep(0, NeoStepperNavigation.Next);
   };
@@ -189,24 +205,8 @@
     return false;
   };
 
-  const isControlDisabled = (control: 'previous' | 'cancel' | 'next'): boolean => {
-    if (disabled || step.current?.disabled) return true;
-    if (control === 'cancel') return canCancel === false;
-    if (control === 'previous') {
-      if (step.previous?.disabled) return true;
-      if (canPrevious !== undefined) return !canPrevious;
-      if (active === 0 && !loop) return true;
-    }
-    if (control === 'next') {
-      if (step.next?.disabled) return true;
-      if (canNext !== undefined) return !canNext;
-      if (active === steps.length - 1 && !loop) return true;
-    }
-    return false;
-  };
-
   const onSwipe = (swipeDirection: SwipeDirections) => {
-    if (!swipeEnabled) return;
+    if (!swipeEnabled || isLoading) return;
     if (swipeDirection === SwipeDirection.Left) goNext();
     else if (swipeDirection === SwipeDirection.Right) goPrevious();
     else if (vertical) {

@@ -12,12 +12,12 @@ export const Route = {
   Cards: 'cards' as const,
   Skeleton: 'skeleton' as const,
   Inputs: 'inputs' as const,
-  Tooltips: 'tooltips' as const,
   Lists: 'lists' as const,
   Progress: 'progress' as const,
   Collapse: 'collapse' as const,
   Stepper: 'stepper' as const,
   Cursor: 'cursor' as const,
+  Tooltips: 'tooltips' as const,
   Dialog: 'dialog' as const,
 } as const;
 
@@ -34,12 +34,12 @@ export const Path: Record<keyof typeof Route, string> = {
   Text: '/text' as const,
   Skeleton: '/skeleton' as const,
   Inputs: '/inputs' as const,
-  Tooltips: '/tooltips' as const,
   Lists: '/lists' as const,
   Progress: '/progress' as const,
   Collapse: '/collapse' as const,
   Stepper: '/stepper' as const,
   Cursor: '/cursor' as const,
+  Tooltips: '/tooltips' as const,
   Dialog: '/dialog' as const,
   Any: '*' as const,
 } as const;
@@ -101,11 +101,6 @@ export const options: RouterOptions<Routes> = {
       component: () => import('../components/DemoInputs.svelte'),
     },
     {
-      name: Route.Tooltips,
-      path: Path.Tooltips,
-      component: () => import('../components/DemoTooltips.svelte'),
-    },
-    {
       name: Route.Lists,
       path: Path.Lists,
       component: () => import('../components/DemoLists.svelte'),
@@ -129,6 +124,11 @@ export const options: RouterOptions<Routes> = {
       name: Route.Cursor,
       path: Path.Cursor,
       component: () => import('../components/DemoCursor.svelte'),
+    },
+    {
+      name: Route.Tooltips,
+      path: Path.Tooltips,
+      component: () => import('../components/DemoTooltips.svelte'),
     },
     {
       name: Route.Dialog,
