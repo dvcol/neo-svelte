@@ -247,7 +247,7 @@
       {@render media?.(context)}
     </svelte:element>
   {/if}
-  {#if header || (!horizontal && close)}
+  {#if header}
     <svelte:element this={headerTag} class:neo-card-segment={true} class:neo-card-header={true} class:neo-scroll={scrollbar} {...headerRest}>
       {@render header?.(context)}
       {#if !horizontal}
@@ -259,6 +259,9 @@
     {@render divider()}
     {#if content}
       <svelte:element this={contentTag} class:neo-card-segment={true} class:neo-card-content={true} class:neo-scroll={scrollbar} {...contentRest}>
+        {#if (horizontal && !action) || (!horizontal && !header)}
+          {@render closeBtn()}
+        {/if}
         {@render content?.(context)}
       </svelte:element>
     {/if}
@@ -271,7 +274,7 @@
       {@render footer?.(context)}
     </svelte:element>
   {/if}
-  {#if action || (horizontal && close)}
+  {#if action}
     {@render divider()}
     <svelte:element this={actionTag} class:neo-card-segment={true} class:neo-card-action={true} class:neo-scroll={scrollbar} {...actionRest}>
       {#if horizontal}
@@ -356,7 +359,6 @@
 
     .neo-card-segment {
       &:only-child {
-        padding: $full-spacing;
         border-radius: inherit;
       }
 
@@ -373,22 +375,29 @@
           border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius));
         }
       }
+
+      &:only-child:not(.neo-card-media) {
+        padding: $full-spacing;
+      }
     }
 
     .neo-card-media {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: $full-spacing;
       overflow: hidden;
       border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
       scrollbar-gutter: auto;
+
+      &:not(:only-child) {
+        margin: $full-spacing $full-spacing $half-spacing;
+      }
 
       &.neo-cover:not(.neo-inset) {
         padding: 0;
 
         &:not(:only-child) {
-          margin: 0 0 $full-spacing;
+          margin: 0 0 $half-spacing;
           border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
         }
 
@@ -405,12 +414,15 @@
     }
 
     .neo-card-close {
+      display: flex;
       flex: 0 0 auto;
       align-self: flex-start;
+      justify-content: flex-end;
       margin-left: auto;
       opacity: 0;
       transition: opacity 0.3s ease;
 
+      --neo-btn-margin: 0.25rem;
       --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
       --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
     }
@@ -423,14 +435,6 @@
       }
     }
 
-    &.neo-image {
-      padding: 0;
-
-      .neo-card-media.neo-cover:not(.neo-inset) {
-        margin: 0;
-      }
-    }
-
     &.neo-scroll,
     &.neo-segments {
       padding: 0;
@@ -439,6 +443,16 @@
     &.neo-segmented {
       .neo-card-segment:not(.neo-card-media) {
         padding: $full-spacing;
+      }
+
+      .neo-card-media.neo-cover {
+        &:not(.neo-inset, :only-child) {
+          margin: 0;
+        }
+
+        &.neo-inset:not(:only-child) {
+          margin: $full-spacing $full-spacing 0;
+        }
       }
 
       .neo-card-segment:not(.neo-card-media, :last-child, :only-child) {
@@ -518,7 +532,7 @@
       }
 
       .neo-card-segment.neo-card-media:not(:only-child) {
-        margin-right: $half-spacing;
+        margin: $full-spacing $half-spacing $full-spacing $full-spacing;
       }
 
       .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
