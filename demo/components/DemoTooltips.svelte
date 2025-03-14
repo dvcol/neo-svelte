@@ -134,10 +134,6 @@
         icon: summary,
       },
       render: lorem,
-      nextProps: {
-        label: 'Confirm',
-        color: 'success',
-      },
     },
   ];
 </script>

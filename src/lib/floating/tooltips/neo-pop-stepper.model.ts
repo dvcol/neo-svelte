@@ -139,10 +139,6 @@ export type NeoPopStepperProps = {
    */
   tooltipProps?: Omit<NeoTooltipProps, 'ref' | 'triggerRef' | 'open' | 'children'>;
   /**
-   * Optional props to pass to the controls.
-   */
-  controlsProps?: HTMLNeoBaseElement & HTMLTagProps;
-  /**
    * Optional props to pass to the header.
    */
   headerProps?: HTMLNeoBaseElement & HTMLTagProps;

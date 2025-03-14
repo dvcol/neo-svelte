@@ -14,8 +14,7 @@
     tooltip: content,
     header: title,
 
-    // States
-    tag = 'div',
+    // Confirmation Props
     loading = $bindable({
       cancel: false,
       confirm: false,
@@ -61,9 +60,8 @@
   }: NeoPopConfirmProps = $props();
   /* eslint-enable prefer-const */
 
-  const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
+  const onCloseButton: MouseEventHandler<HTMLButtonElement> = () => {
     open = false;
-    closeProps?.onclick?.(e);
   };
 
   const handlePromise = async (result: unknown, button: 'cancel' | 'confirm') => {
@@ -77,13 +75,11 @@
   };
 
   const onCancelButton: MouseEventHandler<HTMLButtonElement> = async e => {
-    cancelProps?.onclick?.(e);
     await handlePromise(onCancel?.(e), 'cancel');
     open = false;
   };
 
   const onConfirmButton: MouseEventHandler<HTMLButtonElement> = async e => {
-    confirmProps?.onclick?.(e);
     await handlePromise(onConfirm?.(e), 'confirm');
     open = false;
   };
@@ -91,7 +87,6 @@
 
 {#snippet tooltip(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}
   <NeoConfirm
-    {tag}
     bind:loading
     bind:disabled
     {closable}

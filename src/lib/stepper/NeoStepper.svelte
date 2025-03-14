@@ -91,6 +91,7 @@
     nextProps,
     progressProps,
     markProps,
+    buttonProps,
     ...rest
   }: NeoStepperProps = $props();
   /* eslint-enable prefer-const */
@@ -318,6 +319,7 @@
           onclick={() => goToStep(0, NeoStepperNavigation.Cancel)}
           transition={{ use: scale, props: { duration: quickDuration, start: 0.95 } }}
           {icon}
+          {...buttonProps}
           {...cancelProps}
           {...step.current?.cancelProps}
           class={['neo-stepper-controls-previous', cancelProps?.class, step.current?.cancelProps?.class]}
@@ -339,6 +341,7 @@
             onclick={goPrevious}
             transition={{ use: scale, props: { duration: shortDuration, start: 0.95 } }}
             direction={vertical ? 'up' : 'left'}
+            {...buttonProps}
             {...previousProps}
             {...step.current?.previousProps}
             class={['neo-stepper-controls-previous', previousProps?.class, step.current?.previousProps?.class]}
@@ -358,6 +361,7 @@
           title="Go to next step"
           onclick={goNext}
           direction={vertical ? 'down' : 'right'}
+          {...buttonProps}
           {...nextProps}
           {...step.current?.nextProps}
           class={['neo-stepper-controls-next', nextProps?.class, step.current?.nextProps?.class]}

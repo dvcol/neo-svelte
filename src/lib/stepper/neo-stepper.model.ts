@@ -362,6 +362,10 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    * @see NeoStepperStep.markProps
    */
   markProps?: Partial<NeoProgressMarkProps>;
+  /**
+   * Optional props to pass to all buttons.
+   */
+  buttonProps?: NeoButtonProps;
 } & Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'> &
   HTMLTransitionProps &
   HTMLRefProps;

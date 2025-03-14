@@ -1,10 +1,12 @@
 <script lang="ts">
+  import type { MouseEventHandler } from 'svelte/elements';
   import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
 
   import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconCancel from '~/icons/IconCancel.svelte';
   import IconClose from '~/icons/IconClose.svelte';
+  import { Colors } from '~/utils/colors.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -49,6 +51,21 @@
   const { tag: headerTag = 'h6', ...headerRest } = $derived(headerProps ?? {});
   const { tag: controlsTag = 'div', ...controlsRest } = $derived(controlsProps ?? {});
   const { tag: contentTag = 'div', ...contentRest } = $derived(contentProps ?? {});
+
+  const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
+    closeProps?.onclick?.(e);
+    onClose?.(e);
+  };
+
+  const onCancelButton: MouseEventHandler<HTMLButtonElement> = e => {
+    cancelProps?.onclick?.(e);
+    onCancel?.(e);
+  };
+
+  const onConfirmButton: MouseEventHandler<HTMLButtonElement> = e => {
+    confirmProps?.onclick?.(e);
+    onConfirm?.(e);
+  };
 </script>
 
 {#snippet iconClose()}
@@ -66,7 +83,7 @@
       icon={iconClose}
       {...buttonProps}
       {...closeProps}
-      onclick={onClose}
+      onclick={onCloseButton}
     />
   </div>
 {/snippet}
@@ -108,14 +125,14 @@
       disabled={typeof disabled === 'object' ? disabled.cancel : disabled}
       elevation="0"
       label="Cancel"
-      color="error"
+      color={Colors.Error}
       class="neo-confirm-control-cancel-button"
       aria-label="Cancel confirmation tooltip"
       title="Confirm"
       icon={iconCancel}
       {...buttonProps}
       {...cancelProps}
-      onclick={onCancel}
+      onclick={onCancelButton}
     />
     <NeoArrowButton
       {rounded}
@@ -124,7 +141,7 @@
       disabled={typeof disabled === 'object' ? disabled.confirm : disabled}
       elevation="0"
       label="Confirm"
-      color="success"
+      color={Colors.Success}
       reverse
       class="neo-confirm-control-success-button"
       aria-label="Confirm confirmation tooltip"
@@ -132,7 +149,7 @@
       direction="right"
       {...buttonProps}
       {...confirmProps}
-      onclick={onConfirm}
+      onclick={onConfirmButton}
     />
   </svelte:element>
 </svelte:element>
@@ -153,7 +170,7 @@
 
       &-close {
         float: right;
-        margin-top: -0.875rem;
+        margin-top: -0.75rem;
       }
     }
 
@@ -175,6 +192,7 @@
       --neo-btn-padding-empty: 0.375rem;
       --neo-btn-margin: 0;
 
+      align-self: flex-start;
       opacity: 0.8;
       transition: opacity 0.3s ease;
 
@@ -187,8 +205,8 @@
       display: flex;
       gap: var(--neo-gap-sm);
       justify-content: flex-end;
-      margin-top: var(--neo-gap-xxs);
-      padding: var(--neo-gap-xxs) var(--neo-gap-xs) var(--neo-gap-tiny);
+      margin-top: var(--neo-gap-sm);
+      padding: var(--neo-gap-tiny);
       opacity: 0.8;
       transition: opacity 0.3s ease;
 

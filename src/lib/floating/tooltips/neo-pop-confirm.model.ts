@@ -1,3 +1,4 @@
+import type { MouseEventHandler } from 'svelte/elements';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
@@ -145,14 +146,14 @@ export type NeoPopConfirmProps = {
    * Event Handlers that fires on cancel.
    * If the function rejects, the tooltip will not close.
    */
-  onCancel?: (e: MouseEvent) => Promise<unknown> | unknown;
+  onCancel?: MouseEventHandler<HTMLButtonElement>;
   /**
    * Event Handlers that fires on confirm.
    * If a promise is returned, the loading state will be set to true until the promise resolves.
    * If the promise rejects, the tooltip will not close.
    * @param e
    */
-  onConfirm?: (e: MouseEvent) => Promise<unknown> | unknown;
+  onConfirm?: MouseEventHandler<HTMLButtonElement>;
 
   // Other props
   /**
