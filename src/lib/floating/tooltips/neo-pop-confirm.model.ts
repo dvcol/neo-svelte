@@ -183,4 +183,8 @@ export type NeoPopConfirmProps = {
    * Optional props to pass to the confirm button.
    */
   confirmProps?: NeoButtonProps;
+  /**
+   * Optional props to pass to all buttons.
+   */
+  buttonProps?: NeoButtonProps;
 } & HTMLNeoBaseElement;
