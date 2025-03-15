@@ -216,7 +216,7 @@
           max-height: var(--neo-tab-max-height);
           margin-left: 0.3rem;
           transition:
-            box-shadow 0.3s ease,
+            box-shadow 0.3s ease-out,
             height 0.3s var(--neo-transition-bezier);
           margin-block: 0.5rem;
         }
@@ -256,7 +256,7 @@
         border-radius: var(--neo-tab-border-radius, var(--neo-border-radius));
         box-shadow: var(--neo-box-shadow-flat);
         backface-visibility: hidden;
-        transition: box-shadow 0.3s ease;
+        transition: box-shadow 0.3s ease-out;
         content: '';
         pointer-events: none;
         inset: 0;
@@ -283,7 +283,7 @@
           height: 2px;
           margin-bottom: 0.125rem;
           transition:
-            box-shadow 0.3s ease,
+            box-shadow 0.3s ease-out,
             height 0.3s var(--neo-transition-bezier);
           margin-inline: 0.75rem;
         }
@@ -299,7 +299,7 @@
 
           z-index: var(--neo-z-index-behind, -1) !important;
           transition:
-            box-shadow 0.3s ease,
+            box-shadow 0.3s ease-out,
             background-color 0.3s linear;
         }
 

@@ -1,13 +1,11 @@
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  width={$$props.size ?? '1em'}
-  height={$$props.size ?? '1em'}
-  viewBox="0 0 24 24"
-  {...$$props}
-  style:scale={$$props.scale}
-  scale={undefined}
->
-  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width={$$props.stroke ?? 1.5}>
+<script lang="ts">
+  import type { IconProps } from '~/icons/icon.model.js';
+
+  const { size = '1em', scale = 1, stroke = 1.5, ...rest }: IconProps = $props();
+</script>
+
+<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" style:scale {...rest}>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width={stroke}>
     <path
       stroke-dasharray="64"
       stroke-dashoffset="64"

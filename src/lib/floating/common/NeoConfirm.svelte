@@ -3,9 +3,8 @@
   import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
 
   import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
-  import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconCancel from '~/icons/IconCancel.svelte';
-  import IconClose from '~/icons/IconClose.svelte';
+  import NeoCancelButton from '~/buttons/NeoCancelButton.svelte';
+  import NeoCloseButton from '~/buttons/NeoCloseButton.svelte';
   import { Colors } from '~/utils/colors.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -68,28 +67,19 @@
   };
 </script>
 
-{#snippet iconClose()}
-  <IconClose size="0.875rem" />
-{/snippet}
-
 {#snippet closeButton()}
   <div class="neo-confirm-close">
-    <NeoButton
+    <NeoCloseButton
       rounded
       text
-      class="neo-confirm-control-close-button"
       aria-label="Close confirmation tooltip"
       title="Close"
-      icon={iconClose}
       {...buttonProps}
       {...closeProps}
       onclick={onCloseButton}
+      class={['neo-confirm-control-close-button', buttonProps?.class, closeProps?.class]}
     />
   </div>
-{/snippet}
-
-{#snippet iconCancel()}
-  <IconCancel />
 {/snippet}
 
 <svelte:element this={tag} class="neo-confirm" class:neo-rounded={rounded} {...rest}>
@@ -118,7 +108,7 @@
   </svelte:element>
 
   <svelte:element this={controlsTag} class:neo-confirm-control={true} {...controlsRest}>
-    <NeoButton
+    <NeoCancelButton
       {rounded}
       loading={loading.cancel}
       checked={loading.cancel}
@@ -126,10 +116,8 @@
       elevation="0"
       label="Cancel"
       color={Colors.Error}
-      class="neo-confirm-control-cancel-button"
       aria-label="Cancel confirmation tooltip"
       title="Confirm"
-      icon={iconCancel}
       {...buttonProps}
       {...cancelProps}
       onclick={onCancelButton}
@@ -143,7 +131,6 @@
       label="Confirm"
       color={Colors.Success}
       reverse
-      class="neo-confirm-control-success-button"
       aria-label="Confirm confirmation tooltip"
       title="Close"
       direction="right"

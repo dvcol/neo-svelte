@@ -41,6 +41,14 @@ export type NeoButtonStates = {
    * If true, the button will be disabled and a loading skeleton will be displayed instead of the text.
    */
   skeleton?: boolean;
+  /**
+   * If the button is currently hovered.
+   */
+  hovered?: boolean;
+  /**
+   * If the button is currently focused.
+   */
+  focused?: boolean;
 
   /**
    * If true, only the icon (if any) will be displayed.

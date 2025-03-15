@@ -78,7 +78,7 @@
   <div class="column">
     <span class="label">Default</span>
 
-    <NeoButton rounded toggle bind:checked={openDefault}>Open</NeoButton>
+    <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
     {#if options.returnValue !== undefined}
       <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
     {/if}
@@ -91,7 +91,7 @@
   <div class="column">
     <span class="label">Confirm</span>
 
-    <NeoButton rounded toggle bind:checked={openConfirm}>Open</NeoButton>
+    <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
     {#if options.returnValue !== undefined}
       <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
     {/if}

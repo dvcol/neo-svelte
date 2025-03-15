@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { hovering } from '@dvcol/svelte-utils/hovering';
   import { width } from '@dvcol/svelte-utils/transition';
 
   import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
@@ -40,6 +41,8 @@
     toggle,
     readonly,
     checked = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
 
     // Styles
     start,
@@ -175,6 +178,8 @@
     disabled,
     readonly,
     skeleton,
+    hovered,
+    focused,
 
     empty,
     toggle,
@@ -195,6 +200,7 @@
 <svelte:element
   this={element}
   bind:this={ref}
+  bind:focused
   href={loading || disabled || readonly ? undefined : href}
   aria-disabled={readonly && !disabled}
   {type}
@@ -233,15 +239,23 @@
   style:align-items={align}
   style:flex
   style:aspect-ratio={ratio}
-  use:useFn={useProps}
-  out:outFn={outProps}
-  in:inFn={inProps}
   onkeydown={onKeydownEnter}
   onkeyup={onKeyUpEnter}
   onclick={onClick}
   onblur={onBlur}
   {disabled}
   {...rest}
+  in:inFn={inProps}
+  out:outFn={outProps}
+  use:useFn={useProps}
+  use:hovering={{
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+  }}
 >
   <div class="neo-content" class:neo-reverse={reverse}>
     {#if loading || icon}
@@ -351,6 +365,14 @@
     &:focus-visible,
     &:hover {
       box-shadow: var(--neo-btn-box-shadow-hover, var(--neo-box-shadow-raised-2));
+      transition:
+        opacity 0.3s ease,
+        color 0.15s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        backdrop-filter 0.3s ease,
+        border-radius 0.3s ease,
+        box-shadow 0.15s ease-out;
     }
 
     &:focus-visible .neo-content,
@@ -489,6 +511,13 @@
 
     &.neo-empty {
       padding: var(--neo-btn-padding-empty, 0.5rem);
+
+      &.neo-pressed.neo-pressed,
+      &:active:not(.neo-loading, :disabled) {
+        &.neo-scale .neo-content {
+          scale: var(--neo-btn-scale-pressed-empty, var(--neo-btn-scale-pressed, 0.9));
+        }
+      }
     }
 
     &.neo-pulse {

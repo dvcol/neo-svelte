@@ -635,7 +635,7 @@
         transition:
           -webkit-text-fill-color 0.15s ease,
           color 0.15s ease,
-          box-shadow 0.3s ease;
+          box-shadow 0.3s ease-out;
         margin-inline: -0.5rem;
         margin-block: 0.375rem;
       }

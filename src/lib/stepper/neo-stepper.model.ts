@@ -1,7 +1,9 @@
 import type { SwipeOptions } from '@dvcol/svelte-utils/swipe';
 import type { TransitionProps } from '@dvcol/svelte-utils/transition';
+import type { NeoArrowButtonProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 import type { NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 import type { NeoProgressMarkProps } from '~/progress/neo-progress-mark.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
@@ -336,21 +338,21 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    * Step options will take precedence over these props.
    * @see NeoStepperStep.previousProps
    */
-  previousProps?: NeoButtonProps;
+  previousProps?: NeoArrowButtonProps;
   /**
    * Optional props to pass to the cancel button.
    *
    * Step options will take precedence over these props.
    * @see NeoStepperStep.cancelProps
    */
-  cancelProps?: NeoButtonProps;
+  cancelProps?: NeoIconButtonProps;
   /**
    * Optional props to pass to the next button.
    *
    * Step options will take precedence over these props.
    * @see NeoStepperStep.nextProps
    */
-  nextProps?: NeoButtonProps;
+  nextProps?: NeoArrowButtonProps;
   /**
    * Optional props to pass to the progress bar.
    */

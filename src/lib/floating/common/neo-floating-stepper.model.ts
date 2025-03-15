@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { MouseEventHandler } from 'svelte/elements';
-import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 import type { NeoStepperContext, NeoStepperProps } from '~/stepper/neo-stepper.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
@@ -51,5 +51,5 @@ export type NeoFloatingStepperProps = {
   /**
    * Optional props to pass to the close button.
    */
-  closeProps?: NeoButtonProps;
+  closeProps?: NeoIconButtonProps;
 } & NeoStepperProps;

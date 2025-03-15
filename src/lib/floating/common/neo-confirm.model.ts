@@ -1,6 +1,8 @@
 import type { Snippet } from 'svelte';
 import type { MouseEventHandler } from 'svelte/elements';
+import type { NeoArrowButtonProps } from '~/buttons/neo-arrow-button.model.js';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export type NeoConfirmProps = {
@@ -82,15 +84,15 @@ export type NeoConfirmProps = {
   /**
    * Optional props to pass to the close button.
    */
-  closeProps?: NeoButtonProps;
+  closeProps?: NeoIconButtonProps;
   /**
    * Optional props to pass to the cancel button.
    */
-  cancelProps?: NeoButtonProps;
+  cancelProps?: NeoIconButtonProps;
   /**
    * Optional props to pass to the confirm button.
    */
-  confirmProps?: NeoButtonProps;
+  confirmProps?: NeoArrowButtonProps;
   /**
    * Optional props to pass to all buttons.
    */

@@ -141,6 +141,10 @@ export type NeoTooltipProps = {
    * Padding override for the tooltip.
    */
   padding?: CSSStyleDeclaration['padding'];
+  /**
+   * Whether to remove the border from the tooltip.
+   */
+  borderless?: boolean;
 
   // Hover
 

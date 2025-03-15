@@ -39,6 +39,7 @@
     tinted: false,
     rounded: true,
     elevation: DefaultShadowElevation,
+    borderless: false,
 
     placement: 'bottom',
     openOnHover: true,
@@ -193,6 +194,7 @@
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
+    <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={options.openOnHover}>Hover</NeoButton>
     <NeoButton toggle bind:checked={options.openOnFocus}>Focus</NeoButton>
     <NeoButton

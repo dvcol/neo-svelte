@@ -3,10 +3,6 @@ import type { IconArrowProps } from '~/icons/icon.model.js';
 
 export type NeoArrowButtonProps = NeoButtonProps & {
   /**
-   * The hover state of the button (controls the arrow expand animation).
-   */
-  hovered?: boolean;
-  /**
    * Optional arrow properties.
    */
   arrowProps?: IconArrowProps;

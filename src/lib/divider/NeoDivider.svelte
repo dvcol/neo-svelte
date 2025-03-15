@@ -75,7 +75,7 @@
     box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
     transition:
       border-radius 0.3s ease,
-      box-shadow 0.3s ease,
+      box-shadow 0.3s ease-out,
       background-color 0.3s ease;
 
     &.neo-rounded {

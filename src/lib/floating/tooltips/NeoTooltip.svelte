@@ -53,6 +53,7 @@
     flex,
     width: inputWith,
     height: inputHeight,
+    borderless,
 
     // Shadow
     elevation: _elevation = DefaultShadowElevation,
@@ -310,6 +311,7 @@
     class:neo-rounded={rounded}
     class:neo-tinted={tinted}
     class:neo-filled={filled}
+    class:neo-borderless={borderless}
     class:neo-shadow={shadow}
     class:neo-flat={!elevation}
     data-elevation={elevation}
@@ -359,6 +361,10 @@
       height: inherit;
       min-height: inherit;
       max-height: inherit;
+    }
+
+    &.neo-borderless {
+      --neo-tooltip-border-color: transparent;
     }
 
     &.neo-tinted {

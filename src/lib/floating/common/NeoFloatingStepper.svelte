@@ -2,8 +2,7 @@
   import type { MouseEventHandler } from 'svelte/elements';
   import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
 
-  import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconClose from '~/icons/IconClose.svelte';
+  import NeoCloseButton from '~/buttons/NeoCloseButton.svelte';
   import NeoStepper from '~/stepper/NeoStepper.svelte';
   import {
     type NeoStepperBeforeEvent,
@@ -72,23 +71,9 @@
   };
 </script>
 
-{#snippet icon()}
-  <IconClose size="0.875rem" />
-{/snippet}
-
 {#snippet closeButton()}
   <div class="neo-floating-stepper-close" class:neo-rounded={rounded} class:neo-inside={!header && !progress}>
-    <NeoButton
-      rounded
-      text
-      class="neo-floating-stepper-control-close-button"
-      aria-label="Close confirmation tooltip"
-      title="Close"
-      {icon}
-      {...buttonProps}
-      {...closeProps}
-      onclick={onCloseButton}
-    />
+    <NeoCloseButton rounded text aria-label="Close confirmation tooltip" title="Close" {...buttonProps} {...closeProps} onclick={onCloseButton} />
   </div>
 {/snippet}
 

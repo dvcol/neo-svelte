@@ -4,9 +4,8 @@
 
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
-  import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoCloseButton from '~/buttons/NeoCloseButton.svelte';
   import NeoDivider from '~/divider/NeoDivider.svelte';
-  import IconClose from '~/icons/IconClose.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
 
@@ -154,11 +153,7 @@
 {#snippet closeBtn()}
   {#if close}
     <div class="neo-card-close">
-      <NeoButton aria-label="Close card" rounded text onclick={onClose} {...closeProps}>
-        {#snippet icon()}
-          <IconClose size="1rem" />
-        {/snippet}
-      </NeoButton>
+      <NeoCloseButton aria-label="Close card" rounded text onclick={onClose} {...closeProps} iconProps={{ size: '1rem', ...closeProps?.iconProps }} />
     </div>
   {/if}
 {/snippet}
@@ -315,6 +310,12 @@
     &-content {
       flex: 1 1 auto;
       overflow: auto;
+
+      .neo-card-close {
+        margin: calc(0% - var(--neo-card-spacing, 1.5rem) / 2);
+
+        --neo-btn-margin: 0.5rem;
+      }
     }
 
     &.neo-borderless {
@@ -420,7 +421,7 @@
       justify-content: flex-end;
       margin-left: auto;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease-out 0.15s;
 
       --neo-btn-margin: 0.25rem;
       --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
@@ -432,6 +433,7 @@
     &:hover {
       .neo-card-close {
         opacity: 1;
+        transition: opacity 0.3s ease;
       }
     }
 

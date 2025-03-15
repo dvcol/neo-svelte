@@ -252,7 +252,7 @@
       padding: calc(0.375rem + var(--neo-checkbox-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
       border-radius: var(--neo-border-radius);
       transition:
-        box-shadow 0.3s ease,
+        box-shadow 0.3s ease-out,
         border-radius 0.3s ease;
 
       &.neo-rounded {

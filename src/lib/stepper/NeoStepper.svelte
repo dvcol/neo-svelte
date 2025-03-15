@@ -9,9 +9,8 @@
   import type { NeoProgressBarMarkContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 
   import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
-  import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoCancelButton from '~/buttons/NeoCancelButton.svelte';
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
-  import IconCancel from '~/icons/IconCancel.svelte';
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
@@ -297,15 +296,11 @@
   {/if}
 {/snippet}
 
-{#snippet icon()}
-  <IconCancel />
-{/snippet}
-
 {#snippet buttons()}
   {#if controls}
     <svelte:element this={controlsTag} class:neo-stepper-controls={true} {...controlsRest}>
       {#if cancel}
-        <NeoButton
+        <NeoCancelButton
           type="reset"
           {rounded}
           {borderless}
@@ -319,7 +314,6 @@
           title="Cancel stepper"
           onclick={() => goToStep(0, NeoStepperNavigation.Cancel)}
           transition={{ use: scale, props: { duration: quickDuration, start: 0.95 } }}
-          {icon}
           {...buttonProps}
           {...cancelProps}
           {...step.current?.cancelProps}

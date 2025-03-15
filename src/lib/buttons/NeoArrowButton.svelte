@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { PointerEventHandler } from 'svelte/elements';
-
   import type { NeoArrowButtonProps } from '~/buttons/neo-arrow-button.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -10,17 +8,15 @@
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // State
-    hovered = $bindable(false),
     direction = IconArrowDirection.Right,
 
     // Button props
+    ref = $bindable(),
     checked = $bindable(false),
+    hovered = $bindable(false),
+    focused = $bindable(false),
     disabled,
     readonly,
-
-    // Events
-    onpointerenter,
-    onpointerleave,
 
     // Other Props
     arrowProps,
@@ -29,20 +25,10 @@
   /* eslint-enable prefer-const */
 
   const reverse = $derived(direction === 'right');
-
-  const onPointerEnter: PointerEventHandler<HTMLButtonElement> = e => {
-    hovered = true;
-    onpointerenter?.(e);
-  };
-
-  const onPointerLeave: PointerEventHandler<HTMLButtonElement> = e => {
-    hovered = false;
-    onpointerleave?.(e);
-  };
 </script>
 
 {#snippet icon()}
-  <IconArrow {direction} expanded={(checked || hovered) && !disabled && !readonly} {...arrowProps} />
+  <IconArrow {direction} expanded={(checked || hovered || focused) && !disabled && !readonly} {...arrowProps} />
 {/snippet}
 
-<NeoButton bind:checked {icon} {reverse} {disabled} {readonly} {...rest} onpointerenter={onPointerEnter} onpointerleave={onPointerLeave} />
+<NeoButton bind:ref bind:checked bind:hovered bind:focused {icon} {reverse} {disabled} {readonly} {...rest} />
