@@ -424,8 +424,6 @@
       transition: opacity 0.3s ease-out 0.15s;
 
       --neo-btn-margin: 0.25rem;
-      --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
-      --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
     }
 
     &:focus-within,

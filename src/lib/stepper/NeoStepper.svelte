@@ -127,8 +127,10 @@
     loading[reason] = true;
   }, 200);
 
+  const isLoading = $derived(loading && Object.values(loading).some(Boolean));
   const isControlDisabled = (control: 'previous' | 'cancel' | 'next'): boolean => {
     if (disabled || step.current?.disabled) return true;
+    if (isLoading && !loading[control]) return true;
     if (control === 'cancel') return canCancel === false;
     if (control === 'previous') {
       if (step.previous?.disabled) return true;
@@ -142,6 +144,11 @@
     }
     return false;
   };
+  const isDisabled = $derived({
+    previous: isControlDisabled('previous'),
+    cancel: isControlDisabled('cancel'),
+    next: isControlDisabled('next'),
+  });
 
   const emitStepEvent = async (
     reason: NeoStepperNavigations = NeoStepperNavigation.Navigate,
@@ -180,18 +187,17 @@
   };
 
   const goPrevious: NeoStepperContext['goPrevious'] = async () => {
-    if (isControlDisabled('previous')) return;
+    if (isDisabled.previous) return;
     if (active > 0) return goToStep(active - 1, NeoStepperNavigation.Previous);
     return goToStep(steps.length - 1, NeoStepperNavigation.Previous);
   };
 
   const goNext: NeoStepperContext['goNext'] = async () => {
-    if (isControlDisabled('next')) return;
+    if (isDisabled.next) return;
     if (active < steps.length - 1) return goToStep(active + 1, NeoStepperNavigation.Next);
     return goToStep(0, NeoStepperNavigation.Next);
   };
 
-  const isLoading = $derived(loading && Object.values(loading).some(Boolean));
   const isMarkDisabled = (index: number, target = steps[index]): boolean => {
     if (disabled || target?.disabled || isLoading) return true;
     if (index < active) {
@@ -307,7 +313,7 @@
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
           active={activeElevation}
-          disabled={isControlDisabled('cancel') || (isLoading && !loading.cancel)}
+          disabled={isDisabled.cancel}
           loading={loading.cancel}
           checked={loading.cancel}
           label="Cancel"
@@ -328,7 +334,7 @@
             {borderless}
             elevation={elevation > 0 ? elevation : 0}
             active={activeElevation}
-            disabled={isControlDisabled('previous') || (isLoading && !loading.previous)}
+            disabled={isDisabled.previous}
             loading={loading.previous}
             checked={loading.previous}
             label="Previous"
@@ -344,12 +350,11 @@
           />
         {/if}
         <NeoArrowButton
-          type={active === steps.length - 1 ? 'submit' : 'button'}
           {rounded}
           {borderless}
           elevation={elevation > 0 ? elevation : 0}
           active={activeElevation}
-          disabled={isControlDisabled('next') || (isLoading && !loading.next)}
+          disabled={isDisabled.next}
           loading={loading.next}
           checked={loading.next}
           label="Next"

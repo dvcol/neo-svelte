@@ -31,6 +31,9 @@
   .neo-close-button {
     display: contents;
 
+    --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
+    --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
+
     > :global(.neo-button) {
       :global(.neo-icon) {
         transition: rotate 0.3s ease-out;

@@ -70,6 +70,7 @@
     onclick,
     onkeydown,
     onkeyup,
+    onfocus,
     onblur,
 
     // Transition
@@ -157,8 +158,14 @@
     onkeyup?.(e);
   };
 
+  const onFocus: NeoButtonProps['onfocus'] = e => {
+    focused = true;
+    onfocus?.(e);
+  };
+
   const onBlur: NeoButtonProps['onblur'] = e => {
     enter = false;
+    focused = false;
     onblur?.(e);
   };
 
@@ -200,7 +207,6 @@
 <svelte:element
   this={element}
   bind:this={ref}
-  bind:focused
   href={loading || disabled || readonly ? undefined : href}
   aria-disabled={readonly && !disabled}
   {type}
@@ -243,6 +249,7 @@
   onkeyup={onKeyUpEnter}
   onclick={onClick}
   onblur={onBlur}
+  onfocus={onFocus}
   {disabled}
   {...rest}
   in:inFn={inProps}
