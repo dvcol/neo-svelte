@@ -109,7 +109,7 @@
     before={header ? headerContent : undefined}
     inside={header || progress || !closable ? undefined : closeButton}
     onBeforeStep={onBeforeStepHandler}
-    progressProps={{ elevation: -1, after: header || !closable ? undefined : closeButton, ...progressProps }}
+    progressProps={{ elevation: rest.elevation ?? -1, after: header || !closable ? undefined : closeButton, ...progressProps }}
     cancelProps={{ color: Colors.Error, ...cancelProps }}
     nextProps={{
       color: last ? Colors.Success : undefined,

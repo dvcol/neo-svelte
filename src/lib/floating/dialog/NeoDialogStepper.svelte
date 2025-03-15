@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { toStyle } from '@dvcol/common-utils/common/class';
+
   import NeoDialog from './NeoDialog.svelte';
 
   import type { MouseEventHandler } from 'svelte/elements';
@@ -102,6 +104,7 @@
     onCancel={onCancelButton}
     onConfirm={onConfirmButton}
     {...rest}
+    style={toStyle('--neo-stepper-mark-bg-color: var(--neo-background-color-backdrop-opaque)', rest.style)}
   >
     {#snippet children(stepperContext: NeoStepperContext)}
       {#if typeof content === 'function'}

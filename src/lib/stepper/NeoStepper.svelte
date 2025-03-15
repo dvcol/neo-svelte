@@ -418,6 +418,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
+      :global(> .neo-progress-bar > .neo-progress-bar-mark) {
+        --neo-btn-bg-color: var(--neo-stepper-mark-bg-color);
+
+        white-space: nowrap;
+      }
     }
 
     &-content {
@@ -442,10 +448,6 @@
         align-items: center;
         justify-content: space-between;
       }
-    }
-
-    :global(> .neo-progress-bar > .neo-progress-bar-mark) {
-      white-space: nowrap;
     }
 
     &:not(.neo-vertical) {
