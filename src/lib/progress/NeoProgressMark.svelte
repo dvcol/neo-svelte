@@ -12,7 +12,7 @@
   const checked = $derived(position <= value);
   const color = $derived(checked ? (_color ?? context?.color) : 'var(--neo-text-color-disabled)');
 
-  const elevation = $derived(coerce<ShadowElevation>(_elevation ?? context?.elevation ?? 0, DefaultShallowMinMaxElevation));
+  const elevation = $derived(coerce<ShadowElevation>(_elevation ?? context?.elevation ?? 0, { min: DefaultShallowMinMaxElevation.min, max: 2 }));
   const active = $derived.by(() => {
     if (!elevation) return 0;
     if (elevation < 0) return -2;

@@ -19,12 +19,6 @@ export type NeoFloatingStepperProps = {
    */
   closable?: boolean;
 
-  // Styles
-  /**
-   * Whether to style the borders as rounded.
-   */
-  rounded?: boolean;
-
   // Events
   /**
    * Event Handlers that fires on close.

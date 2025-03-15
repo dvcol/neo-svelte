@@ -2,6 +2,7 @@
   import type { MouseEventHandler } from 'svelte/elements';
 
   import type { NeoDialogConfirmProps } from '~/floating/dialog/neo-dialog-confirm.model.js';
+  import type { NeoDialogContext } from '~/floating/dialog/neo-dialog.model.js';
 
   import NeoConfirm from '~/floating/common/NeoConfirm.svelte';
   import NeoDialog from '~/floating/dialog/NeoDialog.svelte';
@@ -28,6 +29,8 @@
       cancel: false,
       confirm: false,
     }),
+    closedby,
+    closable = closedby === undefined,
 
     // events
     onClose,
@@ -72,11 +75,11 @@
   };
 </script>
 
-<NeoDialog bind:ref bind:open bind:modal bind:returnValue {...dialogProps}>
-  {#snippet children(NeoDialogContext)}
+<NeoDialog bind:ref bind:open bind:modal bind:returnValue {closedby} closeOnClickOutside={closable} {...dialogProps}>
+  {#snippet children(context: NeoDialogContext)}
     {#snippet header()}
       {#if typeof title === 'function'}
-        {@render title?.(NeoDialogContext)}
+        {@render title?.(context)}
       {:else}
         {title}
       {/if}
@@ -84,6 +87,7 @@
     <NeoConfirm
       bind:loading
       bind:disabled
+      {closable}
       header={title ? header : undefined}
       onClose={onCloseButton}
       onCancel={onCancelButton}
@@ -91,7 +95,7 @@
       {...rest}
     >
       {#if typeof content === 'function'}
-        {@render content?.(NeoDialogContext)}
+        {@render content?.(context)}
       {:else}
         {content}
       {/if}

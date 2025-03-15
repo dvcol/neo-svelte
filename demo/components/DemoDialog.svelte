@@ -1,7 +1,14 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
 
-  import type { NeoPopConfirmProps } from '../../src/lib';
+  import NeoDialogStepper from '../../src/lib/floating/dialog/NeoDialogStepper.svelte';
+  import IconAccount from '../../src/lib/icons/IconAccount.svelte';
+  import IconAddress from '../../src/lib/icons/IconAddress.svelte';
+  import IconListSmall from '../../src/lib/icons/IconListSmall.svelte';
+
+  import type { NeoStepperStep } from '../../src/lib';
+  import type { NeoDialogConfirmProps } from '../../src/lib/floating/dialog/neo-dialog-confirm.model';
+  import type { NeoDialogStepperProps } from '../../src/lib/floating/dialog/neo-dialog-stepper.model';
   import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -19,8 +26,9 @@
 
   let openDefault = $state(false);
   let openConfirm = $state(false);
+  let openStepper = $state(false);
 
-  const confirmOptions: NeoPopConfirmProps = {
+  const confirmOptions: NeoDialogConfirmProps = {
     dialog: lorem,
     header: 'Confirm dialog',
     width: { max: '40rem' },
@@ -43,7 +51,59 @@
     },
   };
 
-  // TODO move PopConfirm & PopStepper to cards & factorise with dialog
+  let active = $state(0);
+  const step1Value = $state({ username: '', password: '' });
+  const step2Value = $state({ address: '', city: '', country: '', zip: '' });
+  const steps: NeoStepperStep[] = [
+    {
+      markProps: {
+        label: 'Account',
+        ariaLabel: 'Step 1',
+        title: 'Step 1',
+        icon: account,
+      },
+      render: lorem,
+      value: step1Value,
+    },
+    {
+      markProps: {
+        label: 'Address',
+        ariaLabel: 'Step 2',
+        title: 'Step 2',
+        icon: address,
+      },
+      render: lorem,
+      value: step2Value,
+    },
+    {
+      markProps: {
+        label: 'Summary',
+        ariaLabel: 'Step 3',
+        title: 'Step 3',
+        icon: summary,
+      },
+      render: lorem,
+    },
+  ];
+
+  const stepperOptions: NeoDialogStepperProps = {
+    steps,
+    header: 'Stepper dialog',
+    onOpen: () => console.info('Confirm dialog opened'),
+    onClose: () => console.info('Confirm dialog closed'),
+    onConfirm: async () => {
+      console.info('Confirm dialog confirming...');
+      await wait(2000);
+      console.info('Confirm dialog confirmed');
+      return true;
+    },
+    onCancel: async () => {
+      console.info('Confirm dialog cancelling...');
+      await wait(1000);
+      console.info('Confirm dialog cancelled');
+      return true;
+    },
+  };
 </script>
 
 <div class="row">
@@ -74,6 +134,18 @@
   </div>
 {/snippet}
 
+{#snippet account()}
+  <IconAccount filled={active === 0} />
+{/snippet}
+
+{#snippet address()}
+  <IconAddress filled={active === 1} repeat="1" dot="var(--neo-background-color)" />
+{/snippet}
+
+{#snippet summary()}
+  <IconListSmall filled={active === 2} />
+{/snippet}
+
 <div class="row content">
   <div class="column">
     <span class="label">Default</span>
@@ -99,6 +171,24 @@
     <NeoDialogConfirm {...options} bind:open={openConfirm} bind:modal={options.modal} bind:returnValue={options.returnValue} {...confirmOptions}>
       {@render lorem()}
     </NeoDialogConfirm>
+  </div>
+
+  <div class="column">
+    <span class="label">Stepper</span>
+
+    <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
+    {#if options.returnValue !== undefined}
+      <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
+    {/if}
+
+    <NeoDialogStepper
+      {...options}
+      bind:active
+      bind:open={openStepper}
+      bind:modal={options.modal}
+      bind:returnValue={options.returnValue}
+      {...stepperOptions}
+    />
   </div>
 </div>
 

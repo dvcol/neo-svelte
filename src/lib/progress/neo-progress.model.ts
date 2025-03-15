@@ -3,7 +3,7 @@ import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
-export const NeoProgressState = {
+export const NeoProgressStatus = {
   Active: 'active' as const,
   Idle: 'idle' as const,
   Paused: 'paused' as const,
@@ -11,7 +11,7 @@ export const NeoProgressState = {
   Indeterminate: 'indeterminate' as const,
 } as const;
 
-export type NeoProgressStates = (typeof NeoProgressState)[keyof typeof NeoProgressState];
+export type NeoProgressStatuses = (typeof NeoProgressStatus)[keyof typeof NeoProgressStatus];
 
 export const NeoProgressDirection = {
   Right: 'right' as const,
@@ -26,7 +26,7 @@ export type NeoProgressContext = {
   /**
    * The current state of the progress if controlled.
    */
-  state?: NeoProgressStates;
+  status?: NeoProgressStatuses;
 
   /**
    * The current value of the progress.
@@ -142,39 +142,39 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
 
 export type NeoProgressMethods = {
   /**
-   * Starts a controlled progress and sets the state to {@link NeoProgressState.Active}.
+   * Starts a controlled progress and sets the state to {@link NeoProgressStatus.Active}.
    *
-   * Once the progress reaches the max value, it will either switch to a {@link NeoProgressState.Completed} state or a {@link NeoProgressState.Indeterminate} state.
+   * Once the progress reaches the max value, it will either switch to a {@link NeoProgressStatus.Completed} state or a {@link NeoProgressStatus.Indeterminate} state.
    *
    * @param pending Whether to switch to a pending indeterminate state when max is reached. (defaults to {@link NeoProgressProps.indeterminate})
    * @param expire Whether to switch to a completed state when timeout is reached. (defaults to {@link NeoProgressProps.timeout})
    */
   start: (pending?: boolean, expire?: number) => void;
   /**
-   * Stops the progress and sets the state to {@link NeoProgressState.Idle}.
+   * Stops the progress and sets the state to {@link NeoProgressStatus.Idle}.
    */
   stop: () => void;
   /**
    * Resets the progress to the minimum value.
-   * If restart is true, the progress will start again and the state will be set to {@link NeoProgressState.Active}.
-   * If restart is false, the state will be set to {@link NeoProgressState.Idle}.
-   * @param restart Whether to restart the progress. (defaults to true if state is {@link NeoProgressState.Active}, false otherwise)
+   * If restart is true, the progress will start again and the state will be set to {@link NeoProgressStatus.Active}.
+   * If restart is false, the state will be set to {@link NeoProgressStatus.Idle}.
+   * @param restart Whether to restart the progress. (defaults to true if state is {@link NeoProgressStatus.Active}, false otherwise)
    */
   reset: (restart?: boolean) => void;
   /**
    * Sets the progress to the maximum value.
-   * If pending is true, the state will be set to {@link NeoProgressState.Indeterminate}.
-   * If pending is false, the state will be set to {@link NeoProgressState.Completed}.
+   * If pending is true, the state will be set to {@link NeoProgressStatus.Indeterminate}.
+   * If pending is false, the state will be set to {@link NeoProgressStatus.Completed}.
    * @param pending whether to set the state to pending. (defaults to {@link NeoProgressProps.indeterminate})
    */
   complete: (pending?: boolean) => void;
   /**
-   * Reset the progress and sets the state to {@link NeoProgressState.Paused}.
+   * Reset the progress and sets the state to {@link NeoProgressStatus.Paused}.
    */
   cancel: () => void;
   /**
    * Cancels timeout and interval and sets value and buffer;
-   * Also sets the state to {@link NeoProgressState.Idle}.
+   * Also sets the state to {@link NeoProgressStatus.Idle}.
    * @param value The new value of the progress.
    * @param buffer The new buffer value of the progress.
    */

@@ -17,7 +17,7 @@
     // State
     ref = $bindable(),
     refs = $bindable([]),
-    state = $bindable(),
+    status = $bindable(),
     value = $bindable(0),
     buffer = $bindable(0),
     marks = [],
@@ -56,8 +56,11 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
+  let clientWidth = $state();
+  let clientHeight = $state();
+
   const margin = $derived.by(() => {
-    if (!refs?.length) return;
+    if (!refs?.length || !clientWidth || !clientHeight) return;
     const size = { height: 0, width: 0 };
     refs.forEach(r => {
       if (!r) return;
@@ -72,7 +75,7 @@
   });
 
   const context = $derived<NeoProgressBarContext>({
-    state,
+    status,
 
     value,
     buffer,
@@ -110,6 +113,8 @@
 <svelte:element
   this={containerTag}
   data-direction={direction}
+  bind:clientWidth
+  bind:clientHeight
   class:neo-progress-bar={true}
   class:neo-borderless={borderless || !track}
   class:neo-flat={!elevation}
@@ -131,7 +136,7 @@
   style:--neo-progress-bar-box-shadow={boxShadow}
   {...containerRest}
 >
-  <NeoProgress bind:ref bind:state bind:value bind:buffer {direction} {width} {height} {track} {...rest} />
+  <NeoProgress bind:ref bind:status bind:value bind:buffer {direction} {width} {height} {track} {...rest} />
   {#each marks as position, index}
     {#if position !== undefined}
       <span bind:this={refs[index]} class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">

@@ -1,8 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
 import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
-import type { NeoStepperContext, NeoStepperProps } from '~/stepper/neo-stepper.model.js';
-import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
+import type { NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
 export type NeoPopStepperProps = {
   // Snippet
@@ -65,10 +64,6 @@ export type NeoPopStepperProps = {
 
   // Styles
   /**
-   * Whether to style the borders as rounded.
-   */
-  rounded?: boolean;
-  /**
    * Text color to use for the tooltip.
    */
   color?: NeoTooltipProps['color'];
@@ -125,30 +120,18 @@ export type NeoPopStepperProps = {
    * If a promise is returned, the loading state will be set to true until the promise resolves.
    * If the function rejects, the tooltip will not close.
    */
-  onCancel?: NeoPopStepperProps['onBeforeStep'];
+  onCancel?: NeoFloatingStepperProps['onBeforeStep'];
   /**
    * Event Handlers that fires on confirm.
    * If a promise is returned, the loading state will be set to true until the promise resolves.
    * If the promise rejects, the tooltip will not close.
    * @param e
    */
-  onConfirm?: NeoPopStepperProps['onBeforeStep'];
+  onConfirm?: NeoFloatingStepperProps['onBeforeStep'];
 
   // Other props
   /**
    * Optional props to pass to the tooltip.
    */
   tooltipProps?: Omit<NeoTooltipProps, 'ref' | 'triggerRef' | 'open' | 'children'>;
-  /**
-   * Optional props to pass to the header.
-   */
-  headerProps?: HTMLNeoBaseElement & HTMLTagProps;
-  /**
-   * Optional props to pass to the content wrapper.
-   */
-  contentProps?: HTMLNeoBaseElement & HTMLTagProps;
-  /**
-   * Optional props to pass to the close button.
-   */
-  closeProps?: NeoButtonProps;
-} & NeoStepperProps;
+} & NeoFloatingStepperProps;

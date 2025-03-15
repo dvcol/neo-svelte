@@ -239,8 +239,9 @@
   });
 
   let marksRefs = $state<NeoProgressBarProps['refs']>([]);
-
+  let clientWidth = $state<number>(0);
   const markMargin = $derived.by(() => {
+    if (!clientWidth) return;
     if (!marksRefs?.length || marksRefs.length < (marks?.length ?? 0)) return;
     return {
       start: toPixel((marksRefs[0]?.offsetWidth ?? 0) / 2),
@@ -395,6 +396,7 @@
   style:--neo-stepper-mark-margin-end={markMargin?.end}
   {...rest}
   use:swipe={swipeOptions}
+  bind:clientWidth
 >
   {@render before?.(context)}
   {@render progressBar()}

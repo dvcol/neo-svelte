@@ -13,7 +13,7 @@
   import { displayValue, type NeoSelectOption } from '~/inputs/neo-select.model';
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
-  import { NeoProgressDirection, type NeoProgressHTMLElement, type NeoProgressProps, NeoProgressState } from '~/progress/neo-progress.model';
+  import { NeoProgressDirection, type NeoProgressHTMLElement, type NeoProgressProps, NeoProgressStatus } from '~/progress/neo-progress.model';
   import { getDefaultElevation, MaxShallowShadowElevation, MinShallowShadowElevation } from '~/utils/shadow.utils';
 
   const options = $state<NeoProgressProps>({ value: 40, buffer: 60, direction: NeoProgressDirection.Right });
@@ -42,11 +42,11 @@
   let controlled = $state<NeoProgressHTMLElement>();
   const onStopStart = () => {
     if (!controlled) return;
-    if (controlledState === NeoProgressState.Active) controlled.stop();
-    else if (controlledState === NeoProgressState.Completed) controlled.reset(true);
+    if (controlledState === NeoProgressStatus.Active) controlled.stop();
+    else if (controlledState === NeoProgressStatus.Completed) controlled.reset(true);
     else controlled.start();
   };
-  const label = $derived(NeoProgressState.Active === controlledState ? 'pause' : 'play');
+  const label = $derived(NeoProgressStatus.Active === controlledState ? 'pause' : 'play');
 
   const bar = $state<NeoProgressBarProps>({
     elevation: -1,
@@ -210,17 +210,17 @@
 <div class="row control-group">
   <NeoButtonGroup
     rounded
-    pulse={[NeoProgressState.Active, NeoProgressState.Paused].includes(controlledState)}
+    pulse={[NeoProgressStatus.Active, NeoProgressStatus.Paused].includes(controlledState)}
     elevation="2"
     button={{ active: -1 }}
-    class={{ 'neo-stop': controlledState === NeoProgressState.Paused }}
+    class={{ 'neo-stop': controlledState === NeoProgressStatus.Paused }}
   >
     <NeoButton rounded onclick={() => controlled?.cancel()} ratio="1/1" aria-label="cancel" title="cancel">
       {#snippet icon()}
         <IconDoubleChevronLeft />
       {/snippet}
     </NeoButton>
-    <NeoButton rounded onclick={onStopStart} checked={NeoProgressState.Active === controlledState} ratio="1/1" aria-label={label} title={label}>
+    <NeoButton rounded onclick={onStopStart} checked={NeoProgressStatus.Active === controlledState} ratio="1/1" aria-label={label} title={label}>
       {#snippet icon()}
         <IconPlayPause state={label} />
       {/snippet}

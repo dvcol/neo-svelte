@@ -23,6 +23,7 @@
     returnValue = $bindable(),
     disableBodyScroll = modal,
     closeOnClickOutside = closedby === undefined,
+    unmountOnClose,
 
     // Events
     oncancel,
@@ -135,7 +136,9 @@
   {oncancel}
   onclick={onClick}
 >
-  {@render children?.(context)}
+  {#if !unmountOnClose || open}
+    {@render children?.(context)}
+  {/if}
 </dialog>
 
 <style lang="scss">

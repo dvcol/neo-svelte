@@ -1,20 +1,26 @@
 <script lang="ts">
+  import NeoDialog from './NeoDialog.svelte';
+
   import type { MouseEventHandler } from 'svelte/elements';
 
   import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
-  import type { NeoPopStepperProps } from '~/floating/tooltips/neo-pop-stepper.model.js';
-  import type { NeoTooltipContext, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
+  import type { NeoDialogStepperProps } from '~/floating/dialog/neo-dialog-stepper.model.js';
+  import type { NeoDialogContext } from '~/floating/dialog/neo-dialog.model.js';
 
   import NeoFloatingStepper from '~/floating/common/NeoFloatingStepper.svelte';
-  import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
   import { type NeoStepperBeforeEvent, type NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
-    children: trigger,
-    tooltip: content,
+    children: content,
     header: title,
+
+    // Dialog Props
+    dialogRef = $bindable(),
+    open = $bindable(false),
+    modal = $bindable(true),
+    returnValue = $bindable(),
 
     // States
     ref = $bindable(),
@@ -28,44 +34,28 @@
     steps = [],
     marks: _marks,
     progress = true,
-
-    // Tooltip Props
-    tooltipRef = $bindable(),
-    triggerRef = $bindable(),
-    open = $bindable(false),
-    target,
-    openDelay,
-    hoverDelay,
-    openOnFocus,
-    openOnHover,
-    closable = true,
+    closedby,
+    closable = closedby === undefined,
 
     // Styles
     rounded = false,
-    color,
-    filled,
-    tinted,
-    elevation,
-    flex,
-    width,
-    height,
 
     // Events
-    onOpen,
     onClose,
     onCancel,
     onConfirm,
 
     // Other Props
-    tooltipProps,
+    dialogProps,
     ...rest
-  }: NeoPopStepperProps = $props();
+  }: NeoDialogStepperProps = $props();
   /* eslint-enable prefer-const */
 
   const marks = $derived<boolean>(_marks ?? steps?.some(s => s?.markProps) ?? !!rest?.markProps);
 
-  const onCloseButton: MouseEventHandler<HTMLButtonElement> = () => {
+  const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
     open = false;
+    onClose?.(e);
   };
 
   const handlePromise = async (result: unknown, button: 'cancel' | 'next') => {
@@ -89,10 +79,10 @@
   };
 </script>
 
-{#snippet tooltip(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}
-  {#snippet header(context: NeoStepperContext)}
+{#snippet dialog(dialogContext: NeoDialogContext)}
+  {#snippet header(stepperContext: NeoStepperContext)}
     {#if typeof title === 'function'}
-      {@render title?.(floating, toggle, context)}
+      {@render title?.(dialogContext, stepperContext)}
     {:else}
       {title}
     {/if}
@@ -113,9 +103,9 @@
     onConfirm={onConfirmButton}
     {...rest}
   >
-    {#snippet children(context: NeoStepperContext)}
+    {#snippet children(stepperContext: NeoStepperContext)}
       {#if typeof content === 'function'}
-        {@render content?.(floating, toggle, context)}
+        {@render content?.(dialogContext, stepperContext)}
       {:else}
         {content}
       {/if}
@@ -123,31 +113,4 @@
   </NeoFloatingStepper>
 {/snippet}
 
-<NeoTooltip
-  bind:ref={tooltipRef}
-  bind:triggerRef
-  bind:open
-  keepOpenOnFocus
-  closeOnDismiss={closable}
-  {tooltip}
-  {target}
-  {rounded}
-  {flex}
-  {width}
-  {height}
-  {color}
-  {filled}
-  {tinted}
-  {elevation}
-  {openDelay}
-  {hoverDelay}
-  {openOnFocus}
-  {openOnHover}
-  {onOpen}
-  {onClose}
-  {...tooltipProps}
->
-  {#snippet children(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}
-    {@render trigger?.(floating, toggle)}
-  {/snippet}
-</NeoTooltip>
+<NeoDialog bind:ref={dialogRef} bind:open bind:modal bind:returnValue children={dialog} {closedby} closeOnClickOutside={closable} {...dialogProps} />

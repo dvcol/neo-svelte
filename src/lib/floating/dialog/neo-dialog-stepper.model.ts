@@ -1,23 +1,25 @@
-import type { MouseEventHandler } from 'svelte/elements';
-import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
-import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
+import type { Snippet } from 'svelte';
+import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
+import type { NeoDialogContext, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
+import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
+import type { NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
-export type NeoDialogConfirmProps = {
+export type NeoDialogStepperProps = {
   // Snippet
   /**
-   * Element(s) to render inside the trigger.
+   * Element(s) to render inside the stepper.
    */
-  children?: NeoDialogProps['children'] | string;
+  children?: Snippet<[NeoDialogContext, NeoStepperContext]> | string;
   /**
    * Element(s) to render inside the header once open.
    */
-  header?: NeoDialogProps['children'] | string;
+  header?: Snippet<[NeoDialogContext, NeoStepperContext]> | string;
 
   // Dialog props
   /**
    * The dialog element reference.
    */
-  ref?: NeoDialogProps['ref'];
+  dialogRef?: NeoDialogProps['ref'];
   /**
    * Whether the dialog is open or not.
    * A change in this prop will trigger the dialog to open or close.
@@ -48,24 +50,24 @@ export type NeoDialogConfirmProps = {
   /**
    * Event Handlers that fires on close.
    */
-  onClose?: MouseEventHandler<HTMLButtonElement>;
+  onClose?: NeoTooltipProps['onClose'];
   /**
    * Event Handlers that fires on cancel.
    * If a promise is returned, the loading state will be set to true until the promise resolves.
    * If the function rejects, the tooltip will not close.
    */
-  onCancel?: MouseEventHandler<HTMLButtonElement>;
+  onCancel?: NeoFloatingStepperProps['onBeforeStep'];
   /**
    * Event Handlers that fires on confirm.
    * If a promise is returned, the loading state will be set to true until the promise resolves.
    * If the promise rejects, the tooltip will not close.
    * @param e
    */
-  onConfirm?: MouseEventHandler<HTMLButtonElement>;
+  onConfirm?: NeoFloatingStepperProps['onBeforeStep'];
 
   // Other props
   /**
    * Optional props to pass to the dialog.
    */
   dialogProps?: Omit<NeoDialogProps, 'ref' | 'open' | 'children' | 'header' | 'modal' | 'returnValue'>;
-} & Omit<NeoConfirmProps, 'children' | 'header'>;
+} & NeoFloatingStepperProps;

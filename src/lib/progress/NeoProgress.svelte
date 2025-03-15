@@ -8,7 +8,7 @@
     NeoProgressDirection,
     type NeoProgressMethods,
     type NeoProgressProps,
-    NeoProgressState,
+    NeoProgressStatus,
   } from '~/progress/neo-progress.model.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -22,7 +22,7 @@
     tag = 'div',
     ref = $bindable(),
 
-    state = $bindable(), // active, finished, paused, indeterminate, idle
+    status = $bindable(), // active, finished, paused, indeterminate, idle
 
     value = $bindable(0),
     buffer = $bindable(0),
@@ -73,7 +73,7 @@
     }
   });
 
-  const controlled = $derived(state && ([NeoProgressState.Active, NeoProgressState.Indeterminate] as string[]).includes(state));
+  const controlled = $derived(status && ([NeoProgressStatus.Active, NeoProgressStatus.Indeterminate] as string[]).includes(status));
 
   let intervalId: ReturnType<typeof setTimeout>;
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -87,23 +87,23 @@
     clear();
     if (newValue !== undefined) value = newValue;
     if (newBuffer !== undefined) buffer = newBuffer;
-    state = NeoProgressState.Idle;
+    status = NeoProgressStatus.Idle;
   };
 
   export const stop: NeoProgressMethods['stop'] = () => {
     clear();
-    state = NeoProgressState.Paused;
+    status = NeoProgressStatus.Paused;
   };
 
   export const complete: NeoProgressMethods['complete'] = (pending = indeterminate) => {
     clear();
     value = max ?? 100;
     buffer = max ?? 100;
-    state = pending ? NeoProgressState.Indeterminate : NeoProgressState.Completed;
+    status = pending ? NeoProgressStatus.Indeterminate : NeoProgressStatus.Completed;
   };
 
   export const start: NeoProgressMethods['start'] = (pending = indeterminate, expire = timeout) => {
-    state = NeoProgressState.Active;
+    status = NeoProgressStatus.Active;
     clear();
     intervalId = setInterval(() => {
       if (value < max) value += step;
@@ -112,12 +112,12 @@
     if (expire) timeoutId = setTimeout(() => complete(), expire);
   };
 
-  export const reset: NeoProgressMethods['reset'] = (restart = state === NeoProgressState.Active) => {
+  export const reset: NeoProgressMethods['reset'] = (restart = status === NeoProgressStatus.Active) => {
     clear();
     value = min ?? 0;
     buffer = min ?? 0;
     if (restart) start();
-    else state = NeoProgressState.Idle;
+    else status = NeoProgressStatus.Idle;
   };
 
   export const cancel: NeoProgressMethods['cancel'] = () => {
@@ -129,7 +129,7 @@
   const height = $derived(toSize(_height));
 
   const context = $derived<NeoProgressContext>({
-    state,
+    status,
 
     value,
     buffer,
@@ -163,12 +163,12 @@
   role="progressbar"
   bind:this={ref}
   class:neo-progress={true}
-  class:neo-indeterminate={indeterminate || state === NeoProgressState.Indeterminate}
+  class:neo-indeterminate={indeterminate || status === NeoProgressStatus.Indeterminate}
   class:neo-controlled={controlled}
   class:neo-track={track}
   data-direction={direction}
   data-indeterminate={indeterminate}
-  data-state={state}
+  data-status={status}
   data-min={min}
   data-max={max}
   data-low={low}

@@ -58,6 +58,12 @@ export type NeoDialogContext = {
    * @default true
    */
   closeOnClickOutside?: boolean;
+  /**
+   * Whether to unmount the dialog content when closed.
+   *
+   * @default false
+   */
+  unmountOnClose?: boolean;
 };
 
 export type NeoDialogProps = {
