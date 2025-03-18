@@ -824,13 +824,13 @@
     }
 
     &-value {
-      --neo-tooltip-z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
-      --neo-tooltip-padding: 0.125rem 0.375rem;
+      --neo-floating-z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
+      --neo-floating-padding: 0.125rem 0.375rem;
 
       @include mixin.floating;
 
       &.neo-rounded {
-        --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-lg, var(--neo-border-radius-lg));
+        --neo-floating-border-radius: var(--neo-floating-border-radius-lg, var(--neo-border-radius-lg));
       }
     }
   }

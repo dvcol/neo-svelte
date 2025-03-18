@@ -124,6 +124,8 @@
   .neo-floating-stepper {
     display: contents;
 
+    --neo-stepper-mark-bg-color: var(--neo-background-color-backdrop-filled);
+
     :global(> .neo-stepper .neo-stepper-controls) {
       margin-bottom: 0.25rem;
     }

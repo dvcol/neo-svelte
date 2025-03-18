@@ -4,15 +4,13 @@
   import type { NeoDialogContext, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import { coerce, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
+  import { getColorVariable } from '~/utils/colors.utils.js';
+  import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     children,
-
-    // Style
-    blur: _blur,
-    fade = true,
 
     // States
     id = `neo-dialog-${getUUID()}`,
@@ -25,6 +23,27 @@
     closeOnClickOutside = closedby === undefined,
     unmountOnClose,
 
+    // Style
+    elevation: _elevation,
+    blur: _blur,
+    fade = true,
+    color,
+    filled,
+    tinted,
+    padding,
+    rounded = true,
+    backdrop = true,
+    borderless,
+
+    // Flex
+    justify,
+    align,
+    flex,
+
+    // Size
+    width: _width,
+    height: _height,
+
     // Events
     oncancel,
     onclick,
@@ -33,8 +52,15 @@
   }: NeoDialogProps = $props();
   /* eslint-enable prefer-const */
 
-  const blur = $derived(coerce(_blur!, PositiveMinMaxElevation));
-  const filter = $derived(_blur !== undefined ? `var(--neo-blur-${blur})` : undefined);
+  const elevation = $derived(coerce(_elevation, PositiveMinMaxElevation));
+  const blur = $derived(coerce(_blur ?? _elevation, PositiveMinMaxElevation));
+
+  const backdropFilter = $derived(_blur !== undefined ? `var(--neo-blur-${blur})` : undefined);
+  const cardFilter = $derived(computeGlassFilter(blur, true));
+  const cardShadow = $derived(computeShadowElevation(elevation, { glass: true }, PositiveMinMaxElevation));
+
+  const width = $derived(toSize(_width));
+  const height = $derived(toSize(_height));
 
   const onCancel: NeoDialogProps['oncancel'] = e => {
     if (!ref || !ref.open) return;
@@ -120,21 +146,42 @@
   });
 
   const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside });
+
+  // TODO : refactor card with tooltip in floating card ?
 </script>
 
 <dialog
   bind:this={ref}
   data-modal={modal}
+  data-elevation={elevation}
   data-clicked-outside={closedby ?? closeOnClickOutside}
   class:neo-dialog={true}
-  class:neo-scroll-disabled={!disableBodyScroll}
+  class:neo-borderless={borderless}
+  class:neo-backdrop={backdrop}
+  class:neo-rounded={rounded}
+  class:neo-tinted={tinted}
+  class:neo-filled={filled}
+  class:neo-flat={!elevation}
   class:neo-fade={fade}
-  style:--neo-dialog-backdrop-filter={filter}
+  class:neo-scroll-disabled={!disableBodyScroll}
+  style:--neo-dialog-backdrop-filter={backdropFilter}
   {id}
   {closedby}
   {...rest}
   {oncancel}
   onclick={onClick}
+  style:flex
+  style:width={width?.absolute}
+  style:min-width={width?.min}
+  style:max-width={width?.max}
+  style:height={height?.absolute}
+  style:min-height={height?.min}
+  style:max-height={height?.max}
+  style:--neo-dialog-color={getColorVariable(color)}
+  style:--neo-dialog-box-shadow={cardShadow}
+  style:--neo-dialog-content-filter={cardFilter}
+  style:--neo-dialog-padding={padding}
+  style:--neo-dialog-elevation={elevation}
 >
   {#if !unmountOnClose || open}
     {@render children?.(context)}
@@ -145,20 +192,43 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-dialog {
+    @include mixin.floating(
+      $padding: --neo-dialog-padding,
+      $background-color: --neo-dialog-bg-color,
+      $border-color: --neo-dialog-border-color,
+      $border-radius: --neo-dialog-border-radius,
+      $box-shadow: --neo-dialog-box-shadow,
+      $backdrop-filter: --neo-dialog-content-filter,
+      $z-index: --neo-dialog-z-index,
+      $elevation: --neo-dialog-elevation,
+      $borderless: true,
+      $tinted: true,
+      $filled: true
+    );
+
     margin: auto;
-    padding: 0;
-    color: inherit;
-    background: transparent;
-    border: none;
+    padding: var(--neo-dialog-padding, var(--neo-gap-xs) var(--neo-gap));
     outline: none;
+
+    &.neo-backdrop:not([data-elevation], [data-modal='false']) {
+      background: transparent;
+      border: none;
+      backdrop-filter: none;
+    }
 
     &::backdrop {
       background: var(--neo-dialog-backdrop-color, var(--neo-background-color-backdrop));
       backdrop-filter: var(--neo-dialog-backdrop-filter, blur(2px));
     }
 
+    &:not(.neo-backdrop) {
+      &::backdrop {
+        display: none;
+      }
+    }
+
     &.neo-fade {
-      @include mixin.fade-in($backdrop-color-end: --neo-dialog-backdrop-color, $backdrop-filter-end: --neo-dialog-backdrop-filter);
+      @include mixin.fade-in($backdrop: true, $backdrop-color-end: --neo-dialog-backdrop-color, $backdrop-filter-end: --neo-dialog-backdrop-filter);
 
       &[data-modal='true'] {
         position: fixed;

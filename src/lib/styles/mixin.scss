@@ -361,36 +361,6 @@
   --neo-skeleton-color: var(--neo-glass-skeleton-color);
 }
 
-@mixin floating(
-  $padding: --neo-tooltip-padding,
-  $background-color: --neo-tooltip-bg-color,
-  $border-color: --neo-tooltip-border-color,
-  $border-radius: --neo-tooltip-border-radius,
-  $box-shadow: --neo-tooltip-box-shadow,
-  $backdrop-filter: --neo-tooltip-backdrop-filter,
-  $z-index: --neo-tooltip-z-index,
-  $elevation: --neo-tooltip-elevation
-) {
-  z-index: var($z-index, calc(var(--neo-z-index-layer-ui, 1000) + var($elevation, 1)));
-  padding: var($padding, 0.375rem 0.625rem);
-  background-color: var($background-color, var(--neo-glass-background-color));
-  border: var(--neo-border-width, 1px) solid var($border-color, var(--neo-glass-background-color));
-  border-color: var(
-    $border-color,
-    var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
-  );
-  border-radius: var($border-radius, var(--neo-border-radius));
-  outline: none;
-  box-shadow: var($box-shadow, var(--neo-glass-box-shadow-raised-1));
-  backdrop-filter: var($backdrop-filter, var(--neo-blur-3));
-  transition:
-    box-shadow 0.3s ease-out,
-    backdrop-filter 0.3s ease,
-    border-radius 0.3s ease,
-    border-color 0.3s ease,
-    padding 0.3s ease;
-}
-
 @mixin ellipsis($line: var(--neo-ellipsis-lines, 1), $word-break: break-word) {
   display: -webkit-box;
   -webkit-line-clamp: $line;
@@ -425,6 +395,7 @@
   $enter-timing: ease,
   $exit-timing: ease-out,
 
+  $backdrop: false,
   $backdrop-color-start: transparent,
   $backdrop-color-end: --neo-fade-in-backdrop-color,
   $backdrop-filter-start: blur(0),
@@ -437,15 +408,17 @@
   transition-behavior: allow-discrete;
   scale: $scale-start;
 
-  &::backdrop {
-    background: $backdrop-color-start;
-    backdrop-filter: $backdrop-filter-start;
-    transition:
-      backdrop-filter $exit-duration,
-      display $exit-duration,
-      overlay $exit-duration;
-    transition-timing-function: $exit-timing;
-    transition-behavior: allow-discrete;
+  @if $backdrop {
+    &::backdrop {
+      background: $backdrop-color-start;
+      backdrop-filter: $backdrop-filter-start;
+      transition:
+        backdrop-filter $exit-duration,
+        display $exit-duration,
+        overlay $exit-duration;
+      transition-timing-function: $exit-timing;
+      transition-behavior: allow-discrete;
+    }
   }
 
   &#{$toggle} {
@@ -455,14 +428,16 @@
     transition-duration: $enter-duration;
     scale: $scale-end;
 
-    &::backdrop {
-      background: var($backdrop-color-end, var(--neo-background-color-backdrop));
-      backdrop-filter: var($backdrop-filter-end, blur(2px));
-      transition:
-        backdrop-filter $enter-duration,
-        display $enter-duration,
-        overlay $enter-duration;
-      transition-timing-function: $enter-timing;
+    @if $backdrop {
+      &::backdrop {
+        background: var($backdrop-color-end, var(--neo-background-color-backdrop));
+        backdrop-filter: var($backdrop-filter-end, blur(2px));
+        transition:
+          backdrop-filter $enter-duration,
+          display $enter-duration,
+          overlay $enter-duration;
+        transition-timing-function: $enter-timing;
+      }
     }
   }
 
@@ -471,10 +446,81 @@
       opacity: $opacity-start;
       scale: $scale-start;
 
-      &::backdrop {
-        background: $backdrop-color-start;
-        backdrop-filter: $backdrop-filter-start;
+      @if $backdrop {
+        &::backdrop {
+          background: $backdrop-color-start;
+          backdrop-filter: $backdrop-filter-start;
+        }
       }
+    }
+  }
+}
+
+@mixin floating(
+  $padding: --neo-floating-padding,
+  $color: --neo-floating-color,
+  $background-color: --neo-floating-bg-color,
+  $border-color: --neo-floating-border-color,
+  $border-radius: --neo-floating-border-radius,
+  $box-shadow: --neo-floating-box-shadow,
+  $backdrop-filter: --neo-floating-backdrop-filter,
+  $z-index: --neo-floating-z-index,
+  $elevation: --neo-floating-elevation,
+  $borderless: false,
+  $tinted: false,
+  $filled: false
+) {
+  z-index: var($z-index, calc(var(--neo-z-index-layer-ui, 1000) + var($elevation, 1)));
+  padding: var($padding, 0.375rem 0.625rem);
+  color: var($color, inherit);
+  background-color: var($background-color, var(--neo-glass-background-color));
+  border: var(--neo-border-width, 1px) solid var($border-color, var(--neo-glass-background-color));
+  border-color: var(
+    $border-color,
+    var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
+  );
+  border-radius: var($border-radius, var(--neo-border-radius));
+  outline: none;
+  box-shadow: var($box-shadow, var(--neo-glass-box-shadow-raised-1));
+  backdrop-filter: var($backdrop-filter, var(--neo-blur-3));
+  transition:
+    box-shadow 0.3s ease-out,
+    backdrop-filter 0.3s ease,
+    border-radius 0.3s ease,
+    border-color 0.3s ease,
+    padding 0.3s ease;
+
+  &.neo-flat {
+    border-color: var($border-color, var(--neo-glass-border-color-flat));
+  }
+
+  &.neo-rounded {
+    padding: var($padding, 0.625rem 1rem);
+    border-radius: var($border-radius, var(--neo-border-radius-lg));
+  }
+
+  @if $borderless {
+    &.neo-borderless {
+      border-color: transparent;
+    }
+  }
+
+  @if $tinted {
+    &.neo-tinted {
+      background-color: var($background-color, var(--neo-glass-background-color-tinted));
+    }
+  }
+
+  @if $filled {
+    &.neo-filled {
+      background-color: var($background-color, var(--neo-background-color));
+      border-color: var(
+        $border-color,
+        var(--neo-floating-top-border-color)
+          var(--neo-floating-right-border-color)
+          var(--neo-floating-bottom-border-color)
+          var(--neo-floating-left-border-color)
+      );
     }
   }
 }

@@ -48,7 +48,6 @@
     tinted,
     padding,
     rounded,
-    shadow = true,
     flex,
     width: inputWith,
     height: inputHeight,
@@ -311,26 +310,19 @@
     this={tag}
     bind:this={ref}
     hidden={!floating.open}
+    data-elevation={elevation}
     class:neo-tooltip={true}
-    class:neo-fade={fade}
     class:neo-rounded={rounded}
     class:neo-tinted={tinted}
     class:neo-filled={filled}
     class:neo-borderless={borderless}
-    class:neo-shadow={shadow}
     class:neo-flat={!elevation}
-    data-elevation={elevation}
-    style:--neo-tooltip-text-color={getColorVariable(color)}
-    style:--neo-tooltip-box-shadow={tooltipShadow}
-    style:--neo-tooltip-backdrop-filter={tooltipBlur}
+    class:neo-fade={fade}
     in:inFn={inProps}
     out:outFn={outProps}
     use:useFn={useProps}
     {...tooltipHandler}
     {...rest}
-    style:transform-origin={tooltipOrigin}
-    style:--neo-tooltip-padding={padding}
-    style:--neo-tooltip-elevation={elevation}
     style:flex
     style:width={width?.absolute}
     style:min-width={width?.min}
@@ -338,6 +330,12 @@
     style:height={height?.absolute}
     style:min-height={height?.min}
     style:max-height={height?.max}
+    style:transform-origin={tooltipOrigin}
+    style:--neo-tooltip-color={getColorVariable(color)}
+    style:--neo-tooltip-box-shadow={tooltipShadow}
+    style:--neo-tooltip-backdrop-filter={tooltipBlur}
+    style:--neo-tooltip-padding={padding}
+    style:--neo-tooltip-elevation={elevation}
     style={toStyle(tooltipStyle, rest.style)}
   >
     {#if typeof tooltip === 'function'}
@@ -352,12 +350,24 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-tooltip {
-    @include mixin.floating;
+    @include mixin.floating(
+      $padding: --neo-tooltip-padding,
+      $color: --neo-tooltip-color,
+      $background-color: --neo-tooltip-bg-color,
+      $border-color: --neo-tooltip-border-color,
+      $border-radius: --neo-tooltip-border-radius,
+      $box-shadow: --neo-tooltip-box-shadow,
+      $backdrop-filter: --neo-tooltip-backdrop-filter,
+      $z-index: --neo-tooltip-z-index,
+      $elevation: --neo-tooltip-elevation,
+      $borderless: true,
+      $tinted: true,
+      $filled: true
+    );
 
     display: flex;
     flex: 1 0 fit-content;
     flex-direction: column;
-    color: var(--neo-tooltip-text-color, inherit);
 
     :global(> .neo-list:only-child) {
       width: inherit;
@@ -366,6 +376,14 @@
       height: inherit;
       min-height: inherit;
       max-height: inherit;
+    }
+
+    &.neo-rounded {
+      :global(> .neo-list:only-child) {
+        --neo-list-scrollbar-padding: 0.75rem;
+
+        clip-path: inset(0 round var(--neo-tooltip-border-radius, var(--neo-border-radius)));
+      }
     }
 
     &[hidden] {
@@ -386,38 +404,6 @@
       &[data-modal='true'] {
         position: fixed;
         inset: 0;
-      }
-    }
-
-    &.neo-borderless {
-      --neo-tooltip-border-color: transparent;
-    }
-
-    &.neo-tinted {
-      background-color: var(--neo-tooltip-bg-color, var(--neo-glass-background-color-tinted));
-    }
-
-    &.neo-filled {
-      background-color: var(--neo-tooltip-bg-color, var(--neo-background-color));
-      border-color: var(
-        --neo-tooltip-border-color,
-        var(--neo-floating-top-border-color) var(--neo-floating-right-border-color) var(--neo-floating-bottom-border-color)
-          var(--neo-floating-left-border-color)
-      );
-    }
-
-    &.neo-flat {
-      border-color: var(--neo-tooltip-border-color, var(--neo-glass-border-color-flat));
-    }
-
-    &.neo-rounded {
-      --neo-tooltip-border-radius: var(--neo-tooltip-border-radius-rounded, var(--neo-border-radius-lg));
-      --neo-tooltip-padding: 0.625rem 1rem;
-
-      :global(> .neo-list:only-child) {
-        --neo-list-scrollbar-padding: 0.75rem;
-
-        clip-path: inset(0 round var(--neo-tooltip-border-radius, var(--neo-border-radius)));
       }
     }
   }

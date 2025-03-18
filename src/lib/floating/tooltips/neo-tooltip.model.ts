@@ -94,10 +94,6 @@ export type NeoTooltipProps = {
    */
   filled?: boolean;
   /**
-   * Whether to show a shadow mask on the scroll container
-   */
-  shadow?: boolean;
-  /**
    * Text color to use for the tooltip.
    */
   color?: Color | CSSStyleDeclaration['color'];

@@ -69,7 +69,7 @@
   --neo-background-color-secondary: color-mix(in srgb, var(--neo-background-color), black 5%);
   --neo-background-color-secondary-hover: color-mix(in srgb, var(--neo-background-color), black 8%);
   --neo-background-color-backdrop: color-mix(in srgb, transparent, white 10%);
-  --neo-background-color-backdrop-opaque: color-mix(in srgb, var(--neo-background-color), white 10%);
+  --neo-background-color-backdrop-filled: color-mix(in srgb, var(--neo-background-color), currentcolor 1%);
 
   // Shadow
   --neo-shadow-intensity: 0.06;
@@ -149,7 +149,6 @@
   --neo-dark-background-color-secondary: color-mix(in srgb, var(--neo-dark-background-color), white 5%);
   --neo-dark-background-color-secondary-hover: color-mix(in srgb, var(--neo-dark-background-color), white 8%);
   --neo-dark-background-color-backdrop: color-mix(in srgb, transparent, black 10%);
-  --neo-dark-background-color-backdrop-opaque: color-mix(in srgb, var(--neo-dark-background-color), black 10%);
 
   // Shadow
   --neo-dark-shadow-color-light: oklch(from var(--neo-dark-background-color) calc(l + var(--neo-shadow-intensity) + 0.03) c h);
@@ -230,7 +229,6 @@
   --neo-background-color-secondary: var(--neo-dark-background-color-secondary);
   --neo-background-color-secondary-hover: var(--neo-dark-background-color-secondary-hover);
   --neo-background-color-backdrop: var(--neo-dark-background-color-backdrop);
-  --neo-background-color-backdrop-opaque: var(--neo-dark-background-color-backdrop-opaque);
 
   // Shadow
   --neo-shadow-color-light: var(--neo-dark-shadow-color-light);
