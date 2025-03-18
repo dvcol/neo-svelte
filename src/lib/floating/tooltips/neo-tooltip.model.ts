@@ -207,6 +207,21 @@ export type NeoTooltipProps = {
    */
   dismissOptions?: UseDismissOptions;
 
+  // Mounting
+
+  /**
+   * Whether to unmount the dialog content when closed.
+   *
+   * @default true
+   */
+  unmountOnClose?: boolean;
+  /**
+   * Whether to apply in/out transition with a fade effect.
+   *
+   * @default true
+   */
+  fade?: boolean;
+
   // Events
   /**
    * Event Handlers that fires on state change.

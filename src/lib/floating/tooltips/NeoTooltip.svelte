@@ -13,7 +13,6 @@
     useInteractions,
     useRole,
   } from '@skeletonlabs/floating-ui-svelte';
-
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
   import { scale } from 'svelte/transition';
 
@@ -74,6 +73,10 @@
     // Dismiss
     closeOnDismiss = true,
     dismissOptions,
+
+    // Mounting
+    unmountOnClose = true,
+    fade = !unmountOnClose,
 
     // Events
     onChange,
@@ -258,7 +261,6 @@
   $effect(() => addMethods(triggerRef));
 
   const computeSize = <T extends 'width' | 'height'>(value: NeoTooltipProps[T], dimension: T): SizeOption<T> | undefined => {
-    if (!open) return;
     const tSize = dimension === 'width' ? triggerRef?.offsetWidth : triggerRef?.offsetHeight;
     if (value === NeoTooltipSizeStrategy.Match) return { absolute: toPixel(tSize) };
     if (value === NeoTooltipSizeStrategy.Min) return { min: toPixel(tSize) };
@@ -283,6 +285,7 @@
       onChange?.(open);
       if (open) onOpen?.();
       else onClose?.();
+      if (!unmountOnClose && open) floating.update();
     },
     () => open,
     { skip: 1 },
@@ -303,11 +306,13 @@
   </svelte:element>
 {/if}
 
-{#if floating.open}
+{#if !unmountOnClose || floating.open}
   <svelte:element
     this={tag}
     bind:this={ref}
+    hidden={!floating.open}
     class:neo-tooltip={true}
+    class:neo-fade={fade}
     class:neo-rounded={rounded}
     class:neo-tinted={tinted}
     class:neo-filled={filled}
@@ -361,6 +366,27 @@
       height: inherit;
       min-height: inherit;
       max-height: inherit;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+
+    &.neo-fade {
+      @include mixin.fade-in(
+        $toggle: ':not([hidden])',
+
+        $enter-duration: 0.2s,
+        $exit-duration: 0.15s,
+
+        $enter-timing: ease-out,
+        $exit-timing: ease-out
+      );
+
+      &[data-modal='true'] {
+        position: fixed;
+        inset: 0;
+      }
     }
 
     &.neo-borderless {

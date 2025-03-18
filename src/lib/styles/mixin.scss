@@ -410,3 +410,71 @@
     grid-area: $area;
   }
 }
+
+@mixin fade-in(
+  $toggle: [open],
+  $opacity-start: 0,
+  $opacity-end: 1,
+
+  $scale-start: 0.95,
+  $scale-end: 1,
+
+  $enter-duration: 0.3s,
+  $exit-duration: 0.2s,
+
+  $enter-timing: ease,
+  $exit-timing: ease-out,
+
+  $backdrop-color-start: transparent,
+  $backdrop-color-end: --neo-fade-in-backdrop-color,
+  $backdrop-filter-start: blur(0),
+  $backdrop-filter-end: --neo-fade-in-backdrop-filter
+) {
+  opacity: $opacity-start;
+  transition: opacity, scale, display, overlay;
+  transition-timing-function: $exit-timing;
+  transition-duration: $exit-duration;
+  transition-behavior: allow-discrete;
+  scale: $scale-start;
+
+  &::backdrop {
+    background: $backdrop-color-start;
+    backdrop-filter: $backdrop-filter-start;
+    transition:
+      backdrop-filter $exit-duration,
+      display $exit-duration,
+      overlay $exit-duration;
+    transition-timing-function: $exit-timing;
+    transition-behavior: allow-discrete;
+  }
+
+  &#{$toggle} {
+    display: block;
+    opacity: $opacity-end;
+    transition-timing-function: $enter-timing;
+    transition-duration: $enter-duration;
+    scale: $scale-end;
+
+    &::backdrop {
+      background: var($backdrop-color-end, var(--neo-background-color-backdrop));
+      backdrop-filter: var($backdrop-filter-end, blur(2px));
+      transition:
+        backdrop-filter $enter-duration,
+        display $enter-duration,
+        overlay $enter-duration;
+      transition-timing-function: $enter-timing;
+    }
+  }
+
+  @starting-style {
+    &#{$toggle} {
+      opacity: $opacity-start;
+      scale: $scale-start;
+
+      &::backdrop {
+        background: $backdrop-color-start;
+        backdrop-filter: $backdrop-filter-start;
+      }
+    }
+  }
+}

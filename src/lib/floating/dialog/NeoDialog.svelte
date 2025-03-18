@@ -142,6 +142,8 @@
 </dialog>
 
 <style lang="scss">
+  @use 'src/lib/styles/mixin' as mixin;
+
   .neo-dialog {
     margin: auto;
     padding: 0;
@@ -156,59 +158,11 @@
     }
 
     &.neo-fade {
-      opacity: 0;
-      transition: opacity, scale, display, overlay;
-      transition-timing-function: ease;
-      transition-duration: 0.2s;
-      transition-behavior: allow-discrete;
-      scale: 0.95;
+      @include mixin.fade-in($backdrop-color-end: --neo-dialog-backdrop-color, $backdrop-filter-end: --neo-dialog-backdrop-filter);
 
       &[data-modal='true'] {
         position: fixed;
         inset: 0;
-      }
-
-      &::backdrop {
-        background: transparent;
-        backdrop-filter: blur(0);
-        transition:
-          background 0.4s,
-          backdrop-filter 0.4s,
-          display 0.2s,
-          overlay 0.2s;
-        transition-timing-function: ease;
-        transition-behavior: allow-discrete;
-      }
-
-      &[open] {
-        display: block;
-        opacity: 1;
-        transition-timing-function: ease-out;
-        transition-duration: 0.3s;
-        scale: 1;
-
-        &::backdrop {
-          background: var(--neo-dialog-backdrop-color, var(--neo-background-color-backdrop));
-          backdrop-filter: var(--neo-dialog-backdrop-filter, blur(2px));
-          transition:
-            background 0.4s,
-            backdrop-filter 0.4s,
-            display 0.3s,
-            overlay 0.3s;
-          transition-timing-function: ease-out;
-        }
-      }
-
-      @starting-style {
-        &[open] {
-          opacity: 0;
-          scale: 0.95;
-
-          &::backdrop {
-            background: transparent;
-            backdrop-filter: blur(0);
-          }
-        }
       }
     }
   }
