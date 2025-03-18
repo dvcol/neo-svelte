@@ -353,30 +353,6 @@
       }
     }
 
-    &.neo-container {
-      display: flex;
-      justify-content: unset;
-      margin: var(--neo-btn-margin, 0);
-      padding: var(--neo-btn-padding, 0);
-
-      .neo-content {
-        justify-content: unset;
-        text-align: start;
-      }
-
-      &:focus-visible,
-      &:hover {
-        transition:
-          opacity 0.3s ease,
-          color 0.15s ease,
-          background-color 0.3s ease,
-          border-color 0.3s ease,
-          backdrop-filter 0.3s ease,
-          border-radius 0.3s ease,
-          box-shadow 0.15s ease-out;
-      }
-    }
-
     &:focus-visible {
       outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       outline-offset: var(--neo-outline-offset-width, -1px);
@@ -493,6 +469,35 @@
       background-color: var(--neo-btn-bg-color, var(--neo-background-color-tinted));
     }
 
+    &.neo-rounded {
+      padding: var(--neo-btn-padding, 0.3125rem 0.75rem);
+      border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
+    }
+
+    &.neo-container {
+      display: flex;
+      justify-content: unset;
+      margin: var(--neo-btn-margin, 0);
+      padding: var(--neo-btn-padding, 0);
+
+      .neo-content.neo-content {
+        justify-content: unset;
+        text-align: start;
+      }
+
+      &:focus-visible,
+      &:hover {
+        transition:
+          opacity 0.3s ease,
+          color 0.15s ease,
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          backdrop-filter 0.3s ease,
+          border-radius 0.3s ease,
+          box-shadow 0.15s ease-out;
+      }
+    }
+
     &:disabled,
     &[disabled]:not([disabled='false']) {
       cursor: not-allowed;
@@ -514,11 +519,6 @@
       pointer-events: none;
 
       @include mixin.skeleton;
-    }
-
-    &.neo-rounded {
-      padding: var(--neo-btn-padding, 0.3125rem 0.75rem);
-      border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
     }
 
     &.neo-empty {

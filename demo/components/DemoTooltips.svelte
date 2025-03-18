@@ -319,7 +319,7 @@
       height="28rem"
       tooltipProps={{ ...options, openOnFocus: false, openOnHover: false }}
     >
-      <NeoButton ghost rounded={options.rounded} bind:checked={open} toggle hover={options.elevation} active="-1" pressed>
+      <NeoButton container rounded={options.rounded} bind:checked={open} toggle hover={options.elevation} active="-1" pressed>
         <NeoTransitionContainer overflow="hidden" style="min-width: 252px; margin: 0.5rem">
           {#key complexSelected?.item?.id}
             <div
