@@ -72,9 +72,9 @@
   --neo-background-color-backdrop-opaque: color-mix(in srgb, var(--neo-background-color), white 10%);
 
   // Shadow
-  --neo-shadow-intensity: 0.05;
-  --neo-shadow-color-light: oklch(from var(--neo-background-color) calc(l + var(--neo-shadow-intensity)) c h); // TODO custom intensity
-  --neo-shadow-color-dark: oklch(from var(--neo-background-color) calc(l - var(--neo-shadow-intensity) - 0.025) c h);
+  --neo-shadow-intensity: 0.06;
+  --neo-shadow-color-light: oklch(from var(--neo-background-color) calc(l + var(--neo-shadow-intensity)) c h);
+  --neo-shadow-color-dark: oklch(from var(--neo-background-color) calc(l - var(--neo-shadow-intensity) - 0.03) c h);
 
   // Close
   --neo-close-color: var(--neo-color-error);
@@ -152,8 +152,8 @@
   --neo-dark-background-color-backdrop-opaque: color-mix(in srgb, var(--neo-dark-background-color), black 10%);
 
   // Shadow
-  --neo-dark-shadow-color-light: oklch(from var(--neo-dark-background-color) calc(l + var(--neo-shadow-intensity) + 0.025) c h);
-  --neo-dark-shadow-color-dark: oklch(from var(--neo-dark-background-color) calc(l - var(--neo-shadow-intensity) - 0.0125) c h);
+  --neo-dark-shadow-color-light: oklch(from var(--neo-dark-background-color) calc(l + var(--neo-shadow-intensity) + 0.03) c h);
+  --neo-dark-shadow-color-dark: oklch(from var(--neo-dark-background-color) calc(l - var(--neo-shadow-intensity) - 0.015) c h);
 
   // Close
   --neo-dark-close-color: var(--neo-dark-color-error);
