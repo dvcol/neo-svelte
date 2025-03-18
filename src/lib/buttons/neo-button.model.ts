@@ -113,17 +113,18 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   color?: Color | CSSStyleDeclaration['color'];
   /**
-   * If true, button specific styles will be removed (padding, text align & justification).
-   *
-   * @defaults`{ elevation: 0, hover: -1, active: -2, pressed: false, scale: false, borderless: true }`
-   */
-  ghost?: boolean;
-  /**
    * Shorthand for a flat borderless inset button.
    *
    * @defaults`{ elevation: 0, hover: -1, active: -3, pressed: false, borderless: true }`
    */
   text?: boolean;
+  /**
+   * If true, button specific styles will be removed (padding, text align & justification).
+   * And the button will act as a flex container.
+   *
+   * @defaults`{ elevation: 0, hover: -1, active: -2, pressed: false, scale: false, borderless: true }`
+   */
+  container?: boolean;
   /**
    * Input elevation.
    *

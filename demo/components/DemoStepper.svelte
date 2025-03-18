@@ -1,7 +1,12 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
 
-  import { DefaultShadowElevation, MaxShallowShadowElevation, MinShallowShadowElevation } from '../../src/lib/utils/shadow.utils';
+  import {
+    DefaultShadowElevation,
+    DefaultShadowShallowElevation,
+    MaxShallowShadowElevation,
+    MinShallowShadowElevation,
+  } from '../../src/lib/utils/shadow.utils';
 
   import type { NeoStepperEvent, NeoStepperNavigations, NeoStepperPlacements, NeoStepperProps, NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
@@ -88,7 +93,7 @@
 
     loop: false,
 
-    elevation: DefaultShadowElevation,
+    elevation: DefaultShadowShallowElevation,
     borderless: false,
     rounded: true,
 

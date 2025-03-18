@@ -168,7 +168,14 @@
       <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
     {/if}
 
-    <NeoDialogConfirm {...options} bind:open={openConfirm} bind:modal={options.modal} bind:returnValue={options.returnValue} {...confirmOptions}>
+    <NeoDialogConfirm
+      bind:open={openConfirm}
+      bind:modal={options.modal}
+      bind:returnValue={options.returnValue}
+      closable={options.closeOnClickOutside}
+      {...confirmOptions}
+      dialogProps={{ ...options, ...confirmOptions.dialogProps }}
+    >
       {@render lorem()}
     </NeoDialogConfirm>
   </div>
@@ -182,12 +189,13 @@
     {/if}
 
     <NeoDialogStepper
-      {...options}
       bind:active
       bind:open={openStepper}
       bind:modal={options.modal}
       bind:returnValue={options.returnValue}
+      closable={options.closeOnClickOutside}
       {...stepperOptions}
+      dialogProps={{ ...options, ...confirmOptions.dialogProps }}
     />
   </div>
 </div>

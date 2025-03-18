@@ -153,7 +153,7 @@
 
   // Shadow
   --neo-dark-shadow-color-light: oklch(from var(--neo-dark-background-color) calc(l + var(--neo-shadow-intensity) + 0.025) c h);
-  --neo-dark-shadow-color-dark: oklch(from var(--neo-dark-background-color) calc(l - var(--neo-shadow-intensity)) c h);
+  --neo-dark-shadow-color-dark: oklch(from var(--neo-dark-background-color) calc(l - var(--neo-shadow-intensity) - 0.0125) c h);
 
   // Close
   --neo-dark-close-color: var(--neo-dark-color-error);

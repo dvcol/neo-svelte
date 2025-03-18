@@ -48,16 +48,16 @@
     start,
     color,
     text,
-    ghost,
     glass,
     filled,
     tinted,
     rounded,
-    borderless = text || ghost,
+    container,
+    borderless = text || container,
     reverse,
     coalesce,
     pulse,
-    scale = !ghost,
+    scale = !container,
     ratio,
 
     // Flex
@@ -94,7 +94,7 @@
     blur: _blur,
     ...rest
   } = $derived.by(() => {
-    if (text || ghost) return { ...NeoTextButton, ..._rest };
+    if (text || container) return { ...NeoTextButton, ..._rest };
     return { ..._rest, elevation: _rest.elevation ?? getDefaultElevation(_rest.pressed) };
   });
 
@@ -230,7 +230,7 @@
   class:neo-hover-flat={hoverFlat}
   class:neo-flat-hover={flatHover}
   class:neo-flat-active={activeFlat}
-  class:neo-ghost={ghost}
+  class:neo-container={container}
   class:neo-borderless={borderless}
   class:neo-inset={elevation < 0}
   class:neo-inset-hover={hoverElevation < 0}
@@ -353,7 +353,8 @@
       }
     }
 
-    &.neo-ghost {
+    &.neo-container {
+      display: flex;
       justify-content: unset;
       margin: var(--neo-btn-margin, 0);
       padding: var(--neo-btn-padding, 0);
@@ -361,6 +362,18 @@
       .neo-content {
         justify-content: unset;
         text-align: start;
+      }
+
+      &:focus-visible,
+      &:hover {
+        transition:
+          opacity 0.3s ease,
+          color 0.15s ease,
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          backdrop-filter 0.3s ease,
+          border-radius 0.3s ease,
+          box-shadow 0.15s ease-out;
       }
     }
 
@@ -372,14 +385,6 @@
     &:focus-visible,
     &:hover {
       box-shadow: var(--neo-btn-box-shadow-hover, var(--neo-box-shadow-raised-2));
-      transition:
-        opacity 0.3s ease,
-        color 0.15s ease,
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        backdrop-filter 0.3s ease,
-        border-radius 0.3s ease,
-        box-shadow 0.15s ease-out;
     }
 
     &:focus-visible .neo-content,

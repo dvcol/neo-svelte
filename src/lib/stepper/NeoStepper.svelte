@@ -25,7 +25,7 @@
   } from '~/stepper/neo-stepper.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
-  import { coerce, DefaultShadowElevation, DefaultShallowMinMaxElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
   import { quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
@@ -64,7 +64,7 @@
     // Styles
     vertical = false,
     placement = NeoStepperPlacement.Start,
-    elevation: _elevation = DefaultShadowElevation,
+    elevation: _elevation = DefaultShadowShallowElevation,
     borderless,
     rounded,
 

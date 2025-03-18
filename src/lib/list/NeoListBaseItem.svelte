@@ -110,7 +110,7 @@
   <NeoButton
     data-select={checked}
     aria-labelledby={labelId}
-    ghost
+    container
     elevation="0"
     hover="-1"
     active="-2"
