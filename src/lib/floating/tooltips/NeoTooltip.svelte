@@ -311,6 +311,7 @@
     bind:this={ref}
     hidden={!floating.open}
     data-elevation={elevation}
+    data-unmount-on-close={unmountOnClose}
     class:neo-tooltip={true}
     class:neo-rounded={rounded}
     class:neo-tinted={tinted}

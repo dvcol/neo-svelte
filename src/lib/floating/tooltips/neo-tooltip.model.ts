@@ -206,7 +206,7 @@ export type NeoTooltipProps = {
   // Mounting
 
   /**
-   * Whether to unmount the dialog content when closed.
+   * Whether to unmount the tooltip content when closed.
    *
    * @default true
    */

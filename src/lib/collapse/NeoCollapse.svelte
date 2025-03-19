@@ -26,6 +26,7 @@
     readonly: _readonly = false,
     standalone = false,
     divider = false,
+    unmountOnClose = true,
 
     // Transition
     transition: _transition,
@@ -149,10 +150,12 @@
   {#if divider}
     <NeoDivider vertical={horizontal} {...dividerProps} />
   {/if}
-  {#if open}
+  {#if !unmountOnClose || open}
     <svelte:element
       this={tag}
       bind:this={ref}
+      aria-hidden={!open}
+      data-unmount-on-close={unmountOnClose}
       {id}
       role="region"
       aria-labelledby={triggerId}
@@ -200,6 +203,17 @@
       }
     }
 
+    &-content:not([data-unmount-on-close='true']) {
+      overflow: hidden;
+      transition-timing-function: ease-out;
+      transition-duration: 0.3s;
+
+      &[aria-hidden='true'] {
+        visibility: hidden;
+        opacity: 0;
+      }
+    }
+
     &-label {
       transition: color 0.15s ease;
 
@@ -221,8 +235,19 @@
         padding-block: var(--neo-collapse-trigger-gap, var(--neo-gap-xs, 0.625rem));
       }
 
-      .neo-collapse-content {
+      .neo-collapse-content:not([aria-hidden='true']) {
         padding-block-end: var(--neo-collapse-content-gap, var(--neo-gap-xs, 0.625rem));
+      }
+
+      .neo-collapse-content:not([data-unmount-on-close='true']) {
+        transition-property: height, opacity, visibility, padding-block, margin-block;
+        will-change: height, opacity, visibility, padding-block, margin-block;
+
+        &[aria-hidden='true'] {
+          height: 0;
+          padding-block: 0;
+          margin-block: 0;
+        }
       }
     }
 
@@ -234,17 +259,28 @@
         padding-inline: var(--neo-collapse-trigger-gap, var(--neo-gap, 1rem));
       }
 
-      .neo-collapse-content {
+      .neo-collapse-content:not([aria-hidden='true']) {
         padding-inline-end: var(--neo-collapse-content-gap, var(--neo-gap, 1rem));
+      }
+
+      .neo-collapse-content:not([data-unmount-on-close='true']) {
+        transition-property: width, opacity, visibility, padding-inline, margin-inline;
+        will-change: width, opacity, visibility, padding-inline, margin-inline;
+
+        &[aria-hidden='true'] {
+          width: 0;
+          padding-inline: 0;
+          margin-inline: 0;
+        }
       }
     }
 
     &:only-child {
-      &:not(.neo-horizontal) .neo-collapse-content {
+      &:not(.neo-horizontal) .neo-collapse-content:not([aria-hidden='true']) {
         padding-block-start: var(--neo-collapse-content-gap, var(--neo-gap-xs, 0.625rem));
       }
 
-      &.neo-horizontal .neo-collapse-content {
+      &.neo-horizontal .neo-collapse-content:not([aria-hidden='true']) {
         padding-inline-start: var(--neo-collapse-content-gap, var(--neo-gap, 1rem));
       }
     }

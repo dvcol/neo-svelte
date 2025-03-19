@@ -48,6 +48,12 @@ export type NeoCollapseContext = {
    * Note: Only works if the collapse has an internal trigger.
    */
   divider?: boolean;
+  /**
+   * Whether to unmount the collapsed content when closed.
+   *
+   * @default true
+   */
+  unmountOnClose?: boolean;
 };
 
 export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'> = {
