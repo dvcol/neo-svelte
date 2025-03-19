@@ -30,19 +30,17 @@
     color,
     filled,
     tinted,
-    padding,
     rounded = true,
     backdrop = true,
     borderless,
 
-    // Flex
-    justify,
-    align,
+    // Sizing
     flex,
-
-    // Size
+    align,
+    justify,
     width: _width,
     height: _height,
+    padding,
 
     // Events
     oncancel,
@@ -52,8 +50,8 @@
   }: NeoDialogProps = $props();
   /* eslint-enable prefer-const */
 
-  const elevation = $derived(coerce(_elevation, PositiveMinMaxElevation));
-  const blur = $derived(coerce(_blur ?? _elevation, PositiveMinMaxElevation));
+  const elevation = $derived(coerce(_elevation!, PositiveMinMaxElevation));
+  const blur = $derived(coerce(_blur ?? _elevation!, PositiveMinMaxElevation));
 
   const backdropFilter = $derived(_blur !== undefined ? `var(--neo-blur-${blur})` : undefined);
   const cardFilter = $derived(computeGlassFilter(blur, true));
@@ -147,13 +145,15 @@
 
   const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside });
 
-  // TODO : refactor card with tooltip in floating card ?
+  // TODO : in/out/use (& unmountOnClose svelte transition)
+  // TODO : drawers
 </script>
 
 <dialog
   bind:this={ref}
   data-modal={modal}
   data-elevation={elevation}
+  data-unmount-on-close={unmountOnClose}
   data-clicked-outside={closedby ?? closeOnClickOutside}
   class:neo-dialog={true}
   class:neo-borderless={borderless}
@@ -170,6 +170,8 @@
   {...rest}
   {oncancel}
   onclick={onClick}
+  style:justify-content={justify}
+  style:align-items={align}
   style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}

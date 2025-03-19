@@ -10,7 +10,7 @@ import type {
 import type { Snippet } from 'svelte';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -110,9 +110,16 @@ export type NeoTooltipProps = {
    */
   blur?: NeoTooltipElevation;
   /**
-   * Optional flex strategy for the container
+   * Whether to remove the border from the tooltip.
    */
-  flex?: CSSStyleDeclaration['flex'];
+  borderless?: boolean;
+
+  // Size
+
+  /**
+   * Padding override for the tooltip.
+   */
+  padding?: CSSStyleDeclaration['padding'];
   /**
    * Width strategy for the tooltip.
    * - `match`: the tooltip will match the width of the trigger.
@@ -133,14 +140,6 @@ export type NeoTooltipProps = {
    * - `{ min: string, max: string, absolute: string }`: a css value will be applied to the tooltip.
    */
   height?: NeoTooltipSizeStrategies | SizeInput<'height'>;
-  /**
-   * Padding override for the tooltip.
-   */
-  padding?: CSSStyleDeclaration['padding'];
-  /**
-   * Whether to remove the border from the tooltip.
-   */
-  borderless?: boolean;
 
   // Hover
 
@@ -243,7 +242,8 @@ export type NeoTooltipProps = {
    * Properties to pass to the trigger element.
    */
   triggerProps?: HTMLNeoBaseElement & HTMLTagProps;
-} & HTMLRefProps<NeoTooltipHTMLElement> &
+} & HTMLFlexProps &
+  HTMLRefProps<NeoTooltipHTMLElement> &
   HTMLActionProps &
   Omit<HTMLNeoBaseElement, 'children'>;
 

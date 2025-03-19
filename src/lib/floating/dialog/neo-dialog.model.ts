@@ -1,6 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { HTMLDialogAttributes } from 'svelte/elements';
-import type { BlurElevation, BlurElevationString } from '~/utils/shadow.utils.js';
+import type { Color } from '~/utils/colors.utils.js';
+import type { HTMLFlexProps } from '~/utils/html-element.utils.js';
+import type { BlurElevation, BlurElevationString, PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
+import type { SizeInput } from '~/utils/style.utils.js';
 
 export type HTMLDialogElementRef = HTMLDialogElement & {
   /**
@@ -15,6 +18,7 @@ export type HTMLDialogElementRef = HTMLDialogElement & {
 };
 
 export type NeoDialogBlur = BlurElevation | BlurElevationString;
+export type NeoDialogElevation = PositiveShadowElevation | PositiveShadowElevationString;
 
 export type NeoDialogContext = {
   /**
@@ -73,6 +77,13 @@ export type NeoDialogProps = {
   children?: Snippet<[NeoDialogContext]>;
 
   // style
+
+  /**
+   * The shadow elevation of the dialog.
+   *
+   * @default 2
+   */
+  elevation?: NeoDialogElevation;
   /**
    * The blur level to apply to the backdrop (0 to 5) when open.
    *
@@ -81,10 +92,52 @@ export type NeoDialogProps = {
    */
   blur?: NeoDialogBlur;
   /**
+   * Text color to use for the dialog.
+   */
+  color?: Color | CSSStyleDeclaration['color'];
+  /**
    * Whether the dialog should transition in/out with a fade effect.
    *
    * @default true
    */
   fade?: boolean;
-} & NeoDialogContext &
+  /**
+   * If true, the dialog will have a rounded border.
+   */
+  rounded?: boolean;
+  /**
+   * Tints the dialog with the current color.
+   */
+  tinted?: boolean;
+  /**
+   * Fills the dialog background.
+   */
+  filled?: boolean;
+  /**
+   * Whether to show the dialog backdrop (modal only).
+   *
+   * @default true
+   * @see modal
+   */
+  backdrop?: boolean;
+  /**
+   * Whether to remove the border from the dialog.
+   */
+  borderless?: boolean;
+
+  // Sizing
+  /**
+   * Optional width constraints.
+   */
+  width?: SizeInput<'width'>;
+  /**
+   * Optional height constraints.
+   */
+  height?: SizeInput<'height'>;
+  /**
+   * Padding override for the tooltip.
+   */
+  padding?: CSSStyleDeclaration['padding'];
+} & HTMLFlexProps &
+  NeoDialogContext &
   Omit<HTMLDialogAttributes, 'children'>;

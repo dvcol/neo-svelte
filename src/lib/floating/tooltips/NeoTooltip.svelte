@@ -46,12 +46,16 @@
     color,
     filled,
     tinted,
-    padding,
     rounded,
+    borderless,
+
+    // Sizing
     flex,
+    align,
+    justify,
+    padding,
     width: inputWith,
     height: inputHeight,
-    borderless,
 
     // Shadow
     elevation: _elevation = DefaultShadowElevation,
@@ -324,6 +328,8 @@
     use:useFn={useProps}
     {...tooltipHandler}
     {...rest}
+    style:justify-content={justify}
+    style:align-items={align}
     style:flex
     style:width={width?.absolute}
     style:min-width={width?.min}
