@@ -23,14 +23,18 @@
     closeOnClickOutside = closedby === undefined,
     unmountOnClose,
 
+    // Position
+    placement = 'center',
+
     // Style
     elevation: _elevation,
     blur: _blur,
-    fade = true,
+    fade: _fade,
+    slide: _slide,
     color,
     filled,
     tinted,
-    rounded = true,
+    rounded = false,
     backdrop = true,
     borderless,
 
@@ -59,6 +63,9 @@
 
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
+
+  const fade = $derived(_fade ?? (!modal || placement === 'center'));
+  const slide = $derived(_slide ?? (modal && placement !== 'center'));
 
   const onCancel: NeoDialogProps['oncancel'] = e => {
     if (!ref || !ref.open) return;
@@ -143,15 +150,16 @@
     }
   });
 
-  const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside });
+  const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside, placement });
 
-  // TODO : in/out/use (& unmountOnClose svelte transition)
-  // TODO : drawers
+  // TODO : drawers handle (& swipe) => dedicated component
+  // TODO : support not using dialog component for enter/exit transitions
 </script>
 
 <dialog
   bind:this={ref}
   data-modal={modal}
+  data-placement={placement}
   data-elevation={elevation}
   data-unmount-on-close={unmountOnClose}
   data-clicked-outside={closedby ?? closeOnClickOutside}
@@ -163,8 +171,8 @@
   class:neo-filled={filled}
   class:neo-flat={!elevation}
   class:neo-fade={fade}
+  class:neo-slide={slide}
   class:neo-scroll-disabled={!disableBodyScroll}
-  style:--neo-dialog-backdrop-filter={backdropFilter}
   {id}
   {closedby}
   {...rest}
@@ -179,6 +187,7 @@
   style:height={height?.absolute}
   style:min-height={height?.min}
   style:max-height={height?.max}
+  style:--neo-dialog-backdrop-filter={backdropFilter}
   style:--neo-dialog-color={getColorVariable(color)}
   style:--neo-dialog-box-shadow={cardShadow}
   style:--neo-dialog-content-filter={cardFilter}
@@ -196,6 +205,7 @@
   .neo-dialog {
     @include mixin.floating(
       $padding: --neo-dialog-padding,
+      $color: --neo-dialog-color,
       $background-color: --neo-dialog-bg-color,
       $border-color: --neo-dialog-border-color,
       $border-radius: --neo-dialog-border-radius,
@@ -208,6 +218,9 @@
       $filled: true
     );
 
+    box-sizing: border-box;
+    max-width: 100%;
+    max-height: 100%;
     margin: auto;
     padding: var(--neo-dialog-padding, var(--neo-gap-xs) var(--neo-gap));
     outline: none;
@@ -229,13 +242,58 @@
       }
     }
 
-    &.neo-fade {
-      @include mixin.fade-in($backdrop: true, $backdrop-color-end: --neo-dialog-backdrop-color, $backdrop-filter-end: --neo-dialog-backdrop-filter);
+    &[data-modal='true'] {
+      position: fixed;
+      inset-block: 0;
+      inset-inline: 0;
 
-      &[data-modal='true'] {
-        position: fixed;
-        inset: 0;
+      &[data-placement^='bottom'],
+      &[data-placement^='top'] {
+        margin-block: 0;
       }
+
+      &[data-placement^='bottom'] {
+        inset-block: auto 0;
+      }
+
+      &[data-placement^='right'],
+      &[data-placement^='left'] {
+        margin-inline: 0;
+      }
+
+      &[data-placement^='right'] {
+        inset-inline: auto 0;
+      }
+
+      &[data-placement='bottom-start'],
+      &[data-placement='top-start'] {
+        margin-inline-start: 0;
+      }
+
+      &[data-placement='bottom-end'],
+      &[data-placement='top-end'] {
+        margin-inline-end: 0;
+      }
+
+      &[data-placement='right-start'],
+      &[data-placement='left-start'] {
+        margin-block-start: 0;
+      }
+
+      &[data-placement='right-end'],
+      &[data-placement='left-end'] {
+        margin-block-end: 0;
+      }
+
+      &.neo-slide {
+        @include mixin.slide-in;
+        @include mixin.fade-backdrop;
+      }
+    }
+
+    &.neo-fade {
+      @include mixin.fade-in;
+      @include mixin.fade-backdrop;
     }
   }
 

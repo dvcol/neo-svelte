@@ -6,6 +6,13 @@
   import IconAddress from '../../src/lib/icons/IconAddress.svelte';
   import IconListSmall from '../../src/lib/icons/IconListSmall.svelte';
 
+  import NeoNumberStep from '../../src/lib/inputs/NeoNumberStep.svelte';
+  import NeoSelect from '../../src/lib/inputs/NeoSelect.svelte';
+
+  import { DefaultShadowElevation, MaxShadowElevation } from '../../src/lib/utils/shadow.utils';
+  import { colorOptions } from '../utils/color.utils';
+  import { positionOptions } from '../utils/placement.utils';
+
   import type { NeoStepperStep } from '../../src/lib';
   import type { NeoDialogConfirmProps } from '../../src/lib/floating/dialog/neo-dialog-confirm.model';
   import type { NeoDialogStepperProps } from '../../src/lib/floating/dialog/neo-dialog-stepper.model';
@@ -18,11 +25,23 @@
 
   const options = $state<NeoDialogProps>({
     modal: true,
-    fade: true,
+    backdrop: true,
     disableBodyScroll: true,
     closeOnClickOutside: true,
+
+    color: '',
+    filled: false,
+    tinted: false,
+    rounded: false,
+    borderless: false,
+
+    elevation: 0,
+
     returnValue: undefined,
+    placement: 'center',
   });
+
+  const position = [{ value: 'center', label: 'Center' }, ...positionOptions];
 
   let openDefault = $state(false);
   let openConfirm = $state(false);
@@ -107,12 +126,55 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded>
+  <NeoButtonGroup rounded={options.rounded}>
     <NeoButton toggle bind:checked={options.modal}>Modal</NeoButton>
-    <NeoButton toggle bind:checked={options.fade}>Fade</NeoButton>
     <NeoButton toggle bind:checked={options.disableBodyScroll}>Body Scroll</NeoButton>
     <NeoButton toggle bind:checked={options.closeOnClickOutside}>Click Outside</NeoButton>
+    <NeoButton toggle bind:checked={options.backdrop}>Backdrop</NeoButton>
+    <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
+    <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
+    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
   </NeoButtonGroup>
+
+  <NeoSelect
+    label="Placement"
+    placeholder="Select placement"
+    placement="left"
+    floating={false}
+    bind:value={options.placement}
+    rounded={options.rounded}
+    containerProps={{ style: 'margin-left: 6.75rem' }}
+    options={position}
+    size="15"
+    openOnFocus
+  />
+  <NeoNumberStep
+    label="Elevation"
+    placement="left"
+    center
+    bind:value={options.elevation}
+    min={0}
+    max={MaxShadowElevation}
+    defaultValue={DefaultShadowElevation}
+    rounded={options.rounded}
+    nullable={false}
+    floating={false}
+    groupProps={{ style: 'margin-left: 6rem' }}
+  />
+
+  <NeoSelect
+    label="Color"
+    placeholder="Select color"
+    placement="left"
+    floating={false}
+    color={options.color}
+    size="10"
+    bind:value={options.color}
+    containerProps={{ style: 'margin-left: 6rem' }}
+    options={colorOptions}
+    openOnFocus
+  />
 </div>
 
 {#snippet lorem()}
@@ -155,7 +217,13 @@
       <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
     {/if}
 
-    <NeoDialog {...options} bind:open={openDefault} bind:modal={options.modal} bind:returnValue={options.returnValue}>
+    <NeoDialog
+      {...options}
+      elevation={options.elevation > 0 ? options.elevation : undefined}
+      bind:open={openDefault}
+      bind:modal={options.modal}
+      bind:returnValue={options.returnValue}
+    >
       {@render lorem()}
     </NeoDialog>
   </div>
@@ -174,7 +242,7 @@
       bind:returnValue={options.returnValue}
       closable={options.closeOnClickOutside}
       {...confirmOptions}
-      dialogProps={{ ...options, ...confirmOptions.dialogProps }}
+      dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
     >
       {@render lorem()}
     </NeoDialogConfirm>
@@ -195,7 +263,7 @@
       bind:returnValue={options.returnValue}
       closable={options.closeOnClickOutside}
       {...stepperOptions}
-      dialogProps={{ ...options, ...confirmOptions.dialogProps }}
+      dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
     />
   </div>
 </div>

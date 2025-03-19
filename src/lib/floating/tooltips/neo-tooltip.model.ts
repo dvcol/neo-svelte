@@ -8,6 +8,7 @@ import type {
   UseRoleOptions,
 } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
+import type { NeoTooltipPlacement } from '~/floating/common/neo-placement.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
@@ -77,7 +78,7 @@ export type NeoTooltipProps = {
   /**
    * Where to place the floating element relative to its reference element.
    */
-  placement?: UseFloatingOptions['placement'] | 'auto';
+  placement?: NeoTooltipPlacement;
 
   // Styles
 

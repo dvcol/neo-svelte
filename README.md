@@ -143,12 +143,15 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] popconfirm
   - [x] popselect
   - [x] popstepper
-  - [ ] menu
-  - [ ] nested menus
-  - [ ] menu pane (multi column)
 
 - [ ] Modal/dialog
-  - [ ] HTML Dialog
+  - [X] HTML Dialog
+    - [X] animation (slide/fade)
+    - [X] stepper
+    - [x] confirm
+    - [x] backdrop
+    - [x] position (center, top, bottom, left, right)
+    - [ ] custom tag (not dialog)
   - [ ] HTML Popover
   - [ ] Drawer
     - [ ] animation
@@ -164,6 +167,11 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [ ] click outside
     - [ ] focus trap
 
+
+- [ ] menu
+  - [ ] collapsable 
+  - [ ] nested menus
+  - [ ] menu pane (multi column)
 
 - [ ] Chat
   - [ ] infinite scroll 

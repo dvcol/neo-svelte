@@ -381,81 +381,6 @@
   }
 }
 
-@mixin fade-in(
-  $toggle: [open],
-  $opacity-start: 0,
-  $opacity-end: 1,
-
-  $scale-start: 0.95,
-  $scale-end: 1,
-
-  $enter-duration: 0.3s,
-  $exit-duration: 0.2s,
-
-  $enter-timing: ease,
-  $exit-timing: ease-out,
-
-  $backdrop: false,
-  $backdrop-color-start: transparent,
-  $backdrop-color-end: --neo-fade-in-backdrop-color,
-  $backdrop-filter-start: blur(0),
-  $backdrop-filter-end: --neo-fade-in-backdrop-filter
-) {
-  opacity: $opacity-start;
-  transition: opacity, scale, display, overlay;
-  transition-timing-function: $exit-timing;
-  transition-duration: $exit-duration;
-  transition-behavior: allow-discrete;
-  scale: $scale-start;
-
-  @if $backdrop {
-    &::backdrop {
-      background: $backdrop-color-start;
-      backdrop-filter: $backdrop-filter-start;
-      transition:
-        backdrop-filter $exit-duration,
-        display $exit-duration,
-        overlay $exit-duration;
-      transition-timing-function: $exit-timing;
-      transition-behavior: allow-discrete;
-    }
-  }
-
-  &#{$toggle} {
-    display: block;
-    opacity: $opacity-end;
-    transition-timing-function: $enter-timing;
-    transition-duration: $enter-duration;
-    scale: $scale-end;
-
-    @if $backdrop {
-      &::backdrop {
-        background: var($backdrop-color-end, var(--neo-background-color-backdrop));
-        backdrop-filter: var($backdrop-filter-end, blur(2px));
-        transition:
-          backdrop-filter $enter-duration,
-          display $enter-duration,
-          overlay $enter-duration;
-        transition-timing-function: $enter-timing;
-      }
-    }
-  }
-
-  @starting-style {
-    &#{$toggle} {
-      opacity: $opacity-start;
-      scale: $scale-start;
-
-      @if $backdrop {
-        &::backdrop {
-          background: $backdrop-color-start;
-          backdrop-filter: $backdrop-filter-start;
-        }
-      }
-    }
-  }
-}
-
 @mixin floating(
   $padding: --neo-floating-padding,
   $color: --neo-floating-color,
@@ -490,21 +415,6 @@
     border-color 0.3s ease,
     padding 0.3s ease;
 
-  &.neo-flat {
-    border-color: var($border-color, var(--neo-glass-border-color-flat));
-  }
-
-  &.neo-rounded {
-    padding: var($padding, 0.625rem 1rem);
-    border-radius: var($border-radius, var(--neo-border-radius-lg));
-  }
-
-  @if $borderless {
-    &.neo-borderless {
-      border-color: transparent;
-    }
-  }
-
   @if $tinted {
     &.neo-tinted {
       background-color: var($background-color, var(--neo-glass-background-color-tinted));
@@ -521,6 +431,202 @@
           var(--neo-floating-bottom-border-color)
           var(--neo-floating-left-border-color)
       );
+    }
+  }
+
+  &.neo-flat {
+    border-color: var($border-color, var(--neo-glass-border-color-flat));
+  }
+
+  @if $borderless {
+    &.neo-borderless {
+      border-color: transparent;
+    }
+  }
+
+  &.neo-rounded {
+    padding: var($padding, 0.625rem 1rem);
+    border-radius: var($border-radius, var(--neo-border-radius-lg));
+  }
+}
+
+@mixin fade-backdrop(
+  $toggle: [open],
+  // Opacity
+  $opacity-start: --neo-fade-opacity-start,
+  $opacity-end: --neo-fade-opacity-end,
+  // Duration
+  $enter-duration: --neo-fade-enter-duration,
+  $exit-duration: --neo-fade-exit-duration,
+  // Timing
+  $enter-timing: --neo-fade-enter-timing,
+  $exit-timing: --neo-fade-exit-timing,
+  // color
+  $color-start: --neo-fade-backdrop-color-start,
+  $color-end: --neo-fade-backdrop-color-end,
+  // filter
+  $filter-start: --neo-fade-backdrop-filter-start,
+  $filter-end: --neo-fade-backdrop-filter-end,
+  // Property
+  $transition-property: --neo-fade-backdrop-transition-property
+) {
+  &::backdrop {
+    background: var($color-start, transparent);
+    opacity: var($opacity-start, 0);
+    backdrop-filter: var($filter-start, blur(0));
+    transition-timing-function: var($exit-timing, ease-out);
+    transition-duration: var($exit-duration, 0.2s);
+    transition-property: var($transition-property, backdrop-filter, display, overlay, opacity);
+    transition-behavior: allow-discrete;
+  }
+
+  &#{$toggle} {
+    &::backdrop {
+      background: var($color-end, var(--neo-background-color-backdrop));
+      opacity: var($opacity-end, 1);
+      backdrop-filter: var($filter-end, blur(2px));
+      transition-timing-function: var($enter-timing, ease);
+      transition-duration: var($enter-duration, 0.3s);
+    }
+  }
+
+  @starting-style {
+    &#{$toggle} {
+      &::backdrop {
+        background: $color-start;
+        opacity: var($opacity-start, 0);
+        backdrop-filter: $filter-start;
+      }
+    }
+  }
+}
+
+@mixin fade-in(
+  $toggle: [open],
+  // Opacity
+  $opacity-start: --neo-fade-opacity-start,
+  $opacity-end: --neo-fade-opacity-end,
+  // Scale
+  $scale-start: --neo-fade-scale-start,
+  $scale-end: --neo-fade-scale-end,
+  // Duration
+  $enter-duration: --neo-fade-enter-duration,
+  $exit-duration: --neo-fade-exit-duration,
+  // Timing
+  $enter-timing: --neo-fade-enter-timing,
+  $exit-timing: --neo-fade-exit-timing,
+  // Property
+  $transition-property: --neo-fade-transition-property
+) {
+  opacity: var($opacity-start, 0);
+  transition-timing-function: var($exit-timing, ease-out);
+  transition-duration: var($exit-duration, 0.2s);
+  transition-property: var($transition-property, opacity, scale, display, overlay, box-shadow, backdrop-filter, border-radius, border-color, padding);
+  transition-behavior: allow-discrete;
+  scale: var($scale-start, 0.95);
+
+  &#{$toggle} {
+    display: block;
+    opacity: var($opacity-end, 1);
+    transition-timing-function: var($enter-timing, ease);
+    transition-duration: var($enter-duration, 0.3s);
+    scale: var($scale-end, 1);
+  }
+
+  @starting-style {
+    &#{$toggle} {
+      opacity: var($opacity-start, 0);
+      scale: var($scale-start, 0.95);
+    }
+  }
+}
+
+@mixin slide-in(
+  $toggle: [open],
+  $placement: data-placement,
+  // Opacity
+  $opacity-start: --neo-slide-opacity-start,
+  $opacity-end: --neo-slide-opacity-end,
+  // Translate
+  $translate-start: --neo-slide-translate-start,
+  $translate-end: --neo-slide-translate-end,
+  // Duration
+  $enter-duration: --neo-slide-enter-duration,
+  $exit-duration: --neo-slide-exit-duration,
+  // Timing
+  $enter-timing: --neo-slide-enter-timing,
+  $exit-timing: --neo-slide-exit-timing,
+  // Property
+  $transition-property: --neo-slide-transition-property
+) {
+  opacity: var($opacity-start, 0);
+  transition-timing-function: var($exit-timing, ease-out);
+  transition-duration: var($exit-duration, 0.4s);
+  transition-property: var(
+    $transition-property,
+    opacity,
+    translate,
+    display,
+    overlay,
+    box-shadow,
+    backdrop-filter,
+    border-radius,
+    border-color,
+    padding
+  );
+  transition-behavior: allow-discrete;
+
+  &[#{$placement}^='right'] {
+    translate: var($translate-start, 100%);
+
+    @starting-style {
+      &#{$toggle} {
+        translate: var($translate-start, 100%);
+      }
+    }
+  }
+
+  &[#{$placement}^='left'] {
+    translate: calc(0% - var($translate-start, 100%));
+
+    @starting-style {
+      &#{$toggle} {
+        translate: calc(0% - var($translate-start, 100%));
+      }
+    }
+  }
+
+  &[#{$placement}^='top'] {
+    translate: 0 calc(0% - var($translate-start, 100%));
+
+    @starting-style {
+      &#{$toggle} {
+        translate: 0 calc(0% - var($translate-start, 100%));
+      }
+    }
+  }
+
+  &[#{$placement}^='bottom'] {
+    translate: 0 var($translate-start, 100%);
+
+    @starting-style {
+      &#{$toggle} {
+        translate: 0 var($translate-start, 100%);
+      }
+    }
+  }
+
+  &#{$toggle} {
+    display: block;
+    opacity: var($opacity-end, 1);
+    transition-timing-function: var($enter-timing, ease);
+    transition-duration: var($enter-duration, 0.5s);
+    translate: var($translate-end, 0);
+  }
+
+  @starting-style {
+    &#{$toggle} {
+      opacity: var($opacity-start, 0);
     }
   }
 }

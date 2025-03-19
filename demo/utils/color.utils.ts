@@ -1,8 +1,8 @@
 import type { NeoSelectOption } from '~/inputs/neo-select.model.js';
 
-import { Colors } from '~/utils/colors.utils.js';
+import { type Color, Colors } from '~/utils/colors.utils.js';
 
-export const colorOptions: NeoSelectOption[] = [
+export const colorOptions: NeoSelectOption<Color>[] = [
   {
     label: 'Primary',
     value: Colors.Primary,

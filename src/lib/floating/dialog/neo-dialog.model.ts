@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLDialogAttributes } from 'svelte/elements';
+import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
@@ -68,6 +69,13 @@ export type NeoDialogContext = {
    * @default false
    */
   unmountOnClose?: boolean;
+  /**
+   * Where to place the modal element relative to the viewport (modal only).
+   *
+   * @see modal
+   * @default center
+   */
+  placement?: NeoDialogPlacement;
 };
 
 export type NeoDialogProps = {
@@ -101,6 +109,12 @@ export type NeoDialogProps = {
    * @default true
    */
   fade?: boolean;
+  /**
+   * Whether the dialog should transition in/out with a slide effect.
+   *
+   * @default true
+   */
+  slide?: boolean;
   /**
    * If true, the dialog will have a rounded border.
    */
@@ -138,6 +152,8 @@ export type NeoDialogProps = {
    * Padding override for the tooltip.
    */
   padding?: CSSStyleDeclaration['padding'];
+
+  // Position
 } & HTMLFlexProps &
   NeoDialogContext &
   Omit<HTMLDialogAttributes, 'children'>;
