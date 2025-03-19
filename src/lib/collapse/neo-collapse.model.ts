@@ -54,6 +54,13 @@ export type NeoCollapseContext = {
    * @default true
    */
   unmountOnClose?: boolean;
+  /**
+   * Whether to fade the collapsed content when transitioning (only if unmountOnClose is false).
+   *
+   * @see unmountOnClose
+   * @default true
+   */
+  fade?: boolean;
 };
 
 export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'> = {

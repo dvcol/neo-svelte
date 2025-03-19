@@ -27,6 +27,7 @@
     standalone = false,
     divider = false,
     unmountOnClose = true,
+    fade = true,
 
     // Transition
     transition: _transition,
@@ -163,6 +164,7 @@
       in:transition={transitionProps}
       out:transition={transitionProps}
       class:neo-collapse-content={true}
+      class:neo-fade={fade}
       {...rest}
     >
       {@render children?.(context)}
@@ -208,9 +210,9 @@
       transition-timing-function: ease-out;
       transition-duration: 0.3s;
 
-      &[aria-hidden='true'] {
+      &[aria-hidden='true'].neo-fade {
         visibility: hidden;
-        opacity: 0;
+        opacity: var(--neo-collapse-fade-opacity, 0);
       }
     }
 
