@@ -426,10 +426,10 @@
       background-color: var($background-color, var(--neo-background-color));
       border-color: var(
         $border-color,
-        var(--neo-floating-top-border-color)
-          var(--neo-floating-right-border-color)
-          var(--neo-floating-bottom-border-color)
-          var(--neo-floating-left-border-color)
+        var(--neo-filled-top-border-color)
+          var(--neo-filled-right-border-color)
+          var(--neo-filled-bottom-border-color)
+          var(--neo-filled-left-border-color)
       );
     }
   }

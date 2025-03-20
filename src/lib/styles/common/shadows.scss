@@ -78,11 +78,11 @@
   $neo-glass-bottom-border-color: null;
   $neo-glass-left-border-color: null;
 
-  /** floating border-color */
-  $neo-floating-top-border-color: null;
-  $neo-floating-right-border-color: null;
-  $neo-floating-bottom-border-color: null;
-  $neo-floating-left-border-color: null;
+  /** filled border-color */
+  $neo-filled-top-border-color: null;
+  $neo-filled-right-border-color: null;
+  $neo-filled-bottom-border-color: null;
+  $neo-filled-left-border-color: null;
 
   /* Box shadows top left */
   @if $direction == top-left {
@@ -211,11 +211,11 @@
     $neo-glass-left-border-color: var(--neo-glass-border-color);
     $neo-glass-bottom-border-color: transparent;
 
-    /** floating border-color */
-    $neo-floating-top-border-color: var(--neo-floating-border-color);
-    $neo-floating-right-border-color: transparent;
-    $neo-floating-left-border-color: var(--neo-floating-border-color);
-    $neo-floating-bottom-border-color: transparent;
+    /** filled border-color */
+    $neo-filled-top-border-color: var(--neo-filled-border-color);
+    $neo-filled-right-border-color: transparent;
+    $neo-filled-left-border-color: var(--neo-filled-border-color);
+    $neo-filled-bottom-border-color: transparent;
   }
 
   /* Box shadows top right */
@@ -345,11 +345,11 @@
     $neo-glass-left-border-color: transparent;
     $neo-glass-bottom-border-color: transparent;
 
-    /** floating border-color */
-    $neo-floating-top-border-color: var(--neo-floating-border-color);
-    $neo-floating-right-border-color: var(--neo-floating-border-color);
-    $neo-floating-left-border-color: transparent;
-    $neo-floating-bottom-border-color: transparent;
+    /** filled border-color */
+    $neo-filled-top-border-color: var(--neo-filled-border-color);
+    $neo-filled-right-border-color: var(--neo-filled-border-color);
+    $neo-filled-left-border-color: transparent;
+    $neo-filled-bottom-border-color: transparent;
   }
 
   /* Box shadows bottom right */
@@ -479,11 +479,11 @@
     $neo-glass-left-border-color: transparent;
     $neo-glass-bottom-border-color: var(--neo-glass-border-color);
 
-    /** floating border-color */
-    $neo-floating-top-border-color: transparent;
-    $neo-floating-right-border-color: var(--neo-floating-border-color);
-    $neo-floating-left-border-color: transparent;
-    $neo-floating-bottom-border-color: var(--neo-floating-border-color);
+    /** filled border-color */
+    $neo-filled-top-border-color: transparent;
+    $neo-filled-right-border-color: var(--neo-filled-border-color);
+    $neo-filled-left-border-color: transparent;
+    $neo-filled-bottom-border-color: var(--neo-filled-border-color);
   }
 
   /* Box shadows bottom left */
@@ -613,11 +613,11 @@
     $neo-glass-left-border-color: var(--neo-glass-border-color);
     $neo-glass-bottom-border-color: var(--neo-glass-border-color);
 
-    /** floating border-color */
-    $neo-floating-top-border-color: transparent;
-    $neo-floating-right-border-color: transparent;
-    $neo-floating-left-border-color: var(--neo-floating-border-color);
-    $neo-floating-bottom-border-color: var(--neo-floating-border-color);
+    /** filled border-color */
+    $neo-filled-top-border-color: transparent;
+    $neo-filled-right-border-color: transparent;
+    $neo-filled-left-border-color: var(--neo-filled-border-color);
+    $neo-filled-bottom-border-color: var(--neo-filled-border-color);
   }
 
   /** Base shadows flat */
@@ -693,10 +693,10 @@
   --neo-glass-left-border-color: #{$neo-glass-left-border-color};
   --neo-glass-bottom-border-color: #{$neo-glass-bottom-border-color};
 
-  /** floating border-color */
-  --neo-floating-box-shadow-flat: none;
-  --neo-floating-top-border-color: #{$neo-floating-top-border-color};
-  --neo-floating-right-border-color: #{$neo-floating-right-border-color};
-  --neo-floating-left-border-color: #{$neo-floating-left-border-color};
-  --neo-floating-bottom-border-color: #{$neo-floating-bottom-border-color};
+  /** filled border-color */
+  --neo-filled-box-shadow-flat: none;
+  --neo-filled-top-border-color: #{$neo-filled-top-border-color};
+  --neo-filled-right-border-color: #{$neo-filled-right-border-color};
+  --neo-filled-left-border-color: #{$neo-filled-left-border-color};
+  --neo-filled-bottom-border-color: #{$neo-filled-bottom-border-color};
 }
