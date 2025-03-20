@@ -21,6 +21,37 @@
     open = $bindable(false),
     modal = $bindable(true),
     returnValue = $bindable(),
+    closedby,
+    unmountOnClose,
+
+    // Position
+    placement,
+    movable,
+
+    // Style
+    elevation,
+    blur,
+    color,
+    filled,
+    tinted,
+    backdrop,
+    borderless,
+
+    // Sizing
+    flex,
+    align,
+    justify,
+    width,
+    height,
+    padding,
+
+    // Actions
+    in: inAction,
+    out: outAction,
+    transition,
+
+    // Actions
+    use,
 
     // States
     ref = $bindable(),
@@ -34,11 +65,10 @@
     steps = [],
     marks: _marks,
     progress = true,
-    closedby,
     closable = closedby === undefined,
 
     // Styles
-    rounded = false,
+    rounded,
 
     // Events
     onClose,
@@ -47,6 +77,7 @@
 
     // Other Props
     dialogProps,
+    backdropProps,
     ...rest
   }: NeoDialogStepperProps = $props();
   /* eslint-enable prefer-const */
@@ -120,7 +151,28 @@
   bind:returnValue
   children={dialog}
   {closedby}
-  {rounded}
+  {unmountOnClose}
   closeOnClickOutside={closable}
+  {placement}
+  {movable}
+  {elevation}
+  {blur}
+  {color}
+  {filled}
+  {tinted}
+  {backdrop}
+  {borderless}
+  {rounded}
+  {flex}
+  {align}
+  {justify}
+  {width}
+  {height}
+  {padding}
+  in={inAction}
+  out={outAction}
+  {transition}
+  {use}
+  {backdropProps}
   {...dialogProps}
 />

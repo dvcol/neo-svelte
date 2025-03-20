@@ -19,6 +19,37 @@
     open = $bindable(false),
     modal = $bindable(true),
     returnValue = $bindable(),
+    closedby,
+    unmountOnClose,
+
+    // Position
+    placement,
+    movable,
+
+    // Style
+    elevation,
+    blur,
+    color,
+    filled,
+    tinted,
+    backdrop,
+    borderless,
+
+    // Sizing
+    flex,
+    align,
+    justify,
+    width,
+    height,
+    padding,
+
+    // Actions
+    in: inAction,
+    out: outAction,
+    transition,
+
+    // Actions
+    use,
 
     // Confirmation Props
     loading = $bindable({
@@ -29,7 +60,6 @@
       cancel: false,
       confirm: false,
     }),
-    closedby,
     closable = closedby === undefined,
     rounded,
 
@@ -40,6 +70,7 @@
 
     // Other Props
     dialogProps,
+    backdropProps,
     ...rest
   }: NeoDialogConfirmProps = $props();
   /* eslint-enable prefer-const */
@@ -76,7 +107,37 @@
   };
 </script>
 
-<NeoDialog bind:ref bind:open bind:modal bind:returnValue {closedby} {rounded} closeOnClickOutside={closable} {...dialogProps}>
+<NeoDialog
+  bind:ref
+  bind:open
+  bind:modal
+  bind:returnValue
+  {closedby}
+  {unmountOnClose}
+  closeOnClickOutside={closable}
+  {placement}
+  {movable}
+  {elevation}
+  {blur}
+  {color}
+  {filled}
+  {tinted}
+  {backdrop}
+  {borderless}
+  {rounded}
+  {flex}
+  {align}
+  {justify}
+  {width}
+  {height}
+  {padding}
+  in={inAction}
+  out={outAction}
+  {transition}
+  {use}
+  {backdropProps}
+  {...dialogProps}
+>
   {#snippet children(context: NeoDialogContext)}
     {#snippet header()}
       {#if typeof title === 'function'}

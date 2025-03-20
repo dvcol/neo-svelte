@@ -13,37 +13,6 @@ export type NeoDialogConfirmProps = {
    */
   header?: NeoDialogProps['children'] | string;
 
-  // Dialog props
-  /**
-   * The dialog element reference.
-   */
-  ref?: NeoDialogProps['ref'];
-  /**
-   * Whether the dialog is open or not.
-   * A change in this prop will trigger the dialog to open or close.
-   */
-  open?: NeoDialogProps['open'];
-  /**
-   * Whether the dialog should be modal or not when triggered by a change in the `open` prop.
-   *
-   * @default true
-   */
-  modal?: NeoDialogProps['modal'];
-  /**
-   * The return value when the dialog is closed.
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/returnValue)
-   */
-  returnValue?: NeoDialogProps['returnValue'];
-  /**
-   * Manages the dialog's closing behavior on supported platforms.
-   * If set, disables custom closeOnClickOutside logic.
-   *
-   * @see [support](https://caniuse.com/mdn-html_elements_dialog_closedby)
-   * @see closeOnClickOutside
-   */
-  closedby?: NeoDialogProps['closedby'];
-
   // Events
   /**
    * Event Handlers that fires on close.
@@ -68,4 +37,34 @@ export type NeoDialogConfirmProps = {
    * Optional props to pass to the dialog.
    */
   dialogProps?: Omit<NeoDialogProps, 'ref' | 'open' | 'children' | 'header' | 'modal' | 'returnValue'>;
-} & Omit<NeoConfirmProps, 'children' | 'header'>;
+} & Pick<
+  NeoDialogProps,
+  | 'ref'
+  | 'open'
+  | 'modal'
+  | 'returnValue'
+  | 'closedby'
+  | 'unmountOnClose'
+  | 'placement'
+  | 'movable'
+  | 'elevation'
+  | 'blur'
+  | 'slide'
+  | 'color'
+  | 'filled'
+  | 'tinted'
+  | 'backdrop'
+  | 'borderless'
+  | 'flex'
+  | 'align'
+  | 'justify'
+  | 'width'
+  | 'height'
+  | 'padding'
+  | 'in'
+  | 'out'
+  | 'transition'
+  | 'use'
+  | 'backdropProps'
+> &
+  Omit<NeoConfirmProps, 'children' | 'header'>;

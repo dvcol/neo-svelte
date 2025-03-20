@@ -87,6 +87,12 @@ export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTM
    * @default center
    */
   placement?: NeoDialogPlacement;
+  /**
+   * Whether the dialog can be dragged around.
+   *
+   * @default false
+   */
+  movable?: boolean;
 };
 
 export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {

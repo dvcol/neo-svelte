@@ -41,9 +41,20 @@
     filled,
     tinted,
     elevation,
+
+    // Sizing
     flex,
+    justify,
+    align,
     width,
     height,
+    padding,
+
+    // Actions
+    in: inAction,
+    out: outAction,
+    transition,
+    use,
 
     // Events
     onOpen,
@@ -120,8 +131,11 @@
   {target}
   {rounded}
   {flex}
+  {align}
+  {justify}
   {width}
   {height}
+  {padding}
   {color}
   {filled}
   {tinted}
@@ -132,6 +146,10 @@
   {openOnHover}
   {onOpen}
   {onClose}
+  {use}
+  {transition}
+  in={inAction}
+  out={outAction}
   {...tooltipProps}
 >
   {#snippet children(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}

@@ -22,7 +22,6 @@
 
     // Styles
     rounded = false,
-    flex,
     width = 'min',
     height = 'min',
 
@@ -47,6 +46,18 @@
     hoverDelay,
     openOnFocus,
     openOnHover,
+
+    // Sizing
+    flex,
+    justify,
+    align,
+    padding = '0',
+
+    // Actions
+    in: inAction,
+    out: outAction,
+    transition,
+    use,
 
     // Events
     onSelect,
@@ -113,12 +124,15 @@
     }
   }
   {tooltip}
-  padding="0"
+  unmountOnClose={false}
   {target}
   {rounded}
   {flex}
+  {align}
+  {justify}
   {width}
   {height}
+  {padding}
   {color}
   {filled}
   {tinted}
@@ -129,6 +143,10 @@
   {openOnHover}
   {onClose}
   {onOpen}
+  {use}
+  {transition}
+  in={inAction}
+  out={outAction}
   {...tooltipProps}
 >
   {#snippet children(floating: NeoTooltipContext, toggle: NeoTooltipToggle)}

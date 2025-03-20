@@ -22,9 +22,9 @@
     ref = $bindable(),
     open = $bindable(false),
     modal = $bindable(true),
-    closedby,
     returnValue = $bindable(),
     disableBodyScroll = modal,
+    closedby,
     closeOnClickOutside = closedby === undefined,
     unmountOnClose = true,
     tag = unmountOnClose ? 'div' : 'dialog',
@@ -92,13 +92,13 @@
   };
 
   const onClick: NeoDialogProps['onclick'] = e => {
-    if (!closeOnClickOutside || !open) return onclick?.(e);
+    if (!closeOnClickOutside || !open || !isNative) return onclick?.(e);
     // Close dialog if clicked on the backdrop (only if modal)
     if (modal && e.target === ref) onCancel(e);
     return onclick?.(e);
   };
 
-  const onWindowClick = async (e: SvelteEvent<MouseEvent>) => {
+  const onWindowClick = async (e: SvelteEvent<PointerEvent>) => {
     if (!closeOnClickOutside || !open) return;
     if (!(e.target instanceof HTMLElement)) return;
     if (e.target?.closest(`#${id}`)) return;
@@ -114,12 +114,12 @@
   $effect(() => {
     if (!open) return;
     timeout = setTimeout(() => {
-      window.addEventListener('click', onWindowClick, { passive: true });
+      window.addEventListener('pointerdown', onWindowClick, { passive: true });
       window.addEventListener('keydown', onWindowKeydown, { passive: true });
     }, 0);
     return () => {
       clearTimeout(timeout);
-      window.removeEventListener('click', onWindowClick);
+      window.removeEventListener('pointerdown', onWindowClick);
       window.removeEventListener('keydown', onWindowKeydown);
     };
   });
@@ -157,6 +157,7 @@
       set(val?: any) {
         returnValue = val;
       },
+      configurable: true,
     });
     // Monkey patch dialog methods to sync inner states
     const { close, requestClose, show, showModal, dispatchEvent } = ref;
@@ -339,6 +340,10 @@
       &::backdrop {
         display: none;
       }
+    }
+
+    &:not(:is(dialog), [data-modal='true']) {
+      position: absolute;
     }
 
     &[data-modal='true'] {
