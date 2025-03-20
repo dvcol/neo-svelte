@@ -31,6 +31,7 @@
     }),
     closedby,
     closable = closedby === undefined,
+    rounded,
 
     // events
     onClose,
@@ -75,7 +76,7 @@
   };
 </script>
 
-<NeoDialog bind:ref bind:open bind:modal bind:returnValue {closedby} closeOnClickOutside={closable} {...dialogProps}>
+<NeoDialog bind:ref bind:open bind:modal bind:returnValue {closedby} {rounded} closeOnClickOutside={closable} {...dialogProps}>
   {#snippet children(context: NeoDialogContext)}
     {#snippet header()}
       {#if typeof title === 'function'}
@@ -88,6 +89,7 @@
       bind:loading
       bind:disabled
       {closable}
+      {rounded}
       header={title ? header : undefined}
       onClose={onCloseButton}
       onCancel={onCancelButton}

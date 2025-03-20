@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
+
   import type { MouseEventHandler } from 'svelte/elements';
   import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
 
@@ -18,6 +20,7 @@
     header,
 
     // States
+    id = `neo-floating-steper-${getUUID()}`,
     ref = $bindable(),
     active = $bindable(0),
     loading = $bindable({
@@ -79,8 +82,8 @@
 
 {#snippet headerContent(context: NeoStepperContext)}
   {#if header}
-    <div class="neo-floating-stepper-header" class:neo-progress={progress}>
-      <svelte:element this={headerTag} class="neo-floating-stepper-title" {...headerRest}>
+    <div class="neo-floating-stepper-header" id={`${id}-header`} class:neo-progress={progress}>
+      <svelte:element this={headerTag} class:neo-floating-stepper-title={true} {...headerRest}>
         {#if typeof header === 'function'}
           {@render header?.(context)}
         {:else}
@@ -94,7 +97,7 @@
   {/if}
 {/snippet}
 
-<div class="neo-floating-stepper">
+<div class="neo-floating-stepper" {id}>
   <NeoStepper
     bind:ref
     bind:active

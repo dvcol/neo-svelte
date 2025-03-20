@@ -1,12 +1,16 @@
 import type { Snippet } from 'svelte';
 import type { HTMLDialogAttributes } from 'svelte/elements';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
+import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
-import type { HTMLFlexProps } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
-export type HTMLDialogElementRef = HTMLDialogElement & {
+export type NeoDialogBlur = BlurElevation | BlurElevationString;
+export type NeoDialogElevation = PositiveShadowElevation | PositiveShadowElevationString;
+
+export type NeoDialogHTMLElement = HTMLDialogElement & {
   /**
    * Closes the dialog element.
    *
@@ -18,14 +22,21 @@ export type HTMLDialogElementRef = HTMLDialogElement & {
   requestClose?: (returnValue?: string) => void;
 };
 
-export type NeoDialogBlur = BlurElevation | BlurElevationString;
-export type NeoDialogElevation = PositiveShadowElevation | PositiveShadowElevationString;
-
-export type NeoDialogContext = {
+export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
   /**
    * The dialog element reference.
    */
-  ref?: HTMLDialogElementRef;
+  ref?: NeoDialogHTMLElement;
+  /**
+   * The HTML tag to use for the dialog element.
+   *
+   * If 'dialog', the dialog will be a native dialog element.
+   * If not dialog methods (show, showModal, close, requestClose) will be emulated.
+   *
+   * @default `dialog` if `unmountOnClose` is true, otherwise `div`
+   * @see unmountOnClose
+   */
+  tag?: Tag;
   /**
    * Whether the dialog is open or not.
    * A change in this prop will trigger the dialog to open or close.
@@ -66,7 +77,7 @@ export type NeoDialogContext = {
   /**
    * Whether to unmount the dialog content when closed.
    *
-   * @default false
+   * @default true
    */
   unmountOnClose?: boolean;
   /**
@@ -78,11 +89,11 @@ export type NeoDialogContext = {
   placement?: NeoDialogPlacement;
 };
 
-export type NeoDialogProps = {
+export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
   /**
    * The dialog content.
    */
-  children?: Snippet<[NeoDialogContext]>;
+  children?: Snippet<[NeoDialogContext<Tag>]>;
 
   // style
 
@@ -153,7 +164,18 @@ export type NeoDialogProps = {
    */
   padding?: CSSStyleDeclaration['padding'];
 
-  // Position
+  // Other Props
+  /**
+   * Optional properties to pass to the backdrop element.
+   *
+   * Only applies when `backdrop` is true, `modal` is true, and the dialog is non-native.
+   *
+   * @see backdrop
+   * @see modal
+   * @see tag
+   */
+  backdropProps?: HTMLNeoBaseElement;
 } & HTMLFlexProps &
-  NeoDialogContext &
+  HTMLActionProps &
+  NeoDialogContext<Tag> &
   Omit<HTMLDialogAttributes, 'children'>;

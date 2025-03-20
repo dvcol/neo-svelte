@@ -1,12 +1,17 @@
 <script lang="ts">
+  import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { NeoDialogContext, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
+  import { fade as fadeFn, fly, scale } from 'svelte/transition';
+
+  import type { NeoDialogContext, NeoDialogHTMLElement, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
+  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
+  import { defaultDuration, quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -21,7 +26,8 @@
     returnValue = $bindable(),
     disableBodyScroll = modal,
     closeOnClickOutside = closedby === undefined,
-    unmountOnClose,
+    unmountOnClose = true,
+    tag = unmountOnClose ? 'div' : 'dialog',
 
     // Position
     placement = 'center',
@@ -50,9 +56,22 @@
     oncancel,
     onclick,
 
+    // Actions
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
+
+    // Actions
+    use,
+
+    // Other Props
+    backdropProps,
     ...rest
   }: NeoDialogProps = $props();
   /* eslint-enable prefer-const */
+
+  const isNative = $derived(tag === 'dialog');
+  const ariaProps = $derived(isNative ? {} : { role: 'dialog', 'aria-modal': modal });
 
   const elevation = $derived(coerce(_elevation!, PositiveMinMaxElevation));
   const blur = $derived(coerce(_blur ?? _elevation!, PositiveMinMaxElevation));
@@ -64,11 +83,9 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
-  const fade = $derived(_fade ?? (!modal || placement === 'center'));
-  const slide = $derived(_slide ?? (modal && placement !== 'center'));
-
   const onCancel: NeoDialogProps['oncancel'] = e => {
-    if (!ref || !ref.open) return;
+    if (!ref) return;
+    if (isNative && !ref.open) return;
     if (ref.requestClose) return ref.requestClose();
     ref.close();
     oncancel?.(e);
@@ -88,26 +105,50 @@
     onCancel(e);
   };
 
+  const onWindowKeydown = async (e: SvelteEvent<KeyboardEvent>) => {
+    if (isNative || e.key !== 'Escape') return;
+    onCancel(e);
+  };
+
   let timeout: ReturnType<typeof setTimeout>;
   $effect(() => {
     if (!open) return;
-    timeout = setTimeout(() => window.addEventListener('click', onWindowClick), 0);
+    timeout = setTimeout(() => {
+      window.addEventListener('click', onWindowClick, { passive: true });
+      window.addEventListener('keydown', onWindowKeydown, { passive: true });
+    }, 0);
     return () => {
       clearTimeout(timeout);
       window.removeEventListener('click', onWindowClick);
+      window.removeEventListener('keydown', onWindowKeydown);
     };
   });
-
   // Sync dialog state with component state
   $effect(() => {
-    if (!ref || ref.open === open) return;
+    if (!ref || ref.open === open || !isNative) return;
     if (open && modal) return ref.showModal();
     if (open) return ref.show();
     if (ref.requestClose) return ref.requestClose();
     ref.close();
   });
 
+  const trapFocus = (e: SvelteEvent<FocusEvent>) => {
+    if (!open) return;
+    if (!(e.target instanceof HTMLElement)) return;
+    if (ref?.contains(e.target)) return;
+    e.preventDefault();
+    getFocusableElement(ref)?.focus();
+  };
+
   $effect(() => {
+    if (!ref || !open || isNative) return;
+
+    getFocusableElement(ref)?.focus();
+    window.addEventListener('focusin', trapFocus);
+    return () => window.removeEventListener('focusin', trapFocus);
+  });
+
+  $effect.pre(() => {
     if (!ref) return;
     Object.defineProperty(ref, 'returnValue', {
       get() {
@@ -117,29 +158,31 @@
         returnValue = val;
       },
     });
-    // Monkey patch dialog methods to sync modal, open and returnValue
+    // Monkey patch dialog methods to sync inner states
     const { close, requestClose, show, showModal, dispatchEvent } = ref;
     ref.show = () => {
       modal = false;
       open = true;
-      return show.call(ref);
+      return show?.call(ref);
     };
     ref.showModal = () => {
       modal = true;
       open = true;
-      return showModal.call(ref);
+      return showModal?.call(ref);
     };
     ref.close = (returnVal?: any) => {
       if (returnVal !== undefined) returnValue = returnVal;
       open = false;
-      return close.call(ref, returnVal);
+      if (!close) return dispatchEvent.call(ref, new Event('close', { bubbles: false, cancelable: true }));
+      return close?.call(ref, returnVal);
     };
     if (!requestClose) {
       ref.requestClose = (returnVal?: any) => {
         if (returnVal !== undefined) returnValue = returnVal;
         open = false;
         dispatchEvent.call(ref, new Event('cancel', { bubbles: false, cancelable: true }));
-        return close.call(ref, returnVal);
+        if (!close) return dispatchEvent.call(ref, new Event('close', { bubbles: false, cancelable: true }));
+        return close?.call(ref, returnVal);
       };
     } else {
       ref.requestClose = (returnVal?: any) => {
@@ -153,51 +196,87 @@
   const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside, placement });
 
   // TODO : drawers handle (& swipe) => dedicated component
-  // TODO : support not using dialog component for enter/exit transitions
+
+  const fade = $derived(_fade ?? (!modal || placement === 'center'));
+  const slide = $derived(_slide ?? (modal && placement !== 'center'));
+
+  const transition = $derived.by(() => {
+    if (transitionAction) return transitionAction;
+    if (slide && placement?.startsWith('bottom')) return { use: fly, props: { duration: defaultDuration, y: '100%' } };
+    if (slide && placement?.startsWith('top')) return { use: fly, props: { duration: defaultDuration, y: '-100%' } };
+    if (slide && placement?.startsWith('right')) return { use: fly, props: { duration: defaultDuration, x: '100%' } };
+    if (slide && placement?.startsWith('left')) return { use: fly, props: { duration: defaultDuration, x: '-100%' } };
+    return { use: scale, props: { duration: shortDuration, start: 1.05 } };
+  });
+
+  const inFn = $derived(toTransition(inAction ?? transition));
+  const inProps = $derived(toTransitionProps(inAction ?? transition));
+  const outFn = $derived(toTransition(outAction ?? transition));
+  const outProps = $derived(toTransitionProps(outAction ?? transition));
+
+  const useFn = $derived(toAction(use));
+  const useProps = $derived(toActionProps(use));
 </script>
 
-<dialog
-  bind:this={ref}
-  data-modal={modal}
-  data-placement={placement}
-  data-elevation={elevation}
-  data-unmount-on-close={unmountOnClose}
-  data-clicked-outside={closedby ?? closeOnClickOutside}
-  class:neo-dialog={true}
-  class:neo-borderless={borderless}
-  class:neo-backdrop={backdrop}
-  class:neo-rounded={rounded}
-  class:neo-tinted={tinted}
-  class:neo-filled={filled}
-  class:neo-flat={!elevation}
-  class:neo-fade={fade}
-  class:neo-slide={slide}
-  class:neo-scroll-disabled={!disableBodyScroll}
-  {id}
-  {closedby}
-  {...rest}
-  {oncancel}
-  onclick={onClick}
-  style:justify-content={justify}
-  style:align-items={align}
-  style:flex
-  style:width={width?.absolute}
-  style:min-width={width?.min}
-  style:max-width={width?.max}
-  style:height={height?.absolute}
-  style:min-height={height?.min}
-  style:max-height={height?.max}
-  style:--neo-dialog-backdrop-filter={backdropFilter}
-  style:--neo-dialog-color={getColorVariable(color)}
-  style:--neo-dialog-box-shadow={cardShadow}
-  style:--neo-dialog-content-filter={cardFilter}
-  style:--neo-dialog-padding={padding}
-  style:--neo-dialog-elevation={elevation}
->
-  {#if !unmountOnClose || open}
+{#if !isNative && backdrop && modal && open}
+  <div
+    class:neo-dialog-backdrop={true}
+    style:--neo-dialog-backdrop-filter={backdropFilter}
+    transition:fadeFn={{ duration: quickDuration }}
+    {...backdropProps}
+  >
+    <!--  Backdrop for non native dialog  -->
+  </div>
+{/if}
+
+{#if !unmountOnClose || open}
+  <svelte:element
+    this={tag}
+    bind:this={ref as NeoDialogHTMLElement}
+    data-open={open}
+    data-modal={modal}
+    data-placement={placement}
+    data-elevation={elevation}
+    data-unmount-on-close={unmountOnClose}
+    data-clicked-outside={closedby ?? closeOnClickOutside}
+    class:neo-dialog={true}
+    class:neo-borderless={borderless}
+    class:neo-backdrop={backdrop}
+    class:neo-rounded={rounded}
+    class:neo-tinted={tinted}
+    class:neo-filled={filled}
+    class:neo-flat={!elevation}
+    class:neo-fade={fade && !unmountOnClose}
+    class:neo-slide={slide && !unmountOnClose}
+    class:neo-scroll-disabled={disableBodyScroll}
+    {id}
+    {closedby}
+    in:inFn={inProps}
+    out:outFn={outProps}
+    use:useFn={useProps}
+    {...ariaProps}
+    {...rest}
+    {oncancel}
+    onclick={onClick}
+    style:justify-content={justify}
+    style:align-items={align}
+    style:flex
+    style:width={width?.absolute}
+    style:min-width={width?.min}
+    style:max-width={width?.max}
+    style:height={height?.absolute}
+    style:min-height={height?.min}
+    style:max-height={height?.max}
+    style:--neo-dialog-backdrop-filter={backdropFilter}
+    style:--neo-dialog-color={getColorVariable(color)}
+    style:--neo-dialog-box-shadow={cardShadow}
+    style:--neo-dialog-content-filter={cardFilter}
+    style:--neo-dialog-padding={padding}
+    style:--neo-dialog-elevation={elevation}
+  >
     {@render children?.(context)}
-  {/if}
-</dialog>
+  </svelte:element>
+{/if}
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
@@ -219,11 +298,23 @@
     );
 
     box-sizing: border-box;
+    width: fit-content;
     max-width: 100%;
+    height: fit-content;
     max-height: 100%;
-    margin: auto;
+    margin-inline: var(--neo-dialog-margin-inline, auto);
+    margin-block: var(--neo-dialog-margin-block, auto);
     padding: var(--neo-dialog-padding, var(--neo-gap-xs) var(--neo-gap));
+    overflow: auto;
     outline: none;
+
+    &:not(:is(dialog)) {
+      z-index: var(--neo-dialog-z-index, var(--neo-z-index-layer-top));
+    }
+
+    &:not([data-open='true']) {
+      display: none;
+    }
 
     &.neo-backdrop:not([data-elevation], [data-modal='false']) {
       background: transparent;
@@ -231,9 +322,17 @@
       backdrop-filter: none;
     }
 
+    &-backdrop {
+      position: fixed;
+      inset-block: 0;
+      inset-inline: 0;
+      z-index: calc(var(--neo-dialog-z-index, var(--neo-z-index-layer-top)) - 1);
+    }
+
+    &-backdrop,
     &::backdrop {
       background: var(--neo-dialog-backdrop-color, var(--neo-background-color-backdrop));
-      backdrop-filter: var(--neo-dialog-backdrop-filter, blur(2px));
+      backdrop-filter: var(--neo-dialog-backdrop-filter, var(--neo-blur-1));
     }
 
     &:not(.neo-backdrop) {
@@ -247,18 +346,13 @@
       inset-block: 0;
       inset-inline: 0;
 
-      &[data-placement^='bottom'],
-      &[data-placement^='top'] {
-        margin-block: 0;
+      &:not([data-placement='center']) {
+        margin-block: var(--neo-dialog-margin-block, var(--neo-gap));
+        margin-inline: var(--neo-dialog-margin-inline, var(--neo-gap));
       }
 
       &[data-placement^='bottom'] {
         inset-block: auto 0;
-      }
-
-      &[data-placement^='right'],
-      &[data-placement^='left'] {
-        margin-inline: 0;
       }
 
       &[data-placement^='right'] {
@@ -286,18 +380,24 @@
       }
 
       &.neo-slide {
-        @include mixin.slide-in;
-        @include mixin.fade-backdrop;
+        @include mixin.slide-in($toggle: '[data-open="true"]');
+        @include mixin.fade-backdrop(
+          $toggle: '[data-open="true"]',
+          $filter-end: --neo-dialog-backdrop-filter,
+          $color-end: --neo-dialog-backdrop-color
+        );
       }
     }
 
     &.neo-fade {
-      @include mixin.fade-in;
-      @include mixin.fade-backdrop;
+      --neo-fade-scale-start: 1.05;
+
+      @include mixin.fade-in($toggle: '[data-open="true"]');
+      @include mixin.fade-backdrop($toggle: '[data-open="true"]', $filter-end: --neo-dialog-backdrop-filter, $color-end: --neo-dialog-backdrop-color);
     }
   }
 
-  :global(body:has(.neo-dialog.neo-scroll-disabled[open])) {
+  :global(body:has(.neo-dialog.neo-scroll-disabled[data-open='true'])) {
     overflow: hidden;
   }
 </style>

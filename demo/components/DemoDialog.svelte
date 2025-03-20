@@ -241,6 +241,7 @@
       bind:modal={options.modal}
       bind:returnValue={options.returnValue}
       closable={options.closeOnClickOutside}
+      rounded={options.rounded}
       {...confirmOptions}
       dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
     >
@@ -262,6 +263,7 @@
       bind:modal={options.modal}
       bind:returnValue={options.returnValue}
       closable={options.closeOnClickOutside}
+      rounded={options.rounded}
       {...stepperOptions}
       dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
     />

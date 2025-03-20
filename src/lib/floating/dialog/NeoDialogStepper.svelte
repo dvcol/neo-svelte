@@ -113,4 +113,14 @@
   </NeoFloatingStepper>
 {/snippet}
 
-<NeoDialog bind:ref={dialogRef} bind:open bind:modal bind:returnValue children={dialog} {closedby} closeOnClickOutside={closable} {...dialogProps} />
+<NeoDialog
+  bind:ref={dialogRef}
+  bind:open
+  bind:modal
+  bind:returnValue
+  children={dialog}
+  {closedby}
+  {rounded}
+  closeOnClickOutside={closable}
+  {...dialogProps}
+/>

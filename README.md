@@ -151,7 +151,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] confirm
     - [x] backdrop
     - [x] position (center, top, bottom, left, right)
-    - [ ] custom tag (not dialog)
+    - [x] custom tag (not dialog)
   - [ ] HTML Popover
   - [ ] Drawer
     - [ ] animation

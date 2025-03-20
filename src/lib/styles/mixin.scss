@@ -484,7 +484,7 @@
     &::backdrop {
       background: var($color-end, var(--neo-background-color-backdrop));
       opacity: var($opacity-end, 1);
-      backdrop-filter: var($filter-end, blur(2px));
+      backdrop-filter: var($filter-end, var(--neo-blur-1));
       transition-timing-function: var($enter-timing, ease);
       transition-duration: var($enter-duration, 0.3s);
     }

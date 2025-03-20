@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
+
   import type { MouseEventHandler } from 'svelte/elements';
   import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
 
@@ -14,6 +16,7 @@
     header,
 
     // States
+    id = `neo-floating-confirm-${getUUID()}`,
     tag = 'div',
     loading = $bindable({
       cancel: false,
@@ -82,10 +85,10 @@
   </div>
 {/snippet}
 
-<svelte:element this={tag} class="neo-confirm" class:neo-rounded={rounded} {...rest}>
+<svelte:element this={tag} {id} class:neo-confirm={true} class:neo-rounded={rounded} {...rest}>
   {#if header}
-    <div class="neo-confirm-header">
-      <svelte:element this={headerTag} class="neo-confirm-title" {...headerRest}>
+    <div class="neo-confirm-header" id={`${id}-header`}>
+      <svelte:element this={headerTag} class:neo-confirm-title={true} {...headerRest}>
         {#if typeof header === 'function'}
           {@render header?.()}
         {:else}
@@ -98,7 +101,7 @@
     </div>
   {/if}
 
-  <svelte:element this={contentTag} class:neo-confirm-content={true} {...contentRest}>
+  <svelte:element this={contentTag} id={`${id}-content`} class:neo-confirm-content={true} {...contentRest}>
     {#if !header && closable}
       <div class="neo-confirm-content-close">
         {@render closeButton()}
