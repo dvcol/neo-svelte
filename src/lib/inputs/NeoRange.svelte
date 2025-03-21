@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { round } from '@dvcol/common-utils';
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { clamp } from '@dvcol/common-utils/common/math';
   import { getUUID } from '@dvcol/common-utils/common/string';
@@ -157,13 +158,14 @@
     return value;
   };
 
+  let holding = 1;
   const stepUp = (index = 0) => {
     if (disabled || readonly) return value;
-    return setValue((index ? (upper ?? 0) : lower) - (step || 1), index);
+    return setValue((index ? (upper ?? 0) : lower) - (step || 1) * round(holding), index);
   };
   const stepDown = (index = 0) => {
     if (disabled || readonly) return value;
-    return setValue((index ? (upper ?? 0) : lower) + (step || 1), index);
+    return setValue((index ? (upper ?? 0) : lower) + (step || 1) * round(holding), index);
   };
 
   const validity = $derived<NeoRangeValidationState>({
@@ -230,6 +232,7 @@
     const onDrag: DragEventHandler<HTMLElement> = e => e.preventDefault();
 
     const onArrow: KeyboardEventHandler<HTMLElement> = e => {
+      if (!e.key.startsWith('Arrow')) return;
       if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
         e.preventDefault();
         stepUp(index);
@@ -237,6 +240,11 @@
         e.preventDefault();
         stepDown(index);
       }
+      holding = Math.min((holding + 1) ** 1.01, 100);
+    };
+
+    const onArrowUp = () => {
+      holding = 1;
     };
 
     return {
@@ -245,6 +253,7 @@
       onpointerup: onUp,
       ondragstart: onDrag,
       onkeydown: onArrow,
+      onkeyup: onArrowUp,
     };
   };
 
