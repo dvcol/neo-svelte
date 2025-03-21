@@ -1,5 +1,6 @@
+import type { NeoDividerProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
-import type { HTMLDialogAttributes } from 'svelte/elements';
+import type { HTMLButtonAttributes, HTMLDialogAttributes } from 'svelte/elements';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
@@ -20,6 +21,13 @@ export type NeoDialogHTMLElement = HTMLDialogElement & {
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/requestClose)
    */
   requestClose?: (returnValue?: string) => void;
+};
+
+export type NeoDialogMovable = {
+  enabled: boolean;
+  placement: 'top' | 'right' | 'bottom' | 'left';
+  step: number;
+  render?: Snippet<['top' | 'right' | 'bottom' | 'left']>;
 };
 
 export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
@@ -92,7 +100,7 @@ export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTM
    *
    * @default false
    */
-  movable?: boolean;
+  movable?: boolean | Partial<NeoDialogMovable>;
 };
 
 export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
@@ -181,6 +189,10 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
    * @see tag
    */
   backdropProps?: HTMLNeoBaseElement;
+  /**
+   * Optional properties to pass to the dialog drag handle.
+   */
+  movableProps?: Partial<HTMLButtonAttributes> & { dividerProps?: NeoDividerProps };
 } & HTMLFlexProps &
   HTMLActionProps &
   NeoDialogContext<Tag> &

@@ -149,7 +149,8 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    padding: var(--neo-confirm-padding, var(--neo-gap-xxs));
+    margin: var(--neo-confirm-margin, var(--neo-gap-xxs));
+    padding: var(--neo-confirm-padding, 0);
 
     &-content {
       flex: 1 1 auto;
@@ -195,9 +196,9 @@
       justify-content: flex-end;
       margin-top: var(--neo-gap-sm);
       margin-bottom: var(--neo-gap-tiny);
-      padding-inline: var(--neo-gap-xxxs);
       opacity: 0.8;
       transition: opacity 0.3s ease;
+      padding-inline: var(--neo-gap-xxxs);
 
       --neo-btn-margin: 0;
     }

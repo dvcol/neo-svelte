@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
+  import { type NeoDialogMovable, NeoDivider } from 'src/lib/index.js';
   import { fade as fadeFn, fly, scale } from 'svelte/transition';
 
   import type { NeoDialogContext, NeoDialogHTMLElement, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
@@ -11,7 +13,7 @@
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
-  import { defaultDuration, quickDuration, shortDuration } from '~/utils/transition.utils.js';
+  import { defaultDuration, quickDuration, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -31,6 +33,7 @@
 
     // Position
     placement = 'center',
+    movable: _movable = true,
 
     // Style
     elevation: _elevation,
@@ -66,9 +69,25 @@
 
     // Other Props
     backdropProps,
+    movableProps: _movableProps,
     ...rest
   }: NeoDialogProps = $props();
   /* eslint-enable prefer-const */
+
+  const getMovablePlacement = () => {
+    if (placement?.startsWith('top')) return 'bottom';
+    if (placement?.startsWith('right')) return 'left';
+    if (placement?.startsWith('left')) return 'right';
+    return 'top';
+  };
+
+  const movable = $derived<NeoDialogMovable>({
+    enabled: true,
+    placement: getMovablePlacement(),
+    step: 4,
+    ...(typeof _movable === 'object' ? _movable : { enabled: _movable }),
+  });
+  const { dividerProps, ...movableProps } = $derived(_movableProps ?? {});
 
   const isNative = $derived(tag === 'dialog');
   const ariaProps = $derived(isNative ? {} : { role: 'dialog', 'aria-modal': modal });
@@ -108,6 +127,53 @@
   const onWindowKeydown = async (e: SvelteEvent<KeyboardEvent>) => {
     if (isNative || e.key !== 'Escape') return;
     onCancel(e);
+  };
+
+  let initial = $state<{ x: number; y: number }>({ x: 0, y: 0 });
+  let translate = $state<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const onPointerMove = (_e: PointerEvent) => {
+    translate = { x: _e.clientX - initial.x, y: _e.clientY - initial.y };
+  };
+
+  const onPointerStop = () => {
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerup', onPointerStop);
+    window.removeEventListener('pointercancel', onPointerStop);
+    window.removeEventListener('pointerleave', onPointerStop);
+  };
+
+  const onHandleClick = (e: SvelteEvent<PointerEvent>) => {
+    if (!movable.enabled || !ref) return;
+    e.preventDefault();
+    initial = { x: e.clientX - translate.x, y: e.clientY - translate.y };
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerStop);
+    window.addEventListener('pointercancel', onPointerStop);
+    window.addEventListener('pointerleave', onPointerStop);
+  };
+
+  let translating = $state(0);
+  const onHandleKeyUp = debounce(() => {
+    translating = 0;
+  }, 50);
+
+  const onHandleKeyDown = (e: SvelteEvent<KeyboardEvent>) => {
+    if (!movable.enabled || !ref) return;
+    if (!e.key.startsWith('Arrow')) return;
+    initial = { x: 0, y: 0 };
+    onHandleKeyUp.cancel();
+    translating = Math.min(translating + 1, 10);
+    const step = movable.step * translating;
+    if (e.key === 'ArrowLeft') {
+      translate = { x: translate.x - step, y: translate.y };
+    } else if (e.key === 'ArrowRight') {
+      translate = { x: translate.x + step, y: translate.y };
+    } else if (e.key === 'ArrowUp') {
+      translate = { x: translate.x, y: translate.y - step };
+    } else if (e.key === 'ArrowDown') {
+      translate = { x: translate.x, y: translate.y + step };
+    }
   };
 
   let timeout: ReturnType<typeof setTimeout>;
@@ -197,6 +263,7 @@
   const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside, placement });
 
   // TODO : drawers handle (& swipe) => dedicated component
+  // TODO - dragable => contain viewport & remove padding if header
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));
   const slide = $derived(_slide ?? (modal && placement !== 'center'));
@@ -218,6 +285,29 @@
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 </script>
+
+{#snippet handle()}
+  {#if movable.enabled}
+    <button
+      class:neo-dialog-handle={true}
+      data-placement={movable.placement}
+      onpointerdown={onHandleClick}
+      onkeydown={onHandleKeyDown}
+      onblur={onHandleKeyUp}
+      onkeyup={onHandleKeyUp}
+      aria-label="Drag handle"
+      title="Draggable"
+      transition:scale={quickScaleProps}
+      {...movableProps}
+    >
+      {#if movable.render}
+        {@render movable.render(movable.placement)}
+      {:else}
+        <NeoDivider role="presentation" vertical={['right', 'left'].includes(movable.placement)} {...dividerProps} />
+      {/if}
+    </button>
+  {/if}
+{/snippet}
 
 {#if !isNative && backdrop && modal && open}
   <div
@@ -250,6 +340,7 @@
     class:neo-fade={fade && !unmountOnClose}
     class:neo-slide={slide && !unmountOnClose}
     class:neo-scroll-disabled={disableBodyScroll}
+    class:neo-keyboard-translate={translating}
     {id}
     {closedby}
     in:inFn={inProps}
@@ -261,6 +352,7 @@
     onclick={onClick}
     style:justify-content={justify}
     style:align-items={align}
+    style:translate="{translate?.x ?? 0}px {translate?.y ?? 0}px"
     style:flex
     style:width={width?.absolute}
     style:min-width={width?.min}
@@ -275,6 +367,7 @@
     style:--neo-dialog-padding={padding}
     style:--neo-dialog-elevation={elevation}
   >
+    {@render handle()}
     {@render children?.(context)}
   </svelte:element>
 {/if}
@@ -323,6 +416,75 @@
       backdrop-filter: none;
     }
 
+    &-handle {
+      position: absolute;
+      display: flex;
+      height: fit-content;
+      margin: 0;
+      padding: var(--neo-dialog-handle-padding, calc(var(--neo-dialog-padding, var(--neo-gap-xs)) / 2));
+      color: inherit;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: move;
+      opacity: 0.6;
+      transition: opacity 0.3s ease-in;
+      appearance: none;
+      inset-inline: 0;
+      inset-block: 0;
+
+      --neo-divider-height: 0.25rem;
+      --neo-divider-width: clamp(2rem, 10%, 50%);
+
+      :global(> .neo-divider) {
+        margin-inline: auto;
+      }
+
+      &:focus-visible :global(> .neo-divider) {
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+        outline-offset: 1px;
+      }
+
+      &[data-placement^='bottom'] {
+        inset-block: auto 0;
+      }
+
+      &[data-placement^='right'] {
+        inset-inline: auto 0;
+      }
+
+      &[data-placement^='left'] {
+        inset-inline: 0 auto;
+      }
+
+      &[data-placement^='right'],
+      &[data-placement^='left'] {
+        --neo-divider-height: clamp(2rem, 10%, 50%);
+        --neo-divider-width: 0.25rem;
+
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+    }
+
+    &:focus-within,
+    &:focus,
+    &:hover {
+      .neo-dialog-handle {
+        opacity: 0.8;
+
+        &:focus,
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    &.neo-keyboard-translate {
+      transition: translate 100ms linear;
+    }
+
     &-backdrop {
       position: fixed;
       inset-block: 0;
@@ -351,37 +513,42 @@
       inset-block: 0;
       inset-inline: 0;
 
-      &:not([data-placement='center']) {
-        margin-block: var(--neo-dialog-margin-block, var(--neo-gap));
-        margin-inline: var(--neo-dialog-margin-inline, var(--neo-gap));
+      &[data-placement^='top'] {
+        margin-block: var(--neo-dialog-margin-block, var(--neo-gap)) 0;
       }
 
       &[data-placement^='bottom'] {
         inset-block: auto 0;
+        margin-block: 0 var(--neo-dialog-margin-block, var(--neo-gap));
       }
 
       &[data-placement^='right'] {
         inset-inline: auto 0;
+        margin-inline: 0 var(--neo-dialog-margin-inline, var(--neo-gap));
+      }
+
+      &[data-placement^='left'] {
+        margin-inline: var(--neo-dialog-margin-inline, var(--neo-gap)) 0;
       }
 
       &[data-placement='bottom-start'],
       &[data-placement='top-start'] {
-        margin-inline-start: 0;
+        margin-inline-start: var(--neo-dialog-margin-inline, var(--neo-gap));
       }
 
       &[data-placement='bottom-end'],
       &[data-placement='top-end'] {
-        margin-inline-end: 0;
+        margin-inline-end: var(--neo-dialog-margin-inline, var(--neo-gap));
       }
 
       &[data-placement='right-start'],
       &[data-placement='left-start'] {
-        margin-block-start: 0;
+        margin-block-start: var(--neo-dialog-margin-block, var(--neo-gap));
       }
 
       &[data-placement='right-end'],
       &[data-placement='left-end'] {
-        margin-block-end: 0;
+        margin-block-end: var(--neo-dialog-margin-block, var(--neo-gap));
       }
 
       &.neo-slide {

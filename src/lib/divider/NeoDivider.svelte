@@ -64,12 +64,13 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-divider {
-    --neo-divider-margin: 0px;
-
     box-sizing: border-box;
-    width: calc(var(--neo-divider-width, 100%) - var(--neo-divider-margin) * 2);
-    height: calc(max(var(--neo-divider-minimum), var(--neo-divider-height, 1px) - var(--neo-divider-margin) * 2));
-    margin: var(--neo-divider-margin, var(--neo-shadow-margin, 0.625rem));
+    width: calc(var(--neo-divider-width, 100%) - var(--neo-divider-margin-inline, var(--neo-divider-margin, 0px)) * 2);
+    height: calc(
+      max(var(--neo-divider-minimum), var(--neo-divider-height, 1px) - var(--neo-divider-margin-block, var(--neo-divider-margin, 0px)) * 2)
+    );
+    margin: 0;
+    padding: 0;
     border: none;
     border-radius: var(--neo-divider-border-radius, var(--neo-border-radius));
     box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
@@ -77,14 +78,15 @@
       border-radius 0.3s ease,
       box-shadow 0.3s ease-out,
       background-color 0.3s ease;
+    user-select: none;
 
     &.neo-rounded {
       border-radius: var(--neo-divider-border-radius, var(--neo-border-radius-lg));
     }
 
     &.neo-vertical {
-      width: max(var(--neo-divider-minimum), var(--neo-divider-width, 1px) - var(--neo-divider-margin) * 2);
-      height: calc(var(--neo-divider-height, 100%) - var(--neo-divider-margin, 0.625rem) * 2);
+      width: max(var(--neo-divider-minimum), var(--neo-divider-width, 1px) - var(--neo-divider-margin-inline, var(--neo-divider-margin, 0px)) * 2);
+      height: calc(var(--neo-divider-height, 100%) - var(--neo-divider-margin-block, var(--neo-divider-margin, 0px)) * 2);
     }
 
     &.neo-flat {
