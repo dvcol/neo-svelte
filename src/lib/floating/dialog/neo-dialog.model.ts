@@ -23,11 +23,36 @@ export type NeoDialogHTMLElement = HTMLDialogElement & {
   requestClose?: (returnValue?: string) => void;
 };
 
+export type NeoDialogHandlePlacement = 'top' | 'right' | 'bottom' | 'left';
+
 export type NeoDialogMovable = {
+  /** Whether the dialog can be dragged around. */
   enabled: boolean;
-  placement: 'top' | 'right' | 'bottom' | 'left';
+  /**
+   * Placement of the dialog handle (or array of visible handles).
+   *
+   * @default 'top'
+   **/
+  placement: NeoDialogHandlePlacement | NeoDialogHandlePlacement[];
+  /**
+   * The step size for dragging the dialog with arrow keys.
+   *
+   * @default 4
+   **/
   step: number;
+  /** The allowed axis for dragging the dialog. */
+  axis?: 'x' | 'y';
+  /** Whether the dialog should snap to the viewport edges. */
+  contain?: boolean;
+  /** Whether the handle should be visible. */
+  handle?: boolean;
+  /** Optional render snippet for the handle. */
   render?: Snippet<['top' | 'right' | 'bottom' | 'left']>;
+};
+
+export type NeoDialogMoved = {
+  x: number;
+  y: number;
 };
 
 export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
@@ -95,6 +120,13 @@ export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTM
    * @default center
    */
   placement?: NeoDialogPlacement;
+  /**
+   * The dialog's offset from it's original position if any (applied transform).
+   *
+   * @default { x: 0, y: 0 }
+   * @see movable
+   */
+  moved?: NeoDialogMoved;
   /**
    * Whether the dialog can be dragged around.
    *

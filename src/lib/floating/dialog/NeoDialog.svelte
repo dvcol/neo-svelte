@@ -3,7 +3,7 @@
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import { type NeoDialogMovable, NeoDivider } from 'src/lib/index.js';
+  import { type NeoDialogHandlePlacement, type NeoDialogMovable, NeoDivider } from 'src/lib/index.js';
   import { fade as fadeFn, fly, scale } from 'svelte/transition';
 
   import type { NeoDialogContext, NeoDialogHTMLElement, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
@@ -24,6 +24,7 @@
     ref = $bindable(),
     open = $bindable(false),
     modal = $bindable(true),
+    moved = $bindable({ x: 0, y: 0 }),
     returnValue = $bindable(),
     disableBodyScroll = modal,
     closedby,
@@ -85,6 +86,8 @@
     enabled: true,
     placement: getMovablePlacement(),
     step: 4,
+    handle: true,
+    contain: true,
     ...(typeof _movable === 'object' ? _movable : { enabled: _movable }),
   });
   const { dividerProps, ...movableProps } = $derived(_movableProps ?? {});
@@ -130,10 +133,35 @@
   };
 
   let initial = $state<{ x: number; y: number }>({ x: 0, y: 0 });
-  let translate = $state<{ x: number; y: number }>({ x: 0, y: 0 });
+  const translate = $derived.by(() => {
+    if (movable.axis === 'x') return `${moved?.x ?? 0}px 0`;
+    if (movable.axis === 'y') return `0 ${moved?.y ?? 0}px`;
+    return `${moved?.x ?? 0}px ${moved?.y ?? 0}px`;
+  });
+
+  let available = $state({ top: 0, right: 0, bottom: 0, left: 0 });
+  const updateAvailable = (element = ref) => {
+    if (!element) return;
+    const { top, right, bottom, left } = element.getBoundingClientRect();
+    available = {
+      top: top - moved.y,
+      bottom: window.innerHeight - (bottom - moved.y),
+      left: left - moved.x,
+      right: window.innerWidth - (right - moved.x),
+    };
+  };
+
+  const setMoved = (x: number, y: number) => {
+    if (!movable.contain) moved = { x, y };
+    else {
+      moved.x = Math.min(Math.max(x, -available.left), available.right);
+      moved.y = Math.min(Math.max(y, -available.top), available.bottom);
+    }
+    return moved;
+  };
 
   const onPointerMove = (_e: PointerEvent) => {
-    translate = { x: _e.clientX - initial.x, y: _e.clientY - initial.y };
+    setMoved(_e.clientX - initial.x, _e.clientY - initial.y);
   };
 
   const onPointerStop = () => {
@@ -146,7 +174,8 @@
   const onHandleClick = (e: SvelteEvent<PointerEvent>) => {
     if (!movable.enabled || !ref) return;
     e.preventDefault();
-    initial = { x: e.clientX - translate.x, y: e.clientY - translate.y };
+    initial = { x: e.clientX - moved.x, y: e.clientY - moved.y };
+    updateAvailable();
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerStop);
     window.addEventListener('pointercancel', onPointerStop);
@@ -162,17 +191,18 @@
     if (!movable.enabled || !ref) return;
     if (!e.key.startsWith('Arrow')) return;
     initial = { x: 0, y: 0 };
+
     onHandleKeyUp.cancel();
     translating = Math.min(translating + 1, 10);
     const step = movable.step * translating;
     if (e.key === 'ArrowLeft') {
-      translate = { x: translate.x - step, y: translate.y };
+      setMoved(moved.x - step, moved.y);
     } else if (e.key === 'ArrowRight') {
-      translate = { x: translate.x + step, y: translate.y };
+      setMoved(moved.x + step, moved.y);
     } else if (e.key === 'ArrowUp') {
-      translate = { x: translate.x, y: translate.y - step };
+      setMoved(moved.x, moved.y - step);
     } else if (e.key === 'ArrowDown') {
-      translate = { x: translate.x, y: translate.y + step };
+      setMoved(moved.x, moved.y + step);
     }
   };
 
@@ -199,7 +229,7 @@
   });
 
   const trapFocus = (e: SvelteEvent<FocusEvent>) => {
-    if (!open) return;
+    if (!open || !modal) return;
     if (!(e.target instanceof HTMLElement)) return;
     if (ref?.contains(e.target)) return;
     e.preventDefault();
@@ -207,7 +237,7 @@
   };
 
   $effect(() => {
-    if (!ref || !open || isNative) return;
+    if (!ref || !open || isNative || !modal) return;
 
     getFocusableElement(ref)?.focus();
     window.addEventListener('focusin', trapFocus);
@@ -262,8 +292,8 @@
 
   const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside, placement });
 
+  // TODO - resizable
   // TODO : drawers handle (& swipe) => dedicated component
-  // TODO - dragable => contain viewport & remove padding if header
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));
   const slide = $derived(_slide ?? (modal && placement !== 'center'));
@@ -286,26 +316,39 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-{#snippet handle()}
-  {#if movable.enabled}
-    <button
-      class:neo-dialog-handle={true}
-      data-placement={movable.placement}
-      onpointerdown={onHandleClick}
-      onkeydown={onHandleKeyDown}
-      onblur={onHandleKeyUp}
-      onkeyup={onHandleKeyUp}
-      aria-label="Drag handle"
-      title="Draggable"
-      transition:scale={quickScaleProps}
-      {...movableProps}
-    >
+{#snippet handle(_placement: NeoDialogHandlePlacement, _axis = movable.axis)}
+  <button
+    class:neo-dialog-handle={true}
+    data-placement={_placement}
+    data-axis={_axis}
+    onpointerdown={onHandleClick}
+    onkeydown={onHandleKeyDown}
+    onblur={onHandleKeyUp}
+    onkeyup={onHandleKeyUp}
+    aria-label="Drag handle"
+    title="Draggable"
+    transition:scale={quickScaleProps}
+    {...movableProps}
+  >
+    {#if movable.handle}
       {#if movable.render}
-        {@render movable.render(movable.placement)}
+        {@render movable.render(_placement)}
       {:else}
-        <NeoDivider role="presentation" vertical={['right', 'left'].includes(movable.placement)} {...dividerProps} />
+        <NeoDivider role="presentation" vertical={['right', 'left'].includes(_placement)} {...dividerProps} />
       {/if}
-    </button>
+    {/if}
+  </button>
+{/snippet}
+
+{#snippet handles()}
+  {#if movable.enabled}
+    {#if typeof movable.placement === 'string'}
+      {@render handle(movable.placement)}
+    {:else}
+      {#each movable.placement as _placement}
+        {@render handle(_placement)}
+      {/each}
+    {/if}
   {/if}
 {/snippet}
 
@@ -352,7 +395,7 @@
     onclick={onClick}
     style:justify-content={justify}
     style:align-items={align}
-    style:translate="{translate?.x ?? 0}px {translate?.y ?? 0}px"
+    style:translate
     style:flex
     style:width={width?.absolute}
     style:min-width={width?.min}
@@ -367,7 +410,7 @@
     style:--neo-dialog-padding={padding}
     style:--neo-dialog-elevation={elevation}
   >
-    {@render handle()}
+    {@render handles()}
     {@render children?.(context)}
   </svelte:element>
 {/if}
@@ -399,7 +442,6 @@
     margin-inline: var(--neo-dialog-margin-inline, auto);
     margin-block: var(--neo-dialog-margin-block, auto);
     padding: var(--neo-dialog-padding, var(--neo-gap-xs) var(--neo-gap));
-    overflow: auto;
     outline: none;
 
     &:not(:is(dialog)) {
@@ -420,6 +462,7 @@
       position: absolute;
       display: flex;
       height: fit-content;
+      min-height: calc(var(--neo-dialog-padding, var(--neo-gap-xs)) / 2);
       margin: 0;
       padding: var(--neo-dialog-handle-padding, calc(var(--neo-dialog-padding, var(--neo-gap-xs)) / 2));
       color: inherit;
@@ -443,6 +486,14 @@
       &:focus-visible :global(> .neo-divider) {
         outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
         outline-offset: 1px;
+      }
+
+      &[data-axis='x'] {
+        cursor: ew-resize;
+      }
+
+      &[data-axis='y'] {
+        cursor: ns-resize;
       }
 
       &[data-placement^='bottom'] {

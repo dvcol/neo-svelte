@@ -50,6 +50,7 @@ export type NeoDialogStepperProps = {
   | 'ref'
   | 'open'
   | 'modal'
+  | 'moved'
   | 'returnValue'
   | 'closedby'
   | 'unmountOnClose'

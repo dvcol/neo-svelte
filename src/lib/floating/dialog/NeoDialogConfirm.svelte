@@ -18,6 +18,7 @@
     ref = $bindable(),
     open = $bindable(false),
     modal = $bindable(true),
+    moved = $bindable({ x: 0, y: 0 }),
     returnValue = $bindable(),
     closedby,
     unmountOnClose,
@@ -111,6 +112,7 @@
   bind:ref
   bind:open
   bind:modal
+  bind:moved
   bind:returnValue
   {closedby}
   {unmountOnClose}

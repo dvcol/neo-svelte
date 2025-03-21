@@ -39,6 +39,10 @@
 
     returnValue: undefined,
     placement: 'center',
+    movable: false,
+
+    onclose: () => console.info('Dialog closed'),
+    oncancel: () => console.info('Dialog cancelled'),
   });
 
   const position = [{ value: 'center', label: 'Center' }, ...positionOptions];
@@ -46,11 +50,11 @@
   let openDefault = $state(false);
   let openConfirm = $state(false);
   let openStepper = $state(false);
+  let openDrawer = $state(false);
 
   const confirmOptions: NeoDialogConfirmProps = {
     dialog: lorem,
     header: 'Confirm dialog',
-    width: { max: '40rem' },
     onClose: () => console.info('Confirm dialog button closed'),
     onConfirm: async () => {
       console.info('Confirm dialog button confirming...');
@@ -63,10 +67,6 @@
       await wait(1000);
       console.info('Confirm dialog button cancelled');
       return true;
-    },
-    dialogProps: {
-      onclose: () => console.info('Dialog closed'),
-      oncancel: () => console.info('Dialog cancelled'),
     },
   };
 
@@ -131,6 +131,7 @@
     <NeoButton toggle bind:checked={options.disableBodyScroll}>Body Scroll</NeoButton>
     <NeoButton toggle bind:checked={options.closeOnClickOutside}>Click Outside</NeoButton>
     <NeoButton toggle bind:checked={options.backdrop}>Backdrop</NeoButton>
+    <NeoButton toggle bind:checked={options.movable}>Movable</NeoButton>
     <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
@@ -208,65 +209,80 @@
   <IconListSmall filled={active === 2} />
 {/snippet}
 
-<div class="row content">
-  <div class="column">
-    <span class="label">Default</span>
-
-    <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
+<div class="column content">
+  <div class="row">
     {#if options.returnValue !== undefined}
       <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
     {/if}
+    <div class="column">
+      <span class="label">Default</span>
 
-    <NeoDialog
-      {...options}
-      elevation={options.elevation > 0 ? options.elevation : undefined}
-      bind:open={openDefault}
-      bind:modal={options.modal}
-      bind:returnValue={options.returnValue}
-    >
-      {@render lorem()}
-    </NeoDialog>
+      <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
+
+      <NeoDialog
+        {...options}
+        elevation={options.elevation > 0 ? options.elevation : undefined}
+        bind:open={openDefault}
+        bind:modal={options.modal}
+        bind:returnValue={options.returnValue}
+      >
+        {@render lorem()}
+      </NeoDialog>
+    </div>
+
+    <div class="column">
+      <span class="label">Confirm</span>
+
+      <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
+
+      <NeoDialogConfirm
+        bind:open={openConfirm}
+        bind:modal={options.modal}
+        bind:returnValue={options.returnValue}
+        closable={options.closeOnClickOutside}
+        rounded={options.rounded}
+        {...confirmOptions}
+        dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
+      >
+        {@render lorem()}
+      </NeoDialogConfirm>
+    </div>
+
+    <div class="column">
+      <span class="label">Stepper</span>
+
+      <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
+
+      <NeoDialogStepper
+        bind:active
+        bind:open={openStepper}
+        bind:modal={options.modal}
+        bind:returnValue={options.returnValue}
+        closable={options.closeOnClickOutside}
+        rounded={options.rounded}
+        {...stepperOptions}
+        dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...stepperOptions.dialogProps }}
+      />
+    </div>
   </div>
 
-  <div class="column">
-    <span class="label">Confirm</span>
+  <div class="row">
+    <span class="label">Drawer</span>
 
-    <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
-    {#if options.returnValue !== undefined}
-      <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
-    {/if}
-
-    <NeoDialogConfirm
-      bind:open={openConfirm}
-      bind:modal={options.modal}
-      bind:returnValue={options.returnValue}
-      closable={options.closeOnClickOutside}
-      rounded={options.rounded}
-      {...confirmOptions}
-      dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
-    >
-      {@render lorem()}
-    </NeoDialogConfirm>
-  </div>
-
-  <div class="column">
-    <span class="label">Stepper</span>
-
-    <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
-    {#if options.returnValue !== undefined}
-      <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
-    {/if}
-
-    <NeoDialogStepper
-      bind:active
-      bind:open={openStepper}
-      bind:modal={options.modal}
-      bind:returnValue={options.returnValue}
-      closable={options.closeOnClickOutside}
-      rounded={options.rounded}
-      {...stepperOptions}
-      dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
-    />
+    <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
+    <div class="column">
+      <NeoDialog
+        bind:open={openDrawer}
+        bind:modal={options.modal}
+        bind:returnValue={options.returnValue}
+        closable={options.closeOnClickOutside}
+        rounded={options.rounded}
+        elevation={options.elevation > 0 ? options.elevation : undefined}
+        {...options}
+      >
+        {@render lorem()}
+      </NeoDialog>
+    </div>
   </div>
 </div>
 
@@ -279,6 +295,15 @@
     word-break: break-all;
   }
 
+  p {
+    max-width: 80ch;
+  }
+
+  .content {
+    align-content: center;
+    margin: auto;
+  }
+
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
   }
@@ -287,10 +312,5 @@
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     margin: 2rem 0;
-
-    &.content {
-      flex: 1 1 100%;
-      height: 100%;
-    }
   }
 </style>

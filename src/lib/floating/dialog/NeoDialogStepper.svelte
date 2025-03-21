@@ -20,6 +20,7 @@
     dialogRef = $bindable(),
     open = $bindable(false),
     modal = $bindable(true),
+    moved = $bindable({ x: 0, y: 0 }),
     returnValue = $bindable(),
     closedby,
     unmountOnClose,
@@ -148,6 +149,7 @@
   bind:ref={dialogRef}
   bind:open
   bind:modal
+  bind:moved
   bind:returnValue
   children={dialog}
   {closedby}

@@ -42,6 +42,7 @@ export type NeoDialogConfirmProps = {
   | 'ref'
   | 'open'
   | 'modal'
+  | 'moved'
   | 'returnValue'
   | 'closedby'
   | 'unmountOnClose'
