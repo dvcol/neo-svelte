@@ -2,6 +2,7 @@ import type { NeoDividerProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 import type { HTMLButtonAttributes, HTMLDialogAttributes } from 'svelte/elements';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
+import type { NeoMovable, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
@@ -21,38 +22,6 @@ export type NeoDialogHTMLElement = HTMLDialogElement & {
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/requestClose)
    */
   requestClose?: (returnValue?: string) => void;
-};
-
-export type NeoDialogHandlePlacement = 'top' | 'right' | 'bottom' | 'left';
-
-export type NeoDialogMovable = {
-  /** Whether the dialog can be dragged around. */
-  enabled: boolean;
-  /**
-   * Placement of the dialog handle (or array of visible handles).
-   *
-   * @default 'top'
-   **/
-  placement: NeoDialogHandlePlacement | NeoDialogHandlePlacement[];
-  /**
-   * The step size for dragging the dialog with arrow keys.
-   *
-   * @default 4
-   **/
-  step: number;
-  /** The allowed axis for dragging the dialog. */
-  axis?: 'x' | 'y';
-  /** Whether the dialog should snap to the viewport edges. */
-  contain?: boolean;
-  /** Whether the handle should be visible. */
-  handle?: boolean;
-  /** Optional render snippet for the handle. */
-  render?: Snippet<['top' | 'right' | 'bottom' | 'left']>;
-};
-
-export type NeoDialogMoved = {
-  x: number;
-  y: number;
 };
 
 export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
@@ -126,13 +95,13 @@ export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTM
    * @default { x: 0, y: 0 }
    * @see movable
    */
-  moved?: NeoDialogMoved;
+  moved?: NeoMoved;
   /**
    * Whether the dialog can be dragged around.
    *
    * @default false
    */
-  movable?: boolean | Partial<NeoDialogMovable>;
+  movable?: boolean | Partial<NeoMovable>;
 };
 
 export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {

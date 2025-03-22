@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import { type NeoDialogHandlePlacement, type NeoDialogMovable, NeoDivider } from 'src/lib/index.js';
+  import { NeoDivider } from 'src/lib/index.js';
   import { fade as fadeFn, fly, scale } from 'svelte/transition';
 
-  import type { NeoDialogContext, NeoDialogHTMLElement, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
+  import type { NeoDialogContext, NeoDialogProps, NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
+  import { type NeoMovable, type NeoMovableHandlePlacement, useMovable } from '~/floating/dialog/use-movable.svelte.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
@@ -82,7 +82,7 @@
     return 'top';
   };
 
-  const movable = $derived<NeoDialogMovable>({
+  const movable = $derived<NeoMovable>({
     enabled: true,
     placement: getMovablePlacement(),
     step: 4,
@@ -132,79 +132,20 @@
     onCancel(e);
   };
 
-  let initial = $state<{ x: number; y: number }>({ x: 0, y: 0 });
-  const translate = $derived.by(() => {
-    if (movable.axis === 'x') return `${moved?.x ?? 0}px 0`;
-    if (movable.axis === 'y') return `0 ${moved?.y ?? 0}px`;
-    return `${moved?.x ?? 0}px ${moved?.y ?? 0}px`;
+  const moving = useMovable({
+    get movable() {
+      return movable;
+    },
+    get element() {
+      return ref;
+    },
+    get offset() {
+      return moved;
+    },
+    set offset(val) {
+      moved = val;
+    },
   });
-
-  let available = $state({ top: 0, right: 0, bottom: 0, left: 0 });
-  const updateAvailable = (element = ref) => {
-    if (!element) return;
-    const { top, right, bottom, left } = element.getBoundingClientRect();
-    available = {
-      top: top - moved.y,
-      bottom: window.innerHeight - (bottom - moved.y),
-      left: left - moved.x,
-      right: window.innerWidth - (right - moved.x),
-    };
-  };
-
-  const setMoved = (x: number, y: number) => {
-    if (!movable.contain) moved = { x, y };
-    else {
-      moved.x = Math.min(Math.max(x, -available.left), available.right);
-      moved.y = Math.min(Math.max(y, -available.top), available.bottom);
-    }
-    return moved;
-  };
-
-  const onPointerMove = (_e: PointerEvent) => {
-    setMoved(_e.clientX - initial.x, _e.clientY - initial.y);
-  };
-
-  const onPointerStop = () => {
-    window.removeEventListener('pointermove', onPointerMove);
-    window.removeEventListener('pointerup', onPointerStop);
-    window.removeEventListener('pointercancel', onPointerStop);
-    window.removeEventListener('pointerleave', onPointerStop);
-  };
-
-  const onHandleClick = (e: SvelteEvent<PointerEvent>) => {
-    if (!movable.enabled || !ref) return;
-    e.preventDefault();
-    initial = { x: e.clientX - moved.x, y: e.clientY - moved.y };
-    updateAvailable();
-    window.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', onPointerStop);
-    window.addEventListener('pointercancel', onPointerStop);
-    window.addEventListener('pointerleave', onPointerStop);
-  };
-
-  let translating = $state(0);
-  const onHandleKeyUp = debounce(() => {
-    translating = 0;
-  }, 50);
-
-  const onHandleKeyDown = (e: SvelteEvent<KeyboardEvent>) => {
-    if (!movable.enabled || !ref) return;
-    if (!e.key.startsWith('Arrow')) return;
-    initial = { x: 0, y: 0 };
-
-    onHandleKeyUp.cancel();
-    translating = Math.min(translating + 1, 10);
-    const step = movable.step * translating;
-    if (e.key === 'ArrowLeft') {
-      setMoved(moved.x - step, moved.y);
-    } else if (e.key === 'ArrowRight') {
-      setMoved(moved.x + step, moved.y);
-    } else if (e.key === 'ArrowUp') {
-      setMoved(moved.x, moved.y - step);
-    } else if (e.key === 'ArrowDown') {
-      setMoved(moved.x, moved.y + step);
-    }
-  };
 
   let timeout: ReturnType<typeof setTimeout>;
   $effect(() => {
@@ -316,19 +257,16 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-{#snippet handle(_placement: NeoDialogHandlePlacement, _axis = movable.axis)}
+{#snippet handle(_placement: NeoMovableHandlePlacement, _axis = movable.axis)}
   <button
     class:neo-dialog-handle={true}
     data-placement={_placement}
     data-axis={_axis}
-    onpointerdown={onHandleClick}
-    onkeydown={onHandleKeyDown}
-    onblur={onHandleKeyUp}
-    onkeyup={onHandleKeyUp}
     aria-label="Drag handle"
     title="Draggable"
     transition:scale={quickScaleProps}
     {...movableProps}
+    {...moving.handlers}
   >
     {#if movable.handle}
       {#if movable.render}
@@ -383,7 +321,7 @@
     class:neo-fade={fade && !unmountOnClose}
     class:neo-slide={slide && !unmountOnClose}
     class:neo-scroll-disabled={disableBodyScroll}
-    class:neo-keyboard-translate={translating}
+    class:neo-keyboard-translate={moving.translating}
     {id}
     {closedby}
     in:inFn={inProps}
@@ -395,7 +333,7 @@
     onclick={onClick}
     style:justify-content={justify}
     style:align-items={align}
-    style:translate
+    style:translate={moving.translate}
     style:flex
     style:width={width?.absolute}
     style:min-width={width?.min}
