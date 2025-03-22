@@ -15,6 +15,12 @@ export type NeoDialogStepperProps = {
    */
   header?: Snippet<[NeoDialogContext, NeoStepperContext]> | string;
 
+  // Stepper props
+  /**
+   * Where to place the progress bar relative to the stepper content.
+   */
+  progressPlacement?: NeoFloatingStepperProps['placement'];
+
   // Dialog props
   /**
    * The dialog element reference.
@@ -76,4 +82,4 @@ export type NeoDialogStepperProps = {
   | 'use'
   | 'backdropProps'
 > &
-  NeoFloatingStepperProps;
+  Omit<NeoFloatingStepperProps, 'placement'>;

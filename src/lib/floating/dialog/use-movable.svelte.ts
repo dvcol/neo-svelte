@@ -1,7 +1,10 @@
 import { debounce } from '@dvcol/common-utils/common/debounce';
 
+import { watch } from '@dvcol/svelte-utils/watch';
+
 import type { HTMLAttributes } from 'svelte/elements';
 import type { NeoHandleState } from '~/floating/common/neo-handle.model.js';
+import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
 import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
 import { Logger } from '~/utils/logger.utils.js';
@@ -13,8 +16,20 @@ export type NeoMovable = NeoHandleState & {
    * @default 4
    **/
   step: number;
-  /** Whether the dialog should snap to the viewport edges. */
+  /**
+   * Whether the dialog should snap to the viewport edges.
+   **/
   contain?: boolean;
+  /**
+   * Whether the dialog should snap to the viewport edges.
+   */
+  snap?: boolean;
+  /**
+   * The margin around the dialog when snapping to the viewport edges.
+   *
+   * @default 16px
+   */
+  margin?: number;
 };
 
 export type NeoMoved = {
@@ -28,29 +43,35 @@ export type NeoMovableHandlers<Element extends HTMLElement = HTMLButtonElement> 
 >;
 
 export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
+  offset: NeoMoved;
+  placement: NeoDialogPlacement;
   movable?: Partial<NeoMovable>;
-  offset?: Partial<NeoMoved>;
   element?: Element;
   handlers?: Partial<NeoMovableHandlers>;
 }): {
   offset: NeoMoved;
   movable: NeoMovable;
   element?: Element;
+  placement: NeoDialogPlacement;
   translate: CSSStyleDeclaration['translate'];
   translating: number;
   handlers: NeoMovableHandlers;
+  reset: () => Promise<unknown>;
 } => {
+  const offset = $derived(options.offset);
   const element = $derived(options.element);
+  const placement = $derived(options.placement);
   const movable = $derived<NeoMovable>({
     enabled: true,
     placement: 'top',
     step: 4,
     handle: true,
-    contain: true,
+    margin: 16,
+    contain: false,
+    snap: true,
     ...options.movable,
   });
 
-  let offset = $state<NeoMoved>({ x: 0, y: 0, ...options.offset });
   let initial = $state<{ x: number; y: number }>({ x: 0, y: 0 });
   const translate = $derived.by(() => {
     if (movable.axis === 'x') return `${offset?.x ?? 0}px 0`;
@@ -58,28 +79,109 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     return `${offset?.x ?? 0}px ${offset?.y ?? 0}px`;
   });
 
+  let translating = $state(0);
+  let transition: string = '';
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const startTranslating = (value = 1, easing: string = '300ms ease-in-out') => {
+    clearTimeout(timeout);
+    translating = value;
+    if (!element) return;
+    if (!translating) transition = element.style.transition;
+    const computed = getComputedStyle(element).transition;
+    element.style.transition = computed.includes('translate')
+      ? computed.replace(/translate[^;]+/g, `translate ${easing}`)
+      : `${computed}, translate ${easing}`;
+  };
+  const stopTranslating = debounce(async (delay = 300) => {
+    clearTimeout(timeout);
+    translating = 0;
+    const { resolve, promise } = Promise.withResolvers();
+    timeout = setTimeout(() => {
+      if (translating || !element) return resolve(false);
+      element.style.transition = transition;
+      transition = '';
+      resolve(true);
+    }, delay);
+    return promise;
+  }, 50);
+
   let available = $state({ top: 0, right: 0, bottom: 0, left: 0 });
   const updateAvailable = () => {
-    if (!element) return;
+    if (!element) return {};
     const { top, right, bottom, left } = element.getBoundingClientRect();
+    const margin = movable.margin ?? 0;
     available = {
-      top: top - offset.y,
-      bottom: window.innerHeight - (bottom - offset.y),
-      left: left - offset.x,
-      right: window.innerWidth - (right - offset.x),
+      top: Math.max(0, top - offset.y - margin),
+      bottom: Math.max(0, window.innerHeight - (bottom - offset.y) - margin),
+      left: Math.max(0, left - offset.x - margin),
+      right: Math.max(0, window.innerWidth - (right - offset.x) - margin),
     };
+    return { top, right, bottom, left, available };
   };
 
-  const setOffset = (x: number, y: number) => {
-    offset = {
-      x: !movable.contain ? x : Math.min(Math.max(x, -available.left), available.right),
-      y: !movable.contain ? y : Math.min(Math.max(y, -available.top), available.bottom),
-    };
-    options.offset = $state.snapshot(offset);
+  const setOffset = (x: number, y: number, contain = movable.contain) => {
+    options.offset.x = !contain ? x : Math.min(Math.max(x, -available.left), available.right);
+    options.offset.y = !contain ? y : Math.min(Math.max(y, -available.top), available.bottom);
   };
+
+  const resetOffset = (x = 0, y = 0) => {
+    setOffset(x, y, false);
+    return stopTranslating(0);
+  };
+
+  watch(
+    () => {
+      resetOffset().catch(Logger.error);
+    },
+    () => placement,
+    { skip: 1 },
+  );
 
   const onPointerMove = (_e: PointerEvent) => {
     setOffset(_e.clientX - initial.x, _e.clientY - initial.y);
+  };
+
+  const snapToClosest = async () => {
+    if (!element || !movable.snap) return;
+    const { left, right, top, bottom } = updateAvailable();
+    if (left === undefined || right === undefined || top === undefined || bottom === undefined) return;
+
+    startTranslating();
+
+    const windowX = window.innerWidth / 2;
+    const middleX = left + (right - left) / 2;
+
+    const _offset = { x: 0, y: 0 };
+    if (middleX > windowX) {
+      _offset.x = available.right;
+    } else {
+      _offset.x = -available.left;
+    }
+
+    const windowY = window.innerHeight / 2;
+    const middleY = top + (bottom - top) / 2;
+
+    if (middleY > windowY) {
+      _offset.y = available.bottom;
+    } else {
+      _offset.y = -available.top;
+    }
+
+    setOffset(_offset.x, _offset.y);
+
+    await stopTranslating();
+
+    // TODO - other snap position (center, top, bottom, left, right)
+    // TODO - custom grid position (i.e. every multiple of x, y steps)
+    if (offset.x === available.right && offset.y === available.bottom) {
+      options.placement = 'bottom-end';
+    } else if (offset.x === available.right && offset.y === -available.top) {
+      options.placement = 'top-end';
+    } else if (offset.x === -available.left && offset.y === available.bottom) {
+      options.placement = 'bottom-start';
+    } else if (offset.x === -available.left && offset.y === -available.top) {
+      options.placement = 'top-start';
+    }
   };
 
   const onPointerStop = () => {
@@ -87,11 +189,11 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     window.removeEventListener('pointerup', onPointerStop);
     window.removeEventListener('pointercancel', onPointerStop);
     window.removeEventListener('pointerleave', onPointerStop);
+    snapToClosest().catch(Logger.error);
   };
 
-  const onHandleClick = (e: SvelteEvent<PointerEvent>) => {
+  const onPointerDown = (e: SvelteEvent<PointerEvent>) => {
     if (!movable.enabled || !element || e.button !== 0) return;
-    e.preventDefault();
     initial = { x: e.clientX - offset.x, y: e.clientY - offset.y };
     updateAvailable();
     window.addEventListener('pointermove', onPointerMove);
@@ -100,18 +202,13 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     window.addEventListener('pointerleave', onPointerStop);
   };
 
-  let translating = $state(0);
-  const onHandleKeyUp = debounce(() => {
-    translating = 0;
-  }, 50);
-
-  const onHandleKeyDown = (e: SvelteEvent<KeyboardEvent>) => {
+  const onKeyDown = (e: SvelteEvent<KeyboardEvent>) => {
     if (!movable.enabled || !element) return;
     if (!e.key.startsWith('Arrow')) return;
     initial = { x: 0, y: 0 };
 
-    onHandleKeyUp.cancel().catch(Logger.error);
-    translating = Math.min(translating + 1, 10);
+    stopTranslating.cancel().catch(Logger.error);
+    startTranslating(Math.min(translating + 1, 10), '100ms linear');
     const step = movable.step * translating;
     if (e.key === 'ArrowLeft') {
       setOffset(offset.x - step, offset.y);
@@ -124,9 +221,18 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     }
   };
 
+  const onKeyUp = async (e: SvelteEvent<KeyboardEvent>) => {
+    if (!e.key.startsWith('Arrow')) return;
+    await stopTranslating(0);
+    await snapToClosest();
+  };
+
   return {
     get offset() {
       return offset;
+    },
+    get placement() {
+      return placement;
     },
     get movable() {
       return movable;
@@ -143,22 +249,23 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     get handlers() {
       return {
         onpointerdown: (e: SvelteEvent<PointerEvent>) => {
-          onHandleClick(e);
+          onPointerDown(e);
           return options.handlers?.onpointerdown?.(e);
         },
         onkeydown: (e: SvelteEvent<KeyboardEvent>) => {
-          onHandleKeyDown(e);
+          onKeyDown(e);
           return options.handlers?.onkeydown?.(e);
         },
-        onkeyup: (e: SvelteEvent<KeyboardEvent>) => {
-          onHandleKeyUp().catch(Logger.error);
+        onkeyup: async (e: SvelteEvent<KeyboardEvent>) => {
+          onKeyUp(e).catch(Logger.error);
           return options.handlers?.onkeyup?.(e);
         },
         onblur: (e: SvelteEvent<FocusEvent>) => {
-          onPointerStop();
+          stopTranslating().catch(Logger.error);
           return options.handlers?.onblur?.(e);
         },
       };
     },
+    reset: resetOffset,
   };
 };

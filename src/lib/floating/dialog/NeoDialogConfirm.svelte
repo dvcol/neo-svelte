@@ -24,7 +24,7 @@
     unmountOnClose,
 
     // Position
-    placement,
+    placement = $bindable('center'),
     movable,
 
     // Style
@@ -113,11 +113,11 @@
   bind:open
   bind:modal
   bind:moved
+  bind:placement
   bind:returnValue
   {closedby}
   {unmountOnClose}
   closeOnClickOutside={closable}
-  {placement}
   {movable}
   {elevation}
   {blur}

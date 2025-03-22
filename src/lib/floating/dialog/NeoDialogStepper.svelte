@@ -26,7 +26,7 @@
     unmountOnClose,
 
     // Position
-    placement,
+    placement = $bindable('center'),
     movable,
 
     // Style
@@ -67,6 +67,7 @@
     marks: _marks,
     progress = true,
     closable = closedby === undefined,
+    progressPlacement,
 
     // Styles
     rounded,
@@ -129,6 +130,7 @@
     {progress}
     {closable}
     {rounded}
+    placement={progressPlacement}
     header={title ? header : undefined}
     onClose={onCloseButton}
     onCancel={onCancelButton}
@@ -150,12 +152,12 @@
   bind:open
   bind:modal
   bind:moved
+  bind:placement
   bind:returnValue
   children={dialog}
   {closedby}
   {unmountOnClose}
   closeOnClickOutside={closable}
-  {placement}
   {movable}
   {elevation}
   {blur}

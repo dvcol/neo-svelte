@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { circOut } from 'svelte/easing';
   import { scale } from 'svelte/transition';
 
   import type { NeoHandlePlacement, NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
-  import { quickScaleProps } from '~/utils/transition.utils.js';
+  import { defaultDuration } from '~/utils/transition.utils.js';
 
   const {
     // Snippets
@@ -12,6 +13,7 @@
     handle = true,
 
     // State
+    refs = $bindable([]),
     enabled = true,
     placement = 'top',
     position = 'inside',
@@ -27,35 +29,42 @@
 </script>
 
 {#snippet handleButton(_placement: NeoHandlePlacement, index = 0)}
-  <button
-    class:neo-handle={true}
-    data-placement={_placement}
-    data-position={position}
-    data-axis={axis}
-    aria-label="Drag handle ({_placement})"
-    title="Draggable"
-    transition:scale={quickScaleProps}
-    bind:offsetWidth={width[index]}
-    bind:offsetHeight={height[index]}
-    style:--neo-handler-offset-width="{width[index]}px"
-    style:--neo-handler-offset-height="{height[index]}px"
-    {...rest}
-  >
-    {#if typeof handle === 'function'}
-      {@render handle(_placement)}
-    {:else if handle !== false}
-      <NeoDivider role="presentation" vertical={['right', 'left'].includes(_placement)} {...dividerProps} />
-    {/if}
+  {#key placement}
+    <button
+      bind:this={refs[index]}
+      bind:offsetWidth={width[index]}
+      bind:offsetHeight={height[index]}
+      class:neo-handle={true}
+      data-placement={_placement}
+      data-position={position}
+      data-axis={axis}
+      aria-label="Drag handle ({_placement})"
+      title="Draggable"
+      transition:scale={{ duration: defaultDuration, start: 0.8, easing: circOut }}
+      style:--neo-handler-offset-width="{width[index]}px"
+      style:--neo-handler-offset-height="{height[index]}px"
+      {...rest}
+      onblur={e => {
+        refs?.at(0)?.focus();
+        return rest.onblur?.(e);
+      }}
+    >
+      {#if typeof handle === 'function'}
+        {@render handle(_placement)}
+      {:else if handle !== false}
+        <NeoDivider role="presentation" vertical={['right', 'left'].includes(_placement)} {...dividerProps} />
+      {/if}
 
-    {@render children?.({ enabled, placement: _placement, axis })}
-  </button>
+      {@render children?.({ enabled, placement: _placement, axis })}
+    </button>
+  {/key}
 {/snippet}
 
 {#if enabled}
   {#if typeof placement === 'string'}
     {@render handleButton(placement)}
   {:else}
-    {#each placement as _placement, index}
+    {#each placement as _placement, index (_placement)}
       {@render handleButton(_placement, index)}
     {/each}
   {/if}

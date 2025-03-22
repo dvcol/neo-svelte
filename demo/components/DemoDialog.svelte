@@ -228,6 +228,7 @@
         elevation={options.elevation > 0 ? options.elevation : undefined}
         bind:open={openDefault}
         bind:modal={options.modal}
+        bind:placement={options.placement}
         bind:returnValue={options.returnValue}
       >
         {@render lorem()}
@@ -238,10 +239,11 @@
       <span class="label">Confirm</span>
 
       <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
-
+      {options.placement}
       <NeoDialogConfirm
         bind:open={openConfirm}
         bind:modal={options.modal}
+        bind:placement={options.placement}
         bind:returnValue={options.returnValue}
         closable={options.closeOnClickOutside}
         rounded={options.rounded}
@@ -261,6 +263,7 @@
         bind:active
         bind:open={openStepper}
         bind:modal={options.modal}
+        bind:placement={options.placement}
         bind:returnValue={options.returnValue}
         closable={options.closeOnClickOutside}
         rounded={options.rounded}
@@ -278,6 +281,7 @@
       <NeoDialog
         bind:open={openDrawer}
         bind:modal={options.modal}
+        bind:placement={options.placement}
         bind:returnValue={options.returnValue}
         closable={options.closeOnClickOutside}
         rounded={options.rounded}

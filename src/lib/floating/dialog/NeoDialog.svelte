@@ -32,7 +32,7 @@
     tag = unmountOnClose ? 'div' : 'dialog',
 
     // Position
-    placement = 'center',
+    placement = $bindable('center'),
     movable: _movable = true,
 
     // Style
@@ -127,17 +127,23 @@
   };
 
   const moving = useMovable({
-    get movable() {
-      return movable;
-    },
-    get element() {
-      return ref;
-    },
     get offset() {
       return moved;
     },
     set offset(val) {
       moved = val;
+    },
+    get placement() {
+      return placement;
+    },
+    set placement(val) {
+      placement = val;
+    },
+    get movable() {
+      return movable;
+    },
+    get element() {
+      return ref;
     },
     get handlers() {
       return {
@@ -233,6 +239,7 @@
     }
   });
 
+  // TODO - add movable props to context
   const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside, placement });
 
   // TODO - resizable containers
@@ -291,8 +298,8 @@
     class:neo-flat={!elevation}
     class:neo-fade={fade && !unmountOnClose}
     class:neo-slide={slide && !unmountOnClose}
+    class:neo-movable={movable.enabled}
     class:neo-scroll-disabled={disableBodyScroll}
-    class:neo-keyboard-translate={moving.translating}
     {id}
     {closedby}
     in:inFn={inProps}
@@ -322,6 +329,7 @@
     <NeoHandle
       enabled={movable.enabled}
       placement={movable.placement}
+      position={movable.position}
       axis={movable.axis}
       handle={movable.handle}
       {...moving.handlers}
@@ -360,6 +368,10 @@
     padding: var(--neo-dialog-padding, var(--neo-gap-sm) var(--neo-gap));
     outline: none;
 
+    &.neo-movable {
+      will-change: translate;
+    }
+
     &:not(:is(dialog)) {
       z-index: var(--neo-dialog-z-index, var(--neo-z-index-layer-top));
     }
@@ -394,10 +406,6 @@
       }
     }
 
-    &.neo-keyboard-translate {
-      transition: translate 100ms linear;
-    }
-
     &-backdrop {
       position: fixed;
       inset-block: 0;
@@ -409,6 +417,7 @@
     &::backdrop {
       background: var(--neo-dialog-backdrop-color, var(--neo-background-color-backdrop));
       backdrop-filter: var(--neo-dialog-backdrop-filter, var(--neo-blur-1));
+      will-change: backdrop-filter, background, opacity, display;
     }
 
     &:not(.neo-backdrop) {
@@ -427,41 +436,41 @@
       inset-inline: 0;
 
       &[data-placement^='top'] {
-        margin-block: var(--neo-dialog-margin-block, var(--neo-gap)) 0;
+        margin-block: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
       }
 
       &[data-placement^='bottom'] {
         inset-block: auto 0;
-        margin-block: 0 var(--neo-dialog-margin-block, var(--neo-gap));
+        margin-block: 0 var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
       &[data-placement^='right'] {
         inset-inline: auto 0;
-        margin-inline: 0 var(--neo-dialog-margin-inline, var(--neo-gap));
+        margin-inline: 0 var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
       &[data-placement^='left'] {
-        margin-inline: var(--neo-dialog-margin-inline, var(--neo-gap)) 0;
+        margin-inline: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
       }
 
       &[data-placement='bottom-start'],
       &[data-placement='top-start'] {
-        margin-inline-start: var(--neo-dialog-margin-inline, var(--neo-gap));
+        margin-inline-start: var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
       &[data-placement='bottom-end'],
       &[data-placement='top-end'] {
-        margin-inline-end: var(--neo-dialog-margin-inline, var(--neo-gap));
+        margin-inline-end: var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
       &[data-placement='right-start'],
       &[data-placement='left-start'] {
-        margin-block-start: var(--neo-dialog-margin-block, var(--neo-gap));
+        margin-block-start: var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
       &[data-placement='right-end'],
       &[data-placement='left-end'] {
-        margin-block-end: var(--neo-dialog-margin-block, var(--neo-gap));
+        margin-block-end: var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
       &.neo-slide {

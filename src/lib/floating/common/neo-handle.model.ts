@@ -37,6 +37,10 @@ export type NeoHandleProps = {
    */
   children?: Snippet<[Omit<NeoHandleState, 'placement' | 'handle'> & { placement: NeoHandlePlacement }]>;
   /**
+   * Optional references to the handle buttons.
+   */
+  refs?: HTMLButtonElement[];
+  /**
    * Optional properties to pass to the default drag handle (divider).
    */
   dividerProps?: NeoDividerProps;
