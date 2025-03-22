@@ -1,6 +1,6 @@
-import type { NeoDividerProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
-import type { HTMLButtonAttributes, HTMLDialogAttributes } from 'svelte/elements';
+import type { HTMLDialogAttributes } from 'svelte/elements';
+import type { NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
 import type { NeoMovable, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
@@ -193,7 +193,7 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
   /**
    * Optional properties to pass to the dialog drag handle.
    */
-  movableProps?: Partial<HTMLButtonAttributes> & { dividerProps?: NeoDividerProps };
+  handleProps?: NeoHandleProps;
 } & HTMLFlexProps &
   HTMLActionProps &
   NeoDialogContext<Tag> &

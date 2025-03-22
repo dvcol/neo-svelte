@@ -214,80 +214,78 @@
 {/snippet}
 
 <section>
-  <div class="column content">
-    <div class="row">
-      {#if options.returnValue !== undefined}
-        <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
-      {/if}
-      <div class="column">
-        <span class="label">Default</span>
+  <div class="row">
+    {#if options.returnValue !== undefined}
+      <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
+    {/if}
+    <div class="column">
+      <span class="label">Default</span>
 
-        <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
+      <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
 
-        <NeoDialog
-          {...options}
-          elevation={options.elevation > 0 ? options.elevation : undefined}
-          bind:open={openDefault}
-          bind:modal={options.modal}
-          bind:returnValue={options.returnValue}
-        >
-          {@render lorem()}
-        </NeoDialog>
-      </div>
-
-      <div class="column">
-        <span class="label">Confirm</span>
-
-        <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
-
-        <NeoDialogConfirm
-          bind:open={openConfirm}
-          bind:modal={options.modal}
-          bind:returnValue={options.returnValue}
-          closable={options.closeOnClickOutside}
-          rounded={options.rounded}
-          {...confirmOptions}
-          dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
-        >
-          {@render lorem()}
-        </NeoDialogConfirm>
-      </div>
-
-      <div class="column">
-        <span class="label">Stepper</span>
-
-        <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
-
-        <NeoDialogStepper
-          bind:active
-          bind:open={openStepper}
-          bind:modal={options.modal}
-          bind:returnValue={options.returnValue}
-          closable={options.closeOnClickOutside}
-          rounded={options.rounded}
-          {...stepperOptions}
-          dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...stepperOptions.dialogProps }}
-        />
-      </div>
+      <NeoDialog
+        {...options}
+        elevation={options.elevation > 0 ? options.elevation : undefined}
+        bind:open={openDefault}
+        bind:modal={options.modal}
+        bind:returnValue={options.returnValue}
+      >
+        {@render lorem()}
+      </NeoDialog>
     </div>
 
-    <div class="row">
-      <span class="label">Drawer</span>
+    <div class="column">
+      <span class="label">Confirm</span>
 
-      <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
-      <div class="column">
-        <NeoDialog
-          bind:open={openDrawer}
-          bind:modal={options.modal}
-          bind:returnValue={options.returnValue}
-          closable={options.closeOnClickOutside}
-          rounded={options.rounded}
-          elevation={options.elevation > 0 ? options.elevation : undefined}
-          {...options}
-        >
-          {@render lorem()}
-        </NeoDialog>
-      </div>
+      <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
+
+      <NeoDialogConfirm
+        bind:open={openConfirm}
+        bind:modal={options.modal}
+        bind:returnValue={options.returnValue}
+        closable={options.closeOnClickOutside}
+        rounded={options.rounded}
+        {...confirmOptions}
+        dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
+      >
+        {@render lorem()}
+      </NeoDialogConfirm>
+    </div>
+
+    <div class="column">
+      <span class="label">Stepper</span>
+
+      <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
+
+      <NeoDialogStepper
+        bind:active
+        bind:open={openStepper}
+        bind:modal={options.modal}
+        bind:returnValue={options.returnValue}
+        closable={options.closeOnClickOutside}
+        rounded={options.rounded}
+        {...stepperOptions}
+        dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...stepperOptions.dialogProps }}
+      />
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="label">Drawer</span>
+
+    <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
+    <div class="column">
+      <NeoDialog
+        bind:open={openDrawer}
+        bind:modal={options.modal}
+        bind:returnValue={options.returnValue}
+        closable={options.closeOnClickOutside}
+        rounded={options.rounded}
+        elevation={options.elevation > 0 ? options.elevation : undefined}
+        {...options}
+      >
+        {@render lorem()}
+      </NeoDialog>
     </div>
   </div>
 </section>
@@ -308,11 +306,6 @@
 
   p {
     max-width: 80ch;
-  }
-
-  .content {
-    align-content: center;
-    margin: auto;
   }
 
   .column {

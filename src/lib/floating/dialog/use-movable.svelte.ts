@@ -1,35 +1,20 @@
 import { debounce } from '@dvcol/common-utils/common/debounce';
 
-import type { Snippet } from 'svelte';
+import type { HTMLAttributes } from 'svelte/elements';
+import type { NeoHandleState } from '~/floating/common/neo-handle.model.js';
 import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
 import { Logger } from '~/utils/logger.utils.js';
 
-export type NeoMovableHandlePlacement = 'top' | 'right' | 'bottom' | 'left';
-
-export type NeoMovable = {
-  /** Whether the dialog can be dragged around. */
-  enabled: boolean;
-  /**
-   * Placement of the dialog handle (or array of visible handles).
-   *
-   * @default 'top'
-   **/
-  placement: NeoMovableHandlePlacement | NeoMovableHandlePlacement[];
+export type NeoMovable = NeoHandleState & {
   /**
    * The step size for dragging the dialog with arrow keys.
    *
    * @default 4
    **/
   step: number;
-  /** The allowed axis for dragging the dialog. */
-  axis?: 'x' | 'y';
   /** Whether the dialog should snap to the viewport edges. */
   contain?: boolean;
-  /** Whether the handle should be visible. */
-  handle?: boolean;
-  /** Optional render snippet for the handle. */
-  render?: Snippet<['top' | 'right' | 'bottom' | 'left']>;
 };
 
 export type NeoMoved = {
@@ -37,22 +22,23 @@ export type NeoMoved = {
   y: number;
 };
 
+export type NeoMovableHandlers<Element extends HTMLElement = HTMLButtonElement> = Pick<
+  HTMLAttributes<Element>,
+  'onpointerdown' | 'onkeydown' | 'onkeyup' | 'onblur'
+>;
+
 export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   movable?: Partial<NeoMovable>;
   offset?: Partial<NeoMoved>;
   element?: Element;
+  handlers?: Partial<NeoMovableHandlers>;
 }): {
   offset: NeoMoved;
   movable: NeoMovable;
   element?: Element;
-  translate?: CSSStyleDeclaration['translate'];
+  translate: CSSStyleDeclaration['translate'];
   translating: number;
-  handlers: {
-    onpointerdown: (e: SvelteEvent<PointerEvent>) => void;
-    onkeydown: (e: SvelteEvent<KeyboardEvent>) => void;
-    onkeyup: () => void;
-    onblur: () => void;
-  };
+  handlers: NeoMovableHandlers;
 } => {
   const element = $derived(options.element);
   const movable = $derived<NeoMovable>({
@@ -104,7 +90,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   };
 
   const onHandleClick = (e: SvelteEvent<PointerEvent>) => {
-    if (!movable.enabled || !element) return;
+    if (!movable.enabled || !element || e.button !== 0) return;
     e.preventDefault();
     initial = { x: e.clientX - offset.x, y: e.clientY - offset.y };
     updateAvailable();
@@ -156,10 +142,22 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     },
     get handlers() {
       return {
-        onpointerdown: onHandleClick,
-        onkeydown: onHandleKeyDown,
-        onkeyup: onHandleKeyUp,
-        onblur: onHandleKeyUp,
+        onpointerdown: (e: SvelteEvent<PointerEvent>) => {
+          onHandleClick(e);
+          return options.handlers?.onpointerdown?.(e);
+        },
+        onkeydown: (e: SvelteEvent<KeyboardEvent>) => {
+          onHandleKeyDown(e);
+          return options.handlers?.onkeydown?.(e);
+        },
+        onkeyup: (e: SvelteEvent<KeyboardEvent>) => {
+          onHandleKeyUp().catch(Logger.error);
+          return options.handlers?.onkeyup?.(e);
+        },
+        onblur: (e: SvelteEvent<FocusEvent>) => {
+          onPointerStop();
+          return options.handlers?.onblur?.(e);
+        },
       };
     },
   };

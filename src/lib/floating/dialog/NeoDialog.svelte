@@ -1,19 +1,18 @@
 <script lang="ts">
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
-
-  import { NeoDivider } from 'src/lib/index.js';
   import { fade as fadeFn, fly, scale } from 'svelte/transition';
 
   import type { NeoDialogContext, NeoDialogProps, NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import { type NeoMovable, type NeoMovableHandlePlacement, useMovable } from '~/floating/dialog/use-movable.svelte.js';
+  import NeoHandle from '~/floating/common/NeoHandle.svelte';
+  import { type NeoMovable, useMovable } from '~/floating/dialog/use-movable.svelte.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
-  import { defaultDuration, quickDuration, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
+  import { defaultDuration, quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -70,7 +69,7 @@
 
     // Other Props
     backdropProps,
-    movableProps: _movableProps,
+    handleProps,
     ...rest
   }: NeoDialogProps = $props();
   /* eslint-enable prefer-const */
@@ -82,15 +81,10 @@
     return 'top';
   };
 
-  const movable = $derived<NeoMovable>({
-    enabled: true,
+  const movable = $derived<Partial<NeoMovable>>({
     placement: getMovablePlacement(),
-    step: 4,
-    handle: true,
-    contain: true,
     ...(typeof _movable === 'object' ? _movable : { enabled: _movable }),
   });
-  const { dividerProps, ...movableProps } = $derived(_movableProps ?? {});
 
   const isNative = $derived(tag === 'dialog');
   const ariaProps = $derived(isNative ? {} : { role: 'dialog', 'aria-modal': modal });
@@ -144,6 +138,14 @@
     },
     set offset(val) {
       moved = val;
+    },
+    get handlers() {
+      return {
+        onpointerdown: handleProps?.onpointerdown,
+        onkeydown: handleProps?.onkeydown,
+        onkeyup: handleProps?.onkeyup,
+        onblur: handleProps?.onblur,
+      };
     },
   });
 
@@ -233,8 +235,10 @@
 
   const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside, placement });
 
-  // TODO - resizable
+  // TODO - resizable containers
   // TODO : drawers handle (& swipe) => dedicated component
+  // TODO : snap (edges, corner/center, grid)
+  // TODO : outside (handles picks out) - contain
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));
   const slide = $derived(_slide ?? (modal && placement !== 'center'));
@@ -256,39 +260,6 @@
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 </script>
-
-{#snippet handle(_placement: NeoMovableHandlePlacement, _axis = movable.axis)}
-  <button
-    class:neo-dialog-handle={true}
-    data-placement={_placement}
-    data-axis={_axis}
-    aria-label="Drag handle"
-    title="Draggable"
-    transition:scale={quickScaleProps}
-    {...movableProps}
-    {...moving.handlers}
-  >
-    {#if movable.handle}
-      {#if movable.render}
-        {@render movable.render(_placement)}
-      {:else}
-        <NeoDivider role="presentation" vertical={['right', 'left'].includes(_placement)} {...dividerProps} />
-      {/if}
-    {/if}
-  </button>
-{/snippet}
-
-{#snippet handles()}
-  {#if movable.enabled}
-    {#if typeof movable.placement === 'string'}
-      {@render handle(movable.placement)}
-    {:else}
-      {#each movable.placement as _placement}
-        {@render handle(_placement)}
-      {/each}
-    {/if}
-  {/if}
-{/snippet}
 
 {#if !isNative && backdrop && modal && open}
   <div
@@ -348,7 +319,14 @@
     style:--neo-dialog-padding={padding}
     style:--neo-dialog-elevation={elevation}
   >
-    {@render handles()}
+    <NeoHandle
+      enabled={movable.enabled}
+      placement={movable.placement}
+      axis={movable.axis}
+      handle={movable.handle}
+      {...moving.handlers}
+      {...handleProps}
+    />
     {@render children?.(context)}
   </svelte:element>
 {/if}
@@ -379,7 +357,7 @@
     max-height: 100%;
     margin-inline: var(--neo-dialog-margin-inline, auto);
     margin-block: var(--neo-dialog-margin-block, auto);
-    padding: var(--neo-dialog-padding, var(--neo-gap-xs) var(--neo-gap));
+    padding: var(--neo-dialog-padding, var(--neo-gap-sm) var(--neo-gap));
     outline: none;
 
     &:not(:is(dialog)) {
@@ -396,77 +374,23 @@
       backdrop-filter: none;
     }
 
-    &-handle {
-      position: absolute;
-      display: flex;
-      height: fit-content;
-      min-height: calc(var(--neo-dialog-padding, var(--neo-gap-xs)) / 2);
-      margin: 0;
-      padding: var(--neo-dialog-handle-padding, calc(var(--neo-dialog-padding, var(--neo-gap-xs)) / 2));
-      color: inherit;
-      background: none;
-      border: none;
-      outline: none;
-      cursor: move;
+    :global(.neo-handle) {
+      --neo-handle-padding: var(--neo-dialog-handle-padding, calc(var(--neo-dialog-padding, var(--neo-gap-sm)) / 2));
+
       opacity: 0.6;
-      transition: opacity 0.3s ease-in;
-      appearance: none;
-      inset-inline: 0;
-      inset-block: 0;
 
-      --neo-divider-height: 0.25rem;
-      --neo-divider-width: clamp(2rem, 10%, 50%);
-
-      :global(> .neo-divider) {
-        margin-inline: auto;
-      }
-
-      &:focus-visible :global(> .neo-divider) {
-        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-        outline-offset: 1px;
-      }
-
-      &[data-axis='x'] {
-        cursor: ew-resize;
-      }
-
-      &[data-axis='y'] {
-        cursor: ns-resize;
-      }
-
-      &[data-placement^='bottom'] {
-        inset-block: auto 0;
-      }
-
-      &[data-placement^='right'] {
-        inset-inline: auto 0;
-      }
-
-      &[data-placement^='left'] {
-        inset-inline: 0 auto;
-      }
-
-      &[data-placement^='right'],
-      &[data-placement^='left'] {
-        --neo-divider-height: clamp(2rem, 10%, 50%);
-        --neo-divider-width: 0.25rem;
-
-        align-items: center;
-        justify-content: center;
-        height: 100%;
+      &:hover,
+      &:focus,
+      &:active {
+        opacity: 1;
       }
     }
 
     &:focus-within,
     &:focus,
     &:hover {
-      .neo-dialog-handle {
+      :global(.neo-handle:not(:focus, :hover, :active)) {
         opacity: 0.8;
-
-        &:focus,
-        &:hover {
-          opacity: 1;
-        }
       }
     }
 
