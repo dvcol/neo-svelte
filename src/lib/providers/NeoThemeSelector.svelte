@@ -53,7 +53,7 @@
   const onRemember = () => context.update({ remember: !remember });
 </script>
 
-<NeoButtonGroup {...rest}>
+<NeoButtonGroup elevation="2" {...rest}>
   {#if showSource}
     <NeoButton
       aria-label="Cycle light source origin"

@@ -152,6 +152,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] backdrop
     - [x] position (center, top, bottom, left, right)
     - [x] custom tag (not dialog)
+    - [x] draggable
   - [ ] HTML Popover
   - [ ] Drawer
     - [ ] animation
@@ -163,7 +164,6 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [ ] dismissible
     - [ ] resizable (drag, handle, min/max)
     - [ ] backdrop
-    - [ ] inert
     - [ ] click outside
     - [ ] focus trap
 

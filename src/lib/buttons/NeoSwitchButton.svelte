@@ -248,7 +248,7 @@
           background-color: transparent;
         }
 
-        &.neo-indeterminate {
+        &.neo-indeterminate:not(.neo-skeleton) {
           background-color: color-mix(in srgb, transparent, currentcolor 5%);
         }
 

@@ -57,7 +57,7 @@
     reverse,
     coalesce,
     pulse,
-    scale = !container,
+    scale = true,
     ratio,
 
     // Flex
@@ -375,7 +375,7 @@
     }
 
     &.neo-pressed,
-    &:active:not(.neo-loading, :disabled) {
+    &:active:not(.neo-loading, :disabled, [disabled='true']) {
       box-shadow: var(--neo-btn-box-shadow-active, var(--neo-box-shadow-pressed-2));
       transition:
         opacity 0.3s ease,
@@ -392,7 +392,7 @@
       }
     }
 
-    &:is(a):visited:not(:disabled, .neo-pressed, :active:not(.neo-loading, :disabled)) .neo-content {
+    &:is(a):visited:not(:disabled, .neo-pressed, [disabled='true'], :active:not(.neo-loading, :disabled, [disabled='true'])) .neo-content {
       color: var(--neo-btn-text-color-visited, var(--neo-text-color-secondary));
     }
 
@@ -525,7 +525,7 @@
       padding: var(--neo-btn-padding-empty, 0.5rem);
 
       &.neo-pressed.neo-pressed,
-      &:active:not(.neo-loading, :disabled) {
+      &:active:not(.neo-loading, :disabled, [disabled='true']) {
         &.neo-scale .neo-content {
           scale: var(--neo-btn-scale-pressed-empty, var(--neo-btn-scale-pressed, 0.9));
         }

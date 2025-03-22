@@ -59,6 +59,12 @@ export type NeoButtonGroupContext = {
     pressed?: boolean;
   };
   /**
+   * Shorthand for a flat borderless inset button group.
+   *
+   * @defaults`{ elevation: 0, hover: 0, active: -2, pressed: false, borderless: true }`
+   */
+  text?: boolean;
+  /**
    * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
    */
   pressed?: boolean;

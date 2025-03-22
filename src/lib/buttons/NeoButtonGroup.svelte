@@ -8,6 +8,7 @@
     computeGlassFilter,
     computeHoverShadowElevation,
     computeShadowElevation,
+    DefaultShadowElevation,
     DefaultShadowHoverElevation,
     getDefaultElevation,
     isShadowFlat,
@@ -26,9 +27,10 @@
     skeleton = false,
 
     // Styles
+    text,
     pressed,
     convex,
-    borderless,
+    borderless = text,
     start,
     color,
     glass,
@@ -40,7 +42,7 @@
     nowrap,
 
     // Shadow
-    elevation: _elevation = getDefaultElevation(pressed),
+    elevation: _elevation = getDefaultElevation(pressed, text ? 0 : DefaultShadowElevation),
     hover: _hover = 0,
     blur: _blur,
     button,
@@ -72,7 +74,7 @@
   const hoverElevation = $derived(elevation + hover);
 
   const buttonHover = $derived(coerce(button?.hover ?? DefaultShadowHoverElevation));
-  const buttonActive = $derived(coerce(button?.active ?? -3));
+  const buttonActive = $derived(coerce(button?.active ?? -2));
 
   const blur = $derived(parseBlur(_blur, elevation));
   const filter = $derived(computeGlassFilter(blur, glass));

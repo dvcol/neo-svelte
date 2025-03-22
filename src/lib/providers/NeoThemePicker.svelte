@@ -65,7 +65,7 @@
   });
 </script>
 
-<NeoButtonGroup {rounded} {...rest}>
+<NeoButtonGroup elevation="2" {rounded} {...rest}>
   <NeoButton
     aria-label="Reset theme background color to default"
     title="Reset theme background color to default"
