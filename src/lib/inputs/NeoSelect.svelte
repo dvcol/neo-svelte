@@ -134,11 +134,15 @@
     if (selected === undefined) value = undefined;
   };
 
-  $effect.pre(() => {
-    // If value is already the transformed selected value, do nothing
-    if (value === transformed) return;
-    reflectValue();
-  });
+  watch(
+    () => {
+      // If value is already the transformed selected value, do nothing
+      if (value === transformed) return;
+      reflectValue();
+    },
+    () => value,
+    { pre: true },
+  );
 
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
   const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);
