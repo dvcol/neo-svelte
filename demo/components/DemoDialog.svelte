@@ -126,7 +126,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded={options.rounded}>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.modal}>Modal</NeoButton>
     <NeoButton toggle bind:checked={options.disableBodyScroll}>Body Scroll</NeoButton>
     <NeoButton toggle bind:checked={options.closeOnClickOutside}>Click Outside</NeoButton>
@@ -144,11 +144,12 @@
     placement="left"
     floating={false}
     bind:value={options.placement}
-    rounded={options.rounded}
     containerProps={{ style: 'margin-left: 6.75rem' }}
     options={position}
     size="15"
     openOnFocus
+    rounded
+    glass
   />
   <NeoNumberStep
     label="Elevation"
@@ -158,10 +159,11 @@
     min={0}
     max={MaxShadowElevation}
     defaultValue={DefaultShadowElevation}
-    rounded={options.rounded}
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
+    rounded
+    glass
   />
 
   <NeoSelect
@@ -175,6 +177,8 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
     openOnFocus
+    rounded
+    glass
   />
 </div>
 
@@ -209,85 +213,92 @@
   <IconListSmall filled={active === 2} />
 {/snippet}
 
-<div class="column content">
-  <div class="row">
-    {#if options.returnValue !== undefined}
-      <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
-    {/if}
-    <div class="column">
-      <span class="label">Default</span>
+<section>
+  <div class="column content">
+    <div class="row">
+      {#if options.returnValue !== undefined}
+        <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
+      {/if}
+      <div class="column">
+        <span class="label">Default</span>
 
-      <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
+        <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
 
-      <NeoDialog
-        {...options}
-        elevation={options.elevation > 0 ? options.elevation : undefined}
-        bind:open={openDefault}
-        bind:modal={options.modal}
-        bind:returnValue={options.returnValue}
-      >
-        {@render lorem()}
-      </NeoDialog>
+        <NeoDialog
+          {...options}
+          elevation={options.elevation > 0 ? options.elevation : undefined}
+          bind:open={openDefault}
+          bind:modal={options.modal}
+          bind:returnValue={options.returnValue}
+        >
+          {@render lorem()}
+        </NeoDialog>
+      </div>
+
+      <div class="column">
+        <span class="label">Confirm</span>
+
+        <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
+
+        <NeoDialogConfirm
+          bind:open={openConfirm}
+          bind:modal={options.modal}
+          bind:returnValue={options.returnValue}
+          closable={options.closeOnClickOutside}
+          rounded={options.rounded}
+          {...confirmOptions}
+          dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
+        >
+          {@render lorem()}
+        </NeoDialogConfirm>
+      </div>
+
+      <div class="column">
+        <span class="label">Stepper</span>
+
+        <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
+
+        <NeoDialogStepper
+          bind:active
+          bind:open={openStepper}
+          bind:modal={options.modal}
+          bind:returnValue={options.returnValue}
+          closable={options.closeOnClickOutside}
+          rounded={options.rounded}
+          {...stepperOptions}
+          dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...stepperOptions.dialogProps }}
+        />
+      </div>
     </div>
 
-    <div class="column">
-      <span class="label">Confirm</span>
+    <div class="row">
+      <span class="label">Drawer</span>
 
-      <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
-
-      <NeoDialogConfirm
-        bind:open={openConfirm}
-        bind:modal={options.modal}
-        bind:returnValue={options.returnValue}
-        closable={options.closeOnClickOutside}
-        rounded={options.rounded}
-        {...confirmOptions}
-        dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...confirmOptions.dialogProps }}
-      >
-        {@render lorem()}
-      </NeoDialogConfirm>
-    </div>
-
-    <div class="column">
-      <span class="label">Stepper</span>
-
-      <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
-
-      <NeoDialogStepper
-        bind:active
-        bind:open={openStepper}
-        bind:modal={options.modal}
-        bind:returnValue={options.returnValue}
-        closable={options.closeOnClickOutside}
-        rounded={options.rounded}
-        {...stepperOptions}
-        dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...stepperOptions.dialogProps }}
-      />
+      <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
+      <div class="column">
+        <NeoDialog
+          bind:open={openDrawer}
+          bind:modal={options.modal}
+          bind:returnValue={options.returnValue}
+          closable={options.closeOnClickOutside}
+          rounded={options.rounded}
+          elevation={options.elevation > 0 ? options.elevation : undefined}
+          {...options}
+        >
+          {@render lorem()}
+        </NeoDialog>
+      </div>
     </div>
   </div>
-
-  <div class="row">
-    <span class="label">Drawer</span>
-
-    <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
-    <div class="column">
-      <NeoDialog
-        bind:open={openDrawer}
-        bind:modal={options.modal}
-        bind:returnValue={options.returnValue}
-        closable={options.closeOnClickOutside}
-        rounded={options.rounded}
-        elevation={options.elevation > 0 ? options.elevation : undefined}
-        {...options}
-      >
-        {@render lorem()}
-      </NeoDialog>
-    </div>
-  </div>
-</div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .label {
     max-width: 80vw;

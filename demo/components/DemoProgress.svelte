@@ -63,7 +63,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={bar.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={bar.track}>Track</NeoButton>
     <NeoButton toggle bind:checked={bar.rounded}>Rounded</NeoButton>
@@ -80,6 +80,7 @@
     max={MaxShallowShadowElevation}
     defaultValue={-1}
     rounded
+    glass
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
@@ -97,6 +98,8 @@
     max={100}
     step="10"
     groupProps={{ style: 'margin-left: 4rem' }}
+    rounded
+    glass
   />
   <NeoNumberStep
     label="Buffer"
@@ -107,6 +110,8 @@
     max={100}
     step="10"
     groupProps={{ style: 'margin-left: 4rem' }}
+    rounded
+    glass
   />
 
   <NeoSelect
@@ -121,6 +126,8 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={directionOptions}
     openOnFocus
+    rounded
+    glass
   />
 
   <NeoSelect
@@ -135,123 +142,132 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
     openOnFocus
+    rounded
+    glass
   />
 </div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Default</span>
-    <NeoProgressBar aria-label="Default" {...options} {...bar} buffer={undefined} />
+<section>
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Default</span>
+      <NeoProgressBar aria-label="Default" {...options} {...bar} buffer={undefined} />
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Buffer</span>
-    <NeoProgressBar aria-label="Buffer" {...options} {...bar} />
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Buffer</span>
+      <NeoProgressBar aria-label="Buffer" {...options} {...bar} />
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Min 40</span>
-    <NeoProgressBar aria-label="Min 40" min="40" {...options} {...bar} />
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Min 40</span>
+      <NeoProgressBar aria-label="Min 40" min="40" {...options} {...bar} />
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Min 40 Max 80</span>
-    <NeoProgressBar aria-label="Min 40 Max 80" min="40" max="80" {...options} {...bar} />
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Min 40 Max 80</span>
+      <NeoProgressBar aria-label="Min 40 Max 80" min="40" max="80" {...options} {...bar} />
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Low 20</span>
-    <NeoProgressBar aria-label="Low 20" low="10" {...options} {...bar} color={['error', options.color]} />
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Low 20</span>
+      <NeoProgressBar aria-label="Low 20" low="10" {...options} {...bar} color={['error', options.color]} />
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">High 90</span>
-    <NeoProgressBar aria-label="High 90" high="90" {...options} {...bar} color={[options.color, 'success']} />
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">High 90</span>
+      <NeoProgressBar aria-label="High 90" high="90" {...options} {...bar} color={[options.color, 'success']} />
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Low 20 High 90</span>
-    <NeoProgressBar aria-label="Low 20 High 90" low="10" high="90" {...options} {...bar} color={['error', options.color, 'success']} />
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Low 20 High 90</span>
+      <NeoProgressBar aria-label="Low 20 High 90" low="10" high="90" {...options} {...bar} color={['error', options.color, 'success']} />
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Indeterminate</span>
-    <NeoProgressBar aria-label="Indeterminate" indeterminate {...options} {...bar} />
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Indeterminate</span>
+      <NeoProgressBar aria-label="Indeterminate" indeterminate {...options} {...bar} />
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Controlled & Label</span>
-    <div class="progress-label">
-      <NeoProgressBar aria-label="Controlled and label" bind:ref={controlled} bind:state={controlledState} direction={options.direction} {...bar}>
-        {#snippet before(ctx)}
-          <span class="progress-label-value" data-placement={ctx.direction}>{ctx.value}%</span>
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Controlled & Label</span>
+      <div class="progress-label">
+        <NeoProgressBar aria-label="Controlled and label" bind:ref={controlled} bind:state={controlledState} direction={options.direction} {...bar}>
+          {#snippet before(ctx)}
+            <span class="progress-label-value" data-placement={ctx.direction}>{ctx.value}%</span>
+          {/snippet}
+        </NeoProgressBar>
+      </div>
+    </div>
+  </div>
+
+  <div class="row control-group">
+    <NeoButtonGroup
+      rounded
+      pulse={[NeoProgressStatus.Active, NeoProgressStatus.Paused].includes(controlledState)}
+      elevation="2"
+      button={{ active: -1 }}
+      class={{ 'neo-stop': controlledState === NeoProgressStatus.Paused }}
+    >
+      <NeoButton rounded onclick={() => controlled?.cancel()} ratio="1/1" aria-label="cancel" title="cancel">
+        {#snippet icon()}
+          <IconDoubleChevronLeft />
+        {/snippet}
+      </NeoButton>
+      <NeoButton rounded onclick={onStopStart} checked={NeoProgressStatus.Active === controlledState} ratio="1/1" aria-label={label} title={label}>
+        {#snippet icon()}
+          <IconPlayPause state={label} />
+        {/snippet}
+      </NeoButton>
+      <NeoButton rounded onclick={() => controlled?.complete()} aria-label="finish" title="finish">
+        {#snippet icon()}
+          <IconDoubleChevronRight />
+        {/snippet}
+      </NeoButton>
+    </NeoButtonGroup>
+  </div>
+
+  <div class="row">
+    <div class="column content" class:vertical>
+      <span class="label">Marks</span>
+      <NeoProgressBar aria-label="Custom marks" {...options} {...bar} buffer={undefined} marks={[0, 25, 50, 75, 100]}>
+        {#snippet mark(ctx)}
+          <NeoProgressMark
+            {...ctx}
+            glass={bar.glass}
+            onclick={() => {
+              options.value = ctx.position;
+            }}
+          />
         {/snippet}
       </NeoProgressBar>
     </div>
   </div>
-</div>
-
-<div class="row control-group">
-  <NeoButtonGroup
-    rounded
-    pulse={[NeoProgressStatus.Active, NeoProgressStatus.Paused].includes(controlledState)}
-    elevation="2"
-    button={{ active: -1 }}
-    class={{ 'neo-stop': controlledState === NeoProgressStatus.Paused }}
-  >
-    <NeoButton rounded onclick={() => controlled?.cancel()} ratio="1/1" aria-label="cancel" title="cancel">
-      {#snippet icon()}
-        <IconDoubleChevronLeft />
-      {/snippet}
-    </NeoButton>
-    <NeoButton rounded onclick={onStopStart} checked={NeoProgressStatus.Active === controlledState} ratio="1/1" aria-label={label} title={label}>
-      {#snippet icon()}
-        <IconPlayPause state={label} />
-      {/snippet}
-    </NeoButton>
-    <NeoButton rounded onclick={() => controlled?.complete()} aria-label="finish" title="finish">
-      {#snippet icon()}
-        <IconDoubleChevronRight />
-      {/snippet}
-    </NeoButton>
-  </NeoButtonGroup>
-</div>
-
-<div class="row">
-  <div class="column content" class:vertical>
-    <span class="label">Marks</span>
-    <NeoProgressBar aria-label="Custom marks" {...options} {...bar} buffer={undefined} marks={[0, 25, 50, 75, 100]}>
-      {#snippet mark(ctx)}
-        <NeoProgressMark
-          {...ctx}
-          glass={bar.glass}
-          onclick={() => {
-            options.value = ctx.position;
-          }}
-        />
-      {/snippet}
-    </NeoProgressBar>
-  </div>
-</div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .label {
     max-width: 80vw;

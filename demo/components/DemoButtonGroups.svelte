@@ -61,7 +61,7 @@
 {/snippet}
 
 <div class="row">
-  <NeoButtonGroup>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
@@ -71,6 +71,8 @@
 
   <NeoSelect
     label="Color"
+    rounded
+    glass
     placeholder="Select color"
     placement="left"
     floating={false}
@@ -84,35 +86,42 @@
   />
 </div>
 
-<div class="row" class:invert={!options.vertical}>
-  {#each columns as { label, props }}
+<section>
+  <div class="row" class:invert={!options.vertical}>
+    {#each columns as { label, props }}
+      <div class="column">
+        <span class="label">{label}</span>
+        <SphereBackdrop glass={options?.glass}>
+          {@render group(props)}
+        </SphereBackdrop>
+      </div>
+    {/each}
+
     <div class="column">
-      <span class="label">{label}</span>
-      <SphereBackdrop glass={options?.glass}>
-        {@render group(props)}
-      </SphereBackdrop>
+      <span class="label">Pulse</span>
+      <NeoButtonGroup {...options} pulse>
+        <NeoButton onclick={onClick}>Button</NeoButton>
+        <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
+        <NeoButton {loading} onclick={onLoading} {icon} />
+      </NeoButtonGroup>
+
+      <span class="label">Coalesce</span>
+      <NeoButtonGroup {...options} coalesce>
+        <NeoButton onclick={onClick}>Button</NeoButton>
+        <NeoButton disabled onclick={onClick}>Disabled</NeoButton>
+        <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
+      </NeoButtonGroup>
     </div>
-  {/each}
-
-  <div class="column">
-    <span class="label">Pulse</span>
-    <NeoButtonGroup {...options} pulse>
-      <NeoButton onclick={onClick}>Button</NeoButton>
-      <NeoButton toggle onclick={onClick}>Toggle</NeoButton>
-      <NeoButton {loading} onclick={onLoading} {icon} />
-    </NeoButtonGroup>
-
-    <span class="label">Coalesce</span>
-    <NeoButtonGroup {...options} coalesce>
-      <NeoButton onclick={onClick}>Button</NeoButton>
-      <NeoButton disabled onclick={onClick}>Disabled</NeoButton>
-      <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
-    </NeoButtonGroup>
   </div>
-</div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg));

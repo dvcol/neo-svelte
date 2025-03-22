@@ -30,7 +30,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.loading}>Skeleton</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
   </NeoButtonGroup>
@@ -73,23 +73,30 @@
   </div>
 {/snippet}
 
-<div class="row">
-  <div class="column">
-    <span class="label">No content</span>
-    <div class="content">
-      <NeoSkeletonText {...options} />
-    </div>
-  </div>
-  {#each columns as col}
+<section>
+  <div class="row">
     <div class="column">
-      <span class="label">{col.label}</span>
-      {@render skeleton(col)}
+      <span class="label">No content</span>
+      <div class="content">
+        <NeoSkeletonText {...options} />
+      </div>
     </div>
-  {/each}
-</div>
+    {#each columns as col}
+      <div class="column">
+        <span class="label">{col.label}</span>
+        {@render skeleton(col)}
+      </div>
+    {/each}
+  </div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .content {
     min-width: 48.625rem;

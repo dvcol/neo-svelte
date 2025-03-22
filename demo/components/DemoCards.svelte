@@ -72,7 +72,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded={options.rounded}>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={options.convex}>Convex</NeoButton>
     <NeoButton toggle bind:checked={options.pressed} onclick={onPressed}>Pressed</NeoButton>
@@ -91,11 +91,12 @@
     min={MinShadowElevation}
     max={MaxShadowElevation}
     defaultValue={DefaultShadowElevation}
-    rounded={options.rounded}
     oninput={onElevation}
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 4rem' }}
+    rounded
+    glass
   />
   <NeoNumberStep
     label="Hover"
@@ -105,10 +106,11 @@
     min={MinShadowElevation - options.elevation}
     max={MaxShadowElevation - options.elevation}
     defaultValue={0}
-    rounded={options.rounded}
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 4rem' }}
+    rounded
+    glass
   />
 
   <NeoSelect
@@ -123,6 +125,8 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
     openOnFocus
+    rounded
+    glass
   />
 </div>
 
@@ -202,22 +206,29 @@
   {/if}
 {/snippet}
 
-<div class="row">
-  {#each columns as { label, props, hideContent }}
-    <div class="column content">
-      <span class="label">{label}</span>
+<section>
+  <div class="row">
+    {#each columns as { label, props, hideContent }}
+      <div class="column content">
+        <span class="label">{label}</span>
 
-      <div class="column-item">
-        <SphereBackdrop glass={props?.glass || options.glass}>
-          {@render card(props, hideContent)}
-        </SphereBackdrop>
+        <div class="column-item">
+          <SphereBackdrop glass={props?.glass || options.glass}>
+            {@render card(props, hideContent)}
+          </SphereBackdrop>
+        </div>
       </div>
-    </div>
-  {/each}
-</div>
+    {/each}
+  </div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .content {
     overflow: unset;

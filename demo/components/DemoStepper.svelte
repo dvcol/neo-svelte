@@ -106,7 +106,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
     <NeoButton toggle bind:checked={options.progress}>Progress</NeoButton>
     <NeoButton toggle bind:checked={options.marks}>Marks</NeoButton>
@@ -125,10 +125,11 @@
     min={MinShallowShadowElevation}
     max={MaxShallowShadowElevation}
     defaultValue={DefaultShadowElevation}
-    rounded
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
+    rounded
+    glass
   />
 
   <NeoSelect
@@ -143,7 +144,8 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={placementOptions}
     openOnFocus
-    rounded
+    rounde
+    glass
   />
 </div>
 
@@ -252,23 +254,30 @@
   </div>
 {/snippet}
 
-<div class="row">
-  <div class="column content">
-    <span class="label">Default</span>
-    <NeoCard rounded elevation={-options.elevation}>
-      <NeoForm>
-        <NeoStepper bind:active {steps} {...options}>
-          {#snippet children()}
-            <span>Error: Unknown Step !</span>
-          {/snippet}
-        </NeoStepper>
-      </NeoForm>
-    </NeoCard>
+<section>
+  <div class="row">
+    <div class="column content">
+      <span class="label">Default</span>
+      <NeoCard rounded elevation={-options.elevation}>
+        <NeoForm>
+          <NeoStepper bind:active {steps} {...options}>
+            {#snippet children()}
+              <span>Error: Unknown Step !</span>
+            {/snippet}
+          </NeoStepper>
+        </NeoForm>
+      </NeoCard>
+    </div>
   </div>
-</div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .label {
     max-width: 80vw;

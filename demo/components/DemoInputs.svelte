@@ -525,7 +525,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded={options.rounded}>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={options.pressed} onclick={onPressed}>Pressed</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
@@ -549,11 +549,12 @@
     min={MinShadowElevation}
     max={MaxShadowElevation}
     defaultValue={DefaultShadowElevation}
-    rounded={options.rounded}
     oninput={onElevation}
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
+    rounded
+    glass
   />
   <NeoNumberStep
     label="Hover"
@@ -563,10 +564,11 @@
     min={MinShadowElevation - options.elevation}
     max={MaxShadowElevation - options.elevation}
     defaultValue={DefaultShadowHoverElevation}
-    rounded={options.rounded}
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 4rem' }}
+    rounded
+    glass
   />
 
   <NeoSelect
@@ -581,6 +583,8 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
     openOnFocus
+    rounded
+    glass
   />
 </div>
 
@@ -649,643 +653,650 @@
 
 {@render validationState(validation)}
 
-<div class="column">
-  <NeoForm legend="Input / Textarea" novalidate>
-    <div class="row">
-      {#each columns as column}
-        <div class="column content">
-          <span class="label">{column.label}</span>
-          {@render inputGroup(column)}
-        </div>
-      {/each}
-    </div>
-
-    <div class="row">
-      {#each validationColumns as column}
-        <div class="column content">
-          <span class="label">{column.label}</span>
-          {@render validationState(column.state)}
-          {@render inputGroup(column)}
-        </div>
-      {/each}
-    </div>
-  </NeoForm>
-
-  <!--  Select  -->
-  <NeoForm legend="Select" novalidate>
-    <div class="row">
-      <div class="column">
-        <span class="label">Native Select</span>
-        {@render validationState(selectState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoNativeSelect
-            type="select"
-            validation
-            required
-            label="Native Select"
-            bind:ref={selectState.ref}
-            bind:touched={selectState.touched}
-            bind:dirty={selectState.dirty}
-            bind:valid={selectState.valid}
-            bind:value={selectState.value}
-            {...options}
-            size={undefined}
-          >
-            <option value="" selected>Select an option below</option>
-            <option value="value 1">Label for value 1</option>
-            <option value="value 2">Label for value 2</option>
-            <option value="value 3" disabled>Label for value 3</option>
-            <option value="value 4">Label for value 4</option>
-          </NeoNativeSelect>
-        </SphereBackdrop>
+<section>
+  <div class="column">
+    <NeoForm legend="Input / Textarea" novalidate>
+      <div class="row">
+        {#each columns as column}
+          <div class="column content">
+            <span class="label">{column.label}</span>
+            {@render inputGroup(column)}
+          </div>
+        {/each}
       </div>
 
-      <div class="column">
-        <span class="label">Native Multiple Select</span>
-        {@render validationState(selectMultipleState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoNativeSelect
-            type="select"
-            validation
-            required
-            multiple
-            label="Native Multiple Select"
-            options={nativeSelectOptions}
-            bind:ref={selectMultipleState.ref}
-            bind:touched={selectMultipleState.touched}
-            bind:dirty={selectMultipleState.dirty}
-            bind:valid={selectMultipleState.valid}
-            bind:value={selectMultipleState.value}
-            {...options}
-            size={undefined}
-          />
-        </SphereBackdrop>
+      <div class="row">
+        {#each validationColumns as column}
+          <div class="column content">
+            <span class="label">{column.label}</span>
+            {@render validationState(column.state)}
+            {@render inputGroup(column)}
+          </div>
+        {/each}
       </div>
-    </div>
+    </NeoForm>
 
-    <div class="row">
-      <div class="column">
-        <span class="label">Custom Select</span>
-
-        {@render validationState(selectCustomState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoSelect
-            validation
-            required
-            label="Custom Select"
-            options={items}
-            bind:ref={selectCustomState.ref}
-            bind:touched={selectCustomState.touched}
-            bind:dirty={selectCustomState.dirty}
-            bind:valid={selectCustomState.valid}
-            bind:value={selectCustomState.value}
-            {...options}
-            size={undefined}
-          />
-        </SphereBackdrop>
-      </div>
-
-      <div class="column">
-        <span class="label">Custom Multi Select</span>
-
-        {@render validationState(selectCustomMultipleState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoSelect
-            validation
-            required
-            label="Custom Select"
-            placeholder="Select multiple"
-            options={items}
-            multiple
-            bind:ref={selectCustomMultipleState.ref}
-            bind:touched={selectCustomMultipleState.touched}
-            bind:dirty={selectCustomMultipleState.dirty}
-            bind:valid={selectCustomMultipleState.valid}
-            bind:value={selectCustomMultipleState.value}
-            {...options}
-            size={undefined}
-          />
-        </SphereBackdrop>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="column">
-        <span class="label">Custom display text</span>
-
-        {@render validationState(selectCustomMultipleState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoSelect
-            validation
-            required
-            label="Custom Select"
-            placeholder="Select multiple"
-            display={displayValue}
-            options={items}
-            multiple
-            bind:ref={selectCustomMultipleState.ref}
-            bind:touched={selectCustomMultipleState.touched}
-            bind:dirty={selectCustomMultipleState.dirty}
-            bind:valid={selectCustomMultipleState.valid}
-            bind:value={selectCustomMultipleState.value}
-            {...options}
-            size={undefined}
-          />
-        </SphereBackdrop>
-      </div>
-
-      <div class="column">
-        <span class="label">Custom display snippet</span>
-
-        {@render validationState(selectCustomMultipleState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoSelect
-            required
-            label="Custom Select"
-            placeholder="Select multiple"
-            options={items}
-            multiple
-            bind:ref={selectCustomMultipleState.ref}
-            bind:touched={selectCustomMultipleState.touched}
-            bind:dirty={selectCustomMultipleState.dirty}
-            bind:valid={selectCustomMultipleState.valid}
-            bind:value={selectCustomMultipleState.value}
-            {...options}
-            size={undefined}
-          >
-            {#snippet content({ value }: NeoInputState)}
-              <div style="display: inline-flex; gap: 0.25rem; margin-left: -0.125rem;">
-                {#each value as item (item)}
-                  <span in:fade out:fade={quickDurationProps} animate:flip={quickCircOutProps}>
-                    <NeoPill tinted small elevation="0">{item}</NeoPill>
-                  </span>
-                {/each}
-              </div>
-            {/snippet}
-          </NeoSelect>
-        </SphereBackdrop>
-      </div>
-    </div>
-  </NeoForm>
-
-  <!-- Custom inputs -->
-  <NeoForm legend="Custom inputs" novalidate>
-    <!--  Password  -->
-    <div class="row">
-      <div class="column content">
-        <span class="label">Password</span>
-        <SphereBackdrop glass={options.glass}>
-          <NeoPassword label="Password" autocomplete="current-password" {...options} />
-        </SphereBackdrop>
-      </div>
-    </div>
-
-    <!-- Number inputs -->
-    <div class="row">
-      <div class="column content">
-        <span class="label">Number</span>
-        {@render validationState(numberState)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoNumberStep
-            bind:touched={numberState.touched}
-            bind:dirty={numberState.dirty}
-            bind:valid={numberState.valid}
-            bind:value={numberState.value}
-            {...options}
-          />
-        </SphereBackdrop>
-      </div>
-
-      <div class="column content">
-        <span class="label">Min Max</span>
-        {@render validationState(numberState)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoNumberStep
-            bind:touched={numberState.touched}
-            bind:dirty={numberState.dirty}
-            bind:valid={numberState.valid}
-            bind:value={numberState.value}
-            min="-5"
-            max="5"
-            {...options}
-          />
-        </SphereBackdrop>
-      </div>
-    </div>
-
-    <!-- Number inputs -->
-    <div class="row">
-      <div class="column content">
-        <span class="label">Pin</span>
-        {@render validationState(pinState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoPin
-            label="Pin Default"
-            bind:touched={pinState.touched}
-            bind:dirty={pinState.dirty}
-            bind:valid={pinState.valid}
-            bind:value={pinState.value}
-            {...options}
-          />
-        </SphereBackdrop>
-      </div>
-
-      <div class="column content">
-        <span class="label">Pin Groups</span>
-        {@render validationState(pinStateSeparator, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoPin
-            label="Pin Validation"
-            groups={2}
-            required
-            validation
-            bind:touched={pinStateSeparator.touched}
-            bind:dirty={pinStateSeparator.dirty}
-            bind:valid={pinStateSeparator.valid}
-            bind:value={pinStateSeparator.value}
-            {...options}
-          />
-        </SphereBackdrop>
-      </div>
-
-      <div class="column content">
-        <span class="label">Pin Password</span>
-        {@render validationState(pinPasswordState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoPassword
-            label="Pin Password"
-            required
-            validation
-            pin
-            bind:touched={pinPasswordState.touched}
-            bind:dirty={pinPasswordState.dirty}
-            bind:valid={pinPasswordState.valid}
-            bind:value={pinPasswordState.value}
-            type="password"
-            {...options}
-          />
-        </SphereBackdrop>
-      </div>
-    </div>
-
-    <!-- Date/Time Picker inputs -->
-    <div class="row">
-      {#each dateColumns as column}
-        <div class="column content">
-          <span class="label">{column.label}</span>
-          {@render validationState(column.state, true)}
+    <!--  Select  -->
+    <NeoForm legend="Select" novalidate>
+      <div class="row">
+        <div class="column">
+          <span class="label">Native Select</span>
+          {@render validationState(selectState, true)}
           <SphereBackdrop glass={options.glass}>
-            <NeoDateTime
-              bind:touched={column.state.touched}
-              bind:dirty={column.state.dirty}
-              bind:valid={column.state.valid}
-              bind:value={column.state.value}
+            <NeoNativeSelect
+              type="select"
+              validation
+              required
+              label="Native Select"
+              bind:ref={selectState.ref}
+              bind:touched={selectState.touched}
+              bind:dirty={selectState.dirty}
+              bind:valid={selectState.valid}
+              bind:value={selectState.value}
               {...options}
-              {...column.props}
+              size={undefined}
+            >
+              <option value="" selected>Select an option below</option>
+              <option value="value 1">Label for value 1</option>
+              <option value="value 2">Label for value 2</option>
+              <option value="value 3" disabled>Label for value 3</option>
+              <option value="value 4">Label for value 4</option>
+            </NeoNativeSelect>
+          </SphereBackdrop>
+        </div>
+
+        <div class="column">
+          <span class="label">Native Multiple Select</span>
+          {@render validationState(selectMultipleState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoNativeSelect
+              type="select"
+              validation
+              required
+              multiple
+              label="Native Multiple Select"
+              options={nativeSelectOptions}
+              bind:ref={selectMultipleState.ref}
+              bind:touched={selectMultipleState.touched}
+              bind:dirty={selectMultipleState.dirty}
+              bind:valid={selectMultipleState.valid}
+              bind:value={selectMultipleState.value}
+              {...options}
+              size={undefined}
             />
           </SphereBackdrop>
         </div>
-      {/each}
-    </div>
-
-    <!-- Color Picker inputs -->
-    <div class="row">
-      <div class="column content">
-        <span class="label">Color Picker</span>
-        {@render validationState(colorState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoColorPicker
-            validation
-            required
-            bind:touched={colorState.touched}
-            bind:dirty={colorState.dirty}
-            bind:valid={colorState.valid}
-            bind:value={colorState.value}
-            label="Color Picker"
-            {...options}
-            size="10"
-          />
-        </SphereBackdrop>
       </div>
-    </div>
 
-    <!-- File Picker inputs -->
-    <div class="row">
-      {#each fileColumns as column}
-        <div class="column content">
-          <span class="label">{column.label}</span>
-          {@render validationState(column.state, true)}
+      <div class="row">
+        <div class="column">
+          <span class="label">Custom Select</span>
+
+          {@render validationState(selectCustomState, true)}
           <SphereBackdrop glass={options.glass}>
-            <NeoFilePicker
-              bind:touched={column.state.touched}
-              bind:dirty={column.state.dirty}
-              bind:valid={column.state.valid}
-              bind:value={column.state.value}
-              bind:files={column.state.files}
+            <NeoSelect
+              validation
+              required
+              label="Custom Select"
+              options={items}
+              bind:ref={selectCustomState.ref}
+              bind:touched={selectCustomState.touched}
+              bind:dirty={selectCustomState.dirty}
+              bind:valid={selectCustomState.valid}
+              bind:value={selectCustomState.value}
               {...options}
-              {...column.props}
+              size={undefined}
             />
           </SphereBackdrop>
         </div>
-      {/each}
-    </div>
-  </NeoForm>
 
-  <!-- Checkbox / Radio -->
-  <NeoForm legend="Checkbox / Radio" novalidate>
-    <!-- Checkbox inputs -->
-    <div class="row">
-      <div class="column content">
-        <span class="label">Checkbox</span>
-        {@render validationState(checkboxState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoCheckbox
-            bind:touched={checkboxState.touched}
-            bind:dirty={checkboxState.dirty}
-            bind:valid={checkboxState.valid}
-            bind:checked={checkboxState.checked}
-            bind:indeterminate={checkboxState.indeterminate}
-            label="Checkbox"
-            required
-            validation
-            {...options}
-            width="18rem"
-          />
-        </SphereBackdrop>
+        <div class="column">
+          <span class="label">Custom Multi Select</span>
+
+          {@render validationState(selectCustomMultipleState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoSelect
+              validation
+              required
+              label="Custom Select"
+              placeholder="Select multiple"
+              options={items}
+              multiple
+              bind:ref={selectCustomMultipleState.ref}
+              bind:touched={selectCustomMultipleState.touched}
+              bind:dirty={selectCustomMultipleState.dirty}
+              bind:valid={selectCustomMultipleState.valid}
+              bind:value={selectCustomMultipleState.value}
+              {...options}
+              size={undefined}
+            />
+          </SphereBackdrop>
+        </div>
       </div>
 
-      <div class="column content">
-        <span class="label">Flat Checkbox</span>
-        {@render validationState(checkboxState, true)}
+      <div class="row">
+        <div class="column">
+          <span class="label">Custom display text</span>
 
-        <SphereBackdrop glass={options.glass}>
-          <NeoCheckbox
-            bind:touched={checkboxState.touched}
-            bind:dirty={checkboxState.dirty}
-            bind:valid={checkboxState.valid}
-            bind:checked={checkboxState.checked}
-            bind:indeterminate={checkboxState.indeterminate}
-            label="Flat Checkbox"
-            validation
-            {...options}
-            elevation={0}
-          />
-        </SphereBackdrop>
+          {@render validationState(selectCustomMultipleState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoSelect
+              validation
+              required
+              label="Custom Select"
+              placeholder="Select multiple"
+              display={displayValue}
+              options={items}
+              multiple
+              bind:ref={selectCustomMultipleState.ref}
+              bind:touched={selectCustomMultipleState.touched}
+              bind:dirty={selectCustomMultipleState.dirty}
+              bind:valid={selectCustomMultipleState.valid}
+              bind:value={selectCustomMultipleState.value}
+              {...options}
+              size={undefined}
+            />
+          </SphereBackdrop>
+        </div>
+
+        <div class="column">
+          <span class="label">Custom display snippet</span>
+
+          {@render validationState(selectCustomMultipleState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoSelect
+              required
+              label="Custom Select"
+              placeholder="Select multiple"
+              options={items}
+              multiple
+              bind:ref={selectCustomMultipleState.ref}
+              bind:touched={selectCustomMultipleState.touched}
+              bind:dirty={selectCustomMultipleState.dirty}
+              bind:valid={selectCustomMultipleState.valid}
+              bind:value={selectCustomMultipleState.value}
+              {...options}
+              size={undefined}
+            >
+              {#snippet content({ value }: NeoInputState)}
+                <div style="display: inline-flex; gap: 0.25rem; margin-left: -0.125rem;">
+                  {#each value as item (item)}
+                    <span in:fade out:fade={quickDurationProps} animate:flip={quickCircOutProps}>
+                      <NeoPill tinted small elevation="0">{item}</NeoPill>
+                    </span>
+                  {/each}
+                </div>
+              {/snippet}
+            </NeoSelect>
+          </SphereBackdrop>
+        </div>
+      </div>
+    </NeoForm>
+
+    <!-- Custom inputs -->
+    <NeoForm legend="Custom inputs" novalidate>
+      <!--  Password  -->
+      <div class="row">
+        <div class="column content">
+          <span class="label">Password</span>
+          <SphereBackdrop glass={options.glass}>
+            <NeoPassword label="Password" autocomplete="current-password" {...options} />
+          </SphereBackdrop>
+        </div>
       </div>
 
-      <div class="column content">
-        <span class="label">Checkbox Group</span>
-        <div class="label">Group: {checkboxGroupState.group}</div>
-        <SphereBackdrop glass={options.glass}>
-          <div class="column" style:gap="0.5rem">
-            <NeoCheckbox label="Checkbox 1" value="Checkbox 1" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
-            <NeoCheckbox label="Checkbox 2" value="Checkbox 2" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
-            <NeoCheckbox label="Checkbox 3" value="Checkbox 3" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
+      <!-- Number inputs -->
+      <div class="row">
+        <div class="column content">
+          <span class="label">Number</span>
+          {@render validationState(numberState)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoNumberStep
+              bind:touched={numberState.touched}
+              bind:dirty={numberState.dirty}
+              bind:valid={numberState.valid}
+              bind:value={numberState.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
+
+        <div class="column content">
+          <span class="label">Min Max</span>
+          {@render validationState(numberState)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoNumberStep
+              bind:touched={numberState.touched}
+              bind:dirty={numberState.dirty}
+              bind:valid={numberState.valid}
+              bind:value={numberState.value}
+              min="-5"
+              max="5"
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
+      </div>
+
+      <!-- Number inputs -->
+      <div class="row">
+        <div class="column content">
+          <span class="label">Pin</span>
+          {@render validationState(pinState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoPin
+              label="Pin Default"
+              bind:touched={pinState.touched}
+              bind:dirty={pinState.dirty}
+              bind:valid={pinState.valid}
+              bind:value={pinState.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
+
+        <div class="column content">
+          <span class="label">Pin Groups</span>
+          {@render validationState(pinStateSeparator, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoPin
+              label="Pin Validation"
+              groups={2}
+              required
+              validation
+              bind:touched={pinStateSeparator.touched}
+              bind:dirty={pinStateSeparator.dirty}
+              bind:valid={pinStateSeparator.valid}
+              bind:value={pinStateSeparator.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
+
+        <div class="column content">
+          <span class="label">Pin Password</span>
+          {@render validationState(pinPasswordState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoPassword
+              label="Pin Password"
+              required
+              validation
+              pin
+              bind:touched={pinPasswordState.touched}
+              bind:dirty={pinPasswordState.dirty}
+              bind:valid={pinPasswordState.valid}
+              bind:value={pinPasswordState.value}
+              type="password"
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
+      </div>
+
+      <!-- Date/Time Picker inputs -->
+      <div class="row">
+        {#each dateColumns as column}
+          <div class="column content">
+            <span class="label">{column.label}</span>
+            {@render validationState(column.state, true)}
+            <SphereBackdrop glass={options.glass}>
+              <NeoDateTime
+                bind:touched={column.state.touched}
+                bind:dirty={column.state.dirty}
+                bind:valid={column.state.valid}
+                bind:value={column.state.value}
+                {...options}
+                {...column.props}
+              />
+            </SphereBackdrop>
           </div>
-        </SphereBackdrop>
+        {/each}
       </div>
-    </div>
 
-    <!-- Radio inputs -->
-    <div class="row">
-      <div class="column content">
-        <span class="label">Radio Group</span>
-        <div class="label">Group: {radioState.group}</div>
-        <SphereBackdrop glass={options.glass}>
-          <div class="column" style:gap="0.5rem">
-            <NeoRadio label="Radio 1" value="Radio 1" name="radio-group" bind:group={radioState.group} {...options} />
-            <NeoRadio label="Radio 2" value="Radio 2" name="radio-group" bind:group={radioState.group} {...options} />
-            <NeoRadio label="Radio 3" value="Radio 3" name="radio-group" bind:group={radioState.group} {...options} />
+      <!-- Color Picker inputs -->
+      <div class="row">
+        <div class="column content">
+          <span class="label">Color Picker</span>
+          {@render validationState(colorState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoColorPicker
+              validation
+              required
+              bind:touched={colorState.touched}
+              bind:dirty={colorState.dirty}
+              bind:valid={colorState.valid}
+              bind:value={colorState.value}
+              label="Color Picker"
+              {...options}
+              size="10"
+            />
+          </SphereBackdrop>
+        </div>
+      </div>
+
+      <!-- File Picker inputs -->
+      <div class="row">
+        {#each fileColumns as column}
+          <div class="column content">
+            <span class="label">{column.label}</span>
+            {@render validationState(column.state, true)}
+            <SphereBackdrop glass={options.glass}>
+              <NeoFilePicker
+                bind:touched={column.state.touched}
+                bind:dirty={column.state.dirty}
+                bind:valid={column.state.valid}
+                bind:value={column.state.value}
+                bind:files={column.state.files}
+                {...options}
+                {...column.props}
+              />
+            </SphereBackdrop>
           </div>
-        </SphereBackdrop>
+        {/each}
       </div>
-    </div>
+    </NeoForm>
 
-    <!-- Switch inputs -->
-    <div class="row">
-      <div class="column content">
-        <span class="label">Switch</span>
-        {@render validationState(switchState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <div class="column">
-            <NeoSwitch
-              label="Switch"
-              bind:touched={switchState.touched}
-              bind:dirty={switchState.dirty}
-              bind:valid={switchState.valid}
-              bind:checked={switchState.checked}
-              bind:indeterminate={switchState.indeterminate}
+    <!-- Checkbox / Radio -->
+    <NeoForm legend="Checkbox / Radio" novalidate>
+      <!-- Checkbox inputs -->
+      <div class="row">
+        <div class="column content">
+          <span class="label">Checkbox</span>
+          {@render validationState(checkboxState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoCheckbox
+              bind:touched={checkboxState.touched}
+              bind:dirty={checkboxState.dirty}
+              bind:valid={checkboxState.valid}
+              bind:checked={checkboxState.checked}
+              bind:indeterminate={checkboxState.indeterminate}
+              label="Checkbox"
               required
               validation
               {...options}
               width="18rem"
             />
-          </div>
-        </SphereBackdrop>
+          </SphereBackdrop>
+        </div>
+
+        <div class="column content">
+          <span class="label">Flat Checkbox</span>
+          {@render validationState(checkboxState, true)}
+
+          <SphereBackdrop glass={options.glass}>
+            <NeoCheckbox
+              bind:touched={checkboxState.touched}
+              bind:dirty={checkboxState.dirty}
+              bind:valid={checkboxState.valid}
+              bind:checked={checkboxState.checked}
+              bind:indeterminate={checkboxState.indeterminate}
+              label="Flat Checkbox"
+              validation
+              {...options}
+              elevation={0}
+            />
+          </SphereBackdrop>
+        </div>
+
+        <div class="column content">
+          <span class="label">Checkbox Group</span>
+          <div class="label">Group: {checkboxGroupState.group}</div>
+          <SphereBackdrop glass={options.glass}>
+            <div class="column" style:gap="0.5rem">
+              <NeoCheckbox label="Checkbox 1" value="Checkbox 1" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
+              <NeoCheckbox label="Checkbox 2" value="Checkbox 2" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
+              <NeoCheckbox label="Checkbox 3" value="Checkbox 3" name="checkbox-group" bind:group={checkboxGroupState.group} {...options} />
+            </div>
+          </SphereBackdrop>
+        </div>
       </div>
 
-      <div class="column content">
-        <span class="label">Switch Group</span>
-        <div class="label">Group: {switchGroupState.group}</div>
-        <SphereBackdrop glass={options.glass}>
-          <div class="column" style:gap="0.5rem">
-            <NeoSwitch label="Switch 1" value="Switch 1" name="switch-group" bind:group={switchGroupState.group} {...options} />
-            <NeoSwitch label="Switch 2" value="Switch 2" name="switch-group" bind:group={switchGroupState.group} {...options} />
-            <NeoSwitch label="Switch 3" value="Switch 3" name="switch-group" bind:group={switchGroupState.group} {...options} />
-          </div>
-        </SphereBackdrop>
-      </div>
-    </div>
-  </NeoForm>
-
-  <!-- Range inputs -->
-  <NeoForm legend="Range" novalidate>
-    <div class="row">
-      <div class="column content">
-        <span class="label">Range</span>
-        {@render validationState(rangeState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoRange
-            label="Range"
-            bind:touched={rangeState.touched}
-            bind:dirty={rangeState.dirty}
-            bind:valid={rangeState.valid}
-            bind:value={rangeState.value}
-            {...options}
-          />
-        </SphereBackdrop>
+      <!-- Radio inputs -->
+      <div class="row">
+        <div class="column content">
+          <span class="label">Radio Group</span>
+          <div class="label">Group: {radioState.group}</div>
+          <SphereBackdrop glass={options.glass}>
+            <div class="column" style:gap="0.5rem">
+              <NeoRadio label="Radio 1" value="Radio 1" name="radio-group" bind:group={radioState.group} {...options} />
+              <NeoRadio label="Radio 2" value="Radio 2" name="radio-group" bind:group={radioState.group} {...options} />
+              <NeoRadio label="Radio 3" value="Radio 3" name="radio-group" bind:group={radioState.group} {...options} />
+            </div>
+          </SphereBackdrop>
+        </div>
       </div>
 
-      <div class="column content">
-        <span class="label">Stepped</span>
-        {@render validationState(rangeSteppedState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoRange
-            step={10}
-            label="Stepped"
-            bind:touched={rangeSteppedState.touched}
-            bind:dirty={rangeSteppedState.dirty}
-            bind:valid={rangeSteppedState.valid}
-            bind:value={rangeSteppedState.value}
-            {...options}
-          />
-        </SphereBackdrop>
-      </div>
-    </div>
+      <!-- Switch inputs -->
+      <div class="row">
+        <div class="column content">
+          <span class="label">Switch</span>
+          {@render validationState(switchState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <div class="column">
+              <NeoSwitch
+                label="Switch"
+                bind:touched={switchState.touched}
+                bind:dirty={switchState.dirty}
+                bind:valid={switchState.valid}
+                bind:checked={switchState.checked}
+                bind:indeterminate={switchState.indeterminate}
+                required
+                validation
+                {...options}
+                width="18rem"
+              />
+            </div>
+          </SphereBackdrop>
+        </div>
 
-    <div class="row">
-      <div class="column content">
-        <span class="label">Interval</span>
-        {@render validationState(rangeArrayState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoRange
-            label="Interval"
-            bind:touched={rangeArrayState.touched}
-            bind:dirty={rangeArrayState.dirty}
-            bind:valid={rangeArrayState.valid}
-            bind:value={rangeArrayState.value}
-            {...options}
-          />
-        </SphereBackdrop>
+        <div class="column content">
+          <span class="label">Switch Group</span>
+          <div class="label">Group: {switchGroupState.group}</div>
+          <SphereBackdrop glass={options.glass}>
+            <div class="column" style:gap="0.5rem">
+              <NeoSwitch label="Switch 1" value="Switch 1" name="switch-group" bind:group={switchGroupState.group} {...options} />
+              <NeoSwitch label="Switch 2" value="Switch 2" name="switch-group" bind:group={switchGroupState.group} {...options} />
+              <NeoSwitch label="Switch 3" value="Switch 3" name="switch-group" bind:group={switchGroupState.group} {...options} />
+            </div>
+          </SphereBackdrop>
+        </div>
       </div>
-
-      <div class="column content">
-        <span class="label">Min Max</span>
-        {@render validationState(rangeMinMaxState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoRange
-            label="Min Max"
-            min={-200}
-            max={200}
-            bind:touched={rangeMinMaxState.touched}
-            bind:dirty={rangeMinMaxState.dirty}
-            bind:valid={rangeMinMaxState.valid}
-            bind:value={rangeMinMaxState.value}
-            {...options}
-          >
-            {#snippet tooltip({ value, upper }, { min, max })}
-              {#if upper}
-                {value} / {max}
-              {:else}
-                {min} / {value}
-              {/if}
-            {/snippet}
-          </NeoRange>
-        </SphereBackdrop>
-      </div>
-    </div>
+    </NeoForm>
 
     <!-- Range inputs -->
-    <div class="row">
-      <div class="column content">
-        <span class="label">Tick Range</span>
-        {@render validationState(rangeSteppedState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoRange
-            label="Tick Stepped"
-            step={10}
-            ticks
-            bind:touched={rangeSteppedState.touched}
-            bind:dirty={rangeSteppedState.dirty}
-            bind:valid={rangeSteppedState.valid}
-            bind:value={rangeSteppedState.value}
-            {...options}
-          />
-        </SphereBackdrop>
+    <NeoForm legend="Range" novalidate>
+      <div class="row">
+        <div class="column content">
+          <span class="label">Range</span>
+          {@render validationState(rangeState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoRange
+              label="Range"
+              bind:touched={rangeState.touched}
+              bind:dirty={rangeState.dirty}
+              bind:valid={rangeState.valid}
+              bind:value={rangeState.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
+
+        <div class="column content">
+          <span class="label">Stepped</span>
+          {@render validationState(rangeSteppedState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoRange
+              step={10}
+              label="Stepped"
+              bind:touched={rangeSteppedState.touched}
+              bind:dirty={rangeSteppedState.dirty}
+              bind:valid={rangeSteppedState.valid}
+              bind:value={rangeSteppedState.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
       </div>
 
-      <div class="column content">
-        <span class="label">Tick every 20</span>
-        {@render validationState(rangeSteppedState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoRange
-            label="Tick every 20"
-            step={10}
-            ticks={[0, 20, 40, 60, 80, 100]}
-            bind:touched={rangeSteppedState.touched}
-            bind:dirty={rangeSteppedState.dirty}
-            bind:valid={rangeSteppedState.valid}
-            bind:value={rangeSteppedState.value}
-            {...options}
-          />
-        </SphereBackdrop>
+      <div class="row">
+        <div class="column content">
+          <span class="label">Interval</span>
+          {@render validationState(rangeArrayState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoRange
+              label="Interval"
+              bind:touched={rangeArrayState.touched}
+              bind:dirty={rangeArrayState.dirty}
+              bind:valid={rangeArrayState.valid}
+              bind:value={rangeArrayState.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
+
+        <div class="column content">
+          <span class="label">Min Max</span>
+          {@render validationState(rangeMinMaxState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoRange
+              label="Min Max"
+              min={-200}
+              max={200}
+              bind:touched={rangeMinMaxState.touched}
+              bind:dirty={rangeMinMaxState.dirty}
+              bind:valid={rangeMinMaxState.valid}
+              bind:value={rangeMinMaxState.value}
+              {...options}
+            >
+              {#snippet tooltip({ value, upper }, { min, max })}
+                {#if upper}
+                  {value} / {max}
+                {:else}
+                  {min} / {value}
+                {/if}
+              {/snippet}
+            </NeoRange>
+          </SphereBackdrop>
+        </div>
       </div>
 
-      <div class="column content">
-        <span class="label">Tick Interval</span>
-        {@render validationState(rangeArrayState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoRange
-            label="Tick Interval"
-            step={10}
-            ticks
-            bind:touched={rangeArrayState.touched}
-            bind:dirty={rangeArrayState.dirty}
-            bind:valid={rangeArrayState.valid}
-            bind:value={rangeArrayState.value}
-            {...options}
-          />
-        </SphereBackdrop>
-      </div>
-    </div>
+      <!-- Range inputs -->
+      <div class="row">
+        <div class="column content">
+          <span class="label">Tick Range</span>
+          {@render validationState(rangeSteppedState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoRange
+              label="Tick Stepped"
+              step={10}
+              ticks
+              bind:touched={rangeSteppedState.touched}
+              bind:dirty={rangeSteppedState.dirty}
+              bind:valid={rangeSteppedState.valid}
+              bind:value={rangeSteppedState.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
 
-    {#snippet beforeRange()}
-      <NeoButton
-        rounded
-        aria-label="Increment range"
-        glass={options.glass}
-        disabled={options.disabled}
-        readonly={options.readonly}
-        skeleton={options.skeleton}
-        text
-        onclick={() => rangeState.ref.stepUp()}
-      >
-        {#snippet icon()}
-          <IconMinus style="min-width: 1rem" />
-        {/snippet}
-      </NeoButton>
-    {/snippet}
-    {#snippet afterRange()}
-      <NeoButton
-        rounded
-        aria-label="Decrement range"
-        glass={options.glass}
-        disabled={options.disabled}
-        readonly={options.readonly}
-        skeleton={options.skeleton}
-        text
-        onclick={() => rangeState.ref.stepDown()}
-      >
-        {#snippet icon()}
-          <IconAdd style="min-width: 1rem" />
-        {/snippet}
-      </NeoButton>
-    {/snippet}
+        <div class="column content">
+          <span class="label">Tick every 20</span>
+          {@render validationState(rangeSteppedState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoRange
+              label="Tick every 20"
+              step={10}
+              ticks={[0, 20, 40, 60, 80, 100]}
+              bind:touched={rangeSteppedState.touched}
+              bind:dirty={rangeSteppedState.dirty}
+              bind:valid={rangeSteppedState.valid}
+              bind:value={rangeSteppedState.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
 
-    <div class="row">
-      <div class="column content">
-        <span class="label">Prefix/suffix</span>
-        {@render validationState(rangeState, true)}
-        <SphereBackdrop glass={options.glass}>
-          <NeoRange
-            label="Interval"
-            bind:ref={rangeState.ref}
-            bind:touched={rangeState.touched}
-            bind:dirty={rangeState.dirty}
-            bind:valid={rangeState.valid}
-            bind:value={rangeState.value}
-            before={beforeRange}
-            after={afterRange}
-            {...options}
-          />
-        </SphereBackdrop>
+        <div class="column content">
+          <span class="label">Tick Interval</span>
+          {@render validationState(rangeArrayState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoRange
+              label="Tick Interval"
+              step={10}
+              ticks
+              bind:touched={rangeArrayState.touched}
+              bind:dirty={rangeArrayState.dirty}
+              bind:valid={rangeArrayState.valid}
+              bind:value={rangeArrayState.value}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
       </div>
-    </div>
-  </NeoForm>
-</div>
+
+      {#snippet beforeRange()}
+        <NeoButton
+          rounded
+          aria-label="Increment range"
+          glass={options.glass}
+          disabled={options.disabled}
+          readonly={options.readonly}
+          skeleton={options.skeleton}
+          text
+          onclick={() => rangeState.ref.stepUp()}
+        >
+          {#snippet icon()}
+            <IconMinus style="min-width: 1rem" />
+          {/snippet}
+        </NeoButton>
+      {/snippet}
+      {#snippet afterRange()}
+        <NeoButton
+          rounded
+          aria-label="Decrement range"
+          glass={options.glass}
+          disabled={options.disabled}
+          readonly={options.readonly}
+          skeleton={options.skeleton}
+          text
+          onclick={() => rangeState.ref.stepDown()}
+        >
+          {#snippet icon()}
+            <IconAdd style="min-width: 1rem" />
+          {/snippet}
+        </NeoButton>
+      {/snippet}
+
+      <div class="row">
+        <div class="column content">
+          <span class="label">Prefix/suffix</span>
+          {@render validationState(rangeState, true)}
+          <SphereBackdrop glass={options.glass}>
+            <NeoRange
+              label="Interval"
+              bind:ref={rangeState.ref}
+              bind:touched={rangeState.touched}
+              bind:dirty={rangeState.dirty}
+              bind:valid={rangeState.valid}
+              bind:value={rangeState.value}
+              before={beforeRange}
+              after={afterRange}
+              {...options}
+            />
+          </SphereBackdrop>
+        </div>
+      </div>
+    </NeoForm>
+  </div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .label {
     max-width: 80vw;

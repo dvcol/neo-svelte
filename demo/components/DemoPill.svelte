@@ -39,7 +39,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
@@ -62,9 +62,10 @@
     max={MaxShallowShadowElevation}
     defaultValue={0}
     oninput={onElevation}
-    rounded={options.rounded}
     nullable={false}
     floating={false}
+    rounded
+    glass
     groupProps={{ style: 'margin-left: 6rem' }}
   />
 
@@ -76,9 +77,10 @@
     min={MinShallowShadowElevation - options.elevation}
     max={MaxShallowShadowElevation - options.elevation}
     defaultValue={0}
-    rounded={options.rounded}
     nullable={false}
     floating={false}
+    rounded
+    glass
     groupProps={{ style: 'margin-left: 4rem' }}
   />
 
@@ -89,10 +91,11 @@
     floating={false}
     size="10"
     bind:value={options.size}
-    rounded={options.rounded}
     containerProps={{ style: 'margin-left: 4rem' }}
     options={['large', 'medium', 'small']}
     openOnFocus
+    rounded
+    glass
   />
 
   <NeoSelect
@@ -104,51 +107,59 @@
     display={displayValue}
     size="10"
     bind:value={options.color}
-    rounded={options.rounded}
     containerProps={{ style: 'margin-left: 4rem' }}
     options={colorOptions}
     openOnFocus
+    rounded
+    glass
   />
 </div>
 
-<div class="row">
-  <span class="label">Pills</span>
-  <SphereBackdrop glass={options.glass}>
-    <NeoPill {...options}>default</NeoPill>
-  </SphereBackdrop>
-  <SphereBackdrop glass={options.glass}>
-    <NeoPill pressed {...options}>pressed</NeoPill>
-  </SphereBackdrop>
+<section>
+  <div class="row">
+    <span class="label">Pills</span>
+    <SphereBackdrop glass={options.glass}>
+      <NeoPill {...options}>default</NeoPill>
+    </SphereBackdrop>
+    <SphereBackdrop glass={options.glass}>
+      <NeoPill pressed {...options}>pressed</NeoPill>
+    </SphereBackdrop>
 
-  <SphereBackdrop glass={options.glass}>
-    <NeoPill {...options}>
-      <IconAccount style="margin-inline: -0.1875rem 0.325rem" />
-      <span>Icon</span>
-    </NeoPill>
-  </SphereBackdrop>
-</div>
+    <SphereBackdrop glass={options.glass}>
+      <NeoPill {...options}>
+        <IconAccount style="margin-inline: -0.1875rem 0.325rem" />
+        <span>Icon</span>
+      </NeoPill>
+    </SphereBackdrop>
+  </div>
 
-<div class="row">
-  <span class="label">Badges</span>
-  <SphereBackdrop glass={options.glass}>
-    <NeoBadge value="1" {...options} glass={true} size={'medium'} elevation="2" tinted>
-      <NeoButton glass={options.glass} rounded={options.rounded}>Default</NeoButton>
-    </NeoBadge>
-  </SphereBackdrop>
+  <div class="row">
+    <span class="label">Badges</span>
+    <SphereBackdrop glass={options.glass}>
+      <NeoBadge value="1" {...options} glass={true} size={'medium'} elevation="2" tinted>
+        <NeoButton glass={options.glass} rounded={options.rounded}>Default</NeoButton>
+      </NeoBadge>
+    </SphereBackdrop>
 
-  <SphereBackdrop glass={options.glass}>
-    <NeoBadge {...options} glass={false} size={'small'} elevation="0" filled offset={{ x: '-4%', y: '-2%' }}>
-      <NeoButton glass={options.glass} rounded={options.rounded}>Custom snippet</NeoButton>
+    <SphereBackdrop glass={options.glass}>
+      <NeoBadge {...options} glass={false} size={'small'} elevation="0" filled offset={{ x: '-4%', y: '-2%' }}>
+        <NeoButton glass={options.glass} rounded={options.rounded}>Custom snippet</NeoButton>
 
-      {#snippet value()}
-        <IconMail size="1.25rem" />
-      {/snippet}
-    </NeoBadge>
-  </SphereBackdrop>
-</div>
+        {#snippet value()}
+          <IconMail size="1.25rem" />
+        {/snippet}
+      </NeoBadge>
+    </SphereBackdrop>
+  </div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .label {
     max-width: 80vw;

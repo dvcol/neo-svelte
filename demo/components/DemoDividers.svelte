@@ -20,7 +20,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded={options.rounded}>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
@@ -35,44 +35,52 @@
     min={MinShadowElevation}
     max={MaxShadowElevation}
     defaultValue={DefaultShadowPressedElevation}
-    rounded={options.rounded}
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
+    rounded
+    glass
   />
 </div>
 
-<div class="row">
-  <div class="column content" class:vertical={options.vertical}>
-    <span class="label">Divider</span>
+<section>
+  <div class="row">
+    <div class="column content" class:vertical={options.vertical}>
+      <span class="label">Divider</span>
 
-    <SphereBackdrop glass={options.glass} style="width: 100%; height: 100%">
-      <NeoDivider {...options} />
-    </SphereBackdrop>
+      <SphereBackdrop glass={options.glass} style="width: 100%; height: 100%">
+        <NeoDivider {...options} />
+      </SphereBackdrop>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical={options.vertical}>
-    <span class="label">Custom {options.vertical ? 'Width' : 'Height'}</span>
-    <SphereBackdrop glass={options.glass} style="width: 100%; height: 100%">
-      <NeoDivider height={options.vertical ? undefined : '2rem'} width={options.vertical ? '2rem' : undefined} {...options} />
-    </SphereBackdrop>
+  <div class="row">
+    <div class="column content" class:vertical={options.vertical}>
+      <span class="label">Custom {options.vertical ? 'Width' : 'Height'}</span>
+      <SphereBackdrop glass={options.glass} style="width: 100%; height: 100%">
+        <NeoDivider height={options.vertical ? undefined : '2rem'} width={options.vertical ? '2rem' : undefined} {...options} />
+      </SphereBackdrop>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="column content" class:vertical={options.vertical}>
-    <span class="label">Custom {options.vertical ? 'Height' : 'Width'}</span>
+  <div class="row">
+    <div class="column content" class:vertical={options.vertical}>
+      <span class="label">Custom {options.vertical ? 'Height' : 'Width'}</span>
 
-    <SphereBackdrop glass={options.glass} style="width: 100%; height: 100%">
-      <NeoDivider width={options.vertical ? undefined : '50%'} height={options.vertical ? '50%' : undefined} {...options} />
-    </SphereBackdrop>
+      <SphereBackdrop glass={options.glass} style="width: 100%; height: 100%">
+        <NeoDivider width={options.vertical ? undefined : '50%'} height={options.vertical ? '50%' : undefined} {...options} />
+      </SphereBackdrop>
+    </div>
   </div>
-</div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .label {
     max-width: 80vw;

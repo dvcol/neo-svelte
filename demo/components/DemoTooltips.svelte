@@ -173,12 +173,12 @@
 
 {#snippet avatar(ctx: NeoListItemRenderContext)}
   <span class="custom-item-avatar">
-    <IconAccount size="1.5rem" filled={!!ctx?.checked} />
+    <IconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
   </span>
 {/snippet}
 
 <div class="row">
-  <NeoButtonGroup rounded={options.rounded}>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
@@ -206,11 +206,12 @@
     placement="left"
     floating={false}
     bind:value={options.placement}
-    rounded={options.rounded}
     containerProps={{ style: 'margin-left: 6.75rem' }}
     options={position}
     size="15"
     openOnFocus
+    rounded
+    glass
   />
 
   <NeoNumberStep
@@ -221,10 +222,11 @@
     min={0}
     max={MaxShadowElevation}
     defaultValue={DefaultShadowElevation}
-    rounded={options.rounded}
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
+    rounded
+    glass
   />
 
   <NeoSelect
@@ -238,6 +240,8 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
     openOnFocus
+    rounded
+    glass
   />
 </div>
 
@@ -253,79 +257,9 @@
   </div>
 {/snippet}
 
-<div class="row">
-  <div class="column content">
-    <span class="label">Tooltip</span>
-    <NeoTooltip {tooltip} width {...options}>
-      <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
-    </NeoTooltip>
-  </div>
-
-  <div class="column content">
-    <span class="label">Tooltip (string)</span>
-    <NeoTooltip tooltip="This is a string tooltip" {...options}>
-      <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
-    </NeoTooltip>
-  </div>
-
-  <div class="column content">
-    <span class="label">Tooltip (ref)</span>
-
-    <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" rounded={options.rounded} />
-
-    <NeoTooltip {tooltip} target={containerRef} offset={8} width="min" {...options} />
-  </div>
-</div>
-
-<div class="row">
-  <div class="column content">
-    <span class="label">Simple hover Select</span>
-    <NeoPopSelect
-      bind:selected={simpleSelected}
-      items={simpleItems}
-      rounded={options.rounded}
-      height={'20rem'}
-      tooltipProps={options}
-      onSelect={e => console.info('selected', e)}
-    >
-      <NeoButton text rounded={options.rounded}>Hover select: {simpleSelected?.item?.value ?? 'none selected'}</NeoButton>
-    </NeoPopSelect>
-  </div>
-
-  {#snippet question()}
-    <IconQuestionMark size="1.5rem" />
-  {/snippet}
-
-  <div class="column content">
-    <span class="label">Click pop select</span>
-    <NeoPopSelect
-      search
-      bind:open
-      bind:selected={complexSelected}
-      items={complexItems}
-      rounded={options.rounded}
-      height="28rem"
-      tooltipProps={{ ...options, openOnFocus: false, openOnHover: false }}
-    >
-      <NeoButton container rounded={options.rounded} bind:checked={open} toggle hover={options.elevation} active="-1" pressed>
-        <NeoTransitionContainer overflow="hidden" style="min-width: 252px; margin: 0.5rem">
-          {#key complexSelected?.item?.id}
-            <div
-              in:fly={{ duration: defaultDuration, y: complexSelected?.item ? '-50%' : '50%' }}
-              out:fly={{ duration: quickDuration, y: complexSelected?.item ? '50%' : '-50%' }}
-            >
-              <NeoListBaseItem
-                before={question}
-                checked={true}
-                item={complexSelected?.item ?? { label: 'None Selected', description: 'Please select a profile' }}
-              />
-            </div>
-          {/key}
-        </NeoTransitionContainer>
-      </NeoButton>
-    </NeoPopSelect>
-  </div>
-</div>
+{#snippet question()}
+  <IconQuestionMark size="1.5rem" />
+{/snippet}
 
 {#snippet lorem()}
   <div>
@@ -347,39 +281,116 @@
   <IconListSmall filled={active === 2} />
 {/snippet}
 
-<div class="row">
-  <div class="column content">
-    <span class="label">Click pop confirm</span>
-    <NeoPopConfirm
-      rounded={options.rounded}
-      closable={options.closeOnDismiss}
-      tooltipProps={{ ...options, openOnHover: false, openOnFocus: false }}
-      {...confirmOptions}
-    >
-      {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
-        <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>
-      {/snippet}
-    </NeoPopConfirm>
+<section>
+  <div class="row">
+    <div class="column content">
+      <span class="label">Tooltip</span>
+      <NeoTooltip {tooltip} width {...options}>
+        <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
+      </NeoTooltip>
+    </div>
+
+    <div class="column content">
+      <span class="label">Tooltip (string)</span>
+      <NeoTooltip tooltip="This is a string tooltip" {...options}>
+        <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
+      </NeoTooltip>
+    </div>
+
+    <div class="column content">
+      <span class="label">Tooltip (ref)</span>
+
+      <NeoInput bind:value={content} bind:containerRef placeholder="Placeholder" rounded={options.rounded} />
+
+      <NeoTooltip {tooltip} target={containerRef} offset={8} width="min" {...options} />
+    </div>
   </div>
 
-  <div class="column content">
-    <span class="label">Click pop stepper</span>
-    <NeoPopStepper
-      bind:active
-      rounded={options.rounded}
-      closable={options.closeOnDismiss}
-      tooltipProps={{ ...options, openOnHover: false, openOnFocus: false }}
-      {...stepperOptions}
-    >
-      {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
-        <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>
-      {/snippet}
-    </NeoPopStepper>
+  <div class="row">
+    <div class="column content">
+      <span class="label">Simple hover Select</span>
+      <NeoPopSelect
+        bind:selected={simpleSelected}
+        items={simpleItems}
+        rounded={options.rounded}
+        height={'20rem'}
+        tooltipProps={options}
+        onSelect={e => console.info('selected', e)}
+      >
+        <NeoButton text rounded={options.rounded}>Hover select: {simpleSelected?.item?.value ?? 'none selected'}</NeoButton>
+      </NeoPopSelect>
+    </div>
+
+    <div class="column content">
+      <span class="label">Click pop select</span>
+      <NeoPopSelect
+        search
+        bind:open
+        bind:selected={complexSelected}
+        items={complexItems}
+        rounded={options.rounded}
+        height="28rem"
+        tooltipProps={{ ...options, openOnFocus: false, openOnHover: false }}
+      >
+        <NeoButton container rounded={options.rounded} bind:checked={open} toggle hover={2} active={-2} pressed>
+          <NeoTransitionContainer overflow="hidden" style="min-width: 252px; margin: 0.5rem">
+            {#key complexSelected?.item?.id}
+              <div
+                in:fly={{ duration: defaultDuration, y: complexSelected?.item ? '-50%' : '50%' }}
+                out:fly={{ duration: quickDuration, y: complexSelected?.item ? '50%' : '-50%' }}
+              >
+                <NeoListBaseItem
+                  before={question}
+                  checked={true}
+                  item={complexSelected?.item ?? { label: 'None Selected', description: 'Please select a profile' }}
+                />
+              </div>
+            {/key}
+          </NeoTransitionContainer>
+        </NeoButton>
+      </NeoPopSelect>
+    </div>
   </div>
-</div>
+
+  <div class="row">
+    <div class="column content">
+      <span class="label">Click pop confirm</span>
+      <NeoPopConfirm
+        rounded={options.rounded}
+        closable={options.closeOnDismiss}
+        tooltipProps={{ ...options, openOnHover: false, openOnFocus: false }}
+        {...confirmOptions}
+      >
+        {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
+          <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>
+        {/snippet}
+      </NeoPopConfirm>
+    </div>
+
+    <div class="column content">
+      <span class="label">Click pop stepper</span>
+      <NeoPopStepper
+        bind:active
+        rounded={options.rounded}
+        closable={options.closeOnDismiss}
+        tooltipProps={{ ...options, openOnHover: false, openOnFocus: false }}
+        {...stepperOptions}
+      >
+        {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
+          <NeoButton text rounded={options.rounded} onclick={() => toggle()}>Click to toggle</NeoButton>
+        {/snippet}
+      </NeoPopStepper>
+    </div>
+  </div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .label {
     max-width: 80vw;
@@ -391,7 +402,7 @@
     display: inline-flex;
     align-items: center;
     padding: 0.125rem;
-    border: 1px currentcolor solid;
+    border: 2px currentcolor solid;
     border-radius: 50%;
     aspect-ratio: 1 / 1;
   }

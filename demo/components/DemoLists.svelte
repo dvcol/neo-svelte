@@ -175,7 +175,7 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup rounded={options.rounded}>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={isEmpty}>Empty</NeoButton>
     <NeoButton toggle bind:checked={options.shadow}>Shadow</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
@@ -222,169 +222,176 @@
 
 {#snippet avatar(ctx: NeoListItemRenderContext)}
   <span class="custom-item-avatar">
-    <IconAccount size="1.5rem" filled={!!ctx?.checked} />
+    <IconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
   </span>
 {/snippet}
 
-<div class="row">
-  <!-- custom item with select, before, after & description  & loader  -->
-  <div class="column content">
-    <span class="label">Sortable Card list</span>
-    <NeoCard
-      rounded
-      scrollbar={false}
-      bind:elevation
-      bind:hovered
-      bind:focused
-      hover="-2"
-      height="20rem"
-      width="min(80vw, 20rem)"
-      spacing="0.5rem"
-      --neo-card-border-radius="2.75rem"
-    >
-      <NeoList
-        aria-label="Sortable list"
-        select
-        multiple
-        items={withComplexList}
-        {...options}
-        loaderProps={{
-          description: true,
-          before: true,
-          beforeProps: { width: '1.875rem', height: '1.875rem' },
-        }}
-        buttonProps={{ rounded: true }}
+<section>
+  <div class="row">
+    <!-- custom item with select, before, after & description  & loader  -->
+    <div class="column content">
+      <span class="label">Sortable Card list</span>
+      <NeoCard
+        rounded
+        scrollbar={false}
+        bind:elevation
+        bind:hovered
+        bind:focused
+        hover="-2"
+        height="20rem"
+        width="min(80vw, 20rem)"
+        spacing="0.5rem"
+        --neo-card-border-radius="2.75rem"
       >
-        {#snippet before(context)}
-          <NeoListSearch elevation={hovered || focused ? 2 : elevation} {context} />
+        <NeoList
+          aria-label="Sortable list"
+          select
+          multiple
+          items={withComplexList}
+          {...options}
+          loaderProps={{
+            description: true,
+            before: true,
+            beforeProps: { width: '1.875rem', height: '1.875rem' },
+          }}
+          buttonProps={{ rounded: true }}
+        >
+          {#snippet before(context)}
+            <NeoListSearch elevation={hovered || focused ? 2 : elevation} {context} />
+          {/snippet}
+        </NeoList>
+      </NeoCard>
+    </div>
+
+    <!--  card-->
+    <div class="column content">
+      <span class="label">Card List</span>
+      <NeoCard rounded elevation="0" scrollbar={false} hover="-2" height="20rem" width="min(80vw, 18rem)" spacing="0.75rem">
+        <NeoList aria-label="Card list" select {items} {...options} />
+      </NeoCard>
+    </div>
+
+    <!--  multi line loader-->
+    <div class="column content">
+      <span class="label">Multi-line loader</span>
+      <NeoList aria-label="Multi loader list" {items} {...options} loaderProps={{ lines: 2, items: 5 }} />
+    </div>
+
+    <!--  custom loader-->
+    <div class="column content">
+      <span class="label">Custom loader</span>
+      <NeoList aria-label="Custom loader list" {items} {...options}>
+        {#snippet loader()}
+          <div class="custom-list-loader">
+            <IconCircleLoading size="2rem" />
+          </div>
         {/snippet}
       </NeoList>
-    </NeoCard>
-  </div>
-
-  <!--  card-->
-  <div class="column content">
-    <span class="label">Card List</span>
-    <NeoCard rounded elevation="0" scrollbar={false} hover="-2" height="20rem" width="min(80vw, 18rem)" spacing="0.75rem">
-      <NeoList aria-label="Card list" select {items} {...options} />
-    </NeoCard>
-  </div>
-
-  <!--  multi line loader-->
-  <div class="column content">
-    <span class="label">Multi-line loader</span>
-    <NeoList aria-label="Multi loader list" {items} {...options} loaderProps={{ lines: 2, items: 5 }} />
-  </div>
-
-  <!--  custom loader-->
-  <div class="column content">
-    <span class="label">Custom loader</span>
-    <NeoList aria-label="Custom loader list" {items} {...options}>
-      {#snippet loader()}
-        <div class="custom-list-loader">
-          <IconCircleLoading size="2rem" />
-        </div>
-      {/snippet}
-    </NeoList>
-  </div>
-
-  <!--  custom empty-->
-  <div class="column content">
-    <span class="label">Custom Empty</span>
-    <NeoList aria-label="Custom empty list" {items} {...options}>
-      {#snippet empty()}
-        <li class="custom-list-loader" in:fade={quickDurationProps}>
-          <span> Custom empty snippet</span>
-        </li>
-      {/snippet}
-    </NeoList>
-  </div>
-
-  <!--  custom render -->
-  <div class="column content">
-    <span class="label">Custom Render</span>
-    <NeoList aria-label="Custom item render list" items={withCustom} {...options} />
-  </div>
-
-  <!--  custom item-->
-  <div class="column content">
-    <span class="label">Custom snippet</span>
-    <NeoList aria-label="Custom item snippet list" items={withCustom} {item} {...options} />
-  </div>
-
-  {#snippet values(ctx)}
-    <div class="list-values">
-      {#if Array.isArray(ctx.selected)}
-        values: {ctx.selected?.map(i => [i.sectionIndex, i?.index].filter(j => j !== undefined).join('-')).join(', ') || 'none selected'}
-      {:else}
-        values: {ctx.selected?.index || 'none selected'}
-      {/if}
     </div>
-  {/snippet}
 
-  <!--  select items -->
-  <div class="column content">
-    <span class="label">Select item</span>
-    <NeoList
-      aria-label="Select list"
-      select
-      selected={selected[0]}
-      {items}
-      {...options}
-      onSelect={e => console.info('onSelect - single', e)}
-      after={values}
-    />
+    <!--  custom empty-->
+    <div class="column content">
+      <span class="label">Custom Empty</span>
+      <NeoList aria-label="Custom empty list" {items} {...options}>
+        {#snippet empty()}
+          <li class="custom-list-loader" in:fade={quickDurationProps}>
+            <span> Custom empty snippet</span>
+          </li>
+        {/snippet}
+      </NeoList>
+    </div>
+
+    <!--  custom render -->
+    <div class="column content">
+      <span class="label">Custom Render</span>
+      <NeoList aria-label="Custom item render list" items={withCustom} {...options} />
+    </div>
+
+    <!--  custom item-->
+    <div class="column content">
+      <span class="label">Custom snippet</span>
+      <NeoList aria-label="Custom item snippet list" items={withCustom} {item} {...options} />
+    </div>
+
+    {#snippet values(ctx)}
+      <div class="list-values">
+        {#if Array.isArray(ctx.selected)}
+          values: {ctx.selected?.map(i => [i.sectionIndex, i?.index].filter(j => j !== undefined).join('-')).join(', ') || 'none selected'}
+        {:else}
+          values: {ctx.selected?.index || 'none selected'}
+        {/if}
+      </div>
+    {/snippet}
+
+    <!--  select items -->
+    <div class="column content">
+      <span class="label">Select item</span>
+      <NeoList
+        aria-label="Select list"
+        select
+        selected={selected[0]}
+        {items}
+        {...options}
+        onSelect={e => console.info('onSelect - single', e)}
+        after={values}
+      />
+    </div>
+
+    <!--  multi select items -->
+
+    <div class="column content">
+      <span class="label">Select multiple</span>
+      <NeoList
+        aria-label="Multi-select list"
+        select
+        multiple
+        selected={[...selected]}
+        {items}
+        {...options}
+        onSelect={e => console.info('onSelect - multiple', e)}
+        after={values}
+      />
+    </div>
+
+    <!--  section (i.e. sub-lists) -->
+
+    <div class="column content">
+      <span class="label">Select section</span>
+      <NeoList
+        aria-label="Section list"
+        select
+        multiple
+        items={withSection}
+        {...options}
+        onSelect={e => console.info('onSelect - sections', e)}
+        after={values}
+      />
+    </div>
+
+    <!--  custom section -->
+    <div class="column content">
+      <span class="label">Custom section</span>
+      <NeoList items={withCustomSection} {...options} {item}>
+        {#snippet section(_children, _context)}
+          <h2>{_context?.section?.label}</h2>
+          <ul>
+            {@render _children(_context)}
+          </ul>
+        {/snippet}
+      </NeoList>
+    </div>
+
+    <!--  tooltip item (nested menu drawer, portal ?) -->
   </div>
-
-  <!--  multi select items -->
-
-  <div class="column content">
-    <span class="label">Select multiple</span>
-    <NeoList
-      aria-label="Multi-select list"
-      select
-      multiple
-      selected={[...selected]}
-      {items}
-      {...options}
-      onSelect={e => console.info('onSelect - multiple', e)}
-      after={values}
-    />
-  </div>
-
-  <!--  section (i.e. sub-lists) -->
-
-  <div class="column content">
-    <span class="label">Select section</span>
-    <NeoList
-      aria-label="Section list"
-      select
-      multiple
-      items={withSection}
-      {...options}
-      onSelect={e => console.info('onSelect - sections', e)}
-      after={values}
-    />
-  </div>
-
-  <!--  custom section -->
-  <div class="column content">
-    <span class="label">Custom section</span>
-    <NeoList items={withCustomSection} {...options} {item}>
-      {#snippet section(_children, _context)}
-        <h2>{_context?.section?.label}</h2>
-        <ul>
-          {@render _children(_context)}
-        </ul>
-      {/snippet}
-    </NeoList>
-  </div>
-
-  <!--  tooltip item (nested menu drawer, portal ?) -->
-</div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .label {
     max-width: 80vw;
@@ -410,7 +417,7 @@
     display: inline-flex;
     align-items: center;
     padding: 0.125rem;
-    border: 1px currentcolor solid;
+    border: 2px currentcolor solid;
     border-radius: 50%;
     aspect-ratio: 1 / 1;
   }

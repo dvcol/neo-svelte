@@ -46,8 +46,6 @@
     console.info('Change', { id, ctx });
   };
 
-  const onClear = () => onChange();
-
   const options = $state<NeoTabsProps>({
     disabled: false,
     close: false,
@@ -99,7 +97,7 @@
 {/snippet}
 
 <div class="row">
-  <NeoButtonGroup>
+  <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
     <NeoButton toggle bind:checked={options.add}>Add</NeoButton>
@@ -112,7 +110,6 @@
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
     <NeoButton toggle bind:checked={skeleton}>Skeleton</NeoButton>
-    <NeoButton onclick={onClear}>Clear</NeoButton>
   </NeoButtonGroup>
 
   <NeoSelect
@@ -127,27 +124,38 @@
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
     openOnFocus
+    rounded
+    glass
   />
 </div>
 
-<div class="values">
-  <span>Active: {active}</span>
-  <span>Value: {typeof context?.value === 'object' ? JSON.stringify(context?.value, undefined, 2) : context?.value}</span>
-</div>
+<section>
+  <div class="values">
+    <span>Active: {active}</span>
+    <span>Value: {typeof context?.value === 'object' ? JSON.stringify(context?.value, undefined, 2) : context?.value}</span>
+  </div>
 
-<div class="row" class:invert={!options.vertical}>
-  {#each columns as { label, props }}
-    <div class="column">
-      <span class="label">{label}</span>
-      <SphereBackdrop glass={options.glass}>
-        {@render group(props)}
-      </SphereBackdrop>
+  <div class="content">
+    <div class="row" class:invert={!options.vertical}>
+      {#each columns as { label, props }}
+        <div class="column">
+          <span class="label">{label}</span>
+          <SphereBackdrop glass={options.glass}>
+            {@render group(props)}
+          </SphereBackdrop>
+        </div>
+      {/each}
     </div>
-  {/each}
-</div>
+  </div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-xl));

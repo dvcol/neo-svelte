@@ -84,7 +84,7 @@
 {/snippet}
 
 <div class="row">
-  <NeoButtonGroup>
+  <NeoButtonGroup text rounded active="-2">
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
@@ -94,6 +94,8 @@
   </NeoButtonGroup>
 
   <NeoSelect
+    rounded
+    glass
     label="Color"
     placeholder="Select color"
     placement="left"
@@ -108,45 +110,52 @@
   />
 </div>
 
-<div class="row">
-  {#each columns as { label, props }}
-    <div class="column content">
-      <span class="label">{label}</span>
-      {@render buttons(props)}
+<section>
+  <div class="row">
+    {#each columns as { label, props }}
+      <div class="column content">
+        <span class="label">{label}</span>
+        {@render buttons(props)}
+      </div>
+    {/each}
+    <div class="column">
+      <span class="label">Checkbox</span>
+      <SphereBackdrop glass={options.glass}>
+        <NeoCheckboxButton indeterminate {...options} />
+      </SphereBackdrop>
+      <span class="label">Radio</span>
+      <SphereBackdrop glass={options.glass}>
+        <NeoRadioButton {...options} />
+      </SphereBackdrop>
+      <span class="label">Switch</span>
+      <SphereBackdrop glass={options.glass}>
+        <NeoSwitchButton indeterminate {...options} />
+      </SphereBackdrop>
     </div>
-  {/each}
-  <div class="column">
-    <span class="label">Checkbox</span>
-    <SphereBackdrop glass={options.glass}>
-      <NeoCheckboxButton indeterminate {...options} />
-    </SphereBackdrop>
-    <span class="label">Radio</span>
-    <SphereBackdrop glass={options.glass}>
-      <NeoRadioButton {...options} />
-    </SphereBackdrop>
-    <span class="label">Switch</span>
-    <SphereBackdrop glass={options.glass}>
-      <NeoSwitchButton indeterminate {...options} />
-    </SphereBackdrop>
+    <div class="column">
+      <span class="label">Checkbox</span>
+      <SphereBackdrop glass={options.glass}>
+        <NeoCheckboxButton elevation="0" indeterminate {...options} />
+      </SphereBackdrop>
+      <span class="label">Radio</span>
+      <SphereBackdrop glass={options.glass}>
+        <NeoRadioButton elevation="0" {...options} />
+      </SphereBackdrop>
+      <span class="label">Switch</span>
+      <SphereBackdrop glass={options.glass}>
+        <NeoSwitchButton elevation="0" indeterminate {...options} />
+      </SphereBackdrop>
+    </div>
   </div>
-  <div class="column">
-    <span class="label">Checkbox</span>
-    <SphereBackdrop glass={options.glass}>
-      <NeoCheckboxButton elevation="0" indeterminate {...options} />
-    </SphereBackdrop>
-    <span class="label">Radio</span>
-    <SphereBackdrop glass={options.glass}>
-      <NeoRadioButton elevation="0" {...options} />
-    </SphereBackdrop>
-    <span class="label">Switch</span>
-    <SphereBackdrop glass={options.glass}>
-      <NeoSwitchButton elevation="0" indeterminate {...options} />
-    </SphereBackdrop>
-  </div>
-</div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg));

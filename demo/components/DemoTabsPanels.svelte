@@ -58,7 +58,7 @@
 
 <div class="row">
   <div class="column">
-    <NeoButtonGroup>
+    <NeoButtonGroup text rounded>
       <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
       <NeoButton toggle bind:checked={options.before}>Before</NeoButton>
       <NeoButton toggle bind:checked={options.vertical}>Vertical</NeoButton>
@@ -110,22 +110,29 @@
   </div>
 {/snippet}
 
-<div class="row">
-  {#each columns as { label, props }}
-    <div class="column content" class:max={options.vertical}>
-      <span class="label">{label}</span>
+<section>
+  <div class="row">
+    {#each columns as { label, props }}
+      <div class="column content" class:max={options.vertical}>
+        <span class="label">{label}</span>
 
-      {#if props?.glass}
-        <SphereBackdrop>{@render group(props)}</SphereBackdrop>
-      {:else}
-        {@render group(props)}
-      {/if}
-    </div>
-  {/each}
-</div>
+        {#if props?.glass}
+          <SphereBackdrop>{@render group(props)}</SphereBackdrop>
+        {:else}
+          {@render group(props)}
+        {/if}
+      </div>
+    {/each}
+  </div>
+</section>
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+
+  section {
+    flex: 1 1 100%;
+    align-content: center;
+  }
 
   .content {
     flex: 0 1 37.5rem;
