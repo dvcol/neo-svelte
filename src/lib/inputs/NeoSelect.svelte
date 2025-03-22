@@ -3,7 +3,7 @@
   import { clamp } from '@dvcol/common-utils/common/math';
   import { watch } from '@dvcol/svelte-utils/watch';
 
-  import { tick, untrack } from 'svelte';
+  import { tick } from 'svelte';
 
   import type { FormEventHandler, KeyboardEventHandler } from 'svelte/elements';
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
@@ -113,9 +113,10 @@
   });
 
   const space = $derived(open ? 8 : 6);
+  const transformed = $derived((transform ? transform(selected) : selected) ?? rest?.defaultValue);
   watch(
     () => {
-      value = (transform ? transform(selected) : selected) ?? rest?.defaultValue;
+      value = transformed;
       touched = true;
     },
     () => selected,
@@ -125,16 +126,18 @@
     },
   );
 
+  /**
+   * Reflects change in autocomplete input value to selected value
+   */
   const reflectValue = () => {
     selected = findByValueInList(value, items);
     if (selected === undefined) value = undefined;
   };
 
   $effect.pre(() => {
-    untrack(() => {
-      if (selected) return;
-      untrack(reflectValue);
-    });
+    // If value is already the transformed selected value, do nothing
+    if (value === transformed) return;
+    reflectValue();
   });
 
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
@@ -228,7 +231,7 @@
 />
 
 {#if autocomplete}
-  <input aria-hidden="true" type="text" class="neo-select-autocomplete-hidden" {autocomplete} bind:value onchange={() => reflectValue()} />
+  <input aria-hidden="true" type="text" class="neo-select-autocomplete-hidden" {autocomplete} bind:value onchange={reflectValue} />
 {/if}
 
 <NeoPopSelect
