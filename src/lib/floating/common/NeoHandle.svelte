@@ -2,75 +2,90 @@
   import { circOut } from 'svelte/easing';
   import { scale } from 'svelte/transition';
 
-  import type { NeoHandlePlacement, NeoHandleProps } from '~/floating/common/neo-handle.model.js';
-
   import NeoDivider from '~/divider/NeoDivider.svelte';
+  import { NeoHandlePlacement, type NeoHandlePlacements, type NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 
   const {
     // Snippets
     children,
-    handle = true,
+    handle,
 
     // State
-    refs = $bindable([]),
+    refs = $bindable({}),
     enabled = true,
+    visible = true,
     placement = 'top',
     position = 'inside',
     outside,
     axis,
+    minSize = 16,
 
     // Other Props
     dividerProps,
+    groupProps,
     ...rest
   }: NeoHandleProps = $props();
 
-  const invertMap: Record<NeoHandlePlacement, NeoHandlePlacement> = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' };
-  const getOpposite = (p: NeoHandlePlacement): NeoHandlePlacement => invertMap[p] ?? p;
+  const invertMap: Record<NeoHandlePlacements, NeoHandlePlacements> = {
+    [NeoHandlePlacement.Top]: NeoHandlePlacement.Bottom,
+    [NeoHandlePlacement.Right]: NeoHandlePlacement.Left,
+    [NeoHandlePlacement.Bottom]: NeoHandlePlacement.Top,
+    [NeoHandlePlacement.Left]: NeoHandlePlacement.Right,
+  };
+  const getOpposite = (p: NeoHandlePlacements): NeoHandlePlacements => invertMap[p] ?? p;
 
-  const placements = $derived.by<NeoHandlePlacement[]>(() => {
-    if (outside) return [getOpposite(outside)];
-    return Array.isArray(placement) ? placement : [placement];
+  const placements = $derived.by<NeoHandlePlacements[]>(() => {
+    const _placements = typeof placement === 'string' ? { [placement]: true } : { ...placement };
+    if (outside) _placements[getOpposite(outside)] = true;
+    return Object.entries(_placements)
+      .filter(([k, v]) => typeof k === 'string' && v)
+      .map(([k]) => k as NeoHandlePlacements);
   });
 
-  const width = $state<number[]>([]);
-  const height = $state<number[]>([]);
+  const width = $state<Record<NeoHandlePlacements, number>>({ top: 0, right: 0, bottom: 0, left: 0 });
+  const height = $state<Record<NeoHandlePlacements, number>>({ top: 0, right: 0, bottom: 0, left: 0 });
+  const margin = $derived(`${height.top || minSize}px ${width.right || minSize}px ${height.bottom || minSize}px ${width.left || minSize}px`);
 
   $effect(() => {
-    if (!refs.length) return;
-    refs?.at(0)?.focus();
+    const _refs = Object.values(refs).filter(Boolean);
+    if (!_refs.length) return;
+    _refs?.at(0)?.focus();
   });
 </script>
 
-{#snippet handleButton(_placement: NeoHandlePlacement, index = 0)}
+{#snippet handleButton(_placement: NeoHandlePlacements)}
   <button
-    bind:this={refs[index]}
-    bind:offsetWidth={width[index]}
-    bind:offsetHeight={height[index]}
+    bind:this={refs[_placement]}
+    bind:offsetWidth={width[_placement]}
+    bind:offsetHeight={height[_placement]}
     class:neo-handle={true}
     data-placement={_placement}
     data-position={position}
     data-axis={axis}
     aria-label="Drag handle ({_placement})"
     title="Draggable"
-    transition:scale|global={{ duration: 600, start: 0.5, easing: circOut }}
-    style:--neo-handler-offset-width="{width[index]}px"
-    style:--neo-handler-offset-height="{height[index]}px"
+    transition:scale={{ duration: 600, start: 0.5, easing: circOut }}
+    style:--neo-handle-offset-width="{width[_placement]}px"
+    style:--neo-handle-offset-height="{height[_placement]}px"
     {...rest}
   >
-    {#if typeof handle === 'function'}
+    {#if handle}
       {@render handle(_placement)}
-    {:else if handle !== false}
+    {:else if visible}
       <NeoDivider role="presentation" vertical={['right', 'left'].includes(_placement)} {...dividerProps} />
     {/if}
-
-    {@render children?.({ enabled, placement: _placement, axis, outside })}
   </button>
 {/snippet}
 
 {#if enabled}
-  {#each placements as _placement, index (_placement)}
-    {@render handleButton(_placement, index)}
-  {/each}
+  <div class:neo-handle-group={true} style:--neo-handle-group-computed-margin={margin} {...groupProps}>
+    {#each placements as _placement (_placement)}
+      {@render handleButton(_placement)}
+    {/each}
+    {@render children?.({ enabled, placements, axis, outside })}
+  </div>
+{:else}
+  {@render children?.({ enabled, placements, axis, outside })}
 {/if}
 
 <style lang="scss">
@@ -80,10 +95,10 @@
 
     position: absolute;
     display: flex;
-    width: var(--neo-handler-width, 100%);
-    height: var(--neo-handler-height, fit-content);
+    width: var(--neo-handle-width, 100%);
+    height: var(--neo-handle-height, fit-content);
     margin: 0;
-    padding: var(--neo-handle-padding, var(--neo-gap-xs));
+    padding: var(--neo-handle-padding, var(--neo-gap-sm));
     color: inherit;
     background: none;
     border: none;
@@ -91,6 +106,11 @@
     cursor: move;
     transition: opacity 0.3s ease-in;
     appearance: none;
+
+    &-group {
+      position: relative;
+      margin: var(--neo-handle-group-margin, var(--neo-handle-group-computed-margin, 0));
+    }
 
     :global(> .neo-divider) {
       margin-inline: auto;
@@ -116,48 +136,73 @@
 
       align-items: center;
       justify-content: center;
-      width: var(--neo-handler-width, fit-content);
-      height: var(--neo-handler-height, 100%);
+      width: var(--neo-handle-width, fit-content);
+      height: var(--neo-handle-height, 100%);
+    }
+
+    &[data-placement^='top'] {
+      padding-bottom: var(--neo-handle-padding, var(--neo-gap-xxs));
+    }
+
+    &[data-placement^='bottom'] {
+      padding-top: var(--neo-handle-padding, var(--neo-gap-xxs));
+    }
+
+    &[data-placement^='right'] {
+      padding-left: var(--neo-handle-padding, var(--neo-gap-xxs));
+    }
+
+    &[data-placement^='left'] {
+      padding-right: var(--neo-handle-padding, var(--neo-gap-xxs));
     }
 
     &:not([data-position='outside']) {
-      inset-inline: 0;
-      inset-block: 0;
+      $height: calc(0% - var(--neo-handle-offset-height, 1rem));
+      $width: calc(0% - var(--neo-handle-offset-width, 1rem));
+
+      &[data-placement^='top'] {
+        top: var(--neo-handle-height, $height);
+        left: 0;
+      }
 
       &[data-placement^='bottom'] {
-        inset-block: auto 0;
+        top: auto;
+        bottom: var(--neo-handle-height, $height);
       }
 
       &[data-placement^='right'] {
-        inset-inline: auto 0;
+        right: var(--neo-handle-width, $width);
+        left: auto;
       }
 
       &[data-placement^='left'] {
-        inset-inline: 0 auto;
+        right: auto;
+        left: var(--neo-handle-width, $width);
       }
     }
 
     &[data-position='outside'] {
-      $height: calc(0% - var(--neo-border-width, 1px) - var(--neo-handler-offset-height, 1rem));
-      $width: calc(0% - var(--neo-border-width, 1px) - var(--neo-handler-offset-width, 1rem));
-
-      inset-inline: 0;
-      inset-block: 0;
+      $height: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-height, 1rem));
+      $width: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-width, 1rem));
 
       &[data-placement^='top'] {
-        inset-block: var(--neo-handler-height, $height) auto;
+        top: var(--neo-handle-height, $height);
+        left: 0;
       }
 
       &[data-placement^='bottom'] {
-        inset-block: auto var(--neo-handler-height, $height);
+        top: auto;
+        bottom: var(--neo-handle-height, $height);
       }
 
       &[data-placement^='right'] {
-        inset-inline: auto var(--neo-handler-width, $width);
+        right: var(--neo-handle-width, $width);
+        left: auto;
       }
 
       &[data-placement^='left'] {
-        inset-inline: var(--neo-handler-width, $width) auto;
+        right: auto;
+        left: var(--neo-handle-width, $width);
       }
     }
   }

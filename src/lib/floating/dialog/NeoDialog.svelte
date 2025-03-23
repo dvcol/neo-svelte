@@ -11,7 +11,7 @@
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
-  import { toSize } from '~/utils/style.utils.js';
+  import { toPixel, toSize } from '~/utils/style.utils.js';
   import { defaultDuration, quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -58,6 +58,7 @@
 
     // Events
     oncancel,
+    onclose,
     onclick,
 
     // Actions
@@ -82,9 +83,14 @@
     return 'top';
   };
 
-  const movable = $derived<Partial<NeoMovable>>({
-    placement: getMovablePlacement(),
-    ...(typeof _movable === 'object' ? _movable : { enabled: _movable }),
+  const movable = $derived.by((): NeoMovable<true> => {
+    const parsed: NeoMovable = typeof _movable === 'object' ? _movable : { enabled: !!_movable };
+    return {
+      placement: getMovablePlacement(),
+      ...parsed,
+      handle: typeof parsed.handle === 'boolean' ? { visible: !!parsed.handle } : parsed.handle,
+      snap: typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' },
+    };
   });
 
   const isNative = $derived(tag === 'dialog');
@@ -177,6 +183,13 @@
       window.removeEventListener('keydown', onWindowKeydown);
     };
   });
+
+  // Capture close dialog from external sources (esc key for example)
+  const onClose = (e: SvelteEvent) => {
+    if (open) open = false;
+    return onclose?.(e);
+  };
+
   // Sync dialog state with component state
   $effect(() => {
     if (!ref || ref.open === open || !isNative) return;
@@ -267,6 +280,7 @@
   // TODO - resizable containers
   // TODO : drawers handle (& swipe) => dedicated component
   // TODO : snap (grid)
+  // TODO : close/snap on swipe (mobile mostly)
   // TODO : FUll modal handle
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));
@@ -330,6 +344,7 @@
     {...ariaProps}
     {...rest}
     {oncancel}
+    onclose={onClose}
     onclick={onClick}
     style:justify-content={justify}
     style:align-items={align}
@@ -347,18 +362,19 @@
     style:--neo-dialog-content-filter={cardFilter}
     style:--neo-dialog-padding={padding}
     style:--neo-dialog-elevation={elevation}
+    style:--neo-dialog-safe-margin={toPixel(movable.margin)}
   >
     <NeoHandle
       enabled={movable.enabled}
       placement={movable.placement}
-      position={movable.position}
       axis={movable.axis}
-      handle={movable.handle}
       {outside}
+      {...movable.handle}
       {...moving.handlers}
       {...handleProps}
-    />
-    {@render children?.(context)}
+    >
+      {@render children?.(context)}
+    </NeoHandle>
   </svelte:element>
 {/if}
 
@@ -386,9 +402,9 @@
     max-width: 100%;
     height: fit-content;
     max-height: 100%;
-    margin-inline: var(--neo-dialog-margin-inline, auto);
-    margin-block: var(--neo-dialog-margin-block, auto);
-    padding: var(--neo-dialog-padding, var(--neo-gap-sm) var(--neo-gap));
+    margin: var(--neo-dialog-margin, 0);
+    padding: var(--neo-dialog-padding, var(--neo-gap-xs) var(--neo-gap));
+    overflow: auto;
     outline: none;
 
     &.neo-movable {
@@ -409,9 +425,11 @@
       backdrop-filter: none;
     }
 
-    :global(.neo-handle) {
-      --neo-handle-padding: var(--neo-dialog-handle-padding, calc(var(--neo-dialog-padding, var(--neo-gap-sm)) / 2));
+    &:global(:has(> .neo-handle-group)) {
+      padding: var(--neo-dialog-padding, 0);
+    }
 
+    :global(> .neo-handle-group .neo-handle) {
       opacity: 0.6;
 
       &:focus-visible,
@@ -431,9 +449,9 @@
 
     &-backdrop {
       position: fixed;
+      z-index: calc(var(--neo-dialog-z-index, var(--neo-z-index-layer-top)) - 1);
       inset-block: 0;
       inset-inline: 0;
-      z-index: calc(var(--neo-dialog-z-index, var(--neo-z-index-layer-top)) - 1);
     }
 
     &-backdrop,
@@ -455,75 +473,63 @@
 
     &[data-modal='true'] {
       position: fixed;
-      inset-block: 0;
-      inset-inline: 0;
 
-      &[data-placement^='top'] {
-        inset-block: 0 auto;
-        margin-block: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
+      &[data-placement='center'] {
+        inset: 0;
+        margin: var(--neo-dialog-margin, auto);
       }
 
-      &[data-placement^='bottom'] {
-        inset-block: auto 0;
-        margin-block: 0 var(--neo-dialog-safe-margin, var(--neo-gap));
+      &[data-placement^='top'],
+      &[data-placement='right-start'],
+      &[data-placement='left-start'] {
+        top: 0;
+        bottom: auto;
+        margin-top: var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
-      &[data-placement^='right'] {
-        inset-inline: auto 0;
-        margin-inline: 0 var(--neo-dialog-safe-margin, var(--neo-gap));
+      &[data-placement^='bottom'],
+      &[data-placement='right-end'],
+      &[data-placement='left-end'] {
+        top: auto;
+        bottom: 0;
+        margin-bottom: var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
-      &[data-placement^='left'] {
-        margin-inline: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
-      }
-
+      &[data-placement^='left'],
       &[data-placement='bottom-start'],
       &[data-placement='top-start'] {
-        margin-inline: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
-        inset-inline: 0 auto;
+        right: auto;
+        left: 0;
+        margin-left: var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
+      &[data-placement^='right'],
       &[data-placement='bottom-end'],
       &[data-placement='top-end'] {
-        margin-inline: 0 var(--neo-dialog-safe-margin, var(--neo-gap));
-        inset-inline: auto 0;
+        right: 0;
+        left: auto;
+        margin-right: var(--neo-dialog-safe-margin, var(--neo-gap));
       }
 
-      &[data-placement='right-start'] {
-        margin-block: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
-        inset-inline: auto 0;
-      }
-
-      &[data-placement='right-end'] {
-        margin-block: auto var(--neo-dialog-safe-margin, var(--neo-gap));
-        inset-inline: auto 0;
-      }
-
-      &[data-placement='left-end'] {
-        margin-block: auto var(--neo-dialog-safe-margin, var(--neo-gap));
-        inset-inline: 0 auto;
-      }
-
-      &[data-placement='left-start'] {
-        margin-block: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
-        inset-inline: 0 auto;
+      &[data-placement='right'],
+      &[data-placement='left'] {
+        top: 0;
+        bottom: 0;
+        margin-top: var(--neo-dialog-margin-top, auto);
+        margin-bottom: var(--neo-dialog-margin-bottom, auto);
       }
 
       &.neo-slide {
-        @include mixin.slide-in($toggle: '[data-open="true"]');
-        @include mixin.fade-backdrop(
-          $toggle: '[data-open="true"]',
-          $filter-end: --neo-dialog-backdrop-filter,
-          $color-end: --neo-dialog-backdrop-color
-        );
+        @include mixin.slide-in;
+        @include mixin.fade-backdrop($filter-end: --neo-dialog-backdrop-filter, $color-end: --neo-dialog-backdrop-color);
       }
     }
 
     &.neo-fade {
       --neo-fade-scale-start: 1.05;
 
-      @include mixin.fade-in($toggle: '[data-open="true"]');
-      @include mixin.fade-backdrop($toggle: '[data-open="true"]', $filter-end: --neo-dialog-backdrop-filter, $color-end: --neo-dialog-backdrop-color);
+      @include mixin.fade-in;
+      @include mixin.fade-backdrop($filter-end: --neo-dialog-backdrop-filter, $color-end: --neo-dialog-backdrop-color);
     }
   }
 

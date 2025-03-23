@@ -396,7 +396,7 @@
   $filled: false
 ) {
   z-index: var($z-index, calc(var(--neo-z-index-layer-ui, 1000) + var($elevation, 1)));
-  padding: var($padding, 0.375rem 0.625rem);
+  padding: var($padding, var(--neo-gap-xxxs) var(--neo-gap-xs));
   color: var($color, inherit);
   background-color: var($background-color, var(--neo-glass-background-color));
   border: var(--neo-border-width, 1px) solid var($border-color, var(--neo-glass-background-color));
@@ -445,7 +445,7 @@
   }
 
   &.neo-rounded {
-    padding: var($padding, 0.625rem 1rem);
+    padding: var($padding, var(--neo-gap-xs) var(--neo-gap));
     border-radius: var($border-radius, var(--neo-border-radius-lg));
   }
 }

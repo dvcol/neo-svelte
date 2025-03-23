@@ -3,7 +3,7 @@ import { debounce } from '@dvcol/common-utils/common/debounce';
 import { watch } from '@dvcol/svelte-utils/watch';
 
 import type { HTMLAttributes } from 'svelte/elements';
-import type { NeoHandleState } from '~/floating/common/neo-handle.model.js';
+import type { NeoHandlePlacements, NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
 import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
@@ -54,22 +54,33 @@ export type NeoMovableSnap = {
   grid?: number | { x: number; y: number }; // TODO
 };
 
-export type NeoMovable = NeoHandleState & {
+export type NeoMovableHandle = Pick<NeoHandleProps, 'visible' | 'handle' | 'position' | 'minSize'>;
+
+export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'enabled' | 'placement' | 'axis' | 'outside'> & {
   /**
    * The step size for dragging the dialog with arrow keys.
    *
    * @default 4
    **/
-  step: number;
+  step?: number;
   /**
-   * Whether the dialog should snap to the viewport edges.
+   * Whether the dialog should be contained within to the viewport edges.
    **/
   contain?: boolean;
   /**
+   * Whether to show a handle for dragging the dialog.
+   * If 'true', the handle will be visible whenever most appropriate.
+   *
+   * @default true
+   */
+  handle?: Parsed extends true ? NeoMovableHandle : boolean | NeoMovableHandle;
+  /**
    * Whether the dialog should snap to the viewport edges.
    * If 'corner', the dialog will snap to the closest corner.
+   *
+   * @default false
    */
-  snap?: boolean | 'corner' | NeoMovableSnap;
+  snap?: Parsed extends true ? NeoMovableSnap : boolean | 'corner' | NeoMovableSnap;
   /**
    * The margin around the dialog when snapping to the viewport edges.
    *
@@ -83,7 +94,7 @@ export type NeoMoved = {
   y: number;
 };
 
-export type NeoMovableOutside = false | 'top' | 'bottom' | 'left' | 'right';
+export type NeoMovableOutside = false | NeoHandlePlacements;
 
 export type NeoMovableHandlers<Element extends HTMLElement = HTMLButtonElement> = Pick<
   HTMLAttributes<Element>,
@@ -125,7 +136,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     const _snap = typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' };
     return {
       enabled: !!movable.snap,
-      offset: 16,
+      offset: 25,
       ..._snap,
       translate: { duration: 600, easing: 'var(--neo-transition-spring, ease-in-out)', ..._snap.translate },
     };
@@ -317,7 +328,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
 
     stopTranslating.cancel().catch(Logger.error);
     startTranslating(Math.min(translating + 1, 10), { duration: 100, easing: 'linear' });
-    const step = movable.step * translating;
+    const step = (movable.step ?? 4) * translating;
     if (e.key === 'ArrowLeft') {
       setOffset(offset.x - step, offset.y);
     } else if (e.key === 'ArrowRight') {

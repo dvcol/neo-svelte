@@ -129,10 +129,6 @@
 
     --neo-stepper-mark-bg-color: var(--neo-background-color-backdrop-filled);
 
-    :global(> .neo-stepper .neo-stepper-controls) {
-      margin-bottom: 0.25rem;
-    }
-
     &-close {
       --neo-btn-padding-empty: var(--neo-gap-xxxs);
       --neo-btn-margin: 0;
@@ -155,7 +151,7 @@
       align-items: center;
       justify-content: flex-end;
       margin-inline: var(--neo-floating-stepper-margin-inline, var(--neo-shadow-margin, 0.625rem));
-      margin-block: var(--neo-gap-xxxs);
+      margin-block: var(--neo-gap-xxs);
 
       .neo-floating-stepper-title {
         flex: 1 1 auto;

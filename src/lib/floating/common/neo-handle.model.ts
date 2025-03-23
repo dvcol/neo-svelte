@@ -2,26 +2,50 @@ import type { Snippet } from 'svelte';
 import type { HTMLButtonAttributes } from 'svelte/elements';
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoMovableOutside } from '~/floating/dialog/use-movable.svelte.js';
+import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-export type NeoHandlePlacement = 'top' | 'right' | 'bottom' | 'left';
+export const NeoHandlePlacement = {
+  Top: 'top' as const,
+  Right: 'right' as const,
+  Bottom: 'bottom' as const,
+  Left: 'left' as const,
+} as const;
 
-export type NeoHandleState = {
+export type NeoHandlePlacements = (typeof NeoHandlePlacement)[keyof typeof NeoHandlePlacement];
+
+export type NeoHandleContext = {
+  enabled: boolean;
+  placements: NeoHandlePlacements[];
+  axis?: 'x' | 'y';
+  outside?: NeoMovableOutside;
+};
+
+export type NeoHandleProps = {
+  /**
+   * children around which to render the handles.
+   */
+  children?: Snippet<[NeoHandleContext]>;
+  /**
+   * Custom snippet for the handle content.
+   **/
+  handle?: Snippet<[NeoHandlePlacements]>;
+
+  /**
+   * Optional references to the handle buttons.
+   */
+  refs?: Partial<Record<NeoHandlePlacements, HTMLButtonElement>>;
   /**
    * Whether to render the handles.
    **/
-  enabled: boolean;
+  enabled?: boolean;
   /**
-   * Placement of the handle (or array of visible handles).
-   *
-   * @default 'top'
+   * Whether the handle content should be visible
    **/
-  placement: NeoHandlePlacement | NeoHandlePlacement[];
+  visible?: boolean;
   /**
-   * Whether the handle should be inside or outside the element.
-   *
-   * @default inside
-   */
-  position?: 'inside' | 'outside';
+   * The allowed axis for dragging the element.
+   **/
+  axis?: 'x' | 'y';
   /**
    * Whether the element is currently outside the viewport.
    *
@@ -29,27 +53,30 @@ export type NeoHandleState = {
    */
   outside?: NeoMovableOutside;
   /**
-   * The allowed axis for dragging the element.
+   * Placement of the handle (or array of visible handles).
+   *
+   * @default 'top'
    **/
-  axis?: 'x' | 'y';
+  placement?: NeoHandlePlacements | Partial<Record<NeoHandlePlacements, boolean>>;
   /**
-   * Whether the handle content should be visible.
-   **/
-  handle?: boolean | Snippet<['top' | 'right' | 'bottom' | 'left']>;
-};
+   * Whether the handle should be inside or outside the element.
+   *
+   * @default inside
+   */
+  position?: 'inside' | 'outside';
+  /**
+   * Minimum handle size (in px).
+   *
+   * @default 16
+   */
+  minSize?: number;
 
-export type NeoHandleProps = {
-  /**
-   * Optional children to display within each handle.
-   */
-  children?: Snippet<[Omit<NeoHandleState, 'placement' | 'handle'> & { placement: NeoHandlePlacement }]>;
-  /**
-   * Optional references to the handle buttons.
-   */
-  refs?: HTMLButtonElement[];
   /**
    * Optional properties to pass to the default drag handle (divider).
    */
   dividerProps?: NeoDividerProps;
-} & Partial<NeoHandleState> &
-  Partial<HTMLButtonAttributes>;
+  /**
+   * Optional properties to pass to the handle group wrapper.
+   */
+  groupProps?: HTMLNeoBaseElement;
+} & Partial<HTMLButtonAttributes>;
