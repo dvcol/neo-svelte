@@ -248,6 +248,7 @@
   // TODO : drawers handle (& swipe) => dedicated component
   // TODO : swipe snap
   // TODO : snap (grid)
+  // TODO : FUll modal handle
   // TODO : outside (handles picks out) - contain
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));

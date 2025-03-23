@@ -22,8 +22,19 @@ export type NeoMovable = NeoHandleState & {
   contain?: boolean;
   /**
    * Whether the dialog should snap to the viewport edges.
+   * If 'corner', the dialog will snap to the closest corner.
    */
-  snap?: boolean;
+  snap?:
+    | boolean
+    | 'corner'
+    | {
+        enabled?: boolean;
+        corner?: boolean;
+        placement?: boolean;
+        outside?: boolean; // TODO
+        grid?: number | { x: number; y: number }; // TODO
+        swipe?: boolean; // TODO
+      };
   /**
    * The margin around the dialog when snapping to the viewport edges.
    *
@@ -68,9 +79,10 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     handle: true,
     margin: 16,
     contain: false,
-    snap: true,
+    snap: 'corner',
     ...options.movable,
   });
+  const snap = $derived(typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' });
 
   let initial = $state<{ x: number; y: number }>({ x: 0, y: 0 });
   const translate = $derived.by(() => {
@@ -82,7 +94,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   let translating = $state(0);
   let transition: string = '';
   let timeout: ReturnType<typeof setTimeout> | undefined;
-  const startTranslating = (value = 1, easing: string = '300ms ease-in-out') => {
+  const startTranslating = (value = 1, easing: string = '600ms var(--neo-transition-spring, ease-in-out)') => {
     clearTimeout(timeout);
     translating = value;
     if (!element) return;
@@ -92,7 +104,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
       ? computed.replace(/translate[^;]+/g, `translate ${easing}`)
       : `${computed}, translate ${easing}`;
   };
-  const stopTranslating = debounce(async (delay = 300) => {
+  const stopTranslating = debounce(async (delay = 600) => {
     clearTimeout(timeout);
     translating = 0;
     const { resolve, promise } = Promise.withResolvers();
@@ -155,12 +167,12 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     const _offset = { x: 0, y: 0 };
     const _placement = { x: '', y: '' };
 
-    if (middleX > windowX && middleX - windowX > window.innerWidth - middleX) {
+    if (middleX > windowX && (snap.corner || middleX - windowX > window.innerWidth - middleX)) {
       _placement.x = 'right';
       _offset.x = available.right;
     } else if (middleX > windowX) {
       _offset.x = available.right + margin - (windowX - halfWidth);
-    } else if (middleX < windowX - middleX) {
+    } else if (snap.corner || middleX < windowX - middleX) {
       _placement.x = 'left';
       _offset.x = -available.left;
     } else {
@@ -171,12 +183,12 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     const halfHeight = height / 2;
     const middleY = top + halfHeight;
 
-    if (middleY > windowY && middleY - windowY > window.innerHeight - middleY) {
+    if (middleY > windowY && (snap.corner || middleY - windowY > window.innerHeight - middleY)) {
       _placement.y = 'bottom';
       _offset.y = available.bottom;
     } else if (middleY > windowY) {
       _offset.y = available.bottom + margin - (windowY - halfHeight);
-    } else if (middleY < windowY - middleY) {
+    } else if (snap.corner || middleY < windowY - middleY) {
       _placement.y = 'top';
       _offset.y = -available.top;
     } else {
@@ -186,18 +198,19 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     setOffset(_offset.x, _offset.y);
 
     await stopTranslating();
+    if (!snap.placement) return;
 
     // TODO - custom grid position (i.e. every multiple of x, y steps)
     if (!_placement.x && !_placement.y) {
       options.placement = 'center';
     } else if (_placement.y === 'top' && _placement.x === 'left') {
-      options.placement = options.placement?.startsWith('left') ? 'left-start' : 'top-start';
+      options.placement = snap.corner || options.placement?.startsWith('left') ? 'left-start' : 'top-start';
     } else if (_placement.y === 'top' && _placement.x === 'right') {
-      options.placement = options.placement?.startsWith('right') ? 'right-start' : 'top-end';
+      options.placement = snap.corner || options.placement?.startsWith('right') ? 'right-start' : 'top-end';
     } else if (_placement.y === 'bottom' && _placement.x === 'left') {
-      options.placement = options.placement?.startsWith('left') ? 'left-end' : 'bottom-start';
+      options.placement = snap.corner || options.placement?.startsWith('left') ? 'left-end' : 'bottom-start';
     } else if (_placement.y === 'bottom' && _placement.x === 'right') {
-      options.placement = options.placement?.startsWith('right') ? 'right-end' : 'bottom-end';
+      options.placement = snap.corner || options.placement?.startsWith('right') ? 'right-end' : 'bottom-end';
     } else if (_placement.y === 'top' && !_placement.x) {
       options.placement = 'top';
     } else if (_placement.y === 'bottom' && !_placement.x) {
