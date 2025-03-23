@@ -9,6 +9,21 @@ import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
 import { Logger } from '~/utils/logger.utils.js';
 
+export type NeoMovableSnapTranslate = {
+  /**
+   * Translate duration (in ms).
+   *
+   * @default 600
+   */
+  duration?: number;
+  /**
+   * Easing function.
+   *
+   * @default 'var(--neo-transition-spring, ease-in-out)'
+   */
+  easing?: string;
+};
+
 export type NeoMovableSnap = {
   /**
    * Whether the movable should snap to the viewport edges & center.
@@ -32,6 +47,10 @@ export type NeoMovableSnap = {
    * @default 16
    */
   offset?: number;
+  /**
+   * Translate css to apply when snapping to a position
+   */
+  translate?: NeoMovableSnapTranslate;
   grid?: number | { x: number; y: number }; // TODO
 };
 
@@ -102,9 +121,14 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     snap: 'corner',
     ...options.movable,
   });
-  const snap = $derived({
-    offset: 16,
-    ...(typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' }),
+  const snap = $derived.by(() => {
+    const _snap = typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' };
+    return {
+      enabled: !!movable.snap,
+      offset: 16,
+      ..._snap,
+      translate: { duration: 600, easing: 'var(--neo-transition-spring, ease-in-out)', ..._snap.translate },
+    };
   });
 
   let initial = $state<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -117,17 +141,17 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   let translating = $state(0);
   let transition: string = '';
   let timeout: ReturnType<typeof setTimeout> | undefined;
-  const startTranslating = (value = 1, easing: string = '600ms var(--neo-transition-spring, ease-in-out)') => {
+  const startTranslating = (value = 1, { easing = snap.translate.easing, duration = snap.translate.duration }: NeoMovableSnapTranslate = {}) => {
     clearTimeout(timeout);
     translating = value;
     if (!element) return;
     if (!translating) transition = element.style.transition;
     const computed = getComputedStyle(element).transition;
     element.style.transition = computed.includes('translate')
-      ? computed.replace(/translate[^;]+/g, `translate ${easing}`)
-      : `${computed}, translate ${easing}`;
+      ? computed.replace(/translate[^;]+/g, `translate ${duration}ms ${easing}`)
+      : `${computed}, translate ${duration}ms ${easing}`;
   };
-  const stopTranslating = debounce(async (delay = 600) => {
+  const stopTranslating = debounce(async (delay = snap.translate.duration) => {
     clearTimeout(timeout);
     translating = 0;
     const { resolve, promise } = Promise.withResolvers();
@@ -293,7 +317,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     initial = { x: 0, y: 0 };
 
     stopTranslating.cancel().catch(Logger.error);
-    startTranslating(Math.min(translating + 1, 10), '100ms linear');
+    startTranslating(Math.min(translating + 1, 10), { duration: 100, easing: 'linear' });
     const step = movable.step * translating;
     if (e.key === 'ArrowLeft') {
       setOffset(offset.x - step, offset.y);
