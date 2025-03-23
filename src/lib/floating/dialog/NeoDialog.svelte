@@ -140,7 +140,9 @@
       placement = val;
     },
     get movable() {
-      return movable;
+      if (modal) return movable;
+      // If non modal disable snap
+      return { ...movable, snap: false };
     },
     get element() {
       return ref;
@@ -244,7 +246,8 @@
 
   // TODO - resizable containers
   // TODO : drawers handle (& swipe) => dedicated component
-  // TODO : snap (edges, corner/center, grid)
+  // TODO : swipe snap
+  // TODO : snap (grid)
   // TODO : outside (handles picks out) - contain
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));
@@ -436,6 +439,7 @@
       inset-inline: 0;
 
       &[data-placement^='top'] {
+        inset-block: 0 auto;
         margin-block: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
       }
 
@@ -455,22 +459,34 @@
 
       &[data-placement='bottom-start'],
       &[data-placement='top-start'] {
-        margin-inline-start: var(--neo-dialog-safe-margin, var(--neo-gap));
+        margin-inline: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
+        inset-inline: 0 auto;
       }
 
       &[data-placement='bottom-end'],
       &[data-placement='top-end'] {
-        margin-inline-end: var(--neo-dialog-safe-margin, var(--neo-gap));
+        margin-inline: 0 var(--neo-dialog-safe-margin, var(--neo-gap));
+        inset-inline: auto 0;
       }
 
-      &[data-placement='right-start'],
-      &[data-placement='left-start'] {
-        margin-block-start: var(--neo-dialog-safe-margin, var(--neo-gap));
+      &[data-placement='right-start'] {
+        margin-block: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
+        inset-inline: auto 0;
       }
 
-      &[data-placement='right-end'],
+      &[data-placement='right-end'] {
+        margin-block: auto var(--neo-dialog-safe-margin, var(--neo-gap));
+        inset-inline: auto 0;
+      }
+
       &[data-placement='left-end'] {
-        margin-block-end: var(--neo-dialog-safe-margin, var(--neo-gap));
+        margin-block: auto var(--neo-dialog-safe-margin, var(--neo-gap));
+        inset-inline: 0 auto;
+      }
+
+      &[data-placement='left-start'] {
+        margin-block: var(--neo-dialog-safe-margin, var(--neo-gap)) 0;
+        inset-inline: 0 auto;
       }
 
       &.neo-slide {

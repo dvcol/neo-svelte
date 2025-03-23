@@ -108,7 +108,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   let available = $state({ top: 0, right: 0, bottom: 0, left: 0 });
   const updateAvailable = () => {
     if (!element) return {};
-    const { top, right, bottom, left } = element.getBoundingClientRect();
+    const { top, right, bottom, left, width, height } = element.getBoundingClientRect();
     const margin = movable.margin ?? 0;
     available = {
       top: Math.max(0, top - offset.y - margin),
@@ -116,7 +116,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
       left: Math.max(0, left - offset.x - margin),
       right: Math.max(0, window.innerWidth - (right - offset.x) - margin),
     };
-    return { top, right, bottom, left, available };
+    return { top, right, bottom, left, width, height, margin, available };
   };
 
   const setOffset = (x: number, y: number, contain = movable.contain) => {
@@ -143,44 +143,69 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
 
   const snapToClosest = async () => {
     if (!element || !movable.snap) return;
-    const { left, right, top, bottom } = updateAvailable();
+    const { left, right, top, bottom, width, height, margin } = updateAvailable();
     if (left === undefined || right === undefined || top === undefined || bottom === undefined) return;
 
     startTranslating();
 
     const windowX = window.innerWidth / 2;
-    const middleX = left + (right - left) / 2;
+    const halfWidth = width / 2;
+    const middleX = left + halfWidth;
 
     const _offset = { x: 0, y: 0 };
-    if (middleX > windowX) {
+    const _placement = { x: '', y: '' };
+
+    if (middleX > windowX && middleX - windowX > window.innerWidth - middleX) {
+      _placement.x = 'right';
       _offset.x = available.right;
-    } else {
+    } else if (middleX > windowX) {
+      _offset.x = available.right + margin - (windowX - halfWidth);
+    } else if (middleX < windowX - middleX) {
+      _placement.x = 'left';
       _offset.x = -available.left;
+    } else {
+      _offset.x = windowX - halfWidth - available.left - margin;
     }
 
     const windowY = window.innerHeight / 2;
-    const middleY = top + (bottom - top) / 2;
+    const halfHeight = height / 2;
+    const middleY = top + halfHeight;
 
-    if (middleY > windowY) {
+    if (middleY > windowY && middleY - windowY > window.innerHeight - middleY) {
+      _placement.y = 'bottom';
       _offset.y = available.bottom;
-    } else {
+    } else if (middleY > windowY) {
+      _offset.y = available.bottom + margin - (windowY - halfHeight);
+    } else if (middleY < windowY - middleY) {
+      _placement.y = 'top';
       _offset.y = -available.top;
+    } else {
+      _offset.y = windowY - halfHeight - available.top - margin;
     }
 
     setOffset(_offset.x, _offset.y);
 
     await stopTranslating();
 
-    // TODO - other snap position (center, top, bottom, left, right)
     // TODO - custom grid position (i.e. every multiple of x, y steps)
-    if (offset.x === available.right && offset.y === available.bottom) {
-      options.placement = 'bottom-end';
-    } else if (offset.x === available.right && offset.y === -available.top) {
-      options.placement = 'top-end';
-    } else if (offset.x === -available.left && offset.y === available.bottom) {
-      options.placement = 'bottom-start';
-    } else if (offset.x === -available.left && offset.y === -available.top) {
-      options.placement = 'top-start';
+    if (!_placement.x && !_placement.y) {
+      options.placement = 'center';
+    } else if (_placement.y === 'top' && _placement.x === 'left') {
+      options.placement = options.placement?.startsWith('left') ? 'left-start' : 'top-start';
+    } else if (_placement.y === 'top' && _placement.x === 'right') {
+      options.placement = options.placement?.startsWith('right') ? 'right-start' : 'top-end';
+    } else if (_placement.y === 'bottom' && _placement.x === 'left') {
+      options.placement = options.placement?.startsWith('left') ? 'left-end' : 'bottom-start';
+    } else if (_placement.y === 'bottom' && _placement.x === 'right') {
+      options.placement = options.placement?.startsWith('right') ? 'right-end' : 'bottom-end';
+    } else if (_placement.y === 'top' && !_placement.x) {
+      options.placement = 'top';
+    } else if (_placement.y === 'bottom' && !_placement.x) {
+      options.placement = 'bottom';
+    } else if (_placement.x === 'left' && !_placement.y) {
+      options.placement = 'left';
+    } else if (_placement.x === 'right' && !_placement.y) {
+      options.placement = 'right';
     }
   };
 

@@ -26,6 +26,12 @@
 
   const width = $state<number[]>([]);
   const height = $state<number[]>([]);
+
+  $effect(() => {
+    if (!refs.length) return;
+    refs?.at(0)?.focus();
+    console.info('re-focus');
+  });
 </script>
 
 {#snippet handleButton(_placement: NeoHandlePlacement, index = 0)}
@@ -44,10 +50,6 @@
       style:--neo-handler-offset-width="{width[index]}px"
       style:--neo-handler-offset-height="{height[index]}px"
       {...rest}
-      onblur={e => {
-        refs?.at(0)?.focus();
-        return rest.onblur?.(e);
-      }}
     >
       {#if typeof handle === 'function'}
         {@render handle(_placement)}
