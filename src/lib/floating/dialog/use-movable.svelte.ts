@@ -9,6 +9,32 @@ import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
 import { Logger } from '~/utils/logger.utils.js';
 
+export type NeoMovableSnap = {
+  /**
+   * Whether the movable should snap to the viewport edges & center.
+   */
+  enabled?: boolean;
+  /**
+   * Whether the dialog should only snap to the corners of the viewport.
+   */
+  corner?: boolean;
+  /**
+   * Whether snapping to a corner should change the dialog placement.
+   */
+  placement?: boolean;
+  /**
+   * Whether the dialog can be snapped outside the viewport (with handles peeking in).
+   */
+  outside?: boolean;
+  /**
+   * How much of the dialog should be visible when snapped outside the viewport.
+   *
+   * @default 16
+   */
+  offset?: number;
+  grid?: number | { x: number; y: number }; // TODO
+};
+
 export type NeoMovable = NeoHandleState & {
   /**
    * The step size for dragging the dialog with arrow keys.
@@ -24,17 +50,7 @@ export type NeoMovable = NeoHandleState & {
    * Whether the dialog should snap to the viewport edges.
    * If 'corner', the dialog will snap to the closest corner.
    */
-  snap?:
-    | boolean
-    | 'corner'
-    | {
-        enabled?: boolean;
-        corner?: boolean;
-        placement?: boolean;
-        outside?: boolean; // TODO
-        grid?: number | { x: number; y: number }; // TODO
-        swipe?: boolean; // TODO
-      };
+  snap?: boolean | 'corner' | NeoMovableSnap;
   /**
    * The margin around the dialog when snapping to the viewport edges.
    *
@@ -86,7 +102,10 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     snap: 'corner',
     ...options.movable,
   });
-  const snap = $derived(typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' });
+  const snap = $derived({
+    offset: 16,
+    ...(typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' }),
+  });
 
   let initial = $state<{ x: number; y: number }>({ x: 0, y: 0 });
   const translate = $derived.by(() => {
@@ -159,7 +178,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   };
 
   const snapToClosest = async () => {
-    if (!element || !movable.snap) return;
+    if (!element || !snap.enabled) return;
     const { left, right, top, bottom, width, height, margin } = updateAvailable();
     if (left === undefined || right === undefined || top === undefined || bottom === undefined) return;
 
@@ -178,7 +197,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
       _placement.x = 'right';
       // If the element center is outside the window
       if (!_outside.previous && middleX > window.innerWidth) {
-        _offset.x = available.right + width - margin;
+        _offset.x = available.right + width + margin - snap.offset;
         _outside.current = 'right';
       } else _offset.x = available.right;
     }
@@ -189,7 +208,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
       _placement.x = 'left';
       // If the element center is outside the window
       if (!_outside.current && !_outside.previous && middleX < 0) {
-        _offset.x = -available.left - width + margin;
+        _offset.x = -available.left - width - margin + snap.offset;
         _outside.current = 'left';
       } else _offset.x = -available.left;
     }
@@ -205,7 +224,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
       _placement.y = 'bottom';
       // If the element center is outside the window
       if (!_outside.current && !_outside.previous && middleY > window.innerHeight) {
-        _offset.y = available.bottom + height - margin;
+        _offset.y = available.bottom + height + margin - snap.offset;
         _outside.current = 'bottom';
       } else _offset.y = available.bottom;
     }
@@ -216,7 +235,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
       _placement.y = 'top';
       // If the element center is outside the window
       if (!_outside.current && !_outside.previous && middleY < 0) {
-        _offset.y = -available.top - height + margin;
+        _offset.y = -available.top - height - margin + snap.offset;
         _outside.current = 'top';
       } else _offset.y = -available.top;
     }
