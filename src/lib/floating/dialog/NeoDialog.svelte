@@ -89,7 +89,7 @@
       placement: getMovablePlacement(),
       ...parsed,
       handle: typeof parsed.handle === 'boolean' ? { visible: !!parsed.handle } : parsed.handle,
-      snap: typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' },
+      snap: typeof parsed.snap === 'object' ? parsed.snap : { enabled: !!parsed.snap, corner: parsed.snap === 'corner' },
     };
   });
 
@@ -383,7 +383,7 @@
 
   .neo-dialog {
     @include mixin.floating(
-      $padding: --neo-dialog-padding,
+      $padding: false,
       $color: --neo-dialog-color,
       $background-color: --neo-dialog-bg-color,
       $border-color: --neo-dialog-border-color,
@@ -427,6 +427,7 @@
 
     &:global(:has(> .neo-handle-group)) {
       padding: var(--neo-dialog-padding, 0);
+      overflow: unset;
     }
 
     :global(> .neo-handle-group .neo-handle) {

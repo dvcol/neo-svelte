@@ -126,6 +126,11 @@ export type NeoSelectProps<Value = unknown> = {
    */
   onSelect?: NeoPopSelectProps<Value>['onSelect'];
   /**
+   * Event listener that fires when an item is selected/deselected.
+   * @param value
+   */
+  onChange?: NeoPopSelectProps<Value>['onChange'];
+  /**
    * Event Handlers that fires on open.
    */
   onOpen?: NeoPopSelectProps<Value>['onOpen'];

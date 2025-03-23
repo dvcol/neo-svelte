@@ -44,7 +44,10 @@
 
   const width = $state<Record<NeoHandlePlacements, number>>({ top: 0, right: 0, bottom: 0, left: 0 });
   const height = $state<Record<NeoHandlePlacements, number>>({ top: 0, right: 0, bottom: 0, left: 0 });
-  const margin = $derived(`${height.top || minSize}px ${width.right || minSize}px ${height.bottom || minSize}px ${width.left || minSize}px`);
+  const margin = $derived.by(() => {
+    if (position === 'outside') return `${minSize}px`;
+    return `${height.top || minSize}px ${width.right || minSize}px ${height.bottom || minSize}px ${width.left || minSize}px`;
+  });
 
   $effect(() => {
     const _refs = Object.values(refs).filter(Boolean);
@@ -78,7 +81,7 @@
 {/snippet}
 
 {#if enabled}
-  <div class:neo-handle-group={true} style:--neo-handle-group-computed-margin={margin} {...groupProps}>
+  <div class:neo-handle-group={true} data-position={position} style:--neo-handle-group-computed-margin={margin} {...groupProps}>
     {#each placements as _placement (_placement)}
       {@render handleButton(_placement)}
     {/each}
@@ -140,20 +143,22 @@
       height: var(--neo-handle-height, 100%);
     }
 
+    $padding: var(--neo-handle-padding, var(--neo-gap-xxs));
+
     &[data-placement^='top'] {
-      padding-bottom: var(--neo-handle-padding, var(--neo-gap-xxs));
+      padding-bottom: $padding;
     }
 
     &[data-placement^='bottom'] {
-      padding-top: var(--neo-handle-padding, var(--neo-gap-xxs));
+      padding-top: $padding;
     }
 
     &[data-placement^='right'] {
-      padding-left: var(--neo-handle-padding, var(--neo-gap-xxs));
+      padding-left: $padding;
     }
 
     &[data-placement^='left'] {
-      padding-right: var(--neo-handle-padding, var(--neo-gap-xxs));
+      padding-right: $padding;
     }
 
     &:not([data-position='outside']) {
@@ -182,8 +187,8 @@
     }
 
     &[data-position='outside'] {
-      $height: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-height, 1rem));
-      $width: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-width, 1rem));
+      $height: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-group-computed-margin, 0px) - var(--neo-handle-offset-height, 1rem));
+      $width: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-group-computed-margin, 0px) - var(--neo-handle-offset-width, 1rem));
 
       &[data-placement^='top'] {
         top: var(--neo-handle-height, $height);

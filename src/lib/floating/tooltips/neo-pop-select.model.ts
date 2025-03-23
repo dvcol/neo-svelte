@@ -40,6 +40,11 @@ export type NeoPopSelectProps<Value = unknown> = {
    * @param event
    */
   onSelect?: NeoListProps<Value>['onSelect'];
+  /**
+   * Event listener that fires when an item is selected/deselected.
+   * @param value
+   */
+  onChange?: (current: Value, previous: Value) => void;
 
   // Tooltip props
   /**

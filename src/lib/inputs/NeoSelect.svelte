@@ -67,6 +67,7 @@
     openOnFocus = false,
 
     // Events
+    onChange,
     onSelect,
     onClose,
     onOpen,
@@ -137,7 +138,7 @@
   watch(
     () => {
       // If value is already the transformed selected value, do nothing
-      if (value === transformed) return;
+      if (JSON.stringify(value) === JSON.stringify(transformed)) return;
       reflectValue();
     },
     () => value,
@@ -265,6 +266,7 @@
   {onClose}
   {onOpen}
   {onSelect}
+  {onChange}
   {...listProps}
 />
 

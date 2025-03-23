@@ -2,7 +2,7 @@
   import { watch } from '@dvcol/svelte-utils/watch';
 
   import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
-  import type { NeoTooltipContext, NeoTooltipToggle } from 'src/lib/index.js';
+  import type { NeoListSelectEvent, NeoTooltipContext, NeoTooltipToggle } from 'src/lib/index.js';
   import type { NeoPopSelectProps } from '~/floating/tooltips/neo-pop-select.model.js';
   import type { NeoListContext, NeoListItemOrSection } from '~/list/neo-list.model.js';
 
@@ -60,6 +60,7 @@
     use,
 
     // Events
+    onChange,
     onSelect,
     onClose,
     onOpen,
@@ -72,6 +73,14 @@
   /* eslint-enable prefer-const */
 
   const items = $derived<NeoListItemOrSection[]>(array?.map(i => (typeof i === 'object' ? i : { value: i })));
+
+  const onSelected = (event: NeoListSelectEvent) => {
+    onSelect?.(event);
+    const current = Array.isArray(event.current) ? event.current.map(i => i?.item?.value) : event.current?.item?.value;
+    const previous = Array.isArray(event.previous) ? event.previous.map(i => i?.item?.value) : event.previous?.item?.value;
+    if (JSON.stringify(current) === JSON.stringify(selected)) return;
+    onChange?.(current, previous);
+  };
 
   watch(
     () => {
@@ -107,7 +116,7 @@
     reverse={floating?.placement?.startsWith('top')}
     before={search ? beforeList : before}
     {items}
-    {onSelect}
+    onSelect={onSelected}
     {...rest}
     buttonProps={{ rounded, ...rest.buttonProps }}
     class={['neo-pop-select-list', rest.class]}
