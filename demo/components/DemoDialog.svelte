@@ -39,7 +39,14 @@
 
     returnValue: undefined,
     placement: 'center',
-    movable: false,
+    movable: {
+      enabled: false,
+      snap: {
+        enabled: false,
+        corner: false,
+        outside: false,
+      },
+    },
 
     onclose: () => console.info('Dialog closed'),
     oncancel: () => console.info('Dialog cancelled'),
@@ -131,7 +138,6 @@
     <NeoButton toggle bind:checked={options.disableBodyScroll}>Body Scroll</NeoButton>
     <NeoButton toggle bind:checked={options.closeOnClickOutside}>Click Outside</NeoButton>
     <NeoButton toggle bind:checked={options.backdrop}>Backdrop</NeoButton>
-    <NeoButton toggle bind:checked={options.movable}>Movable</NeoButton>
     <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
@@ -180,7 +186,16 @@
     rounded
     glass
   />
+
+  <NeoButtonGroup text rounded>
+    <NeoButton toggle bind:checked={options.movable.enabled}>Movable</NeoButton>
+    <NeoButton toggle bind:checked={options.movable.snap.enabled} disabled={!options.movable.enabled}>Snap</NeoButton>
+    <NeoButton toggle bind:checked={options.movable.snap.corner} disabled={!options.movable.enabled}>Corner</NeoButton>
+    <NeoButton toggle bind:checked={options.movable.snap.outside} disabled={!options.movable.enabled}>Outside</NeoButton>
+  </NeoButtonGroup>
 </div>
+
+<!-- TODO snap options-->
 
 {#snippet lorem()}
   <div class="column">
@@ -239,7 +254,7 @@
       <span class="label">Confirm</span>
 
       <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
-      {options.placement}
+
       <NeoDialogConfirm
         bind:open={openConfirm}
         bind:modal={options.modal}

@@ -118,7 +118,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     handle: true,
     margin: 16,
     contain: false,
-    snap: 'corner',
+    snap: false,
     ...options.movable,
   });
   const snap = $derived.by(() => {
@@ -220,7 +220,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     if (middleX > windowX && (snap.corner || middleX - windowX > window.innerWidth - middleX)) {
       _placement.x = 'right';
       // If the element center is outside the window
-      if (!_outside.previous && middleX > window.innerWidth) {
+      if (snap.outside && !_outside.previous && middleX > window.innerWidth) {
         _offset.x = available.right + width + margin - snap.offset;
         _outside.current = 'right';
       } else _offset.x = available.right;
@@ -231,7 +231,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     else if (snap.corner || middleX < windowX - middleX) {
       _placement.x = 'left';
       // If the element center is outside the window
-      if (!_outside.current && !_outside.previous && middleX < 0) {
+      if (snap.outside && !_outside.current && !_outside.previous && middleX < 0) {
         _offset.x = -available.left - width - margin + snap.offset;
         _outside.current = 'left';
       } else _offset.x = -available.left;
@@ -247,7 +247,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     if (middleY > windowY && (snap.corner || middleY - windowY > window.innerHeight - middleY)) {
       _placement.y = 'bottom';
       // If the element center is outside the window
-      if (!_outside.current && !_outside.previous && middleY > window.innerHeight) {
+      if (snap.outside && !_outside.current && !_outside.previous && middleY > window.innerHeight) {
         _offset.y = available.bottom + height + margin - snap.offset;
         _outside.current = 'bottom';
       } else _offset.y = available.bottom;
@@ -258,7 +258,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     else if (snap.corner || middleY < windowY - middleY) {
       _placement.y = 'top';
       // If the element center is outside the window
-      if (!_outside.current && !_outside.previous && middleY < 0) {
+      if (snap.outside && !_outside.current && !_outside.previous && middleY < 0) {
         _offset.y = -available.top - height - margin + snap.offset;
         _outside.current = 'top';
       } else _offset.y = -available.top;
@@ -271,7 +271,6 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     await stopTranslating();
     if (!snap.placement) return;
 
-    // TODO - custom grid position (i.e. every multiple of x, y steps)
     if (!_placement.x && !_placement.y) {
       options.placement = 'center';
     } else if (_placement.y === 'top' && _placement.x === 'left') {
