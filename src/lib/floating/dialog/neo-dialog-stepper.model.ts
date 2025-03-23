@@ -62,6 +62,7 @@ export type NeoDialogStepperProps = {
   | 'unmountOnClose'
   | 'placement'
   | 'movable'
+  | 'outside'
   | 'elevation'
   | 'blur'
   | 'slide'

@@ -48,6 +48,7 @@ export type NeoDialogConfirmProps = {
   | 'unmountOnClose'
   | 'placement'
   | 'movable'
+  | 'outside'
   | 'elevation'
   | 'blur'
   | 'slide'

@@ -48,6 +48,8 @@ export type NeoMoved = {
   y: number;
 };
 
+export type NeoMovableOutside = false | 'top' | 'bottom' | 'left' | 'right';
+
 export type NeoMovableHandlers<Element extends HTMLElement = HTMLButtonElement> = Pick<
   HTMLAttributes<Element>,
   'onpointerdown' | 'onkeydown' | 'onkeyup' | 'onblur'
@@ -55,12 +57,14 @@ export type NeoMovableHandlers<Element extends HTMLElement = HTMLButtonElement> 
 
 export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   offset: NeoMoved;
+  outside: NeoMovableOutside;
   placement: NeoDialogPlacement;
   movable?: Partial<NeoMovable>;
   element?: Element;
   handlers?: Partial<NeoMovableHandlers>;
 }): {
   offset: NeoMoved;
+  outside: NeoMovableOutside;
   movable: NeoMovable;
   element?: Element;
   placement: NeoDialogPlacement;
@@ -131,13 +135,14 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     return { top, right, bottom, left, width, height, margin, available };
   };
 
-  const setOffset = (x: number, y: number, contain = movable.contain) => {
+  const setOffset = (x: number, y: number, { contain = movable.contain, outside }: { contain?: boolean; outside?: NeoMovableOutside } = {}) => {
     options.offset.x = !contain ? x : Math.min(Math.max(x, -available.left), available.right);
     options.offset.y = !contain ? y : Math.min(Math.max(y, -available.top), available.bottom);
+    if (outside !== undefined) options.outside = outside;
   };
 
   const resetOffset = (x = 0, y = 0) => {
-    setOffset(x, y, false);
+    setOffset(x, y, { contain: false });
     return stopTranslating(0);
   };
 
@@ -166,36 +171,59 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
 
     const _offset = { x: 0, y: 0 };
     const _placement = { x: '', y: '' };
+    const _outside: Record<string, NeoMovableOutside> = { previous: options.outside, current: false };
 
+    // If element center is over the middle of the window
     if (middleX > windowX && (snap.corner || middleX - windowX > window.innerWidth - middleX)) {
       _placement.x = 'right';
-      _offset.x = available.right;
-    } else if (middleX > windowX) {
-      _offset.x = available.right + margin - (windowX - halfWidth);
-    } else if (snap.corner || middleX < windowX - middleX) {
-      _placement.x = 'left';
-      _offset.x = -available.left;
-    } else {
-      _offset.x = windowX - halfWidth - available.left - margin;
+      // If the element center is outside the window
+      if (!_outside.previous && middleX > window.innerWidth) {
+        _offset.x = available.right + width - margin;
+        _outside.current = 'right';
+      } else _offset.x = available.right;
     }
+    // If the element center is closer to the middle of the window
+    else if (middleX > windowX) _offset.x = available.right + margin - (windowX - halfWidth);
+    // If the element center is before the middle of the window
+    else if (snap.corner || middleX < windowX - middleX) {
+      _placement.x = 'left';
+      // If the element center is outside the window
+      if (!_outside.current && !_outside.previous && middleX < 0) {
+        _offset.x = -available.left - width + margin;
+        _outside.current = 'left';
+      } else _offset.x = -available.left;
+    }
+    // If the element center is closer to the middle of the window
+    else _offset.x = windowX - halfWidth - available.left - margin;
 
     const windowY = window.innerHeight / 2;
     const halfHeight = height / 2;
     const middleY = top + halfHeight;
 
+    // If element center is below the middle of the window
     if (middleY > windowY && (snap.corner || middleY - windowY > window.innerHeight - middleY)) {
       _placement.y = 'bottom';
-      _offset.y = available.bottom;
-    } else if (middleY > windowY) {
-      _offset.y = available.bottom + margin - (windowY - halfHeight);
-    } else if (snap.corner || middleY < windowY - middleY) {
-      _placement.y = 'top';
-      _offset.y = -available.top;
-    } else {
-      _offset.y = windowY - halfHeight - available.top - margin;
+      // If the element center is outside the window
+      if (!_outside.current && !_outside.previous && middleY > window.innerHeight) {
+        _offset.y = available.bottom + height - margin;
+        _outside.current = 'bottom';
+      } else _offset.y = available.bottom;
     }
+    // If the element center is closer to the middle of the window
+    else if (middleY > windowY) _offset.y = available.bottom + margin - (windowY - halfHeight);
+    // If the element center is above the middle of the window
+    else if (snap.corner || middleY < windowY - middleY) {
+      _placement.y = 'top';
+      // If the element center is outside the window
+      if (!_outside.current && !_outside.previous && middleY < 0) {
+        _offset.y = -available.top - height + margin;
+        _outside.current = 'top';
+      } else _offset.y = -available.top;
+    }
+    // If the element center is closer to the middle of the window
+    else _offset.y = windowY - halfHeight - available.top - margin;
 
-    setOffset(_offset.x, _offset.y);
+    setOffset(_offset.x, _offset.y, { outside: _outside.current });
 
     await stopTranslating();
     if (!snap.placement) return;
@@ -268,6 +296,9 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   return {
     get offset() {
       return offset;
+    },
+    get outside() {
+      return options.outside;
     },
     get placement() {
       return placement;

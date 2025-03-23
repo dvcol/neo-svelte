@@ -5,7 +5,6 @@
   import type { NeoHandlePlacement, NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
-  import { defaultDuration } from '~/utils/transition.utils.js';
 
   const {
     // Snippets
@@ -17,6 +16,7 @@
     enabled = true,
     placement = 'top',
     position = 'inside',
+    outside,
     axis,
 
     // Other Props
@@ -24,52 +24,53 @@
     ...rest
   }: NeoHandleProps = $props();
 
+  const invertMap: Record<NeoHandlePlacement, NeoHandlePlacement> = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' };
+  const getOpposite = (p: NeoHandlePlacement): NeoHandlePlacement => invertMap[p] ?? p;
+
+  const placements = $derived.by<NeoHandlePlacement[]>(() => {
+    if (outside) return [getOpposite(outside)];
+    return Array.isArray(placement) ? placement : [placement];
+  });
+
   const width = $state<number[]>([]);
   const height = $state<number[]>([]);
 
   $effect(() => {
     if (!refs.length) return;
     refs?.at(0)?.focus();
-    console.info('re-focus');
   });
 </script>
 
 {#snippet handleButton(_placement: NeoHandlePlacement, index = 0)}
-  {#key placement}
-    <button
-      bind:this={refs[index]}
-      bind:offsetWidth={width[index]}
-      bind:offsetHeight={height[index]}
-      class:neo-handle={true}
-      data-placement={_placement}
-      data-position={position}
-      data-axis={axis}
-      aria-label="Drag handle ({_placement})"
-      title="Draggable"
-      transition:scale={{ duration: defaultDuration, start: 0.8, easing: circOut }}
-      style:--neo-handler-offset-width="{width[index]}px"
-      style:--neo-handler-offset-height="{height[index]}px"
-      {...rest}
-    >
-      {#if typeof handle === 'function'}
-        {@render handle(_placement)}
-      {:else if handle !== false}
-        <NeoDivider role="presentation" vertical={['right', 'left'].includes(_placement)} {...dividerProps} />
-      {/if}
+  <button
+    bind:this={refs[index]}
+    bind:offsetWidth={width[index]}
+    bind:offsetHeight={height[index]}
+    class:neo-handle={true}
+    data-placement={_placement}
+    data-position={position}
+    data-axis={axis}
+    aria-label="Drag handle ({_placement})"
+    title="Draggable"
+    transition:scale|global={{ duration: 600, start: 0.5, easing: circOut }}
+    style:--neo-handler-offset-width="{width[index]}px"
+    style:--neo-handler-offset-height="{height[index]}px"
+    {...rest}
+  >
+    {#if typeof handle === 'function'}
+      {@render handle(_placement)}
+    {:else if handle !== false}
+      <NeoDivider role="presentation" vertical={['right', 'left'].includes(_placement)} {...dividerProps} />
+    {/if}
 
-      {@render children?.({ enabled, placement: _placement, axis })}
-    </button>
-  {/key}
+    {@render children?.({ enabled, placement: _placement, axis, outside })}
+  </button>
 {/snippet}
 
 {#if enabled}
-  {#if typeof placement === 'string'}
-    {@render handleButton(placement)}
-  {:else}
-    {#each placement as _placement, index (_placement)}
-      {@render handleButton(_placement, index)}
-    {/each}
-  {/if}
+  {#each placements as _placement, index (_placement)}
+    {@render handleButton(_placement, index)}
+  {/each}
 {/if}
 
 <style lang="scss">

@@ -34,6 +34,7 @@
     // Position
     placement = $bindable('center'),
     movable: _movable = true,
+    outside = $bindable(false),
 
     // Style
     elevation: _elevation,
@@ -132,6 +133,12 @@
     },
     set offset(val) {
       moved = val;
+    },
+    get outside() {
+      return outside;
+    },
+    set outside(val) {
+      outside = val;
     },
     get placement() {
       return placement;
@@ -241,15 +248,26 @@
     }
   });
 
-  // TODO - add movable props to context
-  const context = $derived<NeoDialogContext>({ ref, open, modal, returnValue, closedby, disableBodyScroll, closeOnClickOutside, placement });
+  const context = $derived<NeoDialogContext>({
+    ref,
+    open,
+    modal,
+    returnValue,
+    closedby,
+    disableBodyScroll,
+    closeOnClickOutside,
+    placement,
+    outside,
+    moved,
+    movable,
+    unmountOnClose,
+    tag,
+  });
 
   // TODO - resizable containers
   // TODO : drawers handle (& swipe) => dedicated component
-  // TODO : swipe snap
   // TODO : snap (grid)
   // TODO : FUll modal handle
-  // TODO : outside (handles picks out) - contain
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));
   const slide = $derived(_slide ?? (modal && placement !== 'center'));
@@ -336,6 +354,7 @@
       position={movable.position}
       axis={movable.axis}
       handle={movable.handle}
+      {outside}
       {...moving.handlers}
       {...handleProps}
     />
@@ -395,8 +414,8 @@
 
       opacity: 0.6;
 
+      &:focus-visible,
       &:hover,
-      &:focus,
       &:active {
         opacity: 1;
       }
@@ -405,7 +424,7 @@
     &:focus-within,
     &:focus,
     &:hover {
-      :global(.neo-handle:not(:focus, :hover, :active)) {
+      :global(.neo-handle:not(:focus-visible, :hover, :active)) {
         opacity: 0.8;
       }
     }

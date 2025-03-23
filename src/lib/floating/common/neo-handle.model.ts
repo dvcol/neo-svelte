@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLButtonAttributes } from 'svelte/elements';
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
+import type { NeoMovableOutside } from '~/floating/dialog/use-movable.svelte.js';
 
 export type NeoHandlePlacement = 'top' | 'right' | 'bottom' | 'left';
 
@@ -21,6 +22,12 @@ export type NeoHandleState = {
    * @default inside
    */
   position?: 'inside' | 'outside';
+  /**
+   * Whether the element is currently outside the viewport.
+   *
+   * @default false
+   */
+  outside?: NeoMovableOutside;
   /**
    * The allowed axis for dragging the element.
    **/

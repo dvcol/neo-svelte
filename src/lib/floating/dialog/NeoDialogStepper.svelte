@@ -28,6 +28,7 @@
     // Position
     placement = $bindable('center'),
     movable,
+    outside = $bindable(false),
 
     // Style
     elevation,
@@ -152,6 +153,7 @@
   bind:open
   bind:modal
   bind:moved
+  bind:outside
   bind:placement
   bind:returnValue
   children={dialog}
