@@ -41,16 +41,38 @@
     placement: 'center',
     movable: {
       enabled: false,
+      contain: false,
+      axis: undefined,
       snap: {
         enabled: false,
         corner: false,
         outside: false,
+        placement: false,
+      },
+      handle: {
+        visible: true,
+        position: 'inside',
       },
     },
 
     onclose: () => console.info('Dialog closed'),
     oncancel: () => console.info('Dialog cancelled'),
   });
+
+  const onHandlePosition = () => {
+    options.movable.handle.position = options.movable.handle.position === 'outside' ? 'inside' : 'outside';
+  };
+
+  const placement = $derived(
+    options.movable.placement
+      ? Object.entries(options.movable.placement)
+          .filter(([, v]) => v)
+          .map(([k]) => k)
+      : undefined,
+  );
+  const onSelectPlacement = (values: string[]) => {
+    options.movable.placement = values?.reduce((acc, cur) => ({ ...acc, [cur]: true }), {});
+  };
 
   const position = [{ value: 'center', label: 'Center' }, ...positionOptions];
 
@@ -133,66 +155,116 @@
 </script>
 
 <div class="row">
-  <NeoButtonGroup text rounded>
-    <NeoButton toggle bind:checked={options.modal}>Modal</NeoButton>
-    <NeoButton toggle bind:checked={options.disableBodyScroll}>Body Scroll</NeoButton>
-    <NeoButton toggle bind:checked={options.closeOnClickOutside}>Click Outside</NeoButton>
-    <NeoButton toggle bind:checked={options.backdrop}>Backdrop</NeoButton>
-    <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
-    <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
-    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
-    <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
-  </NeoButtonGroup>
+  <div class="row">
+    <NeoButtonGroup text rounded>
+      <NeoButton toggle bind:checked={options.modal}>Modal</NeoButton>
+      <NeoButton toggle bind:checked={options.disableBodyScroll}>Body Scroll</NeoButton>
+      <NeoButton toggle bind:checked={options.closeOnClickOutside}>Closable</NeoButton>
+      <NeoButton toggle bind:checked={options.backdrop}>Backdrop</NeoButton>
+      <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
+      <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
+      <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+      <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    </NeoButtonGroup>
 
-  <NeoSelect
-    label="Placement"
-    placeholder="Select placement"
-    placement="left"
-    floating={false}
-    bind:value={options.placement}
-    containerProps={{ style: 'margin-left: 6.75rem' }}
-    options={position}
-    size="15"
-    openOnFocus
-    rounded
-    glass
-  />
-  <NeoNumberStep
-    label="Elevation"
-    placement="left"
-    center
-    bind:value={options.elevation}
-    min={0}
-    max={MaxShadowElevation}
-    defaultValue={DefaultShadowElevation}
-    nullable={false}
-    floating={false}
-    groupProps={{ style: 'margin-left: 6rem' }}
-    rounded
-    glass
-  />
+    <NeoSelect
+      label="Placement"
+      placeholder="Select placement"
+      placement="left"
+      floating={false}
+      bind:value={options.placement}
+      containerProps={{ style: 'margin-left: 6.75rem' }}
+      options={position}
+      size="15"
+      openOnFocus
+      rounded
+      glass
+    />
+    <NeoNumberStep
+      label="Elevation"
+      placement="left"
+      center
+      bind:value={options.elevation}
+      min={0}
+      max={MaxShadowElevation}
+      defaultValue={DefaultShadowElevation}
+      nullable={false}
+      floating={false}
+      groupProps={{ style: 'margin-left: 6rem' }}
+      rounded
+      glass
+    />
 
-  <NeoSelect
-    label="Color"
-    placeholder="Select color"
-    placement="left"
-    floating={false}
-    color={options.color}
-    size="10"
-    bind:value={options.color}
-    containerProps={{ style: 'margin-left: 6rem' }}
-    options={colorOptions}
-    openOnFocus
-    rounded
-    glass
-  />
+    <NeoSelect
+      label="Color"
+      placeholder="Select color"
+      placement="left"
+      floating={false}
+      color={options.color}
+      size="10"
+      bind:value={options.color}
+      containerProps={{ style: 'margin-left: 6rem' }}
+      options={colorOptions}
+      openOnFocus
+      rounded
+      glass
+    />
+  </div>
 
-  <NeoButtonGroup text rounded>
-    <NeoButton toggle bind:checked={options.movable.enabled}>Movable</NeoButton>
-    <NeoButton toggle bind:checked={options.movable.snap.enabled} disabled={!options.movable.enabled}>Snap</NeoButton>
-    <NeoButton toggle bind:checked={options.movable.snap.corner} disabled={!options.movable.enabled}>Corner</NeoButton>
-    <NeoButton toggle bind:checked={options.movable.snap.outside} disabled={!options.movable.enabled}>Outside</NeoButton>
-  </NeoButtonGroup>
+  <div class="row">
+    <NeoButtonGroup text rounded>
+      <NeoButton toggle bind:checked={options.movable.enabled}>Movable</NeoButton>
+      <NeoButton toggle bind:checked={options.movable.snap.enabled} disabled={!options.movable.enabled}>Snap</NeoButton>
+      <NeoButton toggle bind:checked={options.movable.contain} disabled={!options.movable.enabled}>Contain</NeoButton>
+      <NeoButton
+        toggle
+        checked={options.movable.axis === 'x'}
+        disabled={!options.movable.enabled}
+        onclick={() => {
+          options.movable.axis = options.movable.axis === 'x' ? undefined : 'x';
+        }}
+      >
+        Axis X
+      </NeoButton>
+      <NeoButton
+        toggle
+        checked={options.movable.axis === 'y'}
+        disabled={!options.movable.enabled}
+        onclick={() => {
+          options.movable.axis = options.movable.axis === 'y' ? undefined : 'y';
+        }}
+      >
+        Axis Y
+      </NeoButton>
+      <NeoButton toggle bind:checked={options.movable.snap.corner} disabled={!options.movable.enabled}>Snap Corner</NeoButton>
+      <NeoButton toggle bind:checked={options.movable.snap.outside} disabled={!options.movable.enabled}>Snap Outside</NeoButton>
+      <NeoButton toggle checked={options.movable.handle.position === 'outside'} onclick={onHandlePosition} disabled={!options.movable.enabled}>
+        Handle Position
+      </NeoButton>
+    </NeoButtonGroup>
+
+    <NeoSelect
+      label="Handles"
+      placeholder="Handles"
+      placement="left"
+      floating={false}
+      size="10"
+      containerProps={{ style: 'margin-left: 6rem' }}
+      disabled={!options.movable.enabled}
+      value={placement}
+      options={[
+        { value: 'top', label: 'Top' },
+        { value: 'right', label: 'Right' },
+        { value: 'bottom', label: 'Bottom' },
+        { value: 'left', label: 'Left' },
+      ]}
+      multiple
+      onChange={onSelectPlacement}
+      openOnFocus
+      rounded
+      glass
+    />
+  </div>
 </div>
 
 <!-- TODO snap options-->
@@ -335,5 +407,9 @@
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     margin: 2rem 0;
+
+    .row {
+      margin: 0;
+    }
   }
 </style>
