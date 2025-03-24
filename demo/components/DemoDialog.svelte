@@ -50,7 +50,7 @@
         placement: false,
       },
       handle: {
-        full: true,
+        full: false,
         visible: true,
         position: 'inside',
       },

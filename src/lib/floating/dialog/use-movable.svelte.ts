@@ -29,19 +29,19 @@ export type NeoMovableSnap = {
    */
   enabled?: boolean;
   /**
-   * Whether the dialog should only snap to the corners of the viewport.
+   * Whether the element should only snap to the corners of the viewport.
    */
   corner?: boolean;
   /**
-   * Whether snapping to a corner should change the dialog placement.
+   * Whether snapping to a corner should change the element placement.
    */
   placement?: boolean;
   /**
-   * Whether the dialog can be snapped outside the viewport (with handles peeking in).
+   * Whether the element can be snapped outside the viewport (with handles peeking in).
    */
   outside?: boolean;
   /**
-   * How much of the dialog should be visible when snapped outside the viewport.
+   * How much of the element should be visible when snapped outside the viewport.
    *
    * @default 16
    */
@@ -50,7 +50,6 @@ export type NeoMovableSnap = {
    * Translate css to apply when snapping to a position
    */
   translate?: NeoMovableSnapTranslate;
-  grid?: number | { x: number; y: number }; // TODO
 };
 
 export type NeoMovableHandle = Pick<NeoHandleProps, 'visible' | 'handle' | 'position' | 'minSize'> & {
@@ -60,33 +59,47 @@ export type NeoMovableHandle = Pick<NeoHandleProps, 'visible' | 'handle' | 'posi
   full?: boolean;
 };
 
+export type NeoMovableLimit = {
+  min?: number;
+  max?: number;
+};
+
+export type NeoMovableLimits = {
+  x?: NeoMovableLimit;
+  y?: NeoMovableLimit;
+};
+
 export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'enabled' | 'placement' | 'axis' | 'outside'> & {
   /**
-   * The step size for dragging the dialog with arrow keys.
+   * The step size for dragging the element with arrow keys.
    *
    * @default 4
    **/
   step?: number;
   /**
-   * Whether the dialog should be contained within to the viewport edges.
+   * Whether the element should be contained within to the viewport edges.
    **/
   contain?: boolean;
   /**
-   * Whether to show a handle for dragging the dialog.
+   * Boundaries for the element movement.
+   */
+  limits?: NeoMovableLimits;
+  /**
+   * Whether to show a handle for dragging the element.
    * If 'true', the handle will be visible whenever most appropriate.
    *
    * @default true
    */
   handle?: Parsed extends true ? NeoMovableHandle : boolean | NeoMovableHandle;
   /**
-   * Whether the dialog should snap to the viewport edges.
-   * If 'corner', the dialog will snap to the closest corner.
+   * Whether the element should snap to the viewport edges.
+   * If 'corner', the element will snap to the closest corner.
    *
    * @default false
    */
   snap?: Parsed extends true ? NeoMovableSnap : boolean | 'corner' | NeoMovableSnap;
   /**
-   * The margin around the dialog when snapping to the viewport edges.
+   * The margin around the element when snapping to the viewport edges.
    *
    * @default 16px
    */
@@ -245,9 +258,29 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     return { top, right, bottom, left, width, height, margin, available };
   };
 
-  const setOffset = (x: number, y: number, { contain = movable.contain, outside }: { contain?: boolean; outside?: NeoMovableOutside } = {}) => {
-    options.offset.x = !contain ? x : Math.min(Math.max(x, -available.left), available.right);
-    options.offset.y = !contain ? y : Math.min(Math.max(y, -available.top), available.bottom);
+  const setOffset = (
+    x: number,
+    y: number,
+    {
+      contain = movable.contain,
+      outside,
+      limits = movable.limits,
+    }: { contain?: boolean; outside?: NeoMovableOutside; limits?: NeoMovableLimits } = {},
+  ) => {
+    if (contain) {
+      x = Math.min(Math.max(x, -available.left), available.right);
+      y = Math.min(Math.max(y, -available.top), available.bottom);
+    }
+    if (limits?.x) {
+      if (limits.x.min !== undefined) x = Math.max(x, limits.x.min);
+      if (limits.x.max !== undefined) x = Math.min(x, limits.x.max);
+    }
+    if (limits?.y) {
+      if (limits.y.min !== undefined) y = Math.max(y, limits.y.min);
+      if (limits.y.max !== undefined) y = Math.min(y, limits.y.max);
+    }
+    options.offset.x = x;
+    options.offset.y = y;
     if (outside !== undefined) options.outside = outside;
   };
 

@@ -298,7 +298,6 @@
     tag,
   });
 
-  // TODO : snap (grid)
   // TODO : close/snap on swipe (mobile mostly)
   // TODO : drawers handle (& swipe) => dedicated component
   // TODO - resizable containers
