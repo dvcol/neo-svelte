@@ -106,9 +106,21 @@
     background: none;
     border: none;
     outline: none;
-    cursor: move;
+    cursor: grab;
     transition: opacity 0.3s ease-in;
     appearance: none;
+
+    &:active {
+      cursor: grabbing;
+
+      &[data-axis='x'] {
+        cursor: ew-resize;
+      }
+
+      &[data-axis='y'] {
+        cursor: ns-resize;
+      }
+    }
 
     &-group {
       position: relative;
@@ -122,14 +134,6 @@
     &:focus-visible :global(> .neo-divider) {
       outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       outline-offset: 1px;
-    }
-
-    &[data-axis='x'] {
-      cursor: ew-resize;
-    }
-
-    &[data-axis='y'] {
-      cursor: ns-resize;
     }
 
     &[data-placement^='right'],

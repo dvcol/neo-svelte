@@ -1,5 +1,4 @@
 import { debounce } from '@dvcol/common-utils/common/debounce';
-
 import { watch } from '@dvcol/svelte-utils/watch';
 
 import type { HTMLAttributes } from 'svelte/elements';
@@ -54,7 +53,12 @@ export type NeoMovableSnap = {
   grid?: number | { x: number; y: number }; // TODO
 };
 
-export type NeoMovableHandle = Pick<NeoHandleProps, 'visible' | 'handle' | 'position' | 'minSize'>;
+export type NeoMovableHandle = Pick<NeoHandleProps, 'visible' | 'handle' | 'position' | 'minSize'> & {
+  /**
+   * Whether the whole element should act as a handle.
+   */
+  full?: boolean;
+};
 
 export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'enabled' | 'placement' | 'axis' | 'outside'> & {
   /**
@@ -96,29 +100,81 @@ export type NeoMoved = {
 
 export type NeoMovableOutside = false | NeoHandlePlacements;
 
-export type NeoMovableHandlers<Element extends HTMLElement = HTMLButtonElement> = Pick<
-  HTMLAttributes<Element>,
-  'onpointerdown' | 'onkeydown' | 'onkeyup' | 'onblur'
->;
+export type NeoMovableHandlers<Element extends HTMLElement> = Pick<HTMLAttributes<Element>, 'onpointerdown' | 'onkeydown' | 'onkeyup' | 'onblur'>;
 
-export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
+export type NeoMovableUseOptions<Element extends HTMLElement, Handle extends HTMLElement> = {
+  /**
+   * The element's offset from its original position if any (applied transform).
+   */
   offset: NeoMoved;
+  /**
+   * Whether the element is outside the viewport, and in which direction.
+   */
   outside: NeoMovableOutside;
+  /**
+   * The element original placement.
+   */
   placement: NeoDialogPlacement;
+  /**
+   * Movable options.
+   */
   movable?: Partial<NeoMovable>;
+  /**
+   * Reference to the element to move.
+   */
   element?: Element;
-  handlers?: Partial<NeoMovableHandlers>;
-}): {
+  /**
+   * Event handlers to attach to the handle.
+   */
+  handlers?: Partial<NeoMovableHandlers<Handle>>;
+};
+
+export type NeoMovableUseResult<Element extends HTMLElement, Handle extends HTMLElement> = {
+  /**
+   * The element's offset from its original position if any (applied transform).
+   */
   offset: NeoMoved;
+  /**
+   * Whether the element is outside the viewport, and in which direction.
+   */
   outside: NeoMovableOutside;
-  movable: NeoMovable;
-  element?: Element;
+  /**
+   * The element original placement.
+   */
   placement: NeoDialogPlacement;
+  /**
+   * Original movable options.
+   */
+  movable: NeoMovable;
+  /**
+   * Reference to the element to move.
+   */
+  element?: Element;
+  /**
+   * The css translate value to apply to the element.
+   */
   translate: CSSStyleDeclaration['translate'];
+  /**
+   * If the element is currently being translated programmatically (snap or arrow keys).
+   */
   translating: number;
-  handlers: NeoMovableHandlers;
+  /**
+   * If the element is currently being moved by the user (drag).
+   */
+  moving: boolean;
+  /**
+   * Event handlers to attach to the handle.
+   */
+  handlers: NeoMovableHandlers<Handle>;
+  /**
+   * Reset the element's offset to its original position.
+   */
   reset: () => Promise<unknown>;
-} => {
+};
+
+export const useMovable = <Element extends HTMLElement, Handle extends HTMLElement>(
+  options: NeoMovableUseOptions<Element, Handle>,
+): NeoMovableUseResult<Element, Handle> => {
   const offset = $derived(options.offset);
   const element = $derived(options.element);
   const placement = $derived(options.placement);
@@ -164,12 +220,12 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
   };
   const stopTranslating = debounce(async (delay = snap.translate.duration) => {
     clearTimeout(timeout);
-    translating = 0;
     const { resolve, promise } = Promise.withResolvers();
     timeout = setTimeout(() => {
-      if (translating || !element) return resolve(false);
+      if (!element) return resolve(false);
       element.style.transition = transition;
       transition = '';
+      translating = 0;
       resolve(true);
     }, delay);
     return promise;
@@ -303,17 +359,21 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     }
   };
 
+  let moving = $state(false);
   const onPointerStop = () => {
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerup', onPointerStop);
     window.removeEventListener('pointercancel', onPointerStop);
     window.removeEventListener('pointerleave', onPointerStop);
+    moving = false;
     snapToClosest().catch(Logger.error);
   };
 
-  const onPointerDown = (e: SvelteEvent<PointerEvent>) => {
+  const onPointerDown = async (e: SvelteEvent<PointerEvent>) => {
     if (!movable.enabled || !element || e.button !== 0) return;
+    if (translating) await stopTranslating(0);
     e.preventDefault();
+    moving = true;
     initial = { x: e.clientX - offset.x, y: e.clientY - offset.y };
     updateAvailable();
     window.addEventListener('pointermove', onPointerMove);
@@ -368,6 +428,9 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
     },
     get translating() {
       return translating;
+    },
+    get moving() {
+      return moving;
     },
     get handlers() {
       return {

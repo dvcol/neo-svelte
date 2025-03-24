@@ -50,6 +50,7 @@
         placement: false,
       },
       handle: {
+        full: true,
         visible: true,
         position: 'inside',
       },
@@ -214,7 +215,6 @@
   <div class="row">
     <NeoButtonGroup text rounded>
       <NeoButton toggle bind:checked={options.movable.enabled}>Movable</NeoButton>
-      <NeoButton toggle bind:checked={options.movable.snap.enabled} disabled={!options.movable.enabled}>Snap</NeoButton>
       <NeoButton toggle bind:checked={options.movable.contain} disabled={!options.movable.enabled}>Contain</NeoButton>
       <NeoButton
         toggle
@@ -236,11 +236,17 @@
       >
         Axis Y
       </NeoButton>
-      <NeoButton toggle bind:checked={options.movable.snap.corner} disabled={!options.movable.enabled}>Snap Corner</NeoButton>
-      <NeoButton toggle bind:checked={options.movable.snap.outside} disabled={!options.movable.enabled}>Snap Outside</NeoButton>
-      <NeoButton toggle checked={options.movable.handle.position === 'outside'} onclick={onHandlePosition} disabled={!options.movable.enabled}>
-        Handle Position
+      <NeoButton toggle bind:checked={options.movable.snap.enabled} disabled={!options.movable.enabled}>Snap</NeoButton>
+      <NeoButton toggle bind:checked={options.movable.snap.corner} disabled={!options.movable.enabled || !options.movable.snap.enabled}>
+        Snap Corner
       </NeoButton>
+      <NeoButton toggle bind:checked={options.movable.snap.outside} disabled={!options.movable.enabled || !options.movable.snap.enabled}>
+        Snap Outside
+      </NeoButton>
+      <NeoButton toggle checked={options.movable.handle.position === 'outside'} onclick={onHandlePosition} disabled={!options.movable.enabled}>
+        Handle {options.movable.handle.position}
+      </NeoButton>
+      <NeoButton toggle bind:checked={options.movable.handle.full} disabled={!options.movable.enabled}>Handle Full</NeoButton>
     </NeoButtonGroup>
 
     <NeoSelect

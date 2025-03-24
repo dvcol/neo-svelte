@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getFocusableElement } from '@dvcol/common-utils/common/element';
+  import { closestClickableElement, getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade as fadeFn, fly, scale } from 'svelte/transition';
 
@@ -7,7 +7,7 @@
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import NeoHandle from '~/floating/common/NeoHandle.svelte';
-  import { type NeoMovable, useMovable } from '~/floating/dialog/use-movable.svelte.js';
+  import { type NeoMovable, type NeoMovableHandlers, useMovable } from '~/floating/dialog/use-movable.svelte.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
@@ -170,6 +170,27 @@
     },
   });
 
+  const dialogHandler = $derived<NeoMovableHandlers<HTMLDialogElement>>({
+    onpointerdown: (e: SvelteEvent<PointerEvent>) => {
+      if (movable?.handle?.full && (!(e.target instanceof HTMLElement) || !closestClickableElement(e.target))) {
+        moving.handlers.onpointerdown?.(e);
+      }
+      rest.onpointerdown?.(e);
+    },
+    onkeydown: (e: SvelteEvent<KeyboardEvent>) => {
+      if (movable?.handle?.full) moving.handlers.onkeydown?.(e);
+      rest.onkeydown?.(e);
+    },
+    onkeyup: (e: SvelteEvent<KeyboardEvent>) => {
+      if (movable?.handle?.full) moving.handlers.onkeyup?.(e);
+      rest.onkeyup?.(e);
+    },
+    onblur: (e: SvelteEvent<FocusEvent>) => {
+      if (movable?.handle?.full) moving.handlers.onblur?.(e);
+      rest.onblur?.(e);
+    },
+  });
+
   let timeout: ReturnType<typeof setTimeout>;
   $effect(() => {
     if (!open) return;
@@ -277,11 +298,10 @@
     tag,
   });
 
-  // TODO - resizable containers
-  // TODO : drawers handle (& swipe) => dedicated component
   // TODO : snap (grid)
   // TODO : close/snap on swipe (mobile mostly)
-  // TODO : FUll modal handle
+  // TODO : drawers handle (& swipe) => dedicated component
+  // TODO - resizable containers
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));
   const slide = $derived(_slide ?? (modal && placement !== 'center'));
@@ -321,6 +341,9 @@
     bind:this={ref as NeoDialogHTMLElement}
     data-open={open}
     data-modal={modal}
+    data-axis={movable.axis}
+    data-moving={moving.moving}
+    data-snapping={!!moving.translating}
     data-placement={placement}
     data-elevation={elevation}
     data-unmount-on-close={unmountOnClose}
@@ -334,6 +357,7 @@
     class:neo-flat={!elevation}
     class:neo-fade={fade && !unmountOnClose}
     class:neo-slide={slide && !unmountOnClose}
+    class:neo-handle={movable.handle?.full}
     class:neo-movable={movable.enabled}
     class:neo-scroll-disabled={disableBodyScroll}
     {id}
@@ -363,6 +387,7 @@
     style:--neo-dialog-padding={padding}
     style:--neo-dialog-elevation={elevation}
     style:--neo-dialog-safe-margin={toPixel(movable.margin)}
+    {...dialogHandler}
   >
     <NeoHandle
       enabled={movable.enabled}
@@ -409,6 +434,23 @@
 
     &.neo-movable {
       will-change: translate;
+
+      &.neo-handle {
+        cursor: grab;
+
+        &:active,
+        &[data-moving='true'] {
+          cursor: grabbing;
+
+          &[data-axis='x'] {
+            cursor: ew-resize;
+          }
+
+          &[data-axis='y'] {
+            cursor: ns-resize;
+          }
+        }
+      }
     }
 
     &:not(:is(dialog)) {
