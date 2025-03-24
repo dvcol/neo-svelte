@@ -313,6 +313,7 @@ export const useMovable = <Element extends HTMLElement = HTMLElement>(options: {
 
   const onPointerDown = (e: SvelteEvent<PointerEvent>) => {
     if (!movable.enabled || !element || e.button !== 0) return;
+    e.preventDefault();
     initial = { x: e.clientX - offset.x, y: e.clientY - offset.y };
     updateAvailable();
     window.addEventListener('pointermove', onPointerMove);

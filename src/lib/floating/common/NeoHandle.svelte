@@ -81,7 +81,7 @@
 {/snippet}
 
 {#if enabled}
-  <div class:neo-handle-group={true} data-position={position} style:--neo-handle-group-computed-margin={margin} {...groupProps}>
+  <div data-position={position} class:neo-handle-group={true} style:--neo-handle-group-computed-margin={margin} {...groupProps}>
     {#each placements as _placement (_placement)}
       {@render handleButton(_placement)}
     {/each}
