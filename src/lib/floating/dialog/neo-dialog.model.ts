@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { HTMLDialogAttributes } from 'svelte/elements';
 import type { NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
-import type { NeoMovable, NeoMovableOutside, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
+import type { NeoMovable, NeoMovableOutside, NeoMovableResetOptions, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
@@ -22,6 +22,10 @@ export type NeoDialogHTMLElement = HTMLDialogElement & {
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/requestClose)
    */
   requestClose?: (returnValue?: string) => void;
+  /**
+   * Resets the dialog offset.
+   */
+  reset?: (options: NeoMovableResetOptions) => Promise<boolean>;
 };
 
 export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {

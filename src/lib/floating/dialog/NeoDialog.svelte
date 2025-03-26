@@ -247,6 +247,7 @@
       },
       configurable: true,
     });
+    ref.reset = moving.reset;
     // Monkey patch dialog methods to sync inner states
     const { close, requestClose, show, showModal, dispatchEvent } = ref;
     ref.show = () => {
@@ -297,10 +298,6 @@
     unmountOnClose,
     tag,
   });
-
-  // TODO : close/snap on swipe (mobile mostly)
-  // TODO : drawers handle (& swipe) => dedicated component
-  // TODO - resizable containers
 
   const fade = $derived(_fade ?? (!modal || placement === 'center'));
   const slide = $derived(_slide ?? (modal && placement !== 'center'));
@@ -559,6 +556,14 @@
         bottom: 0;
         margin-top: var(--neo-dialog-margin-top, auto);
         margin-bottom: var(--neo-dialog-margin-bottom, auto);
+      }
+
+      &[data-placement='top'],
+      &[data-placement='bottom'] {
+        right: 0;
+        left: 0;
+        margin-right: var(--neo-dialog-margin-bottom, auto);
+        margin-left: var(--neo-dialog-margin-top, auto);
       }
 
       &.neo-slide {

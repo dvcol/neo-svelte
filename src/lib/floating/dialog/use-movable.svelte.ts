@@ -142,6 +142,9 @@ export type NeoMovableUseOptions<Element extends HTMLElement, Handle extends HTM
   handlers?: Partial<NeoMovableHandlers<Handle>>;
 };
 
+export type NeoMovableOffsetOptions = { contain?: boolean; outside?: NeoMovableOutside; limits?: NeoMovableLimits };
+export type NeoMovableResetOptions = NeoMovableOffsetOptions & { x?: number; y?: number; translate?: boolean | NeoMovableSnapTranslate };
+
 export type NeoMovableUseResult<Element extends HTMLElement, Handle extends HTMLElement> = {
   /**
    * The element's offset from its original position if any (applied transform).
@@ -182,7 +185,7 @@ export type NeoMovableUseResult<Element extends HTMLElement, Handle extends HTML
   /**
    * Reset the element's offset to its original position.
    */
-  reset: () => Promise<unknown>;
+  reset: (options: NeoMovableResetOptions) => Promise<boolean>;
 };
 
 export const useMovable = <Element extends HTMLElement, Handle extends HTMLElement>(
@@ -227,13 +230,14 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     if (!element) return;
     if (!translating) transition = element.style.transition;
     const computed = getComputedStyle(element).transition;
-    element.style.transition = computed.includes('translate')
-      ? computed.replace(/translate[^;]+/g, `translate ${duration}ms ${easing}`)
-      : `${computed}, translate ${duration}ms ${easing}`;
+    if (computed.includes('translate')) element.style.transition = computed.replace(/translate[^;]+/g, `translate ${duration}ms ${easing}`);
+    else element.style.transition = `${computed}, translate ${duration}ms ${easing}`;
+
+    return { easing, duration };
   };
   const stopTranslating = debounce(async (delay = snap.translate.duration) => {
     clearTimeout(timeout);
-    const { resolve, promise } = Promise.withResolvers();
+    const { resolve, promise } = Promise.withResolvers<boolean>();
     timeout = setTimeout(() => {
       if (!element) return resolve(false);
       element.style.transition = transition;
@@ -258,15 +262,7 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     return { top, right, bottom, left, width, height, margin, available };
   };
 
-  const setOffset = (
-    x: number,
-    y: number,
-    {
-      contain = movable.contain,
-      outside,
-      limits = movable.limits,
-    }: { contain?: boolean; outside?: NeoMovableOutside; limits?: NeoMovableLimits } = {},
-  ) => {
+  const setOffset = (x: number, y: number, { contain = movable.contain, outside, limits = movable.limits }: NeoMovableOffsetOptions = {}) => {
     if (contain) {
       x = Math.min(Math.max(x, -available.left), available.right);
       y = Math.min(Math.max(y, -available.top), available.bottom);
@@ -284,9 +280,11 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     if (outside !== undefined) options.outside = outside;
   };
 
-  const resetOffset = (x = 0, y = 0) => {
-    setOffset(x, y, { contain: false });
-    return stopTranslating(0);
+  const resetOffset = ({ x, y, translate: _translate, ...opts }: NeoMovableResetOptions = {}) => {
+    let duration = 0;
+    if (_translate) duration = startTranslating(1, typeof _translate === 'object' ? _translate : undefined)?.duration ?? 0;
+    setOffset(x ?? 0, y ?? 0, { contain: false, ...opts });
+    return stopTranslating(duration);
   };
 
   watch(

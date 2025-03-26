@@ -82,6 +82,8 @@
   let openStepper = $state(false);
   let openDrawer = $state(false);
 
+  const refs = $state([]);
+
   const confirmOptions: NeoDialogConfirmProps = {
     dialog: lorem,
     header: 'Confirm dialog',
@@ -153,6 +155,8 @@
       return true;
     },
   };
+
+  const reset = () => refs.forEach(ref => ref?.reset?.({ translate: true }));
 </script>
 
 <div class="row">
@@ -249,6 +253,8 @@
       <NeoButton toggle bind:checked={options.movable.handle.full} disabled={!options.movable.enabled}>Handle Full</NeoButton>
     </NeoButtonGroup>
 
+    <NeoButton rounded onclick={reset} disabled={!options.movable.enabled}>Reset</NeoButton>
+
     <NeoSelect
       label="Handles"
       placeholder="Handles"
@@ -317,6 +323,7 @@
       <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
 
       <NeoDialog
+        bind:ref={refs[0]}
         {...options}
         elevation={options.elevation > 0 ? options.elevation : undefined}
         bind:open={openDefault}
@@ -334,6 +341,7 @@
       <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
 
       <NeoDialogConfirm
+        bind:ref={refs[1]}
         bind:open={openConfirm}
         bind:modal={options.modal}
         bind:placement={options.placement}
@@ -353,6 +361,7 @@
       <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
 
       <NeoDialogStepper
+        bind:dialogRef={refs[2]}
         bind:active
         bind:open={openStepper}
         bind:modal={options.modal}
