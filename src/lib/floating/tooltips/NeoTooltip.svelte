@@ -24,7 +24,7 @@
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
   import { type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
-  import { quickScaleProps } from '~/utils/transition.utils.js';
+  import { quickScaleOpacityProps, quickScaleProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -87,9 +87,9 @@
     onClose,
 
     // Actions
-    in: inAction,
-    out: outAction,
-    transition: transitionAction = { use: scale, props: quickScaleProps },
+    transition: transitionAction,
+    in: inAction = transitionAction ? undefined : { use: scale, props: quickScaleOpacityProps },
+    out: outAction = transitionAction ? undefined : { use: scale, props: quickScaleProps },
 
     // Actions
     use,
@@ -398,14 +398,17 @@
     }
 
     &.neo-fade {
+      --neo-tooltip-fade-enter-duration: 0.2s;
+      --neo-tooltip-fade-exit-duration: 0.15s;
+      --neo-tooltip-fade-enter-timing: ease-out;
+
       @include mixin.fade-in(
         $toggle: ':not([hidden])',
 
-        $enter-duration: 0.2s,
-        $exit-duration: 0.15s,
-
-        $enter-timing: ease-out,
-        $exit-timing: ease-out
+        $enter-duration: --neo-tooltip-fade-enter-duration,
+        $exit-duration: --neo-tooltip-fade-exit-duration,
+        $enter-timing: --neo-tooltip-fade-enter-timing,
+        $exit-timing: --neo-tooltip-fade-exit-timing
       );
 
       &[data-modal='true'] {

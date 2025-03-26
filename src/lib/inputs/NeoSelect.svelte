@@ -135,15 +135,8 @@
     if (selected === undefined) value = undefined;
   };
 
-  watch(
-    () => {
-      // If value is already the transformed selected value, do nothing
-      if (JSON.stringify(value) === JSON.stringify(transformed)) return;
-      reflectValue();
-    },
-    () => value,
-    { pre: true },
-  );
+  // Reflect initial value if value is set but selected is not
+  reflectValue();
 
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
   const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);
