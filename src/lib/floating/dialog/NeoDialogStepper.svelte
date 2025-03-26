@@ -8,6 +8,7 @@
   import type { NeoDialogContext } from '~/floating/dialog/neo-dialog.model.js';
 
   import NeoFloatingStepper from '~/floating/common/NeoFloatingStepper.svelte';
+  import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
   import { type NeoStepperBeforeEvent, type NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -26,9 +27,9 @@
     unmountOnClose,
 
     // Position
-    placement = $bindable('center'),
-    movable,
+    placement = $bindable(NeoDialogPlacements.Center),
     outside = $bindable(false),
+    movable,
 
     // Style
     elevation,

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { round } from '@dvcol/common-utils';
 
-  import type { NeoCursorProps } from '../../src/lib/cursor/neo-cursor.model';
+  import type { NeoCursorProps } from '~/cursor/neo-cursor.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';

@@ -2,9 +2,11 @@ import { debounce } from '@dvcol/common-utils/common/debounce';
 import { watch } from '@dvcol/svelte-utils/watch';
 
 import type { HTMLAttributes } from 'svelte/elements';
-import type { NeoHandlePlacements, NeoHandleProps } from '~/floating/common/neo-handle.model.js';
-import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
+
 import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
+import { type NeoHandlePlacements, type NeoHandleProps } from '~/floating/common/neo-handle.model.js';
+import { type NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
 
 import { Logger } from '~/utils/logger.utils.js';
 
@@ -38,12 +40,14 @@ export type NeoMovableSnap = {
   placement?: boolean;
   /**
    * Whether the element can be snapped outside the viewport (with handles peeking in).
+   *
+   * @default true
    */
   outside?: boolean;
   /**
    * How much of the element should be visible when snapped outside the viewport.
    *
-   * @default 16
+   * @default 25
    */
   offset?: number;
   /**
@@ -77,6 +81,12 @@ export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'e
    **/
   step?: number;
   /**
+   * The margin around the element when snapping to the viewport edges.
+   *
+   * @default 16px
+   */
+  margin?: number;
+  /**
    * Whether the element should be contained within to the viewport edges.
    **/
   contain?: boolean;
@@ -84,6 +94,12 @@ export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'e
    * Boundaries for the element movement.
    */
   limits?: NeoMovableLimits;
+  /**
+   * Whether the element's offset should be reset when it is closed.
+   *
+   * @default true
+   */
+  resetOnClose?: boolean;
   /**
    * Whether to show a handle for dragging the element.
    * If 'true', the handle will be visible whenever most appropriate.
@@ -98,12 +114,6 @@ export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'e
    * @default false
    */
   snap?: Parsed extends true ? NeoMovableSnap : boolean | 'corner' | NeoMovableSnap;
-  /**
-   * The margin around the element when snapping to the viewport edges.
-   *
-   * @default 16px
-   */
-  margin?: number;
 };
 
 export type NeoMoved = {
@@ -185,7 +195,33 @@ export type NeoMovableUseResult<Element extends HTMLElement, Handle extends HTML
   /**
    * Reset the element's offset to its original position.
    */
-  reset: (options: NeoMovableResetOptions) => Promise<boolean>;
+  reset: (options?: NeoMovableResetOptions) => Promise<boolean>;
+};
+
+export const defaultSnap: Required<NeoMovableSnap> = {
+  enabled: false,
+  corner: false,
+  outside: true,
+  placement: false,
+  offset: 25,
+  translate: { duration: 600, easing: 'var(--neo-transition-spring, ease-in-out)' },
+};
+
+export const defaultHandle: NeoMovableHandle = {
+  full: false,
+  visible: true,
+  position: 'inside',
+  minSize: 16,
+};
+
+export const defaultMovable: NeoMovable = {
+  enabled: false,
+  step: 4,
+  margin: 16,
+  contain: false,
+  resetOnClose: true,
+  snap: defaultSnap,
+  handle: defaultHandle,
 };
 
 export const useMovable = <Element extends HTMLElement, Handle extends HTMLElement>(
@@ -195,22 +231,16 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
   const element = $derived(options.element);
   const placement = $derived(options.placement);
   const movable = $derived<NeoMovable>({
-    enabled: true,
-    placement: 'top',
-    step: 4,
-    handle: true,
-    margin: 16,
-    contain: false,
-    snap: false,
+    ...defaultMovable,
     ...options.movable,
   });
   const snap = $derived.by(() => {
     const _snap = typeof movable.snap === 'object' ? movable.snap : { enabled: !!movable.snap, corner: movable.snap === 'corner' };
     return {
+      ...defaultSnap,
       enabled: !!movable.snap,
-      offset: 25,
       ..._snap,
-      translate: { duration: 600, easing: 'var(--neo-transition-spring, ease-in-out)', ..._snap.translate },
+      translate: { ...defaultSnap.translate, ..._snap.translate },
     };
   });
 
@@ -392,6 +422,7 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
 
   let moving = $state(false);
   const onPointerStop = () => {
+    console.info('onPointerStop');
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerup', onPointerStop);
     window.removeEventListener('pointercancel', onPointerStop);
@@ -407,6 +438,7 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     moving = true;
     initial = { x: e.clientX - offset.x, y: e.clientY - offset.y };
     updateAvailable();
+    console.info('onPointerDown');
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerStop);
     window.addEventListener('pointercancel', onPointerStop);
@@ -466,7 +498,7 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     get handlers() {
       return {
         onpointerdown: (e: SvelteEvent<PointerEvent>) => {
-          onPointerDown(e);
+          onPointerDown(e).catch(Logger.error);
           return options.handlers?.onpointerdown?.(e);
         },
         onkeydown: (e: SvelteEvent<KeyboardEvent>) => {

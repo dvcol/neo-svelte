@@ -368,12 +368,6 @@
       color: var(--neo-btn-text-color-hover, var(--neo-text-color-hover));
     }
 
-    &:disabled .neo-content,
-    &[disabled]:not([disabled='false']) .neo-content {
-      color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled));
-      scale: 1;
-    }
-
     &.neo-pressed,
     &:active:not(.neo-loading, :disabled, [disabled='true']) {
       box-shadow: var(--neo-btn-box-shadow-active, var(--neo-box-shadow-pressed-2));
@@ -501,6 +495,11 @@
     &:disabled,
     &[disabled]:not([disabled='false']) {
       cursor: not-allowed;
+
+      .neo-content.neo-content {
+        color: var(--neo-btn-text-color-disabled, var(--neo-text-color-disabled));
+        scale: 1;
+      }
 
       &:not(.neo-pressed, .neo-readonly) {
         border-color: var(--neo-btn-border-color-disabled, var(--neo-border-color-disabled));

@@ -5,6 +5,7 @@
   import type { NeoDialogContext } from '~/floating/dialog/neo-dialog.model.js';
 
   import NeoConfirm from '~/floating/common/NeoConfirm.svelte';
+  import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
   import NeoDialog from '~/floating/dialog/NeoDialog.svelte';
   import { Logger } from '~/utils/logger.utils.js';
 
@@ -24,9 +25,9 @@
     unmountOnClose,
 
     // Position
-    placement = $bindable('center'),
-    movable,
+    placement = $bindable(NeoDialogPlacements.Center),
     outside = $bindable(false),
+    movable,
 
     // Style
     elevation,

@@ -1,27 +1,28 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
 
-  import NeoDialogStepper from '../../src/lib/floating/dialog/NeoDialogStepper.svelte';
-  import IconAccount from '../../src/lib/icons/IconAccount.svelte';
-  import IconAddress from '../../src/lib/icons/IconAddress.svelte';
-  import IconListSmall from '../../src/lib/icons/IconListSmall.svelte';
-
-  import NeoNumberStep from '../../src/lib/inputs/NeoNumberStep.svelte';
-  import NeoSelect from '../../src/lib/inputs/NeoSelect.svelte';
-
-  import { DefaultShadowElevation, MaxShadowElevation } from '../../src/lib/utils/shadow.utils';
+  import { defaultHandle, defaultMovable, defaultSnap } from '../../src/lib/floating/dialog/use-movable.svelte';
   import { colorOptions } from '../utils/color.utils';
   import { positionOptions } from '../utils/placement.utils';
 
-  import type { NeoStepperStep } from '../../src/lib';
-  import type { NeoDialogConfirmProps } from '../../src/lib/floating/dialog/neo-dialog-confirm.model';
-  import type { NeoDialogStepperProps } from '../../src/lib/floating/dialog/neo-dialog-stepper.model';
-  import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
+  import type { NeoDialogConfirmProps } from '~/floating/dialog/neo-dialog-confirm.model.js';
+  import type { NeoDialogStepperProps } from '~/floating/dialog/neo-dialog-stepper.model.js';
+  import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js.js';
+  import type { NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
   import NeoDialog from '~/floating/dialog/NeoDialog.svelte';
   import NeoDialogConfirm from '~/floating/dialog/NeoDialogConfirm.svelte';
+  import NeoDialogStepper from '~/floating/dialog/NeoDialogStepper.svelte';
+  import NeoDrawer from '~/floating/drawer/NeoDrawer.svelte';
+  import IconAccount from '~/icons/IconAccount.svelte';
+  import IconAddress from '~/icons/IconAddress.svelte';
+  import IconListSmall from '~/icons/IconListSmall.svelte';
+  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
+  import { DefaultShadowElevation, MaxShadowElevation } from '~/utils/shadow.utils';
 
   const options = $state<NeoDialogProps>({
     modal: true,
@@ -38,30 +39,48 @@
     elevation: 0,
 
     returnValue: undefined,
-    placement: 'center',
+    placement: NeoDialogPlacements.Center,
+    moved: { x: 0, y: 0 },
     movable: {
+      ...defaultMovable,
       enabled: false,
-      contain: false,
       axis: undefined,
       snap: {
-        enabled: false,
-        corner: false,
-        outside: false,
-        placement: false,
+        ...defaultSnap,
       },
       handle: {
-        full: false,
-        visible: true,
-        position: 'inside',
+        ...defaultHandle,
       },
     },
 
+    ontoggle: () => console.info('Dialog toggled'),
     onclose: () => console.info('Dialog closed'),
     oncancel: () => console.info('Dialog cancelled'),
   });
 
-  const onHandlePosition = () => {
-    options.movable.handle.position = options.movable.handle.position === 'outside' ? 'inside' : 'outside';
+  const drawerOptions = $state<NeoDialogProps>({
+    ...options,
+    placement: NeoDialogPlacements.Right,
+    moved: { x: 0, y: 0 },
+    movable: {
+      ...options?.movable,
+      margin: 0,
+      snap: {
+        ...options?.movable.snap,
+        outside: true,
+      },
+      handle: {
+        ...options?.movable.handle,
+      },
+    },
+
+    ontoggle: () => console.info('Drawer toggled'),
+    onclose: () => console.info('Drawer closed'),
+    oncancel: () => console.info('Drawer cancelled'),
+  });
+
+  const onHandlePosition = (opts: NeoDialogProps) => {
+    opts.movable.handle.position = opts.movable.handle.position === 'outside' ? 'inside' : 'outside';
   };
 
   const placement = $derived(
@@ -156,130 +175,144 @@
     },
   };
 
-  const reset = () => refs.forEach(ref => ref?.reset?.({ translate: true }));
+  const reset = async () => {
+    await Promise.all(refs.map(ref => ref?.reset?.({ translate: true })));
+    options.moved = { x: 0, y: 0 };
+    drawerOptions.moved = { x: 0, y: 0 };
+  };
 </script>
 
-<div class="row">
+{#snippet optionRow(opts: NeoDialogProps, drawer = false)}
   <div class="row">
-    <NeoButtonGroup text rounded>
-      <NeoButton toggle bind:checked={options.modal}>Modal</NeoButton>
-      <NeoButton toggle bind:checked={options.disableBodyScroll}>Body Scroll</NeoButton>
-      <NeoButton toggle bind:checked={options.closeOnClickOutside}>Closable</NeoButton>
-      <NeoButton toggle bind:checked={options.backdrop}>Backdrop</NeoButton>
-      <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
-      <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
-      <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
-      <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
-    </NeoButtonGroup>
+    <div class="row">
+      <NeoButtonGroup text rounded>
+        <NeoButton toggle bind:checked={opts.modal}>Modal</NeoButton>
+        <NeoButton toggle bind:checked={opts.disableBodyScroll}>Body Scroll</NeoButton>
+        <NeoButton toggle bind:checked={opts.closeOnClickOutside}>Closable</NeoButton>
+        <NeoButton toggle bind:checked={opts.backdrop}>Backdrop</NeoButton>
+        <NeoButton toggle bind:checked={opts.filled}>Filled</NeoButton>
+        <NeoButton toggle bind:checked={opts.tinted}>Tinted</NeoButton>
+        <NeoButton toggle bind:checked={opts.rounded}>Rounded</NeoButton>
+        <NeoButton toggle bind:checked={opts.borderless}>Borderless</NeoButton>
+      </NeoButtonGroup>
 
-    <NeoSelect
-      label="Placement"
-      placeholder="Select placement"
-      placement="left"
-      floating={false}
-      bind:value={options.placement}
-      containerProps={{ style: 'margin-left: 6.75rem' }}
-      options={position}
-      size="15"
-      openOnFocus
-      rounded
-      glass
-    />
-    <NeoNumberStep
-      label="Elevation"
-      placement="left"
-      center
-      bind:value={options.elevation}
-      min={0}
-      max={MaxShadowElevation}
-      defaultValue={DefaultShadowElevation}
-      nullable={false}
-      floating={false}
-      groupProps={{ style: 'margin-left: 6rem' }}
-      rounded
-      glass
-    />
+      <NeoSelect
+        label="Placement"
+        placeholder="Select placement"
+        placement="left"
+        floating={false}
+        bind:value={opts.placement}
+        containerProps={{ style: 'margin-left: 6.75rem' }}
+        options={position}
+        size="15"
+        openOnFocus
+        rounded
+        glass
+      />
+      <NeoNumberStep
+        label="Elevation"
+        placement="left"
+        center
+        bind:value={opts.elevation}
+        min={0}
+        max={MaxShadowElevation}
+        defaultValue={DefaultShadowElevation}
+        nullable={false}
+        floating={false}
+        groupProps={{ style: 'margin-left: 6rem' }}
+        rounded
+        glass
+      />
 
-    <NeoSelect
-      label="Color"
-      placeholder="Select color"
-      placement="left"
-      floating={false}
-      color={options.color}
-      size="10"
-      bind:value={options.color}
-      containerProps={{ style: 'margin-left: 6rem' }}
-      options={colorOptions}
-      openOnFocus
-      rounded
-      glass
-    />
+      <NeoSelect
+        label="Color"
+        placeholder="Select color"
+        placement="left"
+        floating={false}
+        color={opts.color}
+        size="10"
+        bind:value={opts.color}
+        containerProps={{ style: 'margin-left: 6rem' }}
+        options={colorOptions}
+        openOnFocus
+        rounded
+        glass
+      />
+    </div>
+
+    <div class="row">
+      <NeoButtonGroup text rounded>
+        <NeoButton toggle bind:checked={opts.movable.enabled}>Movable</NeoButton>
+        {#if !drawer}
+          <NeoButton toggle bind:checked={opts.movable.contain} disabled={!opts.movable.enabled}>Contain</NeoButton>
+          <NeoButton
+            toggle
+            checked={opts.movable.axis === 'x'}
+            disabled={!opts.movable.enabled}
+            onclick={() => {
+              opts.movable.axis = opts.movable.axis === 'x' ? undefined : 'x';
+            }}
+          >
+            Axis X
+          </NeoButton>
+          <NeoButton
+            toggle
+            checked={opts.movable.axis === 'y'}
+            disabled={!opts.movable.enabled}
+            onclick={() => {
+              opts.movable.axis = opts.movable.axis === 'y' ? undefined : 'y';
+            }}
+          >
+            Axis Y
+          </NeoButton>
+        {/if}
+        <NeoButton toggle bind:checked={opts.movable.snap.enabled} disabled={!opts.movable.enabled}>Snap</NeoButton>
+        {#if !drawer}
+          <NeoButton toggle bind:checked={opts.movable.snap.corner} disabled={!opts.movable.enabled || !opts.movable.snap.enabled}>
+            Snap Corner
+          </NeoButton>
+        {/if}
+        <NeoButton toggle bind:checked={opts.movable.snap.outside} disabled={!opts.movable.enabled || !opts.movable.snap.enabled}>
+          Snap Outside
+        </NeoButton>
+        <NeoButton
+          toggle
+          checked={opts.movable.handle.position === 'outside'}
+          onclick={() => onHandlePosition(opts)}
+          disabled={!opts.movable.enabled}
+        >
+          Handle {opts.movable.handle.position}
+        </NeoButton>
+        <NeoButton toggle bind:checked={opts.movable.handle.full} disabled={!opts.movable.enabled}>Element as Handle</NeoButton>
+        <NeoButton toggle bind:checked={opts.movable.resetOnClose} disabled={!opts.movable.enabled}>Reset on Close</NeoButton>
+      </NeoButtonGroup>
+
+      <NeoButton rounded onclick={reset} disabled={!opts.movable.enabled}>Reset</NeoButton>
+
+      <NeoSelect
+        label="Handles"
+        placeholder="Handles"
+        placement="left"
+        floating={false}
+        size="10"
+        containerProps={{ style: 'margin-left: 6rem' }}
+        disabled={!opts.movable.enabled}
+        value={placement}
+        options={[
+          { value: 'top', label: 'Top' },
+          { value: 'right', label: 'Right' },
+          { value: 'bottom', label: 'Bottom' },
+          { value: 'left', label: 'Left' },
+        ]}
+        multiple
+        onChange={onSelectPlacement}
+        openOnFocus
+        rounded
+        glass
+      />
+    </div>
   </div>
-
-  <div class="row">
-    <NeoButtonGroup text rounded>
-      <NeoButton toggle bind:checked={options.movable.enabled}>Movable</NeoButton>
-      <NeoButton toggle bind:checked={options.movable.contain} disabled={!options.movable.enabled}>Contain</NeoButton>
-      <NeoButton
-        toggle
-        checked={options.movable.axis === 'x'}
-        disabled={!options.movable.enabled}
-        onclick={() => {
-          options.movable.axis = options.movable.axis === 'x' ? undefined : 'x';
-        }}
-      >
-        Axis X
-      </NeoButton>
-      <NeoButton
-        toggle
-        checked={options.movable.axis === 'y'}
-        disabled={!options.movable.enabled}
-        onclick={() => {
-          options.movable.axis = options.movable.axis === 'y' ? undefined : 'y';
-        }}
-      >
-        Axis Y
-      </NeoButton>
-      <NeoButton toggle bind:checked={options.movable.snap.enabled} disabled={!options.movable.enabled}>Snap</NeoButton>
-      <NeoButton toggle bind:checked={options.movable.snap.corner} disabled={!options.movable.enabled || !options.movable.snap.enabled}>
-        Snap Corner
-      </NeoButton>
-      <NeoButton toggle bind:checked={options.movable.snap.outside} disabled={!options.movable.enabled || !options.movable.snap.enabled}>
-        Snap Outside
-      </NeoButton>
-      <NeoButton toggle checked={options.movable.handle.position === 'outside'} onclick={onHandlePosition} disabled={!options.movable.enabled}>
-        Handle {options.movable.handle.position}
-      </NeoButton>
-      <NeoButton toggle bind:checked={options.movable.handle.full} disabled={!options.movable.enabled}>Handle Full</NeoButton>
-    </NeoButtonGroup>
-
-    <NeoButton rounded onclick={reset} disabled={!options.movable.enabled}>Reset</NeoButton>
-
-    <NeoSelect
-      label="Handles"
-      placeholder="Handles"
-      placement="left"
-      floating={false}
-      size="10"
-      containerProps={{ style: 'margin-left: 6rem' }}
-      disabled={!options.movable.enabled}
-      value={placement}
-      options={[
-        { value: 'top', label: 'Top' },
-        { value: 'right', label: 'Right' },
-        { value: 'bottom', label: 'Bottom' },
-        { value: 'left', label: 'Left' },
-      ]}
-      multiple
-      onChange={onSelectPlacement}
-      openOnFocus
-      rounded
-      glass
-    />
-  </div>
-</div>
-
-<!-- TODO snap options-->
+{/snippet}
 
 {#snippet lorem()}
   <div class="column">
@@ -312,6 +345,8 @@
   <IconListSmall filled={active === 2} />
 {/snippet}
 
+{@render optionRow(options)}
+
 <section>
   <div class="row">
     {#if options.returnValue !== undefined}
@@ -324,12 +359,13 @@
 
       <NeoDialog
         bind:ref={refs[0]}
-        {...options}
-        elevation={options.elevation > 0 ? options.elevation : undefined}
         bind:open={openDefault}
         bind:modal={options.modal}
+        bind:moved={options.moved}
         bind:placement={options.placement}
         bind:returnValue={options.returnValue}
+        {...options}
+        elevation={options.elevation > 0 ? options.elevation : undefined}
       >
         {@render lorem()}
       </NeoDialog>
@@ -344,6 +380,7 @@
         bind:ref={refs[1]}
         bind:open={openConfirm}
         bind:modal={options.modal}
+        bind:moved={options.moved}
         bind:placement={options.placement}
         bind:returnValue={options.returnValue}
         closable={options.closeOnClickOutside}
@@ -365,33 +402,41 @@
         bind:active
         bind:open={openStepper}
         bind:modal={options.modal}
+        bind:moved={options.moved}
         bind:placement={options.placement}
         bind:returnValue={options.returnValue}
+        {...stepperOptions}
         closable={options.closeOnClickOutside}
         rounded={options.rounded}
-        {...stepperOptions}
         dialogProps={{ ...options, elevation: options.elevation > 0 ? options.elevation : undefined, ...stepperOptions.dialogProps }}
       />
     </div>
   </div>
+</section>
 
+{@render optionRow(drawerOptions, true)}
+
+<section>
   <div class="row">
     <span class="label">Drawer</span>
 
     <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
+
     <div class="column">
-      <NeoDialog
+      <NeoDrawer
+        bind:dialogRef={refs[3]}
         bind:open={openDrawer}
-        bind:modal={options.modal}
-        bind:placement={options.placement}
-        bind:returnValue={options.returnValue}
-        closable={options.closeOnClickOutside}
-        rounded={options.rounded}
-        elevation={options.elevation > 0 ? options.elevation : undefined}
-        {...options}
+        bind:modal={drawerOptions.modal}
+        bind:moved={drawerOptions.moved}
+        bind:placement={drawerOptions.placement}
+        bind:returnValue={drawerOptions.returnValue}
+        closable={drawerOptions.closeOnClickOutside}
+        rounded={drawerOptions.rounded}
+        {...drawerOptions}
+        elevation={drawerOptions.elevation > 0 ? drawerOptions.elevation : undefined}
       >
         {@render lorem()}
-      </NeoDialog>
+      </NeoDrawer>
     </div>
   </div>
 </section>

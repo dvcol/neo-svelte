@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { MaxShallowShadowElevation, MinShallowShadowElevation } from '../../src/lib/utils/shadow.utils';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import { colorOptions } from '../utils/color.utils';
@@ -13,6 +12,7 @@
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoPill from '~/pill/NeoPill.svelte';
+  import { MaxShallowShadowElevation, MinShallowShadowElevation } from '~/utils/shadow.utils';
 
   const options = $state({
     elevation: 1,

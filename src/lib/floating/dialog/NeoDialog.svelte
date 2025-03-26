@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { closestClickableElement, getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade as fadeFn, fly, scale } from 'svelte/transition';
@@ -7,11 +8,20 @@
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import NeoHandle from '~/floating/common/NeoHandle.svelte';
-  import { type NeoMovable, type NeoMovableHandlers, useMovable } from '~/floating/dialog/use-movable.svelte.js';
+  import { NeoHandlePlacement, type NeoHandlePlacements } from '~/floating/common/neo-handle.model.js';
+  import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
+  import {
+    defaultHandle,
+    defaultMovable,
+    defaultSnap,
+    type NeoMovable,
+    type NeoMovableHandlers,
+    useMovable,
+  } from '~/floating/dialog/use-movable.svelte.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
-  import { toPixel, toSize } from '~/utils/style.utils.js';
+  import { toSize } from '~/utils/style.utils.js';
   import { defaultDuration, quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -32,9 +42,9 @@
     tag = unmountOnClose ? 'div' : 'dialog',
 
     // Position
-    placement = $bindable('center'),
-    movable: _movable = true,
+    placement = $bindable(NeoDialogPlacements.Center),
     outside = $bindable(false),
+    movable: _movable,
 
     // Style
     elevation: _elevation,
@@ -76,20 +86,23 @@
   }: NeoDialogProps = $props();
   /* eslint-enable prefer-const */
 
-  const getMovablePlacement = () => {
-    if (placement?.startsWith('top')) return 'bottom';
-    if (placement?.startsWith('right')) return 'left';
-    if (placement?.startsWith('left')) return 'right';
-    return 'top';
+  const getMovablePlacement = (): NeoHandlePlacements => {
+    if (placement?.startsWith('top')) return NeoHandlePlacement.Bottom;
+    if (placement?.startsWith('right')) return NeoHandlePlacement.Left;
+    if (placement?.startsWith('left')) return NeoHandlePlacement.Right;
+    return NeoHandlePlacement.Top;
   };
 
   const movable = $derived.by((): NeoMovable<true> => {
     const parsed: NeoMovable = typeof _movable === 'object' ? _movable : { enabled: !!_movable };
+    const snap = typeof parsed.snap === 'object' ? parsed.snap : { enabled: !!parsed.snap, corner: parsed.snap === 'corner' };
+    const handle = typeof parsed.handle === 'boolean' ? { visible: !!parsed.handle } : parsed.handle;
     return {
+      ...defaultMovable,
       placement: getMovablePlacement(),
       ...parsed,
-      handle: typeof parsed.handle === 'boolean' ? { visible: !!parsed.handle } : parsed.handle,
-      snap: typeof parsed.snap === 'object' ? parsed.snap : { enabled: !!parsed.snap, corner: parsed.snap === 'corner' },
+      snap: { ...defaultSnap, ...snap, translate: { ...defaultSnap.translate, ...snap.translate } },
+      handle: { ...defaultHandle, ...handle },
     };
   });
 
@@ -206,8 +219,9 @@
   });
 
   // Capture close dialog from external sources (esc key for example)
-  const onClose = (e: SvelteEvent) => {
+  const onClose = async (e: SvelteEvent) => {
     if (open) open = false;
+    if (movable.resetOnClose) await moving.reset();
     return onclose?.(e);
   };
 
@@ -220,18 +234,22 @@
     ref.close();
   });
 
-  const trapFocus = (e: SvelteEvent<FocusEvent>) => {
-    if (!open || !modal) return;
-    if (!(e.target instanceof HTMLElement)) return;
-    if (ref?.contains(e.target)) return;
-    e.preventDefault();
+  const focusElement = debounce(() => {
+    if (!open || !ref) return;
     getFocusableElement(ref)?.focus();
+  }, 100);
+
+  const trapFocus = (e: SvelteEvent<FocusEvent>) => {
+    if (!open || !modal || !(e.target instanceof HTMLElement)) return;
+    if (ref?.contains(e.target) || e.target.closest('[data-modal="true"]')) return;
+    e.preventDefault();
+    focusElement();
   };
 
   $effect(() => {
     if (!ref || !open || isNative || !modal) return;
 
-    getFocusableElement(ref)?.focus();
+    focusElement();
     window.addEventListener('focusin', trapFocus);
     return () => window.removeEventListener('focusin', trapFocus);
   });
@@ -382,7 +400,7 @@
     style:--neo-dialog-content-filter={cardFilter}
     style:--neo-dialog-padding={padding}
     style:--neo-dialog-elevation={elevation}
-    style:--neo-dialog-safe-margin={toPixel(movable.margin)}
+    style:--neo-dialog-safe-margin="{movable.margin ?? 0}px"
     {...dialogHandler}
   >
     <NeoHandle
@@ -390,6 +408,7 @@
       placement={movable.placement}
       axis={movable.axis}
       {outside}
+      {elevation}
       {...movable.handle}
       {...moving.handlers}
       {...handleProps}

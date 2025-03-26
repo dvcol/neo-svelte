@@ -25,7 +25,7 @@ export type NeoDialogHTMLElement = HTMLDialogElement & {
   /**
    * Resets the dialog offset.
    */
-  reset?: (options: NeoMovableResetOptions) => Promise<boolean>;
+  reset?: (options?: NeoMovableResetOptions) => Promise<boolean>;
 };
 
 export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {

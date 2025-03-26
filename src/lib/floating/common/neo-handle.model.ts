@@ -65,6 +65,13 @@ export type NeoHandleProps = {
    */
   position?: 'inside' | 'outside';
   /**
+   * Element elevation (used when calculating the handle offset when outside).
+   *
+   * @default 0
+   * @see outside
+   */
+  elevation?: number;
+  /**
    * Minimum handle size (in px).
    *
    * @default 16

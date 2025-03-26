@@ -16,6 +16,7 @@
     visible = true,
     placement = 'top',
     position = 'inside',
+    elevation = 0,
     outside,
     axis,
     minSize = 16,
@@ -70,6 +71,7 @@
     transition:scale={{ duration: 600, start: 0.5, easing: circOut }}
     style:--neo-handle-offset-width="{width[_placement]}px"
     style:--neo-handle-offset-height="{height[_placement]}px"
+    style:--neo-handle-offset-elevation="{elevation}px"
     {...rest}
   >
     {#if handle}
@@ -147,24 +149,6 @@
       height: var(--neo-handle-height, 100%);
     }
 
-    $padding: var(--neo-handle-padding, var(--neo-gap-xxs));
-
-    &[data-placement^='top'] {
-      padding-bottom: $padding;
-    }
-
-    &[data-placement^='bottom'] {
-      padding-top: $padding;
-    }
-
-    &[data-placement^='right'] {
-      padding-left: $padding;
-    }
-
-    &[data-placement^='left'] {
-      padding-right: $padding;
-    }
-
     &:not([data-position='outside']) {
       $height: calc(0% - var(--neo-handle-offset-height, 1rem));
       $width: calc(0% - var(--neo-handle-offset-width, 1rem));
@@ -172,11 +156,13 @@
       &[data-placement^='top'] {
         top: var(--neo-handle-height, $height);
         left: 0;
+        padding-bottom: var(--neo-handle-padding, var(--neo-gap-xxs));
       }
 
       &[data-placement^='bottom'] {
         top: auto;
         bottom: var(--neo-handle-height, $height);
+        padding-top: var(--neo-handle-padding, var(--neo-gap-xxs));
       }
 
       &[data-placement^='right'] {
@@ -191,8 +177,18 @@
     }
 
     &[data-position='outside'] {
-      $height: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-group-computed-margin, 0px) - var(--neo-handle-offset-height, 1rem));
-      $width: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-group-computed-margin, 0px) - var(--neo-handle-offset-width, 1rem));
+      $height: calc(
+        0% - var(--neo-border-width, 1px) - var(--neo-handle-group-computed-margin, 0px) - var(--neo-handle-offset-height, 1rem) - var(
+            --neo-handle-offset-elevation,
+            0px
+          )
+      );
+      $width: calc(
+        0% - var(--neo-border-width, 1px) - var(--neo-handle-group-computed-margin, 0px) - var(--neo-handle-offset-width, 1rem) - var(
+            --neo-handle-offset-elevation,
+            0px
+          )
+      );
 
       &[data-placement^='top'] {
         top: var(--neo-handle-height, $height);

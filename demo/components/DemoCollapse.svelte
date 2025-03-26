@@ -1,6 +1,4 @@
 <script lang="ts">
-  import NeoNumberStep from '../../src/lib/inputs/NeoNumberStep.svelte';
-
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   import type { NeoAccordionProps } from '~/collapse/neo-accordion.model';
@@ -11,6 +9,7 @@
   import NeoCollapse from '~/collapse/NeoCollapse.svelte';
   import NeoCollapseGroup from '~/collapse/NeoCollapseGroup.svelte';
   import { defaultCollapseGroupStrategy } from '~/collapse/neo-collapse-context.svelte';
+  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import {
     DefaultShadowElevation,
