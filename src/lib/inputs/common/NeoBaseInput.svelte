@@ -450,11 +450,16 @@
     background-color: transparent;
     border: none;
     outline: none;
+    transition:
+      opacity 0.3s ease,
+      color 0.3s ease;
     appearance: none;
 
     &::placeholder {
       color: var(--neo-input-color-placeholder, var(--neo-text-color-disabled));
-      transition: opacity 0.3s ease;
+      transition:
+        opacity 0.3s ease,
+        color 0.3s ease;
     }
 
     &:read-only {

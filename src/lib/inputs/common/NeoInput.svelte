@@ -627,17 +627,21 @@
       :global(.neo-input:is(select) option) {
         padding: 0.375rem 0.5rem;
         color: var(--neo-input-text-color, inherit);
-        -webkit-text-fill-color: var(--neo-input-text-color, inherit);
         background-color: transparent;
         background-clip: text;
         border-radius: var(--neo-input-border-radius, var(--neo-border-radius-sm));
+        backface-visibility: hidden;
         cursor: pointer;
         transition:
           -webkit-text-fill-color 0.15s ease,
           color 0.15s ease,
-          box-shadow 0.3s ease-out;
+          box-shadow 0.3s ease-out,
+          scale 0.3s ease-out;
+        will-change: scale, color;
+        -webkit-text-fill-color: var(--neo-input-text-color, var(--neo-text-color));
         margin-inline: -0.5rem;
         margin-block: 0.375rem;
+        scale: 1;
       }
 
       :global(.neo-input:is(select) option:disabled) {
@@ -651,9 +655,10 @@
 
       :global(.neo-input:is(select) option:checked),
       :global(.neo-input:is(select) option:active) {
-        -webkit-text-fill-color: var(--neo-input-active-color, var(--neo-input-text-color));
-        color: var(--neo-input-active-color, var(--neo-input-text-color));
+        -webkit-text-fill-color: var(--neo-input-active-color, var(--neo-input-text-color, var(--neo-text-color)));
+        color: var(--neo-input-active-color, var(--neo-input-text-color, var(--neo-text-color)));
         box-shadow: var(--neo-box-shadow-inset-1);
+        scale: var(--neo-input-scale-pressed, 0.98);
       }
 
       :global(.neo-label-container) {
