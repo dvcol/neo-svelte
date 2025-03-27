@@ -422,7 +422,6 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
 
   let moving = $state(false);
   const onPointerStop = () => {
-    console.info('onPointerStop');
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerup', onPointerStop);
     window.removeEventListener('pointercancel', onPointerStop);
@@ -438,7 +437,6 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     moving = true;
     initial = { x: e.clientX - offset.x, y: e.clientY - offset.y };
     updateAvailable();
-    console.info('onPointerDown');
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerStop);
     window.addEventListener('pointercancel', onPointerStop);

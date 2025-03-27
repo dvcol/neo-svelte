@@ -154,19 +154,11 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] custom tag (not dialog)
     - [x] draggable
   - [ ] HTML Popover
-  - [ ] Drawer
-    - [ ] animation
-    - [ ] buffer
-    - [ ] placement (top, bottom, left, right)
+  - [x] Drawer
     - [ ] size (width, height)
     - [ ] scrollable
-    - [ ] close button
-    - [ ] dismissible
-    - [ ] resizable (drag, handle, min/max)
-    - [ ] backdrop
-    - [ ] click outside
-    - [ ] focus trap
-
+    - [x] close button
+    - [ ] persistant
 
 - [ ] menu
   - [ ] collapsable 

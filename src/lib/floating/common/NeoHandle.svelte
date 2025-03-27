@@ -45,9 +45,14 @@
 
   const width = $state<Record<NeoHandlePlacements, number>>({ top: 0, right: 0, bottom: 0, left: 0 });
   const height = $state<Record<NeoHandlePlacements, number>>({ top: 0, right: 0, bottom: 0, left: 0 });
-  const margin = $derived.by(() => {
-    if (position === 'outside') return `${minSize}px`;
-    return `${height.top || minSize}px ${width.right || minSize}px ${height.bottom || minSize}px ${width.left || minSize}px`;
+  const margin = $derived.by<{ top: number; right: number; bottom: number; left: number }>(() => {
+    if (position === 'outside') return { top: minSize, right: minSize, bottom: minSize, left: minSize };
+    return {
+      top: height.top || minSize,
+      right: width.right || minSize,
+      bottom: height.bottom || minSize,
+      left: width.left || minSize,
+    };
   });
 
   $effect(() => {
@@ -83,7 +88,15 @@
 {/snippet}
 
 {#if enabled}
-  <div data-position={position} class:neo-handle-group={true} style:--neo-handle-group-computed-margin={margin} {...groupProps}>
+  <div
+    data-position={position}
+    class:neo-handle-group={true}
+    style:--neo-handle-group-computed-padding-top="{margin.top}px"
+    style:--neo-handle-group-computed-padding-right="{margin.right}px"
+    style:--neo-handle-group-computed-padding-bottom="{margin.bottom}px"
+    style:--neo-handle-group-computed-padding-left="{margin.left}px"
+    {...groupProps}
+  >
     {#each placements as _placement (_placement)}
       {@render handleButton(_placement)}
     {/each}
@@ -126,7 +139,12 @@
 
     &-group {
       position: relative;
-      margin: var(--neo-handle-group-margin, var(--neo-handle-group-computed-margin, 0));
+      width: 100%;
+      height: 100%;
+      padding: var(--neo-handle-group-margin-top, var(--neo-handle-group-computed-padding-top, 0))
+        var(--neo-handle-group-margin-right, var(--neo-handle-group-computed-padding-right, 0))
+        var(--neo-handle-group-margin-bottom, var(--neo-handle-group-computed-padding-bottom, 0))
+        var(--neo-handle-group-margin-left, var(--neo-handle-group-computed-padding-left, 0));
     }
 
     :global(> .neo-divider) {
@@ -150,45 +168,32 @@
     }
 
     &:not([data-position='outside']) {
-      $height: calc(0% - var(--neo-handle-offset-height, 1rem));
-      $width: calc(0% - var(--neo-handle-offset-width, 1rem));
-
       &[data-placement^='top'] {
-        top: var(--neo-handle-height, $height);
+        top: 0;
         left: 0;
         padding-bottom: var(--neo-handle-padding, var(--neo-gap-xxs));
       }
 
       &[data-placement^='bottom'] {
         top: auto;
-        bottom: var(--neo-handle-height, $height);
+        bottom: 0;
         padding-top: var(--neo-handle-padding, var(--neo-gap-xxs));
       }
 
       &[data-placement^='right'] {
-        right: var(--neo-handle-width, $width);
+        right: 0;
         left: auto;
       }
 
       &[data-placement^='left'] {
         right: auto;
-        left: var(--neo-handle-width, $width);
+        left: 0;
       }
     }
 
     &[data-position='outside'] {
-      $height: calc(
-        0% - var(--neo-border-width, 1px) - var(--neo-handle-group-computed-margin, 0px) - var(--neo-handle-offset-height, 1rem) - var(
-            --neo-handle-offset-elevation,
-            0px
-          )
-      );
-      $width: calc(
-        0% - var(--neo-border-width, 1px) - var(--neo-handle-group-computed-margin, 0px) - var(--neo-handle-offset-width, 1rem) - var(
-            --neo-handle-offset-elevation,
-            0px
-          )
-      );
+      $height: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-height, 1rem) - var(--neo-handle-offset-elevation, 0px));
+      $width: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-width, 1rem) - var(--neo-handle-offset-elevation, 0px));
 
       &[data-placement^='top'] {
         top: var(--neo-handle-height, $height);

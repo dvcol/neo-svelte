@@ -22,6 +22,12 @@
     outside = $bindable(false),
     movable: _movable,
 
+    // Sizing
+    full = true,
+
+    // Style
+    elevation = 1,
+
     ...rest
   }: NeoDialogProps = $props();
   /* eslint-enable prefer-const */
@@ -56,7 +62,7 @@
 </script>
 
 <div class:neo-drawer={true}>
-  <NeoDialog bind:ref bind:open bind:modal bind:moved bind:returnValue bind:placement bind:outside {id} {movable} {...rest} />
+  <NeoDialog bind:ref bind:open bind:modal bind:moved bind:returnValue bind:placement bind:outside {id} {movable} {full} {elevation} {...rest} />
 </div>
 
 <style lang="scss">
@@ -81,6 +87,10 @@
     :global(> .neo-dialog[data-placement^='right']) {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+    }
+
+    :global(> .neo-dialog.neo-full-size) {
+      border-radius: 0;
     }
   }
 </style>

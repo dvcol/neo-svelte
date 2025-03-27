@@ -70,6 +70,7 @@
     width: _width,
     height: _height,
     padding,
+    full,
 
     // Events
     oncancel,
@@ -105,6 +106,7 @@
     const handle = typeof parsed.handle === 'boolean' ? { visible: !!parsed.handle } : parsed.handle;
     return {
       ...defaultMovable,
+      margin: full ? 0 : defaultMovable.margin,
       placement: getMovablePlacement(),
       ...parsed,
       snap: { ...defaultSnap, ...snap, translate: { ...defaultSnap.translate, ...snap.translate } },
@@ -353,7 +355,6 @@
   const useProps = $derived(toActionProps(use));
 
   // TODO - auto-close when threshold is reached (if no snap)
-  // TODO full height/width drawers
 </script>
 
 <NeoPortal enabled={portal} {...portalProps}>
@@ -393,6 +394,7 @@
       class:neo-slide={slide && !unmountOnClose}
       class:neo-handle={movable.handle?.full}
       class:neo-movable={movable.enabled}
+      class:neo-full-size={full}
       class:neo-body-scroll-disabled={disableBodyScroll}
       {id}
       {closedby}
@@ -548,6 +550,20 @@
 
     &:not(:is(dialog), [data-modal='true']) {
       position: absolute;
+    }
+
+    &.neo-full-size {
+      &[data-placement='center'],
+      &[data-placement^='bottom'],
+      &[data-placement^='top'] {
+        width: calc(100% - var(--neo-dialog-safe-margin, var(--neo-gap)) * 2);
+      }
+
+      &[data-placement='center'],
+      &[data-placement^='left'],
+      &[data-placement^='right'] {
+        height: calc(100% - var(--neo-dialog-safe-margin, var(--neo-gap)) * 2);
+      }
     }
 
     &[data-modal='true'] {

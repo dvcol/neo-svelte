@@ -197,6 +197,16 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
    * Padding override for the tooltip.
    */
   padding?: CSSStyleDeclaration['padding'];
+  /**
+   * Whether the dialog should take up the full available space.
+   * If center, the dialog will fill the viewport.
+   * If bottom/top, the dialog will fill the viewport horizontally.
+   * If left/right, the dialog will fill the viewport vertically.
+   *
+   * @default false
+   * @see placement
+   */
+  full?: boolean;
 
   // Other Props
   /**

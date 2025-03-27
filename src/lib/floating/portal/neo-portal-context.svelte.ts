@@ -9,7 +9,7 @@ export class NeoPortalContext {
   readonly #id: string;
   readonly #dialogs = new SvelteMap<string, boolean>();
   #ref = $state<HTMLElement>();
-  #open = $derived(Array.from(this.#dialogs.values().filter(Boolean)).length);
+  #open = $derived(Array.from(this.#dialogs.values()).filter(Boolean).length);
   #placement = $state<NeoDialogPlacement>();
 
   get id() {

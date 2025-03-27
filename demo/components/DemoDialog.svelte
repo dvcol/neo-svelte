@@ -42,9 +42,11 @@
     placement: NeoDialogPlacements.Center,
     moved: { x: 0, y: 0 },
     portal: false,
+    full: false,
     movable: {
-      ...defaultMovable,
-      enabled: false,
+      contain: defaultMovable.contain,
+      enabled: defaultMovable.enabled,
+      resetOnClose: defaultMovable.resetOnClose,
       axis: undefined,
       snap: {
         ...defaultSnap,
@@ -64,6 +66,8 @@
     placement: NeoDialogPlacements.Right,
     moved: { x: 0, y: 0 },
     portal: false,
+    elevation: 1,
+    full: true,
     movable: {
       ...options?.movable,
       margin: 0,
@@ -197,6 +201,7 @@
         <NeoButton toggle bind:checked={opts.rounded}>Rounded</NeoButton>
         <NeoButton toggle bind:checked={opts.borderless}>Borderless</NeoButton>
         <NeoButton toggle bind:checked={opts.portal}>Portal</NeoButton>
+        <NeoButton toggle bind:checked={opts.full}>Full size</NeoButton>
       </NeoButtonGroup>
 
       <NeoSelect
