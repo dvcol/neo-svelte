@@ -69,14 +69,16 @@
     elevation: 1,
     full: true,
     movable: {
-      ...options?.movable,
-      margin: 0,
+      contain: defaultMovable.contain,
+      enabled: defaultMovable.enabled,
+      resetOnClose: defaultMovable.resetOnClose,
+      axis: undefined,
       snap: {
-        ...options?.movable.snap,
+        ...defaultSnap,
         outside: true,
       },
       handle: {
-        ...options?.movable.handle,
+        ...defaultHandle,
       },
     },
 
@@ -89,15 +91,14 @@
     opts.movable.handle.position = opts.movable.handle.position === 'outside' ? 'inside' : 'outside';
   };
 
-  const placement = $derived(
-    options.movable.placement
-      ? Object.entries(options.movable.placement)
-          .filter(([, v]) => v)
-          .map(([k]) => k)
-      : undefined,
-  );
-  const onSelectPlacement = (values: string[]) => {
-    options.movable.placement = values?.reduce((acc, cur) => ({ ...acc, [cur]: true }), {});
+  const getSelectPlacement = (opts: NeoDialogProps) => {
+    if (!opts.movable.placement) return undefined;
+    return Object.entries(opts.movable.placement)
+      .filter(([, v]) => v)
+      .map(([k]) => k);
+  };
+  const onSelectPlacement = (values: string[], opts: NeoDialogProps) => {
+    opts.movable.placement = values?.reduce((acc, cur) => ({ ...acc, [cur]: true }), {});
   };
 
   const position = [{ value: 'center', label: 'Center' }, ...positionOptions];
@@ -305,7 +306,7 @@
         size="10"
         containerProps={{ style: 'margin-left: 6rem' }}
         disabled={!opts.movable.enabled}
-        value={placement}
+        value={getSelectPlacement(opts)}
         options={[
           { value: 'top', label: 'Top' },
           { value: 'right', label: 'Right' },
@@ -313,7 +314,7 @@
           { value: 'left', label: 'Left' },
         ]}
         multiple
-        onChange={onSelectPlacement}
+        onChange={e => onSelectPlacement(e, opts)}
         openOnFocus
         rounded
         glass
