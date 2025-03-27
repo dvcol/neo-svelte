@@ -9,6 +9,7 @@ import type {
 } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
 import type { NeoTooltipPlacement } from '~/floating/common/neo-placement.model.js';
+import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
@@ -79,6 +80,13 @@ export type NeoTooltipProps = {
    * Where to place the floating element relative to its reference element.
    */
   placement?: NeoTooltipPlacement;
+  /**
+   * Whether the tooltip should be rendered in place or as a portal.
+   * If not portal target is provided, the dialog will be attached to the body.
+   *
+   * @default false
+   */
+  portal?: boolean;
 
   // Styles
 
@@ -243,6 +251,10 @@ export type NeoTooltipProps = {
    * Properties to pass to the trigger element.
    */
   triggerProps?: HTMLNeoBaseElement & HTMLTagProps;
+  /**
+   * Optional properties to pass to the portal element.
+   */
+  portalProps?: Omit<NeoPortalProps, 'children'>;
 } & HTMLFlexProps &
   HTMLRefProps<NeoTooltipHTMLElement> &
   HTMLActionProps &

@@ -18,6 +18,7 @@
 
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
+  import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { type NeoTooltipProps, NeoTooltipSizeStrategy, type NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -41,6 +42,7 @@
     placement,
     target,
     options,
+    portal,
 
     // Styles
     color,
@@ -97,6 +99,7 @@
     // Other props
     triggerRef = $bindable(),
     triggerProps,
+    portalProps,
     ...rest
   }: NeoTooltipProps = $props();
   /* eslint-enable prefer-const */
@@ -309,49 +312,51 @@
   </svelte:element>
 {/if}
 
-{#if !unmountOnClose || floating.open}
-  <svelte:element
-    this={tag}
-    bind:this={ref}
-    hidden={!floating.open}
-    data-elevation={elevation}
-    data-unmount-on-close={unmountOnClose}
-    class:neo-tooltip={true}
-    class:neo-rounded={rounded}
-    class:neo-tinted={tinted}
-    class:neo-filled={filled}
-    class:neo-borderless={borderless}
-    class:neo-flat={!elevation}
-    class:neo-fade={fade}
-    in:inFn={inProps}
-    out:outFn={outProps}
-    use:useFn={useProps}
-    {...tooltipHandler}
-    {...rest}
-    style:justify-content={justify}
-    style:align-items={align}
-    style:flex
-    style:width={width?.absolute}
-    style:min-width={width?.min}
-    style:max-width={width?.max}
-    style:height={height?.absolute}
-    style:min-height={height?.min}
-    style:max-height={height?.max}
-    style:transform-origin={tooltipOrigin}
-    style:--neo-tooltip-color={getColorVariable(color)}
-    style:--neo-tooltip-box-shadow={tooltipShadow}
-    style:--neo-tooltip-backdrop-filter={tooltipBlur}
-    style:--neo-tooltip-padding={padding}
-    style:--neo-tooltip-elevation={elevation}
-    style={toStyle(tooltipStyle, rest.style)}
-  >
-    {#if typeof tooltip === 'function'}
-      {@render tooltip?.(floating, toggle)}
-    {:else}
-      {tooltip}
-    {/if}
-  </svelte:element>
-{/if}
+<NeoPortal enabled={portal} {...portalProps}>
+  {#if !unmountOnClose || floating.open}
+    <svelte:element
+      this={tag}
+      bind:this={ref}
+      hidden={!floating.open}
+      data-elevation={elevation}
+      data-unmount-on-close={unmountOnClose}
+      class:neo-tooltip={true}
+      class:neo-rounded={rounded}
+      class:neo-tinted={tinted}
+      class:neo-filled={filled}
+      class:neo-borderless={borderless}
+      class:neo-flat={!elevation}
+      class:neo-fade={fade}
+      in:inFn={inProps}
+      out:outFn={outProps}
+      use:useFn={useProps}
+      {...tooltipHandler}
+      {...rest}
+      style:justify-content={justify}
+      style:align-items={align}
+      style:flex
+      style:width={width?.absolute}
+      style:min-width={width?.min}
+      style:max-width={width?.max}
+      style:height={height?.absolute}
+      style:min-height={height?.min}
+      style:max-height={height?.max}
+      style:transform-origin={tooltipOrigin}
+      style:--neo-tooltip-color={getColorVariable(color)}
+      style:--neo-tooltip-box-shadow={tooltipShadow}
+      style:--neo-tooltip-backdrop-filter={tooltipBlur}
+      style:--neo-tooltip-padding={padding}
+      style:--neo-tooltip-elevation={elevation}
+      style={toStyle(tooltipStyle, rest.style)}
+    >
+      {#if typeof tooltip === 'function'}
+        {@render tooltip?.(floating, toggle)}
+      {:else}
+        {tooltip}
+      {/if}
+    </svelte:element>
+  {/if}
+</NeoPortal>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;

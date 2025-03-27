@@ -711,10 +711,12 @@
 
         :global(.neo-input) {
           color: var(--neo-input-floating-text-color, transparent);
+          transition-timing-function: ease-in;
         }
 
         :global(::placeholder) {
           opacity: 0;
+          transition-timing-function: ease-in;
         }
       }
 

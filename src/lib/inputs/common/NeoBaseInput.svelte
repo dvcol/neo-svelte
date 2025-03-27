@@ -451,15 +451,15 @@
     border: none;
     outline: none;
     transition:
-      opacity 0.3s ease,
-      color 0.3s ease;
+      opacity 0.1s ease-out,
+      color 0.1s ease-out;
     appearance: none;
 
     &::placeholder {
       color: var(--neo-input-color-placeholder, var(--neo-text-color-disabled));
       transition:
-        opacity 0.3s ease,
-        color 0.3s ease;
+        opacity 0.1s ease-out,
+        color 0.1s ease-out;
     }
 
     &:read-only {

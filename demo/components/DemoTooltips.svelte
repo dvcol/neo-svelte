@@ -49,6 +49,7 @@
     openOnFocus: true,
     keepOpenOnFocus: false,
     closeOnDismiss: true,
+    unmountOnClose: true,
   });
 
   let containerRef = $state<HTMLElement>();

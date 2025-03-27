@@ -41,6 +41,7 @@
     returnValue: undefined,
     placement: NeoDialogPlacements.Center,
     moved: { x: 0, y: 0 },
+    portal: false,
     movable: {
       ...defaultMovable,
       enabled: false,
@@ -62,6 +63,7 @@
     ...options,
     placement: NeoDialogPlacements.Right,
     moved: { x: 0, y: 0 },
+    portal: false,
     movable: {
       ...options?.movable,
       margin: 0,
@@ -194,6 +196,7 @@
         <NeoButton toggle bind:checked={opts.tinted}>Tinted</NeoButton>
         <NeoButton toggle bind:checked={opts.rounded}>Rounded</NeoButton>
         <NeoButton toggle bind:checked={opts.borderless}>Borderless</NeoButton>
+        <NeoButton toggle bind:checked={opts.portal}>Portal</NeoButton>
       </NeoButtonGroup>
 
       <NeoSelect

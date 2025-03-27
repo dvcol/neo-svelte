@@ -3,6 +3,7 @@ import type { HTMLDialogAttributes } from 'svelte/elements';
 import type { NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
 import type { NeoMovable, NeoMovableOutside, NeoMovableResetOptions, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
+import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
@@ -107,6 +108,13 @@ export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTM
    */
   movable?: boolean | Partial<NeoMovable>;
   /**
+   * Whether the dialog should be rendered in place or as a portal.
+   * If not portal target is provided, the dialog will be attached to the body.
+   *
+   * @default false
+   */
+  portal?: boolean;
+  /**
    * Whether the dialog is outside the viewport.
    *
    * @default false
@@ -152,6 +160,12 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
    * @default true
    */
   slide?: boolean;
+  /**
+   * Whether the body should be scaled when the dialog is open.
+   *
+   * @default false
+   */
+  scale?: boolean;
   /**
    * If true, the dialog will have a rounded border.
    */
@@ -205,6 +219,10 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
    * Optional properties to pass to the dialog drag handle.
    */
   handleProps?: NeoHandleProps;
+  /**
+   * Optional properties to pass to the portal element.
+   */
+  portalProps?: Omit<NeoPortalProps, 'children'>;
 } & HTMLFlexProps &
   HTMLActionProps &
   NeoDialogContext<Tag> &

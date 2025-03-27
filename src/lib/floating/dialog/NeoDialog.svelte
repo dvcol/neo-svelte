@@ -2,7 +2,8 @@
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { closestClickableElement, getFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { fade as fadeFn, fly, scale } from 'svelte/transition';
+
+  import { fade as fadeFn, fly, scale as scaleFn } from 'svelte/transition';
 
   import type { NeoDialogContext, NeoDialogProps, NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -18,7 +19,9 @@
     type NeoMovableHandlers,
     useMovable,
   } from '~/floating/dialog/use-movable.svelte.js';
+  import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -45,6 +48,7 @@
     placement = $bindable(NeoDialogPlacements.Center),
     outside = $bindable(false),
     movable: _movable,
+    portal,
 
     // Style
     elevation: _elevation,
@@ -82,6 +86,7 @@
     // Other Props
     backdropProps,
     handleProps,
+    portalProps,
     ...rest
   }: NeoDialogProps = $props();
   /* eslint-enable prefer-const */
@@ -314,6 +319,7 @@
     moved,
     movable,
     unmountOnClose,
+    portal,
     tag,
   });
 
@@ -326,7 +332,7 @@
     if (slide && placement?.startsWith('top')) return { use: fly, props: { duration: defaultDuration, y: '-100%' } };
     if (slide && placement?.startsWith('right')) return { use: fly, props: { duration: defaultDuration, x: '100%' } };
     if (slide && placement?.startsWith('left')) return { use: fly, props: { duration: defaultDuration, x: '-100%' } };
-    return { use: scale, props: { duration: shortDuration, start: 1.05 } };
+    return { use: scaleFn, props: { duration: shortDuration, start: 1.05 } };
   });
 
   const inFn = $derived(toTransition(inAction ?? transition));
@@ -338,11 +344,13 @@
   const useProps = $derived(toActionProps(use));
 </script>
 
-{#if !isNative && backdrop && modal && open}
-  <div
-    class:neo-dialog-backdrop={true}
-    style:--neo-dialog-backdrop-filter={backdropFilter}
-    transition:fadeFn={{ duration: quickDuration }}
+<NeoPortal enabled={portal} {...portalProps}>
+  {#if !isNative && modal && open}
+    <div
+      class:neo-dialog-backdrop={true}
+      class:neo-hidden={!backdrop}
+      style:--neo-dialog-backdrop-filter={backdropFilter}
+      transition:fadeFn={{ duration: quickDuration }}
     {...backdropProps}
   >
     <!--  Backdrop for non native dialog  -->
@@ -414,9 +422,10 @@
       {...handleProps}
     >
       {@render children?.(context)}
-    </NeoHandle>
-  </svelte:element>
-{/if}
+      </NeoHandle>
+    </svelte:element>
+  {/if}
+</NeoPortal>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
@@ -512,7 +521,7 @@
       inset-inline: 0;
     }
 
-    &-backdrop,
+    &-backdrop:not(.neo-hidden),
     &::backdrop {
       background: var(--neo-dialog-backdrop-color, var(--neo-background-color-backdrop));
       backdrop-filter: var(--neo-dialog-backdrop-filter, var(--neo-blur-1));

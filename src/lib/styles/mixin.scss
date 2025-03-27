@@ -571,7 +571,7 @@
   transition-property: var(
     $transition-property,
     opacity,
-    translate,
+    transform,
     display,
     overlay,
     box-shadow,
@@ -583,51 +583,51 @@
   transition-behavior: allow-discrete;
 
   &[#{$placement}^='right'] {
-    translate: var($translate-start, 100%);
+    transform: translate(var($translate-start, 100%));
 
     @starting-style {
       &#{$toggle} {
-        translate: var($translate-start, 100%);
+        transform: translate(var($translate-start, 100%));
       }
     }
   }
 
   &[#{$placement}^='left'] {
-    translate: calc(0% - var($translate-start, 100%));
+    transform: translate(calc(0% - var($translate-start, 100%)));
 
     @starting-style {
       &#{$toggle} {
-        translate: calc(0% - var($translate-start, 100%));
+        transform: translate(calc(0% - var($translate-start, 100%)));
       }
     }
   }
 
   &[#{$placement}^='top'] {
-    translate: 0 calc(0% - var($translate-start, 100%));
+    transform: translate(0, calc(0% - var($translate-start, 100%)));
 
     @starting-style {
       &#{$toggle} {
-        translate: 0 calc(0% - var($translate-start, 100%));
+        transform: translate(0, calc(0% - var($translate-start, 100%)));
       }
     }
   }
 
   &[#{$placement}^='bottom'] {
-    translate: 0 var($translate-start, 100%);
+    transform: translate(0, var($translate-start, 100%));
 
     @starting-style {
       &#{$toggle} {
-        translate: 0 var($translate-start, 100%);
+        transform: translate(0, var($translate-start, 100%));
       }
     }
   }
 
   &#{$toggle} {
     display: block;
+    transform: translate(var($translate-end, 0));
     opacity: var($opacity-end, 1);
     transition-timing-function: var($enter-timing, ease);
     transition-duration: var($enter-duration, 0.5s);
-    translate: var($translate-end, 0);
   }
 
   @starting-style {
