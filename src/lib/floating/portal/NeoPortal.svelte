@@ -5,12 +5,16 @@
 
   import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 
-  const { enabled = false, children, props: _props, outro = true, target = document.body, ...rest }: NeoPortalProps = $props();
+  import { getNeoPortalContext } from '~/floating/portal/neo-portal-context.svelte.js';
+
+  const { enabled = false, children, props: _props, outro = true, target = document.body, anchor, ...rest }: NeoPortalProps = $props();
+
+  const portalContext = getNeoPortalContext();
 
   let component: ReturnType<typeof mount>;
   $effect.pre(() => {
     if (!children || !enabled) return;
-    component = mount(children, { target, props: _props, ...rest });
+    component = mount(children, { target, anchor: anchor ?? portalContext?.ref, props: _props, ...rest });
 
     return () => {
       if (!component) return;

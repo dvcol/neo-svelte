@@ -161,12 +161,6 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
    */
   slide?: boolean;
   /**
-   * Whether the body should be scaled when the dialog is open.
-   *
-   * @default false
-   */
-  scale?: boolean;
-  /**
    * If true, the dialog will have a rounded border.
    */
   rounded?: boolean;

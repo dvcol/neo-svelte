@@ -20,6 +20,7 @@
     useMovable,
   } from '~/floating/dialog/use-movable.svelte.js';
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
+  import { getNeoPortalContext } from '~/floating/portal/neo-portal-context.svelte.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -52,6 +53,7 @@
 
     // Style
     elevation: _elevation,
+    backdrop = true,
     blur: _blur,
     fade: _fade,
     slide: _slide,
@@ -59,7 +61,6 @@
     filled,
     tinted,
     rounded = false,
-    backdrop = true,
     borderless,
 
     // Sizing
@@ -259,6 +260,14 @@
     return () => window.removeEventListener('focusin', trapFocus);
   });
 
+  const portalContext = getNeoPortalContext();
+  $effect(() => {
+    if (!portalContext || !portal || !id) return;
+    if (open) portalContext.openDialog(id, placement);
+    else portalContext.closeDialog(id);
+    return () => portalContext.closeDialog(id);
+  });
+
   $effect.pre(() => {
     if (!ref) return;
     Object.defineProperty(ref, 'returnValue', {
@@ -342,6 +351,9 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  // TODO - auto-close when threshold is reached (if no snap)
+  // TODO full height/width drawers
 </script>
 
 <NeoPortal enabled={portal} {...portalProps}>
@@ -351,77 +363,77 @@
       class:neo-hidden={!backdrop}
       style:--neo-dialog-backdrop-filter={backdropFilter}
       transition:fadeFn={{ duration: quickDuration }}
-    {...backdropProps}
-  >
-    <!--  Backdrop for non native dialog  -->
-  </div>
-{/if}
-
-{#if !unmountOnClose || open}
-  <svelte:element
-    this={tag}
-    bind:this={ref as NeoDialogHTMLElement}
-    data-open={open}
-    data-modal={modal}
-    data-axis={movable.axis}
-    data-moving={moving.moving}
-    data-snapping={!!moving.translating}
-    data-placement={placement}
-    data-elevation={elevation}
-    data-unmount-on-close={unmountOnClose}
-    data-clicked-outside={closedby ?? closeOnClickOutside}
-    class:neo-dialog={true}
-    class:neo-borderless={borderless}
-    class:neo-backdrop={backdrop}
-    class:neo-rounded={rounded}
-    class:neo-tinted={tinted}
-    class:neo-filled={filled}
-    class:neo-flat={!elevation}
-    class:neo-fade={fade && !unmountOnClose}
-    class:neo-slide={slide && !unmountOnClose}
-    class:neo-handle={movable.handle?.full}
-    class:neo-movable={movable.enabled}
-    class:neo-scroll-disabled={disableBodyScroll}
-    {id}
-    {closedby}
-    in:inFn={inProps}
-    out:outFn={outProps}
-    use:useFn={useProps}
-    {...ariaProps}
-    {...rest}
-    {oncancel}
-    onclose={onClose}
-    onclick={onClick}
-    style:justify-content={justify}
-    style:align-items={align}
-    style:translate={moving.translate}
-    style:flex
-    style:width={width?.absolute}
-    style:min-width={width?.min}
-    style:max-width={width?.max}
-    style:height={height?.absolute}
-    style:min-height={height?.min}
-    style:max-height={height?.max}
-    style:--neo-dialog-backdrop-filter={backdropFilter}
-    style:--neo-dialog-color={getColorVariable(color)}
-    style:--neo-dialog-box-shadow={cardShadow}
-    style:--neo-dialog-content-filter={cardFilter}
-    style:--neo-dialog-padding={padding}
-    style:--neo-dialog-elevation={elevation}
-    style:--neo-dialog-safe-margin="{movable.margin ?? 0}px"
-    {...dialogHandler}
-  >
-    <NeoHandle
-      enabled={movable.enabled}
-      placement={movable.placement}
-      axis={movable.axis}
-      {outside}
-      {elevation}
-      {...movable.handle}
-      {...moving.handlers}
-      {...handleProps}
+      {...backdropProps}
     >
-      {@render children?.(context)}
+      <!--  Backdrop for non native dialog  -->
+    </div>
+  {/if}
+
+  {#if !unmountOnClose || open}
+    <svelte:element
+      this={tag}
+      bind:this={ref as NeoDialogHTMLElement}
+      data-open={open}
+      data-modal={modal}
+      data-axis={movable.axis}
+      data-moving={moving.moving}
+      data-snapping={!!moving.translating}
+      data-placement={placement}
+      data-elevation={elevation}
+      data-unmount-on-close={unmountOnClose}
+      data-clicked-outside={closedby ?? closeOnClickOutside}
+      class:neo-dialog={true}
+      class:neo-borderless={borderless}
+      class:neo-backdrop={backdrop}
+      class:neo-rounded={rounded}
+      class:neo-tinted={tinted}
+      class:neo-filled={filled}
+      class:neo-flat={!elevation}
+      class:neo-fade={fade && !unmountOnClose}
+      class:neo-slide={slide && !unmountOnClose}
+      class:neo-handle={movable.handle?.full}
+      class:neo-movable={movable.enabled}
+      class:neo-body-scroll-disabled={disableBodyScroll}
+      {id}
+      {closedby}
+      in:inFn={inProps}
+      out:outFn={outProps}
+      use:useFn={useProps}
+      {...ariaProps}
+      {...rest}
+      {oncancel}
+      onclose={onClose}
+      onclick={onClick}
+      style:justify-content={justify}
+      style:align-items={align}
+      style:translate={moving.translate}
+      style:flex
+      style:width={width?.absolute}
+      style:min-width={width?.min}
+      style:max-width={width?.max}
+      style:height={height?.absolute}
+      style:min-height={height?.min}
+      style:max-height={height?.max}
+      style:--neo-dialog-backdrop-filter={backdropFilter}
+      style:--neo-dialog-color={getColorVariable(color)}
+      style:--neo-dialog-box-shadow={cardShadow}
+      style:--neo-dialog-content-filter={cardFilter}
+      style:--neo-dialog-padding={padding}
+      style:--neo-dialog-elevation={elevation}
+      style:--neo-dialog-safe-margin="{movable.margin ?? 0}px"
+      {...dialogHandler}
+    >
+      <NeoHandle
+        enabled={movable.enabled}
+        placement={movable.placement}
+        axis={movable.axis}
+        {outside}
+        {elevation}
+        {...movable.handle}
+        {...moving.handlers}
+        {...handleProps}
+      >
+        {@render children?.(context)}
       </NeoHandle>
     </svelte:element>
   {/if}
@@ -608,7 +620,8 @@
     }
   }
 
-  :global(body:has(.neo-dialog.neo-scroll-disabled[data-open='true'])) {
-    overflow: hidden;
+  :global(body:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])) {
+    overflow: hidden !important;
+    overscroll-behavior: contain;
   }
 </style>
