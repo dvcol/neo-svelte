@@ -73,6 +73,8 @@
       handle,
     };
   });
+
+  $inspect(movable);
 </script>
 
 <div class:neo-drawer={true}>

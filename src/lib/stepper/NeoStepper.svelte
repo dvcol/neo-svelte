@@ -433,13 +433,13 @@
 
     &-content {
       display: flex;
+      flex: 1 1 auto;
       flex-direction: column;
 
       &-step {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         padding: var(--neo-shadow-margin, 0.625rem);
       }
     }

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { wait } from '@dvcol/common-utils/common/promise';
 
-  import { defaultHandle, defaultMovable, defaultSnap } from '../../src/lib/floating/dialog/use-movable.svelte';
   import { colorOptions } from '../utils/color.utils';
   import { positionOptions } from '../utils/placement.utils';
 
@@ -16,7 +15,10 @@
   import NeoDialog from '~/floating/dialog/NeoDialog.svelte';
   import NeoDialogConfirm from '~/floating/dialog/NeoDialogConfirm.svelte';
   import NeoDialogStepper from '~/floating/dialog/NeoDialogStepper.svelte';
+  import { defaultHandle, defaultMovable, defaultSnap } from '~/floating/dialog/use-movable.svelte';
   import NeoDrawer from '~/floating/drawer/NeoDrawer.svelte';
+  import NeoDrawerConfirm from '~/floating/drawer/NeoDrawerConfirm.svelte';
+  import NeoDrawerStepper from '~/floating/drawer/NeoDrawerStepper.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import IconAddress from '~/icons/IconAddress.svelte';
   import IconListSmall from '~/icons/IconListSmall.svelte';
@@ -111,7 +113,10 @@
   let openDefault = $state(false);
   let openConfirm = $state(false);
   let openStepper = $state(false);
+
   let openDrawer = $state(false);
+  let openDrawerConfirm = $state(false);
+  let openDrawerStepper = $state(false);
 
   const refs = $state([]);
 
@@ -367,7 +372,7 @@
       <span>Returned value: {JSON.stringify(options.returnValue, undefined, 2)}</span>
     {/if}
     <div class="column">
-      <span class="label">Default</span>
+      <span class="label">Dialog</span>
 
       <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
 
@@ -432,11 +437,11 @@
 
 <section>
   <div class="row">
-    <span class="label">Drawer</span>
-
-    <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
-
     <div class="column">
+      <span class="label">Drawer</span>
+
+      <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
+
       <NeoDrawer
         bind:dialogRef={refs[3]}
         bind:open={openDrawer}
@@ -451,6 +456,55 @@
       >
         {@render lorem()}
       </NeoDrawer>
+    </div>
+
+    <div class="column">
+      <span class="label">Confirm</span>
+
+      <NeoButton elevation="0" toggle bind:checked={openDrawerConfirm}>Open</NeoButton>
+
+      <NeoDrawerConfirm
+        bind:ref={refs[4]}
+        bind:open={openDrawerConfirm}
+        bind:modal={drawerOptions.modal}
+        bind:moved={drawerOptions.moved}
+        bind:placement={drawerOptions.placement}
+        bind:returnValue={drawerOptions.returnValue}
+        closable={drawerOptions.closeOnClickOutside}
+        rounded={drawerOptions.rounded}
+        {...confirmOptions}
+        dialogProps={{
+          ...drawerOptions,
+          elevation: drawerOptions.elevation > 0 ? drawerOptions.elevation : undefined,
+          ...confirmOptions.dialogProps,
+        }}
+      >
+        {@render lorem()}
+      </NeoDrawerConfirm>
+    </div>
+
+    <div class="column">
+      <span class="label">Stepper</span>
+
+      <NeoButton elevation="0" toggle bind:checked={openDrawerStepper}>Open</NeoButton>
+
+      <NeoDrawerStepper
+        bind:dialogRef={refs[5]}
+        bind:active
+        bind:open={openDrawerStepper}
+        bind:modal={drawerOptions.modal}
+        bind:moved={drawerOptions.moved}
+        bind:placement={drawerOptions.placement}
+        bind:returnValue={drawerOptions.returnValue}
+        {...stepperOptions}
+        closable={drawerOptions.closeOnClickOutside}
+        rounded={drawerOptions.rounded}
+        dialogProps={{
+          ...drawerOptions,
+          elevation: drawerOptions.elevation > 0 ? drawerOptions.elevation : undefined,
+          ...stepperOptions.dialogProps,
+        }}
+      />
     </div>
   </div>
 </section>

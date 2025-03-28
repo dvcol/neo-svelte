@@ -459,6 +459,7 @@
       $filled: true
     );
 
+    display: flex;
     box-sizing: border-box;
     width: fit-content;
     max-width: 100%;

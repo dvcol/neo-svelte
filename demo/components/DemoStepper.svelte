@@ -280,7 +280,9 @@
 
   .form {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
+    justify-content: center;
     width: clamp(22rem, 22rem, 80vw);
   }
 
