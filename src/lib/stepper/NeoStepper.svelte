@@ -418,6 +418,7 @@
   .neo-stepper {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     &-progress {
       display: inline-flex;
@@ -439,7 +440,6 @@
       &-step {
         display: flex;
         flex-direction: column;
-        align-items: center;
         padding: var(--neo-shadow-margin, 0.625rem);
       }
     }

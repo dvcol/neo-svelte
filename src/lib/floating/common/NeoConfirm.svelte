@@ -153,7 +153,9 @@
     padding: var(--neo-confirm-padding, 0);
 
     &-content {
+      display: flex;
       flex: 1 1 auto;
+      flex-direction: column;
 
       &:has(> .neo-confirm-content-close) {
         margin-top: 0.75rem;

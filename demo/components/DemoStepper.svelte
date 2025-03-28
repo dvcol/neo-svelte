@@ -282,8 +282,9 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
+    align-self: center;
     justify-content: center;
-    width: clamp(22rem, 22rem, 80vw);
+    width: 22rem;
   }
 
   .column {

@@ -334,7 +334,7 @@
 {/snippet}
 
 {#snippet lorem()}
-  <div class="column">
+  <div class="lorem">
     <p>
       Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin tincidunt
       mauris eros ex pharetra imperdiet. Nibh facilisi ante vestibulum feugiat facilisi quam risus ex? Malesuada condimentum nulla odio facilisi
@@ -523,8 +523,14 @@
     word-break: break-all;
   }
 
-  p {
-    max-width: 80ch;
+  .lorem {
+    @include flex.column($center: false, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
+
+    margin: 0 auto;
+
+    p {
+      max-width: 80ch;
+    }
   }
 
   .column {
