@@ -155,8 +155,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] draggable
   - [ ] HTML Popover
   - [x] Drawer
-    - [ ] size (width, height)
-    - [ ] scrollable
+    - [x] size (width, height)
+    - [x] scrollable
     - [x] close button
     - [ ] persistant
 

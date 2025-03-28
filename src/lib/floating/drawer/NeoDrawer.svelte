@@ -3,7 +3,7 @@
 
   import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
 
-  import type { NeoMovable, NeoMovableLimits } from '~/floating/dialog/use-movable.svelte.js';
+  import type { NeoMovable, NeoMovableLimits, NeoMovableSnap } from '~/floating/dialog/use-movable.svelte.js';
 
   import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
   import NeoDialog from '~/floating/dialog/NeoDialog.svelte';
@@ -33,6 +33,7 @@
   /* eslint-enable prefer-const */
 
   const getLimits = (limits: NeoMovableLimits = {}): NeoMovableLimits => {
+    if (!placement) return limits;
     if (placement.startsWith('right')) return { ...limits, x: { min: 0, ...limits?.x } };
     if (placement.startsWith('left')) return { ...limits, x: { max: 0, ...limits?.x } };
     if (placement.startsWith('top')) return { ...limits, y: { max: 0, ...limits?.y } };
@@ -41,9 +42,15 @@
   };
 
   const getAxis = (axis?: NeoMovable['axis']): NeoMovable['axis'] => {
-    if (axis) return axis;
+    if (axis || !placement) return axis;
     if (placement.startsWith('top') || placement.startsWith('bottom')) return 'y';
     if (placement.startsWith('left') || placement.startsWith('right')) return 'x';
+  };
+
+  const getThreshold = (threshold?: NeoMovable['closeThreshold'], snap?: NeoMovableSnap['outside']) => {
+    if (threshold || snap || !placement || !ref) return threshold;
+    if (placement.startsWith('top') || placement.startsWith('bottom')) return ref.getBoundingClientRect().height / 2;
+    if (placement.startsWith('right') || placement.startsWith('left')) return ref.getBoundingClientRect().width / 2;
   };
 
   const movable = $derived.by((): NeoMovable => {
@@ -55,7 +62,14 @@
       ...parsed,
       limits: getLimits(parsed.limits),
       axis: getAxis(parsed.axis),
-      snap,
+      closeThreshold: getThreshold(parsed.closeThreshold, snap.outside),
+      snap: {
+        ...snap,
+        translate: {
+          easing: 'var(--neo-easing-quart-out, ease-out)',
+          ...snap.translate,
+        },
+      },
       handle,
     };
   });

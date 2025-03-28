@@ -170,6 +170,7 @@
     &:not([data-position='outside']) {
       &[data-placement^='top'] {
         top: 0;
+        bottom: auto;
         left: 0;
         padding-bottom: var(--neo-handle-padding, var(--neo-gap-xxs));
       }
@@ -177,15 +178,18 @@
       &[data-placement^='bottom'] {
         top: auto;
         bottom: 0;
+        left: 0;
         padding-top: var(--neo-handle-padding, var(--neo-gap-xxs));
       }
 
       &[data-placement^='right'] {
+        top: 0;
         right: 0;
         left: auto;
       }
 
       &[data-placement^='left'] {
+        top: 0;
         right: auto;
         left: 0;
       }
@@ -197,20 +201,24 @@
 
       &[data-placement^='top'] {
         top: var(--neo-handle-height, $height);
+        bottom: auto;
         left: 0;
       }
 
       &[data-placement^='bottom'] {
         top: auto;
         bottom: var(--neo-handle-height, $height);
+        left: 0;
       }
 
       &[data-placement^='right'] {
+        top: 0;
         right: var(--neo-handle-width, $width);
         left: auto;
       }
 
       &[data-placement^='left'] {
+        top: 0;
         right: auto;
         left: var(--neo-handle-width, $width);
       }

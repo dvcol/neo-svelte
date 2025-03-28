@@ -127,7 +127,7 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
-  const onCancel: NeoDialogProps['oncancel'] = e => {
+  const onCancel = (e: SvelteEvent = new Event('cancel', { bubbles: false, cancelable: true })) => {
     if (!ref) return;
     if (isNative && !ref.open) return;
     if (ref.requestClose) return ref.requestClose();
@@ -189,6 +189,7 @@
         onblur: handleProps?.onblur,
       };
     },
+    close: onCancel,
   });
 
   const dialogHandler = $derived<NeoMovableHandlers<HTMLDialogElement>>({
@@ -353,8 +354,6 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
-
-  // TODO - auto-close when threshold is reached (if no snap)
 </script>
 
 <NeoPortal enabled={portal} {...portalProps}>

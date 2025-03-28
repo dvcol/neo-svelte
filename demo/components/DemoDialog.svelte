@@ -7,7 +7,7 @@
 
   import type { NeoDialogConfirmProps } from '~/floating/dialog/neo-dialog-confirm.model.js';
   import type { NeoDialogStepperProps } from '~/floating/dialog/neo-dialog-stepper.model.js';
-  import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js.js';
+  import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
   import type { NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -47,12 +47,15 @@
       contain: defaultMovable.contain,
       enabled: defaultMovable.enabled,
       resetOnClose: defaultMovable.resetOnClose,
-      axis: undefined,
+      axis: defaultMovable.axis,
       snap: {
-        ...defaultSnap,
+        enabled: defaultSnap.enabled,
+        outside: defaultSnap.outside,
+        corner: defaultSnap.corner,
       },
       handle: {
-        ...defaultHandle,
+        full: defaultHandle.full,
+        position: defaultHandle.position,
       },
     },
 
@@ -72,13 +75,15 @@
       contain: defaultMovable.contain,
       enabled: defaultMovable.enabled,
       resetOnClose: defaultMovable.resetOnClose,
-      axis: undefined,
+      axis: defaultMovable.axis,
       snap: {
-        ...defaultSnap,
-        outside: true,
+        enabled: true,
+        outside: defaultSnap.outside,
+        corner: defaultSnap.corner,
       },
       handle: {
-        ...defaultHandle,
+        full: defaultHandle.full,
+        position: defaultHandle.position,
       },
     },
 

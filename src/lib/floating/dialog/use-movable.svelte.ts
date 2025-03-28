@@ -20,7 +20,7 @@ export type NeoMovableSnapTranslate = {
   /**
    * Easing function.
    *
-   * @default 'var(--neo-transition-spring, ease-in-out)'
+   * @default 'var(--neo-easing-spring, ease-in-out)'
    */
   easing?: string;
 };
@@ -73,6 +73,16 @@ export type NeoMovableLimits = {
   y?: NeoMovableLimit;
 };
 
+export type NeoMovableThreshold = {
+  x?: number;
+  y?: number;
+  top?: number;
+  right?: number;
+  bottom?: number;
+  left?: number;
+  outside?: boolean;
+};
+
 export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'enabled' | 'placement' | 'axis' | 'outside'> & {
   /**
    * The step size for dragging the element with arrow keys.
@@ -100,6 +110,16 @@ export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'e
    * @default true
    */
   resetOnClose?: boolean;
+  /**
+   * The threshold offset over which the element should be closed.
+   *
+   * If falsy, the element will not be closed no matter how far it is dragged.
+   *
+   * All thresholds are absolute values.
+   *
+   * @default 0
+   */
+  closeThreshold?: number | NeoMovableThreshold;
   /**
    * Whether to show a handle for dragging the element.
    * If 'true', the handle will be visible whenever most appropriate.
@@ -146,6 +166,10 @@ export type NeoMovableUseOptions<Element extends HTMLElement, Handle extends HTM
    * Reference to the element to move.
    */
   element?: Element;
+  /**
+   * Callback to close the element.
+   */
+  close?: () => unknown | Promise<unknown>;
   /**
    * Event handlers to attach to the handle.
    */
@@ -204,7 +228,7 @@ export const defaultSnap: Required<NeoMovableSnap> = {
   outside: true,
   placement: false,
   offset: 25,
-  translate: { duration: 600, easing: 'var(--neo-transition-spring, ease-in-out)' },
+  translate: { duration: 600, easing: 'var(--neo-easing-spring, ease-in-out)' },
 };
 
 export const defaultHandle: NeoMovableHandle = {
@@ -291,6 +315,20 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     };
     return { top, right, bottom, left, width, height, margin, available };
   };
+
+  const threshold = $derived.by(() => {
+    if (!movable.closeThreshold) return;
+    const _threshold = typeof movable.closeThreshold === 'number' ? { x: movable.closeThreshold, y: movable.closeThreshold } : movable.closeThreshold;
+    const _fallback = _threshold.outside ? available : { top: 0, right: 0, bottom: 0, left: 0 };
+    const _margin = movable.margin ?? 0;
+    const { width, height } = element?.getBoundingClientRect() ?? { width: 0, height: 0 };
+    return {
+      top: _threshold.top ?? _threshold.y ?? _fallback.top + _margin + height,
+      bottom: _threshold.bottom ?? _threshold.y ?? _fallback.bottom + _margin + height,
+      left: _threshold.left ?? _threshold.x ?? _fallback.left + _margin + width,
+      right: _threshold.right ?? _threshold.x ?? _fallback.right + _margin + width,
+    };
+  });
 
   const setOffset = (x: number, y: number, { contain = movable.contain, outside, limits = movable.limits }: NeoMovableOffsetOptions = {}) => {
     if (contain) {
@@ -420,14 +458,35 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     }
   };
 
+  const closeOnThreshold = async () => {
+    if (!element || !threshold) return false;
+    if (
+      // If the offset x is positive we are moving right
+      offset.x <= threshold.right &&
+      -offset.x <= threshold.left &&
+      // If the offset y is positive we are moving down
+      offset.y <= threshold.bottom &&
+      -offset.y <= threshold.top
+    ) {
+      return false;
+    }
+    await options.close?.();
+    return true;
+  };
+
   let moving = $state(false);
-  const onPointerStop = () => {
+  const onPointerStop = async () => {
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerup', onPointerStop);
     window.removeEventListener('pointercancel', onPointerStop);
     window.removeEventListener('pointerleave', onPointerStop);
     moving = false;
-    snapToClosest().catch(Logger.error);
+    try {
+      if (await closeOnThreshold()) return;
+      await snapToClosest();
+    } catch (e) {
+      Logger.error(e);
+    }
   };
 
   const onPointerDown = async (e: SvelteEvent<PointerEvent>) => {
