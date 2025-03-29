@@ -23,7 +23,7 @@
     movable: _movable,
 
     // Sizing
-    full = true,
+    full = modal,
 
     // Style
     elevation = 1,
@@ -73,8 +73,6 @@
       handle,
     };
   });
-
-  $inspect(movable);
 </script>
 
 <div class:neo-drawer={true}>

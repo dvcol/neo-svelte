@@ -60,6 +60,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [x] Buttons
   - [x] toggle
   - [x] groups
+  - [ ] floating (speed dial)
+  - [ ] split
 - [x] tags/pills
   - [x] badge
 - [x] Tabs
@@ -111,6 +113,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] infinite scroll
   - [ ] drag & drop
   - [ ] pagination
+  - [ ] drag & drop
+  - [ ] timeline
   - [ ] pull/scroll to refresh
   - [x] filter
   - [x] sort
@@ -119,6 +123,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [x] progress
   - [x] vertical
   - [ ] circular
+  - [ ] meter (progress group)
   - [x] ticks
   - [x] min/max
   - [x] indeterminate
@@ -209,6 +214,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 
 - [ ] text
   - [ ] elevation
+  - [ ] code block (shiki ?)
   - [x] ellipsis
   - [x] mark
   - [x] scroll & shadow

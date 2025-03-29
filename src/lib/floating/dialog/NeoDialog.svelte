@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { isIOS } from '@dvcol/common-utils/common/browser';
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { closestClickableElement, getFocusableElement } from '@dvcol/common-utils/common/element';
+  import { useMobileScrollLock } from '@dvcol/common-utils/common/mobile';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
   import { fade as fadeFn, fly, scale as scaleFn } from 'svelte/transition';
@@ -316,6 +318,13 @@
         return requestClose.call(ref, returnVal);
       };
     }
+  });
+
+  const scrollLock = useMobileScrollLock();
+  $effect(() => {
+    if (!isIOS() || !disableBodyScroll || !open) return;
+    scrollLock.lock();
+    return scrollLock.unlock;
   });
 
   const context = $derived<NeoDialogContext>({
@@ -636,8 +645,15 @@
     }
   }
 
+  :global(html:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])),
   :global(body:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])) {
     overflow: hidden !important;
     overscroll-behavior: contain;
+  }
+
+  :global(body.neo-scroll-lock:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])) {
+    position: fixed;
+    top: var(--neo-dialog-scroll-offset-y, 0);
+    left: var(--neo-dialog-scroll-offset-x, 0);
   }
 </style>
