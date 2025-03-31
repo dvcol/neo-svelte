@@ -180,8 +180,8 @@
     }
 
     &.neo-dim {
-      :global(> .neo-tabs-group:has(> .neo-tab:hover) > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))),
-      :global(> .neo-tabs-group:has(> .neo-tab *:focus-visible) > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))) {
+      :global(> .neo-tabs-group:has(> .neo-tab *:focus-visible) > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))),
+      &:hover :global(> .neo-tabs-group > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))) {
         opacity: 0.6;
       }
     }

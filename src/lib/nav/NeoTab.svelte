@@ -133,7 +133,7 @@
     --neo-btn-text-color-active: var(--neo-tab-text-color-active, var(--neo-text-color-highlight));
 
     display: flex;
-    transition: opacity 0.3s linear;
+    transition: opacity 0.2s linear;
 
     &.neo-active,
     &:hover,

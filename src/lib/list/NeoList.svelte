@@ -439,7 +439,7 @@
       }
 
       &.neo-dim {
-        &:has(> .neo-list-item:hover) > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
+        &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
         &:has(> .neo-list-item :global(*:focus-visible)) > .neo-list-item:not(:hover, .neo-checked, :has(:global(*:focus-visible))) {
           opacity: 0.6;
         }
@@ -455,7 +455,7 @@
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
       padding-inline: 0.125rem;
-      transition: opacity 0.3s linear;
+      transition: opacity 0.2s linear;
     }
 
     &-loader.neo-select {
