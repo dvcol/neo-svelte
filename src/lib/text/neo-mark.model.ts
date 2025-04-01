@@ -25,4 +25,4 @@ export type NeoMarkProps<Tag extends keyof HTMLElementTagNameMap = 'span'> = {
    * @returns array of [part, mark] tuples
    */
   tokenizer?: NeoMarkTokenizer;
-} & Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

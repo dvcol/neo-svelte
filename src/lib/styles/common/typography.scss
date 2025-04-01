@@ -1,6 +1,6 @@
 @mixin typography {
   /* Default font stack */
-  --neo-font-family: -apple-system, blinkmacsystemfont, 'Segoe UI', ui-rounded, sans-serif;
+  --neo-font-family: -apple-system, ui-sans-serif, system-ui, 'Segoe UI', ui-rounded, sans-serif;
 
   /* font variables */
   --neo-font-size-xxs: 0.625rem;

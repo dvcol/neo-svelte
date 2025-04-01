@@ -2,12 +2,15 @@
   import IconTextHighlight from '~/icons/IconTextHighlight.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoTextarea from '~/inputs/common/NeoTextarea.svelte';
   import NeoEllipsis from '~/text/NeoEllipsis.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
   import NeoScrollShadow from '~/text/NeoScrollShadow.svelte';
+  import NeoTypewriter from '~/text/NeoTypewriter.svelte';
 
   let lines = $state(1);
   let filter = $state('');
+  let typeWriter = $state('Lorem ipsum odor amet, consectetuer adipiscing elit. \nMalesuada pharetra ullamcorper eget hac; imperdiet a finibus hac.');
 </script>
 
 <section>
@@ -39,6 +42,14 @@
       semper sodales. Dapibus est duis odio tincidunt elementum. Sodales scelerisque venenatis hac ridiculus scelerisque massa vitae. Hendrerit
       blandit sed, ac cursus ante varius quam. Malesuada habitant curae diam pulvinar proin congue tristique dictum."
       />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column content">
+      <span class="label">Typewriter</span>
+      <NeoTextarea bind:value={typeWriter} placeholder="Typewriter text" cols="50" clearable />
+      <NeoTypewriter value={typeWriter} />
     </div>
   </div>
 
