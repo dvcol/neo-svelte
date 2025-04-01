@@ -1,13 +1,17 @@
 <script lang="ts">
-  import type { NeoTypewriterProps } from '~/text/neo-typewriter.model.js';
+  import { untrack } from 'svelte';
 
-  import { typewriter, type TypeWriterLine } from '~/text/typewriter.utils.js';
+  import type { NeoTypewriterHTMLElement, NeoTypewriterProps } from '~/text/neo-typewriter.model.js';
+
+  import { typewriter, type TypeWriterLine, type TypewriterOptions } from '~/text/typewriter.utils.js';
+  import { Logger } from '~/utils/logger.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // State
+    ref = $bindable(),
     tag = 'div',
-    value,
+    value = $bindable(''),
     display = $bindable(''),
 
     // Speed
@@ -17,7 +21,7 @@
     typo = false,
     pause = false,
     iterations = 1,
-    mode = 'loop',
+    mode = 'write',
 
     // Style
     caret = true,
@@ -26,6 +30,7 @@
     onTypo,
     onStart,
     onAbort,
+    onComplete,
 
     // Other props
     ...rest
@@ -56,34 +61,79 @@
     rest.onType?.(ctx);
   };
 
+  let writing = $state(false);
+  let promise: Promise<string | undefined>;
   let controller: AbortController;
+  const write = (options: TypewriterOptions, signal: AbortSignal) =>
+    untrack(async () => {
+      writing = true;
+      try {
+        promise = typewriter(options);
+        await promise;
+      } catch (error) {
+        Logger.error('NeoTypewriter: Typewriter error', error);
+      } finally {
+        writing = false;
+        if (!signal.aborted) onComplete?.();
+      }
+    });
+
+  const abort = () => {
+    controller?.abort();
+    display = '';
+  };
+
   $effect(() => {
     if (!lines?.length) return;
     controller = new AbortController();
-    typewriter({
-      lines,
-      mode,
-      speed,
-      iterations,
-      controller,
-      typo,
-      pause,
+    write(
+      {
+        lines,
+        mode,
+        speed,
+        iterations,
+        controller,
+        typo,
+        pause,
 
-      onType,
-      onTypo,
-      onPause,
-      onAbort,
-      onStart,
-      onEnd,
-    });
-    return () => {
-      controller.abort();
-      display = '';
-    };
+        onType,
+        onTypo,
+        onPause,
+        onAbort,
+        onStart,
+        onEnd,
+      },
+      controller.signal,
+    );
+    return abort;
+  });
+
+  $effect(() => {
+    if (!ref) return;
+    Object.assign(ref, {
+      get writing() {
+        return writing;
+      },
+      get promise() {
+        return promise;
+      },
+      write: (_value: string | TypeWriterLine | (string | TypeWriterLine)[]) => {
+        value = _value;
+      },
+      abort,
+    } satisfies NeoTypewriterHTMLElement);
   });
 </script>
 
-<svelte:element this={tag} class:neo-typewriter={true} class:neo-caret={caret} class:neo-blink={blink} {...rest}>
+<svelte:element
+  this={tag}
+  bind:this={ref}
+  data-writing={writing}
+  class:neo-typewriter={true}
+  class:neo-caret={caret}
+  class:neo-blink={blink}
+  {...rest}
+>
   {display}
 </svelte:element>
 

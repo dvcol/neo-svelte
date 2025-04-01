@@ -218,12 +218,10 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] ellipsis
   - [x] mark
   - [x] scroll & shadow
-  - [ ] typing animation
-    - [ ] fake cursor
-    - [ ] fake typos
-    - [ ] constant speed
-    - [ ] random speed & pauses
-    - [ ] total time
+  - [x] typing animation
+    - [x] fake cursor
+    - [x] fake typos
+    - [x] random pauses
 
 - [ ] Alerts
     - [ ] toast

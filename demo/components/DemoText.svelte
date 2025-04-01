@@ -1,4 +1,13 @@
 <script lang="ts">
+  import NeoButton from '../../src/lib/buttons/NeoButton.svelte';
+
+  import NeoButtonGroup from '../../src/lib/buttons/NeoButtonGroup.svelte';
+
+  import NeoSelect from '../../src/lib/inputs/NeoSelect.svelte';
+
+  import type { NeoSelectOption } from '../../.svelte-kit/__package__';
+  import type { NeoTypewriterProps } from '~/text/neo-typewriter.model';
+
   import IconTextHighlight from '~/icons/IconTextHighlight.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
@@ -11,6 +20,24 @@
   let lines = $state(1);
   let filter = $state('');
   let typeWriter = $state('Lorem ipsum odor amet, consectetuer adipiscing elit. \nMalesuada pharetra ullamcorper eget hac; imperdiet a finibus hac.');
+
+  const options = $state<NeoTypewriterProps>({
+    speed: 120,
+
+    typo: false,
+    pause: false,
+    iterations: 1,
+
+    mode: 'write',
+
+    caret: true,
+  });
+
+  const modes: NeoSelectOption[] = [
+    { value: 'write', label: 'Write' },
+    { value: 'delete', label: 'Delete' },
+    { value: 'loop', label: 'Loop' },
+  ];
 </script>
 
 <section>
@@ -48,8 +75,65 @@
   <div class="row">
     <div class="column content">
       <span class="label">Typewriter</span>
+
+      <div class="options">
+        <NeoNumberStep
+          label="Speed"
+          placement="left"
+          center
+          bind:value={options.speed}
+          min={0}
+          max={10000}
+          step={1}
+          defaultValue={120}
+          nullable={false}
+          floating={false}
+          groupProps={{ style: 'margin-left: 4rem' }}
+          rounded
+          glass
+        />
+        <NeoNumberStep
+          label="Iterations"
+          placement="left"
+          center
+          bind:value={options.iterations}
+          min={0}
+          max={10000}
+          step={1}
+          defaultValue={1}
+          nullable={false}
+          floating={false}
+          groupProps={{ style: 'margin-left: 5rem' }}
+          rounded
+          glass
+        />
+
+        <NeoSelect
+          rounded
+          glass
+          label="Mode"
+          placeholder="Select mode"
+          placement="left"
+          floating={false}
+          nullable={false}
+          size="8"
+          bind:value={options.mode}
+          containerProps={{ style: 'margin-left: 4rem' }}
+          options={modes}
+          openOnFocus
+        />
+      </div>
+
+      <div class="options">
+        <NeoButtonGroup text rounded>
+          <NeoButton toggle bind:checked={options.typo}>Typos</NeoButton>
+          <NeoButton toggle bind:checked={options.pause}>Pauses</NeoButton>
+          <NeoButton toggle bind:checked={options.caret}>Caret</NeoButton>
+        </NeoButtonGroup>
+      </div>
+
       <NeoTextarea bind:value={typeWriter} placeholder="Typewriter text" cols="50" clearable />
-      <NeoTypewriter value={typeWriter} />
+      <NeoTypewriter bind:value={typeWriter} {...options} />
     </div>
   </div>
 
@@ -102,6 +186,10 @@
     max-width: 80vw;
     white-space: pre-line;
     word-break: break-all;
+  }
+
+  .options {
+    @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
   }
 
   .column {
