@@ -368,6 +368,8 @@
 <NeoPortal enabled={portal} {...portalProps}>
   {#if !isNative && modal && open}
     <div
+      role="presentation"
+      aria-hidden="true"
       class:neo-dialog-backdrop={true}
       class:neo-hidden={!backdrop}
       style:--neo-dialog-backdrop-filter={backdropFilter}

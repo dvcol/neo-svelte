@@ -561,6 +561,7 @@
       --neo-range-spacing: 0.125rem;
       --neo-label-padding: 0;
       --neo-label-margin: var(--neo-shadow-margin) 0.25rem;
+      --neo-label-container-flex: 1 1 auto;
 
       display: inline-flex;
       align-items: center;

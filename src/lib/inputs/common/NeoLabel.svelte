@@ -56,7 +56,7 @@
 <style lang="scss">
   .neo-label-container {
     display: inline-flex;
-    flex: 0 1 auto;
+    flex: var(--neo-label-container-flex, 0 1 auto);
     flex-direction: column;
 
     .neo-label {
