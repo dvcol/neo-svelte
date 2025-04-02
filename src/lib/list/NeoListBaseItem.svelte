@@ -115,6 +115,7 @@
     hover="-1"
     active="-2"
     checked={buttonProps?.toggle ? checked : undefined}
+    scale={0.99}
     {readonly}
     {disabled}
     href={item?.href}

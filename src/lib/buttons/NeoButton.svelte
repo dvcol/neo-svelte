@@ -122,6 +122,7 @@
   let clicked = $state(false);
   const pressed = $derived(enter || clicked || checked);
   const empty = $derived(only || (!children && label === undefined));
+  const scalePressed = $derived(typeof scale === 'boolean' ? undefined : scale);
 
   let timeout: ReturnType<typeof setTimeout>;
   const onActive = () => {
@@ -241,6 +242,7 @@
   style:--neo-btn-box-shadow={boxShadow}
   style:--neo-btn-box-shadow-hover={hoverShadow}
   style:--neo-btn-box-shadow-active={activeShadow}
+  style:--neo-btn-scale-pressed={scalePressed}
   style:justify-content={justify}
   style:align-items={align}
   style:flex

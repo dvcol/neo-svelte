@@ -161,7 +161,7 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    *
    * @default true
    */
-  scale?: boolean;
+  scale?: boolean | number;
   /**
    * If true, the button will be displayed with no elevation.
    */

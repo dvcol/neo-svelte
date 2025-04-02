@@ -415,11 +415,6 @@
         $enter-timing: --neo-tooltip-fade-enter-timing,
         $exit-timing: --neo-tooltip-fade-exit-timing
       );
-
-      &[data-modal='true'] {
-        position: fixed;
-        inset: 0;
-      }
     }
   }
 </style>
