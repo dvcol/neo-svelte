@@ -30,7 +30,7 @@ export const PathMap = {} as Record<Routes, string>;
 
 (Object.entries(Route) as [RouteKeys, Routes][]).forEach(([k, v]) => {
   Path[k] = `/${v}`;
-  PathMap[v] = `/${v}`;
+  PathMap[v] = v === Route.Any ? '*' : `/${v}`;
 });
 
 export const routes = Object.values(Route).filter(key => key !== Route.Any);
