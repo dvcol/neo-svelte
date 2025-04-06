@@ -426,10 +426,12 @@
     }
 
     &-items {
-      padding-inline: var(--neo-list-padding, 0.25rem);
+      padding-inline: var(--neo-list-padding, 0.375rem);
+      padding-block: var(--neo-list-padding, 0.375rem);
+      overflow: auto;
 
       &.neo-scroll {
-        padding-block: var(--neo-list-scroll-padding, 0.75rem);
+        padding-block: var(--neo-list-scroll-padding, 0.625rem);
 
         &.neo-shadow {
           @include mixin.fade-scroll(1rem);
@@ -454,12 +456,11 @@
       max-width: 100%;
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
-      padding-inline: 0.125rem;
       transition: opacity 0.2s linear;
     }
 
     &-loader.neo-select {
-      gap: 0.25rem;
+      gap: var(--neo-gap-tiny, 0.25rem);
     }
 
     &-item {

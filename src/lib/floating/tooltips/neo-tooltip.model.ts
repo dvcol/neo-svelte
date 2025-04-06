@@ -75,7 +75,7 @@ export type NeoTooltipProps = {
    *
    * @default 6
    */
-  offset?: Parameters<typeof offset>[0];
+  offset?: Parameters<typeof offset>[0] | ((placement: NeoTooltipPlacement) => Parameters<typeof offset>[0]);
   /**
    * Where to place the floating element relative to its reference element.
    */

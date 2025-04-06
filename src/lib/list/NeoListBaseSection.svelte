@@ -59,7 +59,7 @@
 
       &.neo-sticky {
         position: sticky;
-        top: -0.5rem;
+        top: -0.75rem;
         z-index: var(--neo-z-index-in-front, 1);
         background: var(
           --neo-list-section-bg-color,

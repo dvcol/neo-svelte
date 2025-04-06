@@ -147,11 +147,11 @@
     flex-direction: column;
 
     &:not(.neo-reverse) :global(> .neo-list-search-input) {
-      margin-bottom: -0.25rem;
+      margin-bottom: 0.125rem;
     }
 
     &.neo-reverse :global(.neo-list-search-input) {
-      margin-top: -0.25rem;
+      margin-top: 0.125rem;
     }
   }
 </style>

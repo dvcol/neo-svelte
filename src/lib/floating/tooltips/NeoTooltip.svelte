@@ -143,7 +143,7 @@
     },
     get middleware() {
       const middleware = [
-        offset(spacing),
+        offset(typeof spacing === 'function' ? spacing(floating.placement) : spacing),
         size({
           apply({ availableWidth, availableHeight }) {
             available.width = availableWidth - 8;
@@ -152,12 +152,7 @@
         }),
       ];
       if (placement === 'auto') middleware.push(autoPlacement());
-      else
-        middleware.push(
-          flip({
-            fallbackAxisSideDirection: 'end',
-          }),
-        );
+      else middleware.push(flip({ fallbackAxisSideDirection: 'end' }));
       return middleware;
     },
     get placement() {
@@ -332,6 +327,16 @@
       use:useFn={useProps}
       {...tooltipHandler}
       {...rest}
+      onpointerenter={e => {
+        if (!openOnHover) return rest.onpointerenter?.(e);
+        open = true;
+        rest.onpointerenter?.(e);
+      }}
+      onfocuswithin={e => {
+        if (!openOnFocus) return rest.onfocuswithin?.(e);
+        open = true;
+        rest.onfocuswithin?.(e);
+      }}
       style:justify-content={justify}
       style:align-items={align}
       style:flex
