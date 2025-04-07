@@ -291,6 +291,18 @@
     () => open,
     { skip: 1 },
   );
+
+  const onpointerenter: NeoTooltipProps['onpointerenter'] = e => {
+    if (!openOnHover) return rest.onpointerenter?.(e);
+    open = true;
+    rest.onpointerenter?.(e);
+  };
+
+  const onfocusin: NeoTooltipProps['onfocusin'] = e => {
+    if (!openOnFocus) return rest.onfocusin?.(e);
+    open = true;
+    rest.onfocusin?.(e);
+  };
 </script>
 
 {#if !target}
@@ -327,16 +339,8 @@
       use:useFn={useProps}
       {...tooltipHandler}
       {...rest}
-      onpointerenter={e => {
-        if (!openOnHover) return rest.onpointerenter?.(e);
-        open = true;
-        rest.onpointerenter?.(e);
-      }}
-      onfocuswithin={e => {
-        if (!openOnFocus) return rest.onfocuswithin?.(e);
-        open = true;
-        rest.onfocuswithin?.(e);
-      }}
+      {onpointerenter}
+      {onfocusin}
       style:justify-content={justify}
       style:align-items={align}
       style:flex
