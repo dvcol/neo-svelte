@@ -6,6 +6,7 @@
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import IconArrow from '~/icons/IconArrow.svelte';
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
@@ -25,10 +26,17 @@
     select,
     checked,
     touched = $bindable(false),
-    disabled,
-    readonly,
+    disabled: _disabled,
+    readonly: _readonly,
     skeleton = false,
     highlight,
+    selector = '.neo-list-item.neo-list-item-select',
+    arrow,
+    toggle,
+
+    // Buttons Props
+    hovered = $bindable(false),
+    focused = $bindable(false),
 
     // Actions
     onclick,
@@ -47,7 +55,7 @@
   const getNextTarget = (element: EventTarget | HTMLElement | null, action: 'next' | 'previous') => {
     const sibling: keyof HTMLElement = `${action}ElementSibling`;
     if (!(element instanceof HTMLElement)) return;
-    let li = element?.closest<HTMLElement>('.neo-list-item.neo-list-item-select');
+    let li = element?.closest<HTMLElement>(selector);
     let next = li?.[sibling];
     let target = getFocusableElement(next);
     if (target) return target.focus();
@@ -57,28 +65,18 @@
       target = getFocusableElement(next);
     }
     if (!li?.parentElement || li?.dataset?.section === undefined) return;
-    li = li.parentElement.closest<HTMLElement>('.neo-list-item.neo-list-item-select');
+    li = li.parentElement.closest<HTMLElement>(selector);
     return getFocusableElement(li?.[sibling])?.focus();
   };
 
-  const labelId = $derived(select ? `neo-list-item-label-${getUUID()}` : undefined);
+  const button = $derived(item?.href || item?.onclick || onclick || select);
+  const labelId = $derived(button ? `neo-list-item-label-${getUUID()}` : undefined);
+  const disabled = $derived(_disabled || item?.disabled);
+  const readonly = $derived(_readonly || item?.readonly);
 </script>
 
-{#snippet textContent({ label, value, description }: NeoListItem)}
-  <div class="neo-list-item-text">
-    <span id={labelId} class="neo-list-item-label">
-      <NeoMark value={label ?? value?.toString()} filter={highlight} />
-    </span>
-    {#if description}
-      <span class="neo-list-item-description">
-        <NeoMark value={description} filter={highlight} />
-      </span>
-    {/if}
-  </div>
-{/snippet}
-
 {#snippet listItem({ label, value, description }: NeoListItem)}
-  <div class:neo-list-item-content={true} class:neo-disabled={disabled} class:neo-description={description}>
+  <div class:neo-list-item-content={true} class:neo-button={button} class:neo-disabled={disabled} class:neo-description={description}>
     {#if item.before ?? before}
       <div class="neo-list-item-before" class:neo-skeleton={skeleton}>
         {@render (item.before ?? before)?.({ item, index, checked, context })}
@@ -93,7 +91,16 @@
       {...rest}
       class={['neo-list-item-skeleton', rest?.class]}
     >
-      {@render textContent({ label, value, description })}
+      <div class="neo-list-item-text">
+        <span id={labelId} class="neo-list-item-label">
+          <NeoMark value={label ?? value?.toString()} filter={highlight} />
+        </span>
+        {#if description}
+          <span class="neo-list-item-description">
+            <NeoMark value={description} filter={highlight} />
+          </span>
+        {/if}
+      </div>
     </NeoSkeletonText>
 
     {#if item.after ?? after}
@@ -106,15 +113,17 @@
 
 {#if item?.render}
   {@render item?.render({ item, index, checked, context })}
-{:else if item?.href || item?.onclick || select}
+{:else if button}
   <NeoButton
+    bind:hovered
+    bind:focused
     data-select={checked}
     aria-labelledby={labelId}
     container
     elevation="0"
     hover="-1"
     active="-2"
-    checked={buttonProps?.toggle ? checked : undefined}
+    checked={toggle || buttonProps?.toggle ? checked : undefined}
     scale={0.99}
     {readonly}
     {disabled}
@@ -122,7 +131,7 @@
     onclick={e => {
       if (disabled) return;
       item?.onclick?.(e);
-      if (readonly || !select) return;
+      if (readonly) return;
       touched = true;
       onclick?.(e);
     }}
@@ -143,6 +152,10 @@
     {#if select}
       <div class="neo-list-item-checkmark" class:neo-skeleton={skeleton}>
         <IconCheckbox {checked} enter={touched} />
+      </div>
+    {:else if arrow}
+      <div class="neo-list-item-arrow" class:neo-skeleton={skeleton}>
+        <IconArrow expanded={(checked || hovered || focused) && !disabled && !readonly} chevron />
       </div>
     {/if}
   </NeoButton>
@@ -169,6 +182,7 @@
       color: var(--neo-text-color-secondary);
       font-size: var(--neo-font-size-sm, 0.875rem);
       line-height: var(--neo-line-height-sm, 1.25rem);
+      transition: color 0.15s ease;
     }
 
     &-content {
@@ -179,12 +193,16 @@
       padding: 0.125rem 0.5rem;
       transition: color 0.15s ease;
 
-      &:hover:not(.neo-disabled) {
-        color: var(--neo-text-color-highlight);
-      }
-
       &.neo-disabled {
         color: var(--neo-text-color-disabled);
+      }
+
+      &.neo-button {
+        padding: 0.375rem 0.625rem;
+      }
+
+      &:hover:not(.neo-disabled, .neo-button) {
+        color: var(--neo-text-color-highlight);
       }
 
       :global(.neo-list-item-skeleton .neo-skeleton-text-line) {
@@ -201,13 +219,24 @@
       }
     }
 
+    &-checkmark,
+    &-arrow {
+      aspect-ratio: 1 / 1;
+    }
+
+    &-arrow {
+      --neo-arrow-offset-start: 50%;
+      --neo-arrow-offset-end: 40%;
+      --neo-arrow-delay: 0s;
+    }
+
     &-checkmark {
       margin-inline-end: 0.4375rem;
-      aspect-ratio: 1 / 1;
     }
 
     &-before,
     &-after,
+    &-arrow,
     &-checkmark {
       display: inline-flex;
       flex: 0 0 auto;

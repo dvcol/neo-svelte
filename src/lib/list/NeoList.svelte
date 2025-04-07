@@ -347,7 +347,7 @@
             disabled={item.disabled || disabled}
             readonly={item.readonly || readonly || (!isNullable && checked)}
             {...itemProps}
-            onclick={() => toggleItem({ index, item, sectionIndex, section }, checked)}
+            onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
           />
         {/if}
         {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1].item, 'bottom')}
@@ -477,10 +477,6 @@
           border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-md));
         }
 
-        :global(> .neo-list-item-button) {
-          padding: 0.25rem 0.125rem;
-        }
-
         :global(> .neo-list-base-loader:first-child) {
           margin-top: 0.25rem;
         }
@@ -494,7 +490,9 @@
       &:hover,
       &:focus,
       &:focus-within {
-        :global(> .neo-list-section-title) {
+        :global(> .neo-list-section-title),
+        :global(> .neo-list-item-button .neo-list-item-content),
+        :global(> .neo-list-item-button .neo-list-item-description) {
           color: var(--neo-text-color-highlight);
         }
       }

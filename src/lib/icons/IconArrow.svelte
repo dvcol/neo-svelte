@@ -12,6 +12,10 @@
     expanded = false,
     enter = $bindable(true),
     direction = IconArrowDirection.Right,
+    chevron: noLine = false,
+    delay,
+    start,
+    end,
 
     ...rest
   }: IconArrowProps = $props();
@@ -39,7 +43,17 @@
   });
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" style:scale {...rest}>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  style:scale
+  style:--neo-arrow-offset-start={start}
+  style:--neo-arrow-offset-end={end}
+  style:--neo-arrow-delay={delay}
+  {...rest}
+>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width={stroke}>
     <path
       stroke-dasharray="20"
@@ -47,6 +61,7 @@
       d={line}
       class="neo-icon-arrow-line"
       class:neo-expanded={expanded}
+      class:neo-chevron={noLine}
       data-direction={direction}
     />
     <path
@@ -56,6 +71,7 @@
       class="neo-icon-arrow-chevron"
       class:neo-expanded={expanded}
       class:neo-enter={enter}
+      class:neo-chevron={noLine}
       data-direction={direction}
     >
       {#if enter}
@@ -64,37 +80,49 @@
     </path>
   </g>
 
-  <style>
-    .neo-icon-arrow-chevron {
-      transition: translate 0.2s linear;
-      transition-delay: 0.15s;
-
+  <style lang="scss">
+    @mixin offset($x: 25%, $custom: --neo-arrow-offset) {
       &[data-direction='right'] {
-        translate: -25%;
+        translate: calc(0% - var($custom, $x));
       }
 
       &[data-direction='left'] {
-        translate: 25%;
+        translate: var($custom, $x);
       }
 
       &[data-direction='up'] {
-        translate: 0 25%;
+        translate: 0 var($custom, $x);
       }
 
       &[data-direction='down'] {
-        translate: 0 -25%;
+        translate: 0 calc(0% - var($custom, $x));
       }
+    }
+
+    .neo-icon-arrow-chevron {
+      @include offset(25%, --neo-arrow-offset-start);
+
+      transition: translate 0.2s linear;
+      transition-delay: var(--neo-arrow-delay, 0.15s);
 
       &.neo-expanded {
         translate: 0;
         transition-delay: 0s;
         stroke-dashoffset: 0;
+
+        &.neo-chevron {
+          @include offset(15%, --neo-arrow-offset-end);
+        }
       }
     }
 
     .neo-icon-arrow-line {
       transition: stroke-dashoffset 0.2s ease-out;
       stroke-dashoffset: -20;
+
+      &.neo-chevron {
+        display: none;
+      }
 
       &.neo-expanded {
         transition-delay: 0.06s;
@@ -114,21 +142,7 @@
       }
 
       .neo-icon-arrow-chevron.neo-expanded {
-        &[data-direction='right'] {
-          translate: -15%;
-        }
-
-        &[data-direction='left'] {
-          translate: 15%;
-        }
-
-        &[data-direction='up'] {
-          translate: 0 15%;
-        }
-
-        &[data-direction='down'] {
-          translate: 0 -15%;
-        }
+        @include offset(15%, --neo-arrow-offset-end);
       }
     }
   </style>

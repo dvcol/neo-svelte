@@ -62,6 +62,14 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * If true, the item will not trigger selection, but will not be styled as disabled.
    */
   readonly?: boolean;
+  /**
+   * CSS selector to identify the list parent element and select the next/previous focusable sibling.
+   *
+   * This is used to determine the next/previous focusable element when navigating with the keyboard.
+   *
+   * @default '.neo-list-item.neo-list-item-select'
+   */
+  selector?: boolean;
 
   // Methods
   /**
@@ -73,4 +81,5 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * Optional props to pass to the button.
    */
   buttonProps?: NeoButtonProps;
-} & NeoSkeletonTextProps;
+} & NeoSkeletonTextProps &
+  Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle'>;

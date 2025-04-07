@@ -19,6 +19,10 @@ export type IconArrowDirections = (typeof IconArrowDirection)[keyof typeof IconA
 export type IconArrowProps = IconProps & {
   expanded?: boolean;
   direction?: IconArrowDirections;
+  chevron?: boolean;
+  delay?: number;
+  start?: `${number}%` | `${number}px` | `${number}rem` | `${number}em`;
+  end?: `${number}%` | `${number}px` | `${number}rem` | `${number}em`;
 };
 
 export type IconFilledProps = IconProps & {
