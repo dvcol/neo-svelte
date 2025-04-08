@@ -134,6 +134,7 @@
 
     display: flex;
     transition: opacity 0.2s linear;
+    transition-delay: 0s;
 
     &.neo-active,
     &:hover,

@@ -183,6 +183,9 @@
       :global(> .neo-tabs-group:has(> .neo-tab *:focus-visible) > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))),
       &:hover :global(> .neo-tabs-group > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))) {
         opacity: 0.6;
+        transition-delay: 0.1s;
+        transition-timing-function: linear;
+        transition-duration: 0.4s;
       }
     }
 

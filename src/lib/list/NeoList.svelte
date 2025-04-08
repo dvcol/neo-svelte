@@ -444,6 +444,9 @@
         &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
         &:has(> .neo-list-item :global(*:focus-visible)) > .neo-list-item:not(:hover, .neo-checked, :has(:global(*:focus-visible))) {
           opacity: 0.6;
+          transition-delay: 0.1s;
+          transition-timing-function: linear;
+          transition-duration: 0.4s;
         }
       }
     }
@@ -457,6 +460,7 @@
       color: var(--neo-list-item-color, inherit);
       list-style-type: none;
       transition: opacity 0.2s linear;
+      transition-delay: 0s;
     }
 
     &-loader.neo-select {
