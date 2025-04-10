@@ -25,7 +25,7 @@
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
-  import { type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
+  import { isSizeOption, type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
   import { quickScaleOpacityProps, quickScaleProps } from '~/utils/transition.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
@@ -275,6 +275,15 @@
 
   const computeSize = <T extends 'width' | 'height'>(value: NeoTooltipProps[T], dimension: T): SizeOption<T> | undefined => {
     const tSize = dimension === 'width' ? triggerRef?.offsetWidth : triggerRef?.offsetHeight;
+    if (isSizeOption(value)) {
+      const sizes: SizeOption<T> = toSize(value) ?? {};
+      if (value.absolute === NeoTooltipSizeStrategy.Available) sizes.absolute = toPixel(available[dimension]);
+      if (value.min === NeoTooltipSizeStrategy.Available) sizes.min = toPixel(available[dimension]);
+      else if (value.min === NeoTooltipSizeStrategy.Match) sizes.min = toPixel(tSize);
+      if (value.max === NeoTooltipSizeStrategy.Available) sizes.max = toPixel(available[dimension]);
+      else if (value.max === NeoTooltipSizeStrategy.Match) sizes.max = toPixel(tSize);
+      return sizes;
+    }
     if (value === NeoTooltipSizeStrategy.Match) return { absolute: toPixel(tSize) };
     if (value === NeoTooltipSizeStrategy.Min) return { min: toPixel(tSize) };
     if (value === NeoTooltipSizeStrategy.Max) return { max: toPixel(tSize) };

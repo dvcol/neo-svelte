@@ -17,6 +17,9 @@ export const toPixel = (value?: number | string): string | undefined => {
   return typeof value === 'number' ? `${value}px` : value;
 };
 
+export const isSizeOption = <Size extends 'width' | 'height' = 'width' | 'height'>(size?: SizeInput<Size>): size is SizeOption<Size> =>
+  typeof size === 'object';
+
 export const toSize = <Size extends 'width' | 'height' = 'width' | 'height'>(
   size?: SizeInput<Size>,
 ): SizeOption<Size, SizeValue<Size>> | undefined => {
