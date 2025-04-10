@@ -27,6 +27,19 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    */
   keepOpenOnSelect?: NeoMenuListItemProps<Value>['keepOpenOnSelect'];
 
+  // Styles
+
+  /**
+   * Whether to display a shadow when scrolling content.
+   *
+   * @default true
+   */
+  shadow?: boolean;
+  /**
+   * Overrides the default scrollbars.
+   */
+  scrollbar?: boolean;
+
   // Events
   /**
    * Event handler for when a menu item with a nested menu is clicked.

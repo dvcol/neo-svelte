@@ -17,6 +17,10 @@
 
     keepOpenOnSelect,
 
+    // Styles
+    shadow = true,
+    scrollbar = false,
+
     // Events
     onMenu,
     onSelect,
@@ -33,7 +37,7 @@
   // TODO: Section
 </script>
 
-<svelte:element this={tag} role="listbox" bind:this={ref} class:neo-menu-list={true} {...rest}>
+<svelte:element this={tag} role="listbox" bind:this={ref} class:neo-menu-list={true} class:neo-scroll={scrollbar} class:neo-shadow={shadow} {...rest}>
   {#each items as item, index (item.id ?? index)}
     {#if index && showDivider(item.divider, 'top') && !showDivider(items[index - 1]?.divider, 'top')}
       <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
@@ -58,6 +62,8 @@
 </svelte:element>
 
 <style lang="scss">
+  @use 'src/lib/styles/mixin' as mixin;
+
   .neo-menu-list {
     display: flex;
     flex-direction: column;
@@ -66,6 +72,16 @@
 
     :global(.neo-menu-item-divider) {
       margin: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25)) 0;
+    }
+
+    &.neo-scroll {
+      padding-block: var(--neo-menu-scroll-padding, 0.625rem);
+
+      &.neo-shadow {
+        @include mixin.fade-scroll(1rem);
+      }
+
+      @include mixin.scrollbar($button-height: var(--neo-menu-scrollbar-padding, 0.5rem));
     }
   }
 </style>

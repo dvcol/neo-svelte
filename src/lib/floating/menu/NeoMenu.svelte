@@ -98,7 +98,6 @@
     () => open, // eslint-disable-line no-sequences
     _open => {
       tooltipOpen = _open;
-      console.info('tooltipOpen setter', tooltipOpen);
     }
   }
   {target}
