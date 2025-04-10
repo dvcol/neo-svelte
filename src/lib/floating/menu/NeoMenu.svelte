@@ -22,6 +22,9 @@
     target,
     portal = true,
     padding = '0',
+    openOnHover = false,
+    openOnFocus = false,
+    openOnClick = true,
 
     // Events
     onMenu,
@@ -36,7 +39,7 @@
   }: NeoMenuProps = $props();
   /* eslint-enable prefer-const */
 
-  // Use context to track open & prop ?
+  let tooltipOpen = $state(false);
   const context = setMenuContext({
     get open() {
       return open;
@@ -45,11 +48,10 @@
       return ref;
     },
     dismiss() {
-      open = false;
+      tooltipOpen = false;
     },
   });
 
-  let tooltipOpen = $state(false);
   $effect(() => {
     open = tooltipOpen || context.children;
   });
@@ -82,7 +84,7 @@
     {itemProps}
     {dividerProps}
     {keepOpenOnSelect}
-    tooltipProps={{ portal, padding, ...rest }}
+    tooltipProps={{ portal, padding, openOnHover, openOnFocus, openOnClick, ...rest }}
     {...menuProps}
     {onMenu}
     {onSelect}
@@ -96,11 +98,15 @@
     () => open, // eslint-disable-line no-sequences
     _open => {
       tooltipOpen = _open;
+      console.info('tooltipOpen setter', tooltipOpen);
     }
   }
   {target}
   {portal}
   {padding}
+  {openOnHover}
+  {openOnFocus}
+  {openOnClick}
   {...rest}
   {tooltip}
 />

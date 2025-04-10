@@ -56,6 +56,7 @@
     menuContext.toggle(index, open);
   });
 
+  let tooltipOpen = $state(false);
   const childContext = setMenuContext({
     get open() {
       return open;
@@ -64,13 +65,12 @@
       return ref;
     },
     async dismiss() {
-      open = false;
+      tooltipOpen = false;
       await tick();
       return menuContext?.dismiss();
     },
   });
 
-  let tooltipOpen = $state(false);
   $effect(() => {
     open = tooltipOpen || childContext.children;
   });
@@ -105,7 +105,6 @@
     menuContext?.dismiss();
   };
 
-  // TODO - context
   const context = $derived<NeoMenuContext>({ item, index, length, parent, open, keepOpenOnSelect, onMenu, onSelect });
 </script>
 

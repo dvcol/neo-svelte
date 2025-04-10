@@ -35,7 +35,7 @@
 
 <svelte:element this={tag} role="listbox" bind:this={ref} class:neo-menu-list={true} {...rest}>
   {#each items as item, index (item.id ?? index)}
-    {#if index && showDivider(item.divider, 'top')}
+    {#if index && showDivider(item.divider, 'top') && !showDivider(items[index - 1]?.divider, 'top')}
       <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
     {/if}
     <NeoMenuListItem
