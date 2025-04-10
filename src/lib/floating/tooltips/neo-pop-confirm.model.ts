@@ -76,6 +76,7 @@ export type NeoPopConfirmProps = {
   | 'hoverDelay'
   | 'openOnFocus'
   | 'openOnHover'
+  | 'openOnClick'
   | 'color'
   | 'filled'
   | 'tinted'

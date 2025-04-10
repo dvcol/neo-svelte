@@ -66,6 +66,7 @@ export type NeoPopSelectProps<Value = unknown> = {
   | 'hoverDelay'
   | 'openOnFocus'
   | 'openOnHover'
+  | 'openOnClick'
   | 'color'
   | 'filled'
   | 'tinted'

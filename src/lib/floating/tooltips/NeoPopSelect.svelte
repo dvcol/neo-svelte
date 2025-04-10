@@ -46,6 +46,7 @@
     hoverDelay,
     openOnFocus,
     openOnHover,
+    openOnClick,
 
     // Sizing
     flex,
@@ -150,6 +151,7 @@
   {hoverDelay}
   {openOnFocus}
   {openOnHover}
+  {openOnClick}
   {onClose}
   {onOpen}
   {use}

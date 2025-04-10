@@ -33,6 +33,7 @@
     hoverDelay,
     openOnFocus,
     openOnHover,
+    openOnClick,
     closable = true,
 
     // Styles
@@ -144,6 +145,7 @@
   {hoverDelay}
   {openOnFocus}
   {openOnHover}
+  {openOnClick}
   {onOpen}
   {onClose}
   {use}

@@ -1,5 +1,6 @@
 import type {
   offset,
+  UseClickOptions,
   UseDismissOptions,
   UseFloatingOptions,
   UseFloatingReturn,
@@ -203,6 +204,23 @@ export type NeoTooltipProps = {
    * Options to pass to the useFocus hook.
    */
   focusOptions?: UseFocusOptions;
+
+  // Click
+
+  /**
+   * Whether the tooltip should open/close when clicking on the trigger.
+   *
+   * @default false
+   */
+  openOnClick?: boolean;
+  /**
+   * Whether the tooltip should remain open when clicking off the trigger.
+   */
+  keepOpenOnClick?: boolean;
+  /**
+   * Options to pass to the useClick hook.
+   */
+  clickOptions?: UseClickOptions;
 
   // Dismiss
 

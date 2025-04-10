@@ -63,6 +63,7 @@ export type NeoPopStepperProps = {
   | 'hoverDelay'
   | 'openOnFocus'
   | 'openOnHover'
+  | 'openOnClick'
   | 'color'
   | 'filled'
   | 'tinted'

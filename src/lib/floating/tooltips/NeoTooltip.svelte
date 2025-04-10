@@ -6,6 +6,7 @@
     flip,
     offset,
     size,
+    useClick,
     useDismiss,
     useFloating,
     useFocus,
@@ -75,6 +76,11 @@
     keepOpenOnFocus = false,
     focusOptions,
 
+    // Click
+    openOnClick = false,
+    keepOpenOnClick = false,
+    clickOptions,
+
     // Dismiss
     closeOnDismiss = true,
     dismissOptions,
@@ -138,7 +144,7 @@
         focus = _open;
       }
       if (_reason === 'hover' && !_open && (keepOpenOnHover || focus)) return;
-
+      if (_reason === 'click' && _open && keepOpenOnClick) return;
       open = _open;
     },
     get middleware() {
@@ -186,13 +192,19 @@
     },
     ...focusOptions,
   });
+  const _click = useClick(floating.context, {
+    get enabled() {
+      return openOnClick;
+    },
+    ...clickOptions,
+  });
   const _dismiss = useDismiss(floating.context, {
     get enabled() {
       return closeOnDismiss;
     },
     ...dismissOptions,
   });
-  const interactions = useInteractions([_role, _hover, _focus, _dismiss]);
+  const interactions = useInteractions([_role, _hover, _focus, _click, _dismiss]);
 
   const triggerHandler = $derived<HTMLNeoBaseElement>(interactions.getReferenceProps());
   const tooltipHandler = $derived<HTMLNeoBaseElement>(interactions.getFloatingProps());
