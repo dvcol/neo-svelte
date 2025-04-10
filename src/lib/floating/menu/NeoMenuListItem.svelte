@@ -31,10 +31,13 @@
     // Tooltip Props
     tooltipRef = $bindable(),
     open = $bindable(false),
-    keepOpenOnSelect = false,
+    keepOpenOnSelect,
 
     placement = 'right-start',
     offset = (p: NeoTooltipPlacement) => ({ mainAxis: 6, crossAxis: p?.endsWith('start') ? -6 : 6 }),
+
+    // Styles
+    rounded,
 
     // Events
     onMenu,
@@ -43,7 +46,7 @@
     // Other Props
     tooltipProps,
     baseProps,
-    dividerProps,
+    menuProps,
     ...rest
   }: NeoMenuListItemProps = $props();
   /* eslint-enable prefer-const */
@@ -123,29 +126,24 @@
   {#if children}
     {@render children?.(context)}
   {:else}
-    <NeoListBaseItem {item} {index} {context} toggle arrow={nested} checked={open} selector=".neo-menu-item" {...baseProps} {onclick} />
+    <NeoListBaseItem
+      {item}
+      {index}
+      {context}
+      {rounded}
+      toggle
+      arrow={nested}
+      checked={open}
+      selector=".neo-menu-item"
+      {...baseProps}
+      {...item.baseProps}
+      {onclick}
+    />
   {/if}
 </svelte:element>
 
 {#snippet tooltip()}
-  <NeoMenuList
-    {...item.menuProps}
-    itemProps={{ ...rest, ...item.itemProps }}
-    baseProps={{ ...baseProps, ...item.baseProps }}
-    tooltipProps={{ ...tooltipProps, ...item.tooltipProps }}
-    {keepOpenOnSelect}
-    {dividerProps}
-    {items}
-    {item}
-    onMenu={(i, e) => {
-      item.menuProps?.onMenu?.(i, e);
-      onMenu?.(i, e);
-    }}
-    onSelect={(i, e) => {
-      item.menuProps?.onSelect?.(i, e);
-      onSelect?.(i, e);
-    }}
-  />
+  <NeoMenuList {...menuProps} itemProps={{ ...rest, ...menuProps?.itemProps }} {keepOpenOnSelect} {items} {item} {onMenu} {onSelect} />
 {/snippet}
 
 {#if nested}
@@ -158,7 +156,9 @@
         tooltipOpen = _open;
       }
     }
+    {rounded}
     {...tooltipProps}
+    {...item.tooltipProps}
     {placement}
     {offset}
     {tooltip}
@@ -168,7 +168,7 @@
 
 <style lang="scss">
   .neo-menu-item {
-    padding: 0 var(--neo-menu-padding, var(--neo-gap-tiny, 0.25));
+    padding: 0 var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem));
     color: var(--neo-list-item-color, inherit);
 
     :global(> .neo-list-item-button) {

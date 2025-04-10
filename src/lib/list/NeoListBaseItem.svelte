@@ -33,6 +33,7 @@
     selector = '.neo-list-item.neo-list-item-select',
     arrow,
     toggle,
+    rounded,
 
     // Buttons Props
     hovered = $bindable(false),
@@ -127,6 +128,7 @@
     scale={0.99}
     {readonly}
     {disabled}
+    {rounded}
     href={item?.href}
     onclick={e => {
       if (disabled) return;
@@ -155,7 +157,7 @@
       </div>
     {:else if arrow}
       <div class="neo-list-item-arrow" class:neo-skeleton={skeleton}>
-        <IconArrow expanded={(checked || hovered || focused) && !disabled && !readonly} chevron />
+        <IconArrow expanded={checked && !disabled && !readonly} chevron />
       </div>
     {/if}
   </NeoButton>

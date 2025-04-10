@@ -18,8 +18,9 @@
     keepOpenOnSelect,
 
     // Styles
-    shadow = true,
-    scrollbar = false,
+    shadow,
+    scrollbar,
+    rounded,
 
     // Events
     onMenu,
@@ -37,23 +38,39 @@
   // TODO: Section
 </script>
 
-<svelte:element this={tag} role="listbox" bind:this={ref} class:neo-menu-list={true} class:neo-scroll={scrollbar} class:neo-shadow={shadow} {...rest}>
+<svelte:element
+  this={tag}
+  role="listbox"
+  bind:this={ref}
+  class:neo-menu-list={true}
+  class:neo-scroll={scrollbar}
+  class:neo-shadow={shadow}
+  class:neo-rounded={rounded}
+  {...rest}
+>
   {#each items as item, index (item.id ?? index)}
     {#if index && showDivider(item.divider, 'top') && !showDivider(items[index - 1]?.divider, 'top')}
       <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
     {/if}
     <NeoMenuListItem
+      {keepOpenOnSelect}
+      {rounded}
+      {...itemProps}
       {parent}
       {item}
       {index}
       length={items.length}
-      {keepOpenOnSelect}
-      {onMenu}
-      {onSelect}
       {tooltipProps}
       {baseProps}
-      {dividerProps}
-      {...itemProps}
+      menuProps={{ tag, shadow, scrollbar, rounded, dividerProps, tooltipProps, baseProps, ...rest, ...item.menuProps }}
+      onMenu={(i, e) => {
+        item.menuProps?.onMenu?.(i, e);
+        onMenu?.(i, e);
+      }}
+      onSelect={(i, e) => {
+        item.menuProps?.onSelect?.(i, e);
+        onSelect?.(i, e);
+      }}
     />
     {#if index < items.length - 1 && showDivider(item.divider, 'bottom') && !showDivider(items[index + 1]?.divider, 'bottom')}
       <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
@@ -67,16 +84,23 @@
   .neo-menu-list {
     display: flex;
     flex-direction: column;
-    padding: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25)) 0;
+    padding: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem)) 0;
     overflow: auto;
 
     :global(.neo-menu-item-divider) {
-      margin: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25)) 0;
+      margin: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem)) 0;
+    }
+
+    &.neo-scroll,
+    &.neo-rounded {
+      padding-block: var(--neo-menu-scroll-padding, 0.625rem);
+
+      &:not(.neo-scroll) :global(> .neo-menu-item) {
+        padding: 0 var(--neo-menu-padding, var(--neo-gap-xxs, 0.5rem));
+      }
     }
 
     &.neo-scroll {
-      padding-block: var(--neo-menu-scroll-padding, 0.625rem);
-
       &.neo-shadow {
         @include mixin.fade-scroll(1rem);
       }

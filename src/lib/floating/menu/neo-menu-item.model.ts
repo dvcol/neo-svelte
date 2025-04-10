@@ -1,6 +1,5 @@
 import type { Snippet } from 'svelte';
-
-import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
+import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
@@ -12,7 +11,7 @@ export type NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   'containerProps'
 > & {
   items?: NeoMenuItem<Value, Tag>[];
-  menuProps?: Omit<NeoMenuListProps<Value>, 'itemProps' | 'baseProps' | 'tooltipProps' | 'items' | 'item'>;
+  menuProps?: Omit<NeoMenuListProps<Value>, 'itemProps' | 'baseProps' | 'tooltipProps' | 'items' | 'item' | 'ref'>;
   itemProps?: Pick<NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>, 'containerProps'>;
 } & Pick<NeoMenuListItemProps, 'tooltipProps' | 'baseProps'>;
 
@@ -95,6 +94,12 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    */
   offset?: NeoTooltipProps['offset'];
 
+  // Styles
+  /**
+   * If true, the menu & items will be rounded.
+   */
+  rounded?: boolean;
+
   // Other props
   /**
    * Optional props to pass to the tooltip (if any).
@@ -105,8 +110,12 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    */
   baseProps?: Partial<NeoListBaseItemProps<Value, NeoMenuContext<Value, Tag>>>;
   /**
-   * Optional props to pass to the divider.
+   * Optional props to pass to the menu list.
    */
-  dividerProps?: Partial<NeoDividerProps>;
+  menuProps?: Omit<NeoMenuListProps<Value>, 'items' | 'item' | 'ref' | 'onMenu' | 'onSelect'>;
+  /**
+   * Optional props to pass to the button.
+   */
+  buttonProps?: NeoButtonProps;
 } & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'length' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'> &
   Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

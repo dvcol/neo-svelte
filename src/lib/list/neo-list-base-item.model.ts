@@ -85,6 +85,10 @@ export type NeoListBaseItemProps<
    * @default '.neo-list-item.neo-list-item-select'
    */
   selector?: string;
+  /**
+   * If true, the item will be rounded.
+   */
+  rounded?: boolean;
 
   // Methods
   /**

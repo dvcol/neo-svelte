@@ -381,6 +381,7 @@
       class:neo-list-items={true}
       class:neo-scroll={scrollbar}
       class:neo-shadow={shadow}
+      class:neo-rounded={buttonProps?.rounded}
       class:neo-dim={dim}
       in:scaleFreeze={quickScaleProps}
       {...rest}
@@ -429,6 +430,15 @@
       padding-inline: var(--neo-list-padding, 0.375rem);
       padding-block: var(--neo-list-padding, 0.375rem);
       overflow: auto;
+
+      &.neo-scroll,
+      &.neo-rounded {
+        padding-block: var(--neo-menu-scroll-padding, 0.625rem);
+
+        &:not(.neo-scroll) :global(> .neo-list-item) {
+          padding: 0 var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem));
+        }
+      }
 
       &.neo-scroll {
         padding-block: var(--neo-list-scroll-padding, 0.625rem);

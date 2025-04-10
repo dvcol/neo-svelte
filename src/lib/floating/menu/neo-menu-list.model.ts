@@ -1,3 +1,4 @@
+import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoMenuItem, NeoMenuListItemProps } from '~/floating/menu/neo-menu-item.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
@@ -39,6 +40,10 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    * Overrides the default scrollbars.
    */
   scrollbar?: boolean;
+  /**
+   * If true, the menu will be rounded.
+   */
+  rounded?: boolean;
 
   // Events
   /**
@@ -64,11 +69,11 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    */
   baseProps?: NeoMenuListItemProps<Value>['baseProps'];
   /**
-   * Optional props to pass to the divider.
-   */
-  dividerProps?: NeoMenuListItemProps<Value>['dividerProps'];
-  /**
    * Optional props to pass to the list item wrapper.
    */
-  itemProps?: Partial<NeoMenuListItemProps<Value>>;
+  itemProps?: Omit<Partial<NeoMenuListItemProps<Value>>, 'baseProps' | 'tooltipProps'>;
+  /**
+   * Optional props to pass to the divider.
+   */
+  dividerProps?: Partial<NeoDividerProps>;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

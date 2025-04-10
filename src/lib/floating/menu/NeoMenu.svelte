@@ -26,6 +26,11 @@
     openOnFocus = false,
     openOnClick = true,
 
+    // Styles
+    shadow = true,
+    scrollbar,
+    rounded,
+
     // Events
     onMenu,
     onSelect,
@@ -80,6 +85,9 @@
 {#snippet tooltip()}
   <NeoMenuList
     {items}
+    {shadow}
+    {scrollbar}
+    {rounded}
     {baseProps}
     {itemProps}
     {dividerProps}
@@ -106,6 +114,7 @@
   {openOnHover}
   {openOnFocus}
   {openOnClick}
+  {rounded}
   {...rest}
   {tooltip}
 />

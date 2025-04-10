@@ -1,4 +1,4 @@
-import type { NeoMenuItem, NeoMenuListItemProps } from '~/floating/menu/neo-menu-item.model.js';
+import type { NeoMenuItem } from '~/floating/menu/neo-menu-item.model.js';
 import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 
@@ -11,28 +11,28 @@ export type NeoMenuProps<Value = unknown> = Omit<NeoTooltipProps, 'tooltip'> & {
    * @param item - The menu item that was clicked.
    * @param e - The pointer event.
    */
-  onMenu: NeoMenuListItemProps<Value>['onMenu'];
+  onMenu: NeoMenuListProps<Value>['onMenu'];
   /**
    * Event handler for when a menu item without a nested menu is clicked.
    * @param item - The menu item that was clicked.
    * @param e - The pointer event.
    */
-  onSelect: NeoMenuListItemProps<Value>['onSelect'];
+  onSelect: NeoMenuListProps<Value>['onSelect'];
 
   /**
    * If true, the menu will stay open when the item is selected.
    */
-  keepOpenOnSelect?: NeoMenuListItemProps<Value>['keepOpenOnSelect'];
+  keepOpenOnSelect?: NeoMenuListProps<Value>['keepOpenOnSelect'];
 
   // Other Props
   /**
    * Optional props to pass to the tooltip (if any).
    */
-  tooltipProps?: NeoMenuListItemProps<Value>['tooltipProps'];
+  tooltipProps?: NeoMenuListProps<Value>['tooltipProps'];
   /**
    * Optional props to pass to the base list item.
    */
-  baseProps?: NeoMenuListItemProps<Value>['baseProps'];
+  baseProps?: NeoMenuListProps<Value>['baseProps'];
   /**
    * Optional props to pass to the list item wrapper.
    */
@@ -44,5 +44,5 @@ export type NeoMenuProps<Value = unknown> = Omit<NeoTooltipProps, 'tooltip'> & {
   /**
    * Optional props to pass to the divider.
    */
-  dividerProps?: NeoMenuListItemProps<Value>['dividerProps'];
-};
+  dividerProps?: NeoMenuListProps<Value>['dividerProps'];
+} & Pick<NeoMenuListProps<Value>, 'shadow' | 'scrollbar' | 'rounded'>;
