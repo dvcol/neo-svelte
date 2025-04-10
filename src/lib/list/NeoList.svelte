@@ -322,7 +322,7 @@
         out:inFn={inProps}
         in:outFn={outProps}
       >
-        {#if index && showDivider(item, 'top')}
+        {#if index && showDivider(item.divider, 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if isSection(item)}
@@ -350,7 +350,7 @@
             onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
           />
         {/if}
-        {#if index < visible.length - 1 && showDivider(item, 'bottom') && !showDivider(visible[index + 1].item, 'bottom')}
+        {#if index < visible.length - 1 && showDivider(item.divider, 'bottom') && !showDivider(visible[index + 1].item.divider, 'bottom')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
       </svelte:element>

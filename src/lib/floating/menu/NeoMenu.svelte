@@ -31,6 +31,7 @@
     menuProps,
     baseProps,
     itemProps,
+    dividerProps,
     ...rest
   }: NeoMenuProps = $props();
   /* eslint-enable prefer-const */
@@ -75,7 +76,17 @@
 </script>
 
 {#snippet tooltip()}
-  <NeoMenuList {items} {keepOpen} {baseProps} {itemProps} tooltipProps={{ portal, padding, ...rest }} {...menuProps} {onMenu} {onSelect} />
+  <NeoMenuList
+    {items}
+    {keepOpen}
+    {baseProps}
+    {itemProps}
+    {dividerProps}
+    tooltipProps={{ portal, padding, ...rest }}
+    {...menuProps}
+    {onMenu}
+    {onSelect}
+  />
 {/snippet}
 
 <NeoTooltip

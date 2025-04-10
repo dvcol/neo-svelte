@@ -2,6 +2,8 @@
   import NeoMenu from '../../src/lib/floating/menu/NeoMenu.svelte';
   import { colorOptions } from '../utils/color.utils';
 
+  import type { NeoMenuItem } from '../../src/lib/floating/menu/neo-menu-item.model';
+
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
@@ -19,10 +21,11 @@
     externalMenuPanel: false,
   });
 
-  const items = [
-    { label: 'Line 1' },
+  const items: NeoMenuItem[] = [
+    { label: 'Line 1', divider: true },
     {
       label: 'Line 2',
+      divider: true,
       items: [
         { label: 'Level 2 Line 1' },
         { label: 'Level 2 Line 2' },
@@ -69,8 +72,8 @@
       <NeoMenu
         open={open.menu}
         {items}
-        keepOpenOnHover={false}
-        keepOpen
+        keepOpenOnHover={true}
+        keepOpen={true}
         onMenu={(i, e) => console.info('Menu', i, e)}
         onSelect={(i, e) => console.info('Select', i, e)}
       >

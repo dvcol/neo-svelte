@@ -1,15 +1,20 @@
 import type { Snippet } from 'svelte';
 
+import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
 import type { NeoBaseListItem } from '~/list/neo-list.model.js';
 import type { HTMLNeoBaseElement, SvelteEvent } from '~/utils/html-element.utils.js';
 
-export type NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>> & {
+export type NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = Omit<
+  NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>,
+  'containerProps'
+> & {
   items?: NeoMenuItem<Value, Tag>[];
-  menuProps?: Omit<NeoMenuListProps<Value>, 'itemProps' | 'items' | 'item'>;
-};
+  menuProps?: Omit<NeoMenuListProps<Value>, 'itemProps' | 'baseProps' | 'tooltipProps' | 'items' | 'item'>;
+  itemProps?: Pick<NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>, 'containerProps'>;
+} & Pick<NeoMenuListItemProps, 'tooltipProps' | 'baseProps'>;
 
 export type NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   /**
@@ -20,6 +25,10 @@ export type NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagName
    * The index of the item in the menu.
    */
   index: number;
+  /**
+   * The length of the parent menu list.
+   */
+  length: number;
   /**
    * The parent item (if any).
    */
@@ -95,5 +104,9 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * Optional props to pass to the base list item.
    */
   baseProps?: Partial<NeoListBaseItemProps<Value, NeoMenuContext<Value, Tag>>>;
-} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'parent' | 'open' | 'keepOpen' | 'onMenu' | 'onSelect'> &
+  /**
+   * Optional props to pass to the divider.
+   */
+  dividerProps?: Partial<NeoDividerProps>;
+} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'length' | 'parent' | 'open' | 'keepOpen' | 'onMenu' | 'onSelect'> &
   Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

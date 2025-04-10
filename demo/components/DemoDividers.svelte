@@ -16,6 +16,7 @@
     skeleton: false,
     glass: false,
     elevation: 0,
+    margin: '5px',
   });
 </script>
 

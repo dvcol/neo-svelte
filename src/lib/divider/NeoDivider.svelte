@@ -43,6 +43,7 @@
 <div
   role="separator"
   aria-orientation={vertical ? 'vertical' : 'horizontal'}
+  data-elevation={elevation}
   class:neo-divider={true}
   class:neo-vertical={vertical}
   class:neo-flat={!elevation}
@@ -64,12 +65,13 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-divider {
+    align-self: center;
     box-sizing: border-box;
     width: calc(var(--neo-divider-width, 100%) - var(--neo-divider-margin-inline, var(--neo-divider-margin, 0px)) * 2);
     height: calc(
       max(var(--neo-divider-minimum), var(--neo-divider-height, 1px) - var(--neo-divider-margin-block, var(--neo-divider-margin, 0px)) * 2)
     );
-    margin: 0;
+    margin: var(--neo-divider-margin, 0);
     padding: 0;
     border: none;
     border-radius: var(--neo-divider-border-radius, var(--neo-border-radius));

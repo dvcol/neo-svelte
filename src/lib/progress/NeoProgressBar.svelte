@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { watch } from '@dvcol/svelte-utils/watch';
+  import { innerHeight, innerWidth } from 'svelte/reactivity/window';
+
   import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 
   import NeoProgress from '~/progress/NeoProgress.svelte';
@@ -74,6 +77,15 @@
     };
   });
 
+  watch(
+    () => {
+      if (!ref) return;
+      clientWidth = ref.clientWidth;
+      clientHeight = ref.clientHeight;
+    },
+    () => [ref, innerHeight, innerWidth],
+  );
+
   const context = $derived<NeoProgressBarContext>({
     status,
 
@@ -113,8 +125,6 @@
 <svelte:element
   this={containerTag}
   data-direction={direction}
-  bind:clientWidth
-  bind:clientHeight
   class:neo-progress-bar={true}
   class:neo-borderless={borderless || !track}
   class:neo-flat={!elevation}

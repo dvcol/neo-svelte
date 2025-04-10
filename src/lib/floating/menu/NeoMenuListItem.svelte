@@ -25,6 +25,7 @@
     item,
     parent,
     index = 0,
+    length,
 
     // Tooltip Props
     tooltipRef = $bindable(),
@@ -32,7 +33,7 @@
     keepOpen = false,
 
     placement = 'right-start',
-    offset = (p: NeoTooltipPlacement) => ({ mainAxis: 10, crossAxis: p?.endsWith('start') ? -9 : 9 }),
+    offset = (p: NeoTooltipPlacement) => ({ mainAxis: 6, crossAxis: p?.endsWith('start') ? -6 : 6 }),
 
     // Events
     onMenu,
@@ -41,6 +42,7 @@
     // Other Props
     tooltipProps,
     baseProps,
+    dividerProps,
     ...rest
   }: NeoMenuListItemProps = $props();
   /* eslint-enable prefer-const */
@@ -103,7 +105,7 @@
   };
 
   // TODO - context
-  const context = $derived<NeoMenuContext>({ item, index, parent, open, keepOpen, onMenu, onSelect });
+  const context = $derived<NeoMenuContext>({ item, index, length, parent, open, keepOpen, onMenu, onSelect });
 </script>
 
 <svelte:element
@@ -112,10 +114,10 @@
   role="option"
   data-index={index}
   aria-posinset={index + 1}
-  aria-setsize={parent?.items?.length}
+  aria-setsize={length}
   class:neo-menu-item={true}
   {...rest}
-  {...item.containerProps}
+  {...item.itemProps}
 >
   {#if children}
     {@render children?.(context)}
@@ -127,9 +129,10 @@
 {#snippet tooltip()}
   <NeoMenuList
     {...item.menuProps}
-    tooltipProps={{ ...tooltipProps, ...item.menuProps?.tooltipProps }}
-    baseProps={{ ...baseProps, ...item.menuProps?.baseProps }}
-    itemProps={{ ...rest, ...item.containerProps }}
+    itemProps={{ ...rest, ...item.itemProps }}
+    baseProps={{ ...baseProps, ...item.baseProps }}
+    tooltipProps={{ ...tooltipProps, ...item.tooltipProps }}
+    {dividerProps}
     {keepOpen}
     {items}
     {item}
@@ -164,6 +167,8 @@
 
 <style lang="scss">
   .neo-menu-item {
+    padding: 0 var(--neo-menu-padding, var(--neo-gap-tiny, 0.25));
+
     :global(> .neo-list-item-button) {
       width: 100%;
 

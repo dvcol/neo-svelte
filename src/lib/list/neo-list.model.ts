@@ -9,9 +9,9 @@ import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/htm
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoListDividerOption = { top?: boolean; bottom?: boolean };
-export const showDivider = (item: NeoListItemOrSection, position: keyof NeoListDividerOption = 'top') => {
-  if (typeof item.divider !== 'boolean') return item.divider?.[position];
-  return item.divider;
+export const showDivider = (divider?: boolean | NeoListDividerOption, position: keyof NeoListDividerOption = 'top') => {
+  if (typeof divider !== 'boolean') return divider?.[position];
+  return divider;
 };
 
 export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = {

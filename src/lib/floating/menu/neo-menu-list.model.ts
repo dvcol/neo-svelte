@@ -51,6 +51,10 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    */
   baseProps?: NeoMenuListItemProps<Value>['baseProps'];
   /**
+   * Optional props to pass to the divider.
+   */
+  dividerProps?: NeoMenuListItemProps<Value>['dividerProps'];
+  /**
    * Optional props to pass to the list item wrapper.
    */
   itemProps?: Partial<NeoMenuListItemProps<Value>>;

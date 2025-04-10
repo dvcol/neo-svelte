@@ -41,4 +41,8 @@ export type NeoMenuProps<Value = unknown> = Omit<NeoTooltipProps, 'tooltip'> & {
    * Optional props to pass to the menu list wrapper.
    */
   menuProps?: Partial<NeoMenuListProps<Value>>;
+  /**
+   * Optional props to pass to the divider.
+   */
+  dividerProps?: NeoMenuListItemProps<Value>['dividerProps'];
 };
