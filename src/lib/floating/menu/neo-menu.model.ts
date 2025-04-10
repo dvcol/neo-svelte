@@ -22,7 +22,7 @@ export type NeoMenuProps<Value = unknown> = Omit<NeoTooltipProps, 'tooltip'> & {
   /**
    * If true, the menu will stay open when the item is selected.
    */
-  keepOpen?: NeoMenuListItemProps<Value>['keepOpen'];
+  keepOpenOnSelect?: NeoMenuListItemProps<Value>['keepOpenOnSelect'];
 
   // Other Props
   /**

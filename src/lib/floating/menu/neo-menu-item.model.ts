@@ -42,7 +42,7 @@ export type NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagName
   /**
    * If true, the menu will stay open when the item is selected.
    */
-  keepOpen?: boolean;
+  keepOpenOnSelect?: boolean;
 
   // Events
   /**
@@ -108,5 +108,5 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * Optional props to pass to the divider.
    */
   dividerProps?: Partial<NeoDividerProps>;
-} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'length' | 'parent' | 'open' | 'keepOpen' | 'onMenu' | 'onSelect'> &
+} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'length' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'> &
   Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

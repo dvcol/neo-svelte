@@ -11,7 +11,11 @@
 
   const options = $state({
     color: '',
-    close: false,
+    keepOpenOnHover: false,
+    keepOpenOnSelect: false,
+
+    onMenu: (i, e) => console.info('Menu', i, e),
+    onSelect: (i, e) => console.info('Select', i, e),
   });
 
   const open = $state({
@@ -22,14 +26,14 @@
   });
 
   const items: NeoMenuItem[] = [
-    { label: 'Line 1', divider: true },
+    { label: 'Line 1' },
     {
       label: 'Line 2',
       divider: true,
       items: [
         { label: 'Level 2 Line 1' },
         { label: 'Level 2 Line 2' },
-        { label: 'Level 2 Line 3', items: [{ label: 'Level 3 Line 1' }, { label: 'Level 3 Line 2' }] },
+        { label: 'Level 2 Line 3', divider: true, items: [{ label: 'Level 3 Line 1' }, { label: 'Level 3 Line 2' }] },
         { label: 'Level 2 Line 4' },
         { label: 'Level 2 Line 5' },
       ],
@@ -42,7 +46,8 @@
 
 <div class="row">
   <NeoButtonGroup text rounded>
-    <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
+    <NeoButton toggle bind:checked={options.keepOpenOnHover}>Keep Open (Hover)</NeoButton>
+    <NeoButton toggle bind:checked={options.keepOpenOnSelect}>Keep Open (Click)</NeoButton>
   </NeoButtonGroup>
 </div>
 
@@ -69,14 +74,7 @@
     <div class="column">
       <span class="label">Menu</span>
 
-      <NeoMenu
-        open={open.menu}
-        {items}
-        keepOpenOnHover={true}
-        keepOpen={true}
-        onMenu={(i, e) => console.info('Menu', i, e)}
-        onSelect={(i, e) => console.info('Select', i, e)}
-      >
+      <NeoMenu open={open.menu} {items} {...options}>
         <NeoButton elevation="0">Open</NeoButton>
       </NeoMenu>
     </div>

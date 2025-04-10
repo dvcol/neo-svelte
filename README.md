@@ -172,7 +172,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] menu list
   - [x] Dropdown
   - [ ] Sections
-  - [ ] Dividers
+  - [x] Dividers
 
 - [ ] Chat
   - [ ] infinite scroll 

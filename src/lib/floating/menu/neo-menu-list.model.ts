@@ -25,7 +25,7 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
   /**
    * If true, the menu will stay open when the item is selected.
    */
-  keepOpen?: NeoMenuListItemProps<Value>['keepOpen'];
+  keepOpenOnSelect?: NeoMenuListItemProps<Value>['keepOpenOnSelect'];
 
   // Events
   /**

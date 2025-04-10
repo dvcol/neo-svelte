@@ -12,7 +12,7 @@
     // Item Props
     items = [],
 
-    keepOpen,
+    keepOpenOnSelect,
 
     // Tooltip Props
     ref = $bindable(),
@@ -78,10 +78,10 @@
 {#snippet tooltip()}
   <NeoMenuList
     {items}
-    {keepOpen}
     {baseProps}
     {itemProps}
     {dividerProps}
+    {keepOpenOnSelect}
     tooltipProps={{ portal, padding, ...rest }}
     {...menuProps}
     {onMenu}

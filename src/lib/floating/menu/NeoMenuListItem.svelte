@@ -12,6 +12,7 @@
   import { getMenuContext, setMenuContext } from '~/floating/menu/neo-menu-context.svelte.js';
   import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
+  import { getColorVariable } from '~/utils/colors.utils.js';
 
   /* eslint-disable prefer-const -- necessary for binding checked */
   let {
@@ -30,7 +31,7 @@
     // Tooltip Props
     tooltipRef = $bindable(),
     open = $bindable(false),
-    keepOpen = false,
+    keepOpenOnSelect = false,
 
     placement = 'right-start',
     offset = (p: NeoTooltipPlacement) => ({ mainAxis: 6, crossAxis: p?.endsWith('start') ? -6 : 6 }),
@@ -100,12 +101,12 @@
     }
     onSelect?.(item, e);
     baseProps?.onclick?.(e, checked);
-    if (keepOpen) return;
+    if (keepOpenOnSelect) return;
     menuContext?.dismiss();
   };
 
   // TODO - context
-  const context = $derived<NeoMenuContext>({ item, index, length, parent, open, keepOpen, onMenu, onSelect });
+  const context = $derived<NeoMenuContext>({ item, index, length, parent, open, keepOpenOnSelect, onMenu, onSelect });
 </script>
 
 <svelte:element
@@ -116,6 +117,7 @@
   aria-posinset={index + 1}
   aria-setsize={length}
   class:neo-menu-item={true}
+  style:--neo-list-item-color={getColorVariable(item.color)}
   {...rest}
   {...item.itemProps}
 >
@@ -132,8 +134,8 @@
     itemProps={{ ...rest, ...item.itemProps }}
     baseProps={{ ...baseProps, ...item.baseProps }}
     tooltipProps={{ ...tooltipProps, ...item.tooltipProps }}
+    {keepOpenOnSelect}
     {dividerProps}
-    {keepOpen}
     {items}
     {item}
     onMenu={(i, e) => {
@@ -168,11 +170,12 @@
 <style lang="scss">
   .neo-menu-item {
     padding: 0 var(--neo-menu-padding, var(--neo-gap-tiny, 0.25));
+    color: var(--neo-list-item-color, inherit);
 
     :global(> .neo-list-item-button) {
       width: 100%;
 
-      --neo-btn-text-color-active: var(--neo-text-color);
+      --neo-btn-text-color-active: currentcolor;
     }
 
     :global(> .neo-list-item-button.neo-rounded) {

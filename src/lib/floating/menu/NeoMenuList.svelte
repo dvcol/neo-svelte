@@ -15,7 +15,7 @@
     item: parent,
     items = [],
 
-    keepOpen,
+    keepOpenOnSelect,
 
     // Events
     onMenu,
@@ -31,7 +31,6 @@
   /* eslint-enable prefer-const */
 
   // TODO: Section
-  // TODO: divider
 </script>
 
 <svelte:element this={tag} role="listbox" bind:this={ref} class:neo-menu-list={true} {...rest}>
@@ -44,7 +43,7 @@
       {item}
       {index}
       length={items.length}
-      {keepOpen}
+      {keepOpenOnSelect}
       {onMenu}
       {onSelect}
       {tooltipProps}
