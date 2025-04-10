@@ -19,7 +19,7 @@
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
-  import { type NeoTooltipProps, NeoTooltipSizeStrategy, type NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
+  import { isOffsetFunction, type NeoTooltipProps, NeoTooltipSizeStrategy, type NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -143,7 +143,7 @@
     },
     get middleware() {
       const middleware = [
-        offset(typeof spacing === 'function' ? spacing(floating.placement) : spacing),
+        offset(isOffsetFunction(spacing) ? spacing(floating.placement) : spacing),
         size({
           apply({ availableWidth, availableHeight }) {
             available.width = availableWidth - 8;

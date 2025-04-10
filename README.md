@@ -165,10 +165,14 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] close button
     - [ ] persistant
 
-- [ ] menu
-  - [ ] collapsable 
-  - [ ] nested menus
-  - [ ] menu pane (multi column)
+- [x] menu
+  - [x] nested menus
+  - [ ] collapsable (expand below)
+  - [ ] menu pane (multi column, expand right/left)
+  - [ ] menu list
+  - [x] Dropdown
+  - [ ] Sections
+  - [ ] Dividers
 
 - [ ] Chat
   - [ ] infinite scroll 

@@ -1,25 +1,30 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
-import type { NeoListContext, NeoListItem } from '~/list/neo-list.model.js';
+import type { NeoBaseListItem } from '~/list/neo-list.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 
-export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+export type NeoListBaseItemProps<
+  Value = unknown,
+  Context = any,
+  Tag extends keyof HTMLElementTagNameMap = 'li',
+  Item extends NeoBaseListItem<Value, Tag, Context> = NeoBaseListItem<Value, Tag, Context>,
+> = {
   // Snippets
   /**
    * Snippet to display before the list item.
    * e.g. an icon or avatar.
    */
-  before?: NeoListItem<Value, Tag>['before'];
+  before?: Item['before'];
   /**
    * Snippet to display after the list item.
    * e.g. a badge or action button.
    */
-  after?: NeoListItem<Value, Tag>['after'];
+  after?: Item['after'];
 
   // Context
   /**
    * The list item to display.
    */
-  item: NeoListItem<Value, Tag>;
+  item: Item;
   /*
    * The current index of the item within the list.
    */
@@ -27,7 +32,7 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
   /**
    * The current list context.
    */
-  context: NeoListContext;
+  context: Context;
   /**
    * Optional filter to highlight text.
    */
@@ -40,8 +45,18 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
   skeleton?: boolean;
   /**
    * If true, the item will display as a selectable button.
+   *
+   * This will take precedence over `arrow`.
+   * @see arrow
    */
   select?: boolean;
+  /**
+   * If true, the item will display with a chevron arrow.
+   *
+   * This cannot be used with `select`.
+   * @see select
+   */
+  arrow?: boolean;
   /**
    * If true, the item will display with a checked state.
    * Only applicable if `select` is true.
@@ -69,7 +84,7 @@ export type NeoListBaseItemProps<Value = unknown, Tag extends keyof HTMLElementT
    *
    * @default '.neo-list-item.neo-list-item-select'
    */
-  selector?: boolean;
+  selector?: string;
 
   // Methods
   /**

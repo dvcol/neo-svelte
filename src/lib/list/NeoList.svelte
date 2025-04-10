@@ -344,8 +344,8 @@
             {select}
             {highlight}
             {buttonProps}
-            disabled={item.disabled || disabled}
-            readonly={item.readonly || readonly || (!isNullable && checked)}
+            disabled={item.disabled || disabled || section?.disabled}
+            readonly={item.readonly || readonly || section?.readonly || (!isNullable && checked)}
             {...itemProps}
             onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
           />

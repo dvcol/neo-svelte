@@ -28,6 +28,21 @@ export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = 
    */
   tag?: Tag;
   /**
+   * Optional label to display in the list item.
+   * If not provided, the value will be used.
+   *
+   * @note Recommended in section for accessibility.
+   */
+  label?: string;
+  /**
+   * If true, the list item will be disabled.
+   */
+  disabled?: boolean;
+  /**
+   * If true, the item will not trigger selection, but will not be styled as disabled.
+   */
+  readonly?: boolean;
+  /**
    * Text color to use for the item.
    */
   color?: Color | CSSStyleDeclaration['color'];
@@ -49,46 +64,35 @@ export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = 
   containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 };
 
-export type NeoListItemRenderContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+export type NeoListItemContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = unknown> = {
   item: NeoListItem<Value, Tag>;
   index: number;
   checked?: boolean;
-  context: NeoListContext;
+  context: Context;
 };
-export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = Snippet<[NeoListItemRenderContext<Value, Tag>]>;
-export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+
+export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = unknown> = Snippet<
+  [NeoListItemContext<Value, Tag, Context>]
+>;
+
+export type NeoBaseListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = any> = {
   /**
    * An arbitrary value to associate with the list item.
    */
   value: Value;
   /**
-   * Optional label to display in the list item.
-   * If not provided, the value will be used.
-   *
-   * @note Recommended in section for accessibility.
-   */
-  label?: string;
-  /**
    * Optional description to display in the list item.
    */
   description?: string;
   /**
-   * If true, the list item will be disabled.
-   */
-  disabled?: boolean;
-  /**
-   * If true, the item will not trigger selection, but will not be styled as disabled.
-   */
-  readonly?: boolean;
-  /**
    * Optional snippet to display in place of the list item.
    */
-  render?: NeoListItemRender<Value, Tag>;
+  render?: NeoListItemRender<Value, Tag, Context>;
   /**
    * Snippet to display before the list item.
    * e.g. an icon or avatar.
    */
-  before?: NeoListItemRender<Value, Tag>;
+  before?: NeoListItemRender<Value, Tag, Context>;
   /**
    * Snippet to display after the list item.
    * e.g. a badge or action button.
@@ -108,7 +112,13 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   buttonProps?: NeoButtonProps;
 } & NeoListItemCommon<Tag>;
 
-export type NeoListRenderContext<Value = unknown, Item = NeoListItem | NeoListSection> = {
+export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = NeoListContext> = NeoBaseListItem<
+  Value,
+  Tag,
+  Context
+>;
+
+export type NeoListRenderContext<Value = unknown, Item = NeoListItemOrSection<Value>> = {
   items: Item[];
   /**
    * The index of the section in the list.
@@ -125,10 +135,6 @@ export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagName
    * Array of child list items to display.
    */
   items: NeoListItem<Value>[];
-  /**
-   * Optional label to display in the list item.
-   */
-  label: string;
   /**
    * Whether the section is sticky (stays on top while scrolling the content).
    */
@@ -379,7 +385,7 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Optional props to pass to the list item.
    */
-  itemProps?: Omit<NeoListBaseItemProps<Value>, 'buttonProps'>;
+  itemProps?: Omit<NeoListBaseItemProps<Value, NeoListContext>, 'buttonProps'>;
   /**
    * Optional props to pass to the list section.
    */

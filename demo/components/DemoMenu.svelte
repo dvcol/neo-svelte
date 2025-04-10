@@ -1,4 +1,5 @@
 <script lang="ts">
+  import NeoMenu from '../../src/lib/floating/menu/NeoMenu.svelte';
   import { colorOptions } from '../utils/color.utils';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -10,6 +11,30 @@
     color: '',
     close: false,
   });
+
+  const open = $state({
+    menu: false,
+    menuPanel: false,
+    externalMenu: false,
+    externalMenuPanel: false,
+  });
+
+  const items = [
+    { label: 'Line 1' },
+    {
+      label: 'Line 2',
+      items: [
+        { label: 'Level 2 Line 1' },
+        { label: 'Level 2 Line 2' },
+        { label: 'Level 2 Line 3', items: [{ label: 'Level 3 Line 1' }, { label: 'Level 3 Line 2' }] },
+        { label: 'Level 2 Line 4' },
+        { label: 'Level 2 Line 5' },
+      ],
+    },
+    { label: 'Line 3' },
+    { label: 'Line 4' },
+    { label: 'Line 5' },
+  ];
 </script>
 
 <div class="row">
@@ -38,8 +63,73 @@
 
 <section>
   <div class="row">
-    <span class="label">Menu</span>
+    <div class="column">
+      <span class="label">Menu</span>
+
+      <NeoMenu
+        open={open.menu}
+        {items}
+        keepOpenOnHover={false}
+        keepOpen
+        onMenu={(i, e) => console.info('Menu', i, e)}
+        onSelect={(i, e) => console.info('Select', i, e)}
+      >
+        <NeoButton elevation="0">Open</NeoButton>
+      </NeoMenu>
+    </div>
+
+    <!--    <div class="column">-->
+    <!--      <span class="label">Menu Collapse</span>-->
+
+    <!--      <NeoButton elevation="0">Open</NeoButton>-->
+    <!--    </div>-->
+
+    <!--    <div class="column">-->
+    <!--      <span class="label">Menu Panel</span>-->
+
+    <!--      <NeoButton elevation="0">Open</NeoButton>-->
+    <!--    </div>-->
   </div>
+
+  <!--  <div class="row">-->
+  <!--    <div class="column">-->
+  <!--      <span class="label">Complexe Menu</span>-->
+
+  <!--      <NeoButton elevation="0">Open</NeoButton>-->
+  <!--    </div>-->
+
+  <!--    <div class="column">-->
+  <!--      <span class="label">Complexe Menu Collapse</span>-->
+
+  <!--      <NeoButton elevation="0">Open</NeoButton>-->
+  <!--    </div>-->
+
+  <!--    <div class="column">-->
+  <!--      <span class="label">Complexe Menu Panel</span>-->
+
+  <!--      <NeoButton elevation="0">Open</NeoButton>-->
+  <!--    </div>-->
+  <!--  </div>-->
+
+  <!--  <div class="row">-->
+  <!--    <div class="column">-->
+  <!--      <span class="label">Complexe Menu List</span>-->
+
+  <!--      <NeoButton elevation="0">Open</NeoButton>-->
+  <!--    </div>-->
+
+  <!--    <div class="column">-->
+  <!--      <span class="label">Complexe Menu List Collapse </span>-->
+
+  <!--      <NeoButton elevation="0">Open</NeoButton>-->
+  <!--    </div>-->
+
+  <!--    <div class="column">-->
+  <!--      <span class="label">Complexe Menu List Panel</span>-->
+
+  <!--      <NeoButton elevation="0">Open</NeoButton>-->
+  <!--    </div>-->
+  <!--  </div>-->
 </section>
 
 <style lang="scss">
@@ -60,6 +150,10 @@
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     margin: 4rem 0;
+  }
+
+  .column {
+    @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
   }
 
   @media (width < 1200px) {

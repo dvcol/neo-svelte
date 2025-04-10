@@ -35,6 +35,10 @@ export type NeoTooltipContext = UseFloatingReturn;
 
 export type NeoTooltipToggle = (open?: boolean) => boolean;
 
+export type NeoTooltipOffsetFunction = (placement: NeoTooltipPlacement) => Parameters<typeof offset>[0];
+
+export const isOffsetFunction = (fn: NeoTooltipProps['offset']): fn is NeoTooltipOffsetFunction => typeof fn === 'function';
+
 export type NeoTooltipProps = {
   // Snippets
 
@@ -75,7 +79,7 @@ export type NeoTooltipProps = {
    *
    * @default 6
    */
-  offset?: Parameters<typeof offset>[0] | ((placement: NeoTooltipPlacement) => Parameters<typeof offset>[0]);
+  offset?: Parameters<typeof offset>[0] | NeoTooltipOffsetFunction;
   /**
    * Where to place the floating element relative to its reference element.
    */
