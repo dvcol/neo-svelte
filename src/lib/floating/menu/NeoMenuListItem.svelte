@@ -27,6 +27,7 @@
     parent,
     index = 0,
     length,
+    level = 1,
 
     // Tooltip Props
     tooltipRef = $bindable(),
@@ -114,8 +115,10 @@
 <svelte:element
   this={item.tag ?? tag}
   bind:this={ref}
-  role="option"
+  role="menuitem"
   data-index={index}
+  data-level={level}
+  aria-haspopup={nested ? 'menu' : undefined}
   aria-posinset={index + 1}
   aria-setsize={length}
   class:neo-menu-item={true}
@@ -143,7 +146,16 @@
 </svelte:element>
 
 {#snippet tooltip()}
-  <NeoMenuList {...menuProps} itemProps={{ ...rest, ...menuProps?.itemProps }} {keepOpenOnSelect} {items} {item} {onMenu} {onSelect} />
+  <NeoMenuList
+    {...menuProps}
+    itemProps={{ ...rest, ...menuProps?.itemProps }}
+    {keepOpenOnSelect}
+    {items}
+    {item}
+    level={level + 1}
+    {onMenu}
+    {onSelect}
+  />
 {/snippet}
 
 {#if nested}

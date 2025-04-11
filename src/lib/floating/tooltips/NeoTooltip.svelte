@@ -411,6 +411,7 @@
     display: flex;
     flex: 1 0 fit-content;
     flex-direction: column;
+    overflow: hidden;
 
     :global(> .neo-list:only-child) {
       width: inherit;

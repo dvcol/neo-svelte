@@ -171,7 +171,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] menu pane (multi column, expand right/left)
   - [ ] menu list
   - [x] Dropdown
-  - [ ] Sections
+  - [x] Sections
   - [x] Dividers
 
 - [ ] Chat

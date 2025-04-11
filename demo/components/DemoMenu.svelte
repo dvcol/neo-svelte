@@ -53,7 +53,6 @@
       buttonProps: { target: '_blank' },
       title: 'This is a link to google',
       color: Colors.Primary,
-      divider: { top: true },
     },
     {
       label: 'Line item disabled',
@@ -73,22 +72,33 @@
       { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
       { label: 'John Smith', value: 'Smith', description: 'john.smith@hotmal.com' },
       { label: 'Alice Johnson', value: 'Alice', description: 'alice.johnson@outlook.com' },
-      { label: 'Bob Brown', value: 'Bob', description: 'bob.brown@gmail.com' },
-      { label: 'Charlie Davis', value: 'Charlie', description: 'charlie.davis@icloud.com' },
-      { label: 'Diana Evans', value: 'Diana', description: 'diana.evans@hotmail.com' },
-      { label: 'Eve Foster', value: 'Eve', description: 'eve.foster@yahoo.com' },
-      { label: 'Frank Green', value: 'Frank', description: 'frank.green@outlook.com' },
-      { label: 'Grace Harris', value: 'Grace', description: 'grace.harris@gmail.com' },
-      { label: 'Henry Irving', value: 'Henry', description: 'henry.irving@icloud.com' },
       { label: 'Ivy Johnson', value: 'Ivy', description: 'ivy.johnson@hotmail.com' },
       { label: 'Jack King', value: 'Jack', description: 'jack.king@yahoo.com' },
       { label: 'Karen Lee', value: 'Karen', description: 'karen.lee@outlook.com' },
       {
         label: 'Directors',
+        section: true,
         divider: true,
         sticky: true,
         items: [
-          { label: 'Denis VVilleneuve', value: 'Denis', description: '+33 1 25 48 45 45' },
+          {
+            label: 'Denis Villeneuve',
+            value: 'Denis',
+            description: '+33 1 25 48 45 45',
+
+            items: [
+              {
+                label: 'emails',
+                section: true,
+                items: [
+                  { label: 'work', description: 'denis.villeneuve@gmail.com' },
+                  { label: 'personal', description: 'denis.villeneuve@yahoo.com' },
+                  { label: 'landline', description: '+33 1 25 48 45 45' },
+                  { label: 'mobile', description: '+33 6 25 48 45 45' },
+                ],
+              },
+            ],
+          },
           { label: 'Christopher Nolan', value: 'Christopher', description: '+44 2 07 94 60 95' },
           { label: 'Quentin Tarantino', value: 'Quentin', description: '+33 1 05 55 12 34' },
           { label: 'Martin Scorsese', value: 'Martin', description: '+33 1 25 55 56 78' },

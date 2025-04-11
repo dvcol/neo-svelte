@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { getUUID } from '@dvcol/common-utils/common/string';
+
+  import type { NeoMenuItem } from '~/floating/menu/neo-menu-item.model.js';
   import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -14,6 +17,7 @@
     tag = 'ul',
     item: parent,
     items = [],
+    level = 1,
 
     keepOpenOnSelect,
 
@@ -38,9 +42,57 @@
   // TODO: Section
 </script>
 
+{#snippet line(item: NeoMenuItem, index = 0, length = 0)}
+  <NeoMenuListItem
+    {keepOpenOnSelect}
+    {rounded}
+    {...itemProps}
+    {parent}
+    {item}
+    {index}
+    {length}
+    {level}
+    {tooltipProps}
+    {baseProps}
+    menuProps={{ tag, shadow, scrollbar, rounded, dividerProps, tooltipProps, baseProps, ...rest, ...item.menuProps }}
+    onMenu={(i, e) => {
+      item.menuProps?.onMenu?.(i, e);
+      onMenu?.(i, e);
+    }}
+    onSelect={(i, e) => {
+      item.menuProps?.onSelect?.(i, e);
+      onSelect?.(i, e);
+    }}
+  />
+{/snippet}
+
+{#snippet list(array: NeoMenuItem[])}
+  {#each array as item, index (item.id ?? index)}
+    {@const labelId = item.label ? `neo-menu-section-label-${getUUID()}` : undefined}
+    {#if index && showDivider(item.divider, 'top')}
+      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
+    {/if}
+    {#if item.section}
+      <span id={labelId} class="neo-menu-list-section-label" class:neo-sticky={item.sticky}>
+        {item.label}
+      </span>
+      <svelte:element this={tag} role="menu">
+        {#if item.items}
+          {@render list(item.items)}
+        {/if}
+      </svelte:element>
+    {:else}
+      {@render line(item, index, array.length)}
+    {/if}
+    {#if index < array.length - 1 && showDivider(item.divider, 'bottom') && !showDivider(array[index + 1]?.divider, 'bottom')}
+      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
+    {/if}
+  {/each}
+{/snippet}
+
 <svelte:element
   this={tag}
-  role="listbox"
+  role="menu"
   bind:this={ref}
   class:neo-menu-list={true}
   class:neo-scroll={scrollbar}
@@ -48,34 +100,7 @@
   class:neo-rounded={rounded}
   {...rest}
 >
-  {#each items as item, index (item.id ?? index)}
-    {#if index && showDivider(item.divider, 'top') && !showDivider(items[index - 1]?.divider, 'top')}
-      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
-    {/if}
-    <NeoMenuListItem
-      {keepOpenOnSelect}
-      {rounded}
-      {...itemProps}
-      {parent}
-      {item}
-      {index}
-      length={items.length}
-      {tooltipProps}
-      {baseProps}
-      menuProps={{ tag, shadow, scrollbar, rounded, dividerProps, tooltipProps, baseProps, ...rest, ...item.menuProps }}
-      onMenu={(i, e) => {
-        item.menuProps?.onMenu?.(i, e);
-        onMenu?.(i, e);
-      }}
-      onSelect={(i, e) => {
-        item.menuProps?.onSelect?.(i, e);
-        onSelect?.(i, e);
-      }}
-    />
-    {#if index < items.length - 1 && showDivider(item.divider, 'bottom') && !showDivider(items[index + 1]?.divider, 'bottom')}
-      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
-    {/if}
-  {/each}
+  {@render list(items)}
 </svelte:element>
 
 <style lang="scss">
@@ -91,12 +116,35 @@
       margin: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem)) 0;
     }
 
+    &-section {
+      &-label {
+        display: inline-flex;
+        padding: 0.25rem 0.6125rem;
+        transition: color 0.3s ease;
+        margin-block-end: 0.125rem;
+
+        &.neo-sticky {
+          position: sticky;
+          top: -0.5rem;
+          z-index: var(--neo-z-index-in-front, 1);
+          background: var(
+            --neo-list-section-bg-color,
+            linear-gradient(to top, transparent 5%, oklch(from var(--neo-background-color) l c h / 50%) 20%, var(--neo-background-color))
+          );
+        }
+      }
+    }
+
     &.neo-scroll,
     &.neo-rounded {
       padding-block: var(--neo-menu-scroll-padding, 0.625rem);
 
       &:not(.neo-scroll) :global(> .neo-menu-item) {
         padding: 0 var(--neo-menu-padding, var(--neo-gap-xxs, 0.5rem));
+      }
+
+      .neo-menu-list-section-label {
+        top: -0.75rem;
       }
     }
 

@@ -25,6 +25,7 @@
     openOnHover = false,
     openOnFocus = false,
     openOnClick = true,
+    role = 'menu',
 
     // Styles
     shadow = true,
@@ -92,7 +93,7 @@
     {itemProps}
     {dividerProps}
     {keepOpenOnSelect}
-    tooltipProps={{ portal, padding, openOnHover, openOnFocus, openOnClick, ...rest }}
+    tooltipProps={{ role, portal, padding, openOnHover, openOnFocus, openOnClick, ...rest }}
     {...menuProps}
     {onMenu}
     {onSelect}
@@ -109,6 +110,7 @@
     }
   }
   {target}
+  {role}
   {portal}
   {padding}
   {openOnHover}

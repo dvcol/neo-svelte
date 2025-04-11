@@ -24,6 +24,13 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
   items?: NeoMenuItem<Value>[];
 
   /**
+   * The nested level of the menu.
+   *
+   * @default 1
+   */
+  level?: number;
+
+  /**
    * If true, the menu will stay open when the item is selected.
    */
   keepOpenOnSelect?: NeoMenuListItemProps<Value>['keepOpenOnSelect'];

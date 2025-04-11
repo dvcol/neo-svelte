@@ -10,8 +10,28 @@ export type NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>,
   'containerProps'
 > & {
+  /**
+   * If true, children items will be rendered as list items instead of a nested dropdown menu.
+   *
+   * @default false
+   */
+  section?: string;
+  /**
+   * If true, the menu section label will be sticky on scroll.
+   */
+  sticky?: boolean;
+
+  /**
+   * The nested menu items.
+   */
   items?: NeoMenuItem<Value, Tag>[];
+  /**
+   * Optional menu props to pass to the menu list wrapper.
+   */
   menuProps?: Omit<NeoMenuListProps<Value>, 'itemProps' | 'baseProps' | 'tooltipProps' | 'items' | 'item' | 'ref'>;
+  /**
+   * Optional props to pass to the base list item.
+   */
   itemProps?: Pick<NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>, 'containerProps'>;
 } & Pick<NeoMenuListItemProps, 'tooltipProps' | 'baseProps'>;
 
@@ -28,6 +48,12 @@ export type NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagName
    * The length of the parent menu list.
    */
   length: number;
+  /**
+   * The nested level of the menu.
+   *
+   * @default 1
+   */
+  level?: number;
   /**
    * The parent item (if any).
    */
@@ -117,5 +143,5 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * Optional props to pass to the button.
    */
   buttonProps?: NeoButtonProps;
-} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'length' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'> &
+} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'length' | 'level' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'> &
   Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
