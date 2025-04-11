@@ -45,6 +45,10 @@ export type NeoSkeletonMediaProps = {
    * Optional height constraints.
    */
   height?: SizeInput<'height'>;
+  /**
+   * Whether to enable the skeleton container.
+   */
+  disabled?: boolean;
 
   // Styles
   /**

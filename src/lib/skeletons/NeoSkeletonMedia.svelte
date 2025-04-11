@@ -25,6 +25,7 @@
     flex,
     align,
     glass,
+    disabled,
 
     // Styles
     rounded,
@@ -71,6 +72,7 @@
 <NeoSkeletonContainer
   bind:ref
   {loading}
+  {disabled}
   in={inAction}
   out={outAction}
   width={width?.absolute}

@@ -20,6 +20,7 @@
     tag = 'div',
     ref = $bindable(),
     loading = true,
+    disabled = false,
 
     // Styles
     flex,
@@ -63,7 +64,9 @@
   });
 </script>
 
-{#if content}
+{#if disabled}
+  {@render content?.()}
+{:else if content}
   <NeoTransitionContainer {width} {height} {...containerProps}>
     {#if loading}
       <svelte:element

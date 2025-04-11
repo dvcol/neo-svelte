@@ -31,6 +31,7 @@
     paragraphs = 1,
     lines: inputLines,
     fallback = alt ? 26 : 6,
+    disabled = false,
 
     // Transition
     in: inAction = { use: fade, props: quickDelayProps },
@@ -76,6 +77,7 @@
 <NeoSkeletonContainer
   bind:ref
   {loading}
+  {disabled}
   in={inAction}
   out={outAction}
   width={width?.absolute}

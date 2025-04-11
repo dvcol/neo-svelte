@@ -38,6 +38,10 @@ export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 
    */
   loading?: boolean;
   /**
+   * Whether to enable the skeleton container.
+   */
+  disabled?: boolean;
+  /**
    * The context to pass to the skeleton.
    */
   context?: NeoSkeletonContainerContext;

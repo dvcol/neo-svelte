@@ -32,6 +32,10 @@ export type NeoSkeletonTextProps = {
    * @default 6 or 26 if `alt` is true
    */
   fallback?: number | string;
+  /**
+   * Whether to enable the skeleton container.
+   */
+  disabled?: boolean;
 
   // Styles
   /**

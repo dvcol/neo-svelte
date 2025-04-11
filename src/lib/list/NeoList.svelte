@@ -322,7 +322,7 @@
         out:inFn={inProps}
         in:outFn={outProps}
       >
-        {#if index && showDivider(item.divider, 'top') && !showDivider(items[index - 1]?.divider, 'top')}
+        {#if index && showDivider(item.divider, 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if isSection(item)}

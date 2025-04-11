@@ -28,7 +28,7 @@
     touched = $bindable(false),
     disabled: _disabled,
     readonly: _readonly,
-    skeleton = false,
+    skeleton,
     highlight,
     selector = '.neo-list-item.neo-list-item-select',
     arrow,
@@ -85,7 +85,8 @@
     {/if}
 
     <NeoSkeletonText
-      loading={skeleton}
+      loading={!!skeleton}
+      disabled={skeleton === undefined}
       lines="auto"
       fallback={description ? 2 : 1}
       align="center"

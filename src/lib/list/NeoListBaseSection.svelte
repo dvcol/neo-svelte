@@ -16,7 +16,7 @@
     context,
 
     select,
-    skeleton = false,
+    skeleton,
     highlight,
 
     // Other props
@@ -32,7 +32,14 @@
 {:else}
   {#if section.label}
     <div id={labelId} class="neo-list-section-title" class:neo-sticky={section.sticky}>
-      <NeoSkeletonText loading={skeleton} lines={1} align="center" {...skeletonProps} class={['neo-list-section-skeleton', skeletonProps?.class]}>
+      <NeoSkeletonText
+        loading={!!skeleton}
+        disabled={skeleton === undefined}
+        lines={1}
+        align="center"
+        {...skeletonProps}
+        class={['neo-list-section-skeleton', skeletonProps?.class]}
+      >
         <NeoMark value={section.label} filter={highlight} />
       </NeoSkeletonText>
     </div>
