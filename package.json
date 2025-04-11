@@ -82,6 +82,21 @@
       "import": "./dist/floating/dialog/index.js",
       "svelte": "./dist/floating/dialog/index.js"
     },
+    "./floating/drawer": {
+      "types": "./dist/floating/drawer/index.d.ts",
+      "import": "./dist/floating/drawer/index.js",
+      "svelte": "./dist/floating/drawer/index.js"
+    },
+    "./floating/menu": {
+      "types": "./dist/floating/menu/index.d.ts",
+      "import": "./dist/floating/menu/index.js",
+      "svelte": "./dist/floating/menu/index.js"
+    },
+    "./floating/portal": {
+      "types": "./dist/floating/portal/index.d.ts",
+      "import": "./dist/floating/portal/index.js",
+      "svelte": "./dist/floating/portal/index.js"
+    },
     "./floating/tooltips": {
       "types": "./dist/floating/tooltips/index.d.ts",
       "import": "./dist/floating/tooltips/index.js",

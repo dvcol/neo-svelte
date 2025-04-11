@@ -1,4 +1,4 @@
-import type { NeoMenuItem } from '~/floating/menu/neo-menu-item.model.js';
+import type { NeoMenuItem } from '~/floating/menu/neo-menu-list-item.model.js';
 import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 

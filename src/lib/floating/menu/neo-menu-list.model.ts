@@ -1,5 +1,5 @@
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
-import type { NeoMenuItem, NeoMenuListItemProps } from '~/floating/menu/neo-menu-item.model.js';
+import type { NeoMenuItem, NeoMenuListItemProps } from '~/floating/menu/neo-menu-list-item.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { NeoMenuItem } from '~/floating/menu/neo-menu-item.model.js';
+  import type { NeoMenuItem } from '~/floating/menu/neo-menu-list-item.model.js';
   import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';

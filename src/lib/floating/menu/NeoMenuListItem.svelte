@@ -4,7 +4,7 @@
   import { tick } from 'svelte';
 
   import type { NeoTooltipPlacement } from '~/floating/common/neo-placement.model.js';
-  import type { NeoMenuContext, NeoMenuListItemProps } from '~/floating/menu/neo-menu-item.model.js';
+  import type { NeoMenuContext, NeoMenuListItemProps } from '~/floating/menu/neo-menu-list-item.model.js';
 
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
