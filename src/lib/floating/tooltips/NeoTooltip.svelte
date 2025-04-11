@@ -236,23 +236,24 @@
       ['onfocusout', triggerHandler.onblur],
     ];
     listener.forEach(([key, value]) => {
-      if (!triggerRef || typeof value !== 'function') return;
-      triggerRef.addEventListener(key.substring(2).toLowerCase(), value);
+      if (!triggerRef || !value) return;
+      if (typeof value !== 'function') {
+        triggerRef.setAttribute(key, value);
+      } else {
+        triggerRef.addEventListener(key.substring(2).toLowerCase(), value);
+      }
     });
     return () => {
       if (!host) return;
       listener.forEach(([key, value]) => {
-        if (!triggerRef || typeof value !== 'function') return;
-        triggerRef.removeEventListener(key.substring(2).toLowerCase(), value);
+        if (!triggerRef) return;
+        if (typeof value !== 'function') {
+          triggerRef.removeAttribute(key);
+        } else {
+          triggerRef.removeEventListener(key.substring(2).toLowerCase(), value);
+        }
       });
     };
-  });
-
-  $effect(() => {
-    if (!host || !triggerRef) return;
-    const aria = triggerHandler['aria-describedby'];
-    if (aria) triggerRef.setAttribute('aria-describedby', aria);
-    return () => triggerRef?.removeAttribute('aria-describedby');
   });
 
   const toggle: NeoTooltipToggle = (state = !open) => {
