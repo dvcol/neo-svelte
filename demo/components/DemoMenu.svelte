@@ -157,8 +157,8 @@
     <div class="column">
       <span class="label">Menu</span>
 
-      <NeoMenu open={open.menu} {items} {...options}>
-        <NeoButton elevation="0">Open</NeoButton>
+      <NeoMenu bind:open={open.menu} {items} {...options}>
+        <NeoButton elevation="0" toggle bind:checked={open.menu}>Open</NeoButton>
       </NeoMenu>
     </div>
 
@@ -179,8 +179,8 @@
     <div class="column">
       <span class="label">Rich Menu</span>
 
-      <NeoMenu open={open.menuRich} items={itemsRich} {...options}>
-        <NeoButton elevation="0">Open</NeoButton>
+      <NeoMenu bind:open={open.menuRich} items={itemsRich} {...options}>
+        <NeoButton elevation="0" toggle bind:checked={open.menuRich}>Open</NeoButton>
       </NeoMenu>
     </div>
 

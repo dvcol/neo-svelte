@@ -22,9 +22,9 @@
     target,
     portal = true,
     padding = '0',
-    openOnHover = false,
+    openOnHover = true,
     openOnFocus = false,
-    openOnClick = true,
+    openOnClick = false,
     role = 'menu',
 
     // Styles
