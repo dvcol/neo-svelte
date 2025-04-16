@@ -507,7 +507,7 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     if (!e.key.startsWith('Arrow')) return;
     initial = { x: 0, y: 0 };
 
-    stopTranslating.cancel().catch(Logger.error);
+    stopTranslating.cancel();
     startTranslating(Math.min(translating + 1, 10), { duration: 100, easing: 'linear' });
     const step = (movable.step ?? 4) * translating;
     if (e.key === 'ArrowLeft') {

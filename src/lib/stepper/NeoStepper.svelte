@@ -181,7 +181,7 @@
       active = index;
       return await emitStepEvent(reason);
     } finally {
-      setLoading.cancel().catch(Logger.error);
+      setLoading.cancel();
       loading[reason] = false;
     }
   };
