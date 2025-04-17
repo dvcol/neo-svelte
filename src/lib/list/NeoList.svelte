@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { NeoListContext, NeoListMethods, NeoListProps, NeoListRenderContext, NeoListSection, NeoListSelectedItem, NeoListSelectEvent } from '~/list/neo-list.model.js';
+
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
   import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze } from '@dvcol/svelte-utils/transition';
@@ -8,21 +10,15 @@
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconList from '~/icons/IconList.svelte';
-  import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
-  import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
-  import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
   import {
     findByIdInList,
     isSection,
-    type NeoListContext,
-    type NeoListMethods,
-    type NeoListProps,
-    type NeoListRenderContext,
-    type NeoListSection,
-    type NeoListSelectedItem,
-    type NeoListSelectEvent,
+
     showDivider,
   } from '~/list/neo-list.model.js';
+  import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
+  import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
+  import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { NeoErrorListSelectDisabled } from '~/utils/error.utils.js';
@@ -30,7 +26,6 @@
   import { toSize } from '~/utils/style.utils.js';
   import { quickCircOutProps, quickDurationProps, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     item: customItem,
@@ -87,7 +82,6 @@
     sectionProps,
     ...rest
   }: NeoListProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 

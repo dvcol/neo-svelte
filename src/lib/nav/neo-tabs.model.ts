@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
@@ -6,7 +7,11 @@ import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
 
-export type NeoTabContextValue<Value = unknown> = { index: number; value?: Value; ref: HTMLElement };
+export interface NeoTabContextValue<Value = unknown> {
+  index: number;
+  value?: Value;
+  ref: HTMLElement;
+}
 export type OnChange<Value = unknown> = (tabId?: TabId, newValue?: NeoTabContextValue<Value>, oldValue?: NeoTabContextValue) => unknown;
 export type OnClose<Value = unknown> = (tabId?: TabId, value?: NeoTabContextValue<Value>) => unknown;
 
@@ -88,5 +93,5 @@ export type NeoTabsProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    */
   containerProps?: NeoTabsContainerProps & HTMLTagProps;
 } & NeoTabsContext &
-  Omit<NeoButtonGroupProps<Tag>, 'onchange' | 'children' | 'vertical' | 'ref'> &
-  HTMLRefProps;
+Omit<NeoButtonGroupProps<Tag>, 'onchange' | 'children' | 'vertical' | 'ref'> &
+HTMLRefProps;

@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoPinState } from '~/inputs/neo-pin.model.js';
@@ -17,4 +18,4 @@ export type NeoPasswordProps<T extends boolean = false> = {
    */
   buttonProps?: NeoButtonProps;
 } & NeoInputProps &
-  (T extends true ? NeoPinState : Record<string, never>);
+(T extends true ? NeoPinState : Record<string, never>);

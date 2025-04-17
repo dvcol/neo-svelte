@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { NeoListBaseSectionProps } from '~/list/neo-list-base-section.model.js';
+
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';

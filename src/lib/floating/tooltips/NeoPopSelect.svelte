@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { watch } from '@dvcol/svelte-utils/watch';
-
   import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
   import type { NeoListSelectEvent, NeoTooltipContext, NeoTooltipToggle } from 'src/lib/index.js';
+
   import type { NeoPopSelectProps } from '~/floating/tooltips/neo-pop-select.model.js';
   import type { NeoListContext, NeoListItemOrSection } from '~/list/neo-list.model.js';
+
+  import { watch } from '@dvcol/svelte-utils/watch';
 
   import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
   import NeoList from '~/list/NeoList.svelte';
   import NeoListSearch from '~/list/NeoListSearch.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children: trigger,
@@ -71,7 +71,6 @@
     searchProps,
     ...rest
   }: NeoPopSelectProps = $props();
-  /* eslint-enable prefer-const */
 
   const items = $derived<NeoListItemOrSection[]>(array?.map(i => (typeof i === 'object' ? i : { value: i })));
 
@@ -127,12 +126,10 @@
 <NeoTooltip
   bind:ref={tooltipRef}
   bind:triggerRef
-  bind:open={
-    () => open || focused, // eslint-disable-line no-sequences
-    value => {
+  bind:open={() => open || focused,
+    (value) => {
       open = value;
-    }
-  }
+    }}
   {tooltip}
   unmountOnClose={false}
   {target}

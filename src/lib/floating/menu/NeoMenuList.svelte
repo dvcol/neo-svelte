@@ -1,15 +1,13 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { NeoMenuItem } from '~/floating/menu/neo-menu-list-item.model.js';
   import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 
-  import NeoDivider from '~/divider/NeoDivider.svelte';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
+  import NeoDivider from '~/divider/NeoDivider.svelte';
   import NeoMenuListItem from '~/floating/menu/NeoMenuListItem.svelte';
   import { showDivider } from '~/list/neo-list.model.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     ref = $bindable(),
 
@@ -37,9 +35,8 @@
     dividerProps,
     ...rest
   }: NeoMenuListProps = $props();
-  /* eslint-enable prefer-const */
 
-  // TODO: Section
+// TODO: Section
 </script>
 
 {#snippet line(item: NeoMenuItem, index = 0, length = 0)}

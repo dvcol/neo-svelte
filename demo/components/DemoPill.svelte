@@ -1,18 +1,17 @@
 <script lang="ts">
-  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
-
-  import { colorOptions } from '../utils/color.utils';
-
   import NeoBadge from '~/badge/NeoBadge.svelte';
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import IconMail from '~/icons/IconMail.svelte';
+  import { displayValue } from '~/inputs/neo-select.model';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
-  import { displayValue } from '~/inputs/neo-select.model';
   import NeoPill from '~/pill/NeoPill.svelte';
   import { MaxShallowShadowElevation, MinShallowShadowElevation } from '~/utils/shadow.utils';
+
+  import { colorOptions } from '../utils/color.utils';
+  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   const options = $state({
     elevation: 1,
@@ -136,13 +135,13 @@
   <div class="row">
     <span class="label">Badges</span>
     <SphereBackdrop glass={options.glass}>
-      <NeoBadge value="1" {...options} glass={true} size={'medium'} elevation="2" tinted>
+      <NeoBadge value="1" {...options} glass={true} size="medium" elevation="2" tinted>
         <NeoButton glass={options.glass} rounded={options.rounded}>Default</NeoButton>
       </NeoBadge>
     </SphereBackdrop>
 
     <SphereBackdrop glass={options.glass}>
-      <NeoBadge {...options} glass={false} size={'small'} elevation="0" filled offset={{ x: '-4%', y: '-2%' }}>
+      <NeoBadge {...options} glass={false} size="small" elevation="0" filled offset={{ x: '-4%', y: '-2%' }}>
         <NeoButton glass={options.glass} rounded={options.rounded}>Custom snippet</NeoButton>
 
         {#snippet value()}

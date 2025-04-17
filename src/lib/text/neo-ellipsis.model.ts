@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoEllipsisProps<Tag extends keyof HTMLElementTagNameMap = 'span'> = {

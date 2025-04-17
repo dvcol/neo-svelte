@@ -1,5 +1,6 @@
 import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
+
 import type { NeoFormType } from '~/form/neo-form-context.svelte.js';
 import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
@@ -13,7 +14,7 @@ import type { SizeInput } from '~/utils/style.utils.js';
 export type NeoRangeValue = number | [number, number];
 export type NeoRangeElevation = ShadowShallowElevation | ShadowShallowElevationString;
 
-export type NeoRangeStates = {
+export interface NeoRangeStates {
   /**
    * If the input is currently focused.
    */
@@ -52,9 +53,9 @@ export type NeoRangeStates = {
    * @default 1
    */
   step?: number;
-};
+}
 
-export type NeoRangeStyles = {
+export interface NeoRangeStyles {
   /**
    * If true, the input will show step markers.
    * If an array is provided, the input will show the markers at the given values.
@@ -98,18 +99,18 @@ export type NeoRangeStyles = {
    * @default 2
    */
   elevation?: NeoRangeElevation;
-};
+}
 
-export type NeoRangeTooltipContext = {
+export interface NeoRangeTooltipContext {
   lower?: boolean;
   upper?: boolean;
   value?: number;
-};
+}
 
-export type NeoRangeTickContext = {
+export interface NeoRangeTickContext {
   index: number;
   filled?: boolean;
-};
+}
 
 export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation' | 'error' | 'context' | 'message' | 'messageProps'> &
   NeoValidationState<NeoRangeValue> & {
@@ -208,7 +209,7 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
 
 export type NeoRangeValidationState = NeoValidationState<NeoRangeValue>;
 
-export type NeoRangeMethods<T extends NeoRangeValue = NeoRangeValue> = {
+export interface NeoRangeMethods<T extends NeoRangeValue = NeoRangeValue> {
   /**
    * Increment the input value.
    * @param index
@@ -219,7 +220,7 @@ export type NeoRangeMethods<T extends NeoRangeValue = NeoRangeValue> = {
    * @param index
    */
   stepDown: (index?: 0 | 1) => T;
-};
+}
 
 export type NeoRangeContext<T extends NeoRangeValue = NeoRangeValue> = NeoValidationFieldContext &
   NeoRangeStates &

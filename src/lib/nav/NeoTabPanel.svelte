@@ -1,15 +1,14 @@
 <script lang="ts">
+  import type { NeoTabPanelProps } from '~/nav/neo-tab-panel.model.js';
+
   import { emptyTransition } from '@dvcol/svelte-utils/transition';
   import { untrack } from 'svelte';
   import { fly } from 'svelte/transition';
-
-  import type { NeoTabPanelProps } from '~/nav/neo-tab-panel.model.js';
 
   import { getTabsCardContext } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -31,7 +30,6 @@
     // Other props
     ...rest
   }: NeoTabPanelProps = $props();
-  /* eslint-enable prefer-const */
 
   const context = getTabContext();
   const active = $derived(context?.active === tabId);

@@ -1,14 +1,12 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
-
   import type { NeoMovable, NeoMovableLimits, NeoMovableSnap } from '~/floating/dialog/use-movable.svelte.js';
+
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
   import NeoDialog from '~/floating/dialog/NeoDialog.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     id = `neo-drawer-${getUUID()}`,
     ref = $bindable(),
@@ -30,7 +28,6 @@
 
     ...rest
   }: NeoDialogProps = $props();
-  /* eslint-enable prefer-const */
 
   const getLimits = (limits: NeoMovableLimits = {}): NeoMovableLimits => {
     if (!placement) return limits;

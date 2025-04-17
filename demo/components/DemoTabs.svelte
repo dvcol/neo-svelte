@@ -1,23 +1,22 @@
 <script lang="ts">
-  import { randomHex } from '@dvcol/common-utils/common/crypto';
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
-  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
-
-  import { colorOptions } from '../utils/color.utils';
-  import { useButtonState } from '../utils/use-button-state.svelte';
-
   import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
   import type { NeoTabContextValue, NeoTabsProps } from '~/nav/neo-tabs.model.js';
+
+  import { randomHex } from '@dvcol/common-utils/common/crypto';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
-  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabDivider from '~/nav/NeoTabDivider.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
+
+  import { colorOptions } from '../utils/color.utils';
+  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
+  import { useButtonState } from '../utils/use-button-state.svelte';
 
   const { onClick, loading: loading$, onLoading } = useButtonState('DemoTabsClicked');
   const loading = $derived.by(loading$);

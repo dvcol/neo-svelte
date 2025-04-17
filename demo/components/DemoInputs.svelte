@@ -1,18 +1,13 @@
 <script lang="ts">
-  import { flip } from 'svelte/animate';
-  import { fade } from 'svelte/transition';
-
-  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
-
-  import { colorOptions } from '../utils/color.utils';
-
   import type { NeoInputProps, NeoInputState } from '~/inputs/common/neo-input.model.js';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { NeoRangeHTMLElement } from '~/inputs/neo-range.model.js';
   import type { NeoNativeSelectOption } from '~/inputs/neo-select.model.js';
-
   import type { NeoListItem } from '~/list/neo-list.model.js';
+
+  import { flip } from 'svelte/animate';
+  import { fade } from 'svelte/transition';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -21,6 +16,9 @@
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
   import IconMinus from '~/icons/IconMinus.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoTextArea from '~/inputs/common/NeoTextarea.svelte';
+  import { displayValue } from '~/inputs/neo-select.model.js';
   import NeoCheckbox from '~/inputs/NeoCheckbox.svelte';
   import NeoColorPicker from '~/inputs/NeoColorPicker.svelte';
   import NeoDateTime from '~/inputs/NeoDateTime.svelte';
@@ -33,9 +31,6 @@
   import NeoRange from '~/inputs/NeoRange.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoSwitch from '~/inputs/NeoSwitch.svelte';
-  import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import NeoTextArea from '~/inputs/common/NeoTextarea.svelte';
-  import { displayValue } from '~/inputs/neo-select.model.js';
   import NeoPill from '~/pill/NeoPill.svelte';
   import {
     DefaultShadowElevation,
@@ -46,6 +41,9 @@
     MinShadowElevation,
   } from '~/utils/shadow.utils.js';
   import { quickCircOutProps, quickDurationProps } from '~/utils/transition.utils';
+
+  import { colorOptions } from '../utils/color.utils';
+  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   type ColumProps<T = NeoInputProps> = {
     label: string;

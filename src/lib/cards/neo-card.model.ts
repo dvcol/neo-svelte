@@ -1,5 +1,6 @@
 import type { NeoDividerProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
+
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
@@ -19,7 +20,7 @@ export type NeoCardBlur = BlurElevation | BlurElevationString;
 export type NeoCardElevation = ShadowElevation | ShadowElevationString;
 export type NeoCardHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 
-export type NeoCardContext = {
+export interface NeoCardContext {
   // Styles
 
   /**
@@ -119,7 +120,7 @@ export type NeoCardContext = {
    * Callback when the close button is clicked.
    */
   onClose?: NeoButtonProps['onclick'];
-};
+}
 
 export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
@@ -198,7 +199,7 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    */
   closeProps?: NeoIconButtonProps;
 } & NeoCardContext &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  HTMLFlexProps &
-  HTMLActionProps &
-  HTMLRefProps;
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
+HTMLFlexProps &
+HTMLActionProps &
+HTMLRefProps;

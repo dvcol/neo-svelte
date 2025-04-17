@@ -1,9 +1,10 @@
 <script lang="ts">
+  import type { IconArrowProps } from '~/icons/icon.model.js';
+
   import { watch } from '@dvcol/svelte-utils/watch';
 
-  import { IconArrowDirection, type IconArrowProps } from '~/icons/icon.model.js';
+  import { IconArrowDirection } from '~/icons/icon.model.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     size = '1em',
     scale = 1,
@@ -19,7 +20,6 @@
 
     ...rest
   }: IconArrowProps = $props();
-  /* eslint-enable prefer-const */
 
   watch(
     () => {

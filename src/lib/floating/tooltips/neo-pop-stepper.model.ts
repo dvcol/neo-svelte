@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
 import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
 import type { NeoStepperContext } from '~/stepper/neo-stepper.model.js';
@@ -81,4 +82,4 @@ export type NeoPopStepperProps = {
   | 'onOpen'
   | 'onClose'
 > &
-  NeoFloatingStepperProps;
+NeoFloatingStepperProps;

@@ -9,6 +9,7 @@ import type {
   UseRoleOptions,
 } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
+
 import type { NeoTooltipPlacement } from '~/floating/common/neo-placement.model.js';
 import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
@@ -277,14 +278,14 @@ export type NeoTooltipProps = {
    * Optional properties to pass to the portal element.
    */
   portalProps?: Omit<NeoPortalProps, 'children'>;
-} & HTMLFlexProps &
-  HTMLRefProps<NeoTooltipHTMLElement> &
-  HTMLActionProps &
-  Omit<HTMLNeoBaseElement, 'children'>;
+} & HTMLFlexProps
+& HTMLRefProps<NeoTooltipHTMLElement>
+& HTMLActionProps
+& Omit<HTMLNeoBaseElement, 'children'>;
 
-export type NeoTooltipMethods = {
+export interface NeoTooltipMethods {
   toggle: (open?: boolean) => boolean;
   update: UseFloatingReturn['update'];
-};
+}
 
 export type NeoTooltipHTMLElement<T extends HTMLElement = HTMLElement> = T & Partial<NeoTooltipMethods>;

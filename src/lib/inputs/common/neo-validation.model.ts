@@ -1,10 +1,11 @@
 import type { Snippet } from 'svelte';
+
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoValidationValue = string | string[] | number | boolean | boolean[] | FileList | any;
-export type NeoValidationState<T extends NeoValidationValue = NeoValidationValue> = {
+export interface NeoValidationState<T extends NeoValidationValue = NeoValidationValue> {
   /**
    * `true` if the input has been focused.
    */
@@ -28,13 +29,13 @@ export type NeoValidationState<T extends NeoValidationValue = NeoValidationValue
    * The initial input/textarea value.
    */
   initial?: T;
-};
+}
 
-export type NeoValidationContext<
+export interface NeoValidationContext<
   T extends HTMLElement = HTMLElement,
   V extends NeoValidationValue = NeoValidationValue,
   C extends NeoValidationFieldContext<T, V> = NeoValidationFieldContext<T, V>,
-> = {
+> {
   /**
    * If true, all validation messages are hidden.
    */
@@ -51,7 +52,7 @@ export type NeoValidationContext<
    * A snippet or a string to display as the input error message.
    */
   error?: Snippet<[C]> | string;
-};
+}
 
 export type NeoValidationFieldContext<T extends HTMLElement = HTMLElement, V extends NeoValidationValue = NeoValidationValue> = HTMLRefProps<T> &
   NeoValidationState<V>;
@@ -110,6 +111,6 @@ export type NeoValidationProps<
    */
   messageProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & HTMLTransitionProps &
-  HTMLRefProps &
-  NeoValidationContext<T, V, C> &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+HTMLRefProps &
+NeoValidationContext<T, V, C> &
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

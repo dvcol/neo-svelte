@@ -1,15 +1,24 @@
-import { getContext, setContext } from 'svelte';
-import { SvelteMap } from 'svelte/reactivity';
-
 import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 import type { TabId } from '~/nav/neo-tab.model.js';
 import type { NeoTabContextValue, OnChange, OnClose } from '~/nav/neo-tabs.model.js';
 
+import { getContext, setContext } from 'svelte';
+import { SvelteMap } from 'svelte/reactivity';
+
 import { NeoErrorMissingTabId } from '~/utils/error.utils.js';
 import { Logger } from '~/utils/logger.utils.js';
 
-export type NeoTabContextPosition = { id: TabId; top: number; left: number; width: number; height: number };
-export type NeoTabContextPositions = { oldTab?: NeoTabContextPosition; newTab?: NeoTabContextPosition };
+export interface NeoTabContextPosition {
+  id: TabId;
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+export interface NeoTabContextPositions {
+  oldTab?: NeoTabContextPosition;
+  newTab?: NeoTabContextPosition;
+}
 
 type NeoTabContextOptions = {
   // States
@@ -50,7 +59,10 @@ export type NeoTabsContext<T = unknown> = NeoTabContextOptions & {
   value?: NeoTabContextValue<T>;
 };
 
-type NeoTabContextCallbacks<T = unknown> = { onChange?: OnChange<T>; onClose?: OnClose<T> };
+interface NeoTabContextCallbacks<T = unknown> {
+  onChange?: OnChange<T>;
+  onClose?: OnClose<T>;
+}
 
 export class NeoTabContext<T = unknown> {
   readonly #tabs: Map<TabId, NeoTabContextValue<T>> = new SvelteMap();
@@ -178,10 +190,10 @@ export class NeoTabContext<T = unknown> {
 
 const NeoTabsContextSymbol = Symbol('NeoTabsContext');
 
-export const getTabContext = <T = unknown>(): NeoTabContext<T> | undefined => {
+export function getTabContext<T = unknown>(): NeoTabContext<T> | undefined {
   return getContext<NeoTabContext<T>>(NeoTabsContextSymbol);
-};
+}
 
-export const setTabContext = <T = unknown>(callback?: NeoTabContextCallbacks<T>) => {
+export function setTabContext<T = unknown>(callback?: NeoTabContextCallbacks<T>) {
   return setContext(NeoTabsContextSymbol, new NeoTabContext<T>(callback));
-};
+}

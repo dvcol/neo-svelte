@@ -3,7 +3,6 @@
 
   import { toAction, toActionProps } from '~/utils/action.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -23,7 +22,6 @@
     containerProps,
     ...rest
   }: NeoLabelProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 

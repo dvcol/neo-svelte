@@ -1,16 +1,15 @@
 <script lang="ts">
+  import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
+
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { resize } from '@dvcol/svelte-utils/resize';
   import { untrack } from 'svelte';
   import { fade } from 'svelte/transition';
 
-  import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
-
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { quickScaleDelayProps, quickScaleProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     content,
@@ -38,7 +37,6 @@
     containerProps,
     ...rest
   }: NeoSkeletonContainerProps = $props();
-  /* eslint-enable prefer-const */
 
   const inFn = $derived(toTransition(inAction));
   const inProps = $derived(toTransitionProps(inAction));

@@ -7,7 +7,6 @@
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -34,7 +33,6 @@
     buttonProps,
     ...rest
   }: NeoNativeSelectProps = $props();
-  /* eslint-enable prefer-const */
 
   const items = $derived(options?.map(i => (typeof i === 'object' ? i : { value: i })));
 
@@ -42,19 +40,19 @@
   const template = $derived(computeButtonTemplate(elevation, rest?.pressed, rest?.glass));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle select dropdown',
-    title: 'Toggle select dropdown',
-    skeleton: rest.skeleton,
-    disabled: rest.disabled,
-    rounded: rest.rounded,
-    start: rest.start,
-    onclick: () => {
+    'title': 'Toggle select dropdown',
+    'skeleton': rest.skeleton,
+    'disabled': rest.disabled,
+    'rounded': rest.rounded,
+    'start': rest.start,
+    'onclick': () => {
       ref?.focus?.();
       ref?.click?.();
       ref?.showPicker?.();
     },
     ...template,
     ...buttonProps,
-    class: ['neo-select-toggle', buttonProps?.class],
+    'class': ['neo-select-toggle', buttonProps?.class],
   });
 
   let space = $state(6);

@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
@@ -89,5 +90,5 @@ export type NeoSkeletonTextProps = {
    */
   transitionProps?: NeoSkeletonContainerProps['containerProps'];
 } & Pick<HTMLTransitionProps, 'in' | 'out'> &
-  HTMLRefProps &
-  HTMLNeoBaseElement;
+HTMLRefProps &
+HTMLNeoBaseElement;

@@ -1,23 +1,19 @@
 <script lang="ts">
+  import type { NeoTabContextPositions, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
+  import type { NeoTabsProps, OnChange } from '~/nav/neo-tabs.model.js';
+
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { height, width } from '@dvcol/svelte-utils/transition';
-
   import { untrack } from 'svelte';
-
-  import type { NeoTabContextPositions, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
-
-  import type { NeoTabsProps, OnChange } from '~/nav/neo-tabs.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
-
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, computeShadowElevation, getDefaultElevation, getDefaultSlideElevation } from '~/utils/shadow.utils.js';
   import { shortFreezeTransition } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -53,7 +49,6 @@
     containerProps,
     ...rest
   }: NeoTabsProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 

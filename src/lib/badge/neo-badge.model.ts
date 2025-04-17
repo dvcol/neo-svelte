@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoPillProps } from '~/pill/neo-pill.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
@@ -15,10 +16,10 @@ export const NeoBadgePlacement = {
 
 export type NeoBadgePlacements = (typeof NeoBadgePlacement)[keyof typeof NeoBadgePlacement];
 
-export type NeoBadgeContext = {
+export interface NeoBadgeContext {
   placement: NeoBadgePlacements;
   offset?: { x?: string; y?: string };
-};
+}
 
 export type NeoBadgeProps = {
   /**

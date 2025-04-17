@@ -1,15 +1,14 @@
 <script lang="ts">
+  import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
+
   import { watch } from '@dvcol/svelte-utils/watch';
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
 
-  import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
-
-  import NeoProgress from '~/progress/NeoProgress.svelte';
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
+  import NeoProgress from '~/progress/NeoProgress.svelte';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShallowMinMaxElevation, parseBlur } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -47,7 +46,6 @@
     containerProps,
     ...rest
   }: NeoProgressBarProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
@@ -65,7 +63,7 @@
   const margin = $derived.by(() => {
     if (!refs?.length || !clientWidth || !clientHeight) return;
     const size = { height: 0, width: 0 };
-    refs.forEach(r => {
+    refs.forEach((r) => {
       if (!r) return;
       const { offsetWidth, offsetHeight } = r;
       if (offsetHeight && offsetHeight > size.height) size.height = offsetHeight;

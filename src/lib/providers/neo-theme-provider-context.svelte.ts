@@ -1,3 +1,5 @@
+import type { INeoThemeProviderContext } from '~/providers/neo-theme-provider.model.js';
+
 import { wait } from '@dvcol/common-utils/common/promise';
 import { getContext, setContext, untrack } from 'svelte';
 
@@ -6,11 +8,10 @@ import {
   getReset,
   getSource,
   getTheme,
-  type INeoThemeProviderContext,
+
   NeoThemeRoot,
   NeoThemeStorageKey,
 } from '~/providers/neo-theme-provider.model.js';
-
 import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorThemeTargetNotFound } from '~/utils/error.utils.js';
 
 type NeoThemeProviderRoot = INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root']);
@@ -131,12 +132,13 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
 }
 
 const NeoContextKey = Symbol('NeoThemeProviderContext');
-export const setNeoThemeContext = (context: NeoThemeProviderContextState) =>
-  setContext<NeoThemeProviderContext>(NeoContextKey, new NeoThemeProviderContext(context));
+export function setNeoThemeContext(context: NeoThemeProviderContextState) {
+  return setContext<NeoThemeProviderContext>(NeoContextKey, new NeoThemeProviderContext(context));
+}
 export const getNeoThemeContext = () => getContext<NeoThemeProviderContext>(NeoContextKey);
 
-export const useNeoThemeContext = () => {
+export function useNeoThemeContext() {
   const context = getNeoThemeContext();
   if (!context) throw new NeoErrorThemeContextNotFound();
   return context;
-};
+}

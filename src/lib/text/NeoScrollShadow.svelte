@@ -3,7 +3,6 @@
 
   import { toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -25,7 +24,6 @@
     // Other props
     ...rest
   }: NeoScrollShadowProps = $props();
-  /* eslint-enable prefer-const */
 
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));

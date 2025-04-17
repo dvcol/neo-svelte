@@ -1,9 +1,10 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoTransitionContainerProps } from '~/containers/neo-transition-container.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-export type NeoSkeletonContainerContext = {
+export interface NeoSkeletonContainerContext {
   /**
    * Computed content width.
    */
@@ -12,7 +13,7 @@ export type NeoSkeletonContainerContext = {
    * Computed content height.
    */
   height?: string;
-};
+}
 
 export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
@@ -68,5 +69,5 @@ export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 
    */
   containerProps?: NeoTransitionContainerProps;
 } & Pick<HTMLTransitionProps, 'in' | 'out'> &
-  HTMLRefProps &
-  Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
+HTMLRefProps &
+Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

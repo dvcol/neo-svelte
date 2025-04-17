@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { NeoColorPickerSelectorProps } from '~/inputs/neo-color-picker.model.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // State
     ref = $bindable(),
@@ -14,7 +13,7 @@
     // Other props
     ...rest
   }: NeoColorPickerSelectorProps = $props();
-  /* eslint-enable prefer-const */
+
 </script>
 
 <input class:neo-color-picker={true} class:neo-rounded={rounded} bind:this={ref} bind:value type="color" style:height {...rest} />

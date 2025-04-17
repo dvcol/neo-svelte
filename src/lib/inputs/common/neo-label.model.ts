@@ -1,9 +1,10 @@
 import type { Snippet } from 'svelte';
 import type { HTMLLabelAttributes } from 'svelte/elements';
+
 import type { HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 
-export type NeoLabelStates = {
+export interface NeoLabelStates {
   /**
    * If `true` or `false`, the label will be displayed as valid or invalid.
    * If any other value (undefined, null, etc.), the label will be displayed as normal.
@@ -17,7 +18,7 @@ export type NeoLabelStates = {
    * If `true`, the label will be displayed as disabled.
    */
   disabled?: boolean | null;
-};
+}
 
 export type NeoLabelContext = NeoLabelStates & {
   /**
@@ -47,6 +48,6 @@ export type NeoLabelProps = {
    */
   containerProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & NeoLabelStates &
-  HTMLRefProps<HTMLLabelElement> &
-  HTMLLabelAttributes &
-  HTMLUseProps;
+HTMLRefProps<HTMLLabelElement> &
+HTMLLabelAttributes &
+HTMLUseProps;

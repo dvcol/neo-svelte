@@ -1,20 +1,17 @@
 <script lang="ts">
-  import { getFocusableElement } from '@dvcol/common-utils/common/element';
-
-  import { tick } from 'svelte';
-
   import type { NeoTooltipPlacement } from '~/floating/common/neo-placement.model.js';
   import type { NeoMenuContext, NeoMenuListItemProps } from '~/floating/menu/neo-menu-list-item.model.js';
-
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import NeoMenuList from '~/floating/menu/NeoMenuList.svelte';
+  import { getFocusableElement } from '@dvcol/common-utils/common/element';
+  import { tick } from 'svelte';
+
   import { getMenuContext, setMenuContext } from '~/floating/menu/neo-menu-context.svelte.js';
+  import NeoMenuList from '~/floating/menu/NeoMenuList.svelte';
   import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import { getColorVariable } from '~/utils/colors.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -50,7 +47,6 @@
     menuProps,
     ...rest
   }: NeoMenuListItemProps = $props();
-  /* eslint-enable prefer-const */
 
   const items = $derived(item?.items);
 
@@ -162,12 +158,10 @@
   <NeoTooltip
     target={ref}
     bind:ref={tooltipRef}
-    bind:open={
-      () => open, // eslint-disable-line no-sequences
-      _open => {
+    bind:open={() => open,
+      (_open) => {
         tooltipOpen = _open;
-      }
-    }
+      }}
     {rounded}
     {...tooltipProps}
     {...item.tooltipProps}

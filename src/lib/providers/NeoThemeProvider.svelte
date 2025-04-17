@@ -1,8 +1,9 @@
 <script lang="ts">
+  import type { NeoThemeProviderProps } from '~/providers/neo-theme-provider.model.js';
+
   import { onDestroy } from 'svelte';
 
   import { setNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
-  import { type NeoThemeProviderProps } from '~/providers/neo-theme-provider.model.js';
 
   import '~/providers/neo-theme-provider.scss';
 

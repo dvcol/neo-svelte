@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { watch } from '@dvcol/svelte-utils/watch';
-
   import type { IconAddressProps } from '~/icons/icon.model.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
+  import { watch } from '@dvcol/svelte-utils/watch';
+
   let {
     size = '1em',
     scale = 1,
@@ -16,7 +15,6 @@
 
     ...rest
   }: IconAddressProps = $props();
-  /* eslint-enable prefer-const */
 
   watch(
     () => {
@@ -27,8 +25,8 @@
   );
 
   const collapsed = 'M12 18c0 0 0 0 0 0c0 0 0 0 0 0l0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0l0 0c0 0 0 0 0 0c0 0 0 0 0 0Z';
-  const expanded =
-    'M12 21C15.3 21 18 19.9 18 18.5C18 17.8 17.3 17.2 16.2 16.7L16.8 15.8C18.8 16.6 20 17.7 20 19C20 21.2 16.4 23 12 23C7.6 23 4 21.2 4 19C4 17.7 5.2 16.6 7.1 15.8L7.7 16.7C6.7 17.2 6 17.8 6 18.5C6 19.9 8.7 21 12 21z';
+  const expanded
+    = 'M12 21C15.3 21 18 19.9 18 18.5C18 17.8 17.3 17.2 16.2 16.7L16.8 15.8C18.8 16.6 20 17.7 20 19C20 21.2 16.4 23 12 23C7.6 23 4 21.2 4 19C4 17.7 5.2 16.6 7.1 15.8L7.7 16.7C6.7 17.2 6 17.8 6 18.5C6 19.9 8.7 21 12 21z';
 </script>
 
 {#key [filled, enter]}

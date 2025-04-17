@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { round } from '@dvcol/common-utils';
-
   import type { NeoCursorProps } from '~/cursor/neo-cursor.model';
+
+  import { round } from '@dvcol/common-utils';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import { NeoCursor } from '~/cursor';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
-  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
 
   const options = $state<NeoCursorProps>({
     snap: true,

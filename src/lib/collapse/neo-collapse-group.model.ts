@@ -1,9 +1,10 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoCollapseContext } from '~/collapse/neo-collapse-context.svelte.js';
 
 export type NeoCollapseGroupContext = NeoCollapseContext;
 
-export type NeoCollapseGroupProps = {
+export interface NeoCollapseGroupProps {
   /**
    * The neo-collapse to be controlled by this group
    */
@@ -48,4 +49,4 @@ export type NeoCollapseGroupProps = {
    * @default { min: 'readonly', max: 'oldest' }
    */
   strategy?: NeoCollapseContext['strategy'];
-};
+}

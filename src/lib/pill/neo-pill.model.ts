@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
@@ -15,7 +16,7 @@ export type NeoPillSizes = (typeof NeoPillSize)[keyof typeof NeoPillSize];
 
 export type NeoPillBlur = BlurElevation | BlurElevationString;
 export type NeoPillElevation = ShadowShallowElevation | ShadowShallowElevationString;
-export type NeoPillContext = {
+export interface NeoPillContext {
   // State
   /**
    * Display a close button in the pill.
@@ -88,7 +89,7 @@ export type NeoPillContext = {
    * Display the pill as flat on first render.
    */
   start?: boolean;
-};
+}
 
 export type NeoPillProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
@@ -116,6 +117,6 @@ export type NeoPillProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    */
   affixProps?: NeoAffixProps;
 } & NeoPillContext &
-  HTMLTransitionProps &
-  HTMLUseProps &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+HTMLTransitionProps &
+HTMLUseProps &
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

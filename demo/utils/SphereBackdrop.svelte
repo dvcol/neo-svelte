@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { useWatchMedia } from '@dvcol/svelte-utils/media';
-
   import type { Snippet } from 'svelte';
 
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils';
+
+  import { useWatchMedia } from '@dvcol/svelte-utils/media';
 
   const { glass = true, row = false, children, ...rest }: { glass?: boolean; row?: boolean; children: Snippet } & HTMLNeoBaseElement = $props();
 

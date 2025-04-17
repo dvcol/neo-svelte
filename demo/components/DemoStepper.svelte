@@ -1,27 +1,24 @@
 <script lang="ts">
-  import { wait } from '@dvcol/common-utils/common/promise';
-
   import type { NeoStepperEvent, NeoStepperNavigations, NeoStepperPlacements, NeoStepperProps, NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
+  import { wait } from '@dvcol/common-utils/common/promise';
+
   import NeoButton from '~/buttons/NeoButton.svelte';
-
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoForm from '~/form/NeoForm.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
   import IconAddress from '~/icons/IconAddress.svelte';
   import IconListSmall from '~/icons/IconListSmall.svelte';
-  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
-
-  import NeoPassword from '~/inputs/NeoPassword.svelte';
-  import NeoPin from '~/inputs/NeoPin.svelte';
-  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoTextarea from '~/inputs/common/NeoTextarea.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
-  import NeoStepper from '~/stepper/NeoStepper.svelte';
+  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
+  import NeoPassword from '~/inputs/NeoPassword.svelte';
+  import NeoPin from '~/inputs/NeoPin.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { NeoStepperPlacement } from '~/stepper/neo-stepper.model';
+  import NeoStepper from '~/stepper/NeoStepper.svelte';
   import { DefaultShadowElevation, DefaultShadowShallowElevation, MaxShallowShadowElevation, MinShallowShadowElevation } from '~/utils/shadow.utils';
 
   let active = $state(0);

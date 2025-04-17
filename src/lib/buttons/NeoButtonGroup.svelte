@@ -16,7 +16,6 @@
   } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -67,7 +66,6 @@
     // Other props
     ...rest
   }: NeoButtonGroupProps = $props();
-  /* eslint-enable prefer-const */
 
   const elevation = $derived(coerce(_elevation));
   const hover = $derived(coerce(_hover));

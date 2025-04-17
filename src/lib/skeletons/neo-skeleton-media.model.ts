@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
@@ -67,13 +68,13 @@ export type NeoSkeletonMediaProps = {
    * Aspect ratio of the media.
    */
   ratio?: CSSStyleDeclaration['aspectRatio'] /**
-   * Props to pass to the skeleton container.
-   */;
+                                              * Props to pass to the skeleton container.
+                                              */;
   containerProps?: Omit<NeoSkeletonContainerProps, 'children' | 'content' | 'containerProps'>;
   /**
    * Props to pass to the transition container.
    */
   transitionProps?: NeoSkeletonContainerProps['containerProps'];
 } & Pick<HTMLTransitionProps, 'in' | 'out'> &
-  HTMLRefProps &
-  HTMLNeoBaseElement;
+HTMLRefProps &
+HTMLNeoBaseElement;

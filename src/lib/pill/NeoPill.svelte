@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { width } from '@dvcol/svelte-utils/transition';
-
   import type { NeoPillContext, NeoPillProps } from '~/pill/neo-pill.model.js';
+
+  import { width } from '@dvcol/svelte-utils/transition';
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -139,7 +139,7 @@
       {...affixProps}
       closeProps={{
         'aria-label': 'close',
-        onclick: onClose,
+        'onclick': onClose,
         ...affixProps?.closeProps,
       }}
       class={['neo-pill-affix', affixProps?.class]}

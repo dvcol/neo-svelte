@@ -1,35 +1,35 @@
 <script lang="ts">
+  import type { SwipeDirections } from '@dvcol/common-utils';
+  import type { SwipeOptions } from '@dvcol/svelte-utils/swipe';
+
+  import type { NeoProgressBarMarkContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
+  import type { NeoStepperBeforeEvent, NeoStepperContext, NeoStepperEvent, NeoStepperNavigations, NeoStepperProps } from '~/stepper/neo-stepper.model.js';
+  import type { ShadowElevation } from '~/utils/shadow.utils.js';
+
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { SwipeDirection } from '@dvcol/common-utils/common/touch';
-
-  import { swipe, type SwipeOptions } from '@dvcol/svelte-utils/swipe';
+  import { swipe } from '@dvcol/svelte-utils/swipe';
   import { fly, scale } from 'svelte/transition';
-
-  import type { SwipeDirections } from '@dvcol/common-utils';
-  import type { NeoProgressBarMarkContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 
   import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
   import NeoCancelButton from '~/buttons/NeoCancelButton.svelte';
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
+  import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
-  import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
   import {
-    type NeoStepperBeforeEvent,
-    type NeoStepperContext,
-    type NeoStepperEvent,
+
     NeoStepperNavigation,
-    type NeoStepperNavigations,
+
     NeoStepperPlacement,
-    type NeoStepperProps,
+
   } from '~/stepper/neo-stepper.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
-  import { coerce, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
   import { quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     children,
     between,
@@ -94,7 +94,6 @@
     buttonProps,
     ...rest
   }: NeoStepperProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: controlsTag = 'div', ...controlsRest } = $derived(controlsProps ?? {});
 

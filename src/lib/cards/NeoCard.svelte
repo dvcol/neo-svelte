@@ -1,14 +1,13 @@
 <script lang="ts">
+  import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
+
   import { focusin } from '@dvcol/svelte-utils/focusin';
   import { hovering } from '@dvcol/svelte-utils/hovering';
-
-  import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
   import NeoCloseButton from '~/buttons/NeoCloseButton.svelte';
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
-
   import {
     coerce,
     computeGlassFilter,
@@ -20,7 +19,6 @@
   } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children: content,
@@ -92,7 +90,6 @@
     closeProps,
     ...rest
   }: NeoCardProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: contentTag = 'div', ...contentRest } = $derived(contentProps ?? {});
   const { tag: headerTag = 'div', ...headerRest } = $derived(headerProps ?? {});

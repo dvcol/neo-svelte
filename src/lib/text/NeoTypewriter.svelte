@@ -1,12 +1,12 @@
 <script lang="ts">
+  import type { NeoTypewriterHTMLElement, NeoTypewriterProps } from '~/text/neo-typewriter.model.js';
+  import type { TypeWriterLine, TypewriterOptions } from '~/text/typewriter.utils.js';
+
   import { untrack } from 'svelte';
 
-  import type { NeoTypewriterHTMLElement, NeoTypewriterProps } from '~/text/neo-typewriter.model.js';
-
-  import { typewriter, type TypeWriterLine, type TypewriterOptions } from '~/text/typewriter.utils.js';
+  import { typewriter } from '~/text/typewriter.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // State
     ref = $bindable(),
@@ -35,7 +35,6 @@
     // Other props
     ...rest
   }: NeoTypewriterProps = $props();
-  /* eslint-enable prefer-const */
 
   const lines = $derived.by<(string | TypeWriterLine)[]>(() => {
     if (!value) return [];
@@ -45,17 +44,17 @@
 
   let blink = $state(false);
 
-  const onPause: NeoTypewriterProps['onPause'] = ctx => {
+  const onPause: NeoTypewriterProps['onPause'] = (ctx) => {
     blink = true;
     rest.onPause?.(ctx);
   };
 
-  const onEnd: NeoTypewriterProps['onEnd'] = ctx => {
+  const onEnd: NeoTypewriterProps['onEnd'] = (ctx) => {
     blink = true;
     rest.onEnd?.(ctx);
   };
 
-  const onType: NeoTypewriterProps['onType'] = ctx => {
+  const onType: NeoTypewriterProps['onType'] = (ctx) => {
     display = ctx.display ?? '';
     blink = false;
     rest.onType?.(ctx);

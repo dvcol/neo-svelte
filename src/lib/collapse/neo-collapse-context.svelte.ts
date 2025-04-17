@@ -16,7 +16,7 @@ export const defaultCollapseGroupStrategy: { min: NeoCollapseGroupStrategies; ma
   max: NeoCollapseGroupStrategy.Oldest,
 } as const;
 
-export type NeoCollapseGroupState = {
+export interface NeoCollapseGroupState {
   readonly id: string;
   readonly min: number;
   readonly max: number;
@@ -25,17 +25,17 @@ export type NeoCollapseGroupState = {
   readonly strategy?:
     | NeoCollapseGroupStrategies
     | {
-        min?: NeoCollapseGroupStrategies;
-        max?: NeoCollapseGroupStrategies;
-      };
-};
+      min?: NeoCollapseGroupStrategies;
+      max?: NeoCollapseGroupStrategies;
+    };
+}
 
-export type NeoCollapseSection = {
+export interface NeoCollapseSection {
   readonly id: string;
   readonly editable?: boolean;
   open: boolean;
   changed: number;
-};
+}
 
 /**
  * Toggle the oldest changed sections.
@@ -43,7 +43,7 @@ export type NeoCollapseSection = {
  * @param fields - The fields in order of newest to oldest
  * @param open - Whether to open or close the sections
  */
-const toggleOldestChanged = (count: number, fields: NeoCollapseSection[], open = false) => {
+function toggleOldestChanged(count: number, fields: NeoCollapseSection[], open = false) {
   let nb = count;
   let index = -1;
   while (nb > 0 && fields.length >= Math.abs(index)) {
@@ -59,7 +59,7 @@ const toggleOldestChanged = (count: number, fields: NeoCollapseSection[], open =
       index -= 1;
     }
   }
-};
+}
 
 export class NeoCollapseContext {
   readonly #group: NeoCollapseGroupState;
@@ -150,10 +150,10 @@ export class NeoCollapseContext {
 
 const NeoGroupContextSymbol = Symbol('NeoCollapseGroupContext');
 
-export const getNeoCollapseGroupContext = () => {
+export function getNeoCollapseGroupContext() {
   return getContext<NeoCollapseContext>(NeoGroupContextSymbol);
-};
+}
 
-export const setCollapseGroupContext = (group: NeoCollapseGroupState) => {
+export function setCollapseGroupContext(group: NeoCollapseGroupState) {
   return setContext<NeoCollapseContext>(NeoGroupContextSymbol, new NeoCollapseContext(group));
-};
+}

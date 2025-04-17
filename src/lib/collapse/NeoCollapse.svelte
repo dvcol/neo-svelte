@@ -1,15 +1,14 @@
 <script lang="ts">
+  import type { NeoCollapseContext, NeoCollapseProps } from '~/collapse/neo-collapse.model.js';
+
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { height, width } from '@dvcol/svelte-utils/transition';
   import { untrack } from 'svelte';
   import { cubicIn, sineInOut } from 'svelte/easing';
 
-  import type { NeoCollapseContext, NeoCollapseProps } from '~/collapse/neo-collapse.model.js';
-
   import { getNeoCollapseGroupContext } from '~/collapse/neo-collapse-context.svelte.js';
   import NeoDivider from '~/divider/NeoDivider.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippet
     children,
@@ -39,7 +38,6 @@
     containerProps,
     ...rest
   }: NeoCollapseProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
   const { tag: triggerTag = 'button', ...triggerRest } = $derived(triggerProps ?? {});

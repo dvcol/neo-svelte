@@ -1,4 +1,10 @@
 <script lang="ts">
+  import type { EventHandler, FocusEventHandler, FormEventHandler } from 'svelte/elements';
+
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
+  import type { NeoInputContext, NeoInputMethods, NeoInputState, NeoInputValue, NeoTextareaHTMLElement, NeoTextareaProps } from '~/inputs/common/neo-input.model.js';
+  import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
@@ -6,23 +12,14 @@
   import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
 
-  import type { EventHandler, FocusEventHandler, FormEventHandler } from 'svelte/elements';
+  import {
 
-  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { SvelteEvent } from '~/utils/html-element.utils.js';
+    NeoInputLabelPlacement,
 
+  } from '~/inputs/common/neo-input.model.js';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import {
-    type NeoInputContext,
-    NeoInputLabelPlacement,
-    type NeoInputMethods,
-    type NeoInputState,
-    type NeoInputValue,
-    type NeoTextareaHTMLElement,
-    type NeoTextareaProps,
-  } from '~/inputs/common/neo-input.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
@@ -37,7 +34,6 @@
   } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     label,
@@ -129,7 +125,6 @@
     messageProps,
     ...rest
   }: NeoTextareaProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
@@ -167,17 +162,17 @@
     return { touched, dirty, valid, value };
   };
 
-  const onFocus: FocusEventHandler<HTMLTextAreaElement> = e => {
+  const onFocus: FocusEventHandler<HTMLTextAreaElement> = (e) => {
     touched = true;
     onfocus?.(e);
   };
 
-  const onBlur: FocusEventHandler<HTMLTextAreaElement> = e => {
+  const onBlur: FocusEventHandler<HTMLTextAreaElement> = (e) => {
     validate({ dirty: dirtyOnBlur, valid: validateOnBlur });
     onblur?.(e);
   };
 
-  const onInput: FormEventHandler<HTMLTextAreaElement> = e => {
+  const onInput: FormEventHandler<HTMLTextAreaElement> = (e) => {
     touched = true;
     validate({ dirty: dirtyOnInput, valid: validateOnInput });
     oninput?.(e);
@@ -190,14 +185,14 @@
     return value;
   };
 
-  const onChange: FormEventHandler<HTMLTextAreaElement> = e => {
+  const onChange: FormEventHandler<HTMLTextAreaElement> = (e) => {
     touched = true;
     validate();
     fallback();
     onchange?.(e);
   };
 
-  const onInvalid: EventHandler<Event, HTMLTextAreaElement> = e => {
+  const onInvalid: EventHandler<Event, HTMLTextAreaElement> = (e) => {
     valid = false;
     validationMessage = ref?.validationMessage;
     e.preventDefault();

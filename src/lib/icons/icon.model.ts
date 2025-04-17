@@ -39,7 +39,7 @@ export type IconBouncingDotsProps = IconProps & {
   steps?: number[];
 };
 
-export type IconCheckboxProps = {
+export interface IconCheckboxProps {
   /**
    * The stroke width of the border.
    */
@@ -80,7 +80,7 @@ export type IconCheckboxProps = {
    * If the checkbox is indeterminate.
    */
   indeterminate?: boolean;
-};
+}
 
 export type IconCircleLoadingProps = IconProps & {
   animate?: boolean;

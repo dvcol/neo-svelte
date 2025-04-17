@@ -1,10 +1,11 @@
 <script lang="ts">
+  import type { NeoTabsCardProps } from '~/nav/neo-tabs-card.model.js';
+
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
-  import { type NeoTabsCardProps, setTabsCardContext } from '~/nav/neo-tabs-card.model.js';
+  import { setTabsCardContext } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -19,7 +20,6 @@
     containerProps,
     ...rest
   }: NeoTabsCardProps = $props();
-  /* eslint-enable prefer-const */
 
   const context = getTabContext();
   const borderless = $derived(context?.state?.borderless);

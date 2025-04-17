@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoCursorContext } from '~/cursor/neo-cursor.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 

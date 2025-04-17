@@ -1,11 +1,10 @@
 <script lang="ts">
+  import type { NeoTabProps } from '~/nav/neo-tab.model.js';
+
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { emptyTransition, height, width } from '@dvcol/svelte-utils/transition';
   import { watch } from '@dvcol/svelte-utils/watch';
-
   import { tick } from 'svelte';
-
-  import type { NeoTabProps } from '~/nav/neo-tab.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconClose from '~/icons/IconClose.svelte';
@@ -13,7 +12,6 @@
   import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { shortDuration, shortFreezeTransition } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -35,7 +33,6 @@
     tabProps,
     ...rest
   }: NeoTabProps = $props();
-  /* eslint-enable prefer-const */
 
   const context = getTabContext();
   const pane = $derived(context?.getPane(tabId)?.toString());
@@ -48,7 +45,7 @@
   });
   const slide = $derived(context?.state?.slide);
 
-  const onClick: NeoTabProps['onclick'] = e => {
+  const onClick: NeoTabProps['onclick'] = (e) => {
     context?.onChange(tabId);
     onclick?.(e);
   };

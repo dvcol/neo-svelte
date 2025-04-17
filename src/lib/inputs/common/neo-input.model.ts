@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLSelectAttributes, HTMLTextareaAttributes } from 'svelte/elements';
+
 import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
@@ -28,13 +29,13 @@ type NeoInputHTMLAttributes<T extends HTMLInputElement | HTMLTextAreaElement | H
   : T extends HTMLSelectElement
     ? HTMLSelectAttributes & { type?: 'select' }
     : HTMLInputAttributes & {
-        files?: HTMLInputAttributes['bind:files'];
-        group?: HTMLInputAttributes['bind:group'];
-      };
+      files?: HTMLInputAttributes['bind:files'];
+      group?: HTMLInputAttributes['bind:group'];
+    };
 
 export type NeoInputState<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = NeoValidationState<NeoInputValue<T>>;
 
-export type NeoInputStyles = {
+export interface NeoInputStyles {
   // Styles
 
   /**
@@ -96,9 +97,9 @@ export type NeoInputStyles = {
    * If true, the input will be readonly.
    */
   readonly?: boolean;
-};
+}
 
-export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = {
+export interface NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> {
   /**
    * Change the input state. If no value is provided, the state attributes will be unchanged.
    * @param state
@@ -124,7 +125,7 @@ export type NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElement | H
    * @param update whether to check the input dirty and/or valid state.
    */
   validate: (update?: { dirty?: boolean; valid?: boolean }) => NeoInputState<T>;
-};
+}
 
 export type NeoInputBlur = BlurElevation | BlurElevationString;
 export type NeoInputElevation = ShadowElevation | ShadowElevationString;
@@ -257,9 +258,9 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement |
    */
   displayProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & HTMLUseProps &
-  HTMLRefProps<T> &
-  NeoInputState<T> &
-  NeoInputHTMLAttributes<T>;
+HTMLRefProps<T> &
+NeoInputState<T> &
+NeoInputHTMLAttributes<T>;
 
 export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = {
   // Snippets
@@ -388,8 +389,8 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    */
   labelRef?: HTMLLabelElement;
 } & Omit<NeoBaseInputProps<T>, 'after' | 'before'> &
-  NeoInputStyles &
-  HTMLTransitionProps;
+NeoInputStyles &
+HTMLTransitionProps;
 
 export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoInputHTMLElement> = {
   // Snippets
@@ -426,12 +427,12 @@ export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoIn
    */
   beforeRef?: HTMLElement;
 } & NeoInputGroupProps<T> &
-  HTMLInputAttributes & {
-    files?: HTMLInputAttributes['bind:files'];
-    group?: HTMLInputAttributes['bind:group'];
-  };
+HTMLInputAttributes & {
+  files?: HTMLInputAttributes['bind:files'];
+  group?: HTMLInputAttributes['bind:group'];
+};
 
-export type NeoTextAreaResize = {
+export interface NeoTextAreaResize {
   /**
    * The minimum number of rows the textarea can have.
    * @default 1
@@ -441,7 +442,7 @@ export type NeoTextAreaResize = {
    * The maximum number of rows the textarea can have.
    */
   max?: number;
-};
+}
 
 export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElement> = {
   /**
@@ -471,7 +472,7 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
    */
   autoResize?: boolean | NeoTextAreaResize;
 } & Omit<NeoInputGroupProps<T>, 'hide' | 'display' | 'displayProps'> &
-  HTMLTextareaAttributes;
+HTMLTextareaAttributes;
 
 export type NeoInputHTMLElement<T extends HTMLInputElement = HTMLInputElement> = T & Partial<NeoInputMethods<T>>;
 export type NeoSelectHTMLElement<T extends HTMLSelectElement = HTMLSelectElement> = T & Partial<NeoInputMethods<T>>;

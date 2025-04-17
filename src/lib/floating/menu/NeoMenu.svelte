@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { getFocusableElement } from '@dvcol/common-utils/common/element';
-
   import type { NeoMenuProps } from '~/floating/menu/neo-menu.model.js';
 
-  import NeoMenuList from '~/floating/menu/NeoMenuList.svelte';
+  import { getFocusableElement } from '@dvcol/common-utils/common/element';
+
   import { setMenuContext } from '~/floating/menu/neo-menu-context.svelte.js';
+  import NeoMenuList from '~/floating/menu/NeoMenuList.svelte';
   import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Item Props
     items = [],
@@ -43,7 +42,6 @@
     dividerProps,
     ...rest
   }: NeoMenuProps = $props();
-  /* eslint-enable prefer-const */
 
   let tooltipOpen = $state(false);
   const context = setMenuContext({
@@ -103,12 +101,10 @@
 <NeoTooltip
   bind:ref
   bind:triggerRef
-  bind:open={
-    () => open, // eslint-disable-line no-sequences
-    _open => {
+  bind:open={() => open,
+    (_open) => {
       tooltipOpen = _open;
-    }
-  }
+    }}
   {target}
   {role}
   {portal}

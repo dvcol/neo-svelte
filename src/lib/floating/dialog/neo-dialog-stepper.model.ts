@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
 import type { NeoDialogContext, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
@@ -83,4 +84,4 @@ export type NeoDialogStepperProps = {
   | 'use'
   | 'backdropProps'
 > &
-  Omit<NeoFloatingStepperProps, 'placement'>;
+Omit<NeoFloatingStepperProps, 'placement'>;

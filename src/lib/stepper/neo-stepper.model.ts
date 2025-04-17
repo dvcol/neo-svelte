@@ -2,6 +2,7 @@ import type { SwipeOptions } from '@dvcol/svelte-utils/swipe';
 import type { TransitionProps } from '@dvcol/svelte-utils/transition';
 import type { NeoArrowButtonProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
+
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 import type { NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
@@ -28,7 +29,7 @@ export const NeoStepperNavigation = {
 export type NeoStepperNavigations = (typeof NeoStepperNavigation)[keyof typeof NeoStepperNavigation];
 export type NeoStepperLoadingState = Record<NeoStepperNavigations, boolean>;
 
-export type NeoStepperContext<Value = unknown> = {
+export interface NeoStepperContext<Value = unknown> {
   /**
    * Step cursor containing the current, next and previous steps.
    */
@@ -76,12 +77,20 @@ export type NeoStepperContext<Value = unknown> = {
    * This will check if the previous step is disabled, if the current step allows backward navigation and if loop navigation is enabled.
    */
   goNext: () => Promise<undefined | NeoStepperEvent<Value>>;
-};
+}
 
-export type NeoStepperEvent<Value = unknown> = { previous: number; current: number; step: NeoStepperStep<Value> };
-export type NeoStepperBeforeEvent<Value = unknown> = { current: number; next: number; step: NeoStepperStep<Value> };
+export interface NeoStepperEvent<Value = unknown> {
+  previous: number;
+  current: number;
+  step: NeoStepperStep<Value>;
+}
+export interface NeoStepperBeforeEvent<Value = unknown> {
+  current: number;
+  next: number;
+  step: NeoStepperStep<Value>;
+}
 
-export type NeoStepperStep<Value = unknown> = {
+export interface NeoStepperStep<Value = unknown> {
   /**
    * Unique identifier for the step.
    */
@@ -166,7 +175,7 @@ export type NeoStepperStep<Value = unknown> = {
    * Optional value to store in the step.
    */
   value?: Value;
-};
+}
 
 export type NeoStepperElevation = ShadowShallowElevation | ShadowShallowElevationString;
 
@@ -369,5 +378,5 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    */
   buttonProps?: NeoButtonProps;
 } & Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'> &
-  HTMLTransitionProps &
-  HTMLRefProps;
+HTMLTransitionProps &
+HTMLRefProps;

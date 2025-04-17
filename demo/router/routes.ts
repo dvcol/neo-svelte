@@ -40,6 +40,6 @@ export const options: RouterOptions<Routes> = {
   listen: 'navigation',
   routes: Object.entries(Route).map(([k, v]) => {
     if (v === Route.Any) return { name: v, path: PathMap[v], redirect: { name: Route.Buttons } };
-    return { name: v, path: PathMap[v], component: () => import(`../components/Demo${k}.svelte`) };
+    return { name: v, path: PathMap[v], component: async () => import(`../components/Demo${k}.svelte`) };
   }),
 } as const;

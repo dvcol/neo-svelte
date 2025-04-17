@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { mount, unmount } from 'svelte';
-
   import type { Snippet } from 'svelte';
 
   import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
+
+  import { mount, unmount } from 'svelte';
 
   import { getNeoPortalContext } from '~/floating/portal/neo-portal-context.svelte.js';
 

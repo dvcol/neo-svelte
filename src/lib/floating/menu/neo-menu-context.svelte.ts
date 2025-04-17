@@ -1,7 +1,11 @@
 import { getContext, setContext } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
-type NeoMenuContextParent = { readonly open: boolean; readonly ref?: HTMLElement; dismiss: () => void | Promise<void> };
+interface NeoMenuContextParent {
+  readonly open: boolean;
+  readonly ref?: HTMLElement;
+  dismiss: () => void | Promise<void>;
+}
 
 export class NeoMenuContext {
   #parent = $state<NeoMenuContextParent>();

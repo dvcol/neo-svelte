@@ -1,10 +1,10 @@
+import type { HTMLInputTypeAttribute } from 'svelte/elements';
+
+import type { NeoValidationState } from '~/inputs/common/neo-validation.model.js';
+
 import { getUUID } from '@dvcol/common-utils/common/string';
 import { getContext, setContext } from 'svelte';
-
 import { SvelteMap } from 'svelte/reactivity';
-
-import type { HTMLInputTypeAttribute } from 'svelte/elements';
-import type { NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 
 import { NeoErrorFormDuplicateId, NeoErrorFormMissingId } from '~/utils/error.utils.js';
 
@@ -18,7 +18,7 @@ export type NeoFormContextFieldHTMLElement<Element extends HTMLElement = HTMLEle
 
 export type NeoFormType = HTMLInputTypeAttribute | 'range' | 'switch' | null;
 
-export type NeoFormContextField<Value = unknown, Element extends NeoFormContextFieldHTMLElement = NeoFormContextFieldHTMLElement> = {
+export interface NeoFormContextField<Value = unknown, Element extends NeoFormContextFieldHTMLElement = NeoFormContextFieldHTMLElement> {
   id: string;
   ref?: Element;
   name?: string | null;
@@ -27,7 +27,7 @@ export type NeoFormContextField<Value = unknown, Element extends NeoFormContextF
   state: NeoValidationState<Value>;
   error?: unknown | string;
   message?: unknown | string;
-};
+}
 
 type NeoFormContextFieldRecord<Key extends keyof NeoFormContextField | keyof NeoFormContextField['state']> = Key extends keyof NeoFormContextField
   ? Record<string, NeoFormContextField[Key] | NeoFormContextField[Key][]>
@@ -35,12 +35,8 @@ type NeoFormContextFieldRecord<Key extends keyof NeoFormContextField | keyof Neo
     ? Record<string, NeoFormContextField['state'][Key] | NeoFormContextField['state'][Key][]>
     : never;
 
-const toRecord = <Key extends keyof NeoFormContextField | keyof NeoFormContextField['state']>(
-  map: Map<NeoFormContextField['id'], NeoFormContextField>,
-  key: Key,
-  nullable = true,
-): NeoFormContextFieldRecord<Key> =>
-  [...map.entries()].sort().reduce((acc, [id, field]) => {
+function toRecord<Key extends keyof NeoFormContextField | keyof NeoFormContextField['state']>(map: Map<NeoFormContextField['id'], NeoFormContextField>, key: Key, nullable = true): NeoFormContextFieldRecord<Key> {
+  return [...map.entries()].sort().reduce((acc, [id, field]) => {
     const val = key in field ? field[key as keyof NeoFormContextField] : field.state[key as keyof NeoFormContextField['state']];
     if (!nullable && (val === undefined || val === null)) return acc;
     if (field.name) {
@@ -54,6 +50,7 @@ const toRecord = <Key extends keyof NeoFormContextField | keyof NeoFormContextFi
     } else acc[id] = val;
     return acc;
   }, {} as NeoFormContextFieldRecord<Key>);
+}
 
 export class NeoFormContext {
   readonly #id: string;
@@ -123,10 +120,10 @@ export class NeoFormContext {
 
 const NeoFormContextSymbol = Symbol('NeoFormContext');
 
-export const getNeoFormContext = (): NeoFormContext => {
+export function getNeoFormContext(): NeoFormContext {
   return getContext(NeoFormContextSymbol);
-};
+}
 
-export const setNeoFormContext = (id?: string): NeoFormContext => {
+export function setNeoFormContext(id?: string): NeoFormContext {
   return setContext(NeoFormContextSymbol, new NeoFormContext(id));
-};
+}

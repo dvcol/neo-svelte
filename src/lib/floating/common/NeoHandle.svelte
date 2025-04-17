@@ -1,9 +1,11 @@
 <script lang="ts">
+  import type { NeoHandlePlacements, NeoHandleProps } from '~/floating/common/neo-handle.model.js';
+
   import { circOut } from 'svelte/easing';
   import { scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
-  import { NeoHandlePlacement, type NeoHandlePlacements, type NeoHandleProps } from '~/floating/common/neo-handle.model.js';
+  import { NeoHandlePlacement } from '~/floating/common/neo-handle.model.js';
 
   const {
     // Snippets

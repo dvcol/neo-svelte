@@ -101,4 +101,4 @@ export type NeoListBaseItemProps<
    */
   buttonProps?: NeoButtonProps;
 } & NeoSkeletonTextProps &
-  Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle'>;
+Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle'>;

@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -46,4 +47,4 @@ export type NeoScrollShadowProps<Tag extends keyof HTMLElementTagNameMap = 'div'
    */
   overflow?: CSSStyleDeclaration['overflow'];
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  HTMLRefProps<HTMLElementTagNameMap[Tag]>;
+HTMLRefProps<HTMLElementTagNameMap[Tag]>;

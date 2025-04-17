@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
@@ -22,7 +23,7 @@ export const NeoProgressDirection = {
 
 export type NeoProgressDirections = (typeof NeoProgressDirection)[keyof typeof NeoProgressDirection];
 
-export type NeoProgressContext = {
+export interface NeoProgressContext {
   /**
    * The current state of the progress if controlled.
    */
@@ -86,7 +87,7 @@ export type NeoProgressContext = {
    * @default right
    */
   direction?: NeoProgressDirections;
-};
+}
 
 export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = NeoProgressContext & {
   // Snippets
@@ -138,9 +139,9 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
    */
   track?: boolean;
 } & HTMLRefProps<HTMLElementTagNameMap[Tag]> &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
-export type NeoProgressMethods = {
+export interface NeoProgressMethods {
   /**
    * Starts a controlled progress and sets the state to {@link NeoProgressStatus.Active}.
    *
@@ -179,6 +180,6 @@ export type NeoProgressMethods = {
    * @param buffer The new buffer value of the progress.
    */
   change: (value?: number, buffer?: number) => void;
-};
+}
 
 export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] & NeoProgressMethods;

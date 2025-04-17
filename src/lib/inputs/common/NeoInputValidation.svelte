@@ -1,14 +1,12 @@
 <script lang="ts" generics="T extends HTMLElement, V extends any">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
-  import { untrack } from 'svelte';
-
   import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
+
+  import { getUUID } from '@dvcol/common-utils/common/string';
+  import { untrack } from 'svelte';
 
   import { getNeoFormContext } from '~/form/neo-form-context.svelte.js';
   import NeoValidation from '~/inputs/common/NeoValidation.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -31,7 +29,6 @@
     messageId = $bindable(messageProps?.id ?? `neo-validation-message-${getUUID()}`),
     ...rest
   }: NeoInputValidationProps<T, V> = $props();
-  /* eslint-enable prefer-const */
 
   const errorMessage = $derived.by(() => {
     if (!validation || validation === 'success' || valid !== false) return;

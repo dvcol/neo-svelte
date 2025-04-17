@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { OnChange } from '~/nav/neo-tabs.model.js';
 import type { HTMLUseProps } from '~/utils/action.utils.js';
@@ -52,4 +53,4 @@ export type NeoTabProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    */
   tabProps?: HTMLNeoBaseElement & HTMLUseProps;
 } & Omit<NeoButtonProps, 'value' | 'children' | 'ref' | 'tag'> &
-  HTMLRefProps;
+HTMLRefProps;

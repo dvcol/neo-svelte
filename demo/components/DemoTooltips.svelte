@@ -1,20 +1,14 @@
 <script lang="ts">
-  import { wait } from '@dvcol/common-utils/common/promise';
-  import { getUUID } from '@dvcol/common-utils/common/string';
-  import { height } from '@dvcol/svelte-utils/transition';
-
-  import { fly } from 'svelte/transition';
-
-  import { colorOptions } from '../utils/color.utils';
-
-  import { positionOptions } from '../utils/placement.utils';
-
   import type { NeoPopConfirmProps } from '~/floating/tooltips/neo-pop-confirm.model.js';
   import type { NeoPopStepperProps } from '~/floating/tooltips/neo-pop-stepper.model.js';
-
   import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
   import type { NeoListItemRenderContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
   import type { NeoStepperStep } from '~/stepper/neo-stepper.model.js';
+
+  import { wait } from '@dvcol/common-utils/common/promise';
+  import { getUUID } from '@dvcol/common-utils/common/string';
+  import { height } from '@dvcol/svelte-utils/transition';
+  import { fly } from 'svelte/transition';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -27,13 +21,15 @@
   import IconAddress from '~/icons/IconAddress.svelte';
   import IconListSmall from '~/icons/IconListSmall.svelte';
   import IconQuestionMark from '~/icons/IconQuestionMark.svelte';
+  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
-  import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
-
   import { DefaultShadowElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
   import { defaultDuration, quickDuration } from '~/utils/transition.utils';
+
+  import { colorOptions } from '../utils/color.utils';
+  import { positionOptions } from '../utils/placement.utils';
 
   const options = $state<NeoTooltipProps>({
     color: '',
@@ -188,13 +184,11 @@
     <NeoButton toggle bind:checked={options.openOnFocus}>Focus</NeoButton>
     <NeoButton
       toggle
-      bind:checked={
-        () => options.keepOpenOnHover, // eslint-disable-line no-sequences
-        value => {
+      bind:checked={() => options.keepOpenOnHover,
+        (value) => {
           options.keepOpenOnHover = value;
           options.keepOpenOnFocus = value;
-        }
-      }
+        }}
     >
       Keep Open
     </NeoButton>
@@ -314,7 +308,7 @@
         bind:selected={simpleSelected}
         items={simpleItems}
         rounded={options.rounded}
-        height={'20rem'}
+        height="20rem"
         tooltipProps={options}
         onSelect={e => console.info('selected', e)}
       >

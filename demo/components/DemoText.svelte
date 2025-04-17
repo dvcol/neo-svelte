@@ -1,21 +1,20 @@
 <script lang="ts">
-  import NeoButton from '../../src/lib/buttons/NeoButton.svelte';
-
-  import NeoButtonGroup from '../../src/lib/buttons/NeoButtonGroup.svelte';
-
-  import NeoSelect from '../../src/lib/inputs/NeoSelect.svelte';
-
-  import type { NeoSelectOption } from '../../.svelte-kit/__package__';
   import type { NeoTypewriterProps } from '~/text/neo-typewriter.model';
 
+  import type { NeoSelectOption } from '../../.svelte-kit/__package__';
+
   import IconTextHighlight from '~/icons/IconTextHighlight.svelte';
-  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoTextarea from '~/inputs/common/NeoTextarea.svelte';
+  import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoEllipsis from '~/text/NeoEllipsis.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
   import NeoScrollShadow from '~/text/NeoScrollShadow.svelte';
   import NeoTypewriter from '~/text/NeoTypewriter.svelte';
+
+  import NeoButton from '../../src/lib/buttons/NeoButton.svelte';
+  import NeoButtonGroup from '../../src/lib/buttons/NeoButtonGroup.svelte';
+  import NeoSelect from '../../src/lib/inputs/NeoSelect.svelte';
 
   let lines = $state(1);
   let filter = $state('');
@@ -65,9 +64,9 @@
       <NeoMark
         {filter}
         value="Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada pharetra ullamcorper eget hac; imperdiet a finibus hac. Sollicitudin tincidunt
-      mauris eros ex pharetra imperdiet. Nibh facilisi ante vestibulum feugiat facilisi quam risus ex? Malesuada condimentum nulla odio facilisi
-      semper sodales. Dapibus est duis odio tincidunt elementum. Sodales scelerisque venenatis hac ridiculus scelerisque massa vitae. Hendrerit
-      blandit sed, ac cursus ante varius quam. Malesuada habitant curae diam pulvinar proin congue tristique dictum."
+          mauris eros ex pharetra imperdiet. Nibh facilisi ante vestibulum feugiat facilisi quam risus ex? Malesuada condimentum nulla odio facilisi
+          semper sodales. Dapibus est duis odio tincidunt elementum. Sodales scelerisque venenatis hac ridiculus scelerisque massa vitae. Hendrerit
+          blandit sed, ac cursus ante varius quam. Malesuada habitant curae diam pulvinar proin congue tristique dictum."
       />
     </div>
   </div>

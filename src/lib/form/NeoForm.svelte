@@ -1,14 +1,13 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { EventHandler, FormEventHandler } from 'svelte/elements';
+
   import type { NeoFormProps } from '~/form/neo-form.model.js';
 
-  import NeoFieldSet from '~/form/NeoFieldSet.svelte';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import { setNeoFormContext } from '~/form/neo-form-context.svelte.js';
+  import NeoFieldSet from '~/form/NeoFieldSet.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -34,16 +33,15 @@
     // Other props
     ...rest
   }: NeoFormProps = $props();
-  /* eslint-enable prefer-const */
 
   const context = setNeoFormContext(id);
 
-  const onReset: FormEventHandler<HTMLFormElement> = e => {
+  const onReset: FormEventHandler<HTMLFormElement> = (e) => {
     context.validate();
     onreset?.(e);
   };
 
-  const onSubmit: EventHandler<SubmitEvent, HTMLFormElement> = e => {
+  const onSubmit: EventHandler<SubmitEvent, HTMLFormElement> = (e) => {
     context.validate();
     onsubmit?.(e);
   };

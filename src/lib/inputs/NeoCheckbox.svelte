@@ -1,13 +1,13 @@
 <script lang="ts">
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
+  import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
+  import type { NeoCheckboxProps } from '~/inputs/neo-checkbox.model.js';
+
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
   import { hovering } from '@dvcol/svelte-utils/hovering';
   import { fade } from 'svelte/transition';
-
-  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
-  import type { NeoCheckboxProps } from '~/inputs/neo-checkbox.model.js';
 
   import NeoCheckboxButton from '~/buttons/NeoCheckboxButton.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -18,7 +18,6 @@
   import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     label,
@@ -75,7 +74,6 @@
     validationProps,
     ...rest
   }: NeoCheckboxProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 

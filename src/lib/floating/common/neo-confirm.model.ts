@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { MouseEventHandler } from 'svelte/elements';
+
 import type { NeoArrowButtonProps } from '~/buttons/neo-arrow-button.model.js';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
@@ -35,9 +36,9 @@ export type NeoConfirmProps = {
   disabled?:
     | boolean
     | {
-        confirm?: boolean;
-        cancel?: boolean;
-      };
+      confirm?: boolean;
+      cancel?: boolean;
+    };
 
   // State
   /**

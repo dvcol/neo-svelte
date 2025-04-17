@@ -1,19 +1,18 @@
 <script lang="ts">
-  import { percent } from '@dvcol/common-utils';
+  import type { NeoProgressContext, NeoProgressMethods, NeoProgressProps } from '~/progress/neo-progress.model.js';
 
+  import { percent } from '@dvcol/common-utils';
   import { clamp } from '@dvcol/common-utils/common/math';
 
   import {
-    type NeoProgressContext,
+
     NeoProgressDirection,
-    type NeoProgressMethods,
-    type NeoProgressProps,
+
     NeoProgressStatus,
   } from '~/progress/neo-progress.model.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -46,7 +45,6 @@
     // Other Props
     ...rest
   }: NeoProgressProps = $props();
-  /* eslint-enable prefer-const */
 
   // TODO: circular progress
 

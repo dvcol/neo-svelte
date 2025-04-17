@@ -1,14 +1,12 @@
 <script lang="ts">
+  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import { type NeoButtonProps } from '~/buttons/neo-button.model.js';
-
   import IconCalendar from '~/icons/IconCalendar.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     icon: customIcon,
@@ -32,9 +30,8 @@
     buttonProps,
     ...rest
   }: NeoDateTimeProps = $props();
-  /* eslint-enable prefer-const */
 
-  const onclick: NeoButtonProps['onclick'] = e => {
+  const onclick: NeoButtonProps['onclick'] = (e) => {
     ref?.focus?.();
     ref?.click?.();
     ref?.showPicker?.();
@@ -45,11 +42,11 @@
   const template = $derived(computeButtonTemplate(elevation, rest?.pressed, rest?.glass));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle picker',
-    title: 'Toggle picker',
-    skeleton: rest.skeleton,
-    disabled: rest.disabled,
-    rounded: rest.rounded,
-    start: rest.start,
+    'title': 'Toggle picker',
+    'skeleton': rest.skeleton,
+    'disabled': rest.disabled,
+    'rounded': rest.rounded,
+    'start': rest.start,
     ...template,
     ...buttonProps,
     onclick,

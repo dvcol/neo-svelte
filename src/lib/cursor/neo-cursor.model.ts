@@ -1,9 +1,9 @@
-import { getClickableAncestor, isClickable } from '@dvcol/common-utils/common/element';
-
 import type { Snippet } from 'svelte';
 
 import type { NeoCursorPointerProps } from '~/cursor/neo-cursor-pointer.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+
+import { getClickableAncestor, isClickable } from '@dvcol/common-utils/common/element';
 
 export const NeoCursorPointerType = {
   Mouse: 'mouse' as const,
@@ -22,7 +22,7 @@ export const NeoCursorType = {
 
 export type NeoCursorTypes = (typeof NeoCursorType)[keyof typeof NeoCursorType];
 
-export type NeoCursorContext = {
+export interface NeoCursorContext {
   /**
    * Show/hide the cursor.
    */
@@ -67,7 +67,7 @@ export type NeoCursorContext = {
    * Whether the cursor shows tilt information.
    */
   tilt?: boolean;
-};
+}
 
 export type NeoCursorProps = {
   // Snippets
@@ -174,23 +174,23 @@ export type NeoCursorProps = {
   pointerProps?: NeoCursorPointerProps;
 } & Omit<HTMLNeoBaseElement, 'children'>;
 
-export type NeoCursorPosition = {
+export interface NeoCursorPosition {
   x?: number;
   y?: number;
   width?: number;
   height?: number;
   radius?: string;
-};
+}
 
-export type NeoCursorContact = {
+export interface NeoCursorContact {
   size: { width: PointerEvent['width']; height: PointerEvent['height'] };
   tilt: { x: PointerEvent['tiltX']; y: PointerEvent['tiltY'] };
   twist: PointerEvent['twist'];
   angle: { azimuth: PointerEvent['azimuthAngle']; altitude: PointerEvent['altitudeAngle'] };
   pressure: { point: PointerEvent['pressure']; tangential: PointerEvent['tangentialPressure'] };
-};
+}
 
-export type NeoCursorState = {
+export interface NeoCursorState {
   /**
    * Pointer position.
    */
@@ -215,20 +215,21 @@ export type NeoCursorState = {
    * Original PointerEvent.
    */
   event?: PointerEvent;
-};
+}
 
-export const getClosestClickable = (element: Element, boundary?: Element | (() => Element)) =>
-  getClickableAncestor(element, boundary, (el: Element) => {
+export function getClosestClickable(element: Element, boundary?: Element | (() => Element)) {
+  return getClickableAncestor(element, boundary, (el: Element) => {
     if (el.getAttribute('data-neo-cursor') === 'false' || el.getAttribute('data-neo-cursor') === 'none') return false;
     if (el.getAttribute('data-neo-cursor') === 'snap') return true;
     return isClickable(el);
   });
+}
 
-export const getFirstDataNeoCursor = (element?: Element | null, boundary?: Element | (() => Element)): string | undefined | null => {
+export function getFirstDataNeoCursor(element?: Element | null, boundary?: Element | (() => Element)): string | undefined | null {
   if (!element) return;
   if (typeof boundary === 'function' && boundary() === element) return;
   if (boundary === element) return;
   if (element.hasAttribute('data-neo-cursor')) return element.getAttribute('data-neo-cursor');
   if (!element.parentElement) return;
   return getFirstDataNeoCursor(element.parentElement, boundary);
-};
+}

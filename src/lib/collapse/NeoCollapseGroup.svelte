@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { NeoCollapseGroupProps } from '~/collapse/neo-collapse-group.model.js';
+
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import { defaultCollapseGroupStrategy, setCollapseGroupContext } from '~/collapse/neo-collapse-context.svelte.js';
 

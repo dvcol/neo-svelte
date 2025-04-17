@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLButtonAttributes } from 'svelte/elements';
+
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
@@ -56,5 +57,5 @@ export type NeoAffixProps<Tag extends keyof HTMLElementTagNameMap = 'span'> = {
    */
   closeProps?: HTMLButtonAttributes;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  HTMLRefProps<HTMLElementTagNameMap[Tag]> &
-  HTMLTransitionProps;
+HTMLRefProps<HTMLElementTagNameMap[Tag]> &
+HTMLTransitionProps;

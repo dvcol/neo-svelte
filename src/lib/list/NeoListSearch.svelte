@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { debounce } from '@dvcol/common-utils/common/debounce';
-
-  import { getFocusableElement } from '@dvcol/common-utils/common/element';
-
   import type { FormEventHandler, KeyboardEventHandler } from 'svelte/elements';
 
+  import type { NeoListSearchProps } from '~/list/neo-list-search.model.js';
   import type { NeoListItemOrSection } from '~/list/neo-list.model.js';
+
+  import { debounce } from '@dvcol/common-utils/common/debounce';
+  import { getFocusableElement } from '@dvcol/common-utils/common/element';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconAlignBottom from '~/icons/IconAlignBottom.svelte';
@@ -13,10 +13,9 @@
   import IconAlignTop from '~/icons/IconAlignTop.svelte';
   import IconSearch from '~/icons/IconSearch.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { itemLabelSort, itemSearchFilter, type NeoListSearchProps } from '~/list/neo-list-search.model.js';
+  import { itemLabelSort, itemSearchFilter } from '~/list/neo-list-search.model.js';
   import { Logger } from '~/utils/logger.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // State
     tag = 'div',
@@ -47,19 +46,18 @@
     inputProps,
     ...rest
   }: NeoListSearchProps = $props();
-  /* eslint-enable prefer-const */
 
   const setFilter = debounce((_value: string) => {
     if (!context) return Logger.warn('NeoListSearch: No `highlight` context is missing or invalid.', context);
     context.highlight = _value;
   }, delay);
 
-  const oninput: FormEventHandler<HTMLInputElement> = e => {
+  const oninput: FormEventHandler<HTMLInputElement> = (e) => {
     setFilter(e?.currentTarget?.value);
     inputProps?.oninput?.(e);
   };
 
-  const onkeydown: KeyboardEventHandler<HTMLInputElement> = e => {
+  const onkeydown: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'ArrowDown' || !(e.target instanceof HTMLElement)) return;
     const target = e.target.parentElement?.parentElement?.querySelector('.neo-list-item.neo-list-item-select');
     if (target) e.preventDefault();
@@ -89,7 +87,7 @@
     context.filter = filterFunction;
   });
 
-  //  customise loading/clear icons in input & text area
+//  customise loading/clear icons in input & text area
 </script>
 
 {#snippet before()}

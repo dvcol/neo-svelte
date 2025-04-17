@@ -1,20 +1,19 @@
 <script lang="ts">
+  import type { NeoMenuItem } from '~/lib/floating/menu/neo-menu-item.model.js';
+  import type { NeoMenuProps } from '~/lib/floating/menu/neo-menu.model.js';
+
   import { shallowClone } from '@dvcol/common-utils/common/object';
   import { getUUID } from '@dvcol/common-utils/common/string';
-
-  import { colorOptions } from '../utils/color.utils.js';
-
-  import type { NeoMenuItem } from '~/lib/floating/menu/neo-menu-item.model.js';
-
-  import type { NeoMenuProps } from '~/lib/floating/menu/neo-menu.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoMenu from '~/floating/menu/NeoMenu.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
-  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { displayValue } from '~/inputs/neo-select.model.js';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { Colors } from '~/utils/colors.utils.js';
+
+  import { colorOptions } from '../utils/color.utils.js';
 
   const options = $state<NeoMenuProps>({
     color: '',
@@ -162,17 +161,17 @@
       </NeoMenu>
     </div>
 
-    <!--    <div class="column">-->
-    <!--      <span class="label">Menu Collapse</span>-->
+    <!--    <div class="column"> -->
+    <!--      <span class="label">Menu Collapse</span> -->
 
-    <!--      <NeoButton elevation="0">Open</NeoButton>-->
-    <!--    </div>-->
+    <!--      <NeoButton elevation="0">Open</NeoButton> -->
+    <!--    </div> -->
 
-    <!--    <div class="column">-->
-    <!--      <span class="label">Menu Panel</span>-->
+    <!--    <div class="column"> -->
+    <!--      <span class="label">Menu Panel</span> -->
 
-    <!--      <NeoButton elevation="0">Open</NeoButton>-->
-    <!--    </div>-->
+    <!--      <NeoButton elevation="0">Open</NeoButton> -->
+    <!--    </div> -->
   </div>
 
   <div class="row">
@@ -184,38 +183,38 @@
       </NeoMenu>
     </div>
 
-    <!--    <div class="column">-->
-    <!--      <span class="label">Complexe Menu Collapse</span>-->
+    <!--    <div class="column"> -->
+    <!--      <span class="label">Complexe Menu Collapse</span> -->
 
-    <!--      <NeoButton elevation="0">Open</NeoButton>-->
-    <!--    </div>-->
+    <!--      <NeoButton elevation="0">Open</NeoButton> -->
+    <!--    </div> -->
 
-    <!--    <div class="column">-->
-    <!--      <span class="label">Complexe Menu Panel</span>-->
+    <!--    <div class="column"> -->
+    <!--      <span class="label">Complexe Menu Panel</span> -->
 
-    <!--      <NeoButton elevation="0">Open</NeoButton>-->
-    <!--    </div>-->
-    <!--  </div>-->
+    <!--      <NeoButton elevation="0">Open</NeoButton> -->
+    <!--    </div> -->
+    <!--  </div> -->
 
-    <!--  <div class="row">-->
-    <!--    <div class="column">-->
-    <!--      <span class="label">Complexe Menu List</span>-->
+    <!--  <div class="row"> -->
+    <!--    <div class="column"> -->
+    <!--      <span class="label">Complexe Menu List</span> -->
 
-    <!--      <NeoButton elevation="0">Open</NeoButton>-->
-    <!--    </div>-->
+    <!--      <NeoButton elevation="0">Open</NeoButton> -->
+    <!--    </div> -->
 
-    <!--    <div class="column">-->
-    <!--      <span class="label">Complexe Menu List Collapse </span>-->
+    <!--    <div class="column"> -->
+    <!--      <span class="label">Complexe Menu List Collapse </span> -->
 
-    <!--      <NeoButton elevation="0">Open</NeoButton>-->
-    <!--    </div>-->
+    <!--      <NeoButton elevation="0">Open</NeoButton> -->
+    <!--    </div> -->
 
-    <!--    <div class="column">-->
-    <!--      <span class="label">Complexe Menu List Panel</span>-->
+    <!--    <div class="column"> -->
+    <!--      <span class="label">Complexe Menu List Panel</span> -->
 
-    <!--      <NeoButton elevation="0">Open</NeoButton>-->
-    <!--    </div>-->
-    <!--  </div>-->
+    <!--      <NeoButton elevation="0">Open</NeoButton> -->
+    <!--    </div> -->
+    <!--  </div> -->
   </div>
 </section>
 

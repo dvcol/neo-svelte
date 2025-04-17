@@ -1,4 +1,5 @@
 import type { MouseEventHandler } from 'svelte/elements';
+
 import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 
@@ -31,9 +32,9 @@ export type NeoPopConfirmProps = {
   disabled?:
     | boolean
     | {
-        confirm?: boolean;
-        cancel?: boolean;
-      };
+      confirm?: boolean;
+      cancel?: boolean;
+    };
 
   // Tooltip props
   /**
@@ -95,4 +96,4 @@ export type NeoPopConfirmProps = {
   | 'onOpen'
   | 'onClose'
 > &
-  Omit<NeoConfirmProps, 'children' | 'header'>;
+Omit<NeoConfirmProps, 'children' | 'header'>;

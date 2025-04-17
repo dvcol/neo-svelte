@@ -7,7 +7,6 @@
   import NeoConfirm from '~/floating/common/NeoConfirm.svelte';
   import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children: trigger,
@@ -67,7 +66,6 @@
     tooltipProps,
     ...rest
   }: NeoPopConfirmProps = $props();
-  /* eslint-enable prefer-const */
 
   const onCloseButton: MouseEventHandler<HTMLButtonElement> = () => {
     open = false;
@@ -83,12 +81,12 @@
     }
   };
 
-  const onCancelButton: MouseEventHandler<HTMLButtonElement> = async e => {
+  const onCancelButton: MouseEventHandler<HTMLButtonElement> = async (e) => {
     await handlePromise(onCancel?.(e), 'cancel');
     open = false;
   };
 
-  const onConfirmButton: MouseEventHandler<HTMLButtonElement> = async e => {
+  const onConfirmButton: MouseEventHandler<HTMLButtonElement> = async (e) => {
     await handlePromise(onConfirm?.(e), 'confirm');
     open = false;
   };

@@ -12,8 +12,8 @@ export { default as NeoRadio } from './NeoRadio.svelte';
 export { default as NeoRange } from './NeoRange.svelte';
 export { default as NeoSwitch } from './NeoSwitch.svelte';
 
-export { default as NeoSelect } from './NeoSelect.svelte';
 export { default as NeoNativeSelect } from './NeoNativeSelect.svelte';
+export { default as NeoSelect } from './NeoSelect.svelte';
 
 export { NeoInputLabelPlacement } from './common/neo-input.model.js';
 export { displayValue, transformValue } from './neo-select.model.js';
@@ -29,5 +29,5 @@ export type * from './neo-password.model.js';
 export type * from './neo-pin.model.js';
 export type * from './neo-radio.model.js';
 export type * from './neo-range.model.js';
-export type * from './neo-switch.model.js';
 export type * from './neo-select.model.js';
+export type * from './neo-switch.model.js';

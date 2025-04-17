@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
@@ -35,7 +36,7 @@ export type NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   itemProps?: Pick<NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>, 'containerProps'>;
 } & Pick<NeoMenuListItemProps, 'tooltipProps' | 'baseProps'>;
 
-export type NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+export interface NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> {
   /**
    * The item itself.
    */
@@ -82,7 +83,7 @@ export type NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagName
    * @param e - The pointer event.
    */
   onSelect: (item: NeoMenuItem<Value>, e: SvelteEvent<MouseEvent>) => void;
-};
+}
 
 export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
   // Snippets
@@ -144,4 +145,4 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    */
   buttonProps?: NeoButtonProps;
 } & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'length' | 'level' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'> &
-  Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
+Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

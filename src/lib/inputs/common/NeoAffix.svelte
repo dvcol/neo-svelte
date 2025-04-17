@@ -1,8 +1,8 @@
 <script lang="ts">
+  import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
+
   import { debounced } from '@dvcol/svelte-utils/debounce';
   import { fade } from 'svelte/transition';
-
-  import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 
   import IconAlert from '~/icons/IconAlert.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -11,7 +11,6 @@
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     reset,
@@ -40,7 +39,6 @@
     closeProps,
     ...rest
   }: NeoAffixProps = $props();
-  /* eslint-enable prefer-const */
 
   const clear = $derived.by(debounced(() => close && !disabled && !readonly, 100));
 

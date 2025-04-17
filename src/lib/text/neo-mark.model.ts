@@ -1,4 +1,5 @@
 import type { MarkTokenizer } from '@dvcol/common-utils/common/string';
+
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoMarkTokenizer = MarkTokenizer;

@@ -1,4 +1,4 @@
-import { type Snippet } from 'svelte';
+import type { Snippet } from 'svelte';
 
 /**
  * The active theme (`dark` or `light`)
@@ -22,7 +22,7 @@ export const NeoSource = {
 
 export type NeoSources = (typeof NeoSource)[keyof typeof NeoSource];
 
-export type INeoThemeProviderContext = {
+export interface INeoThemeProviderContext {
   /**
    * If a style reset is applied.
    */
@@ -43,9 +43,9 @@ export type INeoThemeProviderContext = {
    * The target to which scope the theme variables
    */
   readonly root?: HTMLElement | ShadowRoot;
-};
+}
 
-export type NeoThemeProviderProps = {
+export interface NeoThemeProviderProps {
   // Snippets
 
   /**
@@ -83,7 +83,7 @@ export type NeoThemeProviderProps = {
    * @default document.documentElement
    */
   target?: HTMLElement | ShadowRoot | (() => HTMLElement | ShadowRoot);
-};
+}
 
 export const NeoThemeRoot = 'neo-theme-root';
 
@@ -104,11 +104,11 @@ export const getTheme = () => getSavedTheme() ?? getPreferTheme();
 export const getSavedSource = () => localStorage?.getItem(NeoThemeStorageKey.Source) as NeoSources | null;
 export const getSource = () => getSavedSource() ?? NeoSource.TopLeft;
 
-const getBoolean = (str?: string | null, fallback: boolean = false): boolean => {
+function getBoolean(str?: string | null, fallback: boolean = false): boolean {
   // If saved reset is always truthy as it is a string
   if (!str) return fallback;
   return str === 'true';
-};
+}
 
 export const getSavedReset = () => localStorage?.getItem(NeoThemeStorageKey.Reset);
 export const getReset = () => getBoolean(getSavedReset(), true);

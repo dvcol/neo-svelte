@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { type MarkAndToken, markTokenizer } from '@dvcol/common-utils/common/string';
+  import type { MarkAndToken } from '@dvcol/common-utils/common/string';
 
   import type { NeoMarkProps } from '~/text/neo-mark.model.js';
+
+  import { markTokenizer } from '@dvcol/common-utils/common/string';
 
   const {
     // Snippets

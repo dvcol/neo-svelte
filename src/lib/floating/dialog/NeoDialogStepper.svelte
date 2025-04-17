@@ -1,17 +1,16 @@
 <script lang="ts">
-  import NeoDialog from './NeoDialog.svelte';
-
   import type { MouseEventHandler } from 'svelte/elements';
 
   import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
   import type { NeoDialogStepperProps } from '~/floating/dialog/neo-dialog-stepper.model.js';
   import type { NeoDialogContext } from '~/floating/dialog/neo-dialog.model.js';
+  import type { NeoStepperBeforeEvent, NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
-  import NeoFloatingStepper from '~/floating/common/NeoFloatingStepper.svelte';
   import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
-  import { type NeoStepperBeforeEvent, type NeoStepperContext } from '~/stepper/neo-stepper.model.js';
+  import NeoFloatingStepper from '~/floating/common/NeoFloatingStepper.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
+  import NeoDialog from './NeoDialog.svelte';
+
   let {
     // Snippets
     children: content,
@@ -84,11 +83,10 @@
     backdropProps,
     ...rest
   }: NeoDialogStepperProps = $props();
-  /* eslint-enable prefer-const */
 
   const marks = $derived<boolean>(_marks ?? steps?.some(s => s?.markProps) ?? !!rest?.markProps);
 
-  const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
+  const onCloseButton: MouseEventHandler<HTMLButtonElement> = (e) => {
     open = false;
     onClose?.(e);
   };

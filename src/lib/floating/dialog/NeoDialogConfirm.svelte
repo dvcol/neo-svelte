@@ -4,12 +4,11 @@
   import type { NeoDialogConfirmProps } from '~/floating/dialog/neo-dialog-confirm.model.js';
   import type { NeoDialogContext } from '~/floating/dialog/neo-dialog.model.js';
 
-  import NeoConfirm from '~/floating/common/NeoConfirm.svelte';
   import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
+  import NeoConfirm from '~/floating/common/NeoConfirm.svelte';
   import NeoDialog from '~/floating/dialog/NeoDialog.svelte';
   import { Logger } from '~/utils/logger.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children: content,
@@ -76,7 +75,6 @@
     backdropProps,
     ...rest
   }: NeoDialogConfirmProps = $props();
-  /* eslint-enable prefer-const */
 
   const close = () => {
     if (!ref) return Logger.error('NeoDialogConfirm: ref is not defined');
@@ -84,7 +82,7 @@
     ref.close();
   };
 
-  const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
+  const onCloseButton: MouseEventHandler<HTMLButtonElement> = (e) => {
     onClose?.(e);
     close();
   };
@@ -99,12 +97,12 @@
     }
   };
 
-  const onCancelButton: MouseEventHandler<HTMLButtonElement> = async e => {
+  const onCancelButton: MouseEventHandler<HTMLButtonElement> = async (e) => {
     await handlePromise(onCancel?.(e), 'cancel');
     close();
   };
 
-  const onConfirmButton: MouseEventHandler<HTMLButtonElement> = async e => {
+  const onConfirmButton: MouseEventHandler<HTMLButtonElement> = async (e) => {
     await handlePromise(onConfirm?.(e), 'confirm');
     close();
   };

@@ -1,4 +1,5 @@
 import type { MouseEventHandler } from 'svelte/elements';
+
 import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
 import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
 
@@ -69,4 +70,4 @@ export type NeoDialogConfirmProps = {
   | 'use'
   | 'backdropProps'
 > &
-  Omit<NeoConfirmProps, 'children' | 'header'>;
+Omit<NeoConfirmProps, 'children' | 'header'>;

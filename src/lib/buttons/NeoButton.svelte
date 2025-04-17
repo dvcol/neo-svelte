@@ -1,11 +1,12 @@
 <script lang="ts">
+  import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
+
+  import type { NeoButtonContext, NeoButtonProps } from '~/buttons/neo-button.model.js';
+
   import { hovering } from '@dvcol/svelte-utils/hovering';
   import { width } from '@dvcol/svelte-utils/transition';
 
-  import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
-
-  import { type NeoButtonContext, type NeoButtonProps, NeoTextButton } from '~/buttons/neo-button.model.js';
-
+  import { NeoTextButton } from '~/buttons/neo-button.model.js';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -23,7 +24,6 @@
   } from '~/utils/shadow.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -84,7 +84,6 @@
     // Other props
     ..._rest
   }: NeoButtonProps = $props();
-  /* eslint-enable prefer-const */
 
   const {
     elevation: _elevation = DefaultShadowElevation,
@@ -133,7 +132,7 @@
     }, 150);
   };
 
-  const onClick: MouseEventHandler<HTMLButtonElement> = e => {
+  const onClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     if (loading || disabled) return;
     if (readonly) return onActive();
     if (toggle) {
@@ -147,24 +146,24 @@
     onActive();
   };
 
-  const onKeydownEnter: KeyboardEventHandler<HTMLButtonElement> = e => {
+  const onKeydownEnter: KeyboardEventHandler<HTMLButtonElement> = (e) => {
     if (loading || disabled || readonly) return;
     if (e.key === 'Enter') enter = true;
     onkeydown?.(e);
   };
 
-  const onKeyUpEnter: KeyboardEventHandler<HTMLButtonElement> = e => {
+  const onKeyUpEnter: KeyboardEventHandler<HTMLButtonElement> = (e) => {
     if (e.key === 'Enter') enter = false;
     if (loading || disabled || readonly) return;
     onkeyup?.(e);
   };
 
-  const onFocus: NeoButtonProps['onfocus'] = e => {
+  const onFocus: NeoButtonProps['onfocus'] = (e) => {
     focused = true;
     onfocus?.(e);
   };
 
-  const onBlur: NeoButtonProps['onblur'] = e => {
+  const onBlur: NeoButtonProps['onblur'] = (e) => {
     enter = false;
     focused = false;
     onblur?.(e);

@@ -1,9 +1,9 @@
+import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
+import type { NeoPortalContainerProps } from '~/floating/portal/neo-portail-container.model.js';
+
 import { getUUID } from '@dvcol/common-utils/common/string';
 import { getContext, setContext } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
-
-import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
-import type { NeoPortalContainerProps } from '~/floating/portal/neo-portail-container.model.js';
 
 export class NeoPortalContext {
   readonly #id: string;
@@ -50,10 +50,10 @@ export class NeoPortalContext {
 
 const NeoPortalContextSymbol = Symbol('NeoPortalContext');
 
-export const getNeoPortalContext = () => {
+export function getNeoPortalContext() {
   return getContext<NeoPortalContext>(NeoPortalContextSymbol);
-};
+}
 
-export const setNeoPortalContext = (id: NeoPortalContainerProps['id']) => {
+export function setNeoPortalContext(id: NeoPortalContainerProps['id']) {
   return setContext<NeoPortalContext>(NeoPortalContextSymbol, new NeoPortalContext(id || `neo-portal-container-${getUUID()}`));
-};
+}

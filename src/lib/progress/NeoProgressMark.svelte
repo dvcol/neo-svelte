@@ -1,12 +1,11 @@
 <script lang="ts">
   import type { NeoProgressMarkProps } from '~/progress/neo-progress-mark.model.js';
+  import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import { coerce, DefaultShallowMinMaxElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
+  import { coerce, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding */
   let { ref = $bindable(), index, position = 0, context, elevation: _elevation, color: _color, ...rest }: NeoProgressMarkProps = $props();
-  /* eslint-enable prefer-const */
 
   const value = $derived(context?.value ?? 0);
   const checked = $derived(position <= value);

@@ -1,20 +1,22 @@
 <script lang="ts">
-  import { colorOptions } from '../utils/color.utils';
-
+  import type { NeoSelectOption } from '~/inputs/neo-select.model';
   import type { NeoProgressBarProps } from '~/progress/neo-progress-bar.model';
+  import type { NeoProgressHTMLElement, NeoProgressProps } from '~/progress/neo-progress.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconDoubleChevronLeft from '~/icons/IconDoubleChevronLeft.svelte';
   import IconDoubleChevronRight from '~/icons/IconDoubleChevronRight.svelte';
   import IconPlayPause from '~/icons/IconPlayPause.svelte';
+  import { displayValue } from '~/inputs/neo-select.model';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
-  import { displayValue, type NeoSelectOption } from '~/inputs/neo-select.model';
+  import { NeoProgressDirection, NeoProgressStatus } from '~/progress/neo-progress.model';
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
-  import { NeoProgressDirection, type NeoProgressHTMLElement, type NeoProgressProps, NeoProgressStatus } from '~/progress/neo-progress.model';
   import { getDefaultElevation, MaxShallowShadowElevation, MinShallowShadowElevation } from '~/utils/shadow.utils';
+
+  import { colorOptions } from '../utils/color.utils';
 
   const options = $state<NeoProgressProps>({ value: 40, buffer: 60, direction: NeoProgressDirection.Right });
   const vertical = $derived([NeoProgressDirection.Top, NeoProgressDirection.Bottom].includes(options.direction));

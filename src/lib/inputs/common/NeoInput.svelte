@@ -1,18 +1,17 @@
 <script lang="ts">
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
+  import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
+
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
   import { hovering } from '@dvcol/svelte-utils/hovering';
 
-  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
-
+  import { NeoInputLabelPlacement } from '~/inputs/common/neo-input.model.js';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { NeoInputLabelPlacement } from '~/inputs/common/neo-input.model.js';
-
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
@@ -27,7 +26,6 @@
   } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     label,
@@ -105,7 +103,6 @@
     messageProps,
     ...rest
   }: NeoInputProps<NeoInputHTMLElement> = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: beforeTag = 'span', ...beforeRest } = $derived(beforeProps ?? {});

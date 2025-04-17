@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition';
-
   import type { NeoSkeletonMediaProps } from '~/skeletons/neo-skeleton-media.model.js';
+
+  import { fade } from 'svelte/transition';
 
   import IconAccount from '~/icons/IconAccount.svelte';
   import IconImage from '~/icons/IconImage.svelte';
@@ -11,7 +11,6 @@
   import { toSize } from '~/utils/style.utils.js';
   import { quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children: content,
@@ -45,7 +44,6 @@
     transitionProps,
     ...rest
   }: NeoSkeletonMediaProps = $props();
-  /* eslint-enable prefer-const */
 
   const MediaType = $derived.by(() => {
     switch (type) {

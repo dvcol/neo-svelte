@@ -1,20 +1,19 @@
 <script lang="ts">
-  import { link } from '@dvcol/svelte-simple-router';
-
-  import { Path } from '../router/routes.js';
-  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
-
-  import { colorOptions } from '../utils/color.utils';
-  import { useButtonState } from '../utils/use-button-state.svelte';
-
   import type { NeoButtonGroupContext, NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
+
+  import { link } from '@dvcol/svelte-simple-router';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import IconAccount from '~/icons/IconAccount.svelte';
-  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { DefaultShadowElevation } from '~/utils/shadow.utils';
+
+  import { Path } from '../router/routes.js';
+  import { colorOptions } from '../utils/color.utils';
+  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
+  import { useButtonState } from '../utils/use-button-state.svelte';
 
   const { onClick, loading: loading$, onLoading } = useButtonState('DemoGroupClicked');
   const loading = $derived.by(loading$);

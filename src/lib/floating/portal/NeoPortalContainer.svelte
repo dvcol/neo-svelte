@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { NeoPortalContainerProps } from '~/floating/portal/neo-portail-container.model.js';
+
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import { setNeoPortalContext } from '~/floating/portal/neo-portal-context.svelte.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -19,7 +18,6 @@
     // Other Props
     ...rest
   }: NeoPortalContainerProps = $props();
-  /* eslint-enable prefer-const */
 
   const context = setNeoPortalContext(id);
 

@@ -1,8 +1,8 @@
 <script lang="ts">
+  import type { NeoListItem, NeoListItemRenderContext, NeoListProps, NeoListSection } from '~/list/neo-list.model.js';
+
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
-
-  import type { NeoListItem, NeoListItemRenderContext, NeoListProps, NeoListSection } from '~/list/neo-list.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -263,7 +263,7 @@
       </NeoCard>
     </div>
 
-    <!--  card-->
+    <!--  card -->
     <div class="column content">
       <span class="label">Card List</span>
       <NeoCard rounded elevation="0" scrollbar={false} hover="-2" height="20rem" width="min(80vw, 18rem)" spacing="0.75rem">
@@ -271,13 +271,13 @@
       </NeoCard>
     </div>
 
-    <!--  multi line loader-->
+    <!--  multi line loader -->
     <div class="column content">
       <span class="label">Multi-line loader</span>
       <NeoList aria-label="Multi loader list" {items} {...options} loaderProps={{ lines: 2, items: 5 }} />
     </div>
 
-    <!--  custom loader-->
+    <!--  custom loader -->
     <div class="column content">
       <span class="label">Custom loader</span>
       <NeoList aria-label="Custom loader list" {items} {...options}>
@@ -289,7 +289,7 @@
       </NeoList>
     </div>
 
-    <!--  custom empty-->
+    <!--  custom empty -->
     <div class="column content">
       <span class="label">Custom Empty</span>
       <NeoList aria-label="Custom empty list" {items} {...options}>
@@ -307,7 +307,7 @@
       <NeoList aria-label="Custom item render list" items={withCustom} {...options} />
     </div>
 
-    <!--  custom item-->
+    <!--  custom item -->
     <div class="column content">
       <span class="label">Custom snippet</span>
       <NeoList aria-label="Custom item snippet list" items={withCustom} {item} {...options} />

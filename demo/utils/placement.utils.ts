@@ -1,4 +1,5 @@
 import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
+
 import type { NeoSelectOption } from '~/inputs/neo-select.model.js';
 
 export const positionOptions: NeoSelectOption<UseFloatingOptions['placement']>[] = [

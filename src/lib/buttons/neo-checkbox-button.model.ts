@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLButtonAttributes } from 'svelte/elements';
+
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 

@@ -1,14 +1,15 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
-  import { hovering } from '@dvcol/svelte-utils/hovering';
-  import { doubleBind } from '@dvcol/svelte-utils/watch';
-
   import type { EventHandler } from 'svelte/elements';
+
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
+  import { getUUID } from '@dvcol/common-utils/common/string';
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { hovering } from '@dvcol/svelte-utils/hovering';
+  import { doubleBind } from '@dvcol/svelte-utils/watch';
 
   import IconMinus from '~/icons/IconMinus.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
@@ -19,7 +20,6 @@
   import { ArrowPrefix } from '~/utils/regex.utils.js';
   import { coerce, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     label,
@@ -89,7 +89,6 @@
     pinProps,
     ...rest
   }: NeoPinProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: beforeTag = 'span', ...beforeRest } = $derived(beforeProps ?? {});
@@ -97,10 +96,10 @@
 
   const labelId = $derived(label ? `neo-pin-label-${getUUID()}` : undefined);
 
-  const refs = $state<NeoInputHTMLElement[][]>(Array(Number(groups)).fill([]));
-  const values = $state<string[][]>(Array(Number(groups)).fill(Array(Number(count)).fill('')));
-  const touches = $state<boolean[][]>(Array(Number(groups)).fill(Array(Number(count)).fill(false)));
-  const dirtiness = $state<boolean[][]>(Array(Number(groups)).fill(Array(Number(count)).fill(false)));
+  const refs = $state<NeoInputHTMLElement[][]>(Array.from({ length: Number(groups) }).fill([]));
+  const values = $state<string[][]>(Array.from({ length: Number(groups) }).fill(Array.from({ length: Number(count) }).fill('')));
+  const touches = $state<boolean[][]>(Array.from({ length: Number(groups) }).fill(Array.from({ length: Number(count) }).fill(false)));
+  const dirtiness = $state<boolean[][]>(Array.from({ length: Number(groups) }).fill(Array.from({ length: Number(count) }).fill(false)));
 
   const initial = $state(value);
   let validationMessage: string | undefined = $state(ref?.validationMessage);
@@ -291,7 +290,7 @@
     changed = value;
   };
 
-  const onInvalid: EventHandler<Event, HTMLInputElement> = e => {
+  const onInvalid: EventHandler<Event, HTMLInputElement> = (e) => {
     valid = false;
     validationMessage = ref?.validationMessage;
     e.preventDefault();
@@ -512,7 +511,7 @@
     {required}
     label={labelGroup}
     {...labelProps}
-    onclick={e => {
+    onclick={(e) => {
       focus(0, 0, { last: true });
       labelProps?.onclick?.(e);
     }}

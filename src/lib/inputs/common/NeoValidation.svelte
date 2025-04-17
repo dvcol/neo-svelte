@@ -1,14 +1,13 @@
 <script lang="ts" generics="T extends HTMLElement, V extends any">
+  import type { NeoValidationContext, NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
+
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fly } from 'svelte/transition';
-
-  import type { NeoValidationContext, NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
 
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { defaultDuration } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -36,7 +35,6 @@
     messageId = $bindable(messageProps?.id ?? `neo-validation-message-${getUUID()}`),
     ...rest
   }: NeoValidationProps<T, V> = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: messageTag = 'div', ...messageRest } = $derived(messageProps ?? {});
 

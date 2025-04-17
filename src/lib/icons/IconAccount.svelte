@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { watch } from '@dvcol/svelte-utils/watch';
-
   import type { IconFilledProps } from '~/icons/icon.model.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
+  import { watch } from '@dvcol/svelte-utils/watch';
+
   let {
     size = '1em',
     scale = 1,
@@ -14,7 +13,6 @@
 
     ...rest
   }: IconFilledProps = $props();
-  /* eslint-enable prefer-const */
 
   watch(
     () => {

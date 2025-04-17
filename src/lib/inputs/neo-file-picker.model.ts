@@ -1,11 +1,12 @@
 import type { Snippet } from 'svelte';
 import type { MouseEventHandler } from 'svelte/elements';
+
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoCardProps } from '~/cards/neo-card.model.js';
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-export type NeoFilePickerContext<Multiple extends boolean = boolean> = {
+export interface NeoFilePickerContext<Multiple extends boolean = boolean> {
   /**
    * If the file picker is in a dragging state.
    * @see drop
@@ -28,7 +29,7 @@ export type NeoFilePickerContext<Multiple extends boolean = boolean> = {
    * The current files in the file picker.
    */
   files?: FileList;
-};
+}
 
 export type NeoFilePickerValue<Multiple extends boolean = boolean> =
   | (Multiple extends true ? FileList : Multiple extends false ? File : FileList | File)
@@ -115,7 +116,7 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    */
   groupProps?: NeoInputProps['containerProps'];
 } & NeoFilePickerContext<Multiple> &
-  Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange' | 'label'>;
+Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange' | 'label'>;
 
 export type NeoFilePickerCardProps = Omit<NeoCardProps, 'children'> & {
   /**
@@ -180,18 +181,18 @@ export type NeoFilePickerCardProps = Omit<NeoCardProps, 'children'> & {
    */
   removeButtonProps?: NeoButtonProps;
 } & Pick<
-    NeoFilePickerProps,
-    | 'files'
-    | 'valid'
-    | 'clearable'
-    | 'placeholder'
-    | 'dropText'
-    | 'loading'
-    | 'multiple'
-    | 'append'
-    | 'children'
-    | 'label'
-    | 'labelProps'
-    | 'labelRef'
-    | 'required'
-  >;
+  NeoFilePickerProps,
+  | 'files'
+  | 'valid'
+  | 'clearable'
+  | 'placeholder'
+  | 'dropText'
+  | 'loading'
+  | 'multiple'
+  | 'append'
+  | 'children'
+  | 'label'
+  | 'labelProps'
+  | 'labelRef'
+  | 'required'
+>;

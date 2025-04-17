@@ -5,7 +5,6 @@
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -30,7 +29,6 @@
     // Other props
     ...rest
   }: NeoCheckboxButtonProps = $props();
-  /* eslint-enable prefer-const */
 
   const elevation = $derived(coerce(_elevation));
   const boxShadow = $derived(computeShadowElevation(elevation, { glass, active: glass }, DefaultShallowMinMaxElevation));

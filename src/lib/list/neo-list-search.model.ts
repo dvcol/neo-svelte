@@ -1,7 +1,8 @@
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
+import type { NeoListContext, NeoListItem, NeoListItemOrSection } from '~/list/neo-list.model.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-import { isSection, type NeoListContext, type NeoListItem, type NeoListItemOrSection } from '~/list/neo-list.model.js';
+import { isSection } from '~/list/neo-list.model.js';
 
 export type NeoListSearchFilter = (item: NeoListItemOrSection, search?: string) => boolean;
 export type NeoListSearchSort = (a: NeoListItemOrSection, b: NeoListItemOrSection, invert?: boolean) => number;
@@ -42,14 +43,15 @@ export type NeoListSearchProps<Tag extends keyof HTMLElementTagNameMap = 'div'> 
    */
   inputProps?: NeoInputProps;
 } & HTMLRefProps<HTMLInputElement> &
-  Pick<
-    NeoInputProps,
+Pick<
+  NeoInputProps,
     'value' | 'valid' | 'dirty' | 'touched' | 'hovered' | 'focused' | 'focusin' | 'loading' | 'elevation' | 'hover' | 'placeholder'
-  > &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+> &
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
-const itemMatch = (item: NeoListItem, search: string) =>
-  item.label?.toLowerCase().includes(search) || item.description?.toLowerCase().includes(search);
+function itemMatch(item: NeoListItem, search: string) {
+  return item.label?.toLowerCase().includes(search) || item.description?.toLowerCase().includes(search);
+}
 
 export const itemSearchFilter: NeoListSearchFilter = (item: NeoListItemOrSection, search?: string) => {
   if (item?.hidden) return false;
@@ -59,7 +61,7 @@ export const itemSearchFilter: NeoListSearchFilter = (item: NeoListItemOrSection
   return !!itemMatch(item, pattern);
 };
 
-export const itemLabelSort = (a: NeoListItemOrSection, b: NeoListItemOrSection, reverse?: boolean) => {
+export function itemLabelSort(a: NeoListItemOrSection, b: NeoListItemOrSection, reverse?: boolean) {
   if (!a?.label || !b?.label) return 0;
   return reverse ? a.label.localeCompare(b.label) : b.label.localeCompare(a.label);
-};
+}

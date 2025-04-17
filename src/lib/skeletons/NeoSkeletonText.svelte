@@ -1,14 +1,13 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition';
-
   import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
+
+  import { fade } from 'svelte/transition';
 
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children: content,
@@ -44,7 +43,6 @@
     transitionProps,
     ...rest
   }: NeoSkeletonTextProps = $props();
-  /* eslint-enable prefer-const */
 
   let auto = $state<number>();
   $effect(() => {
@@ -106,9 +104,9 @@
     {/if}
 
     {#if paragraphs && lines}
-      {#each Array(Number(paragraphs)) as _, i}
+      {#each Array.from({ length: Number(paragraphs) }) as _, i}
         <div class:neo-skeleton-text-paragraph={true} class:neo-alt={alt} class:neo-justify={justify} {...paragraphProps}>
-          {#each Array(Number(Array.isArray(lines) ? lines[i] : lines)) as __}
+          {#each Array.from({ length: Number(Array.isArray(lines) ? lines[i] : lines) }) as __}
             <div class="neo-skeleton-text-line" class:neo-alt={alt}>&nbsp;</div>
           {/each}
         </div>

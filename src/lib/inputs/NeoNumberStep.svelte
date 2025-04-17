@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { watch } from '@dvcol/svelte-utils/watch';
-
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoNumberStepProps } from '~/inputs/neo-number-step.model.js';
+
+  import { watch } from '@dvcol/svelte-utils/watch';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconAdd from '~/icons/IconAdd.svelte';
@@ -11,7 +11,6 @@
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, computeButtonTemplate, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     label,
@@ -50,7 +49,6 @@
     containerProps,
     ...rest
   }: NeoNumberStepProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 

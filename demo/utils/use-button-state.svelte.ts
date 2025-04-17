@@ -1,4 +1,4 @@
-export const useButtonState = (prefix = '') => {
+export function useButtonState(prefix = '') {
   const onClick = (...args: any) => {
     console.info(prefix, ...args);
   };
@@ -17,4 +17,4 @@ export const useButtonState = (prefix = '') => {
     loading: () => loading,
     onLoading,
   };
-};
+}

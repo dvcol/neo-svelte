@@ -1,13 +1,10 @@
 <script lang="ts">
-  import { wait } from '@dvcol/common-utils/common/promise';
-
-  import { colorOptions } from '../utils/color.utils';
-  import { positionOptions } from '../utils/placement.utils';
-
   import type { NeoDialogConfirmProps } from '~/floating/dialog/neo-dialog-confirm.model.js';
   import type { NeoDialogStepperProps } from '~/floating/dialog/neo-dialog-stepper.model.js';
   import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
   import type { NeoStepperStep } from '~/stepper/neo-stepper.model.js';
+
+  import { wait } from '@dvcol/common-utils/common/promise';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -25,6 +22,9 @@
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { DefaultShadowElevation, MaxShadowElevation } from '~/utils/shadow.utils';
+
+  import { colorOptions } from '../utils/color.utils';
+  import { positionOptions } from '../utils/placement.utils';
 
   const options = $state<NeoDialogProps>({
     modal: true,

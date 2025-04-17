@@ -1,8 +1,9 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoValidationFieldContext } from '~/inputs/common/neo-validation.model.js';
 
-export type NeoPinState = {
+export interface NeoPinState {
   // Snippets
   /**
    * A snippet to display as the group separator.
@@ -31,7 +32,7 @@ export type NeoPinState = {
   vertical?: boolean;
 
   // Other props
-};
+}
 
 export type NeoPinProps = NeoPinState &
   Omit<NeoInputProps, 'floating' | 'placement'> & {
@@ -45,9 +46,9 @@ export type NeoPinProps = NeoPinState &
     pinProps?: NeoInputProps[];
   };
 
-export type NeoPinMethods = {
+export interface NeoPinMethods {
   clear: () => Promise<void>;
-};
+}
 
 export type NeoPinContext = NeoValidationFieldContext<NeoInputHTMLElement, string> &
   NeoPinMethods & {

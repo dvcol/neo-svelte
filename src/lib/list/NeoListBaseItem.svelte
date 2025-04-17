@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { getFocusableElement } from '@dvcol/common-utils/common/element';
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
   import type { NeoListItem } from '~/list/neo-list.model.js';
+
+  import { getFocusableElement } from '@dvcol/common-utils/common/element';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconArrow from '~/icons/IconArrow.svelte';
@@ -11,7 +11,6 @@
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     before,
@@ -46,7 +45,6 @@
     buttonProps,
     ...rest
   }: NeoListBaseItemProps = $props();
-  /* eslint-enable prefer-const */
 
   $effect(() => {
     if (touched || !checked) return;
@@ -131,14 +129,14 @@
     {disabled}
     {rounded}
     href={item?.href}
-    onclick={e => {
+    onclick={(e) => {
       if (disabled) return;
       item?.onclick?.(e);
       if (readonly) return;
       touched = true;
       onclick?.(e);
     }}
-    onkeydown={e => {
+    onkeydown={(e) => {
       if (disabled) return;
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         getNextTarget(e.target, e.key === 'ArrowDown' ? 'next' : 'previous');

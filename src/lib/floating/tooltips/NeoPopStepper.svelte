@@ -4,12 +4,11 @@
   import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
   import type { NeoPopStepperProps } from '~/floating/tooltips/neo-pop-stepper.model.js';
   import type { NeoTooltipContext, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
+  import type { NeoStepperBeforeEvent, NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
   import NeoFloatingStepper from '~/floating/common/NeoFloatingStepper.svelte';
   import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
-  import { type NeoStepperBeforeEvent, type NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children: trigger,
@@ -72,7 +71,6 @@
     tooltipProps,
     ...rest
   }: NeoPopStepperProps = $props();
-  /* eslint-enable prefer-const */
 
   const marks = $derived<boolean>(_marks ?? steps?.some(s => s?.markProps) ?? !!rest?.markProps);
 

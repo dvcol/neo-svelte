@@ -1,14 +1,12 @@
 <script lang="ts">
-  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
-
   import type { NeoAccordionProps } from '~/collapse/neo-accordion.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import { defaultCollapseGroupStrategy } from '~/collapse/neo-collapse-context.svelte';
   import NeoAccordion from '~/collapse/NeoAccordion.svelte';
   import NeoCollapse from '~/collapse/NeoCollapse.svelte';
   import NeoCollapseGroup from '~/collapse/NeoCollapseGroup.svelte';
-  import { defaultCollapseGroupStrategy } from '~/collapse/neo-collapse-context.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import {
@@ -19,6 +17,8 @@
     MaxShadowElevation,
     MinShadowElevation,
   } from '~/utils/shadow.utils';
+
+  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   const options = $state<NeoAccordionProps>({
     disabled: false,

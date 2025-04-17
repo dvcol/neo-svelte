@@ -1,19 +1,18 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { FormEventHandler } from 'svelte/elements';
 
+  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoColorPickerProps } from '~/inputs/neo-color-picker.model.js';
 
+  import { getUUID } from '@dvcol/common-utils/common/string';
+
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import { type NeoButtonProps } from '~/buttons/neo-button.model.js';
   import IconPaint from '~/icons/IconPaint.svelte';
-  import NeoColorPickerSelector from '~/inputs/NeoColorPickerSelector.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoColorPickerSelector from '~/inputs/NeoColorPickerSelector.svelte';
   import { HexColorRegexString } from '~/utils/regex.utils.js';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     icon: customIcon,
@@ -41,9 +40,8 @@
     pickerProps,
     ...rest
   }: NeoColorPickerProps = $props();
-  /* eslint-enable prefer-const */
 
-  const onclick: NeoButtonProps['onclick'] = e => {
+  const onclick: NeoButtonProps['onclick'] = (e) => {
     pickerRef?.focus?.();
     pickerRef?.click?.();
     pickerRef?.showPicker?.();
@@ -54,22 +52,22 @@
   const template = $derived(computeButtonTemplate(elevation, rest?.pressed, rest?.glass));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle picker',
-    title: 'Toggle picker',
-    skeleton: rest.skeleton,
-    disabled: rest.disabled,
-    rounded: rest.rounded,
-    start: rest.start,
+    'title': 'Toggle picker',
+    'skeleton': rest.skeleton,
+    'disabled': rest.disabled,
+    'rounded': rest.rounded,
+    'start': rest.start,
     ...template,
     ...buttonProps,
     onclick,
   });
 
-  const oninput: FormEventHandler<HTMLInputElement> = e => {
+  const oninput: FormEventHandler<HTMLInputElement> = (e) => {
     ref?.dispatchEvent(new InputEvent(e.type, e));
     pickerProps?.oninput?.(e);
   };
 
-  const onchange: FormEventHandler<HTMLInputElement> = e => {
+  const onchange: FormEventHandler<HTMLInputElement> = (e) => {
     ref?.dispatchEvent(new InputEvent(e.type, e));
     pickerProps?.onchange?.(e);
   };

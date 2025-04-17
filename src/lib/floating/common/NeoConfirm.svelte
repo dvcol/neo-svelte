@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { MouseEventHandler } from 'svelte/elements';
+
   import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
+
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
   import NeoCancelButton from '~/buttons/NeoCancelButton.svelte';
   import NeoCloseButton from '~/buttons/NeoCloseButton.svelte';
   import { Colors } from '~/utils/colors.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -48,23 +48,22 @@
     buttonProps,
     ...rest
   }: NeoConfirmProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: headerTag = 'h6', ...headerRest } = $derived(headerProps ?? {});
   const { tag: controlsTag = 'div', ...controlsRest } = $derived(controlsProps ?? {});
   const { tag: contentTag = 'div', ...contentRest } = $derived(contentProps ?? {});
 
-  const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
+  const onCloseButton: MouseEventHandler<HTMLButtonElement> = (e) => {
     closeProps?.onclick?.(e);
     onClose?.(e);
   };
 
-  const onCancelButton: MouseEventHandler<HTMLButtonElement> = e => {
+  const onCancelButton: MouseEventHandler<HTMLButtonElement> = (e) => {
     cancelProps?.onclick?.(e);
     onCancel?.(e);
   };
 
-  const onConfirmButton: MouseEventHandler<HTMLButtonElement> = e => {
+  const onConfirmButton: MouseEventHandler<HTMLButtonElement> = (e) => {
     confirmProps?.onclick?.(e);
     onConfirm?.(e);
   };

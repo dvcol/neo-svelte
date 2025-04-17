@@ -2,10 +2,9 @@
   import type { NeoArrowButtonProps } from '~/buttons/neo-arrow-button.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconArrow from '~/icons/IconArrow.svelte';
   import { IconArrowDirection } from '~/icons/icon.model.js';
+  import IconArrow from '~/icons/IconArrow.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // State
     direction = IconArrowDirection.Right,
@@ -22,7 +21,6 @@
     arrowProps,
     ...rest
   }: NeoArrowButtonProps = $props();
-  /* eslint-enable prefer-const */
 
   const reverse = $derived(direction === 'right');
 </script>

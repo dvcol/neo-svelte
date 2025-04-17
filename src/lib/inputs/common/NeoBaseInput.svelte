@@ -1,16 +1,15 @@
 <script lang="ts">
-  import { tick } from 'svelte';
-
   import type { EventHandler, FocusEventHandler, FormEventHandler, HTMLSelectAttributes } from 'svelte/elements';
+
+  import type { NeoBaseInputProps, NeoInputMethods, NeoInputState, NeoInputValue } from '~/inputs/common/neo-input.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
+  import { tick } from 'svelte';
 
-  import { type NeoBaseInputProps, type NeoInputMethods, type NeoInputState, type NeoInputValue } from '~/inputs/common/neo-input.model.js';
+  import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -68,7 +67,6 @@
     displayProps,
     ...rest
   }: NeoBaseInputProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: displayTag = 'span', ...displayRest } = $derived(displayProps ?? {});
 
@@ -169,30 +167,30 @@
     return validate();
   };
 
-  const onFocus: FocusEventHandler<HTMLElement> = e => {
+  const onFocus: FocusEventHandler<HTMLElement> = (e) => {
     if (!readonly && !disabled) touched = true;
     onfocus?.(e as SvelteEvent<FocusEvent, HTMLInputElement>);
   };
 
-  const onBlur: FocusEventHandler<HTMLElement> = e => {
+  const onBlur: FocusEventHandler<HTMLElement> = (e) => {
     validate({ dirty: dirtyOnBlur, valid: validateOnBlur });
     onblur?.(e as SvelteEvent<FocusEvent, HTMLInputElement>);
   };
 
-  const onInput: FormEventHandler<HTMLElement> = e => {
+  const onInput: FormEventHandler<HTMLElement> = (e) => {
     touched = true;
     validate({ dirty: dirtyOnInput, valid: validateOnInput });
     oninput?.(e as SvelteEvent<InputEvent, HTMLInputElement>);
   };
 
-  const onChange: FormEventHandler<HTMLElement> = e => {
+  const onChange: FormEventHandler<HTMLElement> = (e) => {
     touched = true;
     validate();
     fallback();
     onchange?.(e as SvelteEvent<InputEvent, HTMLInputElement>);
   };
 
-  const onInvalid: EventHandler<Event, HTMLElement> = e => {
+  const onInvalid: EventHandler<Event, HTMLElement> = (e) => {
     valid = false;
     validationMessage = ref?.validationMessage;
     e.preventDefault();

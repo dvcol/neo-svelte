@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAnchorAttributes, HTMLButtonAttributes, KeyboardEventHandler } from 'svelte/elements';
+
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, SvelteEvent } from '~/utils/html-element.utils.js';
-
 import type {
   BlurElevation,
   BlurElevationString,
@@ -18,7 +18,7 @@ export type NeoButtonElevation = ShadowElevation | ShadowElevationString;
 export type NeoButtonHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 export type NeoButtonActiveElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 
-export type NeoButtonStates = {
+export interface NeoButtonStates {
   /**
    * The url to navigate to when the anchor is clicked.
    */
@@ -63,7 +63,7 @@ export type NeoButtonStates = {
    * @bindable
    */
   checked?: boolean;
-};
+}
 
 export type NeoButtonContext = NeoButtonStates & {
   /**
@@ -227,15 +227,15 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   onkeyup?: KeyboardEventHandler<HTMLButtonElement>;
 } & NeoButtonStates &
-  HTMLFlexProps &
-  HTMLActionProps &
-  HTMLRefProps &
-  Partial<
-    Omit<
-      Tag extends 'button' ? HTMLButtonAttributes : Tag extends 'a' ? HTMLAnchorAttributes : HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>,
+HTMLFlexProps &
+HTMLActionProps &
+HTMLRefProps &
+Partial<
+  Omit<
+    Tag extends 'button' ? HTMLButtonAttributes : Tag extends 'a' ? HTMLAnchorAttributes : HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>,
       'onclick' | 'onkeydown' | 'onkeyup'
-    >
-  >;
+  >
+>;
 
 export type NeoButtonTemplate = Pick<
   NeoButtonProps,

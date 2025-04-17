@@ -1,26 +1,26 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
-  import { tick } from 'svelte';
-
   import type { DragEventHandler, FormEventHandler, MouseEventHandler } from 'svelte/elements';
+
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
+  import { getUUID } from '@dvcol/common-utils/common/string';
+  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { tick } from 'svelte';
+
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconDownload from '~/icons/IconDownload.svelte';
   import IconFileUpload from '~/icons/IconFileUpload.svelte';
-  import NeoFilePickerCard from '~/inputs/NeoFilePickerCard.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
+  import NeoFilePickerCard from '~/inputs/NeoFilePickerCard.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -93,7 +93,6 @@
     validationProps,
     ...rest
   }: NeoFilePickerProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
@@ -124,7 +123,7 @@
     updateMargin(dragRef?.firstElementChild);
   };
 
-  const onClear: MouseEventHandler<HTMLButtonElement> = e => {
+  const onClear: MouseEventHandler<HTMLButtonElement> = (e) => {
     e?.stopPropagation();
     ref?.clear?.();
   };
@@ -139,14 +138,14 @@
 
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Add files',
-    title: 'Add files',
+    'title': 'Add files',
     skeleton,
     disabled,
-    rounded: expanded || rounded,
-    start: rest.start,
+    'rounded': expanded || rounded,
+    'start': rest.start,
     ...template,
     ...buttonProps,
-    class: ['neo-file-picker-button', buttonProps?.class],
+    'class': ['neo-file-picker-button', buttonProps?.class],
     onclick,
   });
 
@@ -194,7 +193,7 @@
     return transfer.files;
   };
 
-  const onDrop: DragEventHandler<HTMLDivElement> = async e => {
+  const onDrop: DragEventHandler<HTMLDivElement> = async (e) => {
     dragging = false;
     e.preventDefault();
     if (disabled || skeleton) return;
@@ -213,14 +212,14 @@
 
   const onDragOver: DragEventHandler<HTMLDivElement> = e => e.preventDefault();
 
-  const onDragEnter: DragEventHandler<HTMLDivElement> = e => {
+  const onDragEnter: DragEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
     updateDragState();
     dragging = true;
     hovered = true;
   };
 
-  const onDragLeave: DragEventHandler<HTMLDivElement> = e => {
+  const onDragLeave: DragEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
     hovered = false;
     dragging = false;

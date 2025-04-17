@@ -1,15 +1,12 @@
 <script lang="ts">
+  import type { TransitionProps } from '@dvcol/svelte-utils/transition';
+
+  import type { Routes } from './router/routes.js';
+
   import { sentenceCase } from '@dvcol/common-utils';
   import { RouterView } from '@dvcol/svelte-simple-router/components';
   import { resolveComponent } from '@dvcol/svelte-utils';
   import { fade } from 'svelte/transition';
-
-  import { router } from './router/router.js';
-
-  import { routes } from './router/routes.js';
-
-  import type { Routes } from './router/routes.js';
-  import type { TransitionProps } from '@dvcol/svelte-utils/transition';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoPortalContainer from '~/floating/portal/NeoPortalContainer.svelte';
@@ -20,6 +17,9 @@
   import NeoThemePicker from '~/providers/NeoThemePicker.svelte';
   import NeoThemeProvider from '~/providers/NeoThemeProvider.svelte';
   import NeoThemeSelector from '~/providers/NeoThemeSelector.svelte';
+
+  import { router } from './router/router.js';
+  import { routes } from './router/routes.js';
 
   const transition: TransitionProps = {
     in: fade,

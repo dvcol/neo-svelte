@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
   import type { NeoFieldsetProps } from '~/form/neo-fieldset.model.js';
+
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import { toSize } from '~/utils/style.utils.js';
 

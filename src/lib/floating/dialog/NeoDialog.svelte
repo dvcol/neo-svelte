@@ -1,36 +1,34 @@
 <script lang="ts">
+  import type { NeoHandlePlacements } from '~/floating/common/neo-handle.model.js';
+  import type { NeoDialogContext, NeoDialogHTMLElement, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
+  import type { NeoMovable, NeoMovableHandlers } from '~/floating/dialog/use-movable.svelte.js';
+  import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
   import { isIOS } from '@dvcol/common-utils/common/browser';
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { closestClickableElement, getFocusableElement } from '@dvcol/common-utils/common/element';
   import { useMobileScrollLock } from '@dvcol/common-utils/common/mobile';
   import { getUUID } from '@dvcol/common-utils/common/string';
-
   import { fade as fadeFn, fly, scale as scaleFn } from 'svelte/transition';
 
-  import type { NeoDialogContext, NeoDialogProps, NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
-  import type { SvelteEvent } from '~/utils/html-element.utils.js';
-
-  import NeoHandle from '~/floating/common/NeoHandle.svelte';
-  import { NeoHandlePlacement, type NeoHandlePlacements } from '~/floating/common/neo-handle.model.js';
+  import { NeoHandlePlacement } from '~/floating/common/neo-handle.model.js';
   import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
+  import NeoHandle from '~/floating/common/NeoHandle.svelte';
   import {
     defaultHandle,
     defaultMovable,
     defaultSnap,
-    type NeoMovable,
-    type NeoMovableHandlers,
+
     useMovable,
   } from '~/floating/dialog/use-movable.svelte.js';
-  import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { getNeoPortalContext } from '~/floating/portal/neo-portal-context.svelte.js';
+  import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
-
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { defaultDuration, quickDuration, shortDuration } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     children,
 
@@ -93,7 +91,6 @@
     portalProps,
     ...rest
   }: NeoDialogProps = $props();
-  /* eslint-enable prefer-const */
 
   const getMovablePlacement = (): NeoHandlePlacements => {
     if (placement?.startsWith('top')) return NeoHandlePlacement.Bottom;
@@ -117,7 +114,7 @@
   });
 
   const isNative = $derived(tag === 'dialog');
-  const ariaProps = $derived(isNative ? {} : { role: 'dialog', 'aria-modal': modal });
+  const ariaProps = $derived(isNative ? {} : { 'role': 'dialog', 'aria-modal': modal });
 
   const elevation = $derived(coerce(_elevation!, PositiveMinMaxElevation));
   const blur = $derived(coerce(_blur ?? _elevation!, PositiveMinMaxElevation));
@@ -137,7 +134,7 @@
     oncancel?.(e);
   };
 
-  const onClick: NeoDialogProps['onclick'] = e => {
+  const onClick: NeoDialogProps['onclick'] = (e) => {
     if (!closeOnClickOutside || !open || !isNative) return onclick?.(e);
     // Close dialog if clicked on the backdrop (only if modal)
     if (modal && e.target === ref) onCancel(e);

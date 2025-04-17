@@ -4,7 +4,6 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconCancel from '~/icons/IconCancel.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Button props
     ref = $bindable(),
@@ -16,7 +15,7 @@
     iconProps,
     ...rest
   }: NeoIconButtonProps = $props();
-  /* eslint-enable prefer-const */
+
 </script>
 
 {#snippet icon()}

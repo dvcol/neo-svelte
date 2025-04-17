@@ -1,4 +1,9 @@
 <script lang="ts">
+  import type { DragEventHandler, KeyboardEventHandler, PointerEventHandler } from 'svelte/elements';
+
+  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
+  import type { NeoRangeContext, NeoRangeHTMLElement, NeoRangeProps, NeoRangeValidationState, NeoRangeValue } from '~/inputs/neo-range.model.js';
+
   import { round } from '@dvcol/common-utils';
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { clamp } from '@dvcol/common-utils/common/math';
@@ -10,10 +15,6 @@
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
 
-  import type { DragEventHandler, KeyboardEventHandler, PointerEventHandler } from 'svelte/elements';
-  import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoRangeContext, NeoRangeHTMLElement, NeoRangeProps, NeoRangeValidationState, NeoRangeValue } from '~/inputs/neo-range.model.js';
-
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
@@ -23,7 +24,6 @@
   import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     label,
@@ -91,7 +91,6 @@
     floatingOptions,
     ...rest
   }: NeoRangeProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
@@ -208,19 +207,19 @@
   };
 
   const getDragHandler = (element: HTMLElement, index = 0) => {
-    const onMove: PointerEventHandler<HTMLElement> = event => {
+    const onMove: PointerEventHandler<HTMLElement> = (event) => {
       if (!element) return;
       updateValue(event, index);
     };
 
-    const onUp: PointerEventHandler<HTMLElement> = event => {
+    const onUp: PointerEventHandler<HTMLElement> = (event) => {
       if (!element) return;
       element.removeEventListener('pointermove', onMove as EventListener);
       element.removeEventListener('pointerup', onUp as EventListener);
       element.releasePointerCapture(event.pointerId);
     };
 
-    const onDown: PointerEventHandler<HTMLElement> = event => {
+    const onDown: PointerEventHandler<HTMLElement> = (event) => {
       if (disabled || readonly) return;
       if (!element || !rail) return;
       event.stopPropagation();
@@ -231,7 +230,7 @@
 
     const onDrag: DragEventHandler<HTMLElement> = e => e.preventDefault();
 
-    const onArrow: KeyboardEventHandler<HTMLElement> = e => {
+    const onArrow: KeyboardEventHandler<HTMLElement> = (e) => {
       if (!e.key.startsWith('Arrow')) return;
       if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
         e.preventDefault();
@@ -260,7 +259,7 @@
   const handler = $derived(getDragHandler(lowerTooltip.elements.reference as HTMLElement));
   const progressHandler = $derived(getDragHandler(upperTooltip.elements.reference as HTMLElement, 1));
 
-  const onClick: PointerEventHandler<HTMLElement> = e => {
+  const onClick: PointerEventHandler<HTMLElement> = (e) => {
     let index = 0;
     if (isArray && lowerTooltip?.elements.reference && upperTooltip?.elements.reference) {
       // select handle closest to the click

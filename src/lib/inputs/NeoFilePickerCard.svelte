@@ -1,8 +1,8 @@
 <script lang="ts">
+  import type { NeoFilePickerCardProps } from '~/inputs/neo-file-picker.model.js';
+
   import { flip } from 'svelte/animate';
   import { fade } from 'svelte/transition';
-
-  import type { NeoFilePickerCardProps } from '~/inputs/neo-file-picker.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
@@ -15,7 +15,6 @@
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { quickCircOutProps, quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -62,7 +61,6 @@
 
     ...rest
   }: NeoFilePickerCardProps = $props();
-  /* eslint-enable prefer-const */
 
   const detail = $derived(detailText || `${files?.length ?? 0} file${files?.length !== 1 ? 's' : ''}`);
 

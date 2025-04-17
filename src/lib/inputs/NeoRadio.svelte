@@ -1,10 +1,10 @@
 <script lang="ts">
+  import type { NeoRadioProps } from '~/inputs/neo-radio.model.js';
+
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
   import { hovering } from '@dvcol/svelte-utils/hovering';
   import { fade } from 'svelte/transition';
-
-  import type { NeoRadioProps } from '~/inputs/neo-radio.model.js';
 
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
@@ -14,7 +14,6 @@
   import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     label,
@@ -63,7 +62,6 @@
     containerProps,
     ...rest
   }: NeoRadioProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 

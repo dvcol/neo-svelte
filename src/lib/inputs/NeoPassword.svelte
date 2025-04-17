@@ -1,15 +1,15 @@
 <script lang="ts" generics="T extends boolean = false">
   import type { NeoButtonProps } from '~/buttons/index.js';
   import type { NeoPasswordProps } from '~/inputs/neo-password.model.js';
+  import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconWatch from '~/icons/IconWatch.svelte';
   import IconWatchOff from '~/icons/IconWatchOff.svelte';
-  import NeoPin from '~/inputs/NeoPin.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { coerce, computeButtonTemplate, getDefaultElevation, type ShadowElevation } from '~/utils/shadow.utils.js';
+  import NeoPin from '~/inputs/NeoPin.svelte';
+  import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     icon: customIcon,
@@ -36,7 +36,6 @@
     buttonProps,
     ...rest
   }: NeoPasswordProps<T> = $props();
-  /* eslint-enable prefer-const */
 
   let show = $state(false);
 
@@ -46,15 +45,15 @@
   const template = $derived(computeButtonTemplate(elevation, rest?.pressed, pin || rest?.glass));
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle password visibility',
-    title: 'Toggle password visibility',
-    skeleton: rest.skeleton,
-    disabled: rest.disabled,
-    rounded: rest.rounded,
-    start: rest.start,
+    'title': 'Toggle password visibility',
+    'skeleton': rest.skeleton,
+    'disabled': rest.disabled,
+    'rounded': rest.rounded,
+    'start': rest.start,
     ...template,
     ...buttonProps,
-    toggle: true,
-    class: ['neo-password-toggle', buttonProps?.class],
+    'toggle': true,
+    'class': ['neo-password-toggle', buttonProps?.class],
   });
 </script>
 

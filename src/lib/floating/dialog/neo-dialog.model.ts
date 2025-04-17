@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLDialogAttributes } from 'svelte/elements';
+
 import type { NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
 import type { NeoMovable, NeoMovableOutside, NeoMovableResetOptions, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
@@ -29,7 +30,7 @@ export type NeoDialogHTMLElement = HTMLDialogElement & {
   reset?: (options?: NeoMovableResetOptions) => Promise<boolean>;
 };
 
-export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
+export interface NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> {
   /**
    * The dialog element reference.
    */
@@ -121,7 +122,7 @@ export type NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTM
    * @see movable
    */
   readonly outside?: NeoMovableOutside;
-};
+}
 
 export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
   /**
@@ -228,6 +229,6 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
    */
   portalProps?: Omit<NeoPortalProps, 'children'>;
 } & HTMLFlexProps &
-  HTMLActionProps &
-  NeoDialogContext<Tag> &
-  Omit<HTMLDialogAttributes, 'children'>;
+HTMLActionProps &
+NeoDialogContext<Tag> &
+Omit<HTMLDialogAttributes, 'children'>;

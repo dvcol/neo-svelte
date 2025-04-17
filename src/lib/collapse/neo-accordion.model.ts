@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoCollapseGroupProps } from '~/collapse/neo-collapse-group.model.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
@@ -16,7 +17,7 @@ export type NeoAccordionBlur = BlurElevation | BlurElevationString;
 export type NeoAccordionElevation = ShadowElevation | ShadowElevationString;
 export type NeoAccordionHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
 
-export type NeoAccordionContext = {
+export interface NeoAccordionContext {
   /**
    * Whether the whole accordion is disabled.
    */
@@ -29,7 +30,7 @@ export type NeoAccordionContext = {
    * Whether the accordion opens horizontally.
    */
   horizontal?: boolean;
-};
+}
 
 export type NeoAccordionProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
@@ -120,4 +121,4 @@ export type NeoAccordionProps<Tag extends keyof HTMLElementTagNameMap = 'div'> =
    */
   group?: Omit<NeoCollapseGroupProps, 'children'>;
 } & NeoAccordionContext &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

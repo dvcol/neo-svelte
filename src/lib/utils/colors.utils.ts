@@ -18,7 +18,7 @@ export const ColorVariables = {
   [Colors.Default]: '--neo-color-default',
 } as const;
 
-export const getColorVariable = (color?: Color | string): string | undefined => {
+export function getColorVariable(color?: Color | string): string | undefined {
   if (!color || !ColorVariables[color as Color]) return color;
   return `var(${ColorVariables[color as Color]})`;
-};
+}

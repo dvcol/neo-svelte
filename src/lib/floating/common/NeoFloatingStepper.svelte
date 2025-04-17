@@ -1,20 +1,20 @@
 <script lang="ts">
+  import type { MouseEventHandler } from 'svelte/elements';
+
+  import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
+  import type { NeoStepperBeforeEvent, NeoStepperContext, NeoStepperNavigations } from '~/stepper/neo-stepper.model.js';
+
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import type { MouseEventHandler } from 'svelte/elements';
-  import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
-
   import NeoCloseButton from '~/buttons/NeoCloseButton.svelte';
-  import NeoStepper from '~/stepper/NeoStepper.svelte';
   import {
-    type NeoStepperBeforeEvent,
-    type NeoStepperContext,
+
     NeoStepperNavigation,
-    type NeoStepperNavigations,
+
   } from '~/stepper/neo-stepper.model.js';
+  import NeoStepper from '~/stepper/NeoStepper.svelte';
   import { Colors } from '~/utils/colors.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     header,
@@ -52,7 +52,6 @@
     buttonProps,
     ...rest
   }: NeoFloatingStepperProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: headerTag = 'h6', ...headerRest } = $derived(headerProps ?? {});
 
@@ -68,7 +67,7 @@
     }
   };
 
-  const onCloseButton: MouseEventHandler<HTMLButtonElement> = e => {
+  const onCloseButton: MouseEventHandler<HTMLButtonElement> = (e) => {
     closeProps?.onclick?.(e);
     onClose?.(e);
   };

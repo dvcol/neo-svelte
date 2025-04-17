@@ -1,19 +1,19 @@
 <script lang="ts">
+  import type { NeoCursorContext, NeoCursorProps, NeoCursorState } from '~/cursor/neo-cursor.model.js';
+
   import { getCursorState } from '@dvcol/common-utils/common/cursor';
   import { tick } from 'svelte';
 
-  import NeoCursorPointer from '~/cursor/NeoCursorPointer.svelte';
   import {
     getClosestClickable,
     getFirstDataNeoCursor,
-    type NeoCursorContext,
+
     NeoCursorPointerType,
-    type NeoCursorProps,
-    type NeoCursorState,
+
     NeoCursorType,
   } from '~/cursor/neo-cursor.model.js';
+  import NeoCursorPointer from '~/cursor/NeoCursorPointer.svelte';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
 
@@ -47,7 +47,6 @@
     pointerProps,
     ...rest
   }: NeoCursorProps = $props();
-  /* eslint-enable prefer-const */
 
   const boundary = $derived(target ?? ref);
   let innerState = $state<NeoCursorState>();

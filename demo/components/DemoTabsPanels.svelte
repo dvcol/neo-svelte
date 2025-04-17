@@ -1,11 +1,9 @@
 <script lang="ts">
-  import { randomHex } from '@dvcol/common-utils/common/crypto';
-  import { getUUID } from '@dvcol/common-utils/common/string';
-
-  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
-
   import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
   import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
+
+  import { randomHex } from '@dvcol/common-utils/common/crypto';
+  import { getUUID } from '@dvcol/common-utils/common/string';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -16,11 +14,13 @@
   import NeoTabsCard from '~/nav/NeoTabsCard.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
 
+  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
+
   const added = $state<NeoTabProps>([
     { text: 'Button', tabId: 'button', close: false },
     { text: 'Icon', tabId: 'icon', close: false, icon },
     { text: 'Reversed', tabId: 'reversed', close: false, icon, reverse: true },
-    { text: `Removable`, tabId: getUUID() },
+    { text: 'Removable', tabId: getUUID() },
   ]);
   const onclose = (id: TabId) => {
     const index = added.findIndex(tab => tab.tabId === id);

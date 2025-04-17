@@ -1,4 +1,4 @@
-const useAbortPromise = <T>({
+function useAbortPromise<T>({
   controller = new AbortController(),
   fallback,
   error,
@@ -12,7 +12,7 @@ const useAbortPromise = <T>({
   onAbort?: (controller: AbortController) => void;
   onResolve?: (value?: T) => void;
   onReject?: (reason?: unknown) => void;
-} = {}) => {
+} = {}) {
   const { promise, resolve, reject } = Promise.withResolvers();
   const abort = () => {
     onAbort?.(controller);
@@ -35,7 +35,7 @@ const useAbortPromise = <T>({
     },
     abort,
   };
-};
+}
 
 export const KeyboardLayouts = Object.freeze({
   Qwerty: 'qwerty' as const,
@@ -46,32 +46,32 @@ export type KeyboardLayout = (typeof KeyboardLayouts)[keyof typeof KeyboardLayou
 
 const KeyboardTypoMap: Record<KeyboardLayout, Record<string, string>> = Object.freeze({
   [KeyboardLayouts.Qwerty]: Object.freeze({
-    q: 'wa',
-    w: 'qse',
-    e: 'wrd',
-    r: 'etf',
-    t: 'ryg',
-    y: 'tuh',
-    u: 'yij',
-    i: 'uok',
-    o: 'ipl',
-    p: 'o',
-    a: 'qsz',
-    s: 'awed',
-    d: 'serf',
-    f: 'drtg',
-    g: 'ftyh',
-    h: 'gyuj',
-    j: 'huik',
-    k: 'jiol',
-    l: 'kop',
-    z: 'asx',
-    x: 'zdc',
-    c: 'xdfv',
-    v: 'cfgb',
-    b: 'vghn',
-    n: 'bhjm',
-    m: 'njk',
+    'q': 'wa',
+    'w': 'qse',
+    'e': 'wrd',
+    'r': 'etf',
+    't': 'ryg',
+    'y': 'tuh',
+    'u': 'yij',
+    'i': 'uok',
+    'o': 'ipl',
+    'p': 'o',
+    'a': 'qsz',
+    's': 'awed',
+    'd': 'serf',
+    'f': 'drtg',
+    'g': 'ftyh',
+    'h': 'gyuj',
+    'j': 'huik',
+    'k': 'jiol',
+    'l': 'kop',
+    'z': 'asx',
+    'x': 'zdc',
+    'c': 'xdfv',
+    'v': 'cfgb',
+    'b': 'vghn',
+    'n': 'bhjm',
+    'm': 'njk',
     '1': '2q',
     '2': '13w',
     '3': '24e',
@@ -89,32 +89,32 @@ const KeyboardTypoMap: Record<KeyboardLayout, Record<string, string>> = Object.f
     '/': '.',
   } as const),
   [KeyboardLayouts.Azerty]: Object.freeze({
-    a: 'qzs',
-    z: 'aqse',
-    e: 'zrsd',
-    r: 'etfd',
-    t: 'rygf',
-    y: 'tuhg',
-    u: 'yijh',
-    i: 'uokj',
-    o: 'iplk',
-    p: 'o',
-    q: 'azw',
-    s: 'awed',
-    d: 'serf',
-    f: 'drtg',
-    g: 'ftyh',
-    h: 'gyuj',
-    j: 'huik',
-    k: 'jiol',
-    l: 'kopm',
-    m: 'l',
-    w: 'qsx',
-    x: 'wcd',
-    c: 'xdfv',
-    v: 'cfgb',
-    b: 'vghn',
-    n: 'bhjm',
+    'a': 'qzs',
+    'z': 'aqse',
+    'e': 'zrsd',
+    'r': 'etfd',
+    't': 'rygf',
+    'y': 'tuhg',
+    'u': 'yijh',
+    'i': 'uokj',
+    'o': 'iplk',
+    'p': 'o',
+    'q': 'azw',
+    's': 'awed',
+    'd': 'serf',
+    'f': 'drtg',
+    'g': 'ftyh',
+    'h': 'gyuj',
+    'j': 'huik',
+    'k': 'jiol',
+    'l': 'kopm',
+    'm': 'l',
+    'w': 'qsx',
+    'x': 'wcd',
+    'c': 'xdfv',
+    'v': 'cfgb',
+    'b': 'vghn',
+    'n': 'bhjm',
     '1': '2a',
     '2': '13z',
     '3': '24e',
@@ -133,7 +133,7 @@ const KeyboardTypoMap: Record<KeyboardLayout, Record<string, string>> = Object.f
   } as const),
 } as const);
 
-const generateTypo = (char: string, layout: KeyboardLayout) => {
+function generateTypo(char: string, layout: KeyboardLayout) {
   const lowerChar = char.toLowerCase();
   const keyMap = KeyboardTypoMap[layout] || KeyboardTypoMap.qwerty;
 
@@ -142,9 +142,9 @@ const generateTypo = (char: string, layout: KeyboardLayout) => {
 
   const possibleChars = keyMap[lowerChar];
   return possibleChars[Math.floor(Math.random() * possibleChars.length)];
-};
+}
 
-export type TypeWriterRandomOptions = {
+export interface TypeWriterRandomOptions {
   /**
    * Should generate typos
    */
@@ -161,7 +161,7 @@ export type TypeWriterRandomOptions = {
    * @default 5 (every 5 characters)
    */
   modulo?: number;
-};
+}
 
 export type TypeWriterTypoOptions = TypeWriterRandomOptions & {
   /**
@@ -201,21 +201,26 @@ export type TypeWriterPauseOptions = TypeWriterRandomOptions & {
   controller?: AbortController;
 };
 
-export type TypeWriterSpeed = {
+export interface TypeWriterSpeed {
   write: number | number[];
   delete: number | number[];
-};
+}
 
-export type TypeWriterLine = {
+export interface TypeWriterLine {
   text: string;
   display?: string;
   mode?: 'write' | 'delete' | 'loop';
   speed?: TypeWriterSpeed;
   pause?: TypeWriterPauseOptions;
   typo?: TypeWriterTypoOptions;
-};
-export type TypeWriterContext = { line: number; text: string; display?: string; mode?: 'write' | 'delete' };
-export type TypewriterOptions<T extends (string | TypeWriterLine)[] = (string | TypeWriterLine)[]> = {
+}
+export interface TypeWriterContext {
+  line: number;
+  text: string;
+  display?: string;
+  mode?: 'write' | 'delete';
+}
+export interface TypewriterOptions<T extends (string | TypeWriterLine)[] = (string | TypeWriterLine)[]> {
   /**
    * The lines to iterate over
    */
@@ -289,7 +294,7 @@ export type TypewriterOptions<T extends (string | TypeWriterLine)[] = (string | 
    * @param controller
    */
   onAbort?: (controller: AbortController) => void;
-};
+}
 
 type TypeWriterSliceOptions<T extends TypeWriterLine[]> = Omit<TypewriterOptions<T>, 'mode' | 'typo' | 'pause' | 'speed' | 'lines'> & {
   mode: TypeWriterLine['mode'];
@@ -299,7 +304,7 @@ type TypeWriterSliceOptions<T extends TypeWriterLine[]> = Omit<TypewriterOptions
 };
 
 const spaceRegex = /\s/;
-const pauseRegex = /\s|[.,;:!?]/;
+const pauseRegex = /[\s.,;:!?]/;
 
 const defaults = {
   typo: {
@@ -323,11 +328,11 @@ const defaults = {
   },
 } satisfies Partial<TypewriterOptions>;
 
-const sleep = (ms: number | number[] = defaults.speed.write, onAbort?: (c: AbortController) => void, controller?: AbortController) => {
+async function sleep(ms: number | number[] = defaults.speed.write, onAbort?: (c: AbortController) => void, controller?: AbortController) {
   let timeout: ReturnType<typeof setTimeout>;
   const { promise, resolve } = useAbortPromise({
     controller,
-    onAbort: c => {
+    onAbort: (c) => {
       clearTimeout(timeout);
       onAbort?.(c);
     },
@@ -335,24 +340,21 @@ const sleep = (ms: number | number[] = defaults.speed.write, onAbort?: (c: Abort
   const speed = Array.isArray(ms) ? ms[Math.floor(Math.random() * ms.length)] : ms;
   timeout = setTimeout(resolve, speed);
   return promise;
-};
+}
 
 const isLine = (line: string | TypeWriterLine): line is TypeWriterLine => typeof line !== 'string';
 const toLine = (line: string | TypeWriterLine): TypeWriterLine => (isLine(line) ? line : { text: line });
-const toRandom = <T extends TypeWriterRandomOptions>(typo?: boolean | T): T | undefined => {
+function toRandom<T extends TypeWriterRandomOptions>(typo?: boolean | T): T | undefined {
   if (typeof typo === 'object') return { enabled: true, ...typo };
   if (typo === undefined) return;
   return { enabled: typo } as T;
-};
-const toSpeed = (speed?: number | TypeWriterSpeed): TypeWriterSpeed | undefined => {
+}
+function toSpeed(speed?: number | TypeWriterSpeed): TypeWriterSpeed | undefined {
   if (typeof speed === 'number') return { write: speed, delete: speed };
   return speed;
-};
+}
 
-const mergeOptions = <T extends TypeWriterLine[]>(
-  lineOptions: TypeWriterLine,
-  options: Omit<TypewriterOptions, 'lines'>,
-): TypeWriterSliceOptions<T> => {
+function mergeOptions<T extends TypeWriterLine[]>(lineOptions: TypeWriterLine, options: Omit<TypewriterOptions, 'lines'>): TypeWriterSliceOptions<T> {
   const pause: TypeWriterPauseOptions = { ...defaults.pause, ...toRandom(options.pause), ...toRandom(lineOptions.pause) };
   return {
     ...options,
@@ -362,18 +364,16 @@ const mergeOptions = <T extends TypeWriterLine[]>(
     pause: { ...pause, speed: { ...defaults.pause.speed, ...pause.speed } },
     speed: { ...defaults.speed, ...toSpeed(options.speed), ...toSpeed(lineOptions.speed) },
   };
-};
+}
 
-/* eslint-disable no-await-in-loop */
-
-type TypeWriterDoOptions = {
+interface TypeWriterDoOptions {
   text: string;
   index: number;
   line: number;
   mode?: 'write' | 'delete';
-};
+}
 
-const doPause = async <T extends TypeWriterLine[]>({
+async function doPause<T extends TypeWriterLine[]>({
   display = '',
   text,
   index,
@@ -386,16 +386,16 @@ const doPause = async <T extends TypeWriterLine[]>({
   controller,
   onPause,
   onAbort,
-}: Pick<TypeWriterSliceOptions<T>, 'onPause' | 'onAbort' | 'display'> & TypeWriterDoOptions & TypeWriterPauseOptions) => {
+}: Pick<TypeWriterSliceOptions<T>, 'onPause' | 'onAbort' | 'display'> & TypeWriterDoOptions & TypeWriterPauseOptions) {
   if (Math.random() >= odds) return;
   const char = text.charAt(index);
   if (regex && !regex.test(char)) return;
   if (modulo && index % modulo !== 0) return;
   onPause?.({ line, text, display, mode });
   await sleep(speed?.[mode], onAbort, controller);
-};
+}
 
-const doTypo = async <T extends TypeWriterLine[]>({
+async function doTypo<T extends TypeWriterLine[]>({
   display = '',
   text,
   index,
@@ -411,7 +411,7 @@ const doTypo = async <T extends TypeWriterLine[]>({
   controller,
 }: Pick<TypeWriterSliceOptions<T>, 'display' | 'speed' | 'controller' | 'onType' | 'onTypo' | 'onAbort'> &
   TypeWriterDoOptions &
-  TypeWriterTypoOptions) => {
+  TypeWriterTypoOptions) {
   if (Math.random() >= odds) return;
   if (index % modulo !== 0) return;
   const char = text.charAt(index);
@@ -446,7 +446,7 @@ const doTypo = async <T extends TypeWriterLine[]>({
     onType?.({ line, text, display, mode });
     await sleep(speed?.delete ?? defaults.speed.delete, onAbort, controller);
   }
-};
+}
 
 async function sliceText<T extends TypeWriterLine[]>(
   text: string,
@@ -505,4 +505,3 @@ export async function typewriter<T extends (string | TypeWriterLine)[]>({
   }
   return options.display;
 }
-/* eslint-enable no-await-in-loop */

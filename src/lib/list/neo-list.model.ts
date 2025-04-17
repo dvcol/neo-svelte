@@ -1,5 +1,6 @@
 import type { NeoListBaseItemProps, NeoListBaseSectionProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
+
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
@@ -8,13 +9,16 @@ import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
-export type NeoListDividerOption = { top?: boolean; bottom?: boolean };
-export const showDivider = (divider?: boolean | NeoListDividerOption, position: keyof NeoListDividerOption = 'top') => {
+export interface NeoListDividerOption {
+  top?: boolean;
+  bottom?: boolean;
+}
+export function showDivider(divider?: boolean | NeoListDividerOption, position: keyof NeoListDividerOption = 'top') {
   if (typeof divider !== 'boolean') return divider?.[position];
   return divider;
-};
+}
 
-export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+export interface NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> {
   /**
    * Unique identifier for the list item.
    * Used for keying the list item.
@@ -62,14 +66,14 @@ export type NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li'> = 
    Optional props to pass to the container.
    */
   containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
-};
+}
 
-export type NeoListItemContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = unknown> = {
+export interface NeoListItemContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = unknown> {
   item: NeoListItem<Value, Tag>;
   index: number;
   checked?: boolean;
   context: Context;
-};
+}
 
 export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = unknown> = Snippet<
   [NeoListItemContext<Value, Tag, Context>]
@@ -118,7 +122,7 @@ export type NeoListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   Context
 >;
 
-export type NeoListRenderContext<Value = unknown, Item = NeoListItemOrSection<Value>> = {
+export interface NeoListRenderContext<Value = unknown, Item = NeoListItemOrSection<Value>> {
   items: Item[];
   /**
    * The index of the section in the list.
@@ -126,7 +130,7 @@ export type NeoListRenderContext<Value = unknown, Item = NeoListItemOrSection<Va
   index?: number;
   section?: NeoListSection<Value>;
   context?: NeoListContext;
-};
+}
 export type NeoListRender<Value = unknown> = Snippet<[NeoListRenderContext<Value>]>;
 
 export type NeoListSectionRender<Value = unknown> = Snippet<[NeoListRender<Value>, NeoListRenderContext<Value>]>;
@@ -157,14 +161,14 @@ export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagName
 
 export const isSection = <Value = unknown>(item: NeoListItem<Value> | NeoListSection<Value>): item is NeoListSection<Value> => 'items' in item;
 
-export type NeoListSelectedItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = {
+export interface NeoListSelectedItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> {
   index: number;
   item: NeoListItem<Value, Tag>;
   sectionIndex?: number;
   section?: NeoListSection<Value>;
-};
+}
 
-export type NeoListSelectEvent<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = {
+export interface NeoListSelectEvent<Selected = NeoListSelectedItem | NeoListSelectedItem[]> {
   type: 'select' | 'clear' | 're-select';
 
   previous?: Selected;
@@ -172,9 +176,9 @@ export type NeoListSelectEvent<Selected = NeoListSelectedItem | NeoListSelectedI
 
   removed?: Selected;
   added?: Selected;
-};
+}
 
-export type NeoListMethods<Value = unknown> = {
+export interface NeoListMethods<Value = unknown> {
   /**
    * Scroll the list to the top.
    */
@@ -204,10 +208,10 @@ export type NeoListMethods<Value = unknown> = {
    * @returns The selection event if the list or item was cleared, undefined otherwise.
    */
   reSelect: () => NeoListSelectEvent | undefined;
-};
+}
 
 export type NeoListItemOrSection<Value = unknown> = NeoListItem<Value> | NeoListSection<Value>;
-export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSelectedItem[]> = {
+export interface NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSelectedItem[]> {
   // States
   /**
    * List items to display.
@@ -265,7 +269,7 @@ export type NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSel
    * Inverts the flow of the list (flex-direction: column-reverse).
    */
   reverse?: boolean;
-};
+}
 
 export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = NeoListState<Selected> & NeoListMethods;
 
@@ -391,16 +395,13 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    */
   sectionProps?: NeoListBaseSectionProps<Value, Tag>;
 } & HTMLRefProps &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  NeoListState<Selected>;
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
+NeoListState<Selected>;
 
 export type NeoListHTMLElement<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
   NeoListMethods<Value>;
 
-export const findByIdInList = <Value = unknown>(
-  selection: NeoListSelectedItem<Value>,
-  array: NeoListItemOrSection<Value>[],
-): NeoListSelectedItem<Value> | undefined => {
+export function findByIdInList<Value = unknown>(selection: NeoListSelectedItem<Value>, array: NeoListItemOrSection<Value>[]): NeoListSelectedItem<Value> | undefined {
   const result: NeoListSelectedItem<Value> = { index: -1 } as NeoListSelectedItem<Value>;
   const search = array?.some((item, index) => {
     if (isSection(item)) {
@@ -421,9 +422,9 @@ export const findByIdInList = <Value = unknown>(
     return true;
   });
   return search ? result : undefined;
-};
+}
 
-export const findByValueInList = <Value = unknown>(value: Value, array: NeoListItemOrSection<Value>[]): NeoListSelectedItem<Value> | undefined => {
+export function findByValueInList<Value = unknown>(value: Value, array: NeoListItemOrSection<Value>[]): NeoListSelectedItem<Value> | undefined {
   const result: NeoListSelectedItem<Value> = { index: -1 } as NeoListSelectedItem<Value>;
   const search = array.some((item, index) => {
     if (isSection(item)) {
@@ -441,4 +442,4 @@ export const findByValueInList = <Value = unknown>(value: Value, array: NeoListI
     return true;
   });
   return search ? result : undefined;
-};
+}

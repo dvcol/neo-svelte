@@ -1,5 +1,6 @@
 import type { NeoButtonActiveElevation, NeoButtonBlur, NeoButtonHoverElevation } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
+
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
@@ -7,7 +8,7 @@ import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.util
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoButtonGroupElevation = ShadowElevation | ShadowElevationString;
-export type NeoButtonGroupContext = {
+export interface NeoButtonGroupContext {
   // States
 
   /**
@@ -111,7 +112,7 @@ export type NeoButtonGroupContext = {
    * @see [@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) for browser support
    */
   start?: boolean;
-};
+}
 
 export type NeoButtonGroupProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
@@ -143,7 +144,7 @@ export type NeoButtonGroupProps<Tag extends keyof HTMLElementTagNameMap = 'div'>
    */
   height?: SizeInput<'height'>;
 } & NeoButtonGroupContext &
-  HTMLFlexProps &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  HTMLActionProps &
-  HTMLRefProps;
+HTMLFlexProps &
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
+HTMLActionProps &
+HTMLRefProps;

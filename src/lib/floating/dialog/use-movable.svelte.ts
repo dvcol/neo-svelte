@@ -1,16 +1,15 @@
+import type { HTMLAttributes } from 'svelte/elements';
+
+import type { NeoHandlePlacements, NeoHandleProps } from '~/floating/common/neo-handle.model.js';
+import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
+import type { SvelteEvent } from '~/utils/html-element.utils.js';
+
 import { debounce } from '@dvcol/common-utils/common/debounce';
 import { watch } from '@dvcol/svelte-utils/watch';
 
-import type { HTMLAttributes } from 'svelte/elements';
-
-import type { SvelteEvent } from '~/utils/html-element.utils.js';
-
-import { type NeoHandlePlacements, type NeoHandleProps } from '~/floating/common/neo-handle.model.js';
-import { type NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
-
 import { Logger } from '~/utils/logger.utils.js';
 
-export type NeoMovableSnapTranslate = {
+export interface NeoMovableSnapTranslate {
   /**
    * Translate duration (in ms).
    *
@@ -23,9 +22,9 @@ export type NeoMovableSnapTranslate = {
    * @default 'var(--neo-easing-spring, ease-in-out)'
    */
   easing?: string;
-};
+}
 
-export type NeoMovableSnap = {
+export interface NeoMovableSnap {
   /**
    * Whether the movable should snap to the viewport edges & center.
    */
@@ -54,7 +53,7 @@ export type NeoMovableSnap = {
    * Translate css to apply when snapping to a position
    */
   translate?: NeoMovableSnapTranslate;
-};
+}
 
 export type NeoMovableHandle = Pick<NeoHandleProps, 'visible' | 'handle' | 'position' | 'minSize'> & {
   /**
@@ -63,17 +62,17 @@ export type NeoMovableHandle = Pick<NeoHandleProps, 'visible' | 'handle' | 'posi
   full?: boolean;
 };
 
-export type NeoMovableLimit = {
+export interface NeoMovableLimit {
   min?: number;
   max?: number;
-};
+}
 
-export type NeoMovableLimits = {
+export interface NeoMovableLimits {
   x?: NeoMovableLimit;
   y?: NeoMovableLimit;
-};
+}
 
-export type NeoMovableThreshold = {
+export interface NeoMovableThreshold {
   x?: number;
   y?: number;
   top?: number;
@@ -81,14 +80,14 @@ export type NeoMovableThreshold = {
   bottom?: number;
   left?: number;
   outside?: boolean;
-};
+}
 
 export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'enabled' | 'placement' | 'axis' | 'outside'> & {
   /**
    * The step size for dragging the element with arrow keys.
    *
    * @default 4
-   **/
+   */
   step?: number;
   /**
    * The margin around the element when snapping to the viewport edges.
@@ -98,7 +97,7 @@ export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'e
   margin?: number;
   /**
    * Whether the element should be contained within to the viewport edges.
-   **/
+   */
   contain?: boolean;
   /**
    * Boundaries for the element movement.
@@ -136,16 +135,16 @@ export type NeoMovable<Parsed extends boolean = false> = Pick<NeoHandleProps, 'e
   snap?: Parsed extends true ? NeoMovableSnap : boolean | 'corner' | NeoMovableSnap;
 };
 
-export type NeoMoved = {
+export interface NeoMoved {
   x: number;
   y: number;
-};
+}
 
 export type NeoMovableOutside = false | NeoHandlePlacements;
 
 export type NeoMovableHandlers<Element extends HTMLElement> = Pick<HTMLAttributes<Element>, 'onpointerdown' | 'onkeydown' | 'onkeyup' | 'onblur'>;
 
-export type NeoMovableUseOptions<Element extends HTMLElement, Handle extends HTMLElement> = {
+export interface NeoMovableUseOptions<Element extends HTMLElement, Handle extends HTMLElement> {
   /**
    * The element's offset from its original position if any (applied transform).
    */
@@ -174,12 +173,16 @@ export type NeoMovableUseOptions<Element extends HTMLElement, Handle extends HTM
    * Event handlers to attach to the handle.
    */
   handlers?: Partial<NeoMovableHandlers<Handle>>;
-};
+}
 
-export type NeoMovableOffsetOptions = { contain?: boolean; outside?: NeoMovableOutside; limits?: NeoMovableLimits };
+export interface NeoMovableOffsetOptions {
+  contain?: boolean;
+  outside?: NeoMovableOutside;
+  limits?: NeoMovableLimits;
+}
 export type NeoMovableResetOptions = NeoMovableOffsetOptions & { x?: number; y?: number; translate?: boolean | NeoMovableSnapTranslate };
 
-export type NeoMovableUseResult<Element extends HTMLElement, Handle extends HTMLElement> = {
+export interface NeoMovableUseResult<Element extends HTMLElement, Handle extends HTMLElement> {
   /**
    * The element's offset from its original position if any (applied transform).
    */
@@ -220,7 +223,7 @@ export type NeoMovableUseResult<Element extends HTMLElement, Handle extends HTML
    * Reset the element's offset to its original position.
    */
   reset: (options?: NeoMovableResetOptions) => Promise<boolean>;
-};
+}
 
 export const defaultSnap: Required<NeoMovableSnap> = {
   enabled: false,
@@ -248,9 +251,7 @@ export const defaultMovable: NeoMovable = {
   handle: defaultHandle,
 };
 
-export const useMovable = <Element extends HTMLElement, Handle extends HTMLElement>(
-  options: NeoMovableUseOptions<Element, Handle>,
-): NeoMovableUseResult<Element, Handle> => {
+export function useMovable<Element extends HTMLElement, Handle extends HTMLElement>(options: NeoMovableUseOptions<Element, Handle>): NeoMovableUseResult<Element, Handle> {
   const offset = $derived(options.offset);
   const element = $derived(options.element);
   const placement = $derived(options.placement);
@@ -348,7 +349,7 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     if (outside !== undefined) options.outside = outside;
   };
 
-  const resetOffset = ({ x, y, translate: _translate, ...opts }: NeoMovableResetOptions = {}) => {
+  const resetOffset = async ({ x, y, translate: _translate, ...opts }: NeoMovableResetOptions = {}) => {
     let duration = 0;
     if (_translate) duration = startTranslating(1, typeof _translate === 'object' ? _translate : undefined)?.duration ?? 0;
     setOffset(x ?? 0, y ?? 0, { contain: false, ...opts });
@@ -462,11 +463,11 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     if (!element || !threshold) return false;
     if (
       // If the offset x is positive we are moving right
-      offset.x <= threshold.right &&
-      -offset.x <= threshold.left &&
+      offset.x <= threshold.right
+      && -offset.x <= threshold.left
       // If the offset y is positive we are moving down
-      offset.y <= threshold.bottom &&
-      -offset.y <= threshold.top
+      && offset.y <= threshold.bottom
+      && -offset.y <= threshold.top
     ) {
       return false;
     }
@@ -574,4 +575,4 @@ export const useMovable = <Element extends HTMLElement, Handle extends HTMLEleme
     },
     reset: resetOffset,
   };
-};
+}

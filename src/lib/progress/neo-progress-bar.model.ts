@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte';
+
 import type { NeoProgressContext, NeoProgressProps } from '~/progress/neo-progress.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
@@ -6,7 +7,7 @@ import type { BlurElevation, BlurElevationString, ShadowShallowElevation, Shadow
 export type NeoProgressBlur = BlurElevation | BlurElevationString;
 export type NeoProgressElevation = ShadowShallowElevation | ShadowShallowElevationString;
 
-type NeoProgressBarStyle = {
+interface NeoProgressBarStyle {
   // Shadow
 
   /**
@@ -47,10 +48,14 @@ type NeoProgressBarStyle = {
    * Display the progress with a rail track.
    */
   track?: boolean;
-};
+}
 
 export type NeoProgressBarContext = NeoProgressContext & NeoProgressBarStyle;
-export type NeoProgressBarMarkContext = { index: number; position: number; context: NeoProgressBarContext };
+export interface NeoProgressBarMarkContext {
+  index: number;
+  position: number;
+  context: NeoProgressBarContext;
+}
 
 export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div', ContainerTag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
@@ -85,4 +90,4 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
   // Other Props
   containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[ContainerTag]> & HTMLTagProps<ContainerTag>;
 } & NeoProgressBarStyle &
-  Omit<NeoProgressProps<Tag>, 'children'>;
+Omit<NeoProgressProps<Tag>, 'children'>;

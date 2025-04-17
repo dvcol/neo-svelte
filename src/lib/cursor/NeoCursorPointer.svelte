@@ -1,10 +1,10 @@
 <script lang="ts">
+  import type { NeoCursorPointerProps } from '~/cursor/neo-cursor-pointer.model.js';
+  import type { NeoCursorContact } from '~/cursor/neo-cursor.model.js';
+
   import { scale } from 'svelte/transition';
 
-  import type { NeoCursorPointerProps } from '~/cursor/neo-cursor-pointer.model.js';
-
-  import { type NeoCursorContact, NeoCursorPointerType } from '~/cursor/neo-cursor.model.js';
-
+  import { NeoCursorPointerType } from '~/cursor/neo-cursor.model.js';
   import { toPixel } from '~/utils/style.utils.js';
 
   const {

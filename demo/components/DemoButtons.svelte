@@ -1,23 +1,22 @@
 <script lang="ts">
-  import { link } from '@dvcol/svelte-simple-router';
-
-  import { Path } from '../router/routes.js';
-  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
-
-  import { colorOptions } from '../utils/color.utils';
-  import { useButtonState } from '../utils/use-button-state.svelte';
-
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 
+  import { link } from '@dvcol/svelte-simple-router';
+
+  import { NeoFlatButton, NeoRaisedButton, NeoTextButton } from '~/buttons/neo-button.model.js';
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCheckboxButton from '~/buttons/NeoCheckboxButton.svelte';
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
   import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
-  import { NeoFlatButton, NeoRaisedButton, NeoTextButton } from '~/buttons/neo-button.model.js';
   import IconAccount from '~/icons/IconAccount.svelte';
-  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
+
+  import { Path } from '../router/routes.js';
+  import { colorOptions } from '../utils/color.utils';
+  import SphereBackdrop from '../utils/SphereBackdrop.svelte';
+  import { useButtonState } from '../utils/use-button-state.svelte';
 
   const { onClick, loading: isLoading, onLoading } = useButtonState('DemoButtonClick');
 
@@ -41,7 +40,7 @@
     { label: 'Raise', props: NeoRaisedButton },
   ];
 
-  // TODO : button group
+// TODO : button group
   // TODO : select for hover, active, elevation
   // TODO - support override
 </script>

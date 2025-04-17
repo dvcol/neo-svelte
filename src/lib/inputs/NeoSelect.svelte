@@ -1,24 +1,24 @@
 <script lang="ts">
+  import type { FormEventHandler, KeyboardEventHandler } from 'svelte/elements';
+
+  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+  import type { NeoTooltipElevation } from '~/floating/tooltips/neo-tooltip.model.js';
+  import type { NeoSelectProps } from '~/inputs/neo-select.model.js';
+  import type { NeoListItemOrSection } from '~/list/neo-list.model.js';
+
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { clamp } from '@dvcol/common-utils/common/math';
   import { watch } from '@dvcol/svelte-utils/watch';
-
   import { tick } from 'svelte';
-
-  import type { FormEventHandler, KeyboardEventHandler } from 'svelte/elements';
-  import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
-
-  import type { NeoTooltipElevation } from '~/floating/tooltips/neo-tooltip.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoPopSelect from '~/floating/tooltips/NeoPopSelect.svelte';
   import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
-  import { displayValue, type NeoSelectProps, transformValue } from '~/inputs/neo-select.model.js';
-  import { findByValueInList, type NeoListItemOrSection } from '~/list/neo-list.model.js';
+  import { displayValue, transformValue } from '~/inputs/neo-select.model.js';
+  import { findByValueInList } from '~/list/neo-list.model.js';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     children,
@@ -81,11 +81,10 @@
     affixProps,
     ...rest
   }: NeoSelectProps = $props();
-  /* eslint-enable prefer-const */
 
   const items = $derived<NeoListItemOrSection[]>(options?.map(i => (typeof i === 'object' ? i : { value: i })));
 
-  const toggle: FormEventHandler<HTMLElement> = e => {
+  const toggle: FormEventHandler<HTMLElement> = (e) => {
     if (rest?.disabled || readonly) return;
     open = !open;
     e.stopPropagation();
@@ -102,15 +101,15 @@
 
   const afterProps = $derived<NeoButtonProps>({
     'aria-label': 'Toggle select dropdown',
-    title: 'Toggle select dropdown',
-    skeleton: rest.skeleton,
-    disabled: rest.disabled,
-    start: rest.start,
+    'title': 'Toggle select dropdown',
+    'skeleton': rest.skeleton,
+    'disabled': rest.disabled,
+    'start': rest.start,
     rounded,
-    onclick: toggle,
+    'onclick': toggle,
     ...template,
     ...buttonProps,
-    class: ['neo-select-toggle', buttonProps?.class],
+    'class': ['neo-select-toggle', buttonProps?.class],
   });
 
   const space = $derived(open ? 8 : 6);
@@ -140,7 +139,7 @@
 
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
   const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);
-  const onClear: FormEventHandler<HTMLElement> = e => {
+  const onClear: FormEventHandler<HTMLElement> = (e) => {
     selected = multiple ? [] : undefined;
     e.stopPropagation();
     e.preventDefault();
@@ -151,7 +150,7 @@
     getFocusableElement(listRef)?.focus();
   };
 
-  const onkeydown: KeyboardEventHandler<HTMLElement> = e => {
+  const onkeydown: KeyboardEventHandler<HTMLElement> = (e) => {
     if (rest?.disabled || readonly) return;
     if (e.key === 'Enter' || e.key === ' ') {
       return toggle(e);
@@ -185,14 +184,12 @@
   bind:dirty
   bind:valid
   bind:touched
-  bind:hovered={
-    () => {
+  bind:hovered={() => {
       return hovered || open;
-    }, // eslint-disable-line no-sequences
-    _state => {
+    },
+    (_state) => {
       hovered = _state;
-    }
-  }
+    }}
   bind:focused
   bind:focusin
   bind:value

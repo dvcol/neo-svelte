@@ -1,9 +1,10 @@
 import type { HeightParams, WidthParams } from '@dvcol/svelte-utils/transition';
 import type { Snippet } from 'svelte';
+
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 
-export type NeoCollapseContext = {
+export interface NeoCollapseContext {
   /**
    * Unique identifier of the collapsed section.
    */
@@ -61,7 +62,7 @@ export type NeoCollapseContext = {
    * @default true
    */
   fade?: boolean;
-};
+}
 
 export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'> = {
   // Snippets
@@ -114,8 +115,8 @@ export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'
    */
   containerProps?: HTMLNeoBaseElement & HTMLTagProps;
 } & Partial<Omit<NeoCollapseContext, 'trigger' | 'triggerId'>> &
-  HTMLRefProps &
-  HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+HTMLRefProps &
+HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
 export type NeoCollapseHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'section'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> & {
   /**

@@ -1,4 +1,8 @@
 <script lang="ts">
+  import type { NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
+  import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+  import type { SizeOption } from '~/utils/style.utils.js';
+
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { watch } from '@dvcol/svelte-utils/watch';
   import {
@@ -17,18 +21,14 @@
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
   import { scale } from 'svelte/transition';
 
-  import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
-
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
-  import { isOffsetFunction, type NeoTooltipProps, NeoTooltipSizeStrategy, type NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
-
+  import { isOffsetFunction, NeoTooltipSizeStrategy } from '~/floating/tooltips/neo-tooltip.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
-  import { isSizeOption, type SizeOption, toPixel, toSize } from '~/utils/style.utils.js';
+  import { isSizeOption, toPixel, toSize } from '~/utils/style.utils.js';
   import { quickScaleOpacityProps, quickScaleProps } from '~/utils/transition.utils.js';
 
-  /* eslint-disable prefer-const -- necessary for binding checked */
   let {
     // Snippets
     tooltip,
@@ -108,7 +108,6 @@
     portalProps,
     ...rest
   }: NeoTooltipProps = $props();
-  /* eslint-enable prefer-const */
 
   const { tag: triggerTag = 'div', ...triggerRest } = $derived(triggerProps ?? {});
 
@@ -314,13 +313,13 @@
     { skip: 1 },
   );
 
-  const onpointerenter: NeoTooltipProps['onpointerenter'] = e => {
+  const onpointerenter: NeoTooltipProps['onpointerenter'] = (e) => {
     if (!openOnHover) return rest.onpointerenter?.(e);
     open = true;
     rest.onpointerenter?.(e);
   };
 
-  const onfocusin: NeoTooltipProps['onfocusin'] = e => {
+  const onfocusin: NeoTooltipProps['onfocusin'] = (e) => {
     if (!openOnFocus) return rest.onfocusin?.(e);
     open = true;
     rest.onfocusin?.(e);
