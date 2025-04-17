@@ -3,15 +3,7 @@ import type { INeoThemeProviderContext } from '~/providers/neo-theme-provider.mo
 import { wait } from '@dvcol/common-utils/common/promise';
 import { getContext, setContext, untrack } from 'svelte';
 
-import {
-  getRemember,
-  getReset,
-  getSource,
-  getTheme,
-
-  NeoThemeRoot,
-  NeoThemeStorageKey,
-} from '~/providers/neo-theme-provider.model.js';
+import { getRemember, getReset, getSource, getTheme, NeoThemeRoot, NeoThemeStorageKey } from '~/providers/neo-theme-provider.model.js';
 import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorThemeTargetNotFound } from '~/utils/error.utils.js';
 
 type NeoThemeProviderRoot = INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root']);
@@ -99,7 +91,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
 
     this.root.setAttribute(NeoThemeRoot, '');
-    this.setTheme(this.theme);
+    void this.setTheme(this.theme);
     this.setSource(this.source);
 
     if (this.reset) this.root.setAttribute(NeoThemeStorageKey.Reset, '');

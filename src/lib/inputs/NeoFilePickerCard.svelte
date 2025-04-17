@@ -69,7 +69,7 @@
 
 {#snippet labelGroup()}
   <div class="neo-expanded-count" class:neo-label={label}>
-    <NeoLabel bind:ref={labelRef} {label} {disabled} onclick={e => e.preventDefault()} {...labelProps}>
+    <NeoLabel bind:ref={labelRef} {label} {disabled} {required} onclick={e => e.preventDefault()} {...labelProps}>
       <span class="neo-expanded-detail">{detail}</span>
     </NeoLabel>
 

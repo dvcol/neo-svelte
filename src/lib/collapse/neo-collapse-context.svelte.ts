@@ -53,9 +53,8 @@ function toggleOldestChanged(count: number, fields: NeoCollapseSection[], open =
     if (last && last.editable) {
       last.open = open;
       nb -= 1;
-    }
-    // else, move to the next section
-    else {
+    } else {
+      // else, move to the next section
       index -= 1;
     }
   }

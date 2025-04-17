@@ -26,6 +26,6 @@ export function toSize<Size extends 'width' | 'height' = 'width' | 'height'>(siz
   if (typeof size === 'number') return { absolute: toPixel(size) };
   if (typeof size === 'string') return { absolute: size };
   return Object.entries(size).reduce<SizeOption<Size>>((acc, [key, value]) => {
-    return { ...acc, [key]: toPixel(value) };
+    return { ...acc, [key]: toPixel(value as number | string) };
   }, {});
 }

@@ -10,6 +10,7 @@
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, DefaultShadowShallowElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
@@ -73,6 +74,11 @@
 
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
+
+  const inFn = $derived(toTransition(inAction ?? transitionAction));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
+  const outFn = $derived(toTransition(outAction ?? transitionAction));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
 </script>
 
 <svelte:element
@@ -88,6 +94,8 @@
   style:height={height?.absolute}
   style:min-height={height?.min}
   style:max-height={height?.max}
+  out:outFn={outProps}
+  in:inFn={inProps}
   use:focusing={{
     get focusin() {
       return focused;

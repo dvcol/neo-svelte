@@ -1,12 +1,7 @@
 import type { AnimationFunction, TransitionFunction, TransitionProps } from '@dvcol/svelte-utils/transition';
 import type { Action } from 'svelte/action';
 
-import {
-
-  emptyAnimation,
-  emptyTransition,
-
-} from '@dvcol/svelte-utils/transition';
+import { emptyAnimation, emptyTransition } from '@dvcol/svelte-utils/transition';
 
 export const emptyUse: Action<HTMLElement, any> = () => ({});
 
@@ -96,7 +91,7 @@ export function isActionWithProps<T>(action: Action<HTMLElement, T> | ActionWith
 }
 
 export function toAction<T = unknown>(action?: ActionWithProps<T> | Action<HTMLElement, T>): Action<HTMLElement, T> {
-  if (!action) return emptyUse;
+  if (!action) return emptyUse as Action<HTMLElement, T>;
   if (isActionWithProps<T>(action)) return action.use;
   return action;
 }

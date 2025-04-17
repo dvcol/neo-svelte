@@ -75,10 +75,6 @@
 
     // Events
     onClose,
-    onfocusin,
-    onfocusout,
-    onpointerenter,
-    onpointerleave,
 
     // Other props
     contentProps,

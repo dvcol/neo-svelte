@@ -1,5 +1,5 @@
 export function useButtonState(prefix = '') {
-  const onClick = (...args: any) => {
+  const onClick = (...args: unknown[]) => {
     console.info(prefix, ...args);
   };
 

@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'development') {
     alias: {
       '~': './src/lib',
       '~/*': './src/lib/*',
-      src: './src',
+      'src': './src',
       'src/*': './src/*',
     },
   };

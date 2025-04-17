@@ -45,14 +45,6 @@
   import { colorOptions } from '../utils/color.utils';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
-  type ColumProps<T = NeoInputProps> = {
-    label: string;
-    props?: T;
-    state: ValidationState;
-    textarea?: boolean;
-    input?: boolean;
-  };
-
   type InputState = Pick<NeoInputProps, 'type' | 'touched' | 'dirty' | 'valid' | 'value' | 'group' | 'checked' | 'indeterminate' | 'files'>;
 
   class ValidationState<T extends HTMLElement = HTMLElement> implements InputState {
@@ -68,7 +60,7 @@
     files = $state<FileList>();
 
     constructor({ type, touched = false, dirty = false, valid, value = '', group, checked, indeterminate, files }: Partial<InputState> = {}) {
-      this.type = type;
+      this.type = type ?? 'text';
       this.touched = touched;
       this.dirty = dirty;
       this.valid = valid;
@@ -90,6 +82,14 @@
       this.files = undefined;
     }
   }
+
+  type ColumProps<T = NeoInputProps> = {
+    label: string;
+    props?: T;
+    state: ValidationState;
+    textarea?: boolean;
+    input?: boolean;
+  };
 
   const options = $state<NeoInputProps>({
     borderless: false,

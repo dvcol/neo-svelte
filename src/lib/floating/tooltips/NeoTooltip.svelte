@@ -208,7 +208,7 @@
   const triggerHandler = $derived<HTMLNeoBaseElement>(interactions.getReferenceProps());
   const tooltipHandler = $derived<HTMLNeoBaseElement>(interactions.getFloatingProps());
 
-  const tooltipStyle = $derived(floating?.floatingStyles?.replace(/transform:\s*translate\(\s*([^,)]+)\s*,\s*([^)]+)\s*\)/, 'translate: $1 $2'));
+  const tooltipStyle = $derived(floating?.floatingStyles?.replace(/transform:\s*translate\(([^,)]+),([^)]+)\)/, 'translate: $1 $2'));
   const tooltipOrigin = $derived.by(() => {
     if (rest?.style?.includes('transform-origin')) return;
     if (floating.placement.startsWith('top')) return floating.placement.replace('top', 'bottom');

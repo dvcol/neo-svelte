@@ -487,6 +487,7 @@ export async function typewriter<T extends (string | TypeWriterLine)[]>({
   if (!lines.length) return options.display;
 
   // Iterate over lines
+  // eslint-disable-next-line no-unmodified-loop-condition -- loop is infinite if iterations is 0
   for (let iteration = 0; iterations === 0 || iteration < iterations; iteration += 1) {
     if (controller?.signal.aborted) break;
     // Each Line

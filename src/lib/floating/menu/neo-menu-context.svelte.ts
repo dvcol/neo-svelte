@@ -33,8 +33,8 @@ export class NeoMenuContext {
     this.#children.set(index, open);
   }
 
-  dismiss(): void {
-    this.#parent?.dismiss();
+  async dismiss(): Promise<void> {
+    await this.#parent?.dismiss();
   }
 }
 

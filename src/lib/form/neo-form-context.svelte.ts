@@ -35,6 +35,8 @@ type NeoFormContextFieldRecord<Key extends keyof NeoFormContextField | keyof Neo
     ? Record<string, NeoFormContextField['state'][Key] | NeoFormContextField['state'][Key][]>
     : never;
 
+const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
+
 function toRecord<Key extends keyof NeoFormContextField | keyof NeoFormContextField['state']>(map: Map<NeoFormContextField['id'], NeoFormContextField>, key: Key, nullable = true): NeoFormContextFieldRecord<Key> {
   return [...map.entries()].sort().reduce((acc, [id, field]) => {
     const val = key in field ? field[key as keyof NeoFormContextField] : field.state[key as keyof NeoFormContextField['state']];
@@ -43,7 +45,7 @@ function toRecord<Key extends keyof NeoFormContextField | keyof NeoFormContextFi
       const name = field.name.replace('[]', '');
       const current = acc[name];
       if (current !== undefined || field.type === 'radio' || field.name.endsWith('[]')) {
-        if (Array.isArray(current)) acc[name] = [...current, val];
+        if (isArray(current)) acc[name] = [...current, val];
         else if (current !== undefined) acc[name] = [current, val];
         else acc[name] = [val];
       } else acc[name] = val;

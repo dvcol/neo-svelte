@@ -290,7 +290,7 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
 
     return { easing, duration };
   };
-  const stopTranslating = debounce(async (delay = snap.translate.duration) => {
+  const stopTranslating = debounce(async (delay: number | undefined = snap.translate.duration) => {
     clearTimeout(timeout);
     const { resolve, promise } = Promise.withResolvers<boolean>();
     timeout = setTimeout(() => {
@@ -391,9 +391,8 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
         _offset.x = available.right + width + margin - snap.offset;
         _outside.current = 'right';
       } else _offset.x = available.right;
-    }
-    // If the element center is closer to the middle of the window
-    else if (middleX > windowX) _offset.x = available.right + margin - (windowX - halfWidth);
+      // If the element center is closer to the middle of the window
+    } else if (middleX > windowX) _offset.x = available.right + margin - (windowX - halfWidth);
     // If the element center is before the middle of the window
     else if (snap.corner || middleX < windowX - middleX) {
       _placement.x = 'left';
@@ -402,9 +401,8 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
         _offset.x = -available.left - width - margin + snap.offset;
         _outside.current = 'left';
       } else _offset.x = -available.left;
-    }
-    // If the element center is closer to the middle of the window
-    else _offset.x = windowX - halfWidth - available.left - margin;
+      // If the element center is closer to the middle of the window
+    } else _offset.x = windowX - halfWidth - available.left - margin;
 
     const windowY = window.innerHeight / 2;
     const halfHeight = height / 2;
@@ -418,9 +416,8 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
         _offset.y = available.bottom + height + margin - snap.offset;
         _outside.current = 'bottom';
       } else _offset.y = available.bottom;
-    }
-    // If the element center is closer to the middle of the window
-    else if (middleY > windowY) _offset.y = available.bottom + margin - (windowY - halfHeight);
+      // If the element center is closer to the middle of the window
+    } else if (middleY > windowY) _offset.y = available.bottom + margin - (windowY - halfHeight);
     // If the element center is above the middle of the window
     else if (snap.corner || middleY < windowY - middleY) {
       _placement.y = 'top';
@@ -429,9 +426,8 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
         _offset.y = -available.top - height - margin + snap.offset;
         _outside.current = 'top';
       } else _offset.y = -available.top;
-    }
-    // If the element center is closer to the middle of the window
-    else _offset.y = windowY - halfHeight - available.top - margin;
+      // If the element center is closer to the middle of the window
+    } else _offset.y = windowY - halfHeight - available.top - margin;
 
     setOffset(_offset.x, _offset.y, { outside: _outside.current });
 
@@ -503,12 +499,12 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
     window.addEventListener('pointerleave', onPointerStop);
   };
 
-  const onKeyDown = (e: SvelteEvent<KeyboardEvent>) => {
+  const onKeyDown = async (e: SvelteEvent<KeyboardEvent>) => {
     if (!movable.enabled || !element) return;
     if (!e.key.startsWith('Arrow')) return;
     initial = { x: 0, y: 0 };
 
-    stopTranslating.cancel();
+    await stopTranslating.cancel();
     startTranslating(Math.min(translating + 1, 10), { duration: 100, easing: 'linear' });
     const step = (movable.step ?? 4) * translating;
     if (e.key === 'ArrowLeft') {
@@ -555,19 +551,19 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
     },
     get handlers() {
       return {
-        onpointerdown: (e: SvelteEvent<PointerEvent>) => {
+        onpointerdown: (e: SvelteEvent<PointerEvent>): unknown => {
           onPointerDown(e).catch(Logger.error);
           return options.handlers?.onpointerdown?.(e);
         },
-        onkeydown: (e: SvelteEvent<KeyboardEvent>) => {
-          onKeyDown(e);
+        onkeydown: async (e: SvelteEvent<KeyboardEvent>): Promise<unknown> => {
+          await onKeyDown(e);
           return options.handlers?.onkeydown?.(e);
         },
-        onkeyup: async (e: SvelteEvent<KeyboardEvent>) => {
+        onkeyup: async (e: SvelteEvent<KeyboardEvent>): Promise<unknown> => {
           onKeyUp(e).catch(Logger.error);
           return options.handlers?.onkeyup?.(e);
         },
-        onblur: (e: SvelteEvent<FocusEvent>) => {
+        onblur: (e: SvelteEvent<FocusEvent>): unknown => {
           stopTranslating().catch(Logger.error);
           return options.handlers?.onblur?.(e);
         },
