@@ -121,8 +121,8 @@
         outline-offset: var(--neo-outline-offset-width, -1px);
       }
 
-      &:hover:not(.neo-disabled, .neo-flat),
       &:focus-visible,
+      &:hover:not(.neo-disabled, .neo-flat),
       &.neo-checked {
         box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
       }

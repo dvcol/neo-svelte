@@ -119,14 +119,14 @@
         outline-offset: var(--neo-outline-offset-width, -1px);
       }
 
-      &:hover:not(.neo-disabled) {
-        color: var(--neo-radio-color-hover, var(--neo-text-color-highlight));
-      }
-
-      &:hover:not(.neo-disabled, .neo-flat),
       &:focus-visible,
+      &:hover:not(.neo-disabled, .neo-flat),
       &.neo-checked {
         box-shadow: var(--neo-radio-checked-shadow, var(--neo-box-shadow-pressed-2));
+      }
+
+      &:hover:not(.neo-disabled) {
+        color: var(--neo-radio-color-hover, var(--neo-text-color-highlight));
       }
 
       &.neo-disabled {

@@ -493,7 +493,7 @@
       }
     }
 
-    &:disabled,
+    &:disabled:disabled,
     &[disabled]:not([disabled='false']) {
       cursor: not-allowed;
 

@@ -580,12 +580,6 @@
       box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
       cursor: var(--neo-input-cursor, text);
 
-      &:focus-visible,
-      &:has(:global(.neo-input:-webkit-autofill:focus)),
-      &:has(:global(.neo-input:-webkit-autofill:active)) {
-        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-      }
-
       &.neo-readonly {
         cursor: inherit;
       }
@@ -619,6 +613,12 @@
       &.neo-hover:hover,
       &.neo-hover.neo-hovered {
         box-shadow: var(--neo-input-box-shadow-hover, var(--neo-box-shadow-flat));
+      }
+
+      &:focus-visible,
+      &:has(:global(.neo-input:-webkit-autofill:focus)),
+      &:has(:global(.neo-input:-webkit-autofill:active)) {
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       }
 
       :global(.neo-input:is(select) option) {

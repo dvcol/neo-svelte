@@ -1,5 +1,13 @@
 <script lang="ts">
-  import type { NeoListContext, NeoListMethods, NeoListProps, NeoListRenderContext, NeoListSection, NeoListSelectedItem, NeoListSelectEvent } from '~/list/neo-list.model.js';
+  import type {
+    NeoListContext,
+    NeoListMethods,
+    NeoListProps,
+    NeoListRenderContext,
+    NeoListSection,
+    NeoListSelectedItem,
+    NeoListSelectEvent,
+  } from '~/list/neo-list.model.js';
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
@@ -10,12 +18,7 @@
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import IconList from '~/icons/IconList.svelte';
-  import {
-    findByIdInList,
-    isSection,
-
-    showDivider,
-  } from '~/list/neo-list.model.js';
+  import { findByIdInList, isSection, showDivider } from '~/list/neo-list.model.js';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
@@ -408,6 +411,18 @@
     flex-direction: column;
     height: 100%;
 
+    &-loader,
+    &-item {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 100%;
+      color: var(--neo-list-item-color, inherit);
+      list-style-type: none;
+      transition: opacity 0.2s linear;
+      transition-delay: 0s;
+    }
+
     &-items,
     &-empty {
       position: relative;
@@ -448,23 +463,10 @@
         &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
         &:has(> .neo-list-item :global(*:focus-visible)) > .neo-list-item:not(:hover, .neo-checked, :has(:global(*:focus-visible))) {
           opacity: 0.6;
-          transition-delay: 0.1s;
           transition-timing-function: linear;
-          transition-duration: 0.4s;
+          transition-duration: 0.6s;
         }
       }
-    }
-
-    &-loader,
-    &-item {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 100%;
-      color: var(--neo-list-item-color, inherit);
-      list-style-type: none;
-      transition: opacity 0.2s linear;
-      transition-delay: 0s;
     }
 
     &-loader.neo-select {

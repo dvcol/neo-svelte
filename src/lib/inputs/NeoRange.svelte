@@ -730,10 +730,6 @@
         opacity: var(--neo-range-opacity-disabled, var(--neo-opacity-disabled));
       }
 
-      &.neo-flat:hover {
-        border-color: var(--neo-range-border-color-hover, var(--neo-border-color-highlight));
-      }
-
       &.neo-disabled,
       &.neo-flat {
         --neo-range-min-width: calc(var(--neo-range-height) / 2 - 2px);
@@ -774,6 +770,10 @@
             }
           }
         }
+      }
+
+      &.neo-flat:hover {
+        border-color: var(--neo-range-border-color-hover, var(--neo-border-color-highlight));
       }
 
       &:focus-visible {

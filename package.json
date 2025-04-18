@@ -180,7 +180,7 @@
     "check:watch": "run-p check:type:watch check:svelte:watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "style": "stylelint **/*.{svelte,css,scss,less,html} --go '{\"gitignore\":true}'",
+    "style": "stylelint '**/*.{svelte,css,scss,less,html}' --go '{\"gitignore\":true}'",
     "style:fix": "pnpm run style --fix",
     "test:unit": "vitest --run --coverage",
     "test:watch": "vitest",

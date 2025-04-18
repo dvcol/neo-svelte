@@ -2,7 +2,14 @@
   import type { EventHandler, FocusEventHandler, FormEventHandler } from 'svelte/elements';
 
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoInputContext, NeoInputMethods, NeoInputState, NeoInputValue, NeoTextareaHTMLElement, NeoTextareaProps } from '~/inputs/common/neo-input.model.js';
+  import type {
+    NeoInputContext,
+    NeoInputMethods,
+    NeoInputState,
+    NeoInputValue,
+    NeoTextareaHTMLElement,
+    NeoTextareaProps,
+  } from '~/inputs/common/neo-input.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { wait } from '@dvcol/common-utils/common/promise';
@@ -12,11 +19,7 @@
   import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
 
-  import {
-
-    NeoInputLabelPlacement,
-
-  } from '~/inputs/common/neo-input.model.js';
+  import { NeoInputLabelPlacement } from '~/inputs/common/neo-input.model.js';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
@@ -692,12 +695,6 @@
     box-shadow: var(--neo-textarea-box-shadow, var(--neo-box-shadow-flat));
     cursor: text;
 
-    &:focus-visible,
-    &:has(.neo-textarea:-webkit-autofill:focus),
-    &:has(.neo-textarea:-webkit-autofill:active) {
-      outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-    }
-
     &.neo-readonly {
       cursor: initial;
     }
@@ -731,6 +728,12 @@
     &.neo-hover:hover,
     &.neo-hover.neo-hovered {
       box-shadow: var(--neo-textarea-box-shadow-hover, var(--neo-box-shadow-flat));
+    }
+
+    &:focus-visible,
+    &:has(.neo-textarea:-webkit-autofill:focus),
+    &:has(.neo-textarea:-webkit-autofill:active) {
+      outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
     }
 
     &.neo-disabled {
