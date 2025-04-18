@@ -1,13 +1,14 @@
-import { fileURLToPath, URL } from 'url';
+import type { PluginOption } from 'vite';
+import type { ViteUserConfig } from 'vitest/config';
+
+import { fileURLToPath, URL } from 'node:url';
 
 import { sveltekit } from '@sveltejs/kit/vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import { sveltePreprocess } from 'svelte-preprocess';
 import { checker } from 'vite-plugin-checker';
-import { defineConfig, type ViteUserConfig } from 'vitest/config';
-
-import type { PluginOption } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 const plugins: PluginOption[] = [];
 const isTest = process.env.NODE_ENV === 'test';
@@ -44,7 +45,7 @@ const config: ViteUserConfig = {
   resolve: {
     alias: {
       '~': fileURLToPath(new URL('./src/lib', import.meta.url)),
-      src: fileURLToPath(new URL('./src', import.meta.url)),
+      'src': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   server: {

@@ -55,6 +55,7 @@ Then import any of the components you want to use.
 See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/fed1b3f42e863e18968c77256527a837957b3304/demo/components), live demo [here](https://dvcol.github.io/neo-svelte/#/inputs)).
 
 ## TODO
+
 - [ ] @media any-pointer:coarse any-hover:none
 - [ ] move to inline/bloc to support writing-mode
 - [x] Buttons
@@ -86,8 +87,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] range
 - [x] switch
 - [x] slider
-  - [X] range
-  - [X] inset
+  - [x] range
+  - [x] inset
   - [x] custom before-after
   - [x] steps
   - [x] ticks
@@ -98,12 +99,14 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] native
   - [x] custom
 - [x] form
+
   - [x] validation
   - [x] fieldset
-  
+
 - [x] list
+
   - [x] select
-    - [X] multiple
+    - [x] multiple
     - [x] disabled
     - [x] readonly
     - [x] sections
@@ -121,6 +124,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] tree
 
 - [x] progress
+
   - [x] vertical
   - [ ] circular
   - [ ] meter (progress group)
@@ -132,12 +136,14 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] start/stop/cancel/finish/reset
 
 - [x] collapse
+
   - [x] description
   - [x] vertical
   - [x] accordion
   - [x] controlled (min, max, toggle)
 
 - [x] stepper
+
   - [x] vertical
   - [ ] collapse
   - [x] progress/dots
@@ -145,14 +151,16 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] touch swipe
 
 - [x] tooltip
+
   - [x] popconfirm
   - [x] popselect
   - [x] popstepper
 
 - [ ] Modal/dialog
-  - [X] HTML Dialog
-    - [X] animation (slide/fade)
-    - [X] stepper
+
+  - [x] HTML Dialog
+    - [x] animation (slide/fade)
+    - [x] stepper
     - [x] confirm
     - [x] backdrop
     - [x] position (center, top, bottom, left, right)
@@ -166,6 +174,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [ ] persistant
 
 - [x] menu
+
   - [x] nested menus
   - [ ] collapsable (expand below)
   - [ ] menu pane (multi column, expand right/left)
@@ -175,7 +184,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] Dividers
 
 - [ ] Chat
-  - [ ] infinite scroll 
+  - [ ] infinite scroll
   - [ ] virtual scroll
   - [ ] async
   - [ ] stream
@@ -198,6 +207,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 - [ ] pagination
 
 - [ ] auto-complete
+
   - [ ] @ / # tags
   - [ ] select
   - [ ] multiple
@@ -209,14 +219,17 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [ ] carousel
   - [ ] parallax
 - [ ] avatar
+
   - [x] badge
 
 - [x] PointerTracker (Pointer Events)
+
   - [x] track cursor
   - [x] grow to tabindex targets
   - [x] twist, tilt & pressure support (for supported pencils)
 
 - [ ] text
+
   - [ ] elevation
   - [ ] code block (shiki ?)
   - [x] ellipsis
@@ -228,8 +241,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] random pauses
 
 - [ ] Alerts
-    - [ ] toast
-    - [ ] rich notification
+  - [ ] toast
+  - [ ] rich notification
 - [ ] container
   - [x] transition
   - [ ] split/resizable
@@ -239,7 +252,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
 
 ## Author
 
-* Github: [@dvcol](https://github.com/dvcol)
+- Github: [@dvcol](https://github.com/dvcol)
 
 ## Show your support
 
@@ -253,5 +266,6 @@ Give a ⭐️ if this project helped you!
 
 This project is [MIT](https://github.com/dvcol/neo-svelte/blob/master/LICENSE) licensed.
 
-***
+---
+
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

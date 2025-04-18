@@ -45,6 +45,6 @@ jobs:
           # Check status
           git status
           git diff --color -U0 | cat
-          
+
           # Publish
           pnpm publish
