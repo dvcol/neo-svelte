@@ -96,10 +96,10 @@
 
   const labelId = $derived(label ? `neo-pin-label-${getUUID()}` : undefined);
 
-  const refs = $state<NeoInputHTMLElement[][]>(Array.from({ length: Number(groups) }).fill([]));
-  const values = $state<string[][]>(Array.from({ length: Number(groups) }).fill(Array.from({ length: Number(count) }).fill('')));
-  const touches = $state<boolean[][]>(Array.from({ length: Number(groups) }).fill(Array.from({ length: Number(count) }).fill(false)));
-  const dirtiness = $state<boolean[][]>(Array.from({ length: Number(groups) }).fill(Array.from({ length: Number(count) }).fill(false)));
+  const refs = $state<NeoInputHTMLElement[][]>(Array.from<NeoInputHTMLElement[]>({ length: Number(groups) }).fill([]));
+  const values = $state<string[][]>(Array.from<string[]>({ length: Number(groups) }).fill(Array.from<string>({ length: Number(count) }).fill('')));
+  const touches = $state<boolean[][]>(Array.from<boolean[]>({ length: Number(groups) }).fill(Array.from<boolean>({ length: Number(count) }).fill(false)));
+  const dirtiness = $state<boolean[][]>(Array.from<boolean[]>({ length: Number(groups) }).fill(Array.from<boolean>({ length: Number(count) }).fill(false)));
 
   const initial = $state(value);
   let validationMessage: string | undefined = $state(ref?.validationMessage);
