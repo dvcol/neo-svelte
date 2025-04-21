@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoTabContextPositions, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
+  import type { NeoTabContextPositions } from '~/nav/neo-tabs-context.svelte.js';
   import type { NeoTabsProps, OnChange } from '~/nav/neo-tabs.model.js';
 
   import { toStyle } from '@dvcol/common-utils/common/class';
@@ -124,43 +124,39 @@
   <IconAdd class="neo-tabs-add" />
 {/snippet}
 
-{#snippet tabs(ctx: NeoTabsContext = context.state)}
-  <svelte:element
-    this={containerTag}
-    bind:this={ref}
-    class:neo-tabs={true}
-    class:neo-inset={(elevation ?? 0) < 0}
-    class:neo-add={add}
-    class:neo-line={line}
-    class:neo-pill={pill}
-    class:neo-slide={slide}
-    class:neo-translate={translate}
-    class:neo-vertical={rest.vertical}
-    class:neo-rounded={rest.rounded}
-    class:neo-dim={dim}
-    style:--neo-tabs-slide-box-shadow={slideShadow}
-    {...containerRest}
-    use:useFn={useProps}
-    out:outFn={outProps}
-    in:inFn={inProps}
-    {style}
-  >
-    <NeoButtonGroup role="tablist" {pressed} {elevation} {...rest} class={['neo-tabs-group', rest.class]}>
-      {@render children?.(ctx)}
-      {#if add}
-        <div transition:transition={shortFreezeTransition}>
-          <NeoButton aria-label="Add new tab" onclick={onadd} {icon} />
-        </div>
-      {/if}
-    </NeoButtonGroup>
-  </svelte:element>
-{/snippet}
-
 {#if before}
   {@render panes?.(context.state)}
 {/if}
 
-{@render tabs()}
+<svelte:element
+  this={containerTag}
+  bind:this={ref}
+  class:neo-tabs={true}
+  class:neo-inset={(elevation ?? 0) < 0}
+  class:neo-add={add}
+  class:neo-line={line}
+  class:neo-pill={pill}
+  class:neo-slide={slide}
+  class:neo-translate={translate}
+  class:neo-vertical={rest.vertical}
+  class:neo-rounded={rest.rounded}
+  class:neo-dim={dim}
+  style:--neo-tabs-slide-box-shadow={slideShadow}
+  {...containerRest}
+  use:useFn={useProps}
+  out:outFn={outProps}
+  in:inFn={inProps}
+  {style}
+>
+  <NeoButtonGroup role="tablist" {pressed} {elevation} {...rest} class={['neo-tabs-group', rest.class]}>
+    {@render children?.(context.state)}
+    {#if add}
+      <div transition:transition={shortFreezeTransition}>
+        <NeoButton aria-label="Add new tab" onclick={onadd} {icon} />
+      </div>
+    {/if}
+  </NeoButtonGroup>
+</svelte:element>
 
 {#if !before}
   {@render panes?.(context.state)}

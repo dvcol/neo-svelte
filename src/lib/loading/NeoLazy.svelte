@@ -3,10 +3,10 @@
 
   import NeoSuspense from '~/loading/NeoSuspense.svelte';
 
-  const { component, props: _props, loading, error, children }: NeoLazyProps = $props();
+  const { component, props: _props, children, ...rest }: NeoLazyProps = $props();
 </script>
 
-<NeoSuspense promise={component} {loading} {error}>
+<NeoSuspense promise={component} {...rest}>
   {#snippet result(Component)}
     <Component {..._props}>
       {@render children?.()}

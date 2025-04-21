@@ -1,4 +1,4 @@
-import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export type NeoLoadingMatrixProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
@@ -16,4 +16,4 @@ export type NeoLoadingMatrixProps<Tag extends keyof HTMLElementTagNameMap = 'div
    * Size constraints for the loader icon.
    */
   height?: SizeInput<'height'>;
-} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> & HTMLFlexProps;

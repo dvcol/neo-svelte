@@ -5,9 +5,18 @@
   import { toSize } from '~/utils/style.utils.js';
 
   const {
+    // State
     tag = 'div',
+
+    // Size
     width: _width,
     height: _height,
+
+    // Flex
+    flex,
+    align,
+    justify,
+
     ...rest
   }: NeoLoadingMatrixProps = $props();
 
@@ -18,6 +27,9 @@
 <svelte:element
   this={tag}
   class:neo-loading-matrix={true}
+  style:flex
+  style:align-items={align}
+  style:justify-content={justify}
   style:--neo-loader-width={width?.absolute}
   style:--neo-loader-max-width={width?.max}
   style:--neo-loader-min-width={width?.min}
@@ -35,8 +47,6 @@
     flex: 1 1 auto;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
     opacity: 1;
     transition: opacity 1s ease-in 0.2s;
 

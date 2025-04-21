@@ -6,7 +6,7 @@
 
   import NeoLoadingMatrix from '~/loading/NeoLoadingMatrix.svelte';
 
-  const { promise, delay = 500, loading, result, error, children }: NeoSuspenseProps = $props();
+  const { promise, delay = 500, loading, result, error, children, matrixProps }: NeoSuspenseProps = $props();
 
   let showLoading = $state(!delay);
 
@@ -19,10 +19,10 @@
 
 {#await promise}
   {#if showLoading}
-    {#if loading}
+    {#if loading && typeof loading === 'function'}
       {@render loading(promise)}
-    {:else}
-      <NeoLoadingMatrix />
+    {:else if loading !== false}
+      <NeoLoadingMatrix {...matrixProps} />
     {/if}
   {/if}
 {:then resolved}
