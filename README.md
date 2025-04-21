@@ -228,8 +228,15 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] grow to tabindex targets
   - [x] twist, tilt & pressure support (for supported pencils)
 
-- [ ] text
+- [ ] loader
+  - [ ] spinner
+  - [X] matrix
+  - [ ] pull to refresh (top, bottom, left, right)
+  - [x] skeleton
+  - [x] lazy load
+  - [X] suspense
 
+- [ ] text
   - [ ] elevation
   - [ ] code block (shiki ?)
   - [x] ellipsis

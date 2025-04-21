@@ -111,6 +111,11 @@
       "import": "./dist/list/index.js",
       "svelte": "./dist/list/index.js"
     },
+    "./loading": {
+      "types": "./dist/loading/index.d.ts",
+      "import": "./dist/loading/index.js",
+      "svelte": "./dist/loading/index.js"
+    },
     "./nav": {
       "types": "./dist/nav/index.d.ts",
       "import": "./dist/nav/index.js",
@@ -145,6 +150,11 @@
       "types": "./dist/text/index.d.ts",
       "import": "./dist/text/index.js",
       "svelte": "./dist/text/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "svelte": "./dist/utils/index.js"
     }
   },
   "types": "./dist/index.d.ts",
