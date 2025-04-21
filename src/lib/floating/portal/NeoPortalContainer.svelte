@@ -15,6 +15,11 @@
     id = `neo-portal-container-${getUUID()}`,
     scale = true,
 
+    // Flex
+    justify,
+    align,
+    flex,
+
     // Other Props
     ...rest
   }: NeoPortalContainerProps = $props();
@@ -39,6 +44,9 @@
   class:neo-portal-container={true}
   class:neo-scale={scale}
   class:neo-open={open}
+  style:flex
+  style:align-items={align}
+  style:justify-content={justify}
   {id}
   {...rest}
 >
@@ -52,6 +60,9 @@
     }
 
     &.neo-scale {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
       transition-timing-function: var(--neo-portail-container-exit-timing, ease);
       transition-duration: var(--neo-portail-container-exit-duration, 0.4s);
       transition-property: scale, translate;
@@ -86,10 +97,10 @@
       }
 
       &.neo-open {
-        scale: var(--neo-portail-container-enter-scale, 0.98);
-        translate: var(--neo-portail-container-enter-translate, 0);
         transition-timing-function: var(--neo-portail-container-enter-timing, ease);
         transition-duration: var(--neo-portail-container-enter-duration, 0.4s);
+        scale: var(--neo-portail-container-enter-scale, 0.98);
+        translate: var(--neo-portail-container-enter-translate, 0);
       }
     }
   }

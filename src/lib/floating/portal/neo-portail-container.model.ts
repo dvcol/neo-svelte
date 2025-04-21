@@ -1,4 +1,4 @@
-import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type NeoPortalContainerProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   /**
@@ -11,4 +11,4 @@ export type NeoPortalContainerProps<Tag extends keyof HTMLElementTagNameMap = 'd
    */
   scale?: boolean;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-HTMLRefProps<HTMLElementTagNameMap[Tag]>;
+HTMLRefProps<HTMLElementTagNameMap[Tag]> & HTMLFlexProps;
