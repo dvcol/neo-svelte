@@ -24,7 +24,7 @@
 
 <svelte:element this={tag} class:neo-mark={true} {...rest}>
   {#if parts?.length && parts?.at(0)?.mark}
-    {#each parts as { token, mark }}{token}{#if mark}<mark>{mark}</mark>{/if}{/each}
+    {#each parts as { token, mark }, i (i)}{token}{#if mark}<mark>{mark}</mark>{/if}{/each}
   {:else}
     {value}
   {/if}

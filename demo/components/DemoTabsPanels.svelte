@@ -112,7 +112,7 @@
 
 <section>
   <div class="row">
-    {#each columns as { label, props }}
+    {#each columns as { label, props } (label)}
       <div class="column content" class:max={options.vertical}>
         <span class="label">{label}</span>
 

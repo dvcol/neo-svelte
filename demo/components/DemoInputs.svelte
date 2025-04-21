@@ -655,7 +655,7 @@
   <div class="column">
     <NeoForm legend="Input / Textarea" novalidate>
       <div class="row">
-        {#each columns as column}
+        {#each columns as column (column.label)}
           <div class="column content">
             <span class="label">{column.label}</span>
             {@render inputGroup(column)}
@@ -664,7 +664,7 @@
       </div>
 
       <div class="row">
-        {#each validationColumns as column}
+        {#each validationColumns as column (column.label)}
           <div class="column content">
             <span class="label">{column.label}</span>
             {@render validationState(column.state)}
@@ -933,7 +933,7 @@
 
       <!-- Date/Time Picker inputs -->
       <div class="row">
-        {#each dateColumns as column}
+        {#each dateColumns as column (column.label)}
           <div class="column content">
             <span class="label">{column.label}</span>
             {@render validationState(column.state, true)}
@@ -974,7 +974,7 @@
 
       <!-- File Picker inputs -->
       <div class="row">
-        {#each fileColumns as column}
+        {#each fileColumns as column (column.label)}
           <div class="column content">
             <span class="label">{column.label}</span>
             {@render validationState(column.state, true)}

@@ -16,7 +16,7 @@
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
   let skeleton = $state(false);
-  const options = $state<NeoCardProps>({
+  const options = $state<Partial<NeoCardProps>>({
     elevation: DefaultShadowElevation,
     borderless: false,
     rounded: true,
@@ -42,7 +42,7 @@
     if (options.elevation + options.hover > MaxShadowElevation) options.hover -= 1;
   };
 
-  const columns: { label: string; props?: NeoCardProps; hideContent?: boolean }[] = [
+  const columns: { label: string; props?: Partial<NeoCardProps>; hideContent?: boolean }[] = [
     { label: 'Default' },
     {
       label: 'Header',
@@ -206,7 +206,7 @@
 
 <section>
   <div class="row">
-    {#each columns as { label, props, hideContent }}
+    {#each columns as { label, props, hideContent } (label)}
       <div class="column content">
         <span class="label">{label}</span>
 

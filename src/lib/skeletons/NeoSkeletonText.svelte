@@ -104,9 +104,9 @@
     {/if}
 
     {#if paragraphs && lines}
-      {#each Array.from({ length: Number(paragraphs) }) as _, i}
+      {#each Array.from({ length: Number(paragraphs) }) as _, i (i)}
         <div class:neo-skeleton-text-paragraph={true} class:neo-alt={alt} class:neo-justify={justify} {...paragraphProps}>
-          {#each Array.from({ length: Number(Array.isArray(lines) ? lines[i] : lines) }) as __}
+          {#each Array.from({ length: Number(Array.isArray(lines) ? lines[i] : lines) }) as __, j (j)}
             <div class="neo-skeleton-text-line" class:neo-alt={alt}>&nbsp;</div>
           {/each}
         </div>

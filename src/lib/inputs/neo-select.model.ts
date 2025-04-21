@@ -12,6 +12,7 @@ export type NeoNativeSelectOption<Value = unknown> =
   | ({
     value: Value;
     label?: string | Snippet;
+    id?: string | number;
   } & HTMLOptionAttributes);
 
 export type NeoNativeSelectProps<Value = unknown> = {

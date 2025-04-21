@@ -409,9 +409,9 @@
         bind:value
         oninvalid={onInvalid}
       />
-      {#each { length: Number(groups) } as _, i}
+      {#each { length: Number(groups) } as _, i (i)}
         <div class="neo-pin-group">
-          {#each { length: Number(count) } as __, j}
+          {#each { length: Number(count) } as __, j (j)}
             <NeoInput
               bind:ref={refs[i][j]}
               bind:value={values[i][j]}

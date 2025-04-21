@@ -136,7 +136,7 @@
 
   <div class="content">
     <div class="row" class:invert={!options.vertical}>
-      {#each columns as { label, props }}
+      {#each columns as { label, props } (label)}
         <div class="column">
           <span class="label">{label}</span>
           <SphereBackdrop glass={options.glass}>

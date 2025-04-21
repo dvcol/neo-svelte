@@ -212,7 +212,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
-    "@dvcol/eslint-config": "^1.5.0",
+    "@dvcol/eslint-config": "^1.6.0",
     "@dvcol/stylelint-plugin-presets": "^2.1.2",
     "@dvcol/svelte-simple-router": "^1.11.2",
     "@prettier/plugin-xml": "^3.4.1",

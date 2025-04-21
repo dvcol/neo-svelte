@@ -82,8 +82,8 @@
 {/snippet}
 
 {#snippet content()}
-  {#each items as { label, ...option }}
-    <option {...option} value={option.value}>{label ?? option.value}</option>
+  {#each items as { id, label, ...option }, i (id ?? i)}
+    <option {id} {...option} value={option.value}>{label ?? option.value}</option>
   {/each}
   {@render children?.()}
 {/snippet}

@@ -81,7 +81,7 @@
         <NeoSkeletonText {...options} />
       </div>
     </div>
-    {#each columns as col}
+    {#each columns as col (col.label)}
       <div class="column">
         <span class="label">{col.label}</span>
         {@render skeleton(col)}

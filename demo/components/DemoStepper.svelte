@@ -252,9 +252,7 @@
       <NeoCard rounded elevation={-options.elevation}>
         <NeoForm>
           <NeoStepper bind:active {steps} {...options}>
-            {#snippet children()}
-              <span>Error: Unknown Step !</span>
-            {/snippet}
+            <span>Error: Unknown Step !</span>
           </NeoStepper>
         </NeoForm>
       </NeoCard>

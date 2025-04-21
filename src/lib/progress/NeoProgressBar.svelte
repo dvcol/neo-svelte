@@ -145,7 +145,7 @@
   {...containerRest}
 >
   <NeoProgress bind:ref bind:status bind:value bind:buffer {direction} {width} {height} {track} {...rest} />
-  {#each marks as position, index}
+  {#each marks as position, index (index)}
     {#if position !== undefined}
       <span bind:this={refs[index]} class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">
         {#if typeof mark === 'function'}

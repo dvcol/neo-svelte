@@ -516,7 +516,7 @@
               <!--   handle after   -->
             </span>
             {#if steps > 1}
-              {#each { length: (steps ?? 0) + 1 } as _, i}
+              {#each { length: (steps ?? 0) + 1 } as _, i (i)}
                 {#if showTick(i)}
                   {@const filled = isFilled(i)}
                   <div class="neo-range-tick" style:--neo-range-tick-index={i}>

@@ -27,7 +27,7 @@
     tinted: false,
   });
 
-  const columns: { label: string; props: NeoButtonGroupProps }[] = [
+  const columns: { label: string; props?: NeoButtonGroupProps }[] = [
     { label: 'Default' },
     { label: 'Flat', props: { elevation: 0 } },
     { label: 'Text', props: { elevation: 0, borderless: true } },
@@ -77,7 +77,7 @@
     floating={false}
     color={options.color}
     display={displayValue}
-    size="10"
+    size={10}
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
@@ -87,7 +87,7 @@
 
 <section>
   <div class="row" class:invert={!options.vertical}>
-    {#each columns as { label, props }}
+    {#each columns as { label, props } (label)}
       <div class="column">
         <span class="label">{label}</span>
         <SphereBackdrop glass={options?.glass}>

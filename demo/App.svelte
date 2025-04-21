@@ -70,7 +70,7 @@
     <div class="container">
       <header class="row header">
         <NeoTabs rounded pressed tag="nav" {active} onchange={onClick}>
-          {#each routes as route}
+          {#each routes as route (route)}
             <NeoTab tabId={route} onpointerenter={() => onHover(route)}>{sentenceCase(route)}</NeoTab>
           {/each}
 
