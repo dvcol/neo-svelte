@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/dvcol/neo-svelte/compare/v1.1.0...v1.1.1) (2025-04-21)
+
+
+### Bug Fixes
+
+* **lint:** bump deps & fix errors ([b349483](https://github.com/dvcol/neo-svelte/commit/b3494830f2c91586c3b9983e6d016b0fa853c226))
+* **loading:** fix flex behavior ([6bbb288](https://github.com/dvcol/neo-svelte/commit/6bbb288c1e7dcfbd1575960801fdb67dd07c1d11))
+
 ## [1.1.0](https://github.com/dvcol/neo-svelte/compare/v1.0.1...v1.1.0) (2025-04-21)
 
 
