@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/dvcol/neo-svelte/compare/v1.0.1...v1.1.0) (2025-04-21)
+
+
+### Features
+
+* **loading:** adds Lazy & Suspense ([5c9d5fe](https://github.com/dvcol/neo-svelte/commit/5c9d5fef799049c4f494950d8c1127098e76edeb))
+
+
+### Bug Fixes
+
+* **portal:** adds missing export ([da77cd7](https://github.com/dvcol/neo-svelte/commit/da77cd7a082bface934a9135bea4088493af49d1))
+
 ### [1.0.1](https://github.com/dvcol/neo-svelte/compare/v0.1.12...v1.0.1) (2025-04-21)
 
 
