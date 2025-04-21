@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/dvcol/neo-svelte/compare/v0.1.12...v1.0.1) (2025-04-21)
+
+
+### Bug Fixes
+
+* **chore:** bump dependencies ([e2d49aa](https://github.com/dvcol/neo-svelte/commit/e2d49aa2259bc7300facdb6a7516091d898e34a0))
+* **lint:** fix stylelint error due to bump ([5f1a83c](https://github.com/dvcol/neo-svelte/commit/5f1a83c56a063006ea9ad47005be94781171cc92))
+* **typescript:** rework tsconfig project setup ([c963570](https://github.com/dvcol/neo-svelte/commit/c9635707ea391afab42b2ba27a8167938639c20b))
+
 ### [0.1.12](https://github.com/dvcol/neo-svelte/compare/v0.1.11...v0.1.12) (2025-04-11)
 
 
