@@ -804,7 +804,7 @@
     }
 
     &.neo-rounded {
-      border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-lg));
+      border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-xxl));
 
       :global(.neo-affix-container) {
         right: 0.365rem;
@@ -814,7 +814,7 @@
         --neo-scrollbar-button-height: 0.75rem;
 
         padding: 0.75rem 1rem;
-        border-radius: var(--neo-border-radius-lg, 2rem);
+        border-radius: var(--neo-border-radius-xxl, 2rem);
 
         &.neo-affix {
           padding: 0.75rem 2.75rem 0.75rem 1.25rem;

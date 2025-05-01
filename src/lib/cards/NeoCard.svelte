@@ -549,43 +549,43 @@
     }
 
     &.neo-rounded {
-      border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+      border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl));
 
       .neo-card-media {
-        border-radius: var(--neo-card-border-radius, var(--neo-border-radius-md));
+        border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
 
         &.neo-cover:not(.neo-inset) {
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl));
 
           &:not(:only-child) {
-            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0;
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0;
           }
         }
       }
 
       .neo-card-segment:not(.neo-card-media, :only-child) {
         &:first-child {
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0;
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0;
         }
 
         &:last-child {
-          border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg));
+          border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl));
         }
       }
 
       &.neo-horizontal {
         .neo-card-segment:not(.neo-card-media, :only-child) {
           &:first-child {
-            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg));
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl));
           }
 
           &:last-child {
-            border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius-lg)) var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0;
+            border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0;
           }
         }
 
         .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-lg));
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl));
         }
       }
     }

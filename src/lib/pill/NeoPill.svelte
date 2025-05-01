@@ -240,7 +240,7 @@
     }
 
     &.neo-rounded {
-      border-radius: var(--neo-pill-border-radius, var(--neo-border-radius-lg));
+      border-radius: var(--neo-pill-border-radius, var(--neo-border-radius-xxl));
     }
 
     &.neo-glass {

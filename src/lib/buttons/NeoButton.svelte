@@ -466,7 +466,7 @@
 
     &.neo-rounded {
       padding: var(--neo-btn-padding, 0.3125rem 0.75rem);
-      border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
+      border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-xxl));
     }
 
     &.neo-container {

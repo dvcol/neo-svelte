@@ -51,12 +51,12 @@
     }
 
     &.neo-rounded {
-      border-radius: var(--neo-border-radius-lg);
+      border-radius: var(--neo-border-radius-xxl);
 
       &::-webkit-color-swatch-wrapper,
       &::-webkit-color-swatch,
       &::-moz-color-swatch {
-        border-radius: var(--neo-border-radius-lg);
+        border-radius: var(--neo-border-radius-xxl);
       }
     }
   }

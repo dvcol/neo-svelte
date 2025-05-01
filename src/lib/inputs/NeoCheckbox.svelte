@@ -254,7 +254,7 @@
         border-radius 0.3s ease;
 
       &.neo-rounded {
-        border-radius: var(--neo-border-radius-lg);
+        border-radius: var(--neo-border-radius-xxl);
       }
 
       &.neo-flat {

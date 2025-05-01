@@ -134,7 +134,7 @@
     }
 
     &.neo-rounded {
-      border-radius: var(--neo-accordion-border-radius, var(--neo-border-radius-lg));
+      border-radius: var(--neo-accordion-border-radius, var(--neo-border-radius-xxl));
     }
 
     &.neo-flat-hover:hover:not(.neo-borderless),

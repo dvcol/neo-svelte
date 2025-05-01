@@ -229,7 +229,7 @@
       }
 
       &.neo-rounded::before {
-        border-radius: var(--neo-border-radius-md);
+        border-radius: var(--neo-border-radius-lg);
       }
 
       &.neo-disabled {
@@ -281,7 +281,7 @@
       box-shadow: var(--neo-box-shadow-inset-1);
 
       &.neo-rounded {
-        border-radius: var(--neo-border-radius-md);
+        border-radius: var(--neo-border-radius-lg);
       }
 
       .neo-file {

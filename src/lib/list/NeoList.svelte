@@ -487,7 +487,7 @@
 
       &-select {
         :global(> .neo-list-item-button.neo-rounded) {
-          border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-md));
+          border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
         }
 
         :global(> .neo-list-base-loader:first-child) {

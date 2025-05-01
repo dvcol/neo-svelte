@@ -345,7 +345,7 @@
       }
 
       &.neo-rounded :global(> .neo-tabs-group .neo-tab::before) {
-        border-radius: var(--neo-tab-border-radius, var(--neo-border-radius-lg));
+        border-radius: var(--neo-tab-border-radius, var(--neo-border-radius-xxl));
       }
     }
   }

@@ -745,7 +745,7 @@
       }
 
       &.neo-rounded {
-        border-radius: var(--neo-input-border-radius, var(--neo-border-radius-lg));
+        border-radius: var(--neo-input-border-radius, var(--neo-border-radius-xxl));
 
         :global(.neo-input:is(select) option) {
           border-radius: var(--neo-input-border-radius, var(--neo-border-radius));

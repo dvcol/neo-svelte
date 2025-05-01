@@ -307,10 +307,10 @@
 
     &.neo-rounded {
       padding: 0.25rem 0.3125rem;
-      border-radius: var(--neo-btn-groupborder-radius-rounded, var(--neo-border-radius-lg));
+      border-radius: var(--neo-btn-groupborder-radius-rounded, var(--neo-border-radius-xxl));
 
       :global(.neo-button) {
-        border-radius: var(--neo-btn-groupborder-radius-rounded, var(--neo-border-radius-lg));
+        border-radius: var(--neo-btn-groupborder-radius-rounded, var(--neo-border-radius-xxl));
       }
     }
 

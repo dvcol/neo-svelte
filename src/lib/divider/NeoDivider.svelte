@@ -83,7 +83,7 @@
     user-select: none;
 
     &.neo-rounded {
-      border-radius: var(--neo-divider-border-radius, var(--neo-border-radius-lg));
+      border-radius: var(--neo-divider-border-radius, var(--neo-border-radius-xxl));
     }
 
     &.neo-vertical {

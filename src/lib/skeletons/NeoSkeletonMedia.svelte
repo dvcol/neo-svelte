@@ -126,7 +126,7 @@
     }
 
     &.neo-rounded {
-      border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-lg));
+      border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius-xxl));
     }
 
     &.neo-circle {

@@ -839,7 +839,7 @@
       @include mixin.floating;
 
       &.neo-rounded {
-        --neo-floating-border-radius: var(--neo-floating-border-radius-lg, var(--neo-border-radius-lg));
+        --neo-floating-border-radius: var(--neo-floating-border-radius-lg, var(--neo-border-radius-xxl));
       }
     }
   }
