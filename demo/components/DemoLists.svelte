@@ -1,5 +1,13 @@
 <script lang="ts">
-  import type { NeoListItem, NeoListItemRenderContext, NeoListProps, NeoListSection } from '~/list/neo-list.model.js';
+  import type {
+    NeoListContext,
+    NeoListItem,
+    NeoListItemContext,
+    NeoListProps,
+    NeoListRender,
+    NeoListRenderContext,
+    NeoListSection,
+  } from '~/list/neo-list.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
@@ -24,6 +32,7 @@
     disabled: false,
     readonly: false,
     reverse: false,
+    flip: false,
     dim: false,
   });
 
@@ -185,14 +194,15 @@
     <NeoButton toggle bind:checked={options.nullable}>Nullable</NeoButton>
     <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
     <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
+    <NeoButton toggle bind:checked={options.flip}>Flip</NeoButton>
     <NeoButton toggle bind:checked={options.dim}>Dim</NeoButton>
     <NeoButton onclick={onAdd}>Add</NeoButton>
     <NeoButton onclick={onRemove}>Remove</NeoButton>
   </NeoButtonGroup>
 </div>
 
-{#snippet render({ context: { skeleton } })}
-  <NeoSkeletonText class="custom-item-skeleton" loading={skeleton} lines={4} align="center">
+{#snippet render({ context }: NeoListItemContext)}
+  <NeoSkeletonText class="custom-item-skeleton" loading={context?.skeleton} lines={4} align="center">
     <div class="custom-item-card">
       <div>Custom Render Item</div>
       <div>- John Doe</div>
@@ -202,7 +212,7 @@
   </NeoSkeletonText>
 {/snippet}
 
-{#snippet renderSection(_children, _context)}
+{#snippet renderSection(_children: NeoListRender, _context: NeoListRenderContext)}
   <h2>Custom Section</h2>
   <h3>{_context?.section?.label}</h3>
   <ul>
@@ -220,7 +230,7 @@
   </NeoSkeletonText>
 {/snippet}
 
-{#snippet avatar(ctx: NeoListItemRenderContext)}
+{#snippet avatar(ctx: NeoListContext)}
   <span class="custom-item-avatar">
     <IconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
   </span>

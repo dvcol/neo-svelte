@@ -16,7 +16,7 @@
   import NeoTabs from '~/nav/NeoTabs.svelte';
   import NeoThemePicker from '~/providers/NeoThemePicker.svelte';
   import NeoThemeProvider from '~/providers/NeoThemeProvider.svelte';
-  import NeoThemeSelector from '~/providers/NeoThemeSelector.svelte';
+  import NeoThemeSelector from '~/providers/NeoThemeSelectors.svelte';
 
   import { router } from './router/router.js';
   import { routes } from './router/routes.js';
@@ -69,7 +69,7 @@
   <NeoPortalContainer>
     <div class="container">
       <header class="row header">
-        <NeoTabs rounded pressed tag="nav" {active} onchange={onClick}>
+        <NeoTabs rounded pressed dim tag="nav" {active} onchange={onClick}>
           {#each routes as route (route)}
             <NeoTab tabId={route} onpointerenter={() => onHover(route)}>{sentenceCase(route)}</NeoTab>
           {/each}
@@ -83,7 +83,7 @@
           </NeoButton>
         </NeoTabs>
 
-        <NeoThemeSelector rounded reset remember />
+        <NeoThemeSelector rounded source reset remember />
         <NeoThemePicker rounded />
       </header>
 

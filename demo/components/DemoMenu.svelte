@@ -18,7 +18,10 @@
   const options = $state<NeoMenuProps>({
     color: '',
     rounded: false,
+    reverse: false,
+    flip: false,
     keepOpenOnSelect: false,
+    keepOpenOnHover: false,
 
     onMenu: (i, e) => console.info('Menu', shallowClone(i), e),
     onSelect: (i, e) => console.info('Select', shallowClone(i), e),
@@ -123,7 +126,10 @@
 <div class="row">
   <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={options.keepOpenOnSelect}>Keep Open (Click)</NeoButton>
+    <NeoButton toggle bind:checked={options.keepOpenOnHover}>Keep Open (Hover)</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
+    <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
+    <NeoButton toggle bind:checked={options.flip}>Flip</NeoButton>
   </NeoButtonGroup>
 </div>
 
