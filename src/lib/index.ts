@@ -7,6 +7,7 @@ export * from './cursor/index.js';
 export * from './divider/index.js';
 export * from './floating/index.js';
 export * from './form/index.js';
+export * from './icons/index.js';
 export * from './inputs/index.js';
 export * from './list/index.js';
 export * from './loading/index.js';

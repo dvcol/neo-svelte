@@ -99,3 +99,5 @@ export type IconRadioProps = IconProps & {
 export type IconSunMoonProps = IconProps & {
   state?: 'sun' | 'moon';
 };
+
+export type NeoIconThemeProps = IconSunMoonProps;

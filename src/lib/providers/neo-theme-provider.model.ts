@@ -1,5 +1,7 @@
 import type { Snippet } from 'svelte';
 
+import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
+
 /**
  * The active theme (`dark` or `light`)
  */
@@ -24,6 +26,10 @@ export type NeoSources = (typeof NeoSource)[keyof typeof NeoSource];
 
 export interface INeoThemeProviderContext {
   /**
+   * If styles have finished loading.
+   */
+  readonly ready?: boolean;
+  /**
    * If a style reset is applied.
    */
   readonly reset?: boolean;
@@ -45,7 +51,7 @@ export interface INeoThemeProviderContext {
   readonly root?: HTMLElement | ShadowRoot;
 }
 
-export interface NeoThemeProviderProps {
+export interface NeoThemeProviderProps<Tag extends keyof HTMLElementTagNameMap = 'div'> extends Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'> {
   // Snippets
 
   /**
@@ -55,6 +61,16 @@ export interface NeoThemeProviderProps {
 
   // States
 
+  /**
+   * The HTML reference to the inner element when target is `self`.
+   * @see target
+   */
+  ref?: HTMLElement;
+  /**
+   * The HTML tag to use for the container.
+   * @default 'div'
+   */
+  tag?: Tag;
   /**
    * If `true`, injects a css reset for common styling.
    */
@@ -82,7 +98,7 @@ export interface NeoThemeProviderProps {
    *
    * @default document.documentElement
    */
-  target?: HTMLElement | ShadowRoot | (() => HTMLElement | ShadowRoot);
+  target?: 'self' | HTMLElement | ShadowRoot | (() => HTMLElement | ShadowRoot);
 }
 
 export const NeoThemeRoot = 'neo-theme-root';

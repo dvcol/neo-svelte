@@ -101,6 +101,11 @@
       "import": "./dist/form/index.js",
       "svelte": "./dist/form/index.js"
     },
+    "./icons": {
+      "types": "./dist/icons/index.d.ts",
+      "import": "./dist/icons/index.js",
+      "svelte": "./dist/icons/index.js"
+    },
     "./inputs": {
       "types": "./dist/inputs/index.d.ts",
       "import": "./dist/inputs/index.js",

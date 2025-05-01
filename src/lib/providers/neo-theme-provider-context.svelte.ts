@@ -6,6 +6,8 @@ import { getContext, setContext, untrack } from 'svelte';
 import { getRemember, getReset, getSource, getTheme, NeoThemeRoot, NeoThemeStorageKey } from '~/providers/neo-theme-provider.model.js';
 import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorThemeTargetNotFound } from '~/utils/error.utils.js';
 
+import styles from '~/providers/neo-theme-provider.scss?url';
+
 type NeoThemeProviderRoot = INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root']);
 export type NeoThemeProviderContextState = Partial<Omit<INeoThemeProviderContext, 'root'>> & { root?: NeoThemeProviderRoot };
 export class NeoThemeProviderContext implements INeoThemeProviderContext {
@@ -14,6 +16,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
   #source = $state<INeoThemeProviderContext['source']>(getSource());
   #remember = $state<INeoThemeProviderContext['remember']>(getRemember());
   #root = $state<INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root'])>(document?.documentElement);
+  #ready = $state<INeoThemeProviderContext['ready']>(false);
 
   get reset() {
     return this.#reset;
@@ -35,6 +38,10 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     return typeof this.#root === 'function' ? this.#root() : this.#root;
   }
 
+  get ready() {
+    return this.#ready;
+  }
+
   get state() {
     return {
       reset: this.reset,
@@ -51,8 +58,6 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.#source = source ?? this.source;
     this.#remember = remember ?? this.remember;
     this.#root = root ?? this.root;
-
-    this.sync();
   }
 
   update(partial: Partial<NeoThemeProviderContextState>) {
@@ -86,10 +91,28 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.root.setAttribute(NeoThemeStorageKey.Source, source);
   }
 
+  import(target = this.root) {
+    if (!target) throw new NeoErrorThemeTargetNotFound();
+    if (!('setAttribute' in target)) throw new NeoErrorThemeInvalidTarget();
+    if (target.parentElement?.querySelector('#neo-theme-provider')) return;
+
+    const link = document.createElement('link');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('id', 'neo-theme-provider');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('href', new URL(styles, import.meta.url).href);
+    link.addEventListener('load', () => {
+      this.#ready = true;
+    });
+    if (target === document?.documentElement) document.head.appendChild(link);
+    else target.after(link);
+  }
+
   sync() {
     if (!this.root) throw new NeoErrorThemeTargetNotFound();
     if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
 
+    this.import(this.root);
     this.root.setAttribute(NeoThemeRoot, '');
     void this.setTheme(this.theme);
     this.setSource(this.source);
@@ -120,6 +143,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.root.removeAttribute(NeoThemeStorageKey.Reset);
     this.root.removeAttribute(NeoThemeStorageKey.Theme);
     this.root.removeAttribute(NeoThemeStorageKey.Source);
+    this.#ready = false;
   }
 }
 
