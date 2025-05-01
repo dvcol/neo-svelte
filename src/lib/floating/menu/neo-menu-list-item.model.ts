@@ -7,16 +7,13 @@ import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
 import type { NeoBaseListItem } from '~/list/neo-list.model.js';
 import type { HTMLNeoBaseElement, SvelteEvent } from '~/utils/html-element.utils.js';
 
-export type NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> = Omit<
-  NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>,
-  'containerProps'
-> & {
+export interface NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> extends Omit<NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>, 'containerProps'>, Pick<NeoMenuListItemProps, 'tooltipProps' | 'baseProps'> {
   /**
    * If true, children items will be rendered as list items instead of a nested dropdown menu.
    *
    * @default false
    */
-  section?: string;
+  section?: boolean;
   /**
    * If true, the menu section label will be sticky on scroll.
    */
@@ -38,7 +35,7 @@ export type NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    * Optional props to pass to the base list item.
    */
   itemProps?: Pick<NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>, 'containerProps'>;
-} & Pick<NeoMenuListItemProps, 'tooltipProps' | 'baseProps'>;
+} ;
 
 export interface NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> {
   /**

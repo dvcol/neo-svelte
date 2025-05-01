@@ -11,13 +11,13 @@ export type NeoMenuProps<Value = unknown> = Omit<NeoTooltipProps, 'tooltip'> & {
    * @param item - The menu item that was clicked.
    * @param e - The pointer event.
    */
-  onMenu: NeoMenuListProps<Value>['onMenu'];
+  onMenu?: NeoMenuListProps<Value>['onMenu'];
   /**
    * Event handler for when a menu item without a nested menu is clicked.
    * @param item - The menu item that was clicked.
    * @param e - The pointer event.
    */
-  onSelect: NeoMenuListProps<Value>['onSelect'];
+  onSelect?: NeoMenuListProps<Value>['onSelect'];
 
   /**
    * If true, the menu will stay open when the item is selected.

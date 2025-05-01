@@ -6,7 +6,7 @@ import type { NeoPopSelectProps } from '~/floating/tooltips/neo-pop-select.model
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoListItemOrSection, NeoListSelectedItem } from '~/list/neo-list.model.js';
 
-export type NeoNativeSelectOption<Value = unknown> =
+export type NeoNativeSelectOption<Value = any> =
   | string
   | number
   | ({
@@ -15,7 +15,7 @@ export type NeoNativeSelectOption<Value = unknown> =
     id?: string | number;
   } & HTMLOptionAttributes);
 
-export type NeoNativeSelectProps<Value = unknown> = {
+export type NeoNativeSelectProps<Value = any> = {
   /**
    * Custom icon for the picker.
    */
@@ -30,9 +30,9 @@ export type NeoNativeSelectProps<Value = unknown> = {
   options?: NeoNativeSelectOption<Value>[];
 } & NeoInputProps;
 
-export type NeoSelectOption<Value = unknown> = NeoListItemOrSection<Value>;
+export type NeoSelectOption<Value = any> = NeoListItemOrSection<Value>;
 
-export type NeoSelectProps<Value = unknown> = {
+export type NeoSelectProps<Value = any> = {
   // Snippets
 
   /**

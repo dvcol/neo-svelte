@@ -70,13 +70,13 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    * @param item - The menu item that was clicked.
    * @param e - The pointer event.
    */
-  onMenu: NeoMenuListItemProps<Value>['onMenu'];
+  onMenu?: NeoMenuListItemProps<Value>['onMenu'];
   /**
    * Event handler for when a menu item without a nested menu is clicked.
    * @param item - The menu item that was clicked.
    * @param e - The pointer event.
    */
-  onSelect: NeoMenuListItemProps<Value>['onSelect'];
+  onSelect?: NeoMenuListItemProps<Value>['onSelect'];
 
   // Other Props
   /**

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { NeoMenuItem } from '~/lib/floating/menu/neo-menu-item.model.js';
-  import type { NeoMenuProps } from '~/lib/floating/menu/neo-menu.model.js';
+  import type { NeoMenuItem } from '~/floating/menu/neo-menu-list-item.model';
+  import type { NeoMenuProps } from '~/floating/menu/neo-menu.model.js';
 
   import { shallowClone } from '@dvcol/common-utils/common/object';
   import { getUUID } from '@dvcol/common-utils/common/string';
@@ -15,7 +15,7 @@
 
   import { colorOptions } from '../utils/color.utils.js';
 
-  const options = $state<NeoMenuProps>({
+  const options = $state<Partial<NeoMenuProps>>({
     color: '',
     rounded: false,
     reverse: false,
@@ -35,25 +35,24 @@
     externalMenuPanel: false,
   });
 
-  const items: NeoMenuItem[] = [
-    { label: 'Line 1' },
+  const items = [
+    { value: 'Line 1' },
     {
-      label: 'Line 2',
+      value: 'Line 2',
       divider: true,
       items: [
-        { label: 'Level 2 Line 1' },
-        { label: 'Level 2 Line 2' },
-        { label: 'Level 2 Line 3', divider: true, items: [{ label: 'Level 3 Line 1' }, { label: 'Level 3 Line 2' }] },
-        { label: 'Level 2 Line 4' },
-        { label: 'Level 2 Line 5' },
+        { value: 'Level 2 Line 1' },
+        { value: 'Level 2 Line 2' },
+        { value: 'Level 2 Line 3', divider: true, items: [{ value: 'Level 3 Line 1' }, { value: 'Level 3 Line 2' }] },
+        { value: 'Level 2 Line 4' },
+        { value: 'Level 2 Line 5' },
       ],
     },
     {
       label: 'Line item with external link',
       value: 'https://www.google.com',
       href: 'https://www.google.com',
-      buttonProps: { target: '_blank' },
-      title: 'This is a link to google',
+      buttonProps: { target: '_blank', title: 'This is a link to google' },
       color: Colors.Primary,
     },
     {
@@ -63,12 +62,12 @@
       disabled: true,
       divider: { bottom: true },
     },
-    { label: 'Line 3' },
-    { label: 'Line 4' },
-    { label: 'Line 5' },
-  ];
+    { value: 'Line 3' },
+    { value: 'Line 4' },
+    { value: 'Line 5' },
+  ] satisfies NeoMenuItem[];
 
-  const itemsRich = $state(
+  const itemsRich = $state<NeoMenuItem[]>(
     [
       { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
       { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
@@ -78,7 +77,7 @@
       { label: 'Jack King', value: 'Jack', description: 'jack.king@yahoo.com' },
       { label: 'Karen Lee', value: 'Karen', description: 'karen.lee@outlook.com' },
       {
-        label: 'Directors',
+        value: 'Directors',
         section: true,
         divider: true,
         sticky: true,
@@ -90,13 +89,13 @@
 
             items: [
               {
-                label: 'emails',
+                value: 'emails',
                 section: true,
                 items: [
-                  { label: 'work', description: 'denis.villeneuve@gmail.com' },
-                  { label: 'personal', description: 'denis.villeneuve@yahoo.com' },
-                  { label: 'landline', description: '+33 1 25 48 45 45' },
-                  { label: 'mobile', description: '+33 6 25 48 45 45' },
+                  { value: 'work', description: 'denis.villeneuve@gmail.com' },
+                  { value: 'personal', description: 'denis.villeneuve@yahoo.com' },
+                  { value: 'landline', description: '+33 1 25 48 45 45' },
+                  { value: 'mobile', description: '+33 6 25 48 45 45' },
                 ],
               },
             ],
@@ -108,7 +107,7 @@
         ].map(item => ({ ...item, id: getUUID(), before: avatar })),
       },
       {
-        label: 'Actors',
+        value: 'Actors',
         divider: true,
         sticky: true,
         items: [
@@ -141,7 +140,7 @@
     floating={false}
     color={options.color}
     display={displayValue}
-    size="10"
+    size={10}
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 4rem' }}
     options={colorOptions}
@@ -162,7 +161,7 @@
     <div class="column">
       <span class="label">Menu</span>
 
-      <NeoMenu bind:open={open.menu} {items} {...options}>
+      <NeoMenu bind:open={open.menu} {...options} {items}>
         <NeoButton elevation="0" toggle bind:checked={open.menu}>Open</NeoButton>
       </NeoMenu>
     </div>
@@ -184,7 +183,7 @@
     <div class="column">
       <span class="label">Rich Menu</span>
 
-      <NeoMenu bind:open={open.menuRich} items={itemsRich} {...options}>
+      <NeoMenu bind:open={open.menuRich} {...options} items={itemsRich}>
         <NeoButton elevation="0" toggle bind:checked={open.menuRich}>Open</NeoButton>
       </NeoMenu>
     </div>

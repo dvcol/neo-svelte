@@ -78,14 +78,16 @@
 
 {#snippet list(array: NeoMenuItem[])}
   {#each array as item, index (item.id ?? index)}
-    {@const labelId = item.label ? `neo-menu-section-label-${getUUID()}` : undefined}
     {#if index && showDivider(item.divider, 'top')}
       <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
     {/if}
     {#if item.section}
-      <span id={labelId} class="neo-menu-list-section-label" class:neo-sticky={item.sticky} class:neo-reverse={reverse || item.reverse}>
-        {item.label}
-      </span>
+      {@const labelId = (item.label ?? item.value) ? `neo-menu-section-label-${getUUID()}` : undefined}
+      {#if labelId}
+        <span id={labelId} class="neo-menu-list-section-label" class:neo-sticky={item.sticky} class:neo-reverse={reverse || item.reverse}>
+          {item.label ?? item.value}
+        </span>
+      {/if}
       <svelte:element this={tag} role="menu">
         {#if item.items}
           {@render list(item.items)}
