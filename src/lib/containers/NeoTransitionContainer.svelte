@@ -17,6 +17,7 @@
     overflowY,
     width,
     height,
+    reverse,
 
     // Transition
     in: inAction,
@@ -36,6 +37,7 @@
 <svelte:element
   this={tag}
   class:neo-transition-container={true}
+  class:neo-reverse={reverse}
   style:overflow
   style:overflow-x={overflowX}
   style:overflow-y={overflowY}
@@ -59,5 +61,10 @@
 
   .neo-transition-container {
     @include mixin.transition-container;
+
+    &.neo-reverse {
+      justify-content: flex-end;
+      text-align: end;
+    }
   }
 </style>

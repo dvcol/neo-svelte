@@ -30,6 +30,8 @@
     shadow = true,
     scrollbar,
     rounded,
+    reverse,
+    flip,
 
     // Events
     onMenu,
@@ -87,6 +89,8 @@
     {shadow}
     {scrollbar}
     {rounded}
+    {reverse}
+    {flip}
     {baseProps}
     {itemProps}
     {dividerProps}

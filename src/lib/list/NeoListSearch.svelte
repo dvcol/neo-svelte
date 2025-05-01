@@ -108,7 +108,7 @@
   </NeoButton>
 {/snippet}
 
-<svelte:element this={tag} class:neo-list-search={true} class:neo-reverse={context?.reverse} {...rest}>
+<svelte:element this={tag} class:neo-list-search={true} class:neo-flip={context?.flip} {...rest}>
   <NeoInput
     bind:ref
     bind:value
@@ -144,11 +144,11 @@
     display: inline-flex;
     flex-direction: column;
 
-    &:not(.neo-reverse) :global(> .neo-list-search-input) {
+    &:not(.neo-flip) :global(> .neo-list-search-input) {
       margin-bottom: 0.125rem;
     }
 
-    &.neo-reverse :global(.neo-list-search-input) {
+    &.neo-flip :global(.neo-list-search-input) {
       margin-top: 0.125rem;
     }
   }

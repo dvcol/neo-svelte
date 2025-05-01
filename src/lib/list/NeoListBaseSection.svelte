@@ -18,6 +18,7 @@
     select,
     skeleton,
     highlight,
+    reverse,
 
     // Other props
     skeletonProps,
@@ -37,10 +38,11 @@
         disabled={skeleton === undefined}
         lines={1}
         align="center"
+        {reverse}
         {...skeletonProps}
         class={['neo-list-section-skeleton', skeletonProps?.class]}
       >
-        <NeoMark value={section.label} filter={highlight} />
+        <NeoMark class="neo-list-section-title-mark" value={section.label} filter={highlight} />
       </NeoSkeletonText>
     </div>
   {/if}

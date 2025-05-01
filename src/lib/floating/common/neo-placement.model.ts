@@ -29,3 +29,15 @@ export const NeoDialogPlacements: Record<string, NeoDialogPlacement> = {
   ...NeoPlacements,
   Center: 'center' as const,
 } as const;
+
+export function reversePlacement(placement?: NeoTooltipPlacement): NeoTooltipPlacement {
+  if (placement?.startsWith('right')) return placement?.replace('right', 'left') as NeoTooltipPlacement;
+  if (placement?.startsWith('left')) return placement?.replace('left', 'right') as NeoTooltipPlacement;
+  return placement;
+}
+
+export function invertPlacement(placement?: NeoTooltipPlacement): NeoTooltipPlacement {
+  if (placement?.startsWith('top')) return placement?.replace('top', 'bottom') as NeoTooltipPlacement;
+  if (placement?.startsWith('bottom')) return placement?.replace('bottom', 'top') as NeoTooltipPlacement;
+  return placement;
+}

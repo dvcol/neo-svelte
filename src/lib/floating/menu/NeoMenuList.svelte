@@ -3,6 +3,7 @@
   import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { tick } from 'svelte';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import NeoMenuListItem from '~/floating/menu/NeoMenuListItem.svelte';
@@ -23,6 +24,8 @@
     shadow,
     scrollbar,
     rounded,
+    reverse,
+    flip,
 
     // Events
     onMenu,
@@ -36,13 +39,23 @@
     ...rest
   }: NeoMenuListProps = $props();
 
-// TODO: Section
+  const scrollReverse = async () => {
+    await tick();
+    if (!ref) return;
+    ref.scrollTo({ top: ref.scrollHeight, behavior: 'instant' });
+  };
+
+  $effect(() => {
+    if (!flip || !ref) return;
+    scrollReverse();
+  });
 </script>
 
 {#snippet line(item: NeoMenuItem, index = 0, length = 0)}
   <NeoMenuListItem
     {keepOpenOnSelect}
     {rounded}
+    {reverse}
     {...itemProps}
     {parent}
     {item}
@@ -51,7 +64,7 @@
     {level}
     {tooltipProps}
     {baseProps}
-    menuProps={{ tag, shadow, scrollbar, rounded, dividerProps, tooltipProps, baseProps, ...rest, ...item.menuProps }}
+    menuProps={{ tag, shadow, scrollbar, rounded, reverse, flip, dividerProps, tooltipProps, baseProps, ...rest, ...item.menuProps }}
     onMenu={(i, e) => {
       item.menuProps?.onMenu?.(i, e);
       onMenu?.(i, e);
@@ -70,7 +83,7 @@
       <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
     {/if}
     {#if item.section}
-      <span id={labelId} class="neo-menu-list-section-label" class:neo-sticky={item.sticky}>
+      <span id={labelId} class="neo-menu-list-section-label" class:neo-sticky={item.sticky} class:neo-reverse={reverse || item.reverse}>
         {item.label}
       </span>
       <svelte:element this={tag} role="menu">
@@ -95,6 +108,7 @@
   class:neo-scroll={scrollbar}
   class:neo-shadow={shadow}
   class:neo-rounded={rounded}
+  class:neo-flip={flip}
   {...rest}
 >
   {@render list(items)}
@@ -129,6 +143,11 @@
             linear-gradient(to top, transparent 5%, oklch(from var(--neo-background-color) l c h / 50%) 20%, var(--neo-background-color))
           );
         }
+
+        &.neo-reverse {
+          justify-content: flex-end;
+          text-align: end;
+        }
       }
     }
 
@@ -151,6 +170,19 @@
       }
 
       @include mixin.scrollbar($button-height: var(--neo-menu-scrollbar-padding, 0.5rem));
+    }
+
+    &.neo-flip {
+      flex-direction: column-reverse;
+      justify-content: end;
+
+      .neo-list-items {
+        // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
+        @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
+          flex-direction: column-reverse;
+          justify-content: end;
+        }
+      }
     }
   }
 </style>

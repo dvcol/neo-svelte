@@ -51,6 +51,18 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    * If true, the menu will be rounded.
    */
   rounded?: boolean;
+  /**
+   * Reverse the direction of the item.
+   *
+   * @default false
+   */
+  reverse?: boolean;
+  /**
+   * Inverts the flow of the list (flex-direction: column-reverse).
+   *
+   * @default false
+   */
+  flip?: boolean;
 
   // Events
   /**

@@ -8,6 +8,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import IconArrow from '~/icons/IconArrow.svelte';
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
+  import { IconArrowDirection } from '~/icons/index.js';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
 
@@ -33,6 +34,7 @@
     arrow,
     toggle,
     rounded,
+    reverse,
 
     // Buttons Props
     hovered = $bindable(false),
@@ -74,12 +76,29 @@
   const readonly = $derived(_readonly || item?.readonly);
 </script>
 
+{#snippet beforeItem()}
+  {#if item.before ?? before}
+    <div class="neo-list-item-before" class:neo-skeleton={skeleton}>
+      {@render (item.before ?? before)?.({ item, index, checked, context })}
+    </div>
+  {/if}
+{/snippet}
+
+{#snippet afterItem()}
+  {#if item.after ?? after}
+    <div class="neo-list-item-after" class:neo-skeleton={skeleton}>
+      {@render (item.after ?? after)?.({ item, index, checked, context })}
+    </div>
+  {/if}
+{/snippet}
+
 {#snippet listItem({ label, value, description }: NeoListItem)}
-  <div class:neo-list-item-content={true} class:neo-button={button} class:neo-disabled={disabled} class:neo-description={description}>
-    {#if item.before ?? before}
-      <div class="neo-list-item-before" class:neo-skeleton={skeleton}>
-        {@render (item.before ?? before)?.({ item, index, checked, context })}
-      </div>
+  <div class:neo-list-item-content={true} class:neo-button={button} class:neo-disabled={disabled} class:neo-description={description} class:neo-reverse={reverse || item.reverse}>
+
+    {#if !reverse}
+      {@render beforeItem()}
+    {:else}
+      {@render afterItem()}
     {/if}
 
     <NeoSkeletonText
@@ -88,6 +107,7 @@
       lines="auto"
       fallback={description ? 2 : 1}
       align="center"
+      {reverse}
       {...rest}
       class={['neo-list-item-skeleton', rest?.class]}
     >
@@ -103,17 +123,30 @@
       </div>
     </NeoSkeletonText>
 
-    {#if item.after ?? after}
-      <div class="neo-list-item-after" class:neo-skeleton={skeleton}>
-        {@render (item.after ?? after)?.({ item, index, checked, context })}
-      </div>
+    {#if !reverse}
+      {@render afterItem()}
+    {:else}
+      {@render beforeItem()}
     {/if}
   </div>
+{/snippet}
+
+{#snippet affix()}
+  {#if select}
+    <div class="neo-list-item-checkmark" class:neo-skeleton={skeleton} class:neo-reverse={reverse}>
+      <IconCheckbox {checked} enter={touched} />
+    </div>
+  {:else if arrow}
+    <div class="neo-list-item-arrow" class:neo-skeleton={skeleton}>
+      <IconArrow expanded={checked && !disabled && !readonly} chevron direction={reverse ? IconArrowDirection.Left : IconArrowDirection.Right} />
+    </div>
+  {/if}
 {/snippet}
 
 {#if item?.render}
   {@render item?.render({ item, index, checked, context })}
 {:else if button}
+
   <NeoButton
     bind:hovered
     bind:focused
@@ -148,16 +181,14 @@
     {...item?.buttonProps}
     class={['neo-list-item-button', buttonProps?.class, item?.buttonProps?.class]}
   >
+    {#if reverse}
+      {@render affix()}
+    {/if}
+
     {@render listItem(item)}
 
-    {#if select}
-      <div class="neo-list-item-checkmark" class:neo-skeleton={skeleton}>
-        <IconCheckbox {checked} enter={touched} />
-      </div>
-    {:else if arrow}
-      <div class="neo-list-item-arrow" class:neo-skeleton={skeleton}>
-        <IconArrow expanded={checked && !disabled && !readonly} chevron />
-      </div>
+    {#if !reverse}
+      {@render affix()}
     {/if}
   </NeoButton>
 {:else}
@@ -202,6 +233,11 @@
         padding: 0.375rem 0.625rem;
       }
 
+      &.neo-reverse {
+        justify-content: flex-end;
+        text-align: end;
+      }
+
       &:hover:not(.neo-disabled, .neo-button) {
         color: var(--neo-text-color-highlight);
       }
@@ -231,10 +267,6 @@
       --neo-arrow-delay: 0s;
     }
 
-    &-checkmark {
-      margin-inline-end: 0.4375rem;
-    }
-
     &-before,
     &-after,
     &-arrow,
@@ -261,6 +293,16 @@
           opacity: 0;
           transition-delay: 0s;
         }
+      }
+    }
+
+    &-checkmark {
+      &:not(.neo-reverse) {
+        margin-inline-end: 0.4375rem;
+      }
+
+      &.neo-reverse {
+        margin-inline-start: 0.4375rem;
       }
     }
   }

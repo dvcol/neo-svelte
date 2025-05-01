@@ -6,6 +6,7 @@
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
   import { tick } from 'svelte';
 
+  import { reversePlacement } from '~/floating/common/neo-placement.model.js';
   import { getMenuContext, setMenuContext } from '~/floating/menu/neo-menu-context.svelte.js';
   import NeoMenuList from '~/floating/menu/NeoMenuList.svelte';
   import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
@@ -36,6 +37,7 @@
 
     // Styles
     rounded,
+    reverse,
 
     // Events
     onMenu,
@@ -82,11 +84,12 @@
     if (!nested && !menuContext?.ref) return;
     e.preventDefault();
     e.stopPropagation();
-    tooltipOpen = e.key === 'ArrowRight';
-    if (open && e.key === 'ArrowLeft') return;
+    const openNested = reverse ? e.key === 'ArrowLeft' : e.key === 'ArrowRight';
+    tooltipOpen = openNested;
+    if (open && !openNested) return;
     await tick();
-    if (e.key === 'ArrowRight') getFocusableElement(tooltipRef)?.focus();
-    if (e.key === 'ArrowLeft') getFocusableElement(menuContext?.ref)?.focus();
+    if (openNested) getFocusableElement(tooltipRef)?.focus();
+    if (!openNested) getFocusableElement(menuContext?.ref)?.focus();
   };
 
   $effect(() => {
@@ -101,11 +104,13 @@
     }
     onSelect?.(item, e);
     baseProps?.onclick?.(e, checked);
-    if (keepOpenOnSelect) return;
+    if (keepOpenOnSelect || item.keepOpenOnSelect) return;
     menuContext?.dismiss();
   };
 
   const context = $derived<NeoMenuContext>({ item, index, length, parent, open, keepOpenOnSelect, onMenu, onSelect });
+
+  const nestedPlacement = $derived(reverse ? reversePlacement(placement) : placement);
 </script>
 
 <svelte:element
@@ -130,6 +135,7 @@
       {index}
       {context}
       {rounded}
+      {reverse}
       toggle
       arrow={nested}
       checked={open}
@@ -143,6 +149,7 @@
 
 {#snippet tooltip()}
   <NeoMenuList
+    {reverse}
     {...menuProps}
     itemProps={{ ...rest, ...menuProps?.itemProps }}
     {keepOpenOnSelect}
@@ -165,7 +172,7 @@
     {rounded}
     {...tooltipProps}
     {...item.tooltipProps}
-    {placement}
+    placement={nestedPlacement}
     {offset}
     {tooltip}
     openOnFocus={false}

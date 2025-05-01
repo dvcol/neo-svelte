@@ -25,6 +25,7 @@
     flex,
     width,
     height,
+    reverse,
 
     // Content
     context = $bindable({}),
@@ -65,7 +66,7 @@
 {#if disabled}
   {@render content?.()}
 {:else if content}
-  <NeoTransitionContainer {width} {height} {...containerProps}>
+  <NeoTransitionContainer {width} {height} {reverse} {...containerProps}>
     {#if loading}
       <svelte:element
         this={tag}

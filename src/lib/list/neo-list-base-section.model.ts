@@ -28,6 +28,12 @@ export type NeoListBaseSectionProps<Value = unknown, Tag extends keyof HTMLEleme
    * Optional filter to highlight text.
    */
   highlight?: string;
+  /**
+   * Reverse the direction of the item.
+   *
+   * @default false
+   */
+  reverse?: boolean;
 
   /**
    * If true, the section will display as a skeleton.

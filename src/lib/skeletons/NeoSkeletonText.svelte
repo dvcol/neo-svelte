@@ -19,6 +19,7 @@
     align,
     glass,
     flex,
+    reverse,
 
     // Size
     width: _width,
@@ -81,6 +82,7 @@
   width={width?.absolute}
   height={height?.absolute}
   {content}
+  {reverse}
   containerProps={transitionProps}
   {...containerProps}
 >

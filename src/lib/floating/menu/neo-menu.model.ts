@@ -45,4 +45,4 @@ export type NeoMenuProps<Value = unknown> = Omit<NeoTooltipProps, 'tooltip'> & {
    * Optional props to pass to the divider.
    */
   dividerProps?: NeoMenuListProps<Value>['dividerProps'];
-} & Pick<NeoMenuListProps<Value>, 'shadow' | 'scrollbar' | 'rounded'>;
+} & Pick<NeoMenuListProps<Value>, 'shadow' | 'scrollbar' | 'rounded' | 'reverse' | 'flip'>;

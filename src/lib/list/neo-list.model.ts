@@ -59,6 +59,12 @@ export interface NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li
    */
   hidden?: boolean;
   /**
+   * Reverse the direction of the item.
+   *
+   * @default false
+   */
+  reverse?: boolean;
+  /**
    * Optional props to pass to the divider.
    */
   dividerProps?: NeoDividerProps;
@@ -266,9 +272,17 @@ export interface NeoListState<Selected = undefined | NeoListSelectedItem | NeoLi
    */
   readonly?: boolean;
   /**
-   * Inverts the flow of the list (flex-direction: column-reverse).
+   * Reverse the direction of the item.
+   *
+   * @default false
    */
   reverse?: boolean;
+  /**
+   * Inverts the flow of the list (flex-direction: column-reverse).
+   *
+   * @default false
+   */
+  flip?: boolean;
 }
 
 export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = NeoListState<Selected> & NeoListMethods;

@@ -89,6 +89,12 @@ export type NeoListBaseItemProps<
    * If true, the item will be rounded.
    */
   rounded?: boolean;
+  /**
+   * Reverse the direction of the item.
+   *
+   * @default false
+   */
+  reverse?: boolean;
 
   // Methods
   /**

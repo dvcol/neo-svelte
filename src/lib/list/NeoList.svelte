@@ -57,6 +57,7 @@
     disabled,
     readonly,
     reverse,
+    flip,
     dim,
 
     // Styles
@@ -120,7 +121,7 @@
   };
 
   $effect(() => {
-    if (!reverse || !ref) return;
+    if (!flip || !ref) return;
     scrollReverse();
   });
 
@@ -213,6 +214,7 @@
     disabled,
     readonly,
     reverse,
+    flip,
 
     // Filter
     get highlight() {
@@ -327,7 +329,7 @@
           {#if customSection && !item.render}
             {@render customSection(list, sectionContext)}
           {:else}
-            <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} {...sectionProps} />
+            <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} {reverse} {...sectionProps} />
           {/if}
         {:else if customItem && !item.render}
           {@render customItem({ item, index, checked, context })}
@@ -341,6 +343,7 @@
             {select}
             {highlight}
             {buttonProps}
+            {reverse}
             disabled={item.disabled || disabled || section?.disabled}
             readonly={item.readonly || readonly || section?.readonly || (!isNullable && checked)}
             {...itemProps}
@@ -359,7 +362,7 @@
   this={containerTag}
   class:neo-list={true}
   class:neo-empty={empty}
-  class:neo-reverse={reverse}
+  class:neo-flip={flip}
   style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
@@ -519,7 +522,7 @@
       min-height: var(--neo-list-min-height);
     }
 
-    &.neo-reverse {
+    &.neo-flip {
       flex-direction: column-reverse;
       justify-content: end;
 

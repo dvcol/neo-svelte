@@ -21,6 +21,10 @@ export type NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    * If true, the menu section label will be sticky on scroll.
    */
   sticky?: boolean;
+  /**
+   * If true, the menu will stay open when the item is selected.
+   */
+  keepOpenOnSelect?: boolean;
 
   /**
    * The nested menu items.
@@ -126,6 +130,12 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * If true, the menu & items will be rounded.
    */
   rounded?: boolean;
+  /**
+   * Reverse the direction of the item.
+   *
+   * @default false
+   */
+  reverse?: boolean;
 
   // Other props
   /**

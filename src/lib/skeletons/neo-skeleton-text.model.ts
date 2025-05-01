@@ -71,6 +71,11 @@ export type NeoSkeletonTextProps = {
    * Whether to add glass like transparency to the skeleton.
    */
   glass?: boolean;
+  /**
+   * Reverse the direction of the container.
+   * Flow from right to left by default.
+   */
+  reverse?: boolean;
 
   // Other props
   /**

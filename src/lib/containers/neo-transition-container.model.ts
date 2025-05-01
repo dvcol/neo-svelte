@@ -45,5 +45,10 @@ export type NeoTransitionContainerProps<Tag extends keyof HTMLElementTagNameMap 
    * Height of the container.
    */
   height?: CSSStyleDeclaration['height'];
+  /**
+   * Reverse the direction of the container.
+   * Flow from right to left by default.
+   */
+  reverse?: boolean;
 } & HTMLTransitionProps &
 HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
