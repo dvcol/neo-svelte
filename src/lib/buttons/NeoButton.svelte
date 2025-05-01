@@ -120,7 +120,7 @@
   let enter = $state(false);
   let clicked = $state(false);
   const pressed = $derived(enter || clicked || checked);
-  const empty = $derived(only || (!children && label === undefined));
+  const empty = $derived(only || (!children && (label === undefined || label === null)));
   const scalePressed = $derived(typeof scale === 'boolean' ? undefined : scale);
 
   let timeout: ReturnType<typeof setTimeout>;

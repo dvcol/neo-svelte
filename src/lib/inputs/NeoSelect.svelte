@@ -127,15 +127,17 @@
   );
 
   /**
-   * Reflects change in autocomplete input value to selected value
+   * Reflects change in input value to selected value
    */
   const reflectValue = () => {
     selected = findByValueInList(value, items);
     if (selected === undefined) value = undefined;
   };
 
-  // Reflect initial value if value is set but selected is not
-  reflectValue();
+  watch(() => {
+    if (!value || transformed === value) return;
+    reflectValue();
+  }, () => value);
 
   const hasValue = $derived(!!(Array.isArray(selected) ? selected.length : selected));
   const close = $derived(clearable && (focusin || focused || hovered || open) && hasValue);
