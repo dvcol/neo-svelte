@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { coerce, computeShadowElevation } from '~/utils/shadow.utils.js';
 
   const {
@@ -56,6 +57,7 @@
   style:--neo-divider-margin={margin}
   style:--neo-divider-minimum={minimum}
   style:--neo-divider-box-shadow={boxShadow}
+  style:--neo-divider-border-radius={computeBorderRadius(rounded)}
   {...rest}
 >
   &nbsp;

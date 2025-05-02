@@ -6,6 +6,7 @@
 
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
   import NeoProgress from '~/progress/NeoProgress.svelte';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShallowMinMaxElevation, parseBlur } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
 
@@ -142,6 +143,7 @@
   style:--neo-progress-mark-margin-inline={margin?.width}
   style:--neo-progress-bar-glass-blur={filter}
   style:--neo-progress-bar-box-shadow={boxShadow}
+  style:--neo-progress-bar-border-radius={computeBorderRadius(rounded)}
   {...containerRest}
 >
   <NeoProgress bind:ref bind:status bind:value bind:buffer {direction} {width} {height} {track} {...rest} />
@@ -246,7 +248,7 @@
     }
 
     &.neo-rounded {
-      border-radius: var(--neo-pill-border-radius, var(--neo-border-radius-xxl));
+      border-radius: var(--neo-progress-bar-border-radius, var(--neo-border-radius-xxl));
     }
 
     &.neo-glass {

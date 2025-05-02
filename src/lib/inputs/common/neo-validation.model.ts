@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -102,7 +103,7 @@ export type NeoValidationProps<
   /**
    * If true, the wrapper will adjust spacing to match rounded styles.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
 
   // Other props
 

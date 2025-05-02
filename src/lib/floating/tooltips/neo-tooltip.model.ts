@@ -13,6 +13,7 @@ import type { Snippet } from 'svelte';
 import type { NeoTooltipPlacement } from '~/floating/common/neo-placement.model.js';
 import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
@@ -99,7 +100,7 @@ export type NeoTooltipProps = {
   /**
    * If true, the tooltip will have a rounded border.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * Tints the tooltip with the current color.
    */

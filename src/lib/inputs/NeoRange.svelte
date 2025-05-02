@@ -19,6 +19,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -405,6 +406,7 @@
     style:min-height={height?.min}
     style:max-height={height?.max}
     style:--neo-range-height={rangeHeight}
+    style:--neo-range-border-radius={computeBorderRadius(rounded)}
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
@@ -613,7 +615,7 @@
       color: inherit;
       background: var(--neo-range-handle-background, var(--neo-background-color));
       border: 1px solid var(--neo-range-handle-border-color, transparent);
-      border-radius: var(--neo-border-radius-sm);
+      border-radius: var(--neo-range-border-radius, var(--neo-border-radius-sm));
       outline: none;
       box-shadow: var(--neo-range-handle-box-shadow, var(--neo-box-shadow-convex-2));
       backface-visibility: hidden;
@@ -640,7 +642,7 @@
         box-sizing: border-box;
         height: calc(100% - var(--neo-range-spacing) * 2);
         margin: var(--neo-range-spacing);
-        border-radius: var(--neo-border-radius-xs);
+        border-radius: var(--neo-range-border-radius, var(--neo-border-radius-xs));
       }
 
       &-before {

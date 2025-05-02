@@ -13,6 +13,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
@@ -389,6 +390,7 @@
     style:--neo-input-before-width={beforeWidth}
     style:--neo-input-after-width={afterWidth}
     style:--neo-input-affix-width={affixWidth}
+    style:--neo-input-border-radius={computeBorderRadius(rounded)}
     out:outFn={outProps}
     in:inFn={inProps}
     use:focusing={{
@@ -626,7 +628,7 @@
         color: var(--neo-input-text-color, inherit);
         background-color: transparent;
         background-clip: text;
-        border-radius: var(--neo-input-border-radius, var(--neo-border-radius-sm));
+        border-radius: var(--neo-input-option-border-radius, var(--neo-border-radius-sm));
         backface-visibility: hidden;
         cursor: pointer;
         transition:
@@ -748,7 +750,7 @@
         border-radius: var(--neo-input-border-radius, var(--neo-border-radius-xxl));
 
         :global(.neo-input:is(select) option) {
-          border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
+          border-radius: var(--neo-input-option-border-radius, var(--neo-border-radius-md));
         }
 
         :global(.neo-affix-container:not(.neo-after)) {

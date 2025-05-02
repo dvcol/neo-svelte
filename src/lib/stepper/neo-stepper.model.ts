@@ -8,6 +8,7 @@ import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 import type { NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
 import type { NeoProgressMarkProps } from '~/progress/neo-progress-mark.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
@@ -296,7 +297,7 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
   /**
    * Whether to render the stepper's buttons with rounded borders.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
 
   // Sizing
   /**

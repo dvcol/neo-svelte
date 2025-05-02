@@ -6,6 +6,7 @@ import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.j
 import type { NeoMovable, NeoMovableOutside, NeoMovableResetOptions, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
 import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, PositiveShadowElevation, PositiveShadowElevationString } from '~/utils/shadow.utils.js';
@@ -164,7 +165,7 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
   /**
    * If true, the dialog will have a rounded border.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * Tints the dialog with the current color.
    */

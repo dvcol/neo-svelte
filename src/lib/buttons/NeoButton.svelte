@@ -9,6 +9,7 @@
   import { NeoTextButton } from '~/buttons/neo-button.model.js';
   import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
@@ -242,6 +243,7 @@
   style:--neo-btn-box-shadow-hover={hoverShadow}
   style:--neo-btn-box-shadow-active={activeShadow}
   style:--neo-btn-scale-pressed={scalePressed}
+  style:--neo-btn-border-radius={computeBorderRadius(rounded)}
   style:justify-content={justify}
   style:align-items={align}
   style:flex
@@ -466,7 +468,7 @@
 
     &.neo-rounded {
       padding: var(--neo-btn-padding, 0.3125rem 0.75rem);
-      border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-xxl));
+      border-radius: var(--neo-btn-border-radius, var(--neo-border-radius-xxl));
     }
 
     &.neo-container {

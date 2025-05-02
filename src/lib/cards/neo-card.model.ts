@@ -4,6 +4,7 @@ import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type {
@@ -74,7 +75,7 @@ export interface NeoCardContext {
   /**
    * If true, the card will have a rounded border.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * If true, the card will be displayed with a glass effect.
    */

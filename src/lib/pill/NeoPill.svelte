@@ -5,6 +5,7 @@
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
@@ -123,6 +124,7 @@
   style:--neo-pill-box-shadow={boxShadow}
   style:--neo-pill-box-shadow-hover={hoverShadow}
   style:--neo-pill-text-color={getColorVariable(color)}
+  style:--neo-pill-border-radius={computeBorderRadius(rounded)}
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}

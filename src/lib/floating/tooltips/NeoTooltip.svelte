@@ -24,6 +24,7 @@
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { isOffsetFunction, NeoTooltipSizeStrategy } from '~/floating/tooltips/neo-tooltip.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
   import { isSizeOption, toPixel, toSize } from '~/utils/style.utils.js';
@@ -377,6 +378,7 @@
       style:--neo-tooltip-backdrop-filter={tooltipBlur}
       style:--neo-tooltip-padding={padding}
       style:--neo-tooltip-elevation={elevation}
+      style:--neo-tooltip-border-radius={computeBorderRadius(rounded)}
       style={toStyle(tooltipStyle, rest.style)}
     >
       {#if typeof tooltip === 'function'}

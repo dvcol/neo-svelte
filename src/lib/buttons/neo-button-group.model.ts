@@ -2,6 +2,7 @@ import type { NeoButtonActiveElevation, NeoButtonBlur, NeoButtonHoverElevation }
 import type { Snippet } from 'svelte';
 
 import type { HTMLActionProps } from '~/utils/action.utils.js';
+import type { BorderRadiusSizes } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLFlexProps, HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
@@ -80,7 +81,7 @@ export interface NeoButtonGroupContext {
   /**
    * If true, the button group will have a rounded border.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusSizes;
   /**
    * Text color to use for the button.
    */

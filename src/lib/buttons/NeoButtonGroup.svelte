@@ -2,6 +2,7 @@
   import type { NeoButtonGroupContext, NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
@@ -144,6 +145,7 @@
   style:--neo-btn-group-box-shadow-btn-hover={buttonHoverShadow}
   style:--neo-btn-group-box-shadow-btn-active={buttonActiveShadow}
   style:--neo-btn-group-glass-blur={filter}
+  style:--neo-btn-group-border-radius={computeBorderRadius(rounded)}
   style:justify-content={justify}
   style:align-items={align}
   style:flex

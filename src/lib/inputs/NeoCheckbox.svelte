@@ -14,6 +14,7 @@
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { coerce, DefaultShadowShallowElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
@@ -164,6 +165,7 @@
     style:height={height?.absolute}
     style:min-height={height?.min}
     style:max-height={height?.max}
+    style:--neo-checkbox-border-radius={computeBorderRadius(rounded)}
     use:focusing={{
       get focusin() {
         return focused;
@@ -248,13 +250,13 @@
       width: fit-content;
       margin: 0;
       padding: calc(0.375rem + var(--neo-checkbox-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
-      border-radius: var(--neo-border-radius);
+      border-radius: var(--neo-checkbox-border-radius, var(--neo-border-radius));
       transition:
         box-shadow 0.3s ease-out,
         border-radius 0.3s ease;
 
       &.neo-rounded {
-        border-radius: var(--neo-border-radius-xxl);
+        border-radius: var(--neo-checkbox-border-radius, var(--neo-border-radius-xxl));
       }
 
       &.neo-flat {

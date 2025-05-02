@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 
 import type { NeoCollapseGroupProps } from '~/collapse/neo-collapse-group.model.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import type {
@@ -78,7 +79,7 @@ export type NeoAccordionProps<Tag extends keyof HTMLElementTagNameMap = 'div'> =
   /**
    * If true, the accordion will have a rounded border.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * If true, negative elevation (< 0) will be displayed as pressed instead of inset.
    */

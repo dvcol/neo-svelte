@@ -7,6 +7,7 @@
   import NeoCloseButton from '~/buttons/NeoCloseButton.svelte';
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
@@ -192,6 +193,7 @@
   style:--neo-card-box-shadow={boxShadow}
   style:--neo-card-glass-blur={filter}
   style:--neo-card-spacing={spacing}
+  style:--neo-card-border-radius={computeBorderRadius(rounded)}
   style:justify-content={justify}
   style:align-items={align}
   style:flex

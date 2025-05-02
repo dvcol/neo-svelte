@@ -24,6 +24,7 @@
   import { getNeoPortalContext } from '~/floating/portal/neo-portal-context.svelte.js';
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -430,6 +431,7 @@
       style:--neo-dialog-padding={padding}
       style:--neo-dialog-elevation={elevation}
       style:--neo-dialog-safe-margin="{movable.margin ?? 0}px"
+      style:--neo-dialog-border-radius={computeBorderRadius(rounded)}
       {...dialogHandler}
     >
       <NeoHandle

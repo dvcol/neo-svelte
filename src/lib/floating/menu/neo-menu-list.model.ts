@@ -1,5 +1,6 @@
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoMenuItem, NeoMenuListItemProps } from '~/floating/menu/neo-menu-list-item.model.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
@@ -50,7 +51,7 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
   /**
    * If true, the menu will be rounded.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * Reverse the direction of the item.
    *

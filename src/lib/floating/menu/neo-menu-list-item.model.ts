@@ -5,6 +5,7 @@ import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
 import type { NeoBaseListItem } from '~/list/neo-list.model.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, SvelteEvent } from '~/utils/html-element.utils.js';
 
 export interface NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> extends Omit<NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>, 'containerProps'>, Pick<NeoMenuListItemProps, 'tooltipProps' | 'baseProps'> {
@@ -126,7 +127,7 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
   /**
    * If true, the menu & items will be rounded.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * Reverse the direction of the item.
    *

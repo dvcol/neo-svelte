@@ -11,6 +11,7 @@
   import IconAdd from '~/icons/IconAdd.svelte';
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { coerce, computeShadowElevation, getDefaultElevation, getDefaultSlideElevation } from '~/utils/shadow.utils.js';
   import { shortFreezeTransition } from '~/utils/transition.utils.js';
 
@@ -142,6 +143,7 @@
   class:neo-rounded={rest.rounded}
   class:neo-dim={dim}
   style:--neo-tabs-slide-box-shadow={slideShadow}
+  style:--neo-tab-border-radius={computeBorderRadius(rest.rounded)}
   {...containerRest}
   use:useFn={useProps}
   out:outFn={outProps}

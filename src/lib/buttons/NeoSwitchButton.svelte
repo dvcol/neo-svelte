@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { NeoSwitchButtonContext, NeoSwitchButtonProps } from '~/buttons/neo-switch-button.model.js';
 
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
@@ -73,6 +74,7 @@
   style:--neo-switch-color={getColorVariable(color)}
   style:--neo-switch-box-shadow={boxShadow}
   style:--neo-switch-toggle-width="{toggleWidth}px"
+  style:--neo-switch-border-radius={computeBorderRadius(rounded)}
   {onclick}
   {...rest}
 >
@@ -181,10 +183,10 @@
         background-color 0.3s ease;
 
       &.neo-rounded {
-        border-radius: var(--neo-border-radius-xxl);
+        border-radius: var(--neo-switch-border-radius, var(--neo-border-radius-xxl));
 
         .neo-switch-rail {
-          border-radius: var(--neo-border-radius-xxl);
+          border-radius: var(--neo-switch-border-radius, var(--neo-border-radius-xxl));
         }
       }
 

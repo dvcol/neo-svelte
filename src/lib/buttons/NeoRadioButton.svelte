@@ -2,6 +2,7 @@
   import type { NeoRadioButtonProps } from '~/buttons/neo-radio-button.model.js';
 
   import IconRadio from '~/icons/IconRadio.svelte';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
@@ -59,11 +60,12 @@
   style:--neo-radio-color={getColorVariable(color)}
   style:--neo-radio-box-shadow={boxShadow}
   style:--neo-radio-checked-shadow={checkedShadow}
+  style:--neo-radio-border-radius={computeBorderRadius(rounded)}
   {onclick}
   {...rest}
 >
   {@render children?.()}
-  <IconRadio circle={rounded} scale={rounded ? 0.75 : 0.9} checked={!!checked} enter={touched} />
+  <IconRadio circle={!!rounded} scale={rounded ? 0.75 : 0.9} checked={!!checked} enter={touched} />
 </button>
 
 <style lang="scss">
@@ -81,7 +83,7 @@
       background-color: color-mix(in srgb, transparent, currentcolor 1%);
       background-clip: padding-box;
       border: var(--neo-radio-border-width, var(--neo-border-width, 1px)) var(--neo-radio-border-color, transparent) solid;
-      border-radius: var(--neo-border-radius-xs);
+      border-radius: var(--neo-radio-border-radius, var(--neo-border-radius-xs));
       outline: none;
       box-shadow: var(--neo-radio-box-shadow, var(--neo-box-shadow-raised-2));
       cursor: pointer;

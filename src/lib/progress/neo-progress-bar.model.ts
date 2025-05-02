@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 
 import type { NeoProgressContext, NeoProgressProps } from '~/progress/neo-progress.model.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 
@@ -31,7 +32,7 @@ interface NeoProgressBarStyle {
   /**
    * Rounds border radius.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * Recess the content of the progress if elevation is inset (< 0).
    */

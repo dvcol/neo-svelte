@@ -1,6 +1,7 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoBaseListItem } from '~/list/neo-list.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 
 export type NeoListBaseItemProps<
   Value = unknown,
@@ -88,7 +89,7 @@ export type NeoListBaseItemProps<
   /**
    * If true, the item will be rounded.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * Reverse the direction of the item.
    *

@@ -435,7 +435,7 @@
       max-height: 100%;
       margin: 0;
       padding: 0;
-      border-radius: var(--neo-border-radius);
+      border-radius: var(--neo-list-border-radius, var(--neo-border-radius));
     }
 
     &-items {
@@ -487,7 +487,7 @@
 
       &-select {
         :global(> .neo-list-item-button.neo-rounded) {
-          border-radius: var(--neo-btn-border-radius-rounded, var(--neo-border-radius-lg));
+          border-radius: var(--neo-btn-border-radius, var(--neo-border-radius-lg));
         }
 
         :global(> .neo-list-base-loader:first-child) {

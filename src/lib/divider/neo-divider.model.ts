@@ -1,3 +1,4 @@
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
 
@@ -44,5 +45,5 @@ export type NeoDividerProps = {
   /**
    * If true, the divider will have a rounded borders.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
 } & HTMLNeoBaseElement;

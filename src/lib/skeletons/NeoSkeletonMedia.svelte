@@ -8,6 +8,7 @@
   import IconVideo from '~/icons/IconVideo.svelte';
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
 
@@ -93,6 +94,7 @@
     style:aspect-ratio={ratio}
     style:align-self={align}
     style:flex
+    style:--neo-skeleton-border-radius={computeBorderRadius(rounded)}
     in:inFn={inProps}
     out:outFn={outProps}
     {...rest}

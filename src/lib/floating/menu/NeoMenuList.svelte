@@ -177,14 +177,6 @@
     &.neo-flip {
       flex-direction: column-reverse;
       justify-content: end;
-
-      .neo-list-items {
-        // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
-        @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
-          flex-direction: column-reverse;
-          justify-content: end;
-        }
-      }
     }
   }
 </style>

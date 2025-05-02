@@ -2,6 +2,7 @@
   import type { NeoAccordionProps } from '~/collapse/neo-accordion.model.js';
 
   import NeoCollapseGroup from '~/collapse/NeoCollapseGroup.svelte';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeHoverShadowElevation, computeShadowElevation, isShadowFlat, parseBlur } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -84,6 +85,7 @@
   style:--neo-accordion-box-shadow={boxShadow}
   style:--neo-accordion-glass-blur={filter}
   style:--neo-accordion-color={getColorVariable(color)}
+  style:--neo-accordion-border-radius={computeBorderRadius(rounded)}
   {...rest}
 >
   {#if group}

@@ -24,6 +24,7 @@
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
     coerce,
@@ -476,6 +477,7 @@
     style:--neo-textarea-box-shadow-hover={hoverShadow}
     style:--neo-textarea-label-height={labelHeight}
     style:--neo-textarea-label-width={labelWidth}
+    style:--neo-textarea-border-radius={computeBorderRadius(rounded)}
     out:outFn={outProps}
     in:inFn={inProps}
     use:focusing={{
@@ -814,7 +816,7 @@
         --neo-scrollbar-button-height: 0.75rem;
 
         padding: 0.75rem 1rem;
-        border-radius: var(--neo-border-radius-xxl, 2rem);
+        border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-xxl));
 
         &.neo-affix {
           padding: 0.75rem 2.75rem 0.75rem 1.25rem;

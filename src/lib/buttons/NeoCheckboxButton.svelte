@@ -2,6 +2,7 @@
   import type { NeoCheckboxButtonProps } from '~/buttons/neo-checkbox-button.model.js';
 
   import IconCheckbox from '~/icons/IconCheckbox.svelte';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
 
@@ -61,11 +62,12 @@
   style:--neo-checkbox-color={getColorVariable(color)}
   style:--neo-checkbox-box-shadow={boxShadow}
   style:--neo-checkbox-checked-shadow={checkedShadow}
+  style:--neo-checkbox-border-radius={computeBorderRadius(rounded)}
   {onclick}
   {...rest}
 >
   {@render children?.()}
-  <IconCheckbox circle={rounded} indeterminate={!!indeterminate} checked={!!checked} enter={touched} />
+  <IconCheckbox circle={!!rounded} indeterminate={!!indeterminate} checked={!!checked} enter={touched} />
 </button>
 
 <style lang="scss">
@@ -83,7 +85,7 @@
       background-color: color-mix(in srgb, transparent, currentcolor 1%);
       background-clip: padding-box;
       border: var(--neo-checkbox-border-width, var(--neo-border-width, 1px)) var(--neo-checkbox-border-color, transparent) solid;
-      border-radius: var(--neo-border-radius-xs);
+      border-radius: var(--neo-checkbox-border-radius, var(--neo-border-radius-xs));
       outline: none;
       box-shadow: var(--neo-checkbox-box-shadow, var(--neo-box-shadow-raised-2));
       cursor: pointer;

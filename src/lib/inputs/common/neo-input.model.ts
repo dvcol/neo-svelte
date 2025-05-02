@@ -6,6 +6,7 @@ import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validati
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
 import type { NeoValidationFieldContext, NeoValidationProps, NeoValidationState } from '~/inputs/common/neo-validation.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type {
@@ -67,7 +68,7 @@ export interface NeoInputStyles {
   /**
    * If true, the input will have a rounded border.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * If true, the input will be displayed with a glass effect.
    */

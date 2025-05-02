@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte';
 
 import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
@@ -68,7 +69,7 @@ export interface NeoPillContext {
   /**
    * Rounds border radius.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * Recess the content of the pill if elevation is inset (< 0).
    */

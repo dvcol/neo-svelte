@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte';
 
 import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -55,7 +56,7 @@ export type NeoSkeletonMediaProps = {
   /**
    * Whether to round the corners of the skeleton.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
   /**
    * Whether to round the skeleton as a circle.
    */

@@ -4,6 +4,7 @@ import type { MouseEventHandler } from 'svelte/elements';
 import type { NeoArrowButtonProps } from '~/buttons/neo-arrow-button.model.js';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export type NeoConfirmProps = {
@@ -52,7 +53,7 @@ export type NeoConfirmProps = {
   /**
    * Whether to style the buttons as rounded.
    */
-  rounded?: boolean;
+  rounded?: BorderRadiusInput;
 
   // Events
   /**
