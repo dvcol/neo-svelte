@@ -1,7 +1,8 @@
 <script lang="ts">
   import type {
+    NeoProgressChange,
+    NeoProgressComplete,
     NeoProgressContext,
-    NeoProgressMethods,
     NeoProgressProps,
     NeoProgressStart,
     NeoProgressStatuses,
@@ -85,15 +86,16 @@
   /** Method to execute on the next animation iteration. */
   let nextIteration = $state<() => void>();
   /** Deferred function to be called on the next animation iteration. */
-  const deferIteration = (fn: () => void, deferred = status === NeoProgressStatus.Indeterminate): boolean => {
-    if (!deferred || nextIteration) return false;
-    nextIteration = fn;
-    return true;
+  async function deferIteration<T extends () => Promise<undefined | NeoProgressStatuses>>(fn: T, defer = true) {
+    if (!defer || nextIteration) return fn();
+    const { promise, resolve } = Promise.withResolvers<undefined | NeoProgressStatuses>();
+    nextIteration = async () => resolve(await fn());
+    return promise;
   };
   /** Triggered when the animation iteration ends to gracefully transition the progress bar out of the indeterminate state. */
-  const onIteration = () => {
+  async function onIteration() {
     if (!nextIteration) return;
-    nextIteration();
+    await nextIteration();
     nextIteration = undefined;
   };
 
@@ -104,49 +106,61 @@
     clearTimeout(timeoutId);
   };
 
-  export const change: NeoProgressMethods['change'] = ({ value: newValue, buffer: newBuffer }: { value?: number; buffer?: number } = {}) => {
-    if (newValue === undefined && newBuffer === undefined) return;
+  export function change({ value: newValue, buffer: newBuffer, state }: NeoProgressChange = {}): undefined | NeoProgressStatuses {
+    if (newValue === undefined && newBuffer === undefined) return status;
     clear();
     if (newValue !== undefined) value = newValue;
     if (newBuffer !== undefined) buffer = newBuffer;
-    status = value >= (min ?? 0) ? NeoProgressStatus.Paused : NeoProgressStatus.Idle;
-  };
+    status = state ?? (value >= (min ?? 0) ? NeoProgressStatus.Paused : NeoProgressStatus.Idle);
+    return status;
+  }
 
-  export const complete: NeoProgressMethods['complete'] = ({ pending = indeterminate, state, defer = true }: { pending?: boolean; state?: NeoProgressStatuses; defer?: boolean } = {}) => {
-    if (defer && deferIteration(() => {
-      const _immediate = immediate;
-      immediate = true;
-      change({ value: min, buffer: min });
-      setTimeout(() => {
-        immediate = _immediate;
-        complete({ pending, state });
-      }, 0);
-    })) return;
+  function deferComplete(opts: NeoProgressComplete) {
+    const _immediate = immediate;
+    immediate = true;
+    change({ value: min, buffer: min });
+    const { promise, resolve } = Promise.withResolvers<undefined | NeoProgressStatuses>();
+    setTimeout(async () => {
+      immediate = _immediate;
+      const status = await complete({ ...opts, defer: false });
+      resolve(status);
+    }, 0);
+    return promise;
+  }
+
+  export function complete({ pending = indeterminate, state, defer = true }: NeoProgressComplete = {}): undefined | NeoProgressStatuses | Promise<undefined | NeoProgressStatuses> {
+    if (status === NeoProgressStatus.Indeterminate) return deferIteration(() => deferComplete({ pending, state }), defer);
     clear();
     value = max ?? 100;
     buffer = max ?? 100;
     status = state ?? (pending ? NeoProgressStatus.Indeterminate : NeoProgressStatus.Completed);
-  };
+    return status;
+  }
 
-  export const cancel: NeoProgressMethods['cancel'] = (defer = true) => {
-    if (defer && deferIteration(() => {
-      const _immediate = immediate;
-      immediate = true;
-      cancel();
-      setTimeout(() => {
-        immediate = _immediate;
-      }, 0);
-    })) return;
+  function deferCancel() {
+    const _immediate = immediate;
+    immediate = true;
     clear();
-    change({ value: min, buffer: min });
-    status = NeoProgressStatus.Cancelled;
-  };
+    change({ value: min, buffer: min, state: NeoProgressStatus.Cancelled });
+    const { promise, resolve } = Promise.withResolvers<undefined | NeoProgressStatuses>();
+    setTimeout(() => {
+      immediate = _immediate;
+      resolve(status);
+    }, 0);
+    return promise;
+  }
 
-  export const start: NeoProgressMethods['start'] = ({ pending = indeterminate, expire = timeout, indeterminate: startIndeterminate, ...seed }: { pending?: boolean; expire?: number; indeterminate?: boolean; value?: number; buffer?: number } = {}) => {
+  export function cancel(defer = true): undefined | NeoProgressStatuses | Promise<undefined | NeoProgressStatuses> {
+    if (status === NeoProgressStatus.Indeterminate) return deferIteration(deferCancel, defer);
+    clear();
+    change({ value: min, buffer: min, state: NeoProgressStatus.Cancelled });
+    return status;
+  }
+
+  export function start({ pending = indeterminate, expire = timeout, indeterminate: startIndeterminate, ...seed }: NeoProgressStart = {}): undefined | NeoProgressStatuses {
     clear();
     if (startIndeterminate) {
-      change({ value: min, buffer: min });
-      status = NeoProgressStatus.Indeterminate;
+      change({ value: min, buffer: min, state: NeoProgressStatus.Indeterminate });
     } else {
       change(seed);
       status = NeoProgressStatus.Active;
@@ -156,18 +170,20 @@
       }, tick);
     }
     if (expire) timeoutId = setTimeout(() => complete(), expire);
-  };
+    return status;
+  }
 
-  export const stop: NeoProgressMethods['stop'] = () => {
+  export function stop(): undefined | NeoProgressStatuses {
     clear();
     status = NeoProgressStatus.Paused;
+    return status;
   };
 
-  export const reset: NeoProgressMethods['reset'] = (restart = status === NeoProgressStatus.Active, _start?: NeoProgressStart) => {
+  export function reset(restart = status === NeoProgressStatus.Active, _start?: NeoProgressStart): undefined | NeoProgressStatuses {
     clear();
-    if (restart) start({ value: min, buffer: min, ..._start });
-    else change({ value: min, buffer: min });
-  };
+    if (restart) return start({ value: min, buffer: min, ..._start });
+    return change({ value: min, buffer: min });
+  }
 
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
@@ -198,6 +214,15 @@
       cancel,
       change,
       complete,
+      get status() {
+        return status;
+      },
+      get value() {
+        return value;
+      },
+      get buffer() {
+        return buffer;
+      },
     });
   });
 </script>

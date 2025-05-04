@@ -151,6 +151,15 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
 } & HTMLRefProps<HTMLElementTagNameMap[Tag]> &
 HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
+export interface NeoProgressChange {
+  /** The new value of the progress. */
+  value?: number;
+  /** The new buffer value of the progress. */
+  buffer?: number;
+  /** State override. If omitted {@link NeoProgressStatus.Idle} will be set if value <= min, {@link NeoProgressStatus.Paused} otherwise. */
+  state?: NeoProgressStatuses;
+}
+
 export interface NeoProgressStart {
   /** Whether to switch to a pending indeterminate state when max is reached. (end as {@link NeoProgressStatus.Indeterminate}) */
   pending?: boolean;
@@ -162,6 +171,15 @@ export interface NeoProgressStart {
   value?: number;
   /** A beginning buffer value for the progress. */
   buffer?: number;
+}
+
+export interface NeoProgressComplete {
+  /** Whether to set the state to pending. (ends as {@link NeoProgressStatus.Indeterminate}) */
+  pending?: boolean;
+  /** Whether to set the status on completion ({@link NeoProgressStatus}) */
+  state?: NeoProgressStatuses;
+  /** Whether to await indeterminate animation before completing. (defaults to true) */
+  defer?: boolean;
 }
 
 export interface NeoProgressMethods {
@@ -176,11 +194,11 @@ export interface NeoProgressMethods {
    * @param value A beginning value for the progress.
    * @param buffer A beginning buffer value for the progress.
    */
-  start: ({ pending, expire, indeterminate, value, buffer }?: NeoProgressStart) => void;
+  start: ({ pending, expire, indeterminate, value, buffer }?: NeoProgressStart) => undefined | NeoProgressStatuses;
   /**
    * Stops the progress and sets the state to {@link NeoProgressStatus.Paused}.
    */
-  stop: () => void;
+  stop: () => undefined | NeoProgressStatuses;
   /**
    * Resets the progress to the minimum value.
    * If restart is true, the progress will start again and the state will be set to {@link NeoProgressStatus.Active}.
@@ -189,14 +207,14 @@ export interface NeoProgressMethods {
    * @param expire Whether to switch to a completed state when timeout is reached. (ends as {@link NeoProgressStatus.Timeout})
    * @param start Optional starting config for the progress if restart is true.
    */
-  reset: (restart?: boolean, start?: NeoProgressStart) => void;
+  reset: (restart?: boolean, start?: NeoProgressStart) => undefined | NeoProgressStatuses;
   /**
    * Cancels timeout and interval and sets value and buffer;
    * Also sets the state to {@link NeoProgressStatus.Idle} if value is as or under the minimum, {@link NeoProgressStatus.Paused} otherwise.
    * @param value The new value of the progress.
    * @param buffer The new buffer value of the progress.
    */
-  change: ({ value, buffer }?: { value?: number; buffer?: number }) => void;
+  change: ({ value, buffer }?: NeoProgressChange) => undefined | NeoProgressStatuses;
   /**
    * Sets the progress to the maximum value.
    * If pending is true, the state will be set to {@link NeoProgressStatus.Indeterminate}.
@@ -205,12 +223,25 @@ export interface NeoProgressMethods {
    * @param state whether to set the status on completion ({@link NeoProgressStatus})
    * @param defer Whether to await indeterminate animation before completing. (defaults to true)
    */
-  complete: ({ pending, state, defer }?: { pending?: boolean; state?: NeoProgressStatuses; defer?: boolean }) => void;
+  complete: ({ pending, state, defer }?: NeoProgressComplete) => undefined | NeoProgressStatuses | Promise<undefined | NeoProgressStatuses>;
   /**
    * Reset the progress and sets the state to {@link NeoProgressStatus.Cancelled}.
    * @param defer Whether to await indeterminate animation before cancelling. (defaults to true)
    */
-  cancel: (defer?: boolean) => void;
+  cancel: (defer?: boolean) => undefined | NeoProgressStatuses | Promise<undefined | NeoProgressStatuses>;
 }
 
-export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] & NeoProgressMethods;
+export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] & NeoProgressMethods & {
+  /**
+   * The current state of the progress.
+   */
+  readonly status: NeoProgressStatuses;
+  /**
+   * The current value of the progress.
+   */
+  readonly value: number;
+  /**
+   * The current buffered value of the progress.
+   */
+  readonly buffer: number;
+};
