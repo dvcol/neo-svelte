@@ -64,8 +64,6 @@
 
   const label = $derived(NeoProgressStatus.Active === controlledState ? 'pause' : 'play');
 
-  $inspect(controlledState);
-
   const bar = $state<NeoProgressBarProps>({
     elevation: -1,
     borderless: false,
