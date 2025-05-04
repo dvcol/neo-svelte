@@ -77,6 +77,7 @@
       { label: 'Jack King', value: 'Jack', description: 'jack.king@yahoo.com' },
       { label: 'Karen Lee', value: 'Karen', description: 'karen.lee@outlook.com' },
       {
+        label: 'Directors',
         value: 'Directors',
         section: true,
         divider: true,
@@ -107,6 +108,7 @@
         ].map(item => ({ ...item, id: getUUID(), before: avatar })),
       },
       {
+        label: 'Actors',
         value: 'Actors',
         divider: true,
         sticky: true,

@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { NeoSelectOption } from '~/inputs/neo-select.model';
-  import type { NeoProgressBarProps } from '~/progress/neo-progress-bar.model';
-  import type { NeoProgressHTMLElement, NeoProgressProps } from '~/progress/neo-progress.model';
+  import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model';
+  import type { NeoProgressHTMLElement, NeoProgressProps, NeoProgressStatuses } from '~/progress/neo-progress.model';
+  import type { SvelteEvent } from '~/utils/html-element.utils';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -40,15 +41,30 @@
     },
   ];
 
-  let controlledState = $state();
+  let controlledState = $state<NeoProgressStatuses>();
   let controlled = $state<NeoProgressHTMLElement>();
-  const onStopStart = () => {
+  const onStopStart = (e: SvelteEvent<MouseEvent>) => {
     if (!controlled) return;
     if (controlledState === NeoProgressStatus.Active) controlled.stop();
-    else if (controlledState === NeoProgressStatus.Completed) controlled.reset(true);
-    else controlled.start();
+    else if ([NeoProgressStatus.Completed, NeoProgressStatus.Error, NeoProgressStatus.Success, NeoProgressStatus.Warning].includes(controlledState)) controlled.reset(true, { indeterminate: e.altKey, pending: e.shiftKey });
+    else controlled.start({ indeterminate: e.altKey, pending: e.shiftKey });
   };
+
+  const onCancel = () => {
+    controlled?.cancel();
+  };
+
+  const onComplete = (e: SvelteEvent<MouseEvent>) => {
+    // if shift
+    if (e.shiftKey) controlled?.complete({ state: NeoProgressStatus.Success });
+    else if (e.altKey) controlled?.complete({ state: NeoProgressStatus.Error });
+    else if (e.metaKey) controlled?.complete({ state: NeoProgressStatus.Warning });
+    else controlled?.complete();
+  };
+
   const label = $derived(NeoProgressStatus.Active === controlledState ? 'pause' : 'play');
+
+  $inspect(controlledState);
 
   const bar = $state<NeoProgressBarProps>({
     elevation: -1,
@@ -210,8 +226,8 @@
     <div class="column content" class:vertical>
       <span class="label">Controlled & Label</span>
       <div class="progress-label">
-        <NeoProgressBar aria-label="Controlled and label" bind:ref={controlled} bind:state={controlledState} direction={options.direction} {...bar}>
-          {#snippet before(ctx)}
+        <NeoProgressBar aria-label="Controlled and label" {...bar} bind:ref={controlled} bind:status={controlledState} direction={options.direction}>
+          {#snippet before(ctx: NeoProgressBarContext)}
             <span class="progress-label-value" data-placement={ctx.direction}>{ctx.value}%</span>
           {/snippet}
         </NeoProgressBar>
@@ -227,7 +243,7 @@
       button={{ active: -1 }}
       class={{ 'neo-stop': controlledState === NeoProgressStatus.Paused }}
     >
-      <NeoButton rounded onclick={() => controlled?.cancel()} ratio="1/1" aria-label="cancel" title="cancel">
+      <NeoButton rounded onclick={onCancel} ratio="1/1" aria-label="cancel" title="cancel">
         {#snippet icon()}
           <IconDoubleChevronLeft />
         {/snippet}
@@ -237,7 +253,7 @@
           <IconPlayPause state={label} />
         {/snippet}
       </NeoButton>
-      <NeoButton rounded onclick={() => controlled?.complete()} aria-label="finish" title="finish">
+      <NeoButton rounded onclick={onComplete} aria-label="finish" title="finish">
         {#snippet icon()}
           <IconDoubleChevronRight />
         {/snippet}
