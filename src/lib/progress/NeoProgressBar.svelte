@@ -38,6 +38,7 @@
     glass,
     start,
     track = true,
+    immediate = $bindable(false),
 
     // Shadow
     elevation: _elevation = pressed ? -1 : 1,
@@ -146,7 +147,7 @@
   style:--neo-progress-bar-border-radius={computeBorderRadius(rounded)}
   {...containerRest}
 >
-  <NeoProgress bind:ref bind:status bind:value bind:buffer {direction} {width} {height} {track} {...rest} />
+  <NeoProgress bind:ref bind:status bind:value bind:buffer {direction} {width} {height} {track} {immediate} {...rest} />
   {#each marks as position, index (index)}
     {#if position !== undefined}
       <span bind:this={refs[index]} class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">

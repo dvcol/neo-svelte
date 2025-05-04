@@ -4,22 +4,27 @@ import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
-export const NeoProgressStatus = {
+export const NeoProgressStatus = Object.freeze({
+  Indeterminate: 'indeterminate' as const,
   Active: 'active' as const,
   Idle: 'idle' as const,
   Paused: 'paused' as const,
+  Cancelled: 'cancelled' as const,
+  Timeout: 'timeout' as const,
   Completed: 'completed' as const,
-  Indeterminate: 'indeterminate' as const,
-} as const;
+  Error: 'error' as const,
+  Success: 'success' as const,
+  Warning: 'warning' as const,
+});
 
 export type NeoProgressStatuses = (typeof NeoProgressStatus)[keyof typeof NeoProgressStatus];
 
-export const NeoProgressDirection = {
+export const NeoProgressDirection = Object.freeze({
   Right: 'right' as const,
   Left: 'left' as const,
   Top: 'top' as const,
   Bottom: 'bottom' as const,
-} as const;
+});
 
 export type NeoProgressDirections = (typeof NeoProgressDirection)[keyof typeof NeoProgressDirection];
 
@@ -138,8 +143,26 @@ export type NeoProgressProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = 
    * @default true
    */
   track?: boolean;
+  /**
+   * If true, the progress will change immediately without animation.
+   * @default false
+   */
+  immediate?: boolean;
 } & HTMLRefProps<HTMLElementTagNameMap[Tag]> &
 HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+
+export interface NeoProgressStart {
+  /** Whether to switch to a pending indeterminate state when max is reached. (end as {@link NeoProgressStatus.Indeterminate}) */
+  pending?: boolean;
+  /** Whether to switch to a completed state when timeout is reached. (ends as {@link NeoProgressStatus.Timeout}) */
+  expire?: number;
+  /** Whether to start the progress in an indeterminate state. (starts as {@link NeoProgressStatus.Indeterminate}) */
+  indeterminate?: boolean;
+  /** A beginning value for the progress. */
+  value?: number;
+  /** A beginning buffer value for the progress. */
+  buffer?: number;
+}
 
 export interface NeoProgressMethods {
   /**
@@ -147,12 +170,15 @@ export interface NeoProgressMethods {
    *
    * Once the progress reaches the max value, it will either switch to a {@link NeoProgressStatus.Completed} state or a {@link NeoProgressStatus.Indeterminate} state.
    *
-   * @param pending Whether to switch to a pending indeterminate state when max is reached. (defaults to {@link NeoProgressProps.indeterminate})
-   * @param expire Whether to switch to a completed state when timeout is reached. (defaults to {@link NeoProgressProps.timeout})
+   * @param pending Whether to switch to a pending indeterminate state when max is reached. (end as {@link NeoProgressStatus.Indeterminate})
+   * @param expire Whether to switch to a completed state when timeout is reached. (ends as {@link NeoProgressStatus.Timeout})
+   * @param indeterminate Whether to start the progress in an indeterminate state. (starts as {@link NeoProgressStatus.Indeterminate})
+   * @param value A beginning value for the progress.
+   * @param buffer A beginning buffer value for the progress.
    */
-  start: (pending?: boolean, expire?: number) => void;
+  start: ({ pending, expire, indeterminate, value, buffer }?: NeoProgressStart) => void;
   /**
-   * Stops the progress and sets the state to {@link NeoProgressStatus.Idle}.
+   * Stops the progress and sets the state to {@link NeoProgressStatus.Paused}.
    */
   stop: () => void;
   /**
@@ -160,26 +186,31 @@ export interface NeoProgressMethods {
    * If restart is true, the progress will start again and the state will be set to {@link NeoProgressStatus.Active}.
    * If restart is false, the state will be set to {@link NeoProgressStatus.Idle}.
    * @param restart Whether to restart the progress. (defaults to true if state is {@link NeoProgressStatus.Active}, false otherwise)
+   * @param expire Whether to switch to a completed state when timeout is reached. (ends as {@link NeoProgressStatus.Timeout})
+   * @param start Optional starting config for the progress if restart is true.
    */
-  reset: (restart?: boolean) => void;
+  reset: (restart?: boolean, start?: NeoProgressStart) => void;
+  /**
+   * Cancels timeout and interval and sets value and buffer;
+   * Also sets the state to {@link NeoProgressStatus.Idle} if value is as or under the minimum, {@link NeoProgressStatus.Paused} otherwise.
+   * @param value The new value of the progress.
+   * @param buffer The new buffer value of the progress.
+   */
+  change: ({ value, buffer }?: { value?: number; buffer?: number }) => void;
   /**
    * Sets the progress to the maximum value.
    * If pending is true, the state will be set to {@link NeoProgressStatus.Indeterminate}.
    * If pending is false, the state will be set to {@link NeoProgressStatus.Completed}.
-   * @param pending whether to set the state to pending. (defaults to {@link NeoProgressProps.indeterminate})
+   * @param pending whether to set the state to pending. (ends as {@link NeoProgressProps.indeterminate})
+   * @param state whether to set the status on completion ({@link NeoProgressStatus})
+   * @param defer Whether to await indeterminate animation before completing. (defaults to true)
    */
-  complete: (pending?: boolean) => void;
+  complete: ({ pending, state, defer }?: { pending?: boolean; state?: NeoProgressStatuses; defer?: boolean }) => void;
   /**
-   * Reset the progress and sets the state to {@link NeoProgressStatus.Paused}.
+   * Reset the progress and sets the state to {@link NeoProgressStatus.Cancelled}.
+   * @param defer Whether to await indeterminate animation before cancelling. (defaults to true)
    */
-  cancel: () => void;
-  /**
-   * Cancels timeout and interval and sets value and buffer;
-   * Also sets the state to {@link NeoProgressStatus.Idle}.
-   * @param value The new value of the progress.
-   * @param buffer The new buffer value of the progress.
-   */
-  change: (value?: number, buffer?: number) => void;
+  cancel: (defer?: boolean) => void;
 }
 
 export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] & NeoProgressMethods;
