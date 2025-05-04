@@ -28,7 +28,7 @@ export type NeoListBaseLoaderProps = {
   /**
    * Whether to style each 2n item as a description.
    */
-  description?: string;
+  description?: boolean;
   /**
    * Whether to show the checkmark skeleton.
    */

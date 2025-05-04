@@ -82,10 +82,10 @@
       <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
     {/if}
     {#if item.section}
-      {@const labelId = (item.label ?? item.value) ? `neo-menu-section-label-${getUUID()}` : undefined}
+      {@const labelId = item.label ? `neo-menu-section-label-${getUUID()}` : undefined}
       {#if labelId}
         <span id={labelId} class="neo-menu-list-section-label" class:neo-sticky={item.sticky} class:neo-reverse={reverse || item.reverse}>
-          {item.label ?? item.value}
+          {item.label}
         </span>
       {/if}
       <svelte:element this={tag} role="menu">

@@ -297,7 +297,7 @@
     ?.map((item, index) => ({ item, index }))
     .filter(({ item }) => filter(item))
     .sort((a, b) => sort(a.item, b.item))}
-  {#if !visible?.length}
+  {#if !visible?.length && !loading && !skeleton}
     {@render emptyItem(section?.empty)}
   {:else}
     <!-- Items -->
@@ -412,6 +412,7 @@
   .neo-list {
     display: flex;
     flex-direction: column;
+    width: 100%;
     height: 100%;
 
     &-loader,
@@ -439,9 +440,9 @@
     }
 
     &-items {
+      overflow: auto;
       padding-inline: var(--neo-list-padding, 0.375rem);
       padding-block: var(--neo-list-padding, 0.375rem);
-      overflow: auto;
 
       &.neo-scroll,
       &.neo-rounded {
@@ -496,8 +497,8 @@
       }
 
       :global(> .neo-list-item-divider) {
-        margin-block: 0.5rem;
         color: var(--neo-list-divider-color, var(--neo-text-color));
+        margin-block: 0.5rem;
       }
 
       &:hover,
