@@ -10,7 +10,7 @@ import { NeoProgressStatus } from '~/progress/neo-progress.model.js';
  */
 export class NeoProgressService {
   readonly #ref: NeoProgressHTMLElement;
-  #active = $state(new SvelteSet<string>());
+  #active = new SvelteSet<string>();
 
   get ref() {
     return this.#ref;

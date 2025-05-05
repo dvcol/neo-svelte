@@ -45,7 +45,7 @@ export type NeoListSearchProps<Tag extends keyof HTMLElementTagNameMap = 'div'> 
 } & HTMLRefProps<HTMLInputElement> &
 Pick<
   NeoInputProps,
-    'value' | 'valid' | 'dirty' | 'touched' | 'hovered' | 'focused' | 'focusin' | 'loading' | 'elevation' | 'hover' | 'placeholder'
+    'value' | 'valid' | 'dirty' | 'touched' | 'hovered' | 'focused' | 'focusin' | 'loading' | 'elevation' | 'hover' | 'placeholder' | 'rounded'
 > &
 HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 

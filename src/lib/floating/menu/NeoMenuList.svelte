@@ -155,7 +155,8 @@
 
     &.neo-scroll,
     &.neo-rounded {
-      padding-block: var(--neo-menu-scroll-padding, 0.625rem);
+      padding-block: var(--neo-menu-scroll-padding, 0.5rem);
+      gap: var(--neo-menu-scroll-gap, 0.125rem);
 
       &:not(.neo-scroll) :global(> .neo-menu-item) {
         padding: 0 var(--neo-menu-padding, var(--neo-gap-xxs, 0.5rem));

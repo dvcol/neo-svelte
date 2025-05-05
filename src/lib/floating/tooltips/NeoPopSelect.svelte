@@ -113,7 +113,7 @@
     bind:filter
     bind:sort
     select
-    reverse={floating?.placement?.startsWith('top')}
+    flip={floating?.placement?.startsWith('top')}
     before={search ? beforeList : before}
     {items}
     onSelect={onSelected}

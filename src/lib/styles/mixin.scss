@@ -387,6 +387,7 @@
   $background-color: --neo-floating-bg-color,
   $border-color: --neo-floating-border-color,
   $border-radius: --neo-floating-border-radius,
+  $border-radius-rounded: --neo-floating-border-radius-rounded,
   $box-shadow: --neo-floating-box-shadow,
   $backdrop-filter: --neo-floating-backdrop-filter,
   $z-index: --neo-floating-z-index,
@@ -452,7 +453,7 @@
       padding: var($padding, var(--neo-gap-xs) var(--neo-gap));
     }
 
-    border-radius: var($border-radius, var(--neo-border-radius-xxl));
+    border-radius: var($border-radius, var($border-radius-rounded, var(--neo-border-radius-xxl)));
   }
 }
 

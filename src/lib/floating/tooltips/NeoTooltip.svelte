@@ -400,6 +400,7 @@
       $background-color: --neo-tooltip-bg-color,
       $border-color: --neo-tooltip-border-color,
       $border-radius: --neo-tooltip-border-radius,
+      $border-radius-rounded: --neo-tooltip-border-radius-rounded,
       $box-shadow: --neo-tooltip-box-shadow,
       $backdrop-filter: --neo-tooltip-backdrop-filter,
       $z-index: --neo-tooltip-z-index,

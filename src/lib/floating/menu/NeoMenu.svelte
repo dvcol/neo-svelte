@@ -88,13 +88,13 @@
     {items}
     {shadow}
     {scrollbar}
-    {rounded}
     {reverse}
     {flip}
     {baseProps}
     {itemProps}
     {dividerProps}
     {keepOpenOnSelect}
+    rounded={rounded === true ? 'xl' : rounded}
     tooltipProps={{ role, portal, padding, openOnHover, openOnFocus, openOnClick, ...rest }}
     {...menuProps}
     {onMenu}
@@ -116,7 +116,7 @@
   {openOnHover}
   {openOnFocus}
   {openOnClick}
-  {rounded}
+  rounded={rounded === true ? 'xl' : rounded}
   {...rest}
   {tooltip}
 />

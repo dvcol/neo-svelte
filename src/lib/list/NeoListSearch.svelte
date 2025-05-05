@@ -40,6 +40,7 @@
     loading,
     elevation = 0,
     hover = 0,
+    rounded = 'lg',
     placeholder = 'Search...',
 
     // Other props
@@ -108,7 +109,7 @@
   </NeoButton>
 {/snippet}
 
-<svelte:element this={tag} class:neo-list-search={true} class:neo-flip={context?.flip} {...rest}>
+<svelte:element this={tag} class:neo-list-search={true} class:neo-flip={context?.flip} class:neo-rounded={rounded} {...rest}>
   <NeoInput
     bind:ref
     bind:value
@@ -120,7 +121,6 @@
     bind:focusin
     type="search"
     size={1}
-    rounded
     clearable
     {placeholder}
     {oninput}
@@ -131,6 +131,7 @@
     {onkeydown}
     loading={loading ?? context?.loading}
     skeleton={context?.skeleton}
+    rounded={rounded === true ? 'lg' : rounded}
     {...inputProps}
     containerProps={{
       ...inputProps?.containerProps,
@@ -150,6 +151,14 @@
 
     &.neo-flip :global(.neo-list-search-input) {
       margin-top: 0.125rem;
+    }
+
+    &:not(.neo-rounded) :global(> .neo-list-search-input) {
+      margin-top: 0.75rem;
+    }
+
+    &.neo-rounded :global(.neo-list-search-input) {
+      margin-bottom: 0.75rem;
     }
   }
 </style>

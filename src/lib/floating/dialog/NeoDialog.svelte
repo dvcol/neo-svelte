@@ -460,6 +460,7 @@
       $background-color: --neo-dialog-bg-color,
       $border-color: --neo-dialog-border-color,
       $border-radius: --neo-dialog-border-radius,
+      $border-radius-rounded: --neo-dialog-border-radius-rounded,
       $box-shadow: --neo-dialog-box-shadow,
       $backdrop-filter: --neo-dialog-content-filter,
       $z-index: --neo-dialog-z-index,
