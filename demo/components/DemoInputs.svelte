@@ -12,10 +12,10 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoForm from '~/form/NeoForm.svelte';
-  import IconAdd from '~/icons/IconAdd.svelte';
-  import IconFileUpload from '~/icons/IconFileUpload.svelte';
-  import IconMinus from '~/icons/IconMinus.svelte';
-  import IconSearch from '~/icons/IconSearch.svelte';
+  import NeoIconAdd from '~/icons/NeoIconAdd.svelte';
+  import NeoIconFileUpload from '~/icons/NeoIconFileUpload.svelte';
+  import NeoIconMinus from '~/icons/NeoIconMinus.svelte';
+  import NeoIconSearch from '~/icons/NeoIconSearch.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoTextArea from '~/inputs/common/NeoTextarea.svelte';
   import { displayValue } from '~/inputs/neo-select.model.js';
@@ -595,13 +595,13 @@
 {/snippet}
 
 {#snippet before()}
-  <IconSearch style="min-width: 1.25rem; min-height:1.25rem" />
+  <NeoIconSearch style="min-width: 1.25rem; min-height:1.25rem" />
 {/snippet}
 
 {#snippet after()}
   <NeoButton text aria-label="After button snippet" rounded={options.rounded} disabled={options.disabled} readonly={options.readonly}>
     {#snippet icon()}
-      <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
+      <NeoIconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
     {/snippet}
   </NeoButton>
 {/snippet}
@@ -1244,7 +1244,7 @@
           onclick={() => rangeState.ref.stepUp()}
         >
           {#snippet icon()}
-            <IconMinus style="min-width: 1rem" />
+            <NeoIconMinus style="min-width: 1rem" />
           {/snippet}
         </NeoButton>
       {/snippet}
@@ -1260,7 +1260,7 @@
           onclick={() => rangeState.ref.stepDown()}
         >
           {#snippet icon()}
-            <IconAdd style="min-width: 1rem" />
+            <NeoIconAdd style="min-width: 1rem" />
           {/snippet}
         </NeoButton>
       {/snippet}

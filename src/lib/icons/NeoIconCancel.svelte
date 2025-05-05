@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { IconProps } from '~/icons/icon.model.js';
+  import type { NeoIconProps } from '~/icons/neo-icon.model.js';
 
-  const { size = '1em', scale = 1, stroke = 1.5, ...rest }: IconProps = $props();
+  const { size = '1em', scale = 1, stroke = 1.5, ...rest }: NeoIconProps = $props();
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" style:scale {...rest}>

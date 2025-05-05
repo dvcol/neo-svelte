@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoCheckboxButtonProps } from '~/buttons/neo-checkbox-button.model.js';
 
-  import IconCheckbox from '~/icons/IconCheckbox.svelte';
+  import NeoIconCheckbox from '~/icons/NeoIconCheckbox.svelte';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
@@ -67,7 +67,7 @@
   {...rest}
 >
   {@render children?.()}
-  <IconCheckbox circle={!!rounded} indeterminate={!!indeterminate} checked={!!checked} enter={touched} />
+  <NeoIconCheckbox circle={!!rounded} indeterminate={!!indeterminate} checked={!!checked} enter={touched} />
 </button>
 
 <style lang="scss">

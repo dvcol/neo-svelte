@@ -7,7 +7,7 @@
   import { fade } from 'svelte/transition';
 
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
+  import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -156,7 +156,7 @@
     <span class="neo-radio-suffix">
       {#if loading}
         <span class="neo-radio-loading" out:fade={quickDurationProps}>
-          <IconCircleLoading size="1rem" />
+          <NeoIconCircleLoading size="1rem" />
         </span>
       {/if}
     </span>

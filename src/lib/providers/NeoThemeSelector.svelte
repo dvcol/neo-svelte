@@ -2,7 +2,7 @@
   import type { NeoThemeSelectorProps } from '~/providers/neo-theme-selector.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconSunMoon from '~/icons/IconSunMoon.svelte';
+  import NeoIconSunMoon from '~/icons/NeoIconSunMoon.svelte';
   import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
   import { NeoTheme } from '~/providers/neo-theme-provider.model.js';
 
@@ -39,6 +39,6 @@
   {...rest}
 >
   {#snippet icon()}
-    <IconSunMoon state={dark ? 'moon' : 'sun'} />
+    <NeoIconSunMoon state={dark ? 'moon' : 'sun'} />
   {/snippet}
 </NeoButton>

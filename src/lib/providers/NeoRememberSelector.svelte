@@ -2,8 +2,8 @@
   import type { NeoRememberSelectorProps } from '~/providers/neo-remember-selector.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconSave from '~/icons/IconSave.svelte';
-  import IconSaveOff from '~/icons/IconSaveOff.svelte';
+  import NeoIconSave from '~/icons/NeoIconSave.svelte';
+  import NeoIconSaveOff from '~/icons/NeoIconSaveOff.svelte';
   import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
 
   const {
@@ -35,9 +35,9 @@
 >
   {#snippet icon()}
     {#if remember}
-      <IconSave />
+      <NeoIconSave />
     {:else}
-      <IconSaveOff />
+      <NeoIconSaveOff />
     {/if}
   {/snippet}
 </NeoButton>

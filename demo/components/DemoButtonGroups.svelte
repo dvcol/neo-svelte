@@ -5,7 +5,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { DefaultShadowElevation } from '~/utils/shadow.utils';
@@ -39,7 +39,7 @@
 </script>
 
 {#snippet icon()}
-  <IconAccount />
+  <NeoIconAccount />
 {/snippet}
 
 {#snippet buttons()}

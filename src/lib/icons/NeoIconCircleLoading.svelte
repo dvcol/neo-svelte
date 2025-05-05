@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { IconCircleLoadingProps } from '~/icons/icon.model.js';
+  import type { NeoIconCircleLoadingProps } from '~/icons/neo-icon.model.js';
 
-  export const { size = '1em', scale, stroke = 1.5, animate = true, speed = 1.2, ...rest }: IconCircleLoadingProps = $props();
+  export const { size = '1em', scale, stroke = 1.5, animate = true, speed = 1.2, ...rest }: NeoIconCircleLoadingProps = $props();
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" style:scale {...rest}>

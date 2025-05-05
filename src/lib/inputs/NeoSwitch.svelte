@@ -10,7 +10,7 @@
   import { fade } from 'svelte/transition';
 
   import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
+  import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
@@ -228,7 +228,7 @@
       <span class="neo-switch-suffix">
         {#if loading}
           <span class="neo-switch-loading" out:fade={quickDurationProps}>
-            <IconCircleLoading size="1rem" />
+            <NeoIconCircleLoading size="1rem" />
           </span>
         {/if}
       </span>

@@ -1,45 +1,45 @@
 import type { SVGAttributes } from 'svelte/elements';
 
-export type IconProps = {
+export type NeoIconProps = {
   size?: CSSStyleDeclaration['width'] | CSSStyleDeclaration['height'];
   scale?: number | string;
   stroke?: number | string;
   enter?: boolean;
 } & Omit<SVGAttributes<SVGElement>, 'stroke'>;
 
-export const IconArrowDirection = {
+export const NeoIconArrowDirection = {
   Left: 'left' as const,
   Right: 'right' as const,
   Up: 'up' as const,
   Down: 'down' as const,
 } as const;
 
-export type IconArrowDirections = (typeof IconArrowDirection)[keyof typeof IconArrowDirection];
+export type NeoIconArrowDirections = (typeof NeoIconArrowDirection)[keyof typeof NeoIconArrowDirection];
 
-export type IconArrowProps = IconProps & {
+export type NeoIconArrowProps = NeoIconProps & {
   expanded?: boolean;
-  direction?: IconArrowDirections;
+  direction?: NeoIconArrowDirections;
   chevron?: boolean;
   delay?: number;
   start?: `${number}%` | `${number}px` | `${number}rem` | `${number}em`;
   end?: `${number}%` | `${number}px` | `${number}rem` | `${number}em`;
 };
 
-export type IconFilledProps = IconProps & {
+export type NeoIconFilledProps = NeoIconProps & {
   filled?: boolean;
 };
 
-export type IconAddressProps = IconFilledProps & {
+export type NeoIconAddressProps = NeoIconFilledProps & {
   dot?: CSSStyleDeclaration['color'];
   repeat?: SVGAttributes<SVGAnimateTransformElement>['repeatCount'];
 };
 
-export type IconBouncingDotsProps = IconProps & {
+export type NeoIconBouncingDotsProps = NeoIconProps & {
   fill?: CSSStyleDeclaration['color'];
   steps?: number[];
 };
 
-export interface IconCheckboxProps {
+export interface NeoIconCheckboxProps {
   /**
    * The stroke width of the border.
    */
@@ -82,22 +82,22 @@ export interface IconCheckboxProps {
   indeterminate?: boolean;
 }
 
-export type IconCircleLoadingProps = IconProps & {
+export type NeoIconCircleLoadingProps = NeoIconProps & {
   animate?: boolean;
   speed?: number;
 };
 
-export type IconPlayPauseProps = IconProps & {
+export type NeoIconPlayPauseProps = NeoIconProps & {
   state?: 'play' | 'pause';
 };
 
-export type IconRadioProps = IconProps & {
+export type NeoIconRadioProps = NeoIconProps & {
   checked?: boolean;
   circle?: boolean;
 };
 
-export type IconSunMoonProps = IconProps & {
+export type NeoIconSunMoonProps = NeoIconProps & {
   state?: 'sun' | 'moon';
 };
 
-export type NeoIconThemeProps = IconSunMoonProps;
+export type NeoIconThemeProps = NeoIconSunMoonProps;

@@ -17,10 +17,10 @@
   import NeoPopSelect from '~/floating/tooltips/NeoPopSelect.svelte';
   import NeoPopStepper from '~/floating/tooltips/NeoPopStepper.svelte';
   import NeoTooltip from '~/floating/tooltips/NeoTooltip.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
-  import IconAddress from '~/icons/IconAddress.svelte';
-  import IconListSmall from '~/icons/IconListSmall.svelte';
-  import IconQuestionMark from '~/icons/IconQuestionMark.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
+  import NeoIconAddress from '~/icons/NeoIconAddress.svelte';
+  import NeoIconListSmall from '~/icons/NeoIconListSmall.svelte';
+  import NeoIconQuestionMark from '~/icons/NeoIconQuestionMark.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
@@ -170,7 +170,7 @@
 
 {#snippet avatar(ctx: NeoListItemRenderContext)}
   <span class="custom-item-avatar">
-    <IconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
+    <NeoIconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
   </span>
 {/snippet}
 
@@ -253,7 +253,7 @@
 {/snippet}
 
 {#snippet question()}
-  <IconQuestionMark size="1.5rem" />
+  <NeoIconQuestionMark size="1.5rem" />
 {/snippet}
 
 {#snippet lorem()}
@@ -265,15 +265,15 @@
 {/snippet}
 
 {#snippet account()}
-  <IconAccount filled={active === 0} />
+  <NeoIconAccount filled={active === 0} />
 {/snippet}
 
 {#snippet address()}
-  <IconAddress filled={active === 1} repeat="1" dot="var(--neo-background-color)" />
+  <NeoIconAddress filled={active === 1} repeat="1" dot="var(--neo-background-color)" />
 {/snippet}
 
 {#snippet summary()}
-  <IconListSmall filled={active === 2} />
+  <NeoIconListSmall filled={active === 2} />
 {/snippet}
 
 <section>

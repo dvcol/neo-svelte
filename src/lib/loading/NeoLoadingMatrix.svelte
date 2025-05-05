@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoLoadingMatrixProps } from '~/loading/neo-loading-matrix.model.js';
 
-  import IconLoadingMatrix from '~/icons/IconLoadingMatrix.svelte';
+  import NeoIconLoadingMatrix from '~/icons/NeoIconLoadingMatrix.svelte';
   import { toSize } from '~/utils/style.utils.js';
 
   const {
@@ -38,7 +38,7 @@
   style:--neo-loader-min-height={height?.min}
   {...rest}
 >
-  <IconLoadingMatrix class="neo-loader" />
+  <NeoIconLoadingMatrix class="neo-loader" />
 </svelte:element>
 
 <style lang="scss">

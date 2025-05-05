@@ -15,7 +15,7 @@
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
 
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
+  import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -542,7 +542,7 @@
             {/if}
             {#if loading}
               <span class="neo-range-loading" out:fade={quickDurationProps}>
-                <IconCircleLoading size="1rem" />
+                <NeoIconCircleLoading size="1rem" />
               </span>
             {/if}
           </span>

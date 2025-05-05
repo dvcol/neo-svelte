@@ -3,7 +3,7 @@
   import type { NeoNativeSelectProps } from '~/inputs/neo-select.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
+  import NeoIconDoubleChevron from '~/icons/NeoIconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
@@ -75,7 +75,7 @@
       {#if customIcon}
         {@render customIcon(ctx)}
       {:else}
-        <IconDoubleChevron {space} />
+        <NeoIconDoubleChevron {space} />
       {/if}
     {/snippet}
   </NeoButton>

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { NeoIconThemeProps } from '~/icons/icon.model.js';
+  import type { NeoIconThemeProps } from '~/icons/neo-icon.model.js';
 
-  import IconSunMoon from '~/icons/IconSunMoon.svelte';
+  import NeoIconSunMoon from '~/icons/NeoIconSunMoon.svelte';
   import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
   import { NeoTheme } from '~/providers/neo-theme-provider.model.js';
 
@@ -11,4 +11,4 @@
   const dark = $derived(context.theme === NeoTheme.Dark);
 </script>
 
-<IconSunMoon state={dark ? 'moon' : 'sun'} {...rest} />
+<NeoIconSunMoon state={dark ? 'moon' : 'sun'} {...rest} />

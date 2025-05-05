@@ -7,7 +7,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabPanel from '~/nav/NeoTabPanel.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
@@ -71,7 +71,7 @@
 </div>
 
 {#snippet icon()}
-  <IconAccount />
+  <NeoIconAccount />
 {/snippet}
 
 {#snippet tabs()}

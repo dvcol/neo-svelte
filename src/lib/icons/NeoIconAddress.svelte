@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IconAddressProps } from '~/icons/icon.model.js';
+  import type { NeoIconAddressProps } from '~/icons/neo-icon.model.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
 
@@ -14,7 +14,7 @@
     enter = $bindable(true),
 
     ...rest
-  }: IconAddressProps = $props();
+  }: NeoIconAddressProps = $props();
 
   watch(
     () => {

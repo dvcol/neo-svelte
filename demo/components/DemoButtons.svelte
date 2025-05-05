@@ -9,7 +9,7 @@
   import NeoCheckboxButton from '~/buttons/NeoCheckboxButton.svelte';
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
   import NeoSwitchButton from '~/buttons/NeoSwitchButton.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
 
@@ -46,7 +46,7 @@
 </script>
 
 {#snippet icon()}
-  <IconAccount />
+  <NeoIconAccount />
 {/snippet}
 
 {#snippet buttons(opts: NeoButtonProps = {})}

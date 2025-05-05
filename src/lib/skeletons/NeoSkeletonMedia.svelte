@@ -3,9 +3,9 @@
 
   import { fade } from 'svelte/transition';
 
-  import IconAccount from '~/icons/IconAccount.svelte';
-  import IconImage from '~/icons/IconImage.svelte';
-  import IconVideo from '~/icons/IconVideo.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
+  import NeoIconImage from '~/icons/NeoIconImage.svelte';
+  import NeoIconVideo from '~/icons/NeoIconVideo.svelte';
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
@@ -49,11 +49,11 @@
   const MediaType = $derived.by(() => {
     switch (type) {
       case 'image':
-        return IconImage;
+        return NeoIconImage;
       case 'video':
-        return IconVideo;
+        return NeoIconVideo;
       case 'avatar':
-        return IconAccount;
+        return NeoIconAccount;
       default:
         return undefined;
     }

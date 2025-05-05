@@ -2,7 +2,7 @@
   import type { NeoResetSelectorProps } from '~/providers/neo-reset-selector.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconImage from '~/icons/IconImage.svelte';
+  import NeoIconImage from '~/icons/NeoIconImage.svelte';
   import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
 
   const {
@@ -35,6 +35,6 @@
   {...rest}
 >
   {#snippet icon()}
-    <IconImage />
+    <NeoIconImage />
   {/snippet}
 </NeoButton>

@@ -7,9 +7,9 @@
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
   import NeoForm from '~/form/NeoForm.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
-  import IconAddress from '~/icons/IconAddress.svelte';
-  import IconListSmall from '~/icons/IconListSmall.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
+  import NeoIconAddress from '~/icons/NeoIconAddress.svelte';
+  import NeoIconListSmall from '~/icons/NeoIconListSmall.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoTextarea from '~/inputs/common/NeoTextarea.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
@@ -141,15 +141,15 @@
 </div>
 
 {#snippet account()}
-  <IconAccount filled={active === 0} />
+  <NeoIconAccount filled={active === 0} />
 {/snippet}
 
 {#snippet address()}
-  <IconAddress filled={active === 1} repeat="1" dot="var(--neo-background-color)" />
+  <NeoIconAddress filled={active === 1} repeat="1" dot="var(--neo-background-color)" />
 {/snippet}
 
 {#snippet summary()}
-  <IconListSmall filled={active === 2} />
+  <NeoIconListSmall filled={active === 2} />
 {/snippet}
 
 {#snippet step1()}

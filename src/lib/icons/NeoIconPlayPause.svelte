@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IconPlayPauseProps } from '~/icons/icon.model.js';
+  import type { NeoIconPlayPauseProps } from '~/icons/neo-icon.model.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
 
@@ -12,7 +12,7 @@
     enter = $bindable(true),
 
     ...rest
-  }: IconPlayPauseProps = $props();
+  }: NeoIconPlayPauseProps = $props();
 
   watch(
     () => {

@@ -6,7 +6,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import { NeoCursor } from '~/cursor';
-  import IconFileUpload from '~/icons/IconFileUpload.svelte';
+  import NeoIconFileUpload from '~/icons/NeoIconFileUpload.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
 
@@ -108,7 +108,7 @@
   {#snippet after()}
     <NeoButton text aria-label="After button snippet">
       {#snippet icon()}
-        <IconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
+        <NeoIconFileUpload style="min-width: 1.25rem; min-height:1.25rem" />
       {/snippet}
     </NeoButton>
   {/snippet}

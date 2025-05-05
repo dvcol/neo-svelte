@@ -15,8 +15,8 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
+  import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoList from '~/list/NeoList.svelte';
   import NeoListSearch from '~/list/NeoListSearch.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
@@ -232,7 +232,7 @@
 
 {#snippet avatar(ctx: NeoListContext)}
   <span class="custom-item-avatar">
-    <IconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
+    <NeoIconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
   </span>
 {/snippet}
 
@@ -293,7 +293,7 @@
       <NeoList aria-label="Custom loader list" {items} {...options}>
         {#snippet loader()}
           <div class="custom-list-loader">
-            <IconCircleLoading size="2rem" />
+            <NeoIconCircleLoading size="2rem" />
           </div>
         {/snippet}
       </NeoList>

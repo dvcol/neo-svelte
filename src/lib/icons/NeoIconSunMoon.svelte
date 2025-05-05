@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IconSunMoonProps } from '~/icons/icon.model.js';
+  import type { NeoIconSunMoonProps } from '~/icons/neo-icon.model.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
 
@@ -12,7 +12,7 @@
     enter = $bindable(true),
 
     ...rest
-  }: IconSunMoonProps = $props();
+  }: NeoIconSunMoonProps = $props();
 
   watch(
     () => {

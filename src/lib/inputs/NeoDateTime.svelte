@@ -3,7 +3,7 @@
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconCalendar from '~/icons/IconCalendar.svelte';
+  import NeoIconCalendar from '~/icons/NeoIconCalendar.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
@@ -59,7 +59,7 @@
       {#if customIcon}
         {@render customIcon(ctx)}
       {:else}
-        <IconCalendar size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
+        <NeoIconCalendar size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}
     {/snippet}
   </NeoButton>

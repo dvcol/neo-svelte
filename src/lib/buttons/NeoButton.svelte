@@ -7,7 +7,7 @@
   import { width } from '@dvcol/svelte-utils/transition';
 
   import { NeoTextButton } from '~/buttons/neo-button.model.js';
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
+  import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -271,7 +271,7 @@
     {#if loading || icon}
       <span class="neo-icon" class:neo-only={empty} transition:width={quickDurationProps}>
         {#if loading}
-          <IconCircleLoading />
+          <NeoIconCircleLoading />
         {:else}
           {@render icon?.(context)}
         {/if}

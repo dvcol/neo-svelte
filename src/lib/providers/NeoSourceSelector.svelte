@@ -2,7 +2,7 @@
   import type { NeoSourceSelectorProps } from '~/providers/neo-source-selector.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconSun from '~/icons/IconSun.svelte';
+  import NeoIconSun from '~/icons/NeoIconSun.svelte';
   import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
   import { NeoSource } from '~/providers/neo-theme-provider.model.js';
 
@@ -45,7 +45,7 @@
 >
   {#snippet icon()}
     <span class="neo-source-icon" style:--neo-source-rotate="{angle}deg">
-      <IconSun />
+      <NeoIconSun />
     </span>
   {/snippet}
 </NeoButton>

@@ -2,8 +2,8 @@
   import NeoBadge from '~/badge/NeoBadge.svelte';
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
-  import IconMail from '~/icons/IconMail.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
+  import NeoIconMail from '~/icons/NeoIconMail.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
@@ -126,7 +126,7 @@
 
     <SphereBackdrop glass={options.glass}>
       <NeoPill {...options}>
-        <IconAccount style="margin-inline: -0.1875rem 0.325rem" />
+        <NeoIconAccount style="margin-inline: -0.1875rem 0.325rem" />
         <span>Icon</span>
       </NeoPill>
     </SphereBackdrop>
@@ -145,7 +145,7 @@
         <NeoButton glass={options.glass} rounded={options.rounded}>Custom snippet</NeoButton>
 
         {#snippet value()}
-          <IconMail size="1.25rem" />
+          <NeoIconMail size="1.25rem" />
         {/snippet}
       </NeoBadge>
     </SphereBackdrop>

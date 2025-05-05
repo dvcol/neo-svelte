@@ -11,7 +11,7 @@
   import { hovering } from '@dvcol/svelte-utils/hovering';
   import { doubleBind } from '@dvcol/svelte-utils/watch';
 
-  import IconMinus from '~/icons/IconMinus.svelte';
+  import NeoIconMinus from '~/icons/NeoIconMinus.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
@@ -445,7 +445,7 @@
             {:else if typeof separator === 'string'}
               {separator}
             {:else}
-              <IconMinus />
+              <NeoIconMinus />
             {/if}
           </div>
         {/if}

@@ -1,20 +1,18 @@
 <script lang="ts">
+  import type { NeoSelectOption } from '~/inputs/neo-select.model';
   import type { NeoTypewriterProps } from '~/text/neo-typewriter.model';
 
-  import type { NeoSelectOption } from '../../.svelte-kit/__package__';
-
-  import IconTextHighlight from '~/icons/IconTextHighlight.svelte';
+  import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import NeoIconTextHighlight from '~/icons/NeoIconTextHighlight.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoTextarea from '~/inputs/common/NeoTextarea.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
+  import NeoSelect from '~/inputs/NeoSelect.svelte';
   import NeoEllipsis from '~/text/NeoEllipsis.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
   import NeoScrollShadow from '~/text/NeoScrollShadow.svelte';
   import NeoTypewriter from '~/text/NeoTypewriter.svelte';
-
-  import NeoButton from '../../src/lib/buttons/NeoButton.svelte';
-  import NeoButtonGroup from '../../src/lib/buttons/NeoButtonGroup.svelte';
-  import NeoSelect from '../../src/lib/inputs/NeoSelect.svelte';
 
   let lines = $state(1);
   let filter = $state('');
@@ -58,7 +56,7 @@
       <span class="label">Mark</span>
       <NeoInput bind:value={filter} placeholder="Highlight text" rounded size="30" clearable>
         {#snippet before()}
-          <IconTextHighlight size="1.25rem" />
+          <NeoIconTextHighlight size="1.25rem" />
         {/snippet}
       </NeoInput>
       <NeoMark

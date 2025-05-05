@@ -12,8 +12,8 @@
   import { tick } from 'svelte';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconDownload from '~/icons/IconDownload.svelte';
-  import IconFileUpload from '~/icons/IconFileUpload.svelte';
+  import NeoIconDownload from '~/icons/NeoIconDownload.svelte';
+  import NeoIconFileUpload from '~/icons/NeoIconFileUpload.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
@@ -296,11 +296,11 @@
       {#if isDragging && iconDownload}
         {@render iconDownload(ctx)}
       {:else if isDragging}
-        <IconDownload size="1.25rem" scale="1.5" stroke="1" />
+        <NeoIconDownload size="1.25rem" scale="1.5" stroke="1" />
       {:else if iconUpload}
         {@render iconUpload(ctx)}
       {:else}
-        <IconFileUpload size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
+        <NeoIconFileUpload size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}
     {/snippet}
   </NeoButton>

@@ -2,12 +2,12 @@
   import type { NeoArrowButtonProps } from '~/buttons/neo-arrow-button.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import { IconArrowDirection } from '~/icons/icon.model.js';
-  import IconArrow from '~/icons/IconArrow.svelte';
+  import { NeoIconArrowDirection } from '~/icons/neo-icon.model.js';
+  import NeoIconArrow from '~/icons/NeoIconArrow.svelte';
 
   let {
     // State
-    direction = IconArrowDirection.Right,
+    direction = NeoIconArrowDirection.Right,
 
     // Button props
     ref = $bindable(),
@@ -26,7 +26,7 @@
 </script>
 
 {#snippet icon()}
-  <IconArrow {direction} expanded={(checked || hovered || focused) && !disabled && !readonly} {...arrowProps} />
+  <NeoIconArrow {direction} expanded={(checked || hovered || focused) && !disabled && !readonly} {...arrowProps} />
 {/snippet}
 
 <NeoButton bind:ref bind:checked bind:hovered bind:focused {icon} {reverse} {disabled} {readonly} {...rest} />

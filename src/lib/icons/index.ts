@@ -1,3 +1,3 @@
-export * from './icon.model.js';
+export * from './neo-icon.model.js';
 
 export { default as NeoIconTheme } from './NeoIconTheme.svelte';

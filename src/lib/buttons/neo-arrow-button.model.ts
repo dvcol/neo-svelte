@@ -1,13 +1,13 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
-import type { IconArrowProps } from '~/icons/icon.model.js';
+import type { NeoIconArrowProps } from '~/icons/neo-icon.model.js';
 
 export type NeoArrowButtonProps = NeoButtonProps & {
   /**
    * Optional arrow properties.
    */
-  arrowProps?: IconArrowProps;
+  arrowProps?: NeoIconArrowProps;
   /**
    * Arrow direction.
    */
-  direction?: IconArrowProps['direction'];
+  direction?: NeoIconArrowProps['direction'];
 };

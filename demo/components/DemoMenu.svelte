@@ -8,7 +8,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoMenu from '~/floating/menu/NeoMenu.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
   import { displayValue } from '~/inputs/neo-select.model.js';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { Colors } from '~/utils/colors.utils.js';
@@ -154,7 +154,7 @@
 
 {#snippet avatar()}
   <span class="custom-item-avatar">
-    <IconAccount size="1.5rem" stroke="2" />
+    <NeoIconAccount size="1.5rem" stroke="2" />
   </span>
 {/snippet}
 

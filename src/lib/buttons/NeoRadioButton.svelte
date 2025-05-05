@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoRadioButtonProps } from '~/buttons/neo-radio-button.model.js';
 
-  import IconRadio from '~/icons/IconRadio.svelte';
+  import NeoIconRadio from '~/icons/NeoIconRadio.svelte';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeShadowElevation, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
@@ -65,7 +65,7 @@
   {...rest}
 >
   {@render children?.()}
-  <IconRadio circle={!!rounded} scale={rounded ? 0.75 : 0.9} checked={!!checked} enter={touched} />
+  <NeoIconRadio circle={!!rounded} scale={rounded ? 0.75 : 0.9} checked={!!checked} enter={touched} />
 </button>
 
 <style lang="scss">

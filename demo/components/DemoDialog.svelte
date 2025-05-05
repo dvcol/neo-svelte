@@ -16,9 +16,9 @@
   import NeoDrawer from '~/floating/drawer/NeoDrawer.svelte';
   import NeoDrawerConfirm from '~/floating/drawer/NeoDrawerConfirm.svelte';
   import NeoDrawerStepper from '~/floating/drawer/NeoDrawerStepper.svelte';
-  import IconAccount from '~/icons/IconAccount.svelte';
-  import IconAddress from '~/icons/IconAddress.svelte';
-  import IconListSmall from '~/icons/IconListSmall.svelte';
+  import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
+  import NeoIconAddress from '~/icons/NeoIconAddress.svelte';
+  import NeoIconListSmall from '~/icons/NeoIconListSmall.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
   import { DefaultShadowElevation, MaxShadowElevation } from '~/utils/shadow.utils';
@@ -353,15 +353,15 @@
 {/snippet}
 
 {#snippet account()}
-  <IconAccount filled={active === 0} />
+  <NeoIconAccount filled={active === 0} />
 {/snippet}
 
 {#snippet address()}
-  <IconAddress filled={active === 1} repeat="1" dot="var(--neo-background-color)" />
+  <NeoIconAddress filled={active === 1} repeat="1" dot="var(--neo-background-color)" />
 {/snippet}
 
 {#snippet summary()}
-  <IconListSmall filled={active === 2} />
+  <NeoIconListSmall filled={active === 2} />
 {/snippet}
 
 {@render optionRow(options)}

@@ -7,7 +7,7 @@
   import { tick } from 'svelte';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconClose from '~/icons/IconClose.svelte';
+  import NeoIconClose from '~/icons/NeoIconClose.svelte';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { shortDuration, shortFreezeTransition } from '~/utils/transition.utils.js';
@@ -119,7 +119,7 @@
       transition:width={{ duration: skip ? 0 : shortDuration }}
       onclick={onClose}
     >
-      <IconClose class="neo-icon-close" size="1rem" />
+      <NeoIconClose class="neo-icon-close" size="1rem" />
     </button>
   {/if}
 </svelte:element>

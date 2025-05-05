@@ -6,9 +6,9 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconArrow from '~/icons/IconArrow.svelte';
-  import IconCheckbox from '~/icons/IconCheckbox.svelte';
-  import { IconArrowDirection } from '~/icons/index.js';
+  import { NeoIconArrowDirection } from '~/icons/index.js';
+  import NeoIconArrow from '~/icons/NeoIconArrow.svelte';
+  import NeoIconCheckbox from '~/icons/NeoIconCheckbox.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
 
@@ -134,11 +134,11 @@
 {#snippet affix()}
   {#if select}
     <div class="neo-list-item-checkmark" class:neo-skeleton={skeleton} class:neo-reverse={reverse}>
-      <IconCheckbox {checked} enter={touched} />
+      <NeoIconCheckbox {checked} enter={touched} />
     </div>
   {:else if arrow}
     <div class="neo-list-item-arrow" class:neo-skeleton={skeleton}>
-      <IconArrow expanded={checked && !disabled && !readonly} chevron direction={reverse ? IconArrowDirection.Left : IconArrowDirection.Right} />
+      <NeoIconArrow expanded={checked && !disabled && !readonly} chevron direction={reverse ? NeoIconArrowDirection.Left : NeoIconArrowDirection.Right} />
     </div>
   {/if}
 {/snippet}

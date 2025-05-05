@@ -10,7 +10,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoPortalContainer from '~/floating/portal/NeoPortalContainer.svelte';
-  import IconGithub from '~/icons/IconGithub.svelte';
+  import NeoIconGithub from '~/icons/NeoIconGithub.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabDivider from '~/nav/NeoTabDivider.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
@@ -78,7 +78,7 @@
 
           <NeoButton role="tab" aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
             {#snippet icon()}
-              <IconGithub stroke="2" scale="1.125" />
+              <NeoIconGithub stroke="2" scale="1.125" />
             {/snippet}
           </NeoButton>
         </NeoTabs>

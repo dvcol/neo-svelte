@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IconCheckboxProps } from '~/icons/icon.model.js';
+  import type { NeoIconCheckboxProps } from '~/icons/neo-icon.model.js';
 
   const {
     box = 1.25,
@@ -13,7 +13,7 @@
     checked = false,
     indeterminate = false,
     ...rest
-  }: IconCheckboxProps = $props();
+  }: NeoIconCheckboxProps = $props();
 
   const circlePath = 'M3 12c0 -4.97 4.03 -9 9 -9c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9Z';
   const squarePath = 'M4 12v-7c0 -0.55 0.45 -1 1 -1h14c0.55 0 1 0.45 1 1v14c0 0.55 -0.45 1 -1 1h-14c-0.55 0 -1 -0.45 -1 -1Z';

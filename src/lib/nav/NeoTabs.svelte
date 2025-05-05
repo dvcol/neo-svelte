@@ -8,7 +8,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import IconAdd from '~/icons/IconAdd.svelte';
+  import NeoIconAdd from '~/icons/NeoIconAdd.svelte';
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
@@ -122,7 +122,7 @@
 </script>
 
 {#snippet icon()}
-  <IconAdd class="neo-tabs-add" />
+  <NeoIconAdd class="neo-tabs-add" />
 {/snippet}
 
 {#if before}

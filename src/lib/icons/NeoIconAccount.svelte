@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IconFilledProps } from '~/icons/icon.model.js';
+  import type { NeoIconFilledProps } from '~/icons/neo-icon.model.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
 
@@ -12,7 +12,7 @@
     enter = $bindable(true),
 
     ...rest
-  }: IconFilledProps = $props();
+  }: NeoIconFilledProps = $props();
 
   watch(
     () => {

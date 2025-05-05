@@ -8,10 +8,10 @@
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconAlignBottom from '~/icons/IconAlignBottom.svelte';
-  import IconAlignMiddle from '~/icons/IconAlignMiddle.svelte';
-  import IconAlignTop from '~/icons/IconAlignTop.svelte';
-  import IconSearch from '~/icons/IconSearch.svelte';
+  import NeoIconAlignBottom from '~/icons/NeoIconAlignBottom.svelte';
+  import NeoIconAlignMiddle from '~/icons/NeoIconAlignMiddle.svelte';
+  import NeoIconAlignTop from '~/icons/NeoIconAlignTop.svelte';
+  import NeoIconSearch from '~/icons/NeoIconSearch.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { itemLabelSort, itemSearchFilter } from '~/list/neo-list-search.model.js';
   import { Logger } from '~/utils/logger.utils.js';
@@ -92,18 +92,18 @@
 </script>
 
 {#snippet before()}
-  <IconSearch size="1.25rem" />
+  <NeoIconSearch size="1.25rem" />
 {/snippet}
 
 {#snippet after()}
   <NeoButton text rounded {title} aria-label="Change sorting order" {onclick}>
     {#snippet icon()}
       {#if invert === undefined}
-        <IconAlignMiddle size="1.25rem" stroke="1.5" />
+        <NeoIconAlignMiddle size="1.25rem" stroke="1.5" />
       {:else if invert}
-        <IconAlignBottom />
+        <NeoIconAlignBottom />
       {:else}
-        <IconAlignTop />
+        <NeoIconAlignTop />
       {/if}
     {/snippet}
   </NeoButton>

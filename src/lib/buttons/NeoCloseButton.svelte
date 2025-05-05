@@ -2,7 +2,7 @@
   import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconClose from '~/icons/IconClose.svelte';
+  import NeoIconClose from '~/icons/NeoIconClose.svelte';
 
   let {
     // Button props
@@ -19,7 +19,7 @@
 </script>
 
 {#snippet icon()}
-  <IconClose size="0.875rem" {...iconProps} />
+  <NeoIconClose size="0.875rem" {...iconProps} />
 {/snippet}
 
 <div class="neo-close-button">

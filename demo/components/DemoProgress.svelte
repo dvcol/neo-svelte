@@ -6,9 +6,9 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import IconDoubleChevronLeft from '~/icons/IconDoubleChevronLeft.svelte';
-  import IconDoubleChevronRight from '~/icons/IconDoubleChevronRight.svelte';
-  import IconPlayPause from '~/icons/IconPlayPause.svelte';
+  import NeoIconDoubleChevronLeft from '~/icons/NeoIconDoubleChevronLeft.svelte';
+  import NeoIconDoubleChevronRight from '~/icons/NeoIconDoubleChevronRight.svelte';
+  import NeoIconPlayPause from '~/icons/NeoIconPlayPause.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
@@ -243,17 +243,17 @@
     >
       <NeoButton rounded onclick={onCancel} ratio="1/1" aria-label="cancel" title="cancel">
         {#snippet icon()}
-          <IconDoubleChevronLeft />
+          <NeoIconDoubleChevronLeft />
         {/snippet}
       </NeoButton>
       <NeoButton rounded onclick={onStopStart} checked={NeoProgressStatus.Active === controlledState} ratio="1/1" aria-label={label} title={label}>
         {#snippet icon()}
-          <IconPlayPause state={label} />
+          <NeoIconPlayPause state={label} />
         {/snippet}
       </NeoButton>
       <NeoButton rounded onclick={onComplete} aria-label="finish" title="finish">
         {#snippet icon()}
-          <IconDoubleChevronRight />
+          <NeoIconDoubleChevronRight />
         {/snippet}
       </NeoButton>
     </NeoButtonGroup>

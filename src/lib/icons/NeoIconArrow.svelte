@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { IconArrowProps } from '~/icons/icon.model.js';
+  import type { NeoIconArrowProps } from '~/icons/neo-icon.model.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
 
-  import { IconArrowDirection } from '~/icons/icon.model.js';
+  import { NeoIconArrowDirection } from '~/icons/neo-icon.model.js';
 
   let {
     size = '1em',
@@ -12,14 +12,14 @@
 
     expanded = false,
     enter = $bindable(true),
-    direction = IconArrowDirection.Right,
+    direction = NeoIconArrowDirection.Right,
     chevron: noLine = false,
     delay,
     start,
     end,
 
     ...rest
-  }: IconArrowProps = $props();
+  }: NeoIconArrowProps = $props();
 
   watch(
     () => {

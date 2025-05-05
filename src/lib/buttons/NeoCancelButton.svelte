@@ -2,7 +2,7 @@
   import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconCancel from '~/icons/IconCancel.svelte';
+  import NeoIconCancel from '~/icons/NeoIconCancel.svelte';
 
   let {
     // Button props
@@ -19,7 +19,7 @@
 </script>
 
 {#snippet icon()}
-  <IconCancel {...iconProps} />
+  <NeoIconCancel {...iconProps} />
 {/snippet}
 
 <div class="neo-cancel-button">

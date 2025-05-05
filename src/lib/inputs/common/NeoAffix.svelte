@@ -4,10 +4,10 @@
   import { debounced } from '@dvcol/svelte-utils/debounce';
   import { fade } from 'svelte/transition';
 
-  import IconAlert from '~/icons/IconAlert.svelte';
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
-  import IconClear from '~/icons/IconClear.svelte';
-  import IconConfirm from '~/icons/IconConfirm.svelte';
+  import NeoIconAlert from '~/icons/NeoIconAlert.svelte';
+  import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
+  import NeoIconClear from '~/icons/NeoIconClear.svelte';
+  import NeoIconConfirm from '~/icons/NeoIconConfirm.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
@@ -63,7 +63,7 @@
       {#if loader}
         {@render loader({ size })}
       {:else}
-        <IconCircleLoading />
+        <NeoIconCircleLoading />
       {/if}
     </span>
   {:else if clear}
@@ -71,7 +71,7 @@
       {#if reset}
         {@render reset({ size })}
       {:else}
-        <IconClear />
+        <NeoIconClear />
       {/if}
     </button>
   {:else}
@@ -80,9 +80,9 @@
         {#if validation}
           {@render validation({ size, valid })}
         {:else if valid}
-          <IconConfirm />
+          <NeoIconConfirm />
         {:else}
-          <IconAlert />
+          <NeoIconAlert />
         {/if}
       {/if}
     </span>

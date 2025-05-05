@@ -13,7 +13,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoPopSelect from '~/floating/tooltips/NeoPopSelect.svelte';
-  import IconDoubleChevron from '~/icons/IconDoubleChevron.svelte';
+  import NeoIconDoubleChevron from '~/icons/NeoIconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { displayValue, transformValue } from '~/inputs/neo-select.model.js';
   import { findByValueInList } from '~/list/neo-list.model.js';
@@ -172,7 +172,7 @@
       {#if customIcon}
         {@render customIcon(ctx)}
       {:else}
-        <IconDoubleChevron {space} />
+        <NeoIconDoubleChevron {space} />
       {/if}
     {/snippet}
   </NeoButton>

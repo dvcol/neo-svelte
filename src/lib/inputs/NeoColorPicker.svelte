@@ -7,7 +7,7 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconPaint from '~/icons/IconPaint.svelte';
+  import NeoIconPaint from '~/icons/NeoIconPaint.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoColorPickerSelector from '~/inputs/NeoColorPickerSelector.svelte';
   import { HexColorRegexString } from '~/utils/regex.utils.js';
@@ -96,7 +96,7 @@
       {#if customIcon}
         {@render customIcon(ctx)}
       {:else}
-        <IconPaint size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
+        <NeoIconPaint size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}
     {/snippet}
   </NeoButton>

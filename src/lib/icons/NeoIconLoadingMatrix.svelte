@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import type { IconProps } from '~/icons/icon.model.js';
+  import type { NeoIconProps } from '~/icons/neo-icon.model.js';
 
   const {
     size = '1em',
@@ -8,7 +8,7 @@
     stroke,
 
     ...rest
-  }: IconProps = $props();
+  }: NeoIconProps = $props();
 </script>
 
 <svg

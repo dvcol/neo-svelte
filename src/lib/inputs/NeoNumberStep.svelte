@@ -5,8 +5,8 @@
   import { watch } from '@dvcol/svelte-utils/watch';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconAdd from '~/icons/IconAdd.svelte';
-  import IconMinus from '~/icons/IconMinus.svelte';
+  import NeoIconAdd from '~/icons/NeoIconAdd.svelte';
+  import NeoIconMinus from '~/icons/NeoIconMinus.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, computeButtonTemplate, DefaultShadowElevation } from '~/utils/shadow.utils.js';
@@ -113,7 +113,7 @@
       {#if iconMinus}
         {@render iconMinus(ctx)}
       {:else}
-        <IconMinus size="1.25rem" />
+        <NeoIconMinus size="1.25rem" />
       {/if}
     {/snippet}
   </NeoButton>
@@ -125,7 +125,7 @@
       {#if iconPlus}
         {@render iconPlus(ctx)}
       {:else}
-        <IconAdd size="1.25rem" />
+        <NeoIconAdd size="1.25rem" />
       {/if}
     {/snippet}
   </NeoButton>

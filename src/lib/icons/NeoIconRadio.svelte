@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { IconRadioProps } from '~/icons/icon.model.js';
+  import type { NeoIconRadioProps } from '~/icons/neo-icon.model.js';
 
-  const { scale = 1, size = '1em', checked = false, circle = false, enter = true, stroke = 2, ...rest }: IconRadioProps = $props();
+  const { scale = 1, size = '1em', checked = false, circle = false, enter = true, stroke = 2, ...rest }: NeoIconRadioProps = $props();
 
   const circlePath = 'M3 12c0 -4.97 4.03 -9 9 -9c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9Z';
   const squarePath = 'm 3 12 v -4 c 0 -3 1 -5 4 -5 H 16 c 3 0 5 2 5 5 V 16 C 21 19 19 21 16 21 h -8 C 5 21 3 19 3 16 Z';

@@ -6,11 +6,11 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoCard from '~/cards/NeoCard.svelte';
-  import IconCircleLoading from '~/icons/IconCircleLoading.svelte';
-  import IconClear from '~/icons/IconClear.svelte';
-  import IconDownload from '~/icons/IconDownload.svelte';
-  import IconFileUpload from '~/icons/IconFileUpload.svelte';
-  import IconPencil from '~/icons/IconPencil.svelte';
+  import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
+  import NeoIconClear from '~/icons/NeoIconClear.svelte';
+  import NeoIconDownload from '~/icons/NeoIconDownload.svelte';
+  import NeoIconFileUpload from '~/icons/NeoIconFileUpload.svelte';
+  import NeoIconPencil from '~/icons/NeoIconPencil.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
   import { quickCircOutProps, quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
@@ -127,7 +127,7 @@
                   class={['neo-file-remove-button', removeButtonProps?.class]}
                 >
                   {#snippet icon()}
-                    <IconClear size="1rem" scale="1.5" stroke="1" />
+                    <NeoIconClear size="1rem" scale="1.5" stroke="1" />
                   {/snippet}
                 </NeoButton>
               </span>
@@ -140,7 +140,7 @@
       <span>{placeholder}</span>
       <NeoButton {disabled} rounded text onclick={onEdit} title="Edit files" aria-label="Edit files" {...editButtonProps}>
         {#snippet icon()}
-          <IconPencil size="1.25rem" scale="1" />
+          <NeoIconPencil size="1.25rem" scale="1" />
         {/snippet}
       </NeoButton>
     </div>
@@ -164,13 +164,13 @@
             {#if dragging && iconDownload}
               {@render iconDownload(ctx)}
             {:else if dragging}
-              <IconDownload size="2rem" scale="1.25" stroke="0.5" />
+              <NeoIconDownload size="2rem" scale="1.25" stroke="0.5" />
             {:else if loading}
-              <IconCircleLoading size="2rem" scale="1" />
+              <NeoIconCircleLoading size="2rem" scale="1" />
             {:else if iconUpload}
               {@render iconUpload(ctx)}
             {:else}
-              <IconFileUpload size="2rem" scale="1" stroke="0.5" />
+              <NeoIconFileUpload size="2rem" scale="1" stroke="0.5" />
             {/if}
           {/snippet}
         </NeoButton>

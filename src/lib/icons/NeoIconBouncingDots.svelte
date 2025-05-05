@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IconBouncingDotsProps } from '~/icons/icon.model.js';
+  import type { NeoIconBouncingDotsProps } from '~/icons/neo-icon.model.js';
 
   const {
     size = '1rem',
@@ -9,7 +9,7 @@
     steps = [1, 0.5, 1],
 
     ...rest
-  }: IconBouncingDotsProps = $props();
+  }: NeoIconBouncingDotsProps = $props();
 </script>
 
 <svg viewBox="0 0 90 24" width={size} height={size} xmlns="http://www.w3.org/2000/svg" style:scale stroke-width={stroke} {...rest}>

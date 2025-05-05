@@ -4,8 +4,8 @@
   import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
-  import IconWatch from '~/icons/IconWatch.svelte';
-  import IconWatchOff from '~/icons/IconWatchOff.svelte';
+  import NeoIconWatch from '~/icons/NeoIconWatch.svelte';
+  import NeoIconWatchOff from '~/icons/NeoIconWatchOff.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoPin from '~/inputs/NeoPin.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
@@ -63,9 +63,9 @@
       {#if customIcon}
         {@render customIcon({ show })}
       {:else if show}
-        <IconWatchOff size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
+        <NeoIconWatchOff size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {:else}
-        <IconWatch size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
+        <NeoIconWatch size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}
     {/snippet}
   </NeoButton>

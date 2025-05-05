@@ -17,7 +17,7 @@
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
-  import IconList from '~/icons/IconList.svelte';
+  import NeoIconList from '~/icons/NeoIconList.svelte';
   import { findByIdInList, isSection, showDivider } from '~/list/neo-list.model.js';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
@@ -286,7 +286,7 @@
     {@render itemEmpty(context)}
   {:else}
     <div class="neo-list-empty-content">
-      <IconList size="3rem" stroke="1" />
+      <NeoIconList size="3rem" stroke="1" />
       <div>No items</div>
     </div>
   {/if}
