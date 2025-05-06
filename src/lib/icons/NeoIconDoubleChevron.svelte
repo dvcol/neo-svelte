@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width={$$props.size ?? '1em'} height={$$props.size ?? '1em'} viewBox="0 0 24 24" {...$$props}>
+<script lang="ts">
+  import type { NeoIconDoubleChevronProps } from 'src/lib/index.js';
+
+  const { size = '1em', scale = 1, stroke = 2, space = 7, ...rest }: NeoIconDoubleChevronProps = $props();
+</script>
+
+<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" style:scale {...rest}>
   <path
     class="neo-icon-double-chevron"
     fill="none"
@@ -7,9 +13,9 @@
     stroke-dashoffset="10"
     stroke-linecap="round"
     stroke-linejoin="round"
-    stroke-width="2"
+    stroke-width={stroke}
     d="M12 9l-5 5M12 9l5 5"
-    style:translate="0 -{$$props.space ?? 7}px"
+    style:translate="0 -{space}px"
   >
     <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="10;0" />
   </path>
@@ -21,9 +27,9 @@
     stroke-dashoffset="10"
     stroke-linecap="round"
     stroke-linejoin="round"
-    stroke-width="2"
+    stroke-width={stroke}
     d="M12 15l-5 -5M12 15l5 -5"
-    style:translate="0 {$$props.space ?? 7}px"
+    style:translate="0 {space}px"
   >
     <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="10;0" />
   </path>

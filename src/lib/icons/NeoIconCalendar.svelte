@@ -1,16 +1,21 @@
+<script lang="ts">
+  import type { NeoIconProps } from '~/icons/neo-icon.model.js';
+
+  const { size = '1em', scale = 1, stroke = 1.5, ...rest }: NeoIconProps = $props();
+</script>
+
 <svg
   xmlns="http://www.w3.org/2000/svg"
-  width={$$props.size ?? '1em'}
-  height={$$props.size ?? '1em'}
+  width={size}
+  height={size}
   viewBox="0 0 24 24"
-  {...$$props}
-  style:scale={$$props.scale}
-  scale={undefined}
+  style:scale
+  {...rest}
 >
   <rect width="14" height="0" x="5" y="5" fill="currentColor">
     <animate fill="freeze" attributeName="height" begin="0.6s" dur="0.2s" values="0;3" />
   </rect>
-  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width={$$props.stroke ?? 1.5}>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width={stroke}>
     <path
       stroke-dasharray="64"
       stroke-dashoffset="64"

@@ -37,6 +37,7 @@ export type NeoIconAddressProps = NeoIconFilledProps & {
 export type NeoIconBouncingDotsProps = NeoIconProps & {
   fill?: CSSStyleDeclaration['color'];
   steps?: number[];
+  bounce?: boolean;
 };
 
 export interface NeoIconCheckboxProps {
@@ -101,3 +102,7 @@ export type NeoIconSunMoonProps = NeoIconProps & {
 };
 
 export type NeoIconThemeProps = NeoIconSunMoonProps;
+
+export type NeoIconDoubleChevronProps = NeoIconProps & { space?: number };
+
+export type NeoIconUnplugProps = NeoIconProps & { plug?: boolean };
