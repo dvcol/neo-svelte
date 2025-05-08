@@ -1,39 +1,41 @@
-import type { NeoProgressHTMLElement, NeoProgressStart } from '~/progress/neo-progress.model.js';
+import type { NeoProgressContext, NeoProgressStart } from '~/progress/neo-progress.model.js';
 
 import { getUUID } from '@dvcol/common-utils/common/string';
+import { getContext, setContext } from 'svelte';
 import { SvelteSet } from 'svelte/reactivity';
 
 import { NeoProgressStatus } from '~/progress/neo-progress.model.js';
+import { NeoErrorProgressContextNotFound } from '~/utils/error.utils.js';
 
 /**
  * Queuing service to keep track of concurrent call to progress bar
  */
 export class NeoProgressService {
-  readonly #ref: NeoProgressHTMLElement;
+  readonly #context: NeoProgressContext;
   #active = new SvelteSet<string>();
 
-  get ref() {
-    return this.#ref;
+  get context(): NeoProgressContext {
+    return this.#context;
   }
 
   get value() {
-    return this.ref.value;
+    return this.context.value;
   }
 
   get buffer() {
-    return this.ref.buffer;
+    return this.context.buffer;
   }
 
   get status() {
-    return this.ref.status;
+    return this.context.status;
   }
 
   get active(): Set<string> {
-    return $state.snapshot(this.#active);
+    return this.#active;
   }
 
-  constructor(ref: NeoProgressHTMLElement) {
-    this.#ref = ref;
+  constructor(context: NeoProgressContext) {
+    this.#context = context;
   }
 
   sync() {
@@ -46,43 +48,59 @@ export class NeoProgressService {
   start(opts?: NeoProgressStart, id: string = getUUID()): string | undefined {
     this.sync();
     this.#active.add(id);
-    if (this.status === NeoProgressStatus.Active) this.ref.reset(true, opts);
-    else this.ref.start(opts);
+    if (this.status === NeoProgressStatus.Active) this.context.reset(true, opts);
+    else this.context.start(opts);
     return id;
   }
 
   cancel(id?: string, force = !id): string | undefined {
     this.sync();
     if (id) this.#active.delete(id);
-    if (force || this.#active.size === 0) void this.ref.cancel();
+    if (force || this.#active.size === 0) void this.context.cancel();
     return id;
   }
 
   complete(id?: string, force = !id): string | undefined {
     this.sync();
     if (id) this.#active.delete(id);
-    if (force || this.#active.size === 0) void this.ref.complete();
+    if (force || this.#active.size === 0) void this.context.complete();
     return id;
   }
 
   error(id?: string, force = !id): string | undefined {
     this.sync();
     if (id) this.#active.delete(id);
-    if (force || this.#active.size === 0) void this.ref.complete({ state: NeoProgressStatus.Error });
+    if (force || this.#active.size === 0) void this.context.complete({ state: NeoProgressStatus.Error });
     return id;
   }
 
   success(id?: string, force = !id): string | undefined {
     this.sync();
     if (id) this.#active.delete(id);
-    if (force || this.#active.size === 0) void this.ref.complete({ state: NeoProgressStatus.Success });
+    if (force || this.#active.size === 0) void this.context.complete({ state: NeoProgressStatus.Success });
     return id;
   }
 
   warning(id?: string, force = !id): string | undefined {
     this.sync();
     if (id) this.#active.delete(id);
-    if (force || this.#active.size === 0) void this.ref.complete({ state: NeoProgressStatus.Warning });
+    if (force || this.#active.size === 0) void this.context.complete({ state: NeoProgressStatus.Warning });
     return id;
   }
+}
+
+const NeoProgressContextSymbol = Symbol('NeoProgressContext');
+
+export function getProgressContext(): NeoProgressContext {
+  return getContext<NeoProgressContext>(NeoProgressContextSymbol);
+}
+
+export function setProgressContext(context: NeoProgressContext): NeoProgressContext | undefined {
+  return setContext(NeoProgressContextSymbol, context);
+}
+
+export function useNeoProgressService(): NeoProgressService {
+  const context = getProgressContext();
+  if (!context) throw new NeoErrorProgressContextNotFound();
+  return new NeoProgressService(context);
 }

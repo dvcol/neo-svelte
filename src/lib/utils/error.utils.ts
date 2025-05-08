@@ -5,6 +5,7 @@ export const NeoErrorType = {
   NeoTab: 'NeoTab' as const,
   NeoCollapse: 'NeoCollapse' as const,
   NeoForm: 'NeoForm' as const,
+  NeoProgress: 'NeoProgress' as const,
 } as const;
 
 export type NeoErrorTypes = (typeof NeoErrorType)[keyof typeof NeoErrorType];
@@ -80,5 +81,11 @@ export class NeoErrorFormMissingId extends NeoErrorMissingId {
 export class NeoErrorFormDuplicateId extends NeoError {
   constructor() {
     super('Field id already exists', NeoErrorType.NeoForm);
+  }
+}
+
+export class NeoErrorProgressContextNotFound extends NeoError {
+  constructor() {
+    super('Progress context not found', NeoErrorType.NeoProgress);
   }
 }

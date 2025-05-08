@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 
-import type { NeoProgressContext, NeoProgressProps } from '~/progress/neo-progress.model.js';
+import type { NeoProgressProps, NeoProgressState } from '~/progress/neo-progress.model.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
@@ -51,7 +51,7 @@ interface NeoProgressBarStyle {
   track?: boolean;
 }
 
-export type NeoProgressBarContext = NeoProgressContext & NeoProgressBarStyle;
+export type NeoProgressBarContext = NeoProgressState & NeoProgressBarStyle;
 export interface NeoProgressBarMarkContext {
   index: number;
   position: number;
@@ -61,15 +61,19 @@ export interface NeoProgressBarMarkContext {
 export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div', ContainerTag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
   /**
-   * Optional content to display inside the progress.
+   * Optional content to display inside the progress bar.
    */
   children?: Snippet<[NeoProgressBarContext]>;
   /**
-   * Optional content to display before the progress.
+   * Optional content to display inside the inner progress component.
+   */
+  progress?: NeoProgressProps<Tag>['children'];
+  /**
+   * Optional content to display before the progress bar.
    */
   before?: Snippet<[NeoProgressBarContext]> | string;
   /**
-   * Optional content to display after the progress.
+   * Optional content to display after the progress bar.
    */
   after?: Snippet<[NeoProgressBarContext]> | string;
   /**

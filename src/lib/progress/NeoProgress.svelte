@@ -3,6 +3,7 @@
     NeoProgressChange,
     NeoProgressComplete,
     NeoProgressContext,
+    NeoProgressMethods,
     NeoProgressProps,
     NeoProgressStart,
     NeoProgressStatuses,
@@ -11,6 +12,7 @@
   import { percent } from '@dvcol/common-utils';
   import { clamp } from '@dvcol/common-utils/common/math';
 
+  import { setProgressContext } from '~/progress/neo-progress-service.svelte.js';
   import { NeoProgressDirection, NeoProgressStatus } from '~/progress/neo-progress.model.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -203,6 +205,58 @@
 
     color,
     direction,
+
+    start,
+    stop,
+    reset,
+    cancel,
+    change,
+    complete,
+  });
+
+  setProgressContext({
+    get status() {
+      return status;
+    },
+    get value() {
+      return value;
+    },
+    get buffer() {
+      return buffer;
+    },
+    get min() {
+      return min;
+    },
+    get max() {
+      return max;
+    },
+    get indeterminate() {
+      return indeterminate;
+    },
+
+    get step() {
+      return step;
+    },
+    get tick() {
+      return tick;
+    },
+    get timeout() {
+      return timeout;
+    },
+
+    get color() {
+      return color;
+    },
+    get direction() {
+      return direction;
+    },
+
+    start,
+    stop,
+    reset,
+    cancel,
+    change,
+    complete,
   });
 
   $effect(() => {
@@ -214,16 +268,7 @@
       cancel,
       change,
       complete,
-      get status() {
-        return status;
-      },
-      get value() {
-        return value;
-      },
-      get buffer() {
-        return buffer;
-      },
-    });
+    } satisfies NeoProgressMethods);
   });
 </script>
 
