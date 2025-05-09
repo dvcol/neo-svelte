@@ -3,7 +3,13 @@
   import type { SwipeOptions } from '@dvcol/svelte-utils/swipe';
 
   import type { NeoProgressBarMarkContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
-  import type { NeoStepperBeforeEvent, NeoStepperContext, NeoStepperEvent, NeoStepperNavigations, NeoStepperProps } from '~/stepper/neo-stepper.model.js';
+  import type {
+    NeoStepperBeforeEvent,
+    NeoStepperContext,
+    NeoStepperEvent,
+    NeoStepperNavigations,
+    NeoStepperProps,
+  } from '~/stepper/neo-stepper.model.js';
   import type { ShadowElevation } from '~/utils/shadow.utils.js';
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
@@ -17,13 +23,7 @@
   import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
-  import {
-
-    NeoStepperNavigation,
-
-    NeoStepperPlacement,
-
-  } from '~/stepper/neo-stepper.model.js';
+  import { NeoStepperNavigation, NeoStepperPlacement } from '~/stepper/neo-stepper.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
   import { coerce, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
@@ -167,7 +167,7 @@
    * This is imperative navigation, it will not check if next or previous constraints are met.
    * But, it will check if the target step is disabled.
    */
-  const goToStep: NeoStepperContext['goToStep'] = async (
+  export const goTo: NeoStepperContext['goToStep'] = async (
     index: number,
     reason: NeoStepperNavigations = NeoStepperNavigation.Navigate,
     target = steps[index],
@@ -185,16 +185,16 @@
     }
   };
 
-  const goPrevious: NeoStepperContext['goPrevious'] = async () => {
+  export const goPrevious: NeoStepperContext['goPrevious'] = async () => {
     if (isDisabled.previous) return;
-    if (active > 0) return goToStep(active - 1, NeoStepperNavigation.Previous);
-    return goToStep(steps.length - 1, NeoStepperNavigation.Previous);
+    if (active > 0) return goTo(active - 1, NeoStepperNavigation.Previous);
+    return goTo(steps.length - 1, NeoStepperNavigation.Previous);
   };
 
-  const goNext: NeoStepperContext['goNext'] = async () => {
+  export const goNext: NeoStepperContext['goNext'] = async () => {
     if (isDisabled.next) return;
-    if (active < steps.length - 1) return goToStep(active + 1, NeoStepperNavigation.Next);
-    return goToStep(0, NeoStepperNavigation.Next);
+    if (active < steps.length - 1) return goTo(active + 1, NeoStepperNavigation.Next);
+    return goTo(0, NeoStepperNavigation.Next);
   };
 
   const isMarkDisabled = (index: number, target = steps[index]): boolean => {
@@ -238,7 +238,7 @@
     active,
     last,
 
-    goToStep,
+    goToStep: goTo,
     goPrevious,
     goNext,
   });
@@ -257,7 +257,7 @@
   $effect(() => {
     if (!ref) return;
     Object.assign(ref, {
-      goTo: goToStep,
+      goTo,
       previous: goPrevious,
       next: goNext,
     });
@@ -276,7 +276,7 @@
     disabled={_disabled}
     readonly={_disabled}
     glass={progressProps?.glass}
-    onclick={() => goToStep(ctx.index)}
+    onclick={() => goTo(ctx.index)}
     label={(ctx.index + 1)?.toString()}
     {...markProps}
     {...steps[ctx.index]?.markProps}
@@ -318,7 +318,7 @@
           label="Cancel"
           aria-label="Cancel stepper"
           title="Cancel stepper"
-          onclick={() => goToStep(0, NeoStepperNavigation.Cancel)}
+          onclick={() => goTo(0, NeoStepperNavigation.Cancel)}
           transition={{ use: scale, props: { duration: quickDuration, start: 0.95 } }}
           {...buttonProps}
           {...cancelProps}

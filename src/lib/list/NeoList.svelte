@@ -97,13 +97,13 @@
 
   const isNullable = $derived(multiple ? nullable || (isMultiple(selected) && (selected?.length ?? 0) > 1) : nullable);
 
-  const scrollTop: NeoListMethods['scrollTop'] = debounce((options?: ScrollToOptions) => {
+  export const scrollTop: NeoListMethods['scrollTop'] = debounce((options?: ScrollToOptions) => {
     if (!ref) return false;
     ref.scrollTo({ top: 0, behavior: 'smooth', ...options });
     return ref;
   }, shortDuration / 2);
 
-  const scrollBottom: NeoListMethods['scrollBottom'] = debounce((options?: ScrollToOptions) => {
+  export const scrollBottom: NeoListMethods['scrollBottom'] = debounce((options?: ScrollToOptions) => {
     if (!ref?.scrollHeight) return false;
     ref.scrollTo({ top: ref.scrollHeight, behavior: 'smooth', ...options });
     return ref;

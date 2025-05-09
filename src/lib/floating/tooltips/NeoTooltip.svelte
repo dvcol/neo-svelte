@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
+  import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
   import type { SizeOption } from '~/utils/style.utils.js';
 
@@ -127,7 +127,7 @@
   const available = $state<{ width?: number; height?: number }>({});
 
   let focus = $state(false);
-  const floating = useFloating({
+  export const floating = useFloating({
     get elements() {
       return {
         floating: ref,
@@ -256,10 +256,14 @@
     };
   });
 
-  const toggle: NeoTooltipToggle = (state = !open) => {
+  export function toggle(state = !open) {
     open = state;
     return open;
   };
+
+  export function update() {
+    return floating.update();
+  }
 
   const addMethods = <T extends HTMLElement>(element?: T) => {
     if (!element) return;
@@ -267,7 +271,7 @@
       Object.assign(element, { toggle });
     }
     if (!Object.hasOwn(element, 'update')) {
-      Object.assign(element, { update: () => floating.update() });
+      Object.assign(element, { update });
     }
   };
 

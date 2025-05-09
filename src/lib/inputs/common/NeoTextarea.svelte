@@ -156,7 +156,7 @@
   const close = $derived(clearable && (focusin || focused || hovered) && hasValue);
   const isFloating = $derived(floating && !hasValue && (!focused || disabled || readonly));
 
-  const validate: NeoInputMethods<HTMLTextAreaElement>['validate'] = (
+  export const validate: NeoInputMethods<HTMLTextAreaElement>['validate'] = (
     update: { dirty?: boolean; valid?: boolean } = { dirty: true, valid: true },
   ) => {
     if (update.dirty) dirty = value !== initial;

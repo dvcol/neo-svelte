@@ -34,7 +34,7 @@
     ...rest
   }: NeoFormProps = $props();
 
-  const context = setNeoFormContext(id);
+  export const context = setNeoFormContext(id);
 
   const onReset: FormEventHandler<HTMLFormElement> = (e) => {
     context.validate();

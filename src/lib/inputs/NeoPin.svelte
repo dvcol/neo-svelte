@@ -104,12 +104,12 @@
   const initial = $state(value);
   let validationMessage: string | undefined = $state(ref?.validationMessage);
 
-  const validate = () => {
+  export function validate() {
     dirty = value !== initial;
     valid = ref?.checkValidity();
     validationMessage = ref?.validationMessage;
     return { touched, dirty, valid, value, initial };
-  };
+  }
 
   const focus = (i = 0, j = 0, options: { previous?: boolean; last?: boolean; select?: boolean } = {}) => {
     let _group = i;
@@ -183,10 +183,10 @@
     );
   };
 
-  const clear = async () => {
+  export async function clear() {
     await Promise.all(refs?.map(group => group?.map(input => input?.clear?.())));
     focus(0, 0, { last: true });
-  };
+  }
 
   const paste = (data: string, i = 0, j = 0) => {
     let _group = i;

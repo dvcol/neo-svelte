@@ -59,12 +59,12 @@
 
   const context = $derived<NeoCollapseContext>({ id, open, trigger, triggerId, horizontal, disabled, readonly, standalone, divider });
 
-  const toggle = (state = !open) => {
+  export function toggle(state = !open) {
     if (disabled || readonly) return;
     open = state;
     if (standalone) return;
     group?.update(id);
-  };
+  }
 
   $effect(() => {
     if (!ref) return;

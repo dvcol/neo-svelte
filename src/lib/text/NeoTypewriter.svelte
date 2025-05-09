@@ -63,8 +63,8 @@
   let writing = $state(false);
   let promise: Promise<string | undefined>;
   let controller: AbortController;
-  const write = (options: TypewriterOptions, signal: AbortSignal) =>
-    untrack(async () => {
+  export function write(options: TypewriterOptions, signal: AbortSignal) {
+    return untrack(async () => {
       writing = true;
       try {
         promise = typewriter(options);
@@ -76,11 +76,12 @@
         if (!signal.aborted) onComplete?.();
       }
     });
+  }
 
-  const abort = () => {
+  export function abort() {
     controller?.abort();
     display = '';
-  };
+  }
 
   $effect(() => {
     if (!lines?.length) return;

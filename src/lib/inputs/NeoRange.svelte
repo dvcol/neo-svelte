@@ -159,14 +159,14 @@
   };
 
   let holding = 1;
-  const stepUp = (index = 0) => {
+  export function stepUp(index = 0) {
     if (disabled || readonly) return value;
     return setValue((index ? (upper ?? 0) : lower) - (step || 1) * round(holding), index);
-  };
-  const stepDown = (index = 0) => {
+  }
+  export function stepDown(index = 0) {
     if (disabled || readonly) return value;
     return setValue((index ? (upper ?? 0) : lower) + (step || 1) * round(holding), index);
-  };
+  }
 
   const validity = $derived<NeoRangeValidationState>({
     touched,
