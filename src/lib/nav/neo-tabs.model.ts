@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 
 import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
 import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
-import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
+import type { NeoTabContext, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
@@ -10,7 +10,7 @@ import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.util
 export interface NeoTabContextValue<Value = unknown> {
   index: number;
   value?: Value;
-  ref: HTMLElement;
+  ref?: HTMLElement;
 }
 export type OnChange<Value = unknown> = (tabId?: TabId, newValue?: NeoTabContextValue<Value>, oldValue?: NeoTabContextValue) => unknown;
 export type OnClose<Value = unknown> = (tabId?: TabId, value?: NeoTabContextValue<Value>) => unknown;
@@ -23,11 +23,11 @@ export type NeoTabsProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Snippet to display as the tabs content.
    */
-  children?: Snippet<[NeoTabsContext]>;
+  children?: Snippet<[NeoTabsContext<Value>, NeoTabContext<Value>]>;
   /**
    * Optional snippet to expose context to other components.
    */
-  panes?: Snippet<[NeoTabsContext]>;
+  panes?: Snippet<[NeoTabsContext<Value>, NeoTabContext<Value>]>;
 
   // States
 

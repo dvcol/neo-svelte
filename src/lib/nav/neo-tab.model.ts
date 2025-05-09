@@ -42,7 +42,7 @@ export type NeoTabProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   // Events
 
   /**
-   * Event handler that fires wwhen the close button is clicked.
+   * Event handler that fires when the close button is clicked.
    */
   onclose?: OnChange<Value>;
 

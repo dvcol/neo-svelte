@@ -19,7 +19,7 @@
     // States
     ref = $bindable(),
     tag = 'div',
-    tabId = getUUID(),
+    tabId = `neo-tab-${getUUID()}`,
     value,
 
     // styles
@@ -82,6 +82,10 @@
   const useProps = $derived(toActionProps(tabProps?.use));
 </script>
 
+{#snippet innerChildren()}
+  {@render children?.({ active, tabId, value })}
+{/snippet}
+
 <svelte:element
   this={tag}
   bind:this={ref}
@@ -103,13 +107,11 @@
     toggle
     checked={active}
     onclick={onClick}
-    empty={!children}
     {...rest}
     {disabled}
     class={['neo-tab-button', rest.class]}
-  >
-    {@render children?.({ active, tabId, value })}
-  </NeoButton>
+    children={children ? innerChildren : undefined}
+  />
   {#if closeable}
     <button
       type="button"

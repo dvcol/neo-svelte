@@ -168,8 +168,14 @@ export class NeoTabContext<T = unknown> {
     this.#tabs.set(tabId, { ...value, index: this.#tabs.size });
   }
 
-  remove(tabId: TabId) {
+  /**
+   * Removes the tab from the context.
+   * @param tabId - The tab ID to remove.
+   * @param discard - If true, the active tab will be discarded.
+   */
+  remove(tabId: TabId, discard = true) {
     this.#tabs.delete(tabId);
+    if (!discard) return;
     if (this.#active === tabId) this.onChange();
   }
 

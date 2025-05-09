@@ -25,7 +25,7 @@ export interface NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li
    * If not provided, the index will be used.
    * Note: Required for entering/leaving transitions.
    */
-  id?: string | number;
+  id?: string | number | symbol;
   /**
    * The HTML tag to use for the item.
    * @default 'li'

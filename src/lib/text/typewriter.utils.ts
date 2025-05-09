@@ -495,7 +495,6 @@ export async function typewriter<T extends (string | TypeWriterLine)[]>({
       if (controller?.signal.aborted) break;
       const line: TypeWriterLine = toLine(lines[index]);
       const opts = mergeOptions(line, { controller, ...options });
-      console.info('Typewriter:', opts);
       if (opts.mode === 'loop') {
         await sliceText(line.text, index, iteration, 'write', opts);
         await sliceText(line.text, index, iteration, 'delete', opts);

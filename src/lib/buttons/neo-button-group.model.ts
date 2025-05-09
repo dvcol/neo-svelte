@@ -128,6 +128,14 @@ export type NeoButtonGroupProps<Tag extends keyof HTMLElementTagNameMap = 'div'>
    * @default 'div'
    */
   tag?: Tag | keyof HTMLElementTagNameMap;
+  /**
+   * The offset height of the button group.
+   */
+  offsetHeight?: HTMLElementTagNameMap[Tag]['offsetHeight'];
+  /**
+   * The offset width of the button group.
+   */
+  offsetWidth?: HTMLElementTagNameMap[Tag]['offsetWidth'];
 
   // Styles
   /**
@@ -146,6 +154,6 @@ export type NeoButtonGroupProps<Tag extends keyof HTMLElementTagNameMap = 'div'>
   height?: SizeInput<'height'>;
 } & NeoButtonGroupContext &
 HTMLFlexProps &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
 HTMLActionProps &
-HTMLRefProps;
+HTMLRefProps &
+Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

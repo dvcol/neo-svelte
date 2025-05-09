@@ -1,10 +1,12 @@
 <script lang="ts">
   import type { NeoButtonGroupContext, NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
+  import type { NeoButtonRowItem } from '~/buttons/neo-button-row.model';
 
   import { link } from '@dvcol/svelte-simple-router';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
+  import NeoButtonRow from '~/buttons/NeoButtonRow.svelte';
   import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
@@ -35,6 +37,28 @@
     { label: 'Inset', props: { elevation: -2 } },
     { label: 'Pressed', props: { elevation: -2, pressed: true } },
     { label: 'Convex', props: { elevation: 2, convex: true } },
+  ];
+
+  const items: NeoButtonRowItem[] = [
+    { label: 'Anchor', href: `${Path.Buttons}`, onclick: onClick, use: link },
+    { label: 'Button', onclick: onClick },
+    { label: 'Toggle', toggle: true, onclick: onClick },
+    { label: 'Disabled', disabled: true, onclick: onClick },
+    { divider: true },
+    { label: 'Loading', get loading() {
+      return loading;
+    }, onclick: onLoading },
+    { label: 'Icon', icon, onclick: onClick },
+    { label: 'Reversed', reverse: true, icon, onclick: onClick },
+    ...Array.from({ length: 3 }, (_, i) => ({
+      label: `Button ${i + 1}`,
+      onclick: onClick,
+    })),
+    { divider: true },
+    ...Array.from({ length: 3 }, (_, i) => ({
+      label: `Button ${i + 4}`,
+      onclick: onClick,
+    })),
   ];
 </script>
 
@@ -111,6 +135,13 @@
         <NeoButton {loading} onclick={onLoading}>Loading</NeoButton>
       </NeoButtonGroup>
     </div>
+
+    <div class="column">
+      <span class="label">Collapse</span>
+      <SphereBackdrop glass={options?.glass}>
+        <NeoButtonRow {items} {...options} />
+      </SphereBackdrop>
+    </div>
   </div>
 </section>
 
@@ -120,6 +151,11 @@
   section {
     flex: 1 1 100%;
     align-content: center;
+
+    :global(.neo-button-group) {
+      max-width: min(80vw, 44rem);
+      max-height: min(80vh, 31rem);
+    }
   }
 
   .column {

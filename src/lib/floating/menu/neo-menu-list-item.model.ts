@@ -36,7 +36,7 @@ export interface NeoMenuItem<Value = unknown, Tag extends keyof HTMLElementTagNa
    * Optional props to pass to the base list item.
    */
   itemProps?: Pick<NeoBaseListItem<Value, Tag, NeoMenuContext<Value, Tag>>, 'containerProps'>;
-} ;
+}
 
 export interface NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> {
   /**

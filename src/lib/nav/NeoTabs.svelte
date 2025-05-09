@@ -26,6 +26,10 @@
     value = $bindable(),
     disabled,
 
+    // Group Props
+    offsetWidth = $bindable(),
+    offsetHeight = $bindable(),
+
     // Styles
     before,
     toggle,
@@ -63,7 +67,7 @@
     onchange?.(_tabId, _new, _old);
   };
 
-  const context = setTabContext({ onChange, onClose: onclose });
+  export const context = setTabContext({ onChange, onClose: onclose });
   const transition = $derived(rest.vertical ? height : width);
 
   // Function to compute the transform
@@ -126,7 +130,7 @@
 {/snippet}
 
 {#if before}
-  {@render panes?.(context.state)}
+  {@render panes?.(context.state, context)}
 {/if}
 
 <svelte:element
@@ -150,8 +154,8 @@
   in:inFn={inProps}
   {style}
 >
-  <NeoButtonGroup role="tablist" {pressed} {elevation} {...rest} class={['neo-tabs-group', rest.class]}>
-    {@render children?.(context.state)}
+  <NeoButtonGroup bind:offsetWidth bind:offsetHeight role="tablist" {pressed} {elevation} {...rest} class={['neo-tabs-group', rest.class]}>
+    {@render children?.(context.state, context)}
     {#if add}
       <div transition:transition={shortFreezeTransition}>
         <NeoButton aria-label="Add new tab" onclick={onadd} {icon} />
@@ -161,7 +165,7 @@
 </svelte:element>
 
 {#if !before}
-  {@render panes?.(context.state)}
+  {@render panes?.(context.state, context)}
 {/if}
 
 <style lang="scss">

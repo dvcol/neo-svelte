@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
+  import type { NeoTabRowItem } from '~/nav/neo-tabs-row.model';
   import type { NeoTabContextValue, NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
   import { randomHex } from '@dvcol/common-utils/common/crypto';
@@ -13,6 +14,7 @@
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabDivider from '~/nav/NeoTabDivider.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
+  import NeoTabsRow from '~/nav/NeoTabsRow.svelte';
 
   import { colorOptions } from '../utils/color.utils';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
@@ -68,6 +70,34 @@
     { label: 'Inset', props: { elevation: -2 } },
     { label: 'Pressed', props: { elevation: -2, slideElevation: 2, pressed: true } },
     { label: 'Convex', props: { elevation: 2, convex: true } },
+  ];
+
+  let collapseActive = $state<string>('button');
+  let collapseContext = $state<NeoTabContextValue>('button');
+
+  const items: NeoTabRowItem[] = [
+    { label: 'Button', tabId: 'button', value: 'button', onclick: onClick, close: false },
+    { label: 'Disabled', tabId: 'disabled', value: 'disabled', disabled: true, close: false, onclick: onClick },
+    { divider: true },
+    { tabId: 'icon', value: 'icon', get loading() {
+      return loading;
+    }, onclick: onLoading, icon },
+    { label: 'Icon', tabId: 'icon-label', value: 'icon-label', close: false, onclick: onClick, icon },
+    { divider: true },
+    { label: 'Reversed', tabId: 'reversed', value: 'reversed', reverse: true, close: false, onclick: onClick, icon },
+    ...Array.from({ length: 3 }, (_, i) => ({
+      label: `Button ${i + 1}`,
+      tabId: `button-${i + 1}`,
+      value: `button-value-${i + 1}`,
+      onclick: onClick,
+    })),
+    { divider: true },
+    ...Array.from({ length: 3 }, (_, i) => ({
+      label: `Button ${i + 4}`,
+      tabId: `button-${i + 4}`,
+      value: `button-value-${i + 4}`,
+      onclick: onClick,
+    })),
   ];
 </script>
 
@@ -128,11 +158,15 @@
   />
 </div>
 
-<section>
+{#snippet values(_active = active, _context = context)}
   <div class="values">
-    <span>Active: {active}</span>
-    <span>Value: {typeof context?.value === 'object' ? JSON.stringify(context?.value, undefined, 2) : context?.value}</span>
+    <span>Active: {_active}</span>
+    <span>Value: {typeof _context?.value === 'object' ? JSON.stringify(_context?.value, undefined, 2) : _context?.value}</span>
   </div>
+{/snippet}
+
+<section>
+  {@render values(active, context)}
 
   <div class="content">
     <div class="row" class:invert={!options.vertical}>
@@ -146,6 +180,19 @@
       {/each}
     </div>
   </div>
+
+  {@render values(collapseActive, collapseContext)}
+
+  <div class="content">
+    <div class="row" class:invert={!options.vertical}>
+      <div class="column">
+        <span class="label">Collapse</span>
+        <SphereBackdrop glass={options.glass}>
+          <NeoTabsRow {items} bind:active={collapseActive} bind:value={collapseContext} onchange={onChange} {skeleton} {onclose} {onadd} {...options} />
+        </SphereBackdrop>
+      </div>
+    </div>
+  </div>
 </section>
 
 <style lang="scss">
@@ -154,6 +201,11 @@
   section {
     flex: 1 1 100%;
     align-content: center;
+
+    :global(.neo-button-group) {
+      max-width: min(80vw, 38rem);
+      max-height: min(80vh, 31rem);
+    }
   }
 
   .column {

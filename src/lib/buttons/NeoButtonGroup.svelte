@@ -56,6 +56,9 @@
     width: _width,
     height: _height,
 
+    offsetWidth = $bindable(),
+    offsetHeight = $bindable(),
+
     // Transition
     in: inAction,
     out: outAction,
@@ -121,6 +124,8 @@
 <svelte:element
   this={tag}
   bind:this={ref}
+  bind:offsetWidth
+  bind:offsetHeight
   class:neo-button-group={true}
   class:neo-borderless={borderless}
   class:neo-start={start}
