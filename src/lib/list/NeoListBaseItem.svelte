@@ -35,6 +35,7 @@
     toggle,
     rounded,
     reverse,
+    ellipsis,
 
     // Buttons Props
     hovered = $bindable(false),
@@ -93,7 +94,16 @@
 {/snippet}
 
 {#snippet listItem({ label, value, description }: NeoListItem)}
-  <div class:neo-list-item-content={true} class:neo-button={button} class:neo-disabled={disabled} class:neo-description={description} class:neo-reverse={reverse || item.reverse}>
+  <div
+    class:neo-list-item-content={true}
+    class:neo-button={button}
+    class:neo-rounded={rounded}
+    class:neo-disabled={disabled}
+    class:neo-description={description}
+    class:neo-reverse={reverse || item.reverse}
+    style:--neo-list-item-label-lines={typeof ellipsis === 'number' ? ellipsis : ellipsis?.label}
+    style:--neo-list-item-description-lines={typeof ellipsis === 'number' ? ellipsis : ellipsis?.description}
+  >
 
     {#if !reverse}
       {@render beforeItem()}
@@ -199,17 +209,14 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-list-item {
-    &-label,
-    &-description {
-      @include mixin.ellipsis;
-    }
-
     &-label {
+      @include mixin.ellipsis($line: var(--neo-list-item-label-lines, 1));
+
       line-height: var(--neo-line-height-sm, 1.25rem);
     }
 
     &-description {
-      --neo-ellipsis-lines: 2;
+      @include mixin.ellipsis($line: var(--neo-list-item-description-lines, 2));
 
       color: var(--neo-text-color-secondary);
       font-size: var(--neo-font-size-sm, 0.875rem);
@@ -230,7 +237,11 @@
       }
 
       &.neo-button {
-        padding: 0.375rem 0.625rem;
+        padding: var(--neo-list-item-button-padding, 0.4375rem 0.625rem);
+
+        &.neo-rounded {
+          padding: var(--neo-list-item-button-padding, 0.5rem 0.75rem);
+        }
       }
 
       &.neo-reverse {

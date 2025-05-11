@@ -125,8 +125,12 @@
     padding: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem)) 0;
     overflow: auto;
 
-    :global(.neo-menu-item-divider) {
-      margin: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem)) 0;
+    :global(.neo-menu-item-divider[data-elevation='0']) {
+      margin: var(--neo-menu-margin, var(--neo-gap-xxxs, 0.3125rem)) 0;
+    }
+
+    :global(.neo-menu-item-divider:not([data-elevation='0'])) {
+      --neo-divider-margin: var(--neo-menu-margin, var(--neo-gap-xxxs, 0.3125rem));
     }
 
     &-section {

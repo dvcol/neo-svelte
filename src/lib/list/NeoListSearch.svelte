@@ -40,7 +40,7 @@
     loading,
     elevation = 0,
     hover = 0,
-    rounded = 'lg',
+    rounded,
     placeholder = 'Search...',
 
     // Other props
@@ -131,7 +131,7 @@
     {onkeydown}
     loading={loading ?? context?.loading}
     skeleton={context?.skeleton}
-    rounded={rounded === true ? 'lg' : rounded}
+    {rounded}
     {...inputProps}
     containerProps={{
       ...inputProps?.containerProps,
@@ -146,19 +146,11 @@
     flex-direction: column;
 
     &:not(.neo-flip) :global(> .neo-list-search-input) {
-      margin-bottom: 0.125rem;
+      margin-bottom: -0.25rem;
     }
 
     &.neo-flip :global(.neo-list-search-input) {
-      margin-top: 0.125rem;
-    }
-
-    &:not(.neo-rounded) :global(> .neo-list-search-input) {
-      margin-top: 0.75rem;
-    }
-
-    &.neo-rounded :global(.neo-list-search-input) {
-      margin-bottom: 0.75rem;
+      margin-top: -0.25rem;
     }
   }
 </style>

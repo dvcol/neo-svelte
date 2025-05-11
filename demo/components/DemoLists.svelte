@@ -34,6 +34,9 @@
     reverse: false,
     flip: false,
     dim: false,
+    itemProps: {
+      ellipsis: 1,
+    },
   });
 
   const custom: NeoListItem = { label: 'Custom Render Item', value: -1, render, id: getUUID() };
@@ -267,7 +270,7 @@
           buttonProps={{ rounded: true }}
         >
           {#snippet before(context)}
-            <NeoListSearch elevation={hovered || focused ? 2 : elevation} {context} />
+            <NeoListSearch rounded elevation={hovered || focused ? 2 : elevation} {context} />
           {/snippet}
         </NeoList>
       </NeoCard>
@@ -464,7 +467,7 @@
       height: min(80vh, 24rem);
 
       :global(.neo-list) {
-        max-width: 18rem;
+        max-width: 18.875rem;
         max-height: calc(min(80vh, 24rem) - var(--neo-gap-lg) - 2rem);
       }
     }
