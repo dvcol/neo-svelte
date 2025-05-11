@@ -21,26 +21,6 @@ export type NeoButtonRowItem = NeoButtonRowItemButton | NeoButtonRowItemDivider;
 
 export const isButtonRowDivider = (item: NeoButtonRowItem): item is NeoButtonRowItemDivider => item && 'divider' in item && item.divider;
 
-export function buttonRowItemToMenuItem(item: NeoButtonRowItem, next?: NeoButtonRowItem): NeoMenuItem | undefined {
-  if (isButtonRowDivider(item)) return;
-  return {
-    id: item.id?.toString(),
-    label: item.label,
-    value: item.value,
-    before: item.icon,
-    reverse: item.reverse,
-    disabled: item.disabled,
-    readonly: item.readonly,
-    color: item.color || undefined,
-    href: item.href,
-    onclick: item.onclick,
-    divider: {
-      bottom: next && isButtonRowDivider(next),
-    },
-    ...(item.menuProps ?? {}),
-  };
-}
-
 export interface NeoButtonRowContext {
   items?: NeoMenuItem[];
   threshold?: number;

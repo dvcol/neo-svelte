@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { NeoButtonGroupContext } from '~/buttons/neo-button-group.model.js';
-  import type { NeoButtonRowProps } from '~/buttons/neo-button-row.model.js';
+  import type { NeoButtonRowItem, NeoButtonRowProps } from '~/buttons/neo-button-row.model.js';
   import type { NeoMenuItem } from '~/floating/menu/neo-menu-list-item.model.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
 
-  import { buttonRowItemToMenuItem, isButtonRowDivider } from '~/buttons/neo-button-row.model.js';
+  import { isButtonRowDivider } from '~/buttons/neo-button-row.model.js';
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -39,6 +39,26 @@
     collapseProps,
     ...rest
   }: NeoButtonRowProps = $props();
+
+  function buttonRowItemToMenuItem(item: NeoButtonRowItem, next?: NeoButtonRowItem): NeoMenuItem | undefined {
+    if (isButtonRowDivider(item)) return;
+    return {
+      id: item.id?.toString(),
+      label: item.label,
+      value: item.value,
+      before: item.icon,
+      reverse: item.reverse,
+      disabled: item.disabled,
+      readonly: item.readonly,
+      color: item.color || undefined,
+      href: item.href,
+      onclick: item.onclick,
+      divider: {
+        bottom: next && isButtonRowDivider(next),
+      },
+      ...(item.menuProps ?? {}),
+    };
+  }
 
   const visible = $derived(threshold ? buttons?.slice(0, -threshold) : buttons);
   const hidden = $derived(threshold ? buttons?.slice(-threshold) : []);

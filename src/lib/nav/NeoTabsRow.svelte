@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { NeoMenuItem } from '~/floating/menu/neo-menu-list-item.model.js';
   import type { NeoTabContext, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
-  import type { NeoTabsRowProps } from '~/nav/neo-tabs-row.model.js';
+  import type { NeoTabRowItem, NeoTabsRowProps } from '~/nav/neo-tabs-row.model.js';
 
+  import { getUUID } from '@dvcol/common-utils/common/string';
   import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
@@ -10,7 +11,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoMenu from '~/floating/menu/NeoMenu.svelte';
   import NeoIconBouncingDots from '~/icons/NeoIconBouncingDots.svelte';
-  import { isTabRowDivider, tabRowItemToMenuItem } from '~/nav/neo-tabs-row.model.js';
+  import { isTabRowDivider } from '~/nav/neo-tabs-row.model.js';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabDivider from '~/nav/NeoTabDivider.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
@@ -43,6 +44,32 @@
     collapseProps,
     ...rest
   }: NeoTabsRowProps = $props();
+
+  function tabRowItemToMenuItem(item: NeoTabRowItem, next?: NeoTabRowItem): NeoMenuItem | undefined {
+    if (isTabRowDivider(item)) return undefined;
+    return {
+      id: item.tabId ?? `neo-tab-${getUUID()}`,
+      label: item.label,
+      value: item.value,
+      before: item.icon,
+      reverse: item.reverse,
+      disabled: item.disabled,
+      readonly: item.readonly,
+      color: item.color,
+      href: item.href,
+      onclick: item.onclick,
+      divider: {
+        bottom: next && isTabRowDivider(next),
+      },
+      ...item.menuProps,
+      buttonProps: {
+        get checked() {
+          return item.tabId === active;
+        },
+        ...item.menuProps?.buttonProps,
+      },
+    };
+  }
 
   const visible = $derived(threshold ? tabs?.slice(0, -threshold) : tabs);
   const hidden = $derived(threshold ? tabs?.slice(-threshold) : []);

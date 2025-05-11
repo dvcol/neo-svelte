@@ -10,8 +10,6 @@ import type { NeoTabProps } from '~/nav/neo-tab.model.js';
 import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
-import { getUUID } from '@dvcol/common-utils/common/string';
-
 export interface NeoTabRowItemButton<Value = unknown> extends NeoTabProps<Value> {
   menuProps?: Partial<NeoMenuItem<Value>>;
   label?: string | undefined;
@@ -25,26 +23,6 @@ export interface NeoTabRowItemDivider extends NeoDividerProps {
 export type NeoTabRowItem<Value = unknown> = NeoTabRowItemButton<Value> | NeoTabRowItemDivider;
 
 export const isTabRowDivider = <Value = unknown>(item: NeoTabRowItem<Value>): item is NeoButtonRowItemDivider => item && 'divider' in item && item.divider;
-
-export function tabRowItemToMenuItem(item: NeoTabRowItem, next?: NeoTabRowItem): NeoMenuItem | undefined {
-  if (isTabRowDivider(item)) return undefined;
-  return {
-    id: item.tabId ?? `neo-tab-${getUUID()}`,
-    label: item.label,
-    value: item.value,
-    before: item.icon,
-    reverse: item.reverse,
-    disabled: item.disabled,
-    readonly: item.readonly,
-    color: item.color,
-    href: item.href,
-    onclick: item.onclick,
-    divider: {
-      bottom: next && isTabRowDivider(next),
-    },
-    ...(item.menuProps ?? {}),
-  };
-}
 
 export interface NeoTabRowContext {
   items?: NeoMenuItem[];
