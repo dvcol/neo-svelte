@@ -188,7 +188,7 @@
       <div class="column">
         <span class="label">Collapse</span>
         <SphereBackdrop glass={options.glass}>
-          <NeoTabsRow {items} bind:active={collapseActive} bind:value={collapseContext} onchange={onChange} {skeleton} {onclose} {onadd} {...options} />
+          <NeoTabsRow tabs={items} bind:active={collapseActive} bind:value={collapseContext} onchange={onChange} {skeleton} {onclose} {onadd} {...options} />
         </SphereBackdrop>
       </div>
     </div>

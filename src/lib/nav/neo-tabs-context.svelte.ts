@@ -160,9 +160,9 @@ export class NeoTabContext<T = unknown> {
     this.#onClose?.(tabId, this.value);
   }
 
-  register(tabId: TabId, value: Omit<NeoTabContextValue<T>, 'index'>) {
+  register(tabId: TabId, value: Omit<NeoTabContextValue<T>, 'index'>, force = false) {
     if (!tabId) throw new NeoErrorMissingTabId();
-    if (this.#tabs.has(tabId)) {
+    if (this.#tabs.has(tabId) && !force) {
       return Logger.warn(`Tab ID '${String(tabId)}' already exists. Tab registration ignored.`, { existing: this.getValue(tabId), ignored: value });
     }
     this.#tabs.set(tabId, { ...value, index: this.#tabs.size });
@@ -177,6 +177,12 @@ export class NeoTabContext<T = unknown> {
     this.#tabs.delete(tabId);
     if (!discard) return;
     if (this.#active === tabId) this.onChange();
+  }
+
+  clear(discard = true) {
+    this.#tabs.clear();
+    if (!discard) return;
+    if (this.#active) this.onChange();
   }
 
   registerPane(tabId: TabId, panelId: TabId) {

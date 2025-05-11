@@ -21,6 +21,7 @@
     tag = 'div',
     tabId = `neo-tab-${getUUID()}`,
     value,
+    register = true,
 
     // styles
     close,
@@ -64,11 +65,11 @@
 
   watch(
     () => {
-      if (!ref) return;
-      context?.register(tabId, { ref, value });
-      return () => context?.remove(tabId);
+      if (!ref || !register) return;
+      context?.register(tabId, { ref, value }, register === 'force');
+      return () => register && context?.remove(tabId);
     },
-    () => ref,
+    () => [ref, register],
   );
 
   const onClose = (e: MouseEvent) => {

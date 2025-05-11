@@ -30,6 +30,16 @@ export type NeoTabProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    * Optional value to associate with the tab.
    */
   value?: Value;
+  /**
+   * Whether the tab should be registered with the parent `NeoTabs` context.
+   * If false, the tab will not be included in the `NeoTabs` context.
+   * If true, the tab will be registered only if another tab with the same id is not already registered.
+   * If `force`, the tab will be registered even if another tab with the same id is already registered.
+   *
+   * @default true
+   * @see {@link NeoTabContext}
+   */
+  register?: boolean | 'force';
 
   // Styles
 

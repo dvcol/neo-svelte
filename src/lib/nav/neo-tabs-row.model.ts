@@ -12,8 +12,8 @@ import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
 import { getUUID } from '@dvcol/common-utils/common/string';
 
-export interface NeoTabRowItemButton extends NeoTabProps {
-  menuProps?: Partial<NeoMenuItem>;
+export interface NeoTabRowItemButton<Value = unknown> extends NeoTabProps<Value> {
+  menuProps?: Partial<NeoMenuItem<Value>>;
   label?: string | undefined;
   icon?: Snippet<[unknown]>;
 }
@@ -22,9 +22,9 @@ export interface NeoTabRowItemDivider extends NeoDividerProps {
   divider: true;
 }
 
-export type NeoTabRowItem = NeoTabRowItemButton | NeoTabRowItemDivider;
+export type NeoTabRowItem<Value = unknown> = NeoTabRowItemButton<Value> | NeoTabRowItemDivider;
 
-export const isTabRowDivider = (item: NeoTabRowItem): item is NeoButtonRowItemDivider => item && 'divider' in item && item.divider;
+export const isTabRowDivider = <Value = unknown>(item: NeoTabRowItem<Value>): item is NeoButtonRowItemDivider => item && 'divider' in item && item.divider;
 
 export function tabRowItemToMenuItem(item: NeoTabRowItem, next?: NeoTabRowItem): NeoMenuItem | undefined {
   if (isTabRowDivider(item)) return undefined;
@@ -61,7 +61,7 @@ export interface NeoTabsRowProps extends Omit<NeoTabRowContext, 'items'>, Omit<N
 
   // States
   ref?: NeoTabsProps['ref'];
-  items: NeoTabRowItem[];
+  tabs: NeoTabRowItem[];
 
   // Button props
   hovered?: NeoButtonProps['hovered'];

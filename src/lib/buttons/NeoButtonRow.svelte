@@ -93,7 +93,7 @@
       {@render collapsed(ctx, { items, threshold, menuProps, collapseProps, iconProps })}
     {:else if items?.length}
       <div class="neo-button-row-collapse">
-        <NeoMenu {items} {...menuProps}>
+        <NeoMenu {items} openOnClick {...menuProps}>
           <NeoButton bind:hovered bind:focused {...collapseProps}>
             {#snippet icon()}
               <NeoIconBouncingDots bounce={hovered || focused} {...iconProps} />

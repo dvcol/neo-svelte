@@ -3,7 +3,6 @@
   import type { NeoTabContext, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
   import type { NeoTabsRowProps } from '~/nav/neo-tabs-row.model.js';
 
-  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
@@ -15,7 +14,6 @@
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabDivider from '~/nav/NeoTabDivider.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
-  import { Logger } from '~/utils/logger.utils.js';
 
   let {
     // Snippets
@@ -23,7 +21,7 @@
     collapsed,
 
     // State
-    items: tabs = [],
+    tabs = [],
     threshold = $bindable(0),
 
     // Tabs props
@@ -62,31 +60,19 @@
   let instance = $state<{ context: NeoTabContext }>();
   let menu = $state<HTMLElement>();
 
-  const unregister = () => {
-    if (!instance?.context) return;
-    items?.forEach((item) => {
-      if (item?.id === undefined) return;
-      instance?.context.remove(item.id, false);
-    });
-  };
-
-  const register = debounce(() => {
-    if (!instance?.context) return;
-    items.forEach((item) => {
-      if (item?.id === undefined) return Logger.warn('Missing tab id, cannot register collapse menu item', item);
-      instance?.context.register(item.id, { ref: menu, value: item.value });
-    });
-  }, 0);
-
   watch(
     () => {
-      void register();
+      if (!instance?.context) return;
+      hidden?.forEach((item) => {
+        if (isTabRowDivider(item) || item.tabId === undefined) return;
+        instance?.context?.register(item.tabId, { ref: menu, value: item.value }, true);
+      });
+      return () => hidden?.forEach((item) => {
+        if (isTabRowDivider(item) || item.tabId === undefined) return;
+        instance?.context?.remove(item.tabId, false);
+      });
     },
-    () => [
-      instance?.context,
-      visible,
-      items,
-    ],
+    () => [instance?.context, hidden],
   );
 
   const onSelect = (item: NeoMenuItem, ctx: NeoTabContext) => {
@@ -109,7 +95,6 @@
   watch(
     () => {
       void autoSize();
-      return unregister;
     },
     () => [
       vertical,
@@ -130,7 +115,7 @@
       {#if (isTabRowDivider(_props))}
         <NeoTabDivider vertical={!vertical} {..._props} />
       {:else}
-        <NeoTab {...tabProps} {..._props} />
+        <NeoTab register="force" {...tabProps} {..._props} />
       {/if}
     {/each}
 
@@ -138,7 +123,7 @@
       {@render collapsed(ctx, { items, threshold, menuProps, collapseProps, iconProps })}
     {:else if items?.length}
       <div bind:this={menu} class="neo-tab neo-tabs-row-collapse" class:neo-vertical={vertical} class:neo-active={activeMenu}>
-        <NeoMenu {items} onSelect={item => onSelect(item, context)} {...menuProps}>
+        <NeoMenu {items} openOnClick onSelect={item => onSelect(item, context)} {...menuProps}>
           <NeoButton
             bind:hovered
             bind:focused
