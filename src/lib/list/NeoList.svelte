@@ -1,6 +1,7 @@
 <script lang="ts">
   import type {
     NeoListContext,
+    NeoListItemOrSection,
     NeoListMethods,
     NeoListProps,
     NeoListRenderContext,
@@ -279,6 +280,11 @@
     onScrollEvent(e);
   }, 25);
 
+  const renderDivider = (index: number, array: { item: NeoListItemOrSection }[], position: 'top' | 'bottom') => {
+    if (position === 'top') return index && showDivider(array[index].item.divider, 'top');
+    return index < array.length - 1 && showDivider(array[index].item.divider, 'bottom') && !showDivider(array[index + 1].item.divider, 'bottom');
+  };
+
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
@@ -348,7 +354,7 @@
         out:inFn={inProps}
         in:outFn={outProps}
       >
-        {#if index && showDivider(item.divider, 'top')}
+        {#if renderDivider(index, visible, flip ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if isSection(item)}
@@ -377,7 +383,7 @@
             onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
           />
         {/if}
-        {#if index < visible.length - 1 && showDivider(item.divider, 'bottom') && !showDivider(visible[index + 1].item.divider, 'bottom')}
+        {#if renderDivider(index, visible, flip ? 'top' : 'bottom')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
       </svelte:element>
@@ -475,10 +481,10 @@
 
       &.neo-scroll,
       &.neo-rounded {
-        padding-block: var(--neo-menu-scroll-padding, 0.625rem);
+        padding-block: var(--neo-list-scroll-padding, 0.625rem);
 
         &:not(.neo-scroll) :global(> .neo-list-item) {
-          padding: 0 var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem));
+          padding: 0 var(--neo-list-padding, var(--neo-gap-tiny, 0.25rem));
         }
       }
 
