@@ -326,6 +326,8 @@
         rounded={options.rounded}
         height="28rem"
         tooltipProps={{ ...options, openOnFocus: false, openOnHover: false }}
+        onScrollTop={e => console.info('scroll top', e)}
+        onScrollBottom={e => console.info('scroll bottom', e)}
       >
         <NeoButton container rounded={options.rounded} bind:checked={open} toggle hover={2} active={-2} pressed>
           <NeoTransitionContainer overflow="hidden" style="min-width: 252px; margin: 0.5rem">

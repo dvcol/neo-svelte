@@ -8,6 +8,7 @@
     NeoListSelectedItem,
     NeoListSelectEvent,
   } from '~/list/neo-list.model.js';
+  import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
@@ -76,6 +77,8 @@
 
     // Events
     onSelect,
+    onScrollTop,
+    onScrollBottom,
 
     // Other props
     containerProps,
@@ -87,6 +90,9 @@
     ...rest
   }: NeoListProps = $props();
 
+  // TODO - pull to refresh (in mixin or component)
+  // TODO - floating button (back to top)
+
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const empty = $derived(!items?.length);
@@ -97,21 +103,37 @@
 
   const isNullable = $derived(multiple ? nullable || (isMultiple(selected) && (selected?.length ?? 0) > 1) : nullable);
 
-  export const scrollTop: NeoListMethods['scrollTop'] = debounce((options?: ScrollToOptions) => {
+  const onScrollEvent = (e?: SvelteEvent) => {
+    if (!ref) return;
+    // if at the top console.info('top');
+    if (ref.scrollTop === 0) {
+      if (flip) return onScrollBottom?.(e);
+      else return onScrollTop?.(e);
+    }
+    // if at the bottom console.info('bottom');
+    if (Math.abs(ref.scrollTop) + ref.clientHeight >= ref.scrollHeight) {
+      if (flip) return onScrollTop?.(e);
+      else return onScrollBottom?.(e);
+    }
+  };
+
+  export const scrollToTop: NeoListMethods['scrollToTop'] = debounce((options?: ScrollToOptions) => {
     if (!ref) return false;
-    ref.scrollTo({ top: 0, behavior: 'smooth', ...options });
+    ref.scrollTo({ top: flip ? -ref.scrollHeight : 0, behavior: 'smooth', ...options });
+    onScrollEvent();
     return ref;
   }, shortDuration / 2);
 
-  export const scrollBottom: NeoListMethods['scrollBottom'] = debounce((options?: ScrollToOptions) => {
+  export const scrollToBottom: NeoListMethods['scrollToBottom'] = debounce((options?: ScrollToOptions) => {
     if (!ref?.scrollHeight) return false;
-    ref.scrollTo({ top: ref.scrollHeight, behavior: 'smooth', ...options });
+    ref.scrollTo({ top: flip ? 0 : ref.scrollHeight, behavior: 'smooth', ...options });
+    onScrollEvent();
     return ref;
   }, shortDuration / 2);
 
   $effect(() => {
     if (!loading || !scrollToLoader) return;
-    scrollBottom();
+    scrollToBottom();
   });
 
   const scrollReverse = async () => {
@@ -237,8 +259,8 @@
     },
 
     // Methods
-    scrollTop,
-    scrollBottom,
+    scrollToTop,
+    scrollToBottom,
     selectItem,
     clearItem,
     reSelect,
@@ -247,10 +269,15 @@
   $effect(() => {
     if (!ref) return;
     Object.assign(ref, {
-      scrollTop,
-      scrollBottom,
+      scrollToTop,
+      scrollToBottom,
     });
   });
+
+  const onscroll: NeoListProps['onscroll'] = debounce((e) => {
+    rest?.onscroll?.(e);
+    onScrollEvent(e);
+  }, 25);
 
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
@@ -384,6 +411,7 @@
       class:neo-rounded={buttonProps?.rounded}
       class:neo-dim={dim}
       in:scaleFreeze={quickScaleProps}
+      {onscroll}
       {...rest}
     >
       {@render children?.(context)}
@@ -398,6 +426,7 @@
       bind:this={ref}
       class:neo-list-empty={true}
       in:fade={quickDurationProps}
+      {onscroll}
       {...rest}
     >
       {@render emptyItem()}

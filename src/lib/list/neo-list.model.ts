@@ -6,7 +6,7 @@ import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
 import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
-import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export interface NeoListDividerOption {
@@ -188,11 +188,11 @@ export interface NeoListMethods<Value = unknown> {
   /**
    * Scroll the list to the top.
    */
-  scrollTop: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
+  scrollToTop: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
   /**
    * Scroll the list to the bottom.
    */
-  scrollBottom: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
+  scrollToBottom: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
   /**
    * Select an item in the list.
    * @param index - The index of the item to select.
@@ -382,6 +382,16 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * @param event
    */
   onSelect?: (event: NeoListSelectEvent<Selected>) => void;
+  /**
+   * Event listener that fires when the list is scrolled to the top.
+   * @param event
+   */
+  onScrollTop?: (event?: SvelteEvent) => void;
+  /**
+   * Event listener that fires when the list is scrolled to the bottom.
+   * @param event
+   */
+  onScrollBottom?: (event?: SvelteEvent) => void;
 
   // Other Props
   /**
