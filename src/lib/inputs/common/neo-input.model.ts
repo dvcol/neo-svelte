@@ -135,10 +135,10 @@ export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement | H
   Partial<NeoInputStyles & NeoInputMethods<T>>;
 
 export const NeoInputLabelPlacement = {
-  Inside: 'inside' as const,
-  Top: 'top' as const,
-  Left: 'left' as const,
-  Right: 'right' as const,
+  Inside: 'inside',
+  Top: 'top',
+  Left: 'left',
+  Right: 'right',
 } as const;
 
 export type NeoInputLabelPlacements = (typeof NeoInputLabelPlacement)[keyof typeof NeoInputLabelPlacement];

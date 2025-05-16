@@ -6,10 +6,10 @@ import type { NeoMovableOutside } from '~/floating/dialog/use-movable.svelte.js'
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export const NeoHandlePlacement = {
-  Top: 'top' as const,
-  Right: 'right' as const,
-  Bottom: 'bottom' as const,
-  Left: 'left' as const,
+  Top: 'top',
+  Right: 'right',
+  Bottom: 'bottom',
+  Left: 'left',
 } as const;
 
 export type NeoHandlePlacements = (typeof NeoHandlePlacement)[keyof typeof NeoHandlePlacement];

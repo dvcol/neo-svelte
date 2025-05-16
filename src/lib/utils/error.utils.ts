@@ -1,18 +1,18 @@
 export const NeoErrorType = {
-  NeoError: 'NeoError' as const,
-  NeoThemeProvider: 'NeoThemeProvider' as const,
-  NeoList: 'NeoList' as const,
-  NeoTab: 'NeoTab' as const,
-  NeoCollapse: 'NeoCollapse' as const,
-  NeoForm: 'NeoForm' as const,
-  NeoProgress: 'NeoProgress' as const,
+  NeoError: 'NeoError',
+  NeoThemeProvider: 'NeoThemeProvider',
+  NeoList: 'NeoList',
+  NeoTab: 'NeoTab',
+  NeoCollapse: 'NeoCollapse',
+  NeoForm: 'NeoForm',
+  NeoProgress: 'NeoProgress',
 } as const;
 
 export type NeoErrorTypes = (typeof NeoErrorType)[keyof typeof NeoErrorType];
 
 export const NeoErrorName = {
-  TargetNotFound: 'Target not found' as const,
-  InvalidTarget: 'Target is not a valid HTMLElement or ShadowRoot' as const,
+  TargetNotFound: 'Target not found',
+  InvalidTarget: 'Target is not a valid HTMLElement or ShadowRoot',
 } as const;
 
 export class NeoError extends Error {

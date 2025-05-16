@@ -21,13 +21,13 @@ import type { SizeInput } from '~/utils/style.utils.js';
 
 export const NeoTooltipSizeStrategy = {
   /** Match the size of the trigger */
-  Match: 'match' as const,
+  Match: 'match',
   /** At least as wide/tall as the trigger */
-  Min: 'min' as const,
+  Min: 'min',
   /** At most as wide/tall as the trigger */
-  Max: 'max' as const,
+  Max: 'max',
   /** At most as wide/tall as the available space */
-  Available: 'available' as const,
+  Available: 'available',
 } as const;
 
 export type NeoTooltipSizeStrategies = (typeof NeoTooltipSizeStrategy)[keyof typeof NeoTooltipSizeStrategy];

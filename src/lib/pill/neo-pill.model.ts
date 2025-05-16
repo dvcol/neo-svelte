@@ -8,9 +8,9 @@ import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import type { BlurElevation, BlurElevationString, ShadowShallowElevation, ShadowShallowElevationString } from '~/utils/shadow.utils.js';
 
 export const NeoPillSize = {
-  Small: 'small' as const,
-  Medium: 'medium' as const,
-  Large: 'large' as const,
+  Small: 'small',
+  Medium: 'medium',
+  Large: 'large',
 } as const;
 
 export type NeoPillSizes = (typeof NeoPillSize)[keyof typeof NeoPillSize];

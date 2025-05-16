@@ -5,8 +5,8 @@ import { NeoErrorMissingCollapseId } from '~/utils/error.utils.js';
 import { Logger } from '~/utils/logger.utils.js';
 
 export const NeoCollapseGroupStrategy = {
-  Readonly: 'readonly' as const,
-  Oldest: 'oldest' as const,
+  Readonly: 'readonly',
+  Oldest: 'oldest',
 } as const;
 
 export type NeoCollapseGroupStrategies = (typeof NeoCollapseGroupStrategy)[keyof typeof NeoCollapseGroupStrategy];

@@ -14,17 +14,17 @@ import type { ShadowShallowElevation, ShadowShallowElevationString } from '~/uti
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export const NeoStepperPlacement = {
-  Start: 'start' as const,
-  End: 'end' as const,
+  Start: 'start',
+  End: 'end',
 } as const;
 
 export type NeoStepperPlacements = (typeof NeoStepperPlacement)[keyof typeof NeoStepperPlacement];
 
 export const NeoStepperNavigation = {
-  Navigate: 'navigate' as const,
-  Previous: 'previous' as const,
-  Cancel: 'cancel' as const,
-  Next: 'next' as const,
+  Navigate: 'navigate',
+  Previous: 'previous',
+  Cancel: 'cancel',
+  Next: 'next',
 } as const;
 
 export type NeoStepperNavigations = (typeof NeoStepperNavigation)[keyof typeof NeoStepperNavigation];

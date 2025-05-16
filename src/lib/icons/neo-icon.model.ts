@@ -8,10 +8,10 @@ export type NeoIconProps = {
 } & Omit<SVGAttributes<SVGElement>, 'stroke'>;
 
 export const NeoIconArrowDirection = {
-  Left: 'left' as const,
-  Right: 'right' as const,
-  Up: 'up' as const,
-  Down: 'down' as const,
+  Left: 'left',
+  Right: 'right',
+  Up: 'up',
+  Down: 'down',
 } as const;
 
 export type NeoIconArrowDirections = (typeof NeoIconArrowDirection)[keyof typeof NeoIconArrowDirection];

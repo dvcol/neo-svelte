@@ -37,15 +37,15 @@ function useAbortPromise<T>({
   };
 }
 
-export const KeyboardLayouts = Object.freeze({
-  Qwerty: 'qwerty' as const,
-  Azerty: 'azerty' as const,
-} as const);
+export const KeyboardLayouts = {
+  Qwerty: 'qwerty',
+  Azerty: 'azerty',
+} as const;
 
 export type KeyboardLayout = (typeof KeyboardLayouts)[keyof typeof KeyboardLayouts];
 
-const KeyboardTypoMap: Record<KeyboardLayout, Record<string, string>> = Object.freeze({
-  [KeyboardLayouts.Qwerty]: Object.freeze({
+const KeyboardTypoMap: Record<KeyboardLayout, Record<string, string>> = {
+  [KeyboardLayouts.Qwerty]: {
     'q': 'wa',
     'w': 'qse',
     'e': 'wrd',
@@ -87,8 +87,8 @@ const KeyboardTypoMap: Record<KeyboardLayout, Record<string, string>> = Object.f
     '.': ',/',
     ',': 'm.',
     '/': '.',
-  } as const),
-  [KeyboardLayouts.Azerty]: Object.freeze({
+  } as const,
+  [KeyboardLayouts.Azerty]: {
     'a': 'qzs',
     'z': 'aqse',
     'e': 'zrsd',
@@ -130,8 +130,8 @@ const KeyboardTypoMap: Record<KeyboardLayout, Record<string, string>> = Object.f
     '.': ',/',
     ',': 'm.',
     '/': '.',
-  } as const),
-} as const);
+  } as const,
+} as const;
 
 function generateTypo(char: string, layout: KeyboardLayout) {
   const lowerChar = char.toLowerCase();

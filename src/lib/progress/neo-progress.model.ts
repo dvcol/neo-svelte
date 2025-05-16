@@ -4,27 +4,27 @@ import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
-export const NeoProgressStatus = Object.freeze({
-  Indeterminate: 'indeterminate' as const,
-  Active: 'active' as const,
-  Idle: 'idle' as const,
-  Paused: 'paused' as const,
-  Cancelled: 'cancelled' as const,
-  Timeout: 'timeout' as const,
-  Completed: 'completed' as const,
-  Error: 'error' as const,
-  Success: 'success' as const,
-  Warning: 'warning' as const,
-});
+export const NeoProgressStatus = {
+  Indeterminate: 'indeterminate',
+  Active: 'active',
+  Idle: 'idle',
+  Paused: 'paused',
+  Cancelled: 'cancelled',
+  Timeout: 'timeout',
+  Completed: 'completed',
+  Error: 'error',
+  Success: 'success',
+  Warning: 'warning',
+} as const;
 
 export type NeoProgressStatuses = (typeof NeoProgressStatus)[keyof typeof NeoProgressStatus];
 
-export const NeoProgressDirection = Object.freeze({
-  Right: 'right' as const,
-  Left: 'left' as const,
-  Top: 'top' as const,
-  Bottom: 'bottom' as const,
-});
+export const NeoProgressDirection = {
+  Right: 'right',
+  Left: 'left',
+  Top: 'top',
+  Bottom: 'bottom',
+} as const;
 
 export type NeoProgressDirections = (typeof NeoProgressDirection)[keyof typeof NeoProgressDirection];
 

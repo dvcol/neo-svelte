@@ -6,8 +6,8 @@ import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
  * The active theme (`dark` or `light`)
  */
 export const NeoTheme = {
-  Light: 'light' as const,
-  Dark: 'dark' as const,
+  Light: 'light',
+  Dark: 'dark',
 } as const;
 
 export type NeoThemes = (typeof NeoTheme)[keyof typeof NeoTheme];
@@ -16,10 +16,10 @@ export type NeoThemes = (typeof NeoTheme)[keyof typeof NeoTheme];
  * The light source to simulate shadows
  */
 export const NeoSource = {
-  TopLeft: 'top-left' as const,
-  TopRight: 'top-right' as const,
-  BottomRight: 'bottom-right' as const,
-  BottomLeft: 'bottom-left' as const,
+  TopLeft: 'top-left',
+  TopRight: 'top-right',
+  BottomRight: 'bottom-right',
+  BottomLeft: 'bottom-left',
 } as const;
 
 export type NeoSources = (typeof NeoSource)[keyof typeof NeoSource];

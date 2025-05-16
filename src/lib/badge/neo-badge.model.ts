@@ -4,14 +4,14 @@ import type { NeoPillProps } from '~/pill/neo-pill.model.js';
 import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export const NeoBadgePlacement = {
-  Top: 'top' as const,
-  TopRight: 'top-right' as const,
-  TopLeft: 'top-left' as const,
-  Bottom: 'bottom' as const,
-  BottomRight: 'bottom-right' as const,
-  BottomLeft: 'bottom-left' as const,
-  Right: 'right' as const,
-  Left: 'left' as const,
+  Top: 'top',
+  TopRight: 'top-right',
+  TopLeft: 'top-left',
+  Bottom: 'bottom',
+  BottomRight: 'bottom-right',
+  BottomLeft: 'bottom-left',
+  Right: 'right',
+  Left: 'left',
 } as const;
 
 export type NeoBadgePlacements = (typeof NeoBadgePlacement)[keyof typeof NeoBadgePlacement];

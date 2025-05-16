@@ -6,18 +6,18 @@ import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 import { getClickableAncestor, isClickable } from '@dvcol/common-utils/common/element';
 
 export const NeoCursorPointerType = {
-  Mouse: 'mouse' as const,
-  Touch: 'touch' as const,
-  Pen: 'pen' as const,
+  Mouse: 'mouse',
+  Touch: 'touch',
+  Pen: 'pen',
 } as const;
 
 export type NeoCursorPointerTypes = (typeof NeoCursorPointerType)[keyof typeof NeoCursorPointerType];
 
 export const NeoCursorType = {
-  Snap: 'snap' as const,
-  Text: 'text' as const,
-  Auto: 'auto' as const,
-  None: 'none' as const,
+  Snap: 'snap',
+  Text: 'text',
+  Auto: 'auto',
+  None: 'none',
 } as const;
 
 export type NeoCursorTypes = (typeof NeoCursorType)[keyof typeof NeoCursorType];

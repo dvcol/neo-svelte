@@ -6,18 +6,18 @@ export type NeoTooltipPlacement = NeoPlacement | 'auto';
 export type NeoDialogPlacement = NeoPlacement | 'center';
 
 export const NeoPlacements: Record<string, NeoPlacement> = {
-  Top: 'top' as const,
-  TopStart: 'top-start' as const,
-  TopEnd: 'top-end' as const,
-  Bottom: 'bottom' as const,
-  BottomStart: 'bottom-start' as const,
-  BottomEnd: 'bottom-end' as const,
-  Left: 'left' as const,
-  LeftStart: 'left-start' as const,
-  LeftEnd: 'left-end' as const,
-  Right: 'right' as const,
-  RightStart: 'right-start' as const,
-  RightEnd: 'right-end' as const,
+  Top: 'top',
+  TopStart: 'top-start',
+  TopEnd: 'top-end',
+  Bottom: 'bottom',
+  BottomStart: 'bottom-start',
+  BottomEnd: 'bottom-end',
+  Left: 'left',
+  LeftStart: 'left-start',
+  LeftEnd: 'left-end',
+  Right: 'right',
+  RightStart: 'right-start',
+  RightEnd: 'right-end',
 } as const;
 
 export const NeoTooltipPlacements: Record<string, NeoTooltipPlacement> = {
