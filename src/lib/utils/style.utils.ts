@@ -12,7 +12,7 @@ export interface SizeOption<Size extends 'width' | 'height' = 'width' | 'height'
 
 export type SizeInput<Size extends 'width' | 'height' = 'width' | 'height'> = number | SizeValue<Size> | SizeOption<Size, number | SizeValue<Size>>;
 
-export function toPixel(value?: number | string): string | undefined {
+export function toPixel(value?: number | string): string | `${number}px` | undefined {
   if (!value) return;
   return typeof value === 'number' ? `${value}px` : value;
 }

@@ -212,14 +212,14 @@
     "@dvcol/common-utils": "^1.29.4",
     "@dvcol/svelte-utils": "^1.17.1",
     "@skeletonlabs/floating-ui-svelte": "^0.3.9",
-    "svelte": "^5.28.2"
+    "svelte": "^5.30.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@dvcol/eslint-config": "^1.6.0",
     "@dvcol/stylelint-plugin-presets": "^2.1.2",
-    "@dvcol/svelte-simple-router": "^2.4.0",
+    "@dvcol/svelte-simple-router": "^2.4.1",
     "@prettier/plugin-xml": "^3.4.1",
     "@sveltejs/adapter-auto": "^6.0.0",
     "@sveltejs/kit": "^2.20.8",
@@ -250,7 +250,7 @@
     "sass": "^1.87.0",
     "standard-version": "^9.5.0",
     "stylelint": "^16.19.1",
-    "svelte-check": "^4.1.7",
+    "svelte-check": "^4.2.1",
     "svelte-preprocess": "^6.0.3",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",

@@ -39,9 +39,10 @@
   // Text
   --neo-text-color: var(--neo-grey-dark);
   --neo-text-color-inverse: var(--neo-white-soft);
+  --neo-text-color-highlight: oklch(from currentcolor calc(l - 0.15) c h);
   --neo-text-color-secondary: color-mix(in srgb, currentcolor, white 20%);
   --neo-text-color-secondary-hover: color-mix(in srgb, currentcolor, white 10%);
-  --neo-text-color-highlight: oklch(from currentcolor calc(l - 0.15) c h);
+  --neo-text-color-secondary-highlight: color-mix(in srgb, var(--neo-text-color-highlight), white 10%);
   --neo-text-color-active: color-mix(in srgb, currentcolor, white 10%);
   --neo-text-color-hover: oklch(from currentcolor calc(l + 0.075) c h);
   --neo-text-color-hover-active: color-mix(in srgb, var(--neo-text-color-hover), white 10%);
@@ -97,7 +98,7 @@
 
   // Border
   --neo-filled-border-color: var(--neo-shadow-color-light);
-  --neo-glass-border-color: color-mix(in srgb, var(--neo-shadow-color-light), currentcolor 5%);
+  --neo-glass-border-color: color-mix(in srgb, oklch(from var(--neo-shadow-color-light) l c h / 10%), currentcolor 5%);
   --neo-glass-border-color-flat: color-mix(in srgb, var(--neo-glass-shadow-color-dark), currentcolor 10%);
   --neo-glass-border-color-flat-highlight: color-mix(in srgb, var(--neo-glass-shadow-color-dark), currentcolor 30%);
 
@@ -123,9 +124,10 @@
   // Text
   --neo-dark-text-color: var(--neo-white-soft);
   --neo-dark-text-color-inverse: var(--neo-grey);
+  --neo-dark-text-color-highlight: oklch(from currentcolor calc(l + 0.15) c h);
   --neo-dark-text-color-secondary: color-mix(in srgb, currentcolor, black 20%);
   --neo-dark-text-color-secondary-hover: color-mix(in srgb, currentcolor, black 10%);
-  --neo-dark-text-color-highlight: oklch(from currentcolor calc(l + 0.15) c h);
+  --neo-dark-text-color-secondary-highlight: color-mix(in srgb, var(--neo-dark-text-color-highlight), black 20%);
   --neo-dark-text-color-active: color-mix(in srgb, currentcolor, black 10%);
   --neo-dark-text-color-hover: oklch(from currentcolor calc(l - 0.075) c h);
   --neo-dark-text-color-hover-active: color-mix(in srgb, var(--neo-dark-text-color-hover), black 10%);
@@ -174,7 +176,7 @@
 
   // Border
   --neo-dark-filled-border-color: var(--neo-dark-shadow-color-light);
-  --neo-dark-glass-border-color: color-mix(in srgb, oklch(from var(--neo-dark-shadow-color-light) l c h / 5%), currentcolor 5%);
+  --neo-dark-glass-border-color: color-mix(in srgb, oklch(from var(--neo-dark-shadow-color-light) l c h / 10%), currentcolor 5%);
   --neo-dark-glass-border-color-flat: color-mix(in srgb, var(--neo-dark-glass-shadow-color-light), currentcolor 10%);
   --neo-dark-glass-border-color-flat-highlight: color-mix(in srgb, var(--neo-dark-glass-shadow-color-light), currentcolor 30%);
 
@@ -204,9 +206,10 @@
   // Text
   --neo-text-color: var(--neo-dark-text-color);
   --neo-text-color-inverse: var(--neo-dark-text-color-inverse);
+  --neo-text-color-highlight: var(--neo-dark-text-color-highlight);
   --neo-text-color-secondary: var(--neo-dark-text-color-secondary);
   --neo-text-color-secondary-hover: var(--neo-dark-text-color-secondary-hover);
-  --neo-text-color-highlight: var(--neo-dark-text-color-highlight);
+  --neo-text-color-secondary-highlight: var(--neo-dark-text-color-secondary-highlight);
   --neo-text-color-active: var(--neo-dark-text-color-active);
   --neo-text-color-hover: var(--neo-dark-text-color-hover);
   --neo-text-color-hover-active: var(--neo-dark-text-color-hover-active);
