@@ -72,6 +72,7 @@ export type NeoPopConfirmProps = {
   NeoTooltipProps,
   | 'triggerRef'
   | 'open'
+  | 'position'
   | 'target'
   | 'openDelay'
   | 'hoverDelay'

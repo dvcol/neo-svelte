@@ -38,7 +38,7 @@ export type NeoTooltipContext = UseFloatingReturn;
 
 export type NeoTooltipToggle = (open?: boolean) => boolean;
 
-export type NeoTooltipOffsetFunction = (placement: NeoTooltipPlacement) => Parameters<typeof offset>[0];
+export type NeoTooltipOffsetFunction = (placement?: NeoTooltipPlacement) => Parameters<typeof offset>[0];
 
 export const isOffsetFunction = (fn: NeoTooltipProps['offset']): fn is NeoTooltipOffsetFunction => typeof fn === 'function';
 
@@ -87,6 +87,10 @@ export type NeoTooltipProps = {
    * Where to place the floating element relative to its reference element.
    */
   placement?: NeoTooltipPlacement;
+  /**
+   * Actual tooltip position after flip & re-flow to fit viewport
+   */
+  position?: NeoTooltipPlacement;
   /**
    * Whether the tooltip should be rendered in place or as a portal.
    * If not portal target is provided, the dialog will be attached to the body.

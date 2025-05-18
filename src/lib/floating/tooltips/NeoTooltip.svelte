@@ -42,6 +42,7 @@
     open = $bindable(false),
     offset: spacing = 6,
     placement,
+    position = $bindable(),
     target,
     options,
     portal,
@@ -149,7 +150,7 @@
     },
     get middleware() {
       const middleware = [
-        offset(isOffsetFunction(spacing) ? spacing(floating.placement) : spacing),
+        offset((isOffsetFunction(spacing) ? spacing(position ?? placement) : spacing) ?? 6),
         size({
           apply({ availableWidth, availableHeight }) {
             available.width = availableWidth - 8;
@@ -167,6 +168,14 @@
     },
     ...options,
   });
+
+  // Reflect final position
+  watch(
+    () => {
+      position = floating?.placement;
+    },
+    () => floating?.placement,
+  );
 
   const _role = useRole(floating.context, {
     get role() {
@@ -352,6 +361,7 @@
       bind:this={ref}
       hidden={!floating.open}
       data-elevation={elevation}
+      data-position={position}
       data-unmount-on-close={unmountOnClose}
       class:neo-tooltip={true}
       class:neo-rounded={rounded}

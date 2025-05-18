@@ -37,6 +37,7 @@
     tooltipRef = $bindable(),
     triggerRef = $bindable(),
     open = $bindable(false),
+    position = $bindable(),
     target,
     color,
     filled,
@@ -126,6 +127,7 @@
 <NeoTooltip
   bind:ref={tooltipRef}
   bind:triggerRef
+  bind:position
   bind:open={() => open || focused,
     (value) => {
       open = value;

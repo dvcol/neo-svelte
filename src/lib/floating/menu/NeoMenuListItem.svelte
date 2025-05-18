@@ -33,7 +33,7 @@
     keepOpenOnSelect,
 
     placement = 'right-start',
-    offset = (p: NeoTooltipPlacement) => ({ mainAxis: 6, crossAxis: p?.endsWith('start') ? -6 : 6 }),
+    offset = (p?: NeoTooltipPlacement) => ({ mainAxis: 6, crossAxis: p?.endsWith('start') ? -6 : 6 }),
 
     // Styles
     rounded,

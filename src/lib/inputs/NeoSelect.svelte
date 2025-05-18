@@ -61,6 +61,7 @@
     tooltipRef = $bindable(),
     triggerRef = $bindable(),
     open = $bindable(false),
+    position = $bindable(),
     openDelay,
     hoverDelay = 300,
     openOnHover = false,
@@ -241,6 +242,7 @@
   bind:tooltipRef
   bind:triggerRef
   bind:open
+  bind:position
   {readonly}
   {items}
   multiple={!!multiple}

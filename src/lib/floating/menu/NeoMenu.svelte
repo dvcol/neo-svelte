@@ -16,6 +16,7 @@
     // Tooltip Props
     ref = $bindable(),
     open = $bindable(false),
+    position = $bindable(),
     triggerRef = $bindable(),
 
     target,
@@ -105,6 +106,7 @@
 <NeoTooltip
   bind:ref
   bind:triggerRef
+  bind:position
   bind:open={() => open,
     (_open) => {
       tooltipOpen = _open;

@@ -61,6 +61,7 @@ export type NeoPopSelectProps<Value = unknown> = {
   NeoTooltipProps,
   | 'triggerRef'
   | 'open'
+  | 'position'
   | 'target'
   | 'openDelay'
   | 'hoverDelay'

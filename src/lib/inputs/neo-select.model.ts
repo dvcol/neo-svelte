@@ -103,6 +103,10 @@ export type NeoSelectProps<Value = any> = {
    */
   open?: NeoPopSelectProps<Value>['open'];
   /**
+   * Actual tooltip position after flip & re-flow to fit viewport
+   */
+  position?: NeoPopSelectProps<Value>['position'];
+  /**
    * The delay in milliseconds before the tooltip opens on hover.
    *
    * @default 500

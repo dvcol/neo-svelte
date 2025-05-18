@@ -27,6 +27,7 @@
     tooltipRef = $bindable(),
     triggerRef = $bindable(),
     open = $bindable(false),
+    position = $bindable(),
     target,
     openDelay,
     hoverDelay,
@@ -124,6 +125,7 @@
   bind:ref={tooltipRef}
   bind:triggerRef
   bind:open
+  bind:position
   keepOpenOnFocus
   closeOnDismiss={closable}
   {tooltip}
