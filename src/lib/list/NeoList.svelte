@@ -282,8 +282,9 @@
   }, 25);
 
   const renderDivider = (index: number, array: { item: NeoListItemOrSection }[], position: 'top' | 'bottom') => {
-    if (position === 'top') return index && showDivider(array[index].item.divider, 'top');
-    return index < array.length - 1 && showDivider(array[index].item.divider, 'bottom') && !showDivider(array[index + 1].item.divider, 'bottom');
+    if (position === 'top') return index && showDivider(array[index]?.item.divider, 'top');
+    if (index >= array.length - 1) return false;
+    return showDivider(array[index].item.divider, 'bottom') && !showDivider(array[index + 1]?.item.divider, 'top');
   };
 
   const width = $derived(toSize(_width));
@@ -335,7 +336,7 @@
     {@render emptyItem(section?.empty)}
   {:else}
     <!-- Items -->
-    {#each visible as { item, index } (item.id ?? index)}
+    {#each visible as { item, index }, i (item.id ?? index)}
       {@const checked = !isSection(item) && isChecked({ index, item, sectionIndex, section })}
       <svelte:element
         this={item.tag ?? 'li'}
@@ -344,7 +345,7 @@
         data-section={sectionIndex}
         aria-selected={checked}
         aria-posinset={index + 1}
-        aria-setsize={array.length}
+        aria-setsize={visible.length}
         class:neo-list-item={true}
         class:neo-skeleton={skeleton}
         class:neo-checked={checked}
@@ -355,7 +356,7 @@
         out:inFn={inProps}
         in:outFn={outProps}
       >
-        {#if renderDivider(index, visible, flip ? 'bottom' : 'top')}
+        {#if renderDivider(i, visible, flip ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if isSection(item)}
@@ -384,7 +385,7 @@
             onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
           />
         {/if}
-        {#if renderDivider(index, visible, flip ? 'top' : 'bottom')}
+        {#if renderDivider(i, visible, flip ? 'top' : 'bottom')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
       </svelte:element>
