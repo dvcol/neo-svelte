@@ -51,6 +51,7 @@
     loading = false,
     skeleton = false,
     scrollToLoader,
+    scrollTolerance = 1,
 
     select = false,
     multiple = false,
@@ -112,7 +113,7 @@
       else return onScrollTop?.(e);
     }
     // if at the bottom console.info('bottom');
-    if (Math.abs(ref.scrollTop) + ref.clientHeight >= ref.scrollHeight) {
+    if (Math.abs(Math.abs(ref.scrollTop) + ref.clientHeight - ref.scrollHeight) <= scrollTolerance) {
       if (flip) return onScrollTop?.(e);
       else return onScrollBottom?.(e);
     }
@@ -540,9 +541,12 @@
       &:focus,
       &:focus-within {
         :global(> .neo-list-section-title),
-        :global(> .neo-list-item-button .neo-list-item-content),
-        :global(> .neo-list-item-button .neo-list-item-description) {
+        :global(> .neo-list-item-button .neo-list-item-content){
           color: var(--neo-text-color-highlight);
+        }
+
+        :global(> .neo-list-item-button .neo-list-item-description) {
+          color: var(--neo-text-color-secondary-highlight);
         }
       }
     }

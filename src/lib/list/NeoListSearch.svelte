@@ -40,8 +40,17 @@
     loading,
     elevation = 0,
     hover = 0,
+    blur,
     rounded,
+    pressed,
     placeholder = 'Search...',
+    borderless,
+    glass,
+    tinted,
+    color,
+    disabled,
+    readonly,
+    skeleton,
 
     // Other props
     inputProps,
@@ -87,8 +96,6 @@
     if (!context || context?.filter === filterFunction) return;
     context.filter = filterFunction;
   });
-
-//  customise loading/clear icons in input & text area
 </script>
 
 {#snippet before()}
@@ -126,12 +133,20 @@
     {oninput}
     {elevation}
     {hover}
+    {blur}
+    {rounded}
+    {pressed}
+    {borderless}
+    {glass}
+    {tinted}
+    {color}
+    {disabled}
+    {readonly}
+    loading={loading ?? context?.loading}
+    skeleton={skeleton ?? context?.skeleton}
     {before}
     {after}
     {onkeydown}
-    loading={loading ?? context?.loading}
-    skeleton={context?.skeleton}
-    {rounded}
     {...inputProps}
     containerProps={{
       ...inputProps?.containerProps,
