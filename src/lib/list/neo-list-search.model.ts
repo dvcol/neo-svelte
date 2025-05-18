@@ -32,7 +32,7 @@ export type NeoListSearchProps<Tag extends keyof HTMLElementTagNameMap = 'div'> 
    * Custom sort function to apply to the list (overrides default list sort).
    * Defaults unsorted and toggles between ascending and descending alphabetical label order.
    */
-  sort?: NeoListSearchSort;
+  sort?: NeoListSearchSort | false;
   /**
    * List context (used to extract the highlight filter).
    */
@@ -45,7 +45,7 @@ export type NeoListSearchProps<Tag extends keyof HTMLElementTagNameMap = 'div'> 
 } & HTMLRefProps<HTMLInputElement> &
 Pick<
   NeoInputProps,
-    'value' | 'valid' | 'dirty' | 'touched' | 'hovered' | 'focused' | 'focusin' | 'loading' | 'elevation' | 'hover' | 'placeholder' | 'rounded'
+    'value' | 'valid' | 'dirty' | 'touched' | 'hovered' | 'focused' | 'focusin' | 'loading' | 'elevation' | 'hover' | 'blur' | 'pressed' | 'placeholder' | 'rounded' | 'borderless' | 'glass' | 'tinted' | 'color' | 'disabled' | 'skeleton' | 'readonly'
 > &
 HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 

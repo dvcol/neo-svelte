@@ -121,6 +121,11 @@
       "import": "./dist/loading/index.js",
       "svelte": "./dist/loading/index.js"
     },
+    "./media": {
+      "types": "./dist/media/index.d.ts",
+      "import": "./dist/media/index.js",
+      "svelte": "./dist/media/index.js"
+    },
     "./nav": {
       "types": "./dist/nav/index.d.ts",
       "import": "./dist/nav/index.js",

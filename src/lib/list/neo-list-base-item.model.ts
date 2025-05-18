@@ -1,5 +1,6 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoBaseListItem } from '~/list/neo-list.model.js';
+import type { NeoImageProps } from '~/media/neo-image.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
 
@@ -108,9 +109,15 @@ export type NeoListBaseItemProps<
    * @param index
    */
   onclick: NeoButtonProps['onclick'];
+
+  // Other props
   /**
    * Optional props to pass to the button.
    */
   buttonProps?: NeoButtonProps;
+  /**
+   * Optional props to pass to the images.
+   */
+  imageProps?: Partial<NeoImageProps>;
 } & NeoSkeletonTextProps &
-Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle'>;
+Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle' | 'glass' | 'tinted' | 'filled'>;

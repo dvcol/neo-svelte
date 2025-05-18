@@ -75,7 +75,7 @@
     inputProps?.onkeydown?.(e);
   };
 
-  const sortFunction = (a: NeoListItemOrSection, b: NeoListItemOrSection) => sort(a, b, invert);
+  const sortFunction = sort ? (a: NeoListItemOrSection, b: NeoListItemOrSection) => sort(a, b, invert) : undefined;
   const onclick: FormEventHandler<HTMLButtonElement> = () => {
     if (!context) return;
     if (invert === false) {
@@ -145,7 +145,7 @@
     loading={loading ?? context?.loading}
     skeleton={skeleton ?? context?.skeleton}
     {before}
-    {after}
+    after={sort ? after : undefined}
     {onkeydown}
     {...inputProps}
     containerProps={{

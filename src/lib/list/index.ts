@@ -5,7 +5,7 @@ export { default as NeoListBaseSection } from './NeoListBaseSection.svelte';
 export { default as NeoListSearch } from './NeoListSearch.svelte';
 
 export { itemLabelSort, itemSearchFilter } from './neo-list-search.model.js';
-export { isSection } from './neo-list.model.js';
+export { isSection, NeoBaseListItemMediaType } from './neo-list.model.js';
 
 export type * from './neo-list-base-item.model.js';
 export type * from './neo-list-base-loader.model.js';

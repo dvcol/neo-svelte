@@ -11,6 +11,7 @@ export * from './icons/index.js';
 export * from './inputs/index.js';
 export * from './list/index.js';
 export * from './loading/index.js';
+export * from './media/index.js';
 export * from './nav/index.js';
 export * from './pill/index.js';
 export * from './progress/index.js';

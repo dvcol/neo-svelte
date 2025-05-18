@@ -2,7 +2,7 @@
   /* Default font stack */
   --neo-font-family: -apple-system, ui-sans-serif, system-ui, 'Segoe UI', ui-rounded, sans-serif;
 
-  /* font variables */
+  /* font sizes */
   --neo-font-size-xxs: 0.625rem;
   --neo-font-size-xs: 0.75rem;
   --neo-font-size-sm: 0.875rem;
@@ -12,6 +12,13 @@
   --neo-font-size-xl: 1.5rem;
   --neo-font-size-xxl: 1.875rem;
   --neo-font-size-xxxl: 2.125rem;
+
+  /* font weight */
+  --neo-font-weight: normal;
+  --neo-font-weight-md: 500;
+  --neo-font-weight-lg: 600;
+  --neo-font-weight-xl: 700;
+  --neo-font-weight-xxl: 800;
 
   /* Line height */
   --neo-line-height-xxs: 0.75rem;

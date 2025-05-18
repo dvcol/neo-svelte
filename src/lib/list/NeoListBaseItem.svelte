@@ -9,6 +9,8 @@
   import { NeoIconArrowDirection } from '~/icons/index.js';
   import NeoIconArrow from '~/icons/NeoIconArrow.svelte';
   import NeoIconCheckbox from '~/icons/NeoIconCheckbox.svelte';
+  import { NeoBaseListItemMediaType } from '~/list/neo-list.model.js';
+  import NeoImage from '~/media/NeoImage.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
 
@@ -40,12 +42,16 @@
     // Buttons Props
     hovered = $bindable(false),
     focused = $bindable(false),
+    glass,
+    tinted,
+    filled,
 
     // Actions
     onclick,
 
     // Other props
     buttonProps,
+    imageProps,
     ...rest
   }: NeoListBaseItemProps = $props();
 
@@ -70,6 +76,11 @@
     li = li.parentElement.closest<HTMLElement>(selector);
     return getFocusableElement(li?.[sibling])?.focus();
   };
+
+  const lines = $derived({
+    label: typeof ellipsis === 'number' ? ellipsis : ellipsis?.label,
+    description: typeof ellipsis === 'number' ? ellipsis : ellipsis?.description,
+  });
 
   const button = $derived(item?.href || item?.onclick || onclick || select);
   const labelId = $derived(button ? `neo-list-item-label-${getUUID()}` : undefined);
@@ -101,14 +112,23 @@
     class:neo-disabled={disabled}
     class:neo-description={description}
     class:neo-reverse={reverse || item.reverse}
-    style:--neo-list-item-label-lines={typeof ellipsis === 'number' ? ellipsis : ellipsis?.label}
-    style:--neo-list-item-description-lines={typeof ellipsis === 'number' ? ellipsis : ellipsis?.description}
+    style:--neo-list-item-label-lines={lines?.label}
+    style:--neo-list-item-description-lines={lines?.description}
   >
 
     {#if !reverse}
       {@render beforeItem()}
     {:else}
       {@render afterItem()}
+    {/if}
+
+    {#if item.media}
+      {@const { type, ...media } = item.media}
+      <div class="neo-list-item-media">
+        {#if type === NeoBaseListItemMediaType.Imgage}
+          <NeoImage {...imageProps} {...media} />
+        {/if}
+      </div>
     {/if}
 
     <NeoSkeletonText
@@ -122,7 +142,7 @@
       class={['neo-list-item-skeleton', rest?.class]}
     >
       <div class="neo-list-item-text">
-        <span id={labelId} class="neo-list-item-label">
+        <span id={labelId} class="neo-list-item-label" class:neo-header={(lines?.description ?? 0) > 3}>
           <NeoMark value={label ?? value?.toString()} filter={highlight} />
         </span>
         {#if description}
@@ -171,6 +191,9 @@
     {readonly}
     {disabled}
     {rounded}
+    {glass}
+    {tinted}
+    {filled}
     href={item?.href}
     onclick={(e) => {
       if (disabled) return;
@@ -213,6 +236,10 @@
       @include mixin.ellipsis($line: var(--neo-list-item-label-lines, 1));
 
       line-height: var(--neo-line-height-sm, 1.25rem);
+
+      &.neo-header {
+        font-weight: var(--neo-font-weight-md, 500);
+      }
     }
 
     &-description {
@@ -224,13 +251,27 @@
       transition: color 0.15s ease;
     }
 
+    &-text {
+      display: flex;
+      flex-direction: column;
+
+      &:has(> .neo-list-item-label.neo-header) {
+        gap: var(--neo-gap-tiny);
+      }
+    }
+
+    &-media {
+      flex: var(--neo-list-item-media-flex, 0 1 40%);
+      margin: var(--neo-list-item-media-margin, var(--neo-gap-tiny));
+    }
+
     &-content {
       display: inline-flex;
       flex: 1 1 auto;
       gap: var(--neo-gap-xxs, 0.5rem);
       align-items: center;
       padding: 0.125rem 0.5rem;
-      transition: color 0.15s ease;
+      transition: color 0.15s ease, gap 0.3s ease;
 
       &.neo-disabled {
         color: var(--neo-text-color-disabled);

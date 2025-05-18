@@ -4,6 +4,7 @@ import type { Snippet } from 'svelte';
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
+import type { NeoImageProps } from '~/media/neo-image.model.js';
 import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps, SvelteEvent } from '~/utils/html-element.utils.js';
@@ -85,6 +86,21 @@ export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagN
   [NeoListItemContext<Value, Tag, Context>]
 >;
 
+export const NeoBaseListItemMediaType = {
+  Imgage: 'image',
+  Video: 'video',
+  Audio: 'audio',
+} as const;
+
+export type NeoBaseListItemMediaTypes = typeof NeoBaseListItemMediaType[keyof typeof NeoBaseListItemMediaType];
+
+/**
+ * TODO: Add support for video and audio
+ */
+export type NeoBaseListItemMedia<Type extends NeoBaseListItemMediaTypes = typeof NeoBaseListItemMediaType.Imgage> = {
+  type?: Type;
+} & (Type extends typeof NeoBaseListItemMediaType.Imgage ? NeoImageProps : Record<string, never>);
+
 export type NeoBaseListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = any> = {
   /**
    * An arbitrary value to associate with the list item.
@@ -94,6 +110,10 @@ export type NeoBaseListItem<Value = unknown, Tag extends keyof HTMLElementTagNam
    * Optional description to display in the list item.
    */
   description?: string;
+  /**
+   * Optional media to display in the list item.
+   */
+  media?: NeoBaseListItemMedia;
   /**
    * Optional snippet to display in place of the list item.
    */
@@ -356,6 +376,12 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * @default false
    */
   scrollToLoader?: boolean;
+  /**
+   * Scroll tolerance when determining if the list is scrolled to the top or bottom (in pixels).
+   *
+   * @default 1
+   */
+  scrollTolerance?: number;
   /**
    * Optional flex strategy for the container
    */
