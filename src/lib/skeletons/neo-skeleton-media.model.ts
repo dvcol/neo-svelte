@@ -26,19 +26,23 @@ export type NeoSkeletonMediaProps = {
   /**
    * Type of media skeleton to display.
    */
-  type: 'image' | 'video' | 'avatar' | 'empty';
+  type?: 'image' | 'video' | 'avatar' | 'empty';
   /**
    * Size of the media skeleton icon.
    */
   size?: CSSStyleDeclaration['width'];
   /**
-   * Overrides the default flex value.
-   */
-  flex?: CSSStyleDeclaration['flex'];
-  /**
    * Alignment strategy for the skeleton.
    */
   align?: CSSStyleDeclaration['alignSelf'];
+  /**
+   * Optional aspect ratio for the image.
+   */
+  ratio?: CSSStyleDeclaration['aspectRatio'];
+  /**
+   * Overrides the default flex value.
+   */
+  flex?: CSSStyleDeclaration['flex'];
   /**
    * Optional width constraints.
    */
@@ -66,11 +70,8 @@ export type NeoSkeletonMediaProps = {
    */
   glass?: boolean;
   /**
-   * Aspect ratio of the media.
+   * Props to pass to the skeleton container.
    */
-  ratio?: CSSStyleDeclaration['aspectRatio'] /**
-                                              * Props to pass to the skeleton container.
-                                              */;
   containerProps?: Omit<NeoSkeletonContainerProps, 'children' | 'content' | 'containerProps'>;
   /**
    * Props to pass to the transition container.

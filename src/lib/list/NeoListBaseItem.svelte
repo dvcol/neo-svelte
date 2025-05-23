@@ -77,9 +77,15 @@
     return getFocusableElement(li?.[sibling])?.focus();
   };
 
-  const lines = $derived({
-    label: typeof ellipsis === 'number' ? ellipsis : ellipsis?.label,
-    description: typeof ellipsis === 'number' ? ellipsis : ellipsis?.description,
+  const lines = $derived.by(() => {
+    const _lines = {
+      label: typeof ellipsis === 'number' ? ellipsis : ellipsis?.label,
+      description: typeof ellipsis === 'number' ? ellipsis : ellipsis?.description,
+    };
+    return {
+      ..._lines,
+      total: ((_lines?.label ?? 0) + (_lines?.description ?? 0)),
+    };
   });
 
   const button = $derived(item?.href || item?.onclick || onclick || select);
@@ -135,7 +141,7 @@
       loading={!!skeleton}
       disabled={skeleton === undefined}
       lines="auto"
-      fallback={description ? 2 : 1}
+      fallback={lines?.total || (description ? 2 : 1)}
       align="center"
       {reverse}
       {...rest}
@@ -256,7 +262,7 @@
       flex-direction: column;
 
       &:has(> .neo-list-item-label.neo-header) {
-        gap: var(--neo-gap-tiny);
+        gap: var(--neo-list-item-text-gap, var(--neo-gap-tiny));
       }
     }
 

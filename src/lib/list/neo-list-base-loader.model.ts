@@ -1,3 +1,4 @@
+import type { NeoSkeletonMediaProps } from '~/skeletons/neo-skeleton-media.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
@@ -41,7 +42,23 @@ export type NeoListBaseLoaderProps = {
    * Whether to show an after skeleton.
    */
   after?: boolean;
+  /**
+   * Whether to show a header skeleton.
+   */
+  header?: number;
+  /**
+   * Whether to show a media skeleton.
+   */
+  media?: boolean;
 
+  /**
+   * Optional props to pass to the header skeleton.
+   */
+  headerProps?: NeoSkeletonTextProps;
+  /**
+   * Optional props to pass to the media skeleton.
+   */
+  mediaProps?: NeoSkeletonMediaProps;
   /**
    * Optional props to pass to the before skeleton.
    */

@@ -13,10 +13,10 @@
     loaded = $bindable(false),
 
     // Size
-    flex,
     width: _width,
     height: _height,
     ratio,
+    flex,
     fit,
 
     // Events
@@ -43,8 +43,11 @@
     onload?.(e);
   };
 
-// TODO children fallback
-  // TODO loading
+// TODO children fallback (render snippet if error)
+  // TODO loading (skeleton && render snippet if loading & opacity 0 on IMG)
+  // TODO gracefull fade-in betwwen loading/img/fallback
+  // TODO border/shadow to NeoImage
+  // TODO move away from use: to {@attach ...}
 
 </script>
 
@@ -71,6 +74,8 @@
 
 <style lang="scss">
   .neo-image {
+    width: 100%;
+    height: 100%;
     border-radius: var(--neo-imgage-border-radius, var(--neo-border-radius, 0.5rem));
   }
 </style>

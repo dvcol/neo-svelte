@@ -22,8 +22,6 @@
     loading = true,
     type = 'empty',
     size = type === 'avatar' ? '70%' : '20%',
-    flex,
-    align,
     glass,
     disabled,
 
@@ -35,6 +33,8 @@
     // Size
     width: _width,
     height: _height,
+    align,
+    flex,
 
     // Transition
     in: inAction = { use: fade, props: quickDelayProps },

@@ -5,6 +5,7 @@
   import { circIn, circOut } from 'svelte/easing';
   import { fade } from 'svelte/transition';
 
+  import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { quickScaleDelayProps, quickScaleProps } from '~/utils/transition.utils.js';
@@ -16,16 +17,19 @@
     after,
     checkmark = select,
     description,
+    header,
+    media,
 
     lines = description ? 2 : 1,
     items = 3,
-    flex = items > 1 ? undefined : '0 0 70%',
 
     in: inAction = { use: fade, props: quickScaleProps },
     out: outAction = { use: fade, props: quickScaleDelayProps },
 
     beforeProps,
     afterProps,
+    mediaProps,
+    headerProps,
     ...rest
   }: NeoListBaseLoaderProps = $props();
 
@@ -51,7 +55,18 @@
           </div>
         {/if}
 
-        <NeoSkeletonText flex={flex ?? `0 1 ${randomInt(40, 80)}%`} {lines} {...rest} class={['neo-list-loader-skeleton', rest?.class]} />
+        {#if media}
+          <div class="neo-list-base-loader-media">
+            <NeoSkeletonMedia {...mediaProps} />
+          </div>
+        {/if}
+
+        <div class="neo-list-base-loader-text">
+          {#if header}
+            <NeoSkeletonText width={`${randomInt(90, 100)}%`} lines={header} {...headerProps} class={['neo-list-loader-header-skeleton', headerProps?.class]} />
+          {/if}
+          <NeoSkeletonText width={`${randomInt(60, 90)}%`} {lines} {...rest} class={['neo-list-loader-skeleton', rest?.class]} />
+        </div>
 
         {#if after}
           {@const { width, height, ...aProps } = afterProps ?? {}}
@@ -77,6 +92,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
+
+    &-media {
+      flex: var(--neo-list-loader-media-flex, 0 0 28.5%);
+      margin: var(--neo-list-loader-margin, var(--neo-gap-tiny));
+    }
+
+    &-text{
+      flex: 1 1 auto;
+      gap: var(--neo-list-loader-text-gap, 0);
+    }
 
     &-content {
       display: inline-flex;
