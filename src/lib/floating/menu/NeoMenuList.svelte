@@ -122,15 +122,15 @@
   .neo-menu-list {
     display: flex;
     flex-direction: column;
-    padding: var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem)) 0;
+    padding: var(--neo-menu-padding, var(--neo-gap-4xs, 0.25rem)) 0;
     overflow: auto;
 
     :global(.neo-menu-item-divider[data-elevation='0']) {
-      margin: var(--neo-menu-margin, var(--neo-gap-xxxs, 0.3125rem)) 0;
+      margin: var(--neo-menu-margin, var(--neo-gap-3xs, 0.3125rem)) 0;
     }
 
     :global(.neo-menu-item-divider:not([data-elevation='0'])) {
-      --neo-divider-margin: var(--neo-menu-margin, var(--neo-gap-xxxs, 0.3125rem));
+      --neo-divider-margin: var(--neo-menu-margin, var(--neo-gap-3xs, 0.3125rem));
     }
 
     &-section {

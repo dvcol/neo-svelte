@@ -11,7 +11,7 @@
   --neo-font-size-lg: 1.25rem;
   --neo-font-size-xl: 1.5rem;
   --neo-font-size-xxl: 1.875rem;
-  --neo-font-size-xxxl: 2.125rem;
+  --neo-font-size-3xl: 2.125rem;
 
   /* font weight */
   --neo-font-weight: normal;
@@ -39,7 +39,7 @@
   }
 
   h1 {
-    font-size: var(--neo-h1-font-size, var(--neo-font-size-xxxl));
+    font-size: var(--neo-h1-font-size, var(--neo-font-size-3xl));
     line-height: var(--neo-h1-line-height, 1);
   }
 

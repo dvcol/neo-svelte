@@ -2,7 +2,7 @@
   import type { NeoPopConfirmProps } from '~/floating/tooltips/neo-pop-confirm.model.js';
   import type { NeoPopStepperProps } from '~/floating/tooltips/neo-pop-stepper.model.js';
   import type { NeoTooltipContext, NeoTooltipProps, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
-  import type { NeoListItemRenderContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
+  import type { NeoListItemContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
   import type { NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
   import { wait } from '@dvcol/common-utils/common/promise';
@@ -157,18 +157,16 @@
       console.info('Confirm tooltip confirming...');
       await wait(2000);
       console.info('Confirm tooltip confirmed');
-      return true;
     },
     onCancel: async () => {
       console.info('Confirm tooltip cancelling...');
       await wait(1000);
       console.info('Confirm tooltip cancelled');
-      return true;
     },
   };
 </script>
 
-{#snippet avatar(ctx: NeoListItemRenderContext)}
+{#snippet avatar(ctx: NeoListItemContext)}
   <span class="custom-item-avatar">
     <NeoIconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
   </span>
@@ -203,7 +201,7 @@
     bind:value={options.placement}
     containerProps={{ style: 'margin-left: 6.75rem' }}
     options={position}
-    size="15"
+    size={15}
     openOnFocus
     rounded
     glass
@@ -230,7 +228,7 @@
     placement="left"
     floating={false}
     color={options.color}
-    size="10"
+    size={10}
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
@@ -280,7 +278,7 @@
   <div class="row">
     <div class="column content">
       <span class="label">Tooltip</span>
-      <NeoTooltip {tooltip} width {...options}>
+      <NeoTooltip {tooltip} {...options}>
         <NeoButton text rounded={options.rounded}>Hover Me</NeoButton>
       </NeoTooltip>
     </div>
@@ -339,7 +337,7 @@
                 <NeoListBaseItem
                   before={question}
                   checked={true}
-                  item={complexSelected?.item ?? { label: 'None Selected', description: 'Please select a profile' }}
+                  item={complexSelected?.item ?? { label: 'None Selected', value: null, description: 'Please select a profile' }}
                 />
               </div>
             {/key}

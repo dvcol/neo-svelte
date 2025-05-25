@@ -10,7 +10,7 @@ export type NeoFloatingStepperProps = {
   /**
    * Element(s) to render inside the header once open.
    */
-  header?: Snippet<[NeoStepperContext]>;
+  header?: string | Snippet<[NeoStepperContext]>;
 
   // State
   /**

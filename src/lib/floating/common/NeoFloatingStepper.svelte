@@ -129,7 +129,7 @@
     --neo-stepper-mark-bg-color: var(--neo-background-color-backdrop-filled);
 
     &-close {
-      --neo-btn-padding-empty: var(--neo-gap-xxxs);
+      --neo-btn-padding-empty: var(--neo-gap-3xs);
       --neo-btn-margin: 0;
 
       opacity: 0.8;

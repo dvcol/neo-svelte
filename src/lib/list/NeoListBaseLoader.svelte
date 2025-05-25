@@ -95,7 +95,7 @@
 
     &-media {
       flex: var(--neo-list-loader-media-flex, 0 0 28.5%);
-      margin: var(--neo-list-loader-margin, var(--neo-gap-tiny));
+      margin: var(--neo-list-loader-margin, var(--neo-gap-4xs));
     }
 
     &-text{

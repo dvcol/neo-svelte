@@ -1,6 +1,8 @@
 import type { RouterOptions } from '@dvcol/svelte-simple-router/models';
 import type { ComponentOrLazy } from '@dvcol/svelte-utils/component';
 
+import DemoButtons from '../components/DemoButtons.svelte';
+
 export const Route = {
   Buttons: 'buttons' as const,
   ButtonGroups: 'button-groups' as const,
@@ -11,6 +13,7 @@ export const Route = {
   Text: 'text' as const,
   Cards: 'cards' as const,
   Skeleton: 'skeleton' as const,
+  Media: 'media' as const,
   Inputs: 'inputs' as const,
   Lists: 'lists' as const,
   Progress: 'progress' as const,
@@ -41,6 +44,7 @@ export const options: RouterOptions<Routes> = {
   listen: 'navigation',
   routes: Object.entries(Route).map(([k, v]) => {
     if (v === Route.Any) return { name: v, path: PathMap[v], redirect: { name: Route.Buttons } };
+    if (v === Route.Buttons) return { name: v, path: PathMap[v], component: DemoButtons };
     return { name: v, path: PathMap[v], component: async () => import(`../components/Demo${k}.svelte`) as Promise<ComponentOrLazy> };
   }),
 } as const;

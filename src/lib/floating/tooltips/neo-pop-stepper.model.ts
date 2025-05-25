@@ -17,7 +17,7 @@ export type NeoPopStepperProps = {
   /**
    * Element(s) to render inside the header once open.
    */
-  header?: Snippet<[NeoTooltipContext, NeoTooltipToggle, NeoStepperContext]>;
+  header?: string | Snippet<[NeoTooltipContext, NeoTooltipToggle, NeoStepperContext]>;
 
   // Tooltip props
   /**
@@ -83,4 +83,4 @@ export type NeoPopStepperProps = {
   | 'onOpen'
   | 'onClose'
 > &
-NeoFloatingStepperProps;
+Omit<NeoFloatingStepperProps, 'header' | 'children'>;

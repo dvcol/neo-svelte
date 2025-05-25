@@ -173,13 +173,13 @@
 
       .neo-confirm-title {
         flex: 1 1 auto;
-        margin-top: var(--neo-gap-xxxs);
+        margin-top: var(--neo-gap-3xs);
         margin-bottom: 1rem;
       }
     }
 
     &-close {
-      --neo-btn-padding-empty: var(--neo-gap-xxxs);
+      --neo-btn-padding-empty: var(--neo-gap-3xs);
       --neo-btn-margin: 0;
 
       align-self: flex-start;
@@ -196,10 +196,10 @@
       gap: var(--neo-gap-sm);
       justify-content: flex-end;
       margin-top: var(--neo-gap-sm);
-      margin-bottom: var(--neo-gap-tiny);
+      margin-bottom: var(--neo-gap-4xs);
       opacity: 0.8;
       transition: opacity 0.3s ease;
-      padding-inline: var(--neo-gap-xxxs);
+      padding-inline: var(--neo-gap-3xs);
 
       --neo-btn-margin: 0;
     }

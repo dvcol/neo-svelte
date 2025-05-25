@@ -190,6 +190,7 @@
   border-color: $color;
   opacity: $start;
   transition:
+    border-radius calc($delay / 3) ease,
     background-color $delay ease,
     color calc($delay / 3) ease,
     border-color $delay ease,
@@ -417,7 +418,7 @@
     padding 0.3s ease;
 
   @if $padding {
-    padding: var($padding, var(--neo-gap-xxxs) var(--neo-gap-xs));
+    padding: var($padding, var(--neo-gap-3xs) var(--neo-gap-xs));
   }
 
   @if $tinted {

@@ -341,6 +341,7 @@
       <svelte:element
         this={item.tag ?? 'li'}
         role={select ? 'option' : 'listitem'}
+        data-id={item?.id}
         data-index={index}
         data-section={sectionIndex}
         aria-selected={checked}
@@ -486,7 +487,7 @@
         padding-block: var(--neo-list-scroll-padding, 0.625rem);
 
         &:not(.neo-scroll) :global(> .neo-list-item) {
-          padding: 0 var(--neo-list-padding, var(--neo-gap-tiny, 0.25rem));
+          padding: 0 var(--neo-list-padding, var(--neo-gap-4xs, 0.25rem));
         }
       }
 
@@ -511,7 +512,7 @@
     }
 
     &-loader.neo-select {
-      gap: var(--neo-gap-tiny, 0.25rem);
+      gap: var(--neo-gap-4xs, 0.25rem);
     }
 
     &-item {

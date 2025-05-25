@@ -86,4 +86,4 @@ export type NeoPopSelectProps<Value = unknown> = {
   | 'onOpen'
   | 'onClose'
 > &
-Omit<NeoListProps<Value>, 'ref' | 'children' | 'width' | 'height'>;
+Omit<NeoListProps<Value>, 'ref' | 'children' | 'width' | 'height' | 'items'>;

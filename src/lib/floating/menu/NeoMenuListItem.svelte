@@ -181,7 +181,7 @@
 
 <style lang="scss">
   .neo-menu-item {
-    padding: 0 var(--neo-menu-padding, var(--neo-gap-tiny, 0.25rem));
+    padding: 0 var(--neo-menu-padding, var(--neo-gap-4xs, 0.25rem));
     color: var(--neo-list-item-color, inherit);
 
     :global(> .neo-list-item-button) {
