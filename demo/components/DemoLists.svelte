@@ -443,7 +443,8 @@
     font-size: var(--neo-font-size-sm);
     line-height: var(--neo-line-height-sm);
     text-overflow: ellipsis;
-    word-break: break-word;
+    word-break: auto-phrase;
+    overflow-wrap: anywhere;
     padding-inline: 1.125rem;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;

@@ -368,6 +368,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: $word-break;
+  overflow-wrap: anywhere;
 }
 
 @mixin transition-container($area: transition, $width: 100%) {

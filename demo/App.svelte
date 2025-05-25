@@ -47,7 +47,7 @@
         },
       },
     },
-    skipFirst: true,
+    first: false,
   };
 
   const active = $derived(router.route?.name);
