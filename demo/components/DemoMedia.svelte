@@ -1,7 +1,6 @@
 <script lang="ts">
+  import type { NeoImageProps } from '~/media/neo-image.model.js';
   import type { NeoMediaProps } from '~/media/neo-media.model';
-
-  import { displayValue } from '~';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -27,7 +26,16 @@
     },
   });
 
+  const brokenLink = 'http://brokenlink.com';
   const src = 'https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
+
+  let fallback = $state(false);
+  let broken = $state(false);
+  const image = $derived.by<NeoImageProps>(() => {
+    if (fallback) return { src: brokenLink, fallback: src };
+    if (broken) return { src: brokenLink };
+    return { src };
+  });
 
 </script>
 
@@ -40,6 +48,8 @@
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.pressed}>Pressed</NeoButton>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
+    <NeoButton toggle bind:checked={broken}>Broken</NeoButton>
+    <NeoButton toggle bind:checked={fallback}>Fallback</NeoButton>
   </NeoButtonGroup>
 </div>
 
@@ -64,7 +74,6 @@
     placement="left"
     floating={false}
     color={options.color}
-    display={displayValue}
     size={10}
     bind:value={options.color}
     containerProps={{ style: 'margin-left: 4rem' }}
@@ -80,7 +89,11 @@
     <div class="column">
       <span class="label">No content</span>
       <div class="content">
-        <NeoMedia {...options} caption="Image caption title." image={{ src }} ratio="3/2" />
+        {#key image}
+          <NeoMedia {...options} caption="Image caption title." {image} ratio="3/2">
+            <span>Failed to load image</span>
+          </NeoMedia>
+        {/key}
       </div>
     </div>
   </div>

@@ -121,3 +121,10 @@ export type NeoIconAudioProps = NeoIconProps & {
    */
   repeat?: number | 'indefinite';
 };
+
+export type NeoIconImageProps = NeoIconProps & {
+  /**
+   * Delay the entry animation (in seconds).
+   */
+  delay?: number;
+};

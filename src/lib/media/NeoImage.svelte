@@ -2,11 +2,15 @@
   import type { NeoImageProps } from '~/media/neo-image.model.js';
 
   import NeoIconImage from '~/icons/NeoIconImage.svelte';
+  import NeoIconWarning from '~/icons/NeoIconWarning.svelte';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
   let {
+    // Snippet
+    children,
+
     // State
     ref = $bindable(),
     src = $bindable(),
@@ -38,8 +42,6 @@
 
   const { tag = 'div', ...containerProps } = $derived(_containerProps);
 
-  $inspect(containerProps);
-
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
@@ -53,23 +55,22 @@
 
   const onLoad: NeoImageProps['onload'] = (e) => {
     loaded = true;
+    error = false;
     onload?.(e);
   };
-
-// TODO children fallback (render snippet if error & children, else tint background red, show error icon & add error text)
-  // TODO loading (when loading apply skeleton styles, then transition to image when loaded)
-  // TODO replace MediaSkeleton from NeoMedia with inner component loading
-
 </script>
 
 <svelte:element
   this={tag}
   data-error={error}
   data-loaded={loaded}
+  data-fallback={(error && src === fallback)}
+  data-src={(error && src === fallback) ? src : undefined}
   class:neo-image={true}
   class:neo-rounded={rounded}
   class:neo-skeleton={skeleton || (!loaded && !error)}
   class:neo-glass={glass}
+  class:neo-error={error}
   style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
@@ -81,9 +82,14 @@
   style:--neo-image-border-radius={computeBorderRadius(rounded)}
   {...containerProps}
 >
-  <span class="neo-image-icon">
-    <NeoIconImage />
-  </span>
+  <div class="neo-image-icon">
+    {#if error}
+      <NeoIconWarning />
+      {@render children?.()}
+    {:else}
+      <NeoIconImage delay={0.3} />
+    {/if}
+  </div>
   <img
     bind:this={ref}
     class:neo-image-img={true}
@@ -128,6 +134,11 @@
       position: absolute;
       top: calc(50% - var(--neo-image-icon-size, 20%) / 2);
       left: calc(50% - var(--neo-image-icon-size, 20%) / 2);
+      display: flex;
+      flex-direction: column;
+      gap: var(--neo-gap-xxs, 0.5rem);
+      align-items: center;
+      justify-content: center;
       width: var(--neo-image-icon-size, 20%);
       height: var(--neo-image-icon-size, 20%);
       color: var(--neo-text-color-inverse);
@@ -135,7 +146,7 @@
       opacity: 0.75;
       transition: visibility 0.3s ease, opacity 0.3s ease;
 
-      :global(> svg:only-child) {
+      :global(> svg) {
         width: 100%;
         height: 100%;
       }
@@ -147,6 +158,18 @@
       .neo-image-img {
         visibility: hidden;
         opacity: 0;
+      }
+
+      .neo-image-icon {
+        visibility: visible;
+      }
+    }
+
+    &.neo-error {
+      background-color: var(--neo-image-error-bg, color-mix(in srgb, var(--neo-skeleton-color) 75%, var(--neo-dark-color-error-75)));
+
+      .neo-image-img {
+        visibility: hidden;
       }
 
       .neo-image-icon {
