@@ -104,7 +104,7 @@ export interface NeoMediaProps<Type extends NeoMediaTypes = NeoMediaTypes, Tag e
   /**
    * The props to pass to the image element.
    */
-  image: NeoImageProps;
+  image?: NeoImageProps;
 
   // Sizes
   /**
@@ -132,9 +132,9 @@ export interface NeoMediaProps<Type extends NeoMediaTypes = NeoMediaTypes, Tag e
   /**
    * The props to pass to the caption skeleton loader.
    */
-  textProps?: NeoSkeletonTextProps;
+  skeletonTextProps?: NeoSkeletonTextProps;
   /**
    * The props to pass to the media skeleton loader.
    */
-  mediaProps?: NeoSkeletonMediaProps;
+  skeletonMediaProps?: NeoSkeletonMediaProps;
 }

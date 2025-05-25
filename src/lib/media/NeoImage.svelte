@@ -86,7 +86,7 @@
     border-radius: var(--neo-image-border-radius, var(--neo-border-radius, 0.5rem));
 
     &.neo-rounded {
-      border-radius: var(--neo-media-border-radius, var(--neo-border-radius-xl));
+      border-radius: var(--neo-image-border-radius, var(--neo-border-radius-xl));
     }
   }
 </style>

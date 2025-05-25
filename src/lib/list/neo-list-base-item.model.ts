@@ -1,6 +1,6 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoBaseListItem } from '~/list/neo-list.model.js';
-import type { NeoImageProps } from '~/media/neo-image.model.js';
+import type { NeoMediaProps } from '~/media/neo-media.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
 
@@ -116,8 +116,8 @@ export type NeoListBaseItemProps<
    */
   buttonProps?: NeoButtonProps;
   /**
-   * Optional props to pass to the images.
+   * Optional props to pass to the media.
    */
-  imageProps?: Partial<NeoImageProps>;
+  mediaProps?: NeoMediaProps;
 } & NeoSkeletonTextProps &
 Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle' | 'glass' | 'tinted' | 'filled'>;

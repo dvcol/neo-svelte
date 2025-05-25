@@ -50,7 +50,7 @@
 
     // Other props
     buttonProps,
-    imageProps,
+    mediaProps,
     ...rest
   }: NeoListBaseItemProps = $props();
 
@@ -129,7 +129,7 @@
 
     {#if item.media}
       {@const { image, ...media } = item.media}
-      <NeoMedia class="neo-list-item-media" {rounded} {...media} image={{ ...imageProps, ...image }} />
+      <NeoMedia class="neo-list-item-media" loading={!!skeleton} elevation={(hovered || focused) ? 2 : 1} {rounded} {...mediaProps} {...media} image={{ ...mediaProps?.image, ...image }} />
     {/if}
 
     <NeoSkeletonText
@@ -261,11 +261,6 @@
       }
     }
 
-    &-media {
-      flex: var(--neo-list-item-media-flex, 0 1 40%);
-      margin: var(--neo-list-item-media-margin, var(--neo-gap-4xs));
-    }
-
     &-content {
       display: inline-flex;
       flex: 1 1 auto;
@@ -273,6 +268,12 @@
       align-items: center;
       padding: 0.125rem 0.5rem;
       transition: color 0.15s ease, gap 0.3s ease;
+
+      :global(> .neo-list-item-media) {
+        --neo-media-margin: var(--neo-list-item-media-margin, var(--neo-gap-4xs));
+        --neo-media-padding:var(--neo-list-item-media-padding, var(--neo-gap-4xs));
+        --neo-media-flex: var(--neo-list-item-media-flex, 0 1 40%);
+      }
 
       &.neo-disabled {
         color: var(--neo-text-color-disabled);

@@ -20,7 +20,7 @@
     ref = $bindable(),
     tag = 'figure',
     type: _type,
-    loading,
+    loading = false,
 
     // Media,
     image,
@@ -52,8 +52,8 @@
 
     // Other props
     captionProps: _captionProps = {},
-    textProps,
-    mediaProps,
+    skeletonTextProps,
+    skeletonMediaProps,
     ...rest
   }: NeoMediaProps = $props();
 
@@ -125,7 +125,7 @@
   in:inFn={inProps}
   {...rest}
 >
-  <NeoSkeletonMedia {loading} {glass} {rounded} {type} {ratio} {...mediaProps} containerProps={{ width: '100%', height: '100%' }}>
+  <NeoSkeletonMedia {loading} {glass} {rounded} {type} {ratio} {...skeletonMediaProps} containerProps={{ width: '100%', height: '100%' }}>
     {#if type === NeoMediaType.Image}
       <NeoImage {rounded} {ratio} {...image} />
     {:else}
@@ -134,7 +134,7 @@
 
   </NeoSkeletonMedia>
   {#if caption}
-    <NeoSkeletonText lines="1" {loading} {glass} {...textProps}>
+    <NeoSkeletonText lines="1" {loading} {glass} {...skeletonTextProps}>
       <svelte:element this={captionTag} class:neo-media-caption={true} {...captionProps}>
         {#if typeof caption === 'function'}
           {@render caption(context)}
@@ -149,6 +149,7 @@
 <style lang="scss">
   .neo-media {
     display: flex;
+    flex: var(--neo-media-flex, 1 1 auto);
     flex-direction: column;
     gap: var(--neo-media-gap, var(--neo-gap-xs, 0.625rem));
     margin: var(--neo-media-margin, var(--neo-shadow-margin, 0.625rem));

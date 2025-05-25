@@ -1,4 +1,4 @@
-import type { NeoSkeletonMediaProps } from '~/skeletons/neo-skeleton-media.model.js';
+import type { NeoMediaProps } from '~/media/neo-media.model.js';
 import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
@@ -58,7 +58,7 @@ export type NeoListBaseLoaderProps = {
   /**
    * Optional props to pass to the media skeleton.
    */
-  mediaProps?: NeoSkeletonMediaProps;
+  mediaProps?: NeoMediaProps;
   /**
    * Optional props to pass to the before skeleton.
    */

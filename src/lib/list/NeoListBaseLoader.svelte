@@ -5,7 +5,7 @@
   import { circIn, circOut } from 'svelte/easing';
   import { fade } from 'svelte/transition';
 
-  import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
+  import NeoMedia from '~/media/NeoMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { quickScaleDelayProps, quickScaleProps } from '~/utils/transition.utils.js';
@@ -56,9 +56,7 @@
         {/if}
 
         {#if media}
-          <div class="neo-list-base-loader-media">
-            <NeoSkeletonMedia {...mediaProps} />
-          </div>
+          <NeoMedia class="neo-list-base-loader-media" elevation="1" loading {...mediaProps} />
         {/if}
 
         <div class="neo-list-base-loader-text">
@@ -93,13 +91,10 @@
     align-items: center;
     justify-content: space-between;
 
-    &-media {
-      flex: var(--neo-list-loader-media-flex, 0 0 28.5%);
-      margin: var(--neo-list-loader-margin, var(--neo-gap-4xs));
-    }
-
     &-text{
+      display: flex;
       flex: 1 1 auto;
+      flex-direction: column;
       gap: var(--neo-list-loader-text-gap, 0);
     }
 
@@ -109,6 +104,12 @@
       gap: var(--neo-gap-xxs, 0.5rem);
       align-items: center;
       padding: 0.125rem 0.5rem;
+
+      :global(> .neo-list-base-loader-media) {
+        --neo-media-margin: var(--neo-list-loader-media-margin, var(--neo-gap-4xs));
+        --neo-media-padding:var(--neo-list-loader-media-padding, var(--neo-gap-4xs));
+        --neo-media-flex: var(--neo-list-loader-media-flex, 0 1 28.5%);
+      }
 
       :global(.neo-list-loader-skeleton .neo-skeleton-text-line) {
         --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);

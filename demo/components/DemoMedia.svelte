@@ -22,7 +22,7 @@
     rounded: false,
     pressed: false,
     borderless: false,
-    mediaProps: {
+    skeletonMediaProps: {
       ratio: '3/2',
     },
   });
