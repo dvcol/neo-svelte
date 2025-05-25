@@ -4,8 +4,10 @@
   import { fade } from 'svelte/transition';
 
   import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
+  import NeoIconAudio from '~/icons/NeoIconAudio.svelte';
   import NeoIconImage from '~/icons/NeoIconImage.svelte';
   import NeoIconVideo from '~/icons/NeoIconVideo.svelte';
+  import { NeoSkeletonMediaType } from '~/skeletons/neo-skeleton-media.model.js';
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
@@ -20,15 +22,15 @@
     // State
     ref = $bindable(),
     loading = true,
-    type = 'empty',
-    size = type === 'avatar' ? '70%' : '20%',
+    type = NeoSkeletonMediaType.Empty,
+    size = type === NeoSkeletonMediaType.Avatar ? '70%' : '20%',
     glass,
     disabled,
 
     // Styles
     rounded,
     circle,
-    ratio = type === 'video' ? '16 / 9' : '4 / 3',
+    ratio = type === NeoSkeletonMediaType.Video ? '16 / 9' : '4 / 3',
 
     // Size
     width: _width,
@@ -48,11 +50,13 @@
 
   const MediaType = $derived.by(() => {
     switch (type) {
-      case 'image':
+      case NeoSkeletonMediaType.Image:
         return NeoIconImage;
-      case 'video':
+      case NeoSkeletonMediaType.Video:
         return NeoIconVideo;
-      case 'avatar':
+      case NeoSkeletonMediaType.Audio:
+        return NeoIconAudio;
+      case NeoSkeletonMediaType.Avatar:
         return NeoIconAccount;
       default:
         return undefined;
@@ -118,7 +122,8 @@
     flex: 1 1 auto;
     flex-direction: column;
     gap: var(--neo-skeleton-gap, var(--neo-gap-xl));
-    width: 100%;
+    width: var(--neo-skeleton-content-width, 100%);
+    height: var(--neo-skeleton-content-height);
     border-radius: var(--neo-skeleton-border-radius, var(--neo-border-radius));
 
     @include mixin.skeleton;
@@ -137,14 +142,12 @@
     }
 
     &-icon {
-      $icon-color: oklch(from var(--neo-skeleton-color) calc(l + 0.1) c h);
-
       position: absolute;
       top: calc(50% - var(--neo-skeleton-media-icon-size) / 2);
       left: calc(50% - var(--neo-skeleton-media-icon-size) / 2);
       width: var(--neo-skeleton-media-icon-size);
       height: var(--neo-skeleton-media-icon-size);
-      color: $icon-color;
+      color: var(--neo-text-color-inverse);
       visibility: visible;
       opacity: 0.75;
 

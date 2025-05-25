@@ -1,5 +1,6 @@
 import type { HTMLImgAttributes } from 'svelte/elements';
 
+import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -13,10 +14,6 @@ export interface NeoImageProps extends Omit<HTMLImgAttributes, 'width' | 'height
    * Whether the image failed to load.
    */
   error?: boolean;
-  /**
-   * The image alternate text for accessibility.
-   */
-  alt: Required<HTMLImgAttributes['alt']>;
   /**
    * An optional fallback image source to use if the image fails to load.
    */
@@ -43,4 +40,10 @@ export interface NeoImageProps extends Omit<HTMLImgAttributes, 'width' | 'height
    * Optional object fit for the image.
    */
   fit?: CSSStyleDeclaration['objectFit'];
+
+  // Styles
+  /**
+   * Rounds border radius.
+   */
+  rounded?: BorderRadiusInput;
 }

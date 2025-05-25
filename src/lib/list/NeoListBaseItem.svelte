@@ -9,8 +9,7 @@
   import { NeoIconArrowDirection } from '~/icons/index.js';
   import NeoIconArrow from '~/icons/NeoIconArrow.svelte';
   import NeoIconCheckbox from '~/icons/NeoIconCheckbox.svelte';
-  import { NeoBaseListItemMediaType } from '~/list/neo-list.model.js';
-  import NeoImage from '~/media/NeoImage.svelte';
+  import NeoMedia from '~/media/NeoMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
 
@@ -129,12 +128,8 @@
     {/if}
 
     {#if item.media}
-      {@const { type, ...media } = item.media}
-      <div class="neo-list-item-media">
-        {#if type === NeoBaseListItemMediaType.Imgage}
-          <NeoImage {...imageProps} {...media} />
-        {/if}
-      </div>
+      {@const { image, ...media } = item.media}
+      <NeoMedia class="neo-list-item-media" {rounded} {...media} image={{ ...imageProps, ...image }} />
     {/if}
 
     <NeoSkeletonText
@@ -262,13 +257,13 @@
       flex-direction: column;
 
       &:has(> .neo-list-item-label.neo-header) {
-        gap: var(--neo-list-item-text-gap, var(--neo-gap-tiny));
+        gap: var(--neo-list-item-text-gap, var(--neo-gap-4xs));
       }
     }
 
     &-media {
       flex: var(--neo-list-item-media-flex, 0 1 40%);
-      margin: var(--neo-list-item-media-margin, var(--neo-gap-tiny));
+      margin: var(--neo-list-item-media-margin, var(--neo-gap-4xs));
     }
 
     &-content {

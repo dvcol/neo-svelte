@@ -6,6 +6,16 @@ import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
+export const NeoSkeletonMediaType = {
+  Image: 'image',
+  Video: 'video',
+  Audio: 'audio',
+  Avatar: 'avatar',
+  Empty: 'empty',
+} as const;
+
+export type NeoSkeletonMediaTypes = (typeof NeoSkeletonMediaType)[keyof typeof NeoSkeletonMediaType];
+
 export type NeoSkeletonMediaProps = {
   // Snippets
 
@@ -26,7 +36,7 @@ export type NeoSkeletonMediaProps = {
   /**
    * Type of media skeleton to display.
    */
-  type?: 'image' | 'video' | 'avatar' | 'empty';
+  type?: NeoSkeletonMediaTypes;
   /**
    * Size of the media skeleton icon.
    */

@@ -217,7 +217,7 @@
 
     &.neo-alt {
       flex-flow: row wrap;
-      gap: var(--neo-skeleton-alt-gap, 0 var(--neo-gap-xxxs));
+      gap: var(--neo-skeleton-alt-gap, 0 var(--neo-gap-3xs));
     }
 
     &.neo-justify {

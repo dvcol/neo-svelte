@@ -106,3 +106,18 @@ export type NeoIconThemeProps = NeoIconSunMoonProps;
 export type NeoIconDoubleChevronProps = NeoIconProps & { space?: number };
 
 export type NeoIconUnplugProps = NeoIconProps & { plug?: boolean };
+
+export type NeoIconAudioProps = NeoIconProps & {
+  /**
+   * The speed of the animation in seconds.
+   */
+  speed?: number;
+  /**
+   * Whether the icon should animate.
+   */
+  animated?: boolean;
+  /**
+   * The number animation iterations before stopping.
+   */
+  repeat?: number | 'indefinite';
+};

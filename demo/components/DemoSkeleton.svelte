@@ -23,6 +23,7 @@
     { type: 'text', label: 'Alt Justify', props: { titleProps, alt: true, justify: true }, content: { height: '14rem' } },
     { type: 'media', label: 'Video', props: { type: 'video' }, content: { width: '40rem' } },
     { type: 'media', label: 'Image', props: { type: 'image' }, content: { width: '30rem' } },
+    { type: 'media', label: 'Audio', props: { type: 'audio' }, content: { width: '30rem' } },
     { type: 'media', label: 'Empty', content: { width: '30rem' } },
     { type: 'media', label: 'Rounded', props: { rounded: true }, content: { width: '30rem' } },
     { type: 'media', label: 'Avatar', props: { type: 'avatar', circle: true }, content: { height: '9rem', width: '9rem' } },

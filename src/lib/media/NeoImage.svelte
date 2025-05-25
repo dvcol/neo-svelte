@@ -1,16 +1,21 @@
 <script lang="ts">
   import type { NeoImageProps } from '~/media/neo-image.model.js';
 
+  import { computeBorderRadius } from '~/utils/border.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
   let {
+    // State
     ref = $bindable(),
     src = $bindable(),
     fallback,
     alt,
     error = $bindable(false),
     loaded = $bindable(false),
+
+    // Styles
+    rounded,
 
     // Size
     width: _width,
@@ -52,12 +57,13 @@
 </script>
 
 <img
-  class="neo-image"
   bind:this={ref}
   {src}
   {alt}
   loading="lazy"
   decoding="async"
+  class="neo-image"
+  class:neo-rounded={rounded}
   style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
@@ -67,6 +73,7 @@
   style:max-height={height?.max}
   style:aspect-ratio={ratio}
   style:object-fit={fit}
+  style:--neo-image-border-radius={computeBorderRadius(rounded)}
   onerror={onError}
   onload={onLoad}
   {...rest}
@@ -76,6 +83,10 @@
   .neo-image {
     width: 100%;
     height: 100%;
-    border-radius: var(--neo-imgage-border-radius, var(--neo-border-radius, 0.5rem));
+    border-radius: var(--neo-image-border-radius, var(--neo-border-radius, 0.5rem));
+
+    &.neo-rounded {
+      border-radius: var(--neo-media-border-radius, var(--neo-border-radius-xl));
+    }
   }
 </style>
