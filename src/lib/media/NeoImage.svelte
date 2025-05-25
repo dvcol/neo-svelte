@@ -56,7 +56,7 @@
     onload?.(e);
   };
 
-// TODO children fallback (render snippet if error)
+// TODO children fallback (render snippet if error & children, else tint background red, show error icon & add error text)
   // TODO loading (when loading apply skeleton styles, then transition to image when loaded)
   // TODO replace MediaSkeleton from NeoMedia with inner component loading
 

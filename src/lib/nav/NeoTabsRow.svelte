@@ -37,6 +37,10 @@
     hovered = $bindable(false),
     focused = $bindable(false),
 
+    // Events
+    ontabfocus,
+    ontabhover,
+
     // Other props
     menuProps,
     iconProps,
@@ -67,6 +71,20 @@
           return item.tabId === active;
         },
         ...item.menuProps?.buttonProps,
+        onfocus: (e) => {
+          item.menuProps?.buttonProps?.onfocus?.(e);
+          ontabfocus?.(e, {
+            tabId: item.tabId ?? tabProps?.tabId,
+            value: item.value ?? tabProps?.value,
+          });
+        },
+        onpointerenter: (e) => {
+          item.menuProps?.buttonProps?.onpointerenter?.(e);
+          ontabhover?.(e, {
+            tabId: item.tabId ?? tabProps?.tabId,
+            value: item.value ?? tabProps?.value,
+          });
+        },
       },
     };
   }
@@ -142,7 +160,27 @@
       {#if (isTabRowDivider(_props))}
         <NeoTabDivider vertical={!vertical} {..._props} />
       {:else}
-        <NeoTab register="force" {...tabProps} {..._props} />
+        <NeoTab
+          register="force"
+          {...tabProps}
+          {..._props}
+          onfocus={(e) => {
+            tabProps?.onfocus?.(e);
+            _props?.onfocus?.(e);
+            ontabfocus?.(e, {
+              tabId: _props?.tabId ?? tabProps?.tabId,
+              value: _props?.value ?? tabProps?.value,
+            });
+          }}
+          onpointerenter={(e) => {
+            tabProps?.onpointerenter?.(e);
+            _props?.onpointerenter?.(e);
+            ontabhover?.(e, {
+              tabId: _props?.tabId ?? tabProps?.tabId,
+              value: _props?.value ?? tabProps?.value,
+            });
+          }}
+        />
       {/if}
     {/each}
 
