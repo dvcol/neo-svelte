@@ -8,7 +8,7 @@
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
-  import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { DefaultShadowElevation, getDefaultElevation, MaxShadowElevation, MinShadowElevation } from '~/utils/shadow.utils';
 
@@ -155,15 +155,15 @@
 {/snippet}
 
 {#snippet media({ horizontal }: NeoCardContext)}
-  <NeoSkeletonMedia loading={skeleton} type="image" ratio="1.5" transitionProps={{ style: horizontal ? 'max-width: 30dvw' : undefined }}>
-    <img
-      class="demo-card-media"
-      height="100%"
-      width="100%"
-      src="https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-      alt="Placeholder"
-    />
-  </NeoSkeletonMedia>
+  <NeoImage
+    {skeleton}
+    class="demo-card-media"
+    src="https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+    alt="Placeholder"
+    ratio="1.5"
+    fit="cover"
+    width={horizontal ? { max: '30dvw' } : undefined}
+  />
 {/snippet}
 
 {#snippet header()}
@@ -231,7 +231,7 @@
   .content {
     overflow: unset;
 
-    .demo-card-media {
+    :global(.demo-card-media) {
       max-width: 86ch;
       border-radius: inherit;
     }

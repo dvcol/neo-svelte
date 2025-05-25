@@ -23,6 +23,7 @@
 
     // Styles
     flex,
+    ratio,
     width,
     height,
     reverse,
@@ -66,7 +67,7 @@
 {#if disabled}
   {@render content?.()}
 {:else if content}
-  <NeoTransitionContainer {width} {height} {reverse} {...containerProps}>
+  <NeoTransitionContainer {width} {height} {reverse} {ratio} {...containerProps}>
     {#if loading}
       <svelte:element
         this={tag}

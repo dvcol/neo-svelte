@@ -15,6 +15,9 @@
     overflow,
     overflowX,
     overflowY,
+
+    // Size
+    ratio,
     width,
     height,
     reverse,
@@ -43,6 +46,7 @@
   style:overflow-y={overflowY}
   style:width
   style:height
+  style:aspect-ratio={ratio}
   out:outFn={outProps}
   in:inFn={inProps}
   {...rest}

@@ -38,6 +38,10 @@ export type NeoTransitionContainerProps<Tag extends keyof HTMLElementTagNameMap 
    */
   overflowY?: CSSStyleDeclaration['overflowY'];
   /**
+   * Optional aspect ratio for the container.
+   */
+  ratio?: CSSStyleDeclaration['aspectRatio'];
+  /**
    * Width of the container.
    */
   width?: CSSStyleDeclaration['width'];

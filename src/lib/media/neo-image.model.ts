@@ -1,7 +1,7 @@
 import type { HTMLImgAttributes } from 'svelte/elements';
 
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
-import type { HTMLRefProps } from '~/utils/html-element.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
 export interface NeoImageProps extends Omit<HTMLImgAttributes, 'width' | 'height'>, HTMLRefProps {
@@ -18,6 +18,10 @@ export interface NeoImageProps extends Omit<HTMLImgAttributes, 'width' | 'height
    * An optional fallback image source to use if the image fails to load.
    */
   fallback?: HTMLImgAttributes['src'];
+  /**
+   * Whether to show a skeleton in place of the image, regardless of loading state.
+   */
+  skeleton?: boolean;
 
   // Size
   /**
@@ -46,4 +50,14 @@ export interface NeoImageProps extends Omit<HTMLImgAttributes, 'width' | 'height
    * Rounds border radius.
    */
   rounded?: BorderRadiusInput;
+  /**
+   * Whether to show the skeleton with a glass effect.
+   */
+  glass?: boolean;
+
+  // Other Props
+  /**
+   * Optional props to pass to the container element.
+   */
+  containerProps?: HTMLNeoBaseElement & HTMLTagProps;
 }

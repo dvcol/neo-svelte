@@ -80,6 +80,7 @@
   out={outAction}
   width={width?.absolute}
   height={height?.absolute}
+  {ratio}
   {content}
   containerProps={transitionProps}
   {...containerProps}

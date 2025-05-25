@@ -125,14 +125,14 @@
   in:inFn={inProps}
   {...rest}
 >
-  <NeoSkeletonMedia {loading} {glass} {rounded} {type} {ratio} {...skeletonMediaProps} containerProps={{ width: '100%', height: '100%' }}>
-    {#if type === NeoMediaType.Image}
-      <NeoImage {rounded} {ratio} {...image} />
-    {:else}
+  {#if type === NeoMediaType.Image}
+    <NeoImage skeleton={loading} {rounded} {glass} {ratio} {...image} />
+  {:else}
+    <NeoSkeletonMedia {loading} {glass} {rounded} {type} {ratio} {...skeletonMediaProps}>
       {@render children?.(context)}
-    {/if}
+    </NeoSkeletonMedia>
+  {/if}
 
-  </NeoSkeletonMedia>
   {#if caption}
     <NeoSkeletonText lines="1" {loading} {glass} {...skeletonTextProps}>
       <svelte:element this={captionTag} class:neo-media-caption={true} {...captionProps}>
@@ -168,11 +168,6 @@
             backdrop-filter 0.3s ease,
             background-color 0.3s ease,
             box-shadow 0.3s ease-out;
-
-    :global(> .neo-transition-container:first-child > .neo-skeleton-content-container) {
-      width: 100%;
-      height: 100%;
-    }
 
     .neo-media-caption {
       transition: margin 0.3s ease;

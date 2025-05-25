@@ -54,6 +54,10 @@ export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 
    */
   flex?: CSSStyleDeclaration['flex'];
   /**
+   * Optional aspect ratio for the container.
+   */
+  ratio?: CSSStyleDeclaration['aspectRatio'];
+  /**
    * Width of the container.
    */
   width?: CSSStyleDeclaration['width'];
