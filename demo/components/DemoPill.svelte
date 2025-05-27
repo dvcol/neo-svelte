@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { NeoPillProps } from '~/pill/neo-pill.model.js';
+
   import NeoBadge from '~/badge/NeoBadge.svelte';
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -7,17 +9,18 @@
   import { displayValue } from '~/inputs/neo-select.model';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
+  import { NeoPillSize } from '~/pill/neo-pill.model.js';
   import NeoPill from '~/pill/NeoPill.svelte';
   import { MaxShallowShadowElevation, MinShallowShadowElevation } from '~/utils/shadow.utils';
 
   import { colorOptions } from '../utils/color.utils';
   import SphereBackdrop from '../utils/SphereBackdrop.svelte';
 
-  const options = $state({
+  const options = $state<NeoPillProps>({
     elevation: 1,
     hover: 0,
 
-    size: 'large',
+    size: NeoPillSize.Large,
     color: '',
     close: false,
     loading: false,
@@ -88,7 +91,7 @@
     placeholder="Select size"
     placement="left"
     floating={false}
-    size="10"
+    size={10}
     bind:value={options.size}
     containerProps={{ style: 'margin-left: 4rem' }}
     options={['large', 'medium', 'small']}
@@ -126,8 +129,10 @@
 
     <SphereBackdrop glass={options.glass}>
       <NeoPill {...options}>
-        <NeoIconAccount style="margin-inline: -0.1875rem 0.325rem" />
-        <span>Icon</span>
+        {#snippet icon()}
+          <NeoIconAccount />
+        {/snippet}
+        <span>icon</span>
       </NeoPill>
     </SphereBackdrop>
   </div>

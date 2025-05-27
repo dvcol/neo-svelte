@@ -52,10 +52,6 @@ export interface NeoButtonStates {
   focused?: boolean;
 
   /**
-   * If true, only the icon (if any) will be displayed.
-   */
-  empty?: boolean;
-  /**
    * If true, the button will act as a toggle button.
    */
   toggle?: boolean;

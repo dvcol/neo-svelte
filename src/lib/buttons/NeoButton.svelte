@@ -38,7 +38,6 @@
     loading,
     skeleton = false,
     disabled,
-    empty: only,
     toggle,
     readonly,
     checked = $bindable(false),
@@ -121,7 +120,7 @@
   let enter = $state(false);
   let clicked = $state(false);
   const pressed = $derived(enter || clicked || checked);
-  const empty = $derived(only || (!children && (label === undefined || label === null)));
+  const empty = $derived((!children && (label === undefined || label === null)));
   const scalePressed = $derived(typeof scale === 'boolean' ? undefined : scale);
 
   let timeout: ReturnType<typeof setTimeout>;
@@ -189,7 +188,6 @@
     hovered,
     focused,
 
-    empty,
     toggle,
 
     checked,
@@ -342,16 +340,16 @@
       scale: 1;
 
       .neo-icon:not(.neo-only) {
-        margin-right: var(--neo-btn-icon-gap, 0.3125rem);
-        margin-left: var(--neo-btn-icon-offset, calc(0% - var(--neo-btn-icon-gap, 0.3125rem)));
+        margin-right: var(--neo-btn-icon-gap, var(--neo-gap-3xs, 0.3125rem));
+        margin-left: var(--neo-btn-icon-offset, calc(0% - var(--neo-btn-icon-gap, var(--neo-gap-3xs, 0.3125rem))));
       }
 
       &.neo-reverse {
         flex-direction: row-reverse;
 
         .neo-icon:not(.neo-only) {
-          margin-right: var(--neo-btn-icon-offset, calc(0% - var(--neo-btn-icon-gap, 0.3125rem)));
-          margin-left: var(--neo-btn-icon-gap, 0.3125rem);
+          margin-right: var(--neo-btn-icon-offset, calc(0% - var(--neo-btn-icon-gap, var(--neo-gap-3xs, 0.3125rem))));
+          margin-left: var(--neo-btn-icon-gap, var(--neo-gap-3xs, 0.3125rem));
         }
       }
     }

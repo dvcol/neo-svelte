@@ -51,6 +51,7 @@
     // Other props
     buttonProps,
     mediaProps,
+    markProps,
     ...rest
   }: NeoListBaseItemProps = $props();
 
@@ -144,11 +145,11 @@
     >
       <div class="neo-list-item-text">
         <span id={labelId} class="neo-list-item-label" class:neo-header={(lines?.description ?? 0) > 3}>
-          <NeoMark value={label ?? value?.toString()} filter={highlight} />
+          <NeoMark {...markProps} value={label ?? value?.toString()} filter={highlight} />
         </span>
         {#if description}
           <span class="neo-list-item-description">
-            <NeoMark value={description} filter={highlight} />
+            <NeoMark {...markProps} value={description} filter={highlight} />
           </span>
         {/if}
       </div>

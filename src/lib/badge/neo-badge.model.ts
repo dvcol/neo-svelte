@@ -29,7 +29,7 @@ export type NeoBadgeProps = {
   /**
    * The value to display in the badge.
    */
-  value?: Snippet<[NeoBadgeContext]>;
+  value?: string | Snippet<[NeoBadgeContext]>;
 
   /**
    * Optional vertical and horizontal offset for the badge.

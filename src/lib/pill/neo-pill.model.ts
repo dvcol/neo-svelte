@@ -28,6 +28,12 @@ export interface NeoPillContext {
    */
   color?: Color | CSSStyleDeclaration['color'];
   /**
+   * Shorthand for a flat borderless pill.
+   *
+   * @defaults`{ elevation: 0, borderless: true }`
+   */
+  text?: boolean;
+  /**
    * Display a loading indicator in the pill.
    */
   loading?: boolean;
@@ -98,6 +104,14 @@ export type NeoPillProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    * Snippet to display as the pill content.
    */
   children?: Snippet<[NeoPillContext]>;
+  /**
+   * Optional snippet or text to display as the button label.
+   */
+  label?: Snippet<[NeoPillContext]> | string;
+  /**
+   * Optional icon snippet to display before the text.
+   */
+  icon?: Snippet<[NeoPillContext]>;
 
   // State
   /**

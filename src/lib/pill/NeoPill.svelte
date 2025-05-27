@@ -22,18 +22,21 @@
   let {
     // Snippets
     children,
+    label,
+    icon,
 
     // States
     tag = 'div',
     close,
     color,
+    text,
     loading,
     disabled,
     skeleton = false,
     size,
 
     // Styles
-    borderless,
+    borderless = text,
     rounded = true,
     pressed,
     glass,
@@ -42,7 +45,7 @@
     start,
 
     // Shadow
-    elevation: _elevation = pressed ? -1 : 1,
+    elevation: _elevation = text ? 0 : (pressed ? -1 : 1),
     hover: _hover = 0,
     blur: _blur,
 
@@ -74,6 +77,8 @@
 
   const hoverFlat = $derived(isShadowFlat(boxShadow) && !isShadowFlat(hoverShadow));
   const flatHover = $derived(isShadowFlat(hoverShadow) && !isShadowFlat(boxShadow));
+
+  const empty = $derived((!children && (label === undefined || label === null)));
 
   const context = $derived<NeoPillContext>({
     close,
@@ -114,6 +119,7 @@
   class:neo-tinted={tinted}
   class:neo-filled={filled}
   class:neo-start={start}
+  class:neo-empty={empty}
   class:neo-hover={hover}
   class:neo-hover-flat={hoverFlat}
   class:neo-flat-hover={flatHover}
@@ -130,6 +136,16 @@
   in:inFn={inProps}
   {...rest}
 >
+  {#if icon}
+    <span class="neo-icon" class:neo-only={empty} transition:width={quickDurationProps}>
+      {@render icon?.(context)}
+    </span>
+  {/if}
+  {#if typeof label === 'function'}
+    {@render label?.(context)}
+  {:else if label !== undefined}
+    {label}
+  {/if}
   {@render children?.(context)}
   {#if (close && !disabled) || loading}
     <NeoAffix
@@ -157,7 +173,6 @@
     align-items: center;
     box-sizing: border-box;
     width: fit-content;
-    min-width: 1.875rem;
     margin: 0;
     color: var(--neo-pill-text-color, inherit);
     background-clip: padding-box;
@@ -174,6 +189,22 @@
       box-shadow 0.3s ease-out;
     padding-block: 0.125rem;
     padding-inline: 0.5rem;
+
+    &.neo-empty {
+      padding: var(--neo-pill-padding-empty, 0.375rem);
+    }
+
+    .neo-icon{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+
+      &:not(.neo-only) {
+        margin-right: var(--neo-pill-icon-gap, var(--neo-gap-4xs, 0.25rem));
+        margin-left: var(--neo-pill-icon-offset, calc(0% - var(--neo-pill-icon-gap, var(--neo-gap-5xs, 0.125rem))));
+      }
+    }
 
     &[medium],
     &[data-type='medium'] {
