@@ -1,5 +1,6 @@
 import type { MarkTokenizer } from '@dvcol/common-utils/common/string';
 
+import type { NeoHtmlProps } from '~/text/neo-html.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoMarkTokenizer = MarkTokenizer;
@@ -26,4 +27,11 @@ export type NeoMarkProps<Tag extends keyof HTMLElementTagNameMap = 'span'> = {
    * @returns array of [part, mark] tuples
    */
   tokenizer?: NeoMarkTokenizer;
+  /**
+   * Html rendering options.
+   *
+   * If falsy, value will be parsed as text content.
+   * If truthy, value will be parsed as HTML.
+   */
+  html?: boolean | Omit<NeoHtmlProps, 'html'>;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

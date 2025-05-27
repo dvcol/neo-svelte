@@ -214,10 +214,11 @@
     "svelte": ">=5"
   },
   "dependencies": {
-    "@dvcol/common-utils": "^1.31.2",
+    "@dvcol/common-utils": "^1.32.0",
     "@dvcol/svelte-utils": "^1.17.1",
     "@skeletonlabs/floating-ui-svelte": "^0.3.9",
-    "svelte": "^5.33.0"
+    "dompurify": "^3.2.5",
+    "svelte": "^5.33.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
