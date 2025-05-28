@@ -7,6 +7,7 @@
     NeoListRender,
     NeoListRenderContext,
     NeoListSection,
+    NeoListSelectedItem,
   } from '~/list/neo-list.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
@@ -43,7 +44,13 @@
 
   const list: NeoListItem[] = $state(
     [
-      { label: 'Line item label', value: 0 },
+      { label: 'Line item label', value: 0, tags: [
+        'tag1',
+        'tag2',
+        {
+          label: 'tag3',
+        },
+      ] },
       { label: 'Line item with longer label', value: 1 },
       custom,
       {
@@ -74,7 +81,7 @@
       { label: 'Line item success', value: 4, color: Colors.Success },
       { label: 'Line item primary', value: 5, color: Colors.Primary },
       { label: 'Line item secondary', value: 6, color: Colors.Secondary },
-    ].map(item => ({ ...item, id: item?.id ?? getUUID() })),
+    ].map((item: NeoListItem) => ({ ...item, id: item?.id ?? getUUID() })),
   );
 
   const sectionA: NeoListSection = {
@@ -111,20 +118,20 @@
     ].map(item => ({ ...item, id: getUUID() })),
   };
 
-  const selected = [{ item: list[4] }, { item: list[6] }];
+  const selected = [{ item: list[4] }, { item: list[6] }] as NeoListSelectedItem[];
 
   let isEmpty = $state(false);
-  const items = $derived(isEmpty ? [] : list.filter(item => item.id !== custom.id));
+  const items = $derived<NeoListProps['items']>(isEmpty ? [] : list.filter(item => item.id !== custom.id));
 
-  const withCustom = $derived(isEmpty ? [] : list);
+  const withCustom = $derived<NeoListProps['items']>(isEmpty ? [] : list);
 
   const sectionList = $state([...list.slice(0, 4), sectionA, sectionB]);
-  const withSection = $derived(isEmpty ? [] : sectionList);
+  const withSection = $derived<NeoListProps['items']>(isEmpty ? [] : sectionList);
 
   const customSectionList = $state([...list.slice(0, 4), sectionA, customSection, sectionB]);
-  const withCustomSection = $derived(isEmpty ? [] : customSectionList);
+  const withCustomSection = $derived<NeoListProps['items']>(isEmpty ? [] : customSectionList);
 
-  const complexList = $state(
+  const complexList = $state<NeoListProps['items']>(
     [
       { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
       { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
@@ -169,8 +176,8 @@
 
   let hovered = $state(false);
   let focused = $state(false);
-  let elevation = $state(0);
-  const withComplexList = $derived(isEmpty ? [] : complexList);
+  const elevation = $state(0);
+  const withComplexList = $derived<NeoListProps['items']>(isEmpty ? [] : complexList);
 
   const onAdd = () => {
     list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
@@ -223,7 +230,7 @@
   </ul>
 {/snippet}
 
-{#snippet item({ item: { label, value }, index, context: { skeleton } })}
+{#snippet item({ item: { label, value }, index, context: { skeleton } }: NeoListItemContext)}
   <NeoSkeletonText class="custom-item-skeleton" loading={skeleton} lines={3} align="center">
     <div class="custom-item-card">
       <div>{label}</div>
@@ -233,7 +240,7 @@
   </NeoSkeletonText>
 {/snippet}
 
-{#snippet avatar(ctx: NeoListContext)}
+{#snippet avatar(ctx: NeoListItemContext)}
   <span class="custom-item-avatar">
     <NeoIconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
   </span>
@@ -247,7 +254,7 @@
       <NeoCard
         rounded
         scrollbar={false}
-        bind:elevation
+        {elevation}
         bind:hovered
         bind:focused
         hover="-2"
@@ -260,8 +267,8 @@
           aria-label="Sortable list"
           select
           multiple
-          items={withComplexList}
           {...options}
+          items={withComplexList}
           loaderProps={{
             description: true,
             before: true,
@@ -326,7 +333,7 @@
       <NeoList aria-label="Custom item snippet list" items={withCustom} {item} {...options} />
     </div>
 
-    {#snippet values(ctx)}
+    {#snippet values(ctx: NeoListContext)}
       <div class="list-values">
         {#if Array.isArray(ctx.selected)}
           values: {ctx.selected?.map(i => [i.sectionIndex, i?.index].filter(j => j !== undefined).join('-')).join(', ') || 'none selected'}

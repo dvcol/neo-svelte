@@ -102,7 +102,7 @@ export type NeoListBaseItemProps<
    * The maximum number of lines to display before truncating the text.
    * @default label: 1, description: 2
    */
-  ellipsis?: number | { label: number; description: number };
+  ellipsis?: number | { label?: number; description?: number };
 
   // Methods
   /**

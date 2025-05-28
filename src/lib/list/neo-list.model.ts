@@ -76,14 +76,14 @@ export interface NeoListItemCommon<Tag extends keyof HTMLElementTagNameMap = 'li
   containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 }
 
-export interface NeoListItemContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = unknown> {
+export interface NeoListItemContext<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = NeoListContext> {
   item: NeoListItem<Value, Tag>;
   index: number;
   checked?: boolean;
   context: Context;
 }
 
-export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = unknown> = Snippet<
+export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = NeoListContext> = Snippet<
   [NeoListItemContext<Value, Tag, Context>]
 >;
 
@@ -97,6 +97,8 @@ export type NeoBaseListItemMedia<Type extends NeoMediaTypes = typeof NeoMediaTyp
         image?: NeoImageProps;
       } : Record<string, never>);
 
+export type NeoBaseListItemTag = string | NeoButtonProps;
+
 export type NeoBaseListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = any> = {
   /**
    * An arbitrary value to associate with the list item.
@@ -106,6 +108,10 @@ export type NeoBaseListItem<Value = unknown, Tag extends keyof HTMLElementTagNam
    * Optional description to display in the list item.
    */
   description?: string;
+  /**
+   * Optional tags to display between label and description.
+   */
+  tags?: NeoBaseListItemTag[];
   /**
    * Optional media to display in the list item.
    */
@@ -423,7 +429,7 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * The props to pass to the loader.
    */
-  loaderProps?: NeoListBaseLoaderProps;
+  loaderProps?: Partial<NeoListBaseLoaderProps>;
   /**
    * Optional props to pass to the button.
    */
@@ -435,7 +441,7 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Optional props to pass to the list item.
    */
-  itemProps?: Omit<NeoListBaseItemProps<Value, NeoListContext>, 'buttonProps'>;
+  itemProps?: Partial<Omit<NeoListBaseItemProps<Value, NeoListContext>, 'buttonProps'>>;
   /**
    * Optional props to pass to the list section.
    */
