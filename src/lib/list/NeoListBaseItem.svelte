@@ -24,6 +24,7 @@
     context,
 
     // List State
+    buttonRef = $bindable(),
     select,
     checked,
     touched = $bindable(false),
@@ -110,7 +111,7 @@
   {/if}
 {/snippet}
 
-{#snippet listItem({ label, value, description }: NeoListItem)}
+{#snippet listItem({ label, value, description, tags }: NeoListItem)}
   <div
     class:neo-list-item-content={true}
     class:neo-button={button}
@@ -147,6 +148,33 @@
         <span id={labelId} class="neo-list-item-label" class:neo-header={(lines?.description ?? 0) > 3}>
           <NeoMark {...markProps} value={label ?? value?.toString()} filter={highlight} />
         </span>
+        {#if tags?.length}
+          <div class="neo-list-item-tags">
+            {#each tags as tag}
+              {#if typeof tag === 'string'}
+                <span class="neo-list-item-tag">{tag}</span>
+              {:else}
+                <NeoButton
+                  elevation={0}
+                  text
+                  {rounded}
+                  {disabled}
+                  propagation={false}
+                  {...tag}
+                  class={['neo-list-item-tag', tag?.class]}
+                  onkeydown={(e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                      if (e.key === 'ArrowDown') getNextTarget(e.target, 'next');
+                      else buttonRef?.focus();
+                      e.preventDefault();
+                    }
+                    tag?.onkeydown?.(e);
+                  }}
+                />
+              {/if}
+            {/each}
+          </div>
+        {/if}
         {#if description}
           <span class="neo-list-item-description">
             <NeoMark {...markProps} value={description} filter={highlight} />
@@ -178,8 +206,8 @@
 {#if item?.render}
   {@render item?.render({ item, index, checked, context })}
 {:else if button}
-
   <NeoButton
+    bind:ref={buttonRef}
     bind:hovered
     bind:focused
     data-select={checked}
@@ -262,12 +290,34 @@
       }
     }
 
+    &-tags {
+      --neo-btn-padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-3xs, 0.3125rem);
+      --neo-btn-margin: 0;
+
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0 var(--neo-gap-xxs, 0.5rem);
+      align-items: center;
+      color: var(--neo-text-color-secondary);
+      font-size: var(--neo-font-size-sm, 0.875rem);
+      line-height: var(--neo-line-height-sm, 1.25rem);
+      transition: color 0.15s ease;
+
+      :global(.neo-list-item-tag.neo-button.neo-borderless.neo-flat) {
+        --neo-btn-margin: 0 calc(0% - var(--neo-gap-3xs, 0.3125rem ));
+      }
+
+      :global(.neo-list-item-tag.neo-button.neo-borderless.neo-flat:first-child) {
+        margin-inline-start: calc(-0.0625rem - var(--neo-gap-3xs, 0.3125rem ));
+      }
+    }
+
     &-content {
       display: inline-flex;
       flex: 1 1 auto;
       gap: var(--neo-gap-xxs, 0.5rem);
       align-items: center;
-      padding: 0.125rem 0.5rem;
+      padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-xxs, 0.5rem);
       transition: color 0.15s ease, gap 0.3s ease;
 
       :global(> .neo-list-item-media) {

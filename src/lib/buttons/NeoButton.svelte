@@ -43,6 +43,7 @@
     checked = $bindable(false),
     hovered = $bindable(false),
     focused = $bindable(false),
+    propagation = true,
 
     // Styles
     start,
@@ -133,6 +134,7 @@
   };
 
   const onClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    if (!propagation) e.stopPropagation();
     if (loading || disabled) return;
     if (readonly) return onActive();
     if (toggle) {
@@ -147,12 +149,14 @@
   };
 
   const onKeydownEnter: KeyboardEventHandler<HTMLButtonElement> = (e) => {
+    if (!propagation) e.stopPropagation();
     if (loading || disabled || readonly) return;
     if (e.key === 'Enter') enter = true;
     onkeydown?.(e);
   };
 
   const onKeyUpEnter: KeyboardEventHandler<HTMLButtonElement> = (e) => {
+    if (!propagation) e.stopPropagation();
     if (e.key === 'Enter') enter = false;
     if (loading || disabled || readonly) return;
     onkeyup?.(e);
@@ -235,6 +239,7 @@
   class:neo-inset-hover={hoverElevation < 0}
   class:neo-rounded={rounded}
   class:neo-empty={empty}
+  class:neo-propagation={!propagation}
   style:--neo-btn-text-color={getColorVariable(color)}
   style:--neo-btn-backdrop-filter={filter}
   style:--neo-btn-box-shadow={boxShadow}
@@ -308,13 +313,13 @@
     box-shadow: var(--neo-btn-box-shadow, var(--neo-box-shadow-raised-3));
     cursor: pointer;
     transition:
-      opacity 0.3s ease,
-      color 0.15s ease,
-      background-color 0.3s ease,
-      border-color 0.3s ease,
-      backdrop-filter 0.3s ease,
-      border-radius 0.3s ease,
-      box-shadow 0.3s ease-out;
+            opacity 0.3s ease,
+            color 0.15s ease,
+            background-color 0.3s ease,
+            border-color 0.3s ease,
+            backdrop-filter 0.3s ease,
+            border-radius 0.3s ease,
+            box-shadow 0.3s ease-out;
     appearance: none;
 
     &.neo-loading {
@@ -334,8 +339,8 @@
       height: 100%;
       backface-visibility: hidden;
       transition:
-        color 0.15s ease,
-        scale 0.3s ease;
+              color 0.15s ease,
+              scale 0.3s ease;
       will-change: scale, color;
       scale: 1;
 
@@ -370,16 +375,21 @@
     }
 
     &.neo-pressed,
-    &:active:not(.neo-loading, :disabled, [disabled='true']) {
+    &:active:not(
+        .neo-loading,
+        :disabled,
+        [disabled='true'],
+         :has(:global(:where(.neo-button.neo-propagation:active)))
+      ) {
       box-shadow: var(--neo-btn-box-shadow-active, var(--neo-box-shadow-pressed-2));
       transition:
-        opacity 0.3s ease,
-        color 0.15s ease,
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        backdrop-filter 0.3s ease,
-        border-radius 0.3s ease,
-        box-shadow 0.15s ease-out;
+              opacity 0.3s ease,
+              color 0.15s ease,
+              background-color 0.3s ease,
+              border-color 0.3s ease,
+              backdrop-filter 0.3s ease,
+              border-radius 0.3s ease,
+              box-shadow 0.15s ease-out;
 
       &.neo-scale .neo-content {
         color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
@@ -387,7 +397,17 @@
       }
     }
 
-    &:is(a):visited:not(:disabled, .neo-pressed, [disabled='true'], :active:not(.neo-loading, :disabled, [disabled='true'])) .neo-content {
+    &:is(a):visited:not(
+        :disabled,
+        .neo-pressed,
+        [disabled='true'],
+        :active:not(
+          .neo-loading,
+          :disabled,
+          [disabled='true'],
+          :has(:global(:where(.neo-button.neo-propagation:active)))
+        )
+      ) .neo-content {
       color: var(--neo-btn-text-color-visited, var(--neo-text-color-secondary));
     }
 
@@ -400,7 +420,14 @@
     &.neo-hover.neo-flat-hover:hover:not(:active, .neo-pressed),
     &.neo-flat-active.neo-pressed,
     &.neo-flat-active:active,
-    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-visible, .neo-hover-flat.neo-hovered, .neo-pressed, :active) {
+    &.neo-flat:not(
+        .neo-borderless,
+        .neo-hover-flat:hover,
+        .neo-hover-flat:focus-visible,
+        .neo-hover-flat.neo-hovered,
+        .neo-pressed,
+        :active
+      ) {
       border-color: var(--neo-btn-border-color, var(--neo-border-color));
 
       &:focus-visible,
@@ -429,9 +456,9 @@
           :active
         ) {
         border-color: var(
-          --neo-btn-border-color,
-          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-            var(--neo-glass-left-border-color)
+                        --neo-btn-border-color,
+                        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+                        var(--neo-glass-left-border-color)
         );
       }
 
@@ -440,7 +467,14 @@
       &.neo-hover.neo-flat-hover:hover:not(:active, .neo-pressed),
       &.neo-flat-active.neo-pressed,
       &.neo-flat-active:active,
-      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:focus-visible, .neo-hover-flat.neo-hovered, .neo-pressed, :active) {
+      &.neo-flat:not(
+          .neo-borderless,
+          .neo-hover-flat:hover,
+          .neo-hover-flat:focus-visible,
+          .neo-hover-flat.neo-hovered,
+          .neo-pressed,
+          :active
+        ) {
         border-color: var(--neo-btn-border-color, var(--neo-glass-border-color-flat));
 
         &:focus-visible,
@@ -483,13 +517,13 @@
       &:focus-visible,
       &:hover {
         transition:
-          opacity 0.3s ease,
-          color 0.15s ease,
-          background-color 0.3s ease,
-          border-color 0.3s ease,
-          backdrop-filter 0.3s ease,
-          border-radius 0.3s ease,
-          box-shadow 0.15s ease-out;
+                opacity 0.3s ease,
+                color 0.15s ease,
+                background-color 0.3s ease,
+                border-color 0.3s ease,
+                backdrop-filter 0.3s ease,
+                border-radius 0.3s ease,
+                box-shadow 0.15s ease-out;
       }
     }
 
@@ -525,7 +559,12 @@
       padding: var(--neo-btn-padding-empty, 0.5rem);
 
       &.neo-pressed.neo-pressed,
-      &:active:not(.neo-loading, :disabled, [disabled='true']) {
+      &:active:not(
+          .neo-loading,
+          :disabled,
+          [disabled='true']
+          :has(:global(:where(.neo-button.neo-propagation:active)))
+        ) {
         &.neo-scale .neo-content {
           scale: var(--neo-btn-scale-pressed-empty, var(--neo-btn-scale-pressed, 0.9));
         }

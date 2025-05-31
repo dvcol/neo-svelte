@@ -547,7 +547,8 @@
           color: var(--neo-text-color-highlight);
         }
 
-        :global(> .neo-list-item-button .neo-list-item-description) {
+        :global(> .neo-list-item-button .neo-list-item-description),
+        :global(> .neo-list-item-button .neo-list-item-tags){
           color: var(--neo-text-color-secondary-highlight);
         }
       }

@@ -197,9 +197,13 @@
     &:hover,
     &:focus,
     &:focus-within {
-      :global(> .neo-list-item-button .neo-list-item-content),
-      :global(> .neo-list-item-button .neo-list-item-description) {
+      :global(> .neo-list-item-button .neo-list-item-content) {
         color: var(--neo-text-color-highlight);
+      }
+
+      :global(> .neo-list-item-button .neo-list-item-description),
+      :global(> .neo-list-item-button .neo-list-item-tags){
+        color: var(--neo-text-color-secondary-highlight);
       }
     }
   }

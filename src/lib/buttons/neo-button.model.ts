@@ -50,6 +50,11 @@ export interface NeoButtonStates {
    * If the button is currently focused.
    */
   focused?: boolean;
+  /**
+   * If true, the button will not propagate the click event to its parent elements.
+   * This is useful for preventing unwanted side effects when clicking the button.
+   */
+  propagation?: boolean;
 
   /**
    * If true, the button will act as a toggle button.

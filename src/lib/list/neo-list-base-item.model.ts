@@ -5,12 +5,12 @@ import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.j
 import type { NeoMarkProps } from '~/text/neo-mark.model.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
 
-export type NeoListBaseItemProps<
+export interface NeoListBaseItemProps<
   Value = unknown,
   Context = any,
   Tag extends keyof HTMLElementTagNameMap = 'li',
   Item extends NeoBaseListItem<Value, Tag, Context> = NeoBaseListItem<Value, Tag, Context>,
-> = {
+> extends NeoSkeletonTextProps, Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle' | 'glass' | 'tinted' | 'filled'> {
   // Snippets
   /**
    * Snippet to display before the list item.
@@ -42,6 +42,10 @@ export type NeoListBaseItemProps<
   highlight?: string;
 
   // States
+  /**
+   * Reference to the button element (if any) within the list item.
+   */
+  buttonRef?: NeoButtonProps['ref'];
   /**
    * If true, the item will display as a skeleton.
    */
@@ -124,5 +128,4 @@ export type NeoListBaseItemProps<
    * Optional props to pass to the marks.
    */
   markProps?: NeoMarkProps;
-} & NeoSkeletonTextProps &
-Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle' | 'glass' | 'tinted' | 'filled'>;
+} ;
