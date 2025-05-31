@@ -281,16 +281,16 @@
       box-shadow: var(--neo-box-shadow-flat) !important;
     }
 
-    :global(.neo-button:not(:active:not(.neo-loading), .neo-pressed)) {
+    :global(.neo-button:not(:active:not(.neo-loading, :has(.neo-button.neo-propagation:active)), .neo-pressed)) {
       box-shadow: var(--neo-box-shadow-flat);
     }
 
-    :global(.neo-button:not(.neo-flat, :active:not(.neo-loading), .neo-pressed):hover) {
+    :global(.neo-button:not(.neo-flat, :active:not(.neo-loading, :has(.neo-button.neo-propagation:active)), .neo-pressed):hover) {
       box-shadow: var(--neo-btn-group-box-shadow-btn-hover);
     }
 
     :global(.neo-button.neo-pressed),
-    :global(.neo-button:active:not(.neo-loading)) {
+    :global(.neo-button:active:not(.neo-loading, :has(.neo-button.neo-propagation:active))) {
       box-shadow: var(--neo-btn-group-box-shadow-btn-active);
     }
 
