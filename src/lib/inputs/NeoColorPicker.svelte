@@ -10,6 +10,7 @@
   import NeoIconPaint from '~/icons/NeoIconPaint.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoColorPickerSelector from '~/inputs/NeoColorPickerSelector.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { HexColorRegexString } from '~/utils/regex.utils.js';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
@@ -93,8 +94,10 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon(ctx)}
-      {#if customIcon}
+      {#if typeof customIcon === 'function'}
         {@render customIcon(ctx)}
+      {:else if typeof customIcon === 'string'}
+        <NeoImage src={customIcon} ratio="1/1" {...afterProps?.imageProps} />
       {:else}
         <NeoIconPaint size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}

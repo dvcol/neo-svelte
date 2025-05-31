@@ -1,4 +1,3 @@
-import type { NeoListBaseItemProps, NeoListBaseSectionProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
@@ -101,7 +100,13 @@ export type NeoBaseListItemMedia<Type extends NeoMediaTypes = typeof NeoMediaTyp
         image?: NeoImageProps;
       } : Record<string, never>);
 
-export type NeoBaseListItemTag = string | NeoButtonProps;
+export type NeoBaseListItemTag = string | NeoButtonProps | NeoPillProps;
+
+export function isButtonTag(tag: NeoBaseListItemTag): tag is NeoButtonProps {
+  if (typeof tag === 'string') return false;
+  if ('tag' in tag && (tag.tag === 'button' || tag.tag === 'a')) return true;
+  return 'href' in tag || 'onclick' in tag;
+}
 
 export type NeoBaseListItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li', Context = any> = {
   /**
@@ -376,6 +381,10 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Overrides the default scrollbars.
    */
   scrollbar?: boolean;
+  /**
+   * Whether to round the corners of the list items.
+   */
+  rounded?: BorderRadiusInput;
   /**
    * Whether to scroll to the bottom when loading additional items.
    *

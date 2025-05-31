@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 
 import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
+import type { NeoImageProps } from '~/media/index.js';
 import type { HTMLTransitionProps, HTMLUseProps } from '~/utils/action.utils.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
@@ -45,6 +46,11 @@ export interface NeoPillContext {
    * Disable interactions and display a skeleton state.
    */
   skeleton?: boolean;
+  /**
+   * If true, the flex direction of the pill will be reversed.
+   */
+  reverse?: boolean;
+
   /**
    * Set the size of the pill.
    *
@@ -111,7 +117,7 @@ export type NeoPillProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   /**
    * Optional icon snippet to display before the text.
    */
-  icon?: Snippet<[NeoPillContext]>;
+  icon?: Snippet<[NeoPillContext]> | string;
 
   // State
   /**
@@ -126,11 +132,15 @@ export type NeoPillProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    */
   onClose?: NonNullable<NeoAffixProps['closeProps']>['onclick'];
 
-  // Other props
+  // Other Props
   /**
    * Props to pass to the close/loading affix.
    */
   affixProps?: NeoAffixProps;
+  /**
+   * Optional props to pass to the icon image component if the icon is a string.
+   */
+  imageProps?: Partial<NeoImageProps>;
 } & NeoPillContext &
 HTMLTransitionProps &
 HTMLUseProps &

@@ -44,13 +44,7 @@
 
   const list: NeoListItem[] = $state(
     [
-      { label: 'Line item label', value: 0, tags: [
-        'tag1',
-        'tag2',
-        {
-          label: 'tag3',
-        },
-      ] },
+      { label: 'Line item label', value: 0 },
       { label: 'Line item with longer label', value: 1 },
       custom,
       {

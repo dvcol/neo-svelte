@@ -66,6 +66,7 @@
     // Styles
     shadow = true,
     scrollbar = true,
+    rounded,
 
     // Size
     flex,
@@ -380,6 +381,7 @@
             {highlight}
             {buttonProps}
             {reverse}
+            {rounded}
             disabled={item.disabled || disabled || section?.disabled}
             readonly={item.readonly || readonly || section?.readonly || (!isNullable && checked)}
             {...itemProps}

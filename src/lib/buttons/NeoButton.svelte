@@ -8,6 +8,7 @@
 
   import { NeoTextButton } from '~/buttons/neo-button.model.js';
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -83,6 +84,7 @@
     use,
 
     // Other props
+    imageProps,
     ..._rest
   }: NeoButtonProps = $props();
 
@@ -275,8 +277,10 @@
       <span class="neo-icon" class:neo-only={empty} transition:width={quickDurationProps}>
         {#if loading}
           <NeoIconCircleLoading />
-        {:else}
+        {:else if typeof icon === 'function'}
           {@render icon?.(context)}
+        {:else if typeof icon === 'string'}
+          <NeoImage src={icon} ratio="1/1" {...imageProps} />
         {/if}
       </span>
     {/if}
@@ -332,6 +336,12 @@
       align-items: center;
       justify-content: center;
       vertical-align: middle;
+    }
+
+    .neo-icon :global(.neo-image) {
+      --neo-image-border-radius: 0;
+
+      min-height: 1rem;
     }
 
     .neo-content {

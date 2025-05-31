@@ -26,6 +26,7 @@
     loading: false,
     disabled: false,
     skeleton: false,
+    reverse: false,
 
     borderless: false,
     rounded: true,
@@ -45,6 +46,7 @@
     <NeoButton toggle bind:checked={options.close}>Close</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
+    <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
     <NeoButton toggle bind:checked={options.borderless}>Borderless</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.glass}>Glass</NeoButton>

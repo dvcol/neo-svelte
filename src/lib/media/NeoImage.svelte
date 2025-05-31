@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { NeoImageProps } from '~/media/neo-image.model.js';
 
+  import { onMount } from 'svelte';
+
   import NeoIconImage from '~/icons/NeoIconImage.svelte';
   import NeoIconWarning from '~/icons/NeoIconWarning.svelte';
   import { computeBorderRadius } from '~/utils/border.utils.js';
@@ -19,6 +21,7 @@
     error = $bindable(false),
     loaded = $bindable(false),
     skeleton,
+    delay = 0,
 
     // Styles
     rounded,
@@ -45,6 +48,17 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
+  let ready = $state(delay === null);
+  const loading = $derived(ready && !loaded && !error);
+
+  onMount(() => {
+    if (ready) return;
+    if (!delay) return ready = true;
+    setTimeout(() => {
+      ready = true;
+    }, delay);
+  });
+
   const onError: NeoImageProps['onerror'] = (e) => {
     onerror?.(e);
     error = true;
@@ -68,7 +82,7 @@
   data-src={(error && src === fallback) ? src : undefined}
   class:neo-image={true}
   class:neo-rounded={rounded}
-  class:neo-skeleton={skeleton || (!loaded && !error)}
+  class:neo-skeleton={skeleton || loading}
   class:neo-glass={glass}
   class:neo-error={error}
   style:flex

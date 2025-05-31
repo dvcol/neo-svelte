@@ -17,6 +17,7 @@
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { displayValue, transformValue } from '~/inputs/neo-select.model.js';
   import { findByValueInList } from '~/list/neo-list.model.js';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
 
   let {
@@ -170,8 +171,10 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon(ctx)}
-      {#if customIcon}
+      {#if typeof customIcon === 'function'}
         {@render customIcon(ctx)}
+      {:else if typeof customIcon === 'string'}
+        <NeoImage src={customIcon} ratio="1/1" {...afterProps?.imageProps} />
       {:else}
         <NeoIconDoubleChevron {space} />
       {/if}

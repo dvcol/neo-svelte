@@ -18,6 +18,7 @@
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoFilePickerCard from '~/inputs/NeoFilePickerCard.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
 
@@ -293,12 +294,16 @@
 {#snippet upload()}
   <NeoButton {...afterProps}>
     {#snippet icon(ctx)}
-      {#if isDragging && iconDownload}
+      {#if isDragging && typeof iconDownload === 'function'}
         {@render iconDownload(ctx)}
+      {:else if isDragging && typeof iconDownload === 'string'}
+        <NeoImage src={iconDownload} ratio="1/1" {...afterProps?.imageProps} />
       {:else if isDragging}
         <NeoIconDownload size="1.25rem" scale="1.5" stroke="1" />
-      {:else if iconUpload}
+      {:else if typeof iconUpload === 'function'}
         {@render iconUpload(ctx)}
+      {:else if typeof iconUpload === 'string'}
+        <NeoImage src={iconUpload} ratio="1/1" {...afterProps?.imageProps} />
       {:else}
         <NeoIconFileUpload size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}

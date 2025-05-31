@@ -143,7 +143,7 @@
       margin: 0;
       padding: 0;
       color: var(--neo-affix-clear-color, inherit);
-      background-color: var(--neo-background-color-secondary);
+      background-color: var(--neo-affix-clear-bg-color, var(--neo-background-color-secondary));
       border: none;
       border-radius: 50%;
       aspect-ratio: 1;

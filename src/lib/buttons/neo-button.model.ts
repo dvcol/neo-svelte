@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAnchorAttributes, HTMLButtonAttributes, KeyboardEventHandler } from 'svelte/elements';
 
+import type { NeoImageProps } from '~/media/neo-image.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';
@@ -92,7 +93,7 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
   /**
    * Optional icon snippet to display before the text.
    */
-  icon?: Snippet<[NeoButtonContext]>;
+  icon?: Snippet<[NeoButtonContext]> | string;
 
   // States
 
@@ -228,6 +229,12 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * @param e
    */
   onkeyup?: KeyboardEventHandler<HTMLButtonElement>;
+
+  // Other Props
+  /**
+   * Optional props to pass to the icon image component if the icon is a string.
+   */
+  imageProps?: Partial<NeoImageProps>;
 } & NeoButtonStates &
 HTMLFlexProps &
 HTMLActionProps &

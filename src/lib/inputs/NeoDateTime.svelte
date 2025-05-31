@@ -5,6 +5,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoIconCalendar from '~/icons/NeoIconCalendar.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   let {
@@ -56,8 +57,10 @@
 {#snippet after()}
   <NeoButton {...afterProps}>
     {#snippet icon(ctx)}
-      {#if customIcon}
+      {#if typeof customIcon === 'function'}
         {@render customIcon(ctx)}
+      {:else if typeof customIcon === 'string'}
+        <NeoImage src={customIcon} ratio="1/1" {...afterProps?.imageProps} />
       {:else}
         <NeoIconCalendar size="1.25rem" scale="var(--neo-input-icon-scale, 1.125)" />
       {/if}

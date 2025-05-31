@@ -9,7 +9,9 @@
   import { NeoIconArrowDirection } from '~/icons/index.js';
   import NeoIconArrow from '~/icons/NeoIconArrow.svelte';
   import NeoIconCheckbox from '~/icons/NeoIconCheckbox.svelte';
+  import { isButtonTag } from '~/list/neo-list.model.js';
   import NeoMedia from '~/media/NeoMedia.svelte';
+  import NeoPill from '~/pill/NeoPill.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
 
@@ -145,7 +147,7 @@
       class={['neo-list-item-skeleton', rest?.class]}
     >
       <div class="neo-list-item-text">
-        <span id={labelId} class="neo-list-item-label" class:neo-header={(lines?.description ?? 0) > 3}>
+        <span id={labelId} class="neo-list-item-label" class:neo-header={(tags?.length && description) || ((lines?.description ?? 0) > 3)}>
           <NeoMark {...markProps} value={label ?? value?.toString()} filter={highlight} />
         </span>
         {#if tags?.length}
@@ -153,7 +155,7 @@
             {#each tags as tag}
               {#if typeof tag === 'string'}
                 <span class="neo-list-item-tag">{tag}</span>
-              {:else}
+              {:else if isButtonTag(tag)}
                 <NeoButton
                   elevation={0}
                   text
@@ -170,6 +172,15 @@
                     }
                     tag?.onkeydown?.(e);
                   }}
+                />
+              {:else}
+                <NeoPill
+                  elevation={0}
+                  text
+                  {rounded}
+                  {disabled}
+                  {...tag}
+                  class={['neo-list-item-tag', tag?.class]}
                 />
               {/if}
             {/each}
@@ -286,25 +297,37 @@
       flex-direction: column;
 
       &:has(> .neo-list-item-label.neo-header) {
-        gap: var(--neo-list-item-text-gap, var(--neo-gap-4xs));
+        gap: var(--neo-list-item-text-gap, var(--neo-gap-5xs, 0.125rem));
       }
     }
 
     &-tags {
       --neo-btn-padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-3xs, 0.3125rem);
       --neo-btn-margin: 0;
+      --neo-pill-padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-3xs, 0.3125rem);
+      --neo-pill-margin: 0;
 
       display: inline-flex;
       flex-wrap: wrap;
       gap: 0 var(--neo-gap-xxs, 0.5rem);
       align-items: center;
       color: var(--neo-text-color-secondary);
+      font-weight: var(--neo-font-weight-sm, 300);
       font-size: var(--neo-font-size-sm, 0.875rem);
       line-height: var(--neo-line-height-sm, 1.25rem);
       transition: color 0.15s ease;
 
+      :global(.neo-list-item-tag.neo-pill.neo-borderless.neo-flat) {
+        --neo-pill-margin: 0 calc(0% - var(--neo-gap-3xs, 0.312 ));
+      }
+
       :global(.neo-list-item-tag.neo-button.neo-borderless.neo-flat) {
         --neo-btn-margin: 0 calc(0% - var(--neo-gap-3xs, 0.3125rem ));
+      }
+
+      :global(.neo-list-item-tag.neo-pill.neo-borderless.neo-flat:first-child) {
+        margin-inline-start: calc(-0.0625rem - var(--neo-gap-3xs, 0.3125rem ));
+
       }
 
       :global(.neo-list-item-tag.neo-button.neo-borderless.neo-flat:first-child) {

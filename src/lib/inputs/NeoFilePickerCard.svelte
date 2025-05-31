@@ -13,6 +13,7 @@
   import NeoIconPencil from '~/icons/NeoIconPencil.svelte';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { quickCircOutProps, quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
 
   let {
@@ -161,14 +162,18 @@
       <div class="neo-expanded-button">
         <NeoButton aria-label="Add files" title="Add files" text rounded {skeleton} {disabled} onclick={onEdit} {...addButtonProps}>
           {#snippet icon(ctx)}
-            {#if dragging && iconDownload}
+            {#if dragging && typeof iconDownload === 'function'}
               {@render iconDownload(ctx)}
+            {:else if dragging && typeof iconDownload === 'string'}
+              <NeoImage src={iconDownload} ratio="1/1" {...addButtonProps?.imageProps} />
             {:else if dragging}
               <NeoIconDownload size="2rem" scale="1.25" stroke="0.5" />
             {:else if loading}
               <NeoIconCircleLoading size="2rem" scale="1" />
-            {:else if iconUpload}
+            {:else if typeof iconUpload === 'function'}
               {@render iconUpload(ctx)}
+            {:else if typeof iconUpload === 'string'}
+              <NeoImage src={iconUpload} ratio="1/1" {...addButtonProps?.imageProps} />
             {:else}
               <NeoIconFileUpload size="2rem" scale="1" stroke="0.5" />
             {/if}

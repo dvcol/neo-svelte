@@ -5,6 +5,7 @@
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoIconDoubleChevron from '~/icons/NeoIconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation } from '~/utils/shadow.utils.js';
 
   let {
@@ -72,8 +73,10 @@
 {#snippet after()}
   <NeoButton {onpointerdown} {onpointerup} {...afterProps}>
     {#snippet icon(ctx)}
-      {#if customIcon}
+      {#if typeof customIcon === 'function'}
         {@render customIcon(ctx)}
+      {:else if typeof customIcon === 'string'}
+        <NeoImage src={customIcon} ratio="1/1" {...afterProps?.imageProps} />
       {:else}
         <NeoIconDoubleChevron {space} />
       {/if}

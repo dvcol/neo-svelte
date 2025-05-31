@@ -8,6 +8,7 @@
   import NeoIconAdd from '~/icons/NeoIconAdd.svelte';
   import NeoIconMinus from '~/icons/NeoIconMinus.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, computeButtonTemplate, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
@@ -110,8 +111,10 @@
 {#snippet before()}
   <NeoButton aria-label="Decrement number" title="Decrement number" onclick={decrement} {...buttonsProps}>
     {#snippet icon(ctx)}
-      {#if iconMinus}
+      {#if typeof iconMinus === 'function'}
         {@render iconMinus(ctx)}
+      {:else if typeof iconMinus === 'string'}
+        <NeoImage src={iconMinus} ratio="1/1" {...buttonsProps?.imageProps} />
       {:else}
         <NeoIconMinus size="1.25rem" />
       {/if}
@@ -122,8 +125,10 @@
 {#snippet after()}
   <NeoButton aria-label="Increment number" title="Increment number" onclick={increment} {...buttonsProps}>
     {#snippet icon(ctx)}
-      {#if iconPlus}
+      {#if typeof iconPlus === 'function'}
         {@render iconPlus(ctx)}
+      {:else if typeof iconPlus === 'string'}
+        <NeoImage src={iconPlus} ratio="1/1" {...buttonsProps?.imageProps} />
       {:else}
         <NeoIconAdd size="1.25rem" />
       {/if}

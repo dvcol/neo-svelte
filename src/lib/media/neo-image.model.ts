@@ -22,6 +22,12 @@ export interface NeoImageProps extends Omit<HTMLImgAttributes, 'width' | 'height
    * Whether to show a skeleton in place of the image, regardless of loading state.
    */
   skeleton?: boolean;
+  /**
+   * How long to wait before showing the skeleton if the image is not loaded or errored (in milliseconds).
+   *
+   * @default 0
+   */
+  delay?: number;
 
   // Size
   /**

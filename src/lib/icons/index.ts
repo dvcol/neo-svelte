@@ -23,6 +23,7 @@ export { default as NeoIconDoubleChevronRight } from './NeoIconDoubleChevronRigh
 export { default as NeoIconDownload } from './NeoIconDownload.svelte';
 export { default as NeoIconEmpty } from './NeoIconEmpty.svelte';
 export { default as NeoIconFileUpload } from './NeoIconFileUpload.svelte';
+export { default as NeoIconFire } from './NeoIconFire.svelte';
 export { default as NeoIconGithub } from './NeoIconGithub.svelte';
 export { default as NeoIconImage } from './NeoIconImage.svelte';
 export { default as NeoIconList } from './NeoIconList.svelte';
@@ -44,6 +45,7 @@ export { default as NeoIconSun } from './NeoIconSun.svelte';
 export { default as NeoIconSunMoon } from './NeoIconSunMoon.svelte';
 export { default as NeoIconTextHighlight } from './NeoIconTextHighlight.svelte';
 export { default as NeoIconTheme } from './NeoIconTheme.svelte';
+export { default as NeoIconTrend } from './NeoIconTrend.svelte';
 export { default as NeoIconUnplug } from './NeoIconUnplug.svelte';
 export { default as NeoIconVideo } from './NeoIconVideo.svelte';
 export { default as NeoIconWatch } from './NeoIconWatch.svelte';

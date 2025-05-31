@@ -4,6 +4,7 @@
   import { width } from '@dvcol/svelte-utils/transition';
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
+  import NeoImage from '~/media/NeoImage.svelte';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
@@ -33,6 +34,7 @@
     loading,
     disabled,
     skeleton = false,
+    reverse,
     size,
 
     // Styles
@@ -62,6 +64,7 @@
 
     // Other props
     affixProps,
+    imageProps,
     ...rest
   }: NeoPillProps = $props();
   /* eslint-enable prefer-const */
@@ -115,6 +118,7 @@
   class:neo-disabled={disabled}
   class:neo-skeleton={skeleton}
   class:neo-pressed={pressed}
+  class:neo-reverse={reverse}
   class:neo-glass={glass}
   class:neo-tinted={tinted}
   class:neo-filled={filled}
@@ -138,7 +142,11 @@
 >
   {#if icon}
     <span class="neo-icon" class:neo-only={empty} transition:width={quickDurationProps}>
-      {@render icon?.(context)}
+      {#if typeof icon === 'function'}
+        {@render icon?.(context)}
+      {:else if typeof icon === 'string'}
+        <NeoImage src={icon} ratio="1/1" {...imageProps} />
+      {/if}
     </span>
   {/if}
   {#if typeof label === 'function'}
@@ -173,7 +181,8 @@
     align-items: center;
     box-sizing: border-box;
     width: fit-content;
-    margin: 0;
+    margin: var(--neo-pill-margin, 0);
+    padding: var(--neo-pill-padding, 0.125rem 0.5rem);
     color: var(--neo-pill-text-color, inherit);
     background-clip: padding-box;
     border: var(--neo-pill-border-width, var(--neo-border-width, 1px)) var(--neo-pill-border-color, transparent) solid;
@@ -187,8 +196,6 @@
       backdrop-filter 0.3s ease,
       background-color 0.3s ease,
       box-shadow 0.3s ease-out;
-    padding-block: 0.125rem;
-    padding-inline: 0.5rem;
 
     &.neo-empty {
       padding: var(--neo-pill-padding-empty, 0.375rem);
@@ -200,9 +207,28 @@
       justify-content: center;
       vertical-align: middle;
 
+      :global(.neo-image) {
+        --neo-image-border-radius: 0;
+
+        min-height: 1rem;
+      }
+
       &:not(.neo-only) {
         margin-right: var(--neo-pill-icon-gap, var(--neo-gap-4xs, 0.25rem));
         margin-left: var(--neo-pill-icon-offset, calc(0% - var(--neo-pill-icon-gap, var(--neo-gap-5xs, 0.125rem))));
+      }
+    }
+
+    &.neo-reverse {
+      flex-direction: row-reverse;
+
+      .neo-icon:not(.neo-only) {
+        margin-right: var(--neo-pill-icon-offset, calc(0% - var(--neo-pill-icon-gap, var(--neo-gap-5xs, 0.125rem))));
+        margin-left: var(--neo-pill-icon-gap, var(--neo-gap-4xs, 0.25rem));
+      }
+
+      :global(> .neo-pill-affix) {
+        --neo-pill-affix-margin-inline: -0.125rem 0.3125rem;
       }
     }
 
@@ -215,9 +241,12 @@
       padding-inline: 0.4375rem;
 
       :global(> .neo-pill-affix) {
-        --neo-affix-size: 0.8125rem;
+        --neo-affix-size: 0.875rem;
+        --neo-pill-affix-margin-inline: 0.25rem -0.125rem;
+      }
 
-        margin-inline-start: 0.25rem;
+      &.neo-reverse :global(> .neo-pill-affix) {
+        --neo-pill-affix-margin-inline: -0.125rem 0.25rem;
       }
     }
 
@@ -230,9 +259,12 @@
       padding-inline: 0.3125rem;
 
       :global(> .neo-pill-affix) {
-        --neo-affix-size: 0.625rem;
+        --neo-affix-size: 0.75rem;
+        --neo-pill-affix-margin-inline: 0.1875rem -0.0625rem;
+      }
 
-        margin-inline-start: 0.1875rem;
+      &.neo-reverse :global(> .neo-pill-affix) {
+        --neo-pill-affix-margin-inline: -0.0625rem 0.1875rem;
       }
     }
 
@@ -242,10 +274,11 @@
     }
 
     :global(> .neo-pill-affix) {
-      --neo-affix-size: 1rem;
+      --neo-affix-size: 1.125rem;
+      --neo-pill-affix-margin-inline: 0.3125rem -0.125rem;
 
       padding: 0;
-      margin-inline-start: 0.3125rem;
+      margin-inline: var(--neo-pill-affix-margin-inline);
     }
 
     &.neo-hover.neo-flat-hover:hover,
@@ -320,6 +353,8 @@
     }
 
     &.neo-filled {
+      --neo-affix-clear-color: var(--neo-pill-affix-color-filled, var(--neo-text-color));
+
       color: var(--neo-pill-text-color-filled, var(--neo-text-color-inverse));
       background-color: var(--neo-pill-text-color, var(--neo-text-color));
 
