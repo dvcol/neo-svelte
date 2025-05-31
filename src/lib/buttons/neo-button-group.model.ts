@@ -1,6 +1,6 @@
-import type { NeoButtonActiveElevation, NeoButtonBlur, NeoButtonHoverElevation } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 
+import type { NeoButtonActiveElevation, NeoButtonBlur, NeoButtonHoverElevation } from '~/buttons/neo-button.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';

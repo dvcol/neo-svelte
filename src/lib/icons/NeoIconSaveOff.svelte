@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoIconProps } from 'src/lib/index.js';
+  import type { NeoIconProps } from '~/icons/neo-icon.model.js';
 
   const { size = '1em', scale = 1, stroke = 2, ...rest }: NeoIconProps = $props();
 </script>

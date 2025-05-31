@@ -1,7 +1,8 @@
-import type { NeoRememberSelectorProps, NeoResetSelectorProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 import type { NeoButtonGroupProps } from '~/buttons/neo-button-group.model.js';
+import type { NeoRememberSelectorProps } from '~/providers/neo-remember-selector.model.js';
+import type { NeoResetSelectorProps } from '~/providers/neo-reset-selector.model.js';
 import type { NeoSourceSelectorProps } from '~/providers/neo-source-selector.model.js';
 import type { INeoThemeProviderContext } from '~/providers/neo-theme-provider.model.js';
 import type { NeoThemeSelectorProps } from '~/providers/neo-theme-selector.model.js';

@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
-  import type { NeoListSelectEvent, NeoTooltipContext, NeoTooltipToggle } from 'src/lib/index.js';
 
   import type { NeoPopSelectProps } from '~/floating/tooltips/neo-pop-select.model.js';
-  import type { NeoListContext, NeoListItemOrSection } from '~/list/neo-list.model.js';
+  import type { NeoTooltipContext, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
+  import type { NeoListContext, NeoListItemOrSection, NeoListSelectEvent } from '~/list/neo-list.model.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
 

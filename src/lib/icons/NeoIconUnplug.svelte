@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoIconUnplugProps } from 'src/lib/index.js';
+  import type { NeoIconUnplugProps } from '~/icons/neo-icon.model.js';
 
   const { size = '1em', scale = 1, stroke = 2, plug = false, ...rest }: NeoIconUnplugProps = $props();
 

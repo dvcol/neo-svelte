@@ -1,8 +1,8 @@
-import type { NeoDividerProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
+import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { Color } from '~/utils/colors.utils.js';

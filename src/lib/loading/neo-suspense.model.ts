@@ -1,5 +1,6 @@
-import type { NeoLoadingMatrixProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
+
+import type { NeoLoadingMatrixProps } from '~/loading/neo-loading-matrix.model.js';
 
 export interface NeoSuspenseProps<R = any, E = any> {
   /**

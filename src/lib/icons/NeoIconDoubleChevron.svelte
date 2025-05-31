@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoIconDoubleChevronProps } from 'src/lib/index.js';
+  import type { NeoIconDoubleChevronProps } from '~/icons/neo-icon.model.js';
 
   const { size = '1em', scale = 1, stroke = 2, space = 7, ...rest }: NeoIconDoubleChevronProps = $props();
 </script>
