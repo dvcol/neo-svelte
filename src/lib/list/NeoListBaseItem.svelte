@@ -12,7 +12,6 @@
   import { isButtonTag } from '~/list/neo-list.model.js';
   import NeoMedia from '~/media/NeoMedia.svelte';
   import NeoPill from '~/pill/NeoPill.svelte';
-  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
 
   let {
@@ -26,13 +25,13 @@
     context,
 
     // List State
+    tag = 'div',
     buttonRef = $bindable(),
     select,
     checked,
     touched = $bindable(false),
     disabled: _disabled,
     readonly: _readonly,
-    skeleton,
     highlight,
     selector = '.neo-list-item.neo-list-item-select',
     arrow,
@@ -99,7 +98,7 @@
 
 {#snippet beforeItem()}
   {#if item.before ?? before}
-    <div class="neo-list-item-before" class:neo-skeleton={skeleton}>
+    <div class="neo-list-item-before">
       {@render (item.before ?? before)?.({ item, index, checked, context })}
     </div>
   {/if}
@@ -107,14 +106,15 @@
 
 {#snippet afterItem()}
   {#if item.after ?? after}
-    <div class="neo-list-item-after" class:neo-skeleton={skeleton}>
+    <div class="neo-list-item-after">
       {@render (item.after ?? after)?.({ item, index, checked, context })}
     </div>
   {/if}
 {/snippet}
 
 {#snippet listItem({ label, value, description, tags }: NeoListItem)}
-  <div
+  <svelte:element
+    this={tag}
     class:neo-list-item-content={true}
     class:neo-button={button}
     class:neo-rounded={rounded}
@@ -123,6 +123,7 @@
     class:neo-reverse={reverse || item.reverse}
     style:--neo-list-item-label-lines={lines?.label}
     style:--neo-list-item-description-lines={lines?.description}
+    {...rest}
   >
 
     {#if !reverse}
@@ -133,82 +134,71 @@
 
     {#if item.media}
       {@const { image, ...media } = item.media}
-      <NeoMedia class="neo-list-item-media" loading={!!skeleton} elevation={(hovered || focused) ? 2 : 1} {rounded} {...mediaProps} {...media} image={{ ...mediaProps?.image, ...image }} />
+      <NeoMedia class="neo-list-item-media" elevation={(hovered || focused) ? 2 : 1} {rounded} {...mediaProps} {...media} image={{ ...mediaProps?.image, ...image }} />
     {/if}
 
-    <NeoSkeletonText
-      loading={!!skeleton}
-      disabled={skeleton === undefined}
-      lines="auto"
-      fallback={lines?.total || (description ? 2 : 1)}
-      align="center"
-      {reverse}
-      {...rest}
-      class={['neo-list-item-skeleton', rest?.class]}
-    >
-      <div class="neo-list-item-text">
-        <span id={labelId} class="neo-list-item-label" class:neo-header={(tags?.length && description) || ((lines?.description ?? 0) > 3)}>
-          <NeoMark {...markProps} value={label ?? value?.toString()} filter={highlight} />
+    <div class="neo-list-item-text">
+      <span id={labelId} class="neo-list-item-label" class:neo-header={(tags?.length && description) || ((lines?.description ?? 0) > 3)}>
+        <NeoMark {...markProps} value={label ?? value?.toString()} filter={highlight} />
+      </span>
+      {#if tags?.length}
+        <div class="neo-list-item-tags">
+          {#each tags as tag}
+            {#if typeof tag === 'string'}
+              <span class="neo-list-item-tag">{tag}</span>
+            {:else if isButtonTag(tag)}
+              <NeoButton
+                elevation={0}
+                text
+                {rounded}
+                {disabled}
+                propagation={false}
+                {...tag}
+                class={['neo-list-item-tag', tag?.class]}
+                onkeydown={(e) => {
+                  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    if (e.key === 'ArrowDown') getNextTarget(e.target, 'next');
+                    else buttonRef?.focus();
+                    e.preventDefault();
+                  }
+                  tag?.onkeydown?.(e);
+                }}
+              />
+            {:else}
+              <NeoPill
+                elevation={0}
+                text
+                {rounded}
+                {disabled}
+                {...tag}
+                class={['neo-list-item-tag', tag?.class]}
+              />
+            {/if}
+          {/each}
+        </div>
+      {/if}
+      {#if description}
+        <span class="neo-list-item-description">
+          <NeoMark {...markProps} value={description} filter={highlight} />
         </span>
-        {#if tags?.length}
-          <div class="neo-list-item-tags">
-            {#each tags as tag}
-              {#if typeof tag === 'string'}
-                <span class="neo-list-item-tag">{tag}</span>
-              {:else if isButtonTag(tag)}
-                <NeoButton
-                  elevation={0}
-                  text
-                  {rounded}
-                  {disabled}
-                  propagation={false}
-                  {...tag}
-                  class={['neo-list-item-tag', tag?.class]}
-                  onkeydown={(e) => {
-                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                      if (e.key === 'ArrowDown') getNextTarget(e.target, 'next');
-                      else buttonRef?.focus();
-                      e.preventDefault();
-                    }
-                    tag?.onkeydown?.(e);
-                  }}
-                />
-              {:else}
-                <NeoPill
-                  elevation={0}
-                  text
-                  {rounded}
-                  {disabled}
-                  {...tag}
-                  class={['neo-list-item-tag', tag?.class]}
-                />
-              {/if}
-            {/each}
-          </div>
-        {/if}
-        {#if description}
-          <span class="neo-list-item-description">
-            <NeoMark {...markProps} value={description} filter={highlight} />
-          </span>
-        {/if}
-      </div>
-    </NeoSkeletonText>
+      {/if}
+    </div>
 
     {#if !reverse}
       {@render afterItem()}
     {:else}
       {@render beforeItem()}
     {/if}
-  </div>
+  </svelte:element>
 {/snippet}
 
 {#snippet affix()}
   {#if select}
-    <div class="neo-list-item-checkmark" class:neo-skeleton={skeleton} class:neo-reverse={reverse}>
+    <div class="neo-list-item-checkmark" class:neo-reverse={reverse}>
       <NeoIconCheckbox {checked} enter={touched} />
     </div>
   {:else if arrow}
-    <div class="neo-list-item-arrow" class:neo-skeleton={skeleton}>
+    <div class="neo-list-item-arrow">
       <NeoIconArrow expanded={checked && !disabled && !readonly} chevron direction={reverse ? NeoIconArrowDirection.Left : NeoIconArrowDirection.Right} />
     </div>
   {/if}
@@ -294,6 +284,7 @@
 
     &-text {
       display: flex;
+      flex: 1 1 auto;
       flex-direction: column;
 
       &:has(> .neo-list-item-label.neo-header) {
@@ -346,7 +337,7 @@
       :global(> .neo-list-item-media) {
         --neo-media-margin: var(--neo-list-item-media-margin, var(--neo-gap-4xs));
         --neo-media-padding:var(--neo-list-item-media-padding, var(--neo-gap-4xs));
-        --neo-media-flex: var(--neo-list-item-media-flex, 0 1 40%);
+        --neo-media-flex: var(--neo-list-item-media-flex, 0 0 30%);
       }
 
       &.neo-disabled {
@@ -370,17 +361,8 @@
         color: var(--neo-text-color-highlight);
       }
 
-      :global(.neo-list-item-skeleton .neo-skeleton-text-line) {
-        --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
-      }
-
       &.neo-description {
         gap: var(--neo-gap-xs, 0.625rem);
-
-        :global(.neo-list-item-skeleton .neo-skeleton-text-line:nth-child(n + 2)) {
-          --neo-skeleton-text-font-size: var(--neo-font-size-sm, 0.875rem);
-          --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
-        }
       }
     }
 
@@ -408,20 +390,6 @@
       text-align: center;
       border-radius: 50%;
       transition: background-color 0.3s ease-out;
-
-      :global(> *) {
-        opacity: 1;
-        transition: opacity 0.15s ease-out 0.15s;
-      }
-
-      &.neo-skeleton {
-        @include mixin.skeleton($content: false);
-
-        :global(> *) {
-          opacity: 0;
-          transition-delay: 0s;
-        }
-      }
     }
 
     &-checkmark {

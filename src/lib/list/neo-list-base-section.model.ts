@@ -1,5 +1,4 @@
 import type { NeoListContext, NeoListRender, NeoListSection } from '~/list/neo-list.model.js';
-import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export type NeoListBaseSectionProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
@@ -34,13 +33,4 @@ export type NeoListBaseSectionProps<Value = unknown, Tag extends keyof HTMLEleme
    * @default false
    */
   reverse?: boolean;
-
-  /**
-   * If true, the section will display as a skeleton.
-   */
-  skeleton?: boolean;
-  /**
-   * Optional props to pass to the skeleton loader.
-   */
-  skeletonProps?: NeoSkeletonTextProps;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

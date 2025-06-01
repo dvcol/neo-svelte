@@ -1,16 +1,16 @@
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
 import type { NeoBaseListItem } from '~/list/neo-list.model.js';
 import type { NeoMediaProps } from '~/media/neo-media.model.js';
-import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 import type { NeoMarkProps } from '~/text/neo-mark.model.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
+import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export interface NeoListBaseItemProps<
   Value = unknown,
   Context = any,
   Tag extends keyof HTMLElementTagNameMap = 'li',
   Item extends NeoBaseListItem<Value, Tag, Context> = NeoBaseListItem<Value, Tag, Context>,
-> extends NeoSkeletonTextProps, Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle' | 'glass' | 'tinted' | 'filled'> {
+> extends HTMLNeoBaseElement, HTMLTagProps, Pick<NeoButtonProps, 'hovered' | 'focused' | 'toggle' | 'glass' | 'tinted' | 'filled'> {
   // Snippets
   /**
    * Snippet to display before the list item.
@@ -46,10 +46,6 @@ export interface NeoListBaseItemProps<
    * Reference to the button element (if any) within the list item.
    */
   buttonRef?: NeoButtonProps['ref'];
-  /**
-   * If true, the item will display as a skeleton.
-   */
-  skeleton?: boolean;
   /**
    * If true, the item will display as a selectable button.
    *

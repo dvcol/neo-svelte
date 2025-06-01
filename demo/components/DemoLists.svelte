@@ -20,7 +20,6 @@
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoList from '~/list/NeoList.svelte';
   import NeoListSearch from '~/list/NeoListSearch.svelte';
-  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import { Colors } from '~/utils/colors.utils';
   import { quickDurationProps } from '~/utils/transition.utils';
 
@@ -193,7 +192,6 @@
     <NeoButton toggle bind:checked={options.shadow}>Shadow</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.scrollToLoader}>Scroll to loader</NeoButton>
-    <NeoButton toggle bind:checked={options.skeleton}>Skeleton</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
     <NeoButton toggle bind:checked={options.nullable}>Nullable</NeoButton>
     <NeoButton toggle bind:checked={options.readonly}>Readonly</NeoButton>
@@ -205,15 +203,13 @@
   </NeoButtonGroup>
 </div>
 
-{#snippet render({ context }: NeoListItemContext)}
-  <NeoSkeletonText class="custom-item-skeleton" loading={context?.skeleton} lines={4} align="center">
-    <div class="custom-item-card">
-      <div>Custom Render Item</div>
-      <div>- John Doe</div>
-      <div>- john.doe@email.com</div>
-      <div>- 123-456-7890</div>
-    </div>
-  </NeoSkeletonText>
+{#snippet render()}
+  <div class="custom-item-card">
+    <div>Custom Render Item</div>
+    <div>- John Doe</div>
+    <div>- john.doe@email.com</div>
+    <div>- 123-456-7890</div>
+  </div>
 {/snippet}
 
 {#snippet renderSection(_children: NeoListRender, _context: NeoListRenderContext)}
@@ -224,14 +220,12 @@
   </ul>
 {/snippet}
 
-{#snippet item({ item: { label, value }, index, context: { skeleton } }: NeoListItemContext)}
-  <NeoSkeletonText class="custom-item-skeleton" loading={skeleton} lines={3} align="center">
-    <div class="custom-item-card">
-      <div>{label}</div>
-      <div>index: {index}</div>
-      <div>value: {value}</div>
-    </div>
-  </NeoSkeletonText>
+{#snippet item({ item: { label, value }, index }: NeoListItemContext)}
+  <div class="custom-item-card">
+    <div>{label}</div>
+    <div>index: {index}</div>
+    <div>value: {value}</div>
+  </div>
 {/snippet}
 
 {#snippet avatar(ctx: NeoListItemContext)}
@@ -424,6 +418,9 @@
   .custom-item-card {
     display: flex;
     flex-direction: column;
+    border: var(--neo-border-width) solid var(--neo-border-color);
+    border-radius: 0.5rem;
+    padding-inline: 0.5rem;
     margin-block: 0.25rem;
   }
 
@@ -450,14 +447,6 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     line-clamp: 1;
-  }
-
-  .custom-item-card,
-  :global(.custom-item-skeleton) {
-    border: var(--neo-border-width) solid var(--neo-border-color);
-    border-radius: 0.5rem;
-    padding-inline: 0.5rem;
-    margin-block: 0.25rem;
   }
 
   .column {

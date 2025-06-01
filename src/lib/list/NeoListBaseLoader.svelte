@@ -108,7 +108,7 @@
       :global(> .neo-list-base-loader-media) {
         --neo-media-margin: var(--neo-list-loader-media-margin, var(--neo-gap-4xs));
         --neo-media-padding:var(--neo-list-loader-media-padding, var(--neo-gap-4xs));
-        --neo-media-flex: var(--neo-list-loader-media-flex, 0 1 28.5%);
+        --neo-media-flex: var(--neo-list-loader-media-flex, 0 0 30%);
       }
 
       :global(.neo-list-loader-skeleton .neo-skeleton-text-line) {

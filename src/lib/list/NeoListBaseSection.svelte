@@ -3,7 +3,6 @@
 
   import { getUUID } from '@dvcol/common-utils/common/string';
 
-  import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
   import NeoMark from '~/text/NeoMark.svelte';
 
   const {
@@ -16,12 +15,10 @@
     context,
 
     select,
-    skeleton,
     highlight,
     reverse,
 
     // Other props
-    skeletonProps,
     ...rest
   }: NeoListBaseSectionProps = $props();
 
@@ -32,18 +29,10 @@
   {@render section?.render(list, { items: section.items, section, index, context })}
 {:else}
   {#if section.label}
-    <div id={labelId} class="neo-list-section-title" class:neo-sticky={section.sticky}>
-      <NeoSkeletonText
-        loading={!!skeleton}
-        disabled={skeleton === undefined}
-        lines={1}
-        align="center"
-        {reverse}
-        {...skeletonProps}
-        class={['neo-list-section-skeleton', skeletonProps?.class]}
-      >
-        <NeoMark class="neo-list-section-title-mark" value={section.label} filter={highlight} />
-      </NeoSkeletonText>
+    <div id={labelId} class="neo-list-section-title" class:neo-sticky={section.sticky} class:neo-reverse={reverse}>
+      <NeoMark class="neo-list-section-title-mark" value={section.label} filter={highlight} />
+      <span>test</span>
+      <span>end</span>
     </div>
   {/if}
   <svelte:element
@@ -65,6 +54,11 @@
       padding: 0.25rem 0.6125rem;
       transition: color 0.3s ease;
       margin-block-end: 0.125rem;
+
+      &.neo-reverse {
+        justify-content: flex-end;
+        text-align: end;
+      }
 
       &.neo-sticky {
         position: sticky;

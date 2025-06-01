@@ -143,7 +143,7 @@
     {disabled}
     {readonly}
     loading={loading ?? context?.loading}
-    skeleton={skeleton ?? context?.skeleton}
+    {skeleton}
     {before}
     after={sort ? after : undefined}
     {onkeydown}

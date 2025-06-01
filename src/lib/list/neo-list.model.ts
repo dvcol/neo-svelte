@@ -291,10 +291,6 @@ export interface NeoListState<Selected = undefined | NeoListSelectedItem | NeoLi
    */
   loading?: boolean;
   /**
-   * If the list should display a loading skeleton.
-   */
-  skeleton?: boolean;
-  /**
    * Disable all items in the list.
    */
   disabled?: boolean;

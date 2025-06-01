@@ -49,7 +49,6 @@
     filter = $bindable(item => !item?.hidden),
     sort = $bindable(() => 0),
     loading = false,
-    skeleton = false,
     scrollToLoader,
     scrollTolerance = 1,
 
@@ -235,7 +234,6 @@
     selected,
 
     loading,
-    skeleton,
     disabled,
     readonly,
     reverse,
@@ -333,7 +331,7 @@
     ?.map((item, index) => ({ item, index }))
     .filter(({ item }) => filter(item))
     .sort((a, b) => sort(a.item, b.item))}
-  {#if !visible?.length && !loading && !skeleton}
+  {#if !visible?.length && !loading}
     {@render emptyItem(section?.empty)}
   {:else}
     <!-- Items -->
@@ -349,7 +347,6 @@
         aria-posinset={index + 1}
         aria-setsize={visible.length}
         class:neo-list-item={true}
-        class:neo-skeleton={skeleton}
         class:neo-checked={checked}
         class:neo-list-item-select={select}
         style:--neo-list-item-color={getColorVariable(item.color)}
@@ -366,7 +363,7 @@
           {#if customSection && !item.render}
             {@render customSection(list, sectionContext)}
           {:else}
-            <NeoListBaseSection section={item} {index} {context} {skeleton} {select} {list} {reverse} {...sectionProps} />
+            <NeoListBaseSection section={item} {index} {context} {select} {list} {reverse} {...sectionProps} />
           {/if}
         {:else if customItem && !item.render}
           {@render customItem({ item, index, checked, context })}
@@ -375,7 +372,6 @@
             {item}
             {index}
             {context}
-            {skeleton}
             {checked}
             {select}
             {highlight}
@@ -411,7 +407,7 @@
   {...containerRest}
 >
   {@render before?.(context)}
-  {#if !empty || loading || skeleton}
+  {#if !empty || loading}
     <svelte:element
       this={tag}
       role={select ? 'listbox' : 'list'}
@@ -427,7 +423,7 @@
     >
       {@render children?.(context)}
       {@render list({ items, context })}
-      {@render loader(loading || (empty && skeleton))}
+      {@render loader(loading || empty)}
     </svelte:element>
   {:else}
     <svelte:element
@@ -520,10 +516,6 @@
     &-item {
       :global(> .neo-list-item-button) {
         width: 100%;
-      }
-
-      &.neo-skeleton {
-        pointer-events: none;
       }
 
       &-select {
