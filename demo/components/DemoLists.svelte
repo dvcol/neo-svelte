@@ -25,7 +25,6 @@
 
   const options = $state<NeoListProps>({
     loading: false,
-    skeleton: false,
     shadow: true,
     scrollToLoader: false,
     nullable: true,

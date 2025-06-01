@@ -109,7 +109,7 @@ export interface NeoListBaseItemProps<
    * Optional callback to handle the item click event.
    * @param index
    */
-  onclick: NeoButtonProps['onclick'];
+  onclick?: NeoButtonProps['onclick'];
 
   // Other props
   /**

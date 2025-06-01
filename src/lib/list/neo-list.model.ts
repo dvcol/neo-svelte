@@ -215,15 +215,7 @@ export interface NeoListSelectEvent<Selected = NeoListSelectedItem | NeoListSele
   added?: Selected;
 }
 
-export interface NeoListMethods<Value = unknown> {
-  /**
-   * Scroll the list to the top.
-   */
-  scrollToTop: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
-  /**
-   * Scroll the list to the bottom.
-   */
-  scrollToBottom: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
+export interface NeoListSelectMethods<Value = unknown> {
   /**
    * Select an item in the list.
    * @param index - The index of the item to select.
@@ -247,13 +239,24 @@ export interface NeoListMethods<Value = unknown> {
   reSelect: () => NeoListSelectEvent | undefined;
 }
 
-export type NeoListItemOrSection<Value = unknown> = NeoListItem<Value> | NeoListSection<Value>;
-export interface NeoListState<Selected = undefined | NeoListSelectedItem | NeoListSelectedItem[]> {
-  // States
+export interface NeoListMethods {
   /**
-   * List items to display.
+   * Scroll the list to the top.
    */
-  items?: NeoListItemOrSection[];
+  scrollToTop: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
+  /**
+   * Scroll the list to the bottom.
+   */
+  scrollToBottom: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
+}
+
+export type NeoListItemOrSection<Value = unknown> = NeoListItem<Value> | NeoListSection<Value>;
+
+export interface NeoListSelectState<Selected = NeoListSelectedItem | NeoListSelectedItem[]> {
+  /**
+   * The currently selected item(s).
+   */
+  selected?: Selected;
   /**
    * Whether to allow selecting items in the list.
    */
@@ -266,10 +269,14 @@ export interface NeoListState<Selected = undefined | NeoListSelectedItem | NeoLi
    * Whether to allow deselecting items if it will result in an empty selection.
    */
   nullable?: boolean;
+}
+
+export interface NeoListState<Item = NeoListItemOrSection> {
+  // States
   /**
-   * The currently selected item(s).
+   * List items to display.
    */
-  selected?: Selected;
+  items?: Item[];
   /**
    * Optional filter to highlight text.
    */
@@ -278,13 +285,13 @@ export interface NeoListState<Selected = undefined | NeoListSelectedItem | NeoLi
    * A filter function to apply to each item in the list.
    * @param item
    */
-  filter?: (item: NeoListItemOrSection) => boolean;
+  filter?: (item: Item) => boolean;
   /**
    * A sort function to apply to the list items.
    * @param a
    * @param b
    */
-  sort?: (a: NeoListItemOrSection, b: NeoListItemOrSection) => number;
+  sort?: (a: Item, b: Item) => number;
 
   /**
    * If the list is currently loading additional items.
@@ -310,16 +317,23 @@ export interface NeoListState<Selected = undefined | NeoListSelectedItem | NeoLi
    * @default false
    */
   flip?: boolean;
+  /**
+   * Whether to display a divider above items in the list.
+   * If an item divider option is set, it will take precedence over the list divider.
+   *
+   * @default false
+   */
+  divider?: boolean;
 }
 
-export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[]> = NeoListState<Selected> & NeoListMethods;
+export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[], Value = unknown> = NeoListState & NeoListSelectState<Selected> & NeoListMethods & NeoListSelectMethods<Value>;
 
-export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul', Selected = NeoListSelectedItem | NeoListSelectedItem[]> = {
+export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul', Selected = NeoListSelectedItem | NeoListSelectedItem[], Context = NeoListContext<Selected>> = {
   // Snippets
   /**
    * Optional snippet to display in place of each list item.
    */
-  item?: NeoListItemRender<Value>;
+  item?: NeoListItemRender<Value, 'li', Context>;
   /**
    * Optional snippet to display in place of each list section.
    */
@@ -327,23 +341,23 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Optional snippet to display when the list is empty.
    */
-  empty?: Snippet<[NeoListContext]>;
+  empty?: Snippet<[Context]>;
   /**
    * Optional snippet to display in place of the loading indicator.
    */
-  loader?: Snippet<[NeoListContext]>;
+  loader?: Snippet<[Context]>;
   /**
    * Optional snippet to display after the list.
    */
-  after?: Snippet<[NeoListContext]>;
+  after?: Snippet<[Context]>;
   /**
    * Optional snippet to display before the list.
    */
-  before?: Snippet<[NeoListContext]>;
+  before?: Snippet<[Context]>;
   /**
    * Optional snippet to display inside the list.
    */
-  children?: Snippet<[NeoListContext]>;
+  children?: Snippet<[Context]>;
 
   // Animation
   /**
@@ -450,17 +464,17 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Optional props to pass to the list item.
    */
-  itemProps?: Partial<Omit<NeoListBaseItemProps<Value, NeoListContext>, 'buttonProps'>>;
+  itemProps?: Partial<Omit<NeoListBaseItemProps<Value, Context>, 'buttonProps'>>;
   /**
    * Optional props to pass to the list section.
    */
   sectionProps?: NeoListBaseSectionProps<Value, Tag>;
 } & HTMLRefProps &
 HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-NeoListState<Selected>;
+NeoListState & NeoListSelectState<Selected>;
 
 export type NeoListHTMLElement<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  NeoListMethods<Value>;
+  NeoListMethods & NeoListSelectMethods<Value>;
 
 export function findByIdInList<Value = unknown>(selection: NeoListSelectedItem<Value>, array: NeoListItemOrSection<Value>[]): NeoListSelectedItem<Value> | undefined {
   const result: NeoListSelectedItem<Value> = { index: -1 } as NeoListSelectedItem<Value>;

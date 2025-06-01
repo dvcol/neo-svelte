@@ -1,34 +1,20 @@
 <script lang="ts">
-  import type {
-    NeoListContext,
-    NeoListItemOrSection,
-    NeoListMethods,
-    NeoListProps,
-    NeoListRenderContext,
-    NeoListSection,
-    NeoListSelectedItem,
-    NeoListSelectEvent,
-    NeoListSelectMethods,
-  } from '~/list/neo-list.model.js';
+  import type { NeoLisFlattContext, NeoListFlatProps } from '~/list/neo-list-flat.model.js';
+  import type { NeoListItem, NeoListMethods, NeoListProps } from '~/list/neo-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
-  import { shallowClone } from '@dvcol/common-utils/common/object';
   import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze } from '@dvcol/svelte-utils/transition';
-  import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import NeoIconList from '~/icons/NeoIconList.svelte';
-  import { findByIdInList, isSection, showDivider } from '~/list/neo-list.model.js';
+  import { showDivider } from '~/list/neo-list.model.js';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
-  import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
-  import { NeoErrorListSelectDisabled } from '~/utils/error.utils.js';
-  import { Logger } from '~/utils/logger.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickCircOutProps, quickDurationProps, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
 
@@ -37,7 +23,6 @@
     item: customItem,
     empty: customEmpty,
     loader: customLoader,
-    section: customSection,
     after,
     before,
     children,
@@ -54,10 +39,6 @@
     scrollTolerance = 1,
 
     divider,
-    select = false,
-    multiple = false,
-    nullable = true,
-    selected = $bindable(),
     disabled,
     readonly,
     reverse,
@@ -80,7 +61,6 @@
     animate = { use: flipToggle, props: quickCircOutProps },
 
     // Events
-    onSelect,
     onScrollTop,
     onScrollBottom,
 
@@ -90,22 +70,12 @@
     buttonProps,
     dividerProps,
     itemProps,
-    sectionProps,
     ...rest
-  }: NeoListProps = $props();
-
-  // TODO - pull to refresh (in mixin or component)
-  // TODO - floating button (back to top)
+  }: NeoListFlatProps = $props();
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
-
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
-
-  const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
-    multiple && (Array.isArray(list) || list === undefined);
-
-  const isNullable = $derived(multiple ? nullable || (isMultiple(selected) && (selected?.length ?? 0) > 1) : nullable);
 
   const onScrollEvent = (e?: SvelteEvent) => {
     if (!ref) return;
@@ -151,82 +121,7 @@
     scrollReverse();
   });
 
-  const isSameIndex = (left: NeoListSelectedItem, right: NeoListSelectedItem) =>
-    left?.index === right?.index && left?.sectionIndex === right?.sectionIndex;
-
-  const cloneSelection = (selection = selected): undefined | NeoListSelectedItem | NeoListSelectedItem[] => {
-    if (!selection || (Array.isArray(selection) && !selection.length)) return multiple ? [] : undefined;
-    return shallowClone(selection, Array.isArray(selection) ? 3 : 2);
-  };
-
-  const selectItem: NeoListSelectMethods['selectItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
-    if (disabled || readonly || !selection?.length) return;
-    if (!select) throw new NeoErrorListSelectDisabled();
-
-    const previous = cloneSelection();
-    if (isMultiple(selected)) {
-      selected = [...(selected ?? []), ...selection];
-    } else {
-      if (selection.length > 1) Logger.warn('Multiple selection is disabled. Only the first selection will be considered.');
-      [selected] = selection;
-    }
-    return { type: 'select', previous, current: cloneSelection(), added: selection };
-  };
-
-  const clearItem: NeoListSelectMethods['clearItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
-    if (disabled || readonly) return;
-    if (!select) throw new NeoErrorListSelectDisabled();
-
-    const previous = cloneSelection();
-    if (isMultiple(selected)) {
-      if (!selection?.length) selected = [];
-      else selected = selected?.filter(item => !selection.some(s => isSameIndex(s, item))) ?? [];
-    } else {
-      selected = undefined;
-    }
-
-    return { type: 'clear', previous, current: cloneSelection(), removed: selection };
-  };
-
-  const toggleItem = (item: NeoListSelectedItem, clear = false) => {
-    if (disabled || readonly) return;
-    const event = clear ? clearItem(item) : selectItem(item);
-    if (event) onSelect?.(event);
-  };
-
-  const isChecked = (item: NeoListSelectedItem) => {
-    if (isMultiple(selected)) return selected?.some(i => isSameIndex(i, item));
-    return isSameIndex(selected, item);
-  };
-
-  /**
-   * Re-selects the previous selection if it still exists in the list
-   */
-  const reSelect: NeoListSelectMethods['reSelect'] = () => {
-    if (!select || missing || !selected) return;
-    if (Array.isArray(selected) && !selected.length) return;
-    const previous = cloneSelection();
-    clearItem();
-    if (multiple && !Array.isArray(previous)) return;
-    if (isMultiple(previous)) {
-      selected = previous?.map(item => findByIdInList(item, items)).filter<NeoListSelectedItem>(item => !!item) ?? [];
-    } else {
-      selected = findByIdInList(previous, items);
-    }
-    const event: NeoListSelectEvent = { type: 're-select', previous, current: cloneSelection() };
-    onSelect?.(event);
-    return event;
-  };
-
-  // Clear selected item(s) when items list changes and attempts to re-select if the item still exists
-  watch(
-    () => {
-      reSelect();
-    },
-    () => items,
-  );
-
-  const context = $derived<NeoListContext>({
+  const context = $derived<NeoLisFlattContext>({
     // States
     items,
 
@@ -236,12 +131,6 @@
     readonly,
     reverse,
     flip,
-
-    // Selection
-    select,
-    multiple,
-    nullable,
-    selected,
 
     // Filter
     get highlight() {
@@ -266,10 +155,7 @@
     // Methods
     scrollToTop,
     scrollToBottom,
-    selectItem,
-    clearItem,
-    reSelect,
-  });
+  }); // TOSO - type this properly
 
   $effect(() => {
     if (!ref) return;
@@ -284,10 +170,10 @@
     onScrollEvent(e);
   }, 25);
 
-  const renderDivider = (index: number, array: { item: NeoListItemOrSection }[], position: 'top' | 'bottom') => {
-    if (position === 'top') return index && (showDivider(array[index]?.item.divider, 'top') ?? showDivider(divider, 'top'));
+  const renderDivider = (index: number, array: NeoListItem[], position: 'top' | 'bottom') => {
+    if (position === 'top') return index && (showDivider(array[index]?.divider, 'top') ?? showDivider(divider, 'top'));
     if (index >= array.length - 1) return false;
-    return showDivider(array[index].item.divider, 'bottom') && !showDivider(array[index + 1]?.item.divider, 'top');
+    return showDivider(array[index]?.divider, 'bottom') && !showDivider(array[index + 1]?.divider, 'top');
   };
 
   const width = $derived(toSize(_width));
@@ -304,24 +190,21 @@
 {#snippet loader(show = loading)}
   <!-- Loading indicator -->
   <li
-    role={select ? 'option' : 'listitem'}
-    aria-disabled="true"
+    role="listitem"
     aria-label="Loading placeholder."
     class="neo-list-loader"
-    class:neo-select={select}
-    class:neo-list-item-select={select}
   >
     {#if show && customLoader}
       {@render customLoader(context)}
     {:else}
-      <NeoListBaseLoader loading={show} {select} in={inAction} out={outAction} {...loaderProps} />
+      <NeoListBaseLoader loading={show} in={inAction} out={outAction} {...loaderProps} />
     {/if}
   </li>
 {/snippet}
 
-{#snippet emptyItem(itemEmpty: NeoListSection['empty'] = customEmpty)}
-  {#if itemEmpty}
-    {@render itemEmpty(context)}
+{#snippet emptyItem()}
+  {#if customEmpty}
+    {@render customEmpty(context)}
   {:else}
     <div class="neo-list-empty-content">
       <NeoIconList size="3rem" stroke="1" />
@@ -330,65 +213,47 @@
   {/if}
 {/snippet}
 
-{#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
-  {@const visible = array
-    ?.map((item, index) => ({ item, index }))
-    .filter(({ item }) => filter(item))
-    .sort((a, b) => sort(a.item, b.item))}
+{#snippet list(array: NeoListItem[])}
+  {@const visible = array?.filter(item => filter(item)).sort((a, b) => sort(a, b))}
   {#if !visible?.length && !loading}
-    {@render emptyItem(section?.empty)}
+    {@render emptyItem()}
   {:else}
     <!-- Items -->
-    {#each visible as { item, index }, i (item.id ?? index)}
-      {@const checked = !isSection(item) && isChecked({ index, item, sectionIndex, section })}
+    {#each visible as item, index (item.id ?? index)}
       <svelte:element
         this={item.tag ?? 'li'}
-        role={select ? 'option' : 'listitem'}
+        role="listitem"
         data-id={item?.id}
         data-index={index}
-        data-section={sectionIndex}
-        aria-selected={checked}
         aria-posinset={index + 1}
         aria-setsize={visible.length}
         class:neo-list-item={true}
-        class:neo-checked={checked}
-        class:neo-list-item-select={select}
         style:--neo-list-item-color={getColorVariable(item.color)}
         {...item.containerProps}
-        animate:animateFn={{ ...animateProps, skip: section }}
+        animate:animateFn={animateProps}
         out:inFn={inProps}
         in:outFn={outProps}
       >
-        {#if renderDivider(i, visible, flip ? 'bottom' : 'top')}
+        {#if renderDivider(index, visible, flip ? 'bottom' : 'top') ?? showDivider(divider, flip ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
-        {#if isSection(item)}
-          {@const sectionContext = { items: item.items, section: item, index, context }}
-          {#if customSection && !item.render}
-            {@render customSection(list, sectionContext)}
-          {:else}
-            <NeoListBaseSection section={item} {index} {context} {select} {list} {reverse} {...sectionProps} />
-          {/if}
-        {:else if customItem && !item.render}
-          {@render customItem({ item, index, checked, context })}
+        {#if customItem && !item.render}
+          {@render customItem({ item, index, context })}
         {:else}
           <NeoListBaseItem
             {item}
             {index}
             {context}
-            {checked}
-            {select}
             {highlight}
             {buttonProps}
             {reverse}
             {rounded}
-            disabled={item.disabled || disabled || section?.disabled}
-            readonly={item.readonly || readonly || section?.readonly || (!isNullable && checked)}
+            disabled={item.disabled || disabled}
+            readonly={item.readonly || readonly}
             {...itemProps}
-            onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
           />
         {/if}
-        {#if renderDivider(i, visible, flip ? 'top' : 'bottom')}
+        {#if renderDivider(index, visible, flip ? 'top' : 'bottom')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
       </svelte:element>
@@ -414,7 +279,7 @@
   {#if !empty || loading}
     <svelte:element
       this={tag}
-      role={select ? 'listbox' : 'list'}
+      role="list"
       bind:this={ref}
       class:neo-list-items={true}
       class:neo-scroll={scrollbar}
@@ -426,14 +291,14 @@
       {...rest}
     >
       {@render children?.(context)}
-      {@render list({ items, context })}
+      {@render list(items)}
       {@render loader(loading || empty)}
     </svelte:element>
   {:else}
     <svelte:element
       this={tag}
       aria-label="Empty placeholder"
-      role={select ? 'listbox' : 'list'}
+      role="list"
       bind:this={ref}
       class:neo-list-empty={true}
       in:fade={quickDurationProps}
@@ -504,8 +369,8 @@
       }
 
       &.neo-dim {
-        &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
-        &:has(> .neo-list-item :global(*:focus-visible)) > .neo-list-item:not(:hover, .neo-checked, :has(:global(*:focus-visible))) {
+        &:hover > .neo-list-item:not(:hover, :has(*:focus-visible)),
+        &:has(> .neo-list-item :global(*:focus-visible)) > .neo-list-item:not(:hover, :has(:global(*:focus-visible))) {
           opacity: 0.6;
           transition-timing-function: linear;
           transition-duration: 0.6s;
@@ -513,23 +378,9 @@
       }
     }
 
-    &-loader.neo-select {
-      gap: var(--neo-gap-4xs, 0.25rem);
-    }
-
     &-item {
       :global(> .neo-list-item-button) {
         width: 100%;
-      }
-
-      &-select {
-        :global(> .neo-list-item-button.neo-rounded) {
-          border-radius: var(--neo-btn-border-radius, var(--neo-border-radius-lg));
-        }
-
-        :global(> .neo-list-base-loader:first-child) {
-          margin-top: 0.25rem;
-        }
       }
 
       :global(> .neo-list-item-divider) {
@@ -540,7 +391,6 @@
       &:hover,
       &:focus,
       &:focus-within {
-        :global(> .neo-list-section-title),
         :global(> .neo-list-item-button .neo-list-item-content){
           color: var(--neo-text-color-highlight);
         }
