@@ -142,8 +142,8 @@
     &-group {
       position: relative;
       display: flex;
+      flex: 1 1 auto;
       width: 100%;
-      height: 100%;
       padding: var(--neo-handle-group-margin-top, var(--neo-handle-group-computed-padding-top, 0))
         var(--neo-handle-group-margin-right, var(--neo-handle-group-computed-padding-right, 0))
         var(--neo-handle-group-margin-bottom, var(--neo-handle-group-computed-padding-bottom, 0))
