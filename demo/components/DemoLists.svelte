@@ -12,6 +12,7 @@
 
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
+  import { NeoListBaseItem } from '~';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -20,6 +21,8 @@
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoList from '~/list/NeoList.svelte';
   import NeoListSearch from '~/list/NeoListSearch.svelte';
+  import NeoSimpleList from '~/list/NeoSimpleList.svelte';
+  import NeoVirtualList from '~/list/NeoVirtualList.svelte';
   import { Colors } from '~/utils/colors.utils';
   import { quickDurationProps } from '~/utils/transition.utils';
 
@@ -166,6 +169,14 @@
     ].map(item => ({ ...item, id: getUUID(), before: avatar })),
   );
 
+  const virtual = Array.from({ length: 100 }).fill(0).map((_, i) => ({
+    label: `Virtual item ${i + 1}`,
+    description: `This is a virtual item with index ${i + 1}. It is used to demonstrate the NeoVirtualList component.`,
+    tags: ['virtual', 'list', 'item', 'demo'],
+    value: i + 1,
+    id: getUUID(),
+  }));
+
   let hovered = $state(false);
   let focused = $state(false);
   const elevation = $state(0);
@@ -232,6 +243,25 @@
     <NeoIconAccount size="1.5rem" stroke="2" filled={!!ctx?.checked} />
   </span>
 {/snippet}
+
+<section>
+  <div class="row">
+    <!--  Virtual list  -->
+    <div class="column content">
+      <span class="label">Sortable Card list</span>
+      <NeoSimpleList {...options} items={virtual} />
+    </div>
+
+    <div class="column content">
+      <span class="label">Sortable Card list</span>
+      <NeoVirtualList items={virtual}>
+        {#snippet children(item)}
+          <NeoListBaseItem {item} />
+        {/snippet}
+      </NeoVirtualList>
+    </div>
+  </div>
+</section>
 
 <section>
   <div class="row">

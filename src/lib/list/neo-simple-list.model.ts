@@ -11,9 +11,9 @@ import type { BorderRadiusInput } from '~/utils/border.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
-export type NeoLisFlattContext = NeoListState<NeoListItem> & NeoListMethods;
+export type NeoSimpleListContext = NeoListState<NeoListItem> & NeoListMethods;
 
-export type NeoListFlatProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul', Context = NeoLisFlattContext> = {
+export type NeoSimpleListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul', Context = NeoSimpleListContext> = {
   // Snippets
   /**
    * Optional snippet to display in place of each list item.

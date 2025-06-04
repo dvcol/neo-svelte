@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { NeoLisFlattContext, NeoListFlatProps } from '~/list/neo-list-flat.model.js';
   import type { NeoListItem, NeoListMethods, NeoListProps } from '~/list/neo-list.model.js';
+  import type { NeoSimpleListContext, NeoSimpleListProps } from '~/list/neo-simple-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
@@ -13,6 +13,7 @@
   import { showDivider } from '~/list/neo-list.model.js';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
+  import NeoVirtualList from '~/list/NeoVirtualList.svelte';
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -25,7 +26,7 @@
     loader: customLoader,
     after,
     before,
-    children,
+    children: inner,
 
     // States
     ref = $bindable(),
@@ -71,11 +72,13 @@
     dividerProps,
     itemProps,
     ...rest
-  }: NeoListFlatProps = $props();
+  }: NeoSimpleListProps = $props();
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
-  const empty = $derived(!items?.length);
-  const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
+
+  const filtered = items?.filter(item => filter(item)).sort((a, b) => sort(a, b));
+  const empty = $derived(!filtered?.length);
+  const missing = $derived(filtered?.some(item => item.id === undefined || item.id === null));
 
   const onScrollEvent = (e?: SvelteEvent) => {
     if (!ref) return;
@@ -121,7 +124,7 @@
     scrollReverse();
   });
 
-  const context = $derived<NeoLisFlattContext>({
+  const context = $derived<NeoSimpleListContext>({
     // States
     items,
 
@@ -155,7 +158,7 @@
     // Methods
     scrollToTop,
     scrollToBottom,
-  }); // TOSO - type this properly
+  });
 
   $effect(() => {
     if (!ref) return;
@@ -213,28 +216,29 @@
   {/if}
 {/snippet}
 
-{#snippet list(array: NeoListItem[])}
-  {@const visible = array?.filter(item => filter(item)).sort((a, b) => sort(a, b))}
-  {#if !visible?.length && !loading}
-    {@render emptyItem()}
-  {:else}
-    <!-- Items -->
-    {#each visible as item, index (item.id ?? index)}
+{#snippet list()}
+  <NeoVirtualList items={filtered}>
+    <!-- Before -->
+    {#snippet before()}
+      {@render inner?.(context)}
+    {/snippet}
+    <!-- Item -->
+    {#snippet children({ item, index, id })}
       <svelte:element
         this={item.tag ?? 'li'}
         role="listitem"
         data-id={item?.id}
         data-index={index}
         aria-posinset={index + 1}
-        aria-setsize={visible.length}
+        aria-setsize={filtered.length}
         class:neo-list-item={true}
         style:--neo-list-item-color={getColorVariable(item.color)}
         {...item.containerProps}
-        animate:animateFn={animateProps}
-        out:inFn={inProps}
-        in:outFn={outProps}
       >
-        {#if renderDivider(index, visible, flip ? 'bottom' : 'top') ?? showDivider(divider, flip ? 'bottom' : 'top')}
+        <!--        animate:animateFn={animateProps} -->
+        <!--        out:inFn={inProps} -->
+        <!--        in:outFn={outProps} -->
+        {#if renderDivider(index, filtered, flip ? 'bottom' : 'top') ?? showDivider(divider, flip ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if customItem && !item.render}
@@ -253,12 +257,16 @@
             {...itemProps}
           />
         {/if}
-        {#if renderDivider(index, visible, flip ? 'top' : 'bottom')}
+        {#if renderDivider(index, filtered, flip ? 'top' : 'bottom')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
       </svelte:element>
-    {/each}
-  {/if}
+    {/snippet}
+    <!-- Loader -->
+    {#snippet after()}
+      {@render loader(loading || empty)}
+    {/snippet}
+  </NeoVirtualList>
 {/snippet}
 
 <svelte:element
@@ -290,9 +298,7 @@
       {onscroll}
       {...rest}
     >
-      {@render children?.(context)}
-      {@render list(items)}
-      {@render loader(loading || empty)}
+      {@render list()}
     </svelte:element>
   {:else}
     <svelte:element
