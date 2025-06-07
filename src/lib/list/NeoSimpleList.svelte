@@ -50,6 +50,10 @@
     flip,
     dim,
 
+    // Virtual List
+    buffer,
+    itemHeight,
+
     // Styles
     shadow = true,
     scrollbar = true,
@@ -251,6 +255,8 @@
     {dim}
     {shadow}
     {scrollbar}
+    {buffer}
+    {itemHeight}
     items={filtered}
     in={{ use: scaleFreeze, props: quickScaleProps }}
     {...rest}

@@ -43,6 +43,19 @@ export type NeoSimpleListProps<Value = unknown, Tag extends keyof HTMLElementTag
    */
   children?: Snippet<[Context]>;
 
+  // Virtual Props
+
+  /**
+   * The number of items to keep rendered before and after the visible items.
+   *
+   * @default 3
+   */
+  buffer?: number;
+  /**
+   * The average height of each item in the list.
+   */
+  itemHeight?: number;
+
   // Transitions
   /**
    * Transition function to apply when adding items to the list.

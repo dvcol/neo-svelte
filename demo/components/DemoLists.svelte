@@ -170,9 +170,22 @@
     ].map(item => ({ ...item, id: getUUID(), before: avatar })),
   );
 
+  const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+  function randomDescription() {
+    const maxLength = Math.floor(Math.random() ** 2 * 100);
+    const sliced = lorem.slice(0, maxLength);
+    // If we cut in the middle of a word, trim back to the last space
+    const lastSpace = sliced.lastIndexOf(' ');
+    if (lastSpace < 0) return '';
+    if (lastSpace !== sliced.length - 1) return sliced.slice(0, lastSpace);
+    return sliced;
+  }
+
   const generated = $state(Array.from({ length: 1000 }).fill(0).map((_, i) => ({
     label: `Virtual item ${i + 1}`,
-    description: `This is a virtual item with index ${i + 1}. It is used to demonstrate the NeoVirtualList component.`,
+    // Generate of random description length between 0 and 100 characters
+    description: randomDescription(),
     tags: ['virtual', 'list', 'item', 'demo'],
     value: i + 1,
     id: getUUID(),
@@ -192,13 +205,13 @@
     complexList.push({
       label: `Complex item ${complexList.length + 1}`,
       value: complexList.length + 1,
-      description: `This is a complex item with index ${complexList.length + 1}. It has a custom avatar and before snippet.`,
+      description: randomDescription(),
       id: getUUID(),
       before: avatar,
     });
     virtual.push({
       label: `Virtual item ${virtual.length + 1}`,
-      description: `This is a virtual item with index ${virtual.length + 1}. It is used to demonstrate the NeoVirtualList component.`,
+      description: randomDescription(),
       tags: ['virtual', 'list', 'item', 'demo'],
       value: virtual.length + 1,
       id: getUUID(),
