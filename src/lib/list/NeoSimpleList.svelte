@@ -3,6 +3,7 @@
   import type { NeoSimpleListContext, NeoSimpleListProps } from '~/list/neo-simple-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
+  import { isSafari } from '@dvcol/common-utils/common/browser';
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze } from '@dvcol/svelte-utils/transition';
   import { tick } from 'svelte';
@@ -74,9 +75,12 @@
     ...rest
   }: NeoSimpleListProps = $props();
 
+  // TODO - animate/in/out
+  // TODO - loading
+
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
-  const filtered = items?.filter(item => filter(item)).sort((a, b) => sort(a, b));
+  const filtered = $derived(items?.filter(item => filter(item)).sort((a, b) => sort(a, b)));
   const empty = $derived(!filtered?.length);
   const missing = $derived(filtered?.some(item => item.id === undefined || item.id === null));
 
@@ -217,13 +221,27 @@
 {/snippet}
 
 {#snippet list()}
-  <NeoVirtualList items={filtered}>
+  <NeoVirtualList
+    this={tag}
+    role="list"
+    bind:ref
+    {rounded}
+    {flip}
+    {dim}
+    {shadow}
+    {scrollbar}
+    items={filtered}
+    in={{ use: scaleFreeze, props: quickScaleProps }}
+    {...rest}
+    {onscroll}
+    class={['neo-list-items', rest?.class]}
+  >
     <!-- Before -->
     {#snippet before()}
       {@render inner?.(context)}
     {/snippet}
     <!-- Item -->
-    {#snippet children({ item, index, id })}
+    {#snippet children({ item, index })}
       <svelte:element
         this={item.tag ?? 'li'}
         role="listitem"
@@ -238,7 +256,7 @@
         <!--        animate:animateFn={animateProps} -->
         <!--        out:inFn={inProps} -->
         <!--        in:outFn={outProps} -->
-        {#if renderDivider(index, filtered, flip ? 'bottom' : 'top') ?? showDivider(divider, flip ? 'bottom' : 'top')}
+        {#if renderDivider(index, filtered, flip && !isSafari() ? 'bottom' : 'top') ?? showDivider(divider, flip && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if customItem && !item.render}
@@ -257,7 +275,7 @@
             {...itemProps}
           />
         {/if}
-        {#if renderDivider(index, filtered, flip ? 'top' : 'bottom')}
+        {#if renderDivider(index, filtered, flip && !isSafari() ? 'top' : 'bottom')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
       </svelte:element>
@@ -285,21 +303,7 @@
 >
   {@render before?.(context)}
   {#if !empty || loading}
-    <svelte:element
-      this={tag}
-      role="list"
-      bind:this={ref}
-      class:neo-list-items={true}
-      class:neo-scroll={scrollbar}
-      class:neo-shadow={shadow}
-      class:neo-rounded={buttonProps?.rounded}
-      class:neo-dim={dim}
-      in:scaleFreeze={quickScaleProps}
-      {onscroll}
-      {...rest}
-    >
-      {@render list()}
-    </svelte:element>
+    {@render list()}
   {:else}
     <svelte:element
       this={tag}
@@ -308,8 +312,8 @@
       bind:this={ref}
       class:neo-list-empty={true}
       in:fade={quickDurationProps}
-      {onscroll}
       {...rest}
+      {onscroll}
     >
       {@render emptyItem()}
     </svelte:element>
@@ -350,40 +354,6 @@
       border-radius: var(--neo-list-border-radius, var(--neo-border-radius));
     }
 
-    &-items {
-      overflow: auto;
-      padding-inline: var(--neo-list-padding, 0.375rem);
-      padding-block: var(--neo-list-padding, 0.375rem);
-
-      &.neo-scroll,
-      &.neo-rounded {
-        padding-block: var(--neo-list-scroll-padding, 0.625rem);
-
-        &:not(.neo-scroll) :global(> .neo-list-item) {
-          padding: 0 var(--neo-list-padding, var(--neo-gap-4xs, 0.25rem));
-        }
-      }
-
-      &.neo-scroll {
-        padding-block: var(--neo-list-scroll-padding, 0.625rem);
-
-        &.neo-shadow {
-          @include mixin.fade-scroll(1rem);
-        }
-
-        @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.5rem));
-      }
-
-      &.neo-dim {
-        &:hover > .neo-list-item:not(:hover, :has(*:focus-visible)),
-        &:has(> .neo-list-item :global(*:focus-visible)) > .neo-list-item:not(:hover, :has(:global(*:focus-visible))) {
-          opacity: 0.6;
-          transition-timing-function: linear;
-          transition-duration: 0.6s;
-        }
-      }
-    }
-
     &-item {
       :global(> .neo-list-item-button) {
         width: 100%;
@@ -422,14 +392,6 @@
     &.neo-flip {
       flex-direction: column-reverse;
       justify-content: end;
-
-      .neo-list-items {
-        // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
-        @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
-          flex-direction: column-reverse;
-          justify-content: end;
-        }
-      }
     }
   }
 </style>

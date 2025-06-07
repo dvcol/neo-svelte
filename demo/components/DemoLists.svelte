@@ -169,13 +169,15 @@
     ].map(item => ({ ...item, id: getUUID(), before: avatar })),
   );
 
-  const virtual = Array.from({ length: 100 }).fill(0).map((_, i) => ({
+  const generated = Array.from({ length: 1000 }).fill(0).map((_, i) => ({
     label: `Virtual item ${i + 1}`,
     description: `This is a virtual item with index ${i + 1}. It is used to demonstrate the NeoVirtualList component.`,
     tags: ['virtual', 'list', 'item', 'demo'],
     value: i + 1,
     id: getUUID(),
   }));
+
+  const virtual = $derived(isEmpty ? [] : generated);
 
   let hovered = $state(false);
   let focused = $state(false);
@@ -255,7 +257,7 @@
     <div class="column content">
       <span class="label">Sortable Card list</span>
       <NeoVirtualList items={virtual}>
-        {#snippet children(item)}
+        {#snippet children({ item })}
           <NeoListBaseItem {item} />
         {/snippet}
       </NeoVirtualList>

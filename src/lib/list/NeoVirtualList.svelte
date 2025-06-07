@@ -2,25 +2,39 @@
   import type { NeoVirtualContext, NeoVirtualItem, NeoVirtualListProps } from '~/list/neo-virtual-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
+  import { isSafari } from '@dvcol/common-utils/common/browser';
   import { onMount, tick } from 'svelte';
 
   import { defaultVirtualKey } from '~/list/neo-virtual-list.model.js';
+  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
-  const {
+  let {
     // Snippet
     children,
     before,
     after,
 
     // State
+    ref: viewport = $bindable(),
     tag = 'ul',
     items = [],
     key = defaultVirtualKey,
     itemHeight,
     buffer = 3,
 
+    // Style
+    flip,
+    dim,
+    shadow = true,
+    scrollbar = true,
+
     // Events
     onscroll,
+
+    // Transition
+    in: inAction,
+    out: outAction,
+    transition: transitionAction,
 
     // Other Props
     contentProps,
@@ -29,16 +43,13 @@
 
   const { tag: contentTag = 'div', ...contentRest } = $derived(contentProps ?? {});
 
+  // Height of the list viewport
+  let viewportHeight = $state(0);
+
   // Rendered items
   const cursor = $state({
     start: 0,
     end: 0,
-  });
-
-  // Viewport container
-  const viewport = $state<{ ref?: HTMLElement; height: number }>({
-    ref: undefined,
-    height: 0,
   });
 
   // Rows wrapper
@@ -52,6 +63,14 @@
   const rows = $state<{ refs: HTMLCollectionOf<HTMLElement>; heights: number[] }>({
     refs: [] as unknown as HTMLCollectionOf<HTMLElement>,
     heights: [],
+  });
+
+  const totalHeight = $derived.by(() => {
+    let total = rows.heights.reduce((x, y) => x + y, 0);
+    if (!content.ref) return total;
+    const style = getComputedStyle(content.ref);
+    total += Number.parseInt(style.paddingBlockEnd, 10);
+    total += Number.parseInt(style.paddingBlockStart, 10);
   });
 
   const averageHeight = $derived.by<number>(() => {
@@ -71,14 +90,14 @@
     let contentHeight = content.top - scrollTop;
     let i = cursor.start;
 
-    while (contentHeight < viewport.height && i < items.length) {
+    while (contentHeight < viewportHeight && i < items.length) {
       let row = rows.refs[i - cursor.start];
       if (!row) {
         cursor.end = i + 1;
         await tick(); // render the newly visible row
         row = rows.refs[i - cursor.start];
       }
-      contentHeight += (rows.heights[i] = itemHeight || row.offsetHeight);
+      contentHeight += (rows.heights[i] = row?.offsetHeight || averageHeight);
       i += 1;
     }
 
@@ -99,30 +118,30 @@
     }
   }
 
-  let resizeObserver: ResizeObserver;
+  const resizeObserver: ResizeObserver = new ResizeObserver(refresh);
   async function refresh() {
     // wait until the DOM is up to date
     await tick();
 
-    if (!viewport.ref) return;
-    const { scrollTop } = viewport.ref;
+    if (!viewport) return;
+    const { scrollTop } = viewport;
 
     await computeCursor(scrollTop);
     computeBottomPadding();
 
     const totalHeight = rows.heights.reduce((x, y) => x + y, 0);
-    if (scrollTop + viewport.height > totalHeight && viewport.ref) {
+    if (scrollTop + viewportHeight > totalHeight && viewport) {
       // If we scroll outside the viewport scroll to the top.
-      viewport.ref.scrollTo(0, Math.max(0, totalHeight - viewport.height));
+      viewport.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
     }
 
     for (const row of rows.refs) resizeObserver?.observe(row);
   }
 
   async function handleScroll(e: SvelteEvent<UIEvent>) {
-    if (!viewport.ref) return onscroll?.(e);
+    if (!viewport) return onscroll?.(e);
 
-    const { scrollTop } = viewport.ref;
+    const { scrollTop } = viewport;
     const previous = cursor.start;
 
     for (let v = 0; v < rows.refs.length; v += 1) {
@@ -154,7 +173,7 @@
     while (i < items.length) {
       y += rows.heights[i] || averageHeight;
       i += 1;
-      if (y > scrollTop + viewport.height) break;
+      if (y > scrollTop + viewportHeight) break;
     }
     cursor.end = Math.min(items.length, i + buffer);
 
@@ -166,7 +185,7 @@
     for (let k = cursor.end; k < items.length; k++) content.bottom += rows.heights[k] || averageHeight;
 
     // prevent jumping if we scrolled up into unknown territory
-    if (cursor.start < previous && viewport.ref) {
+    if (cursor.start < previous && viewport) {
       await tick();
       let expectedHeight = 0;
       let actualHeight = 0;
@@ -176,31 +195,23 @@
         actualHeight += itemHeight || (rows.refs[k - cursor.start]).offsetHeight;
       }
       const difference = actualHeight - expectedHeight;
-      viewport.ref.scrollTo(0, scrollTop + difference);
+      viewport.scrollTo(0, scrollTop + difference);
     }
 
-    const totalHeight = rows.heights.reduce((x, y) => x + y, 0);
-    if (scrollTop + viewport.height > totalHeight && viewport.ref) {
-      // If we scroll outside the viewport scroll to the top.
-      viewport.ref?.scrollTo(0, Math.max(0, totalHeight - viewport.height));
+    // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
+    if (scrollTop + viewportHeight > totalHeight && viewport) {
+      viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
     }
     return onscroll?.(e);
   }
 
-  let mounted: boolean = $state(false);
-
   // whenever `items` changes, invalidate the current heightmap
-  $effect(() => {
-    if (!mounted) return;
-    refresh();
-  });
+  $effect(refresh);
 
   // trigger initial refresh
   onMount(() => {
     if (!content.ref) return;
     rows.refs = content.ref.children as HTMLCollectionOf<HTMLElement>;
-    resizeObserver = new ResizeObserver(() => refresh);
-    mounted = true;
   });
 
   const context = $derived<NeoVirtualContext<T>>({
@@ -209,19 +220,30 @@
     start: cursor.start,
     end: cursor.end,
   });
+
+  const inFn = $derived(toTransition(inAction ?? transitionAction));
+  const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
+  const outFn = $derived(toTransition(outAction ?? transitionAction));
+  const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
 </script>
 
 <svelte:element
   this={tag}
   class:neo-virtual-list={true}
-  bind:this={viewport.ref}
-  bind:offsetHeight={viewport.height}
+  class:neo-flip={flip && !isSafari()}
+  class:neo-scroll={scrollbar}
+  class:neo-shadow={shadow}
+  bind:this={viewport}
+  bind:offsetHeight={viewportHeight}
   {...rest}
   onscroll={handleScroll}
+  in:inFn={inProps}
+  out:outFn={outProps}
 >
   <svelte:element
     this={contentTag}
     class:neo-virtual-list-contents={true}
+    class:neo-dim={dim}
     bind:this={content.ref}
     style:padding-top="{content.top}px"
     style:padding-bottom="{content.bottom}px"
@@ -236,6 +258,8 @@
 </svelte:element>
 
 <style lang="scss">
+  @use 'src/lib/styles/mixin' as mixin;
+
   .neo-virtual-list {
     position: relative;
     display: flex;
@@ -244,11 +268,39 @@
     height: 100%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding-inline: var(--neo-list-padding, 0.375rem);
+    padding-block: var(--neo-list-padding, 0.375rem);
 
     &-contents {
       display: flex;
       flex: 0 0 auto;
       flex-direction: column;
+
+      &.neo-dim {
+        &:hover :global(> *:not(:hover, :has(*:focus-visible))),
+        &:has(> * :global(*:focus-visible)) > *:not(:hover, :has(:global(*:focus-visible))) {
+          opacity: 0.6;
+          transition-timing-function: linear;
+          transition-duration: 0.6s;
+        }
+      }
     }
+
+    &.neo-scroll {
+      &.neo-shadow {
+        @include mixin.fade-scroll(1rem);
+      }
+
+      @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
+    }
+
+    &.neo-flip {
+      // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
+      @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
+        flex-direction: column-reverse;
+        justify-content: end;
+      }
+    }
+
   }
 </style>

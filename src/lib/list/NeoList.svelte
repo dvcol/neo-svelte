@@ -12,6 +12,7 @@
   } from '~/list/neo-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
+  import { isSafari } from '@dvcol/common-utils/common/browser';
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
   import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze } from '@dvcol/svelte-utils/transition';
@@ -359,7 +360,7 @@
         out:inFn={inProps}
         in:outFn={outProps}
       >
-        {#if renderDivider(i, visible, flip ? 'bottom' : 'top')}
+        {#if renderDivider(i, visible, flip && !isSafari() ? 'bottom' : 'top') ?? showDivider(divider, flip && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if isSection(item)}
@@ -388,7 +389,7 @@
             onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
           />
         {/if}
-        {#if renderDivider(i, visible, flip ? 'top' : 'bottom')}
+        {#if renderDivider(i, visible, flip && !isSafari() ? 'top' : 'bottom')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
       </svelte:element>
@@ -419,7 +420,6 @@
       class:neo-list-items={true}
       class:neo-scroll={scrollbar}
       class:neo-shadow={shadow}
-      class:neo-rounded={buttonProps?.rounded}
       class:neo-dim={dim}
       in:scaleFreeze={quickScaleProps}
       {onscroll}
@@ -484,23 +484,12 @@
       padding-inline: var(--neo-list-padding, 0.375rem);
       padding-block: var(--neo-list-padding, 0.375rem);
 
-      &.neo-scroll,
-      &.neo-rounded {
-        padding-block: var(--neo-list-scroll-padding, 0.625rem);
-
-        &:not(.neo-scroll) :global(> .neo-list-item) {
-          padding: 0 var(--neo-list-padding, var(--neo-gap-4xs, 0.25rem));
-        }
-      }
-
       &.neo-scroll {
-        padding-block: var(--neo-list-scroll-padding, 0.625rem);
-
         &.neo-shadow {
           @include mixin.fade-scroll(1rem);
         }
 
-        @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.5rem));
+        @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
       }
 
       &.neo-dim {
@@ -523,10 +512,6 @@
       }
 
       &-select {
-        :global(> .neo-list-item-button.neo-rounded) {
-          border-radius: var(--neo-btn-border-radius, var(--neo-border-radius-lg));
-        }
-
         :global(> .neo-list-base-loader:first-child) {
           margin-top: 0.25rem;
         }
