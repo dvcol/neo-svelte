@@ -12,7 +12,6 @@
 
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { fade } from 'svelte/transition';
-  import { NeoListBaseItem } from '~';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -20,6 +19,7 @@
   import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoList from '~/list/NeoList.svelte';
+  import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListSearch from '~/list/NeoListSearch.svelte';
   import NeoSimpleList from '~/list/NeoSimpleList.svelte';
   import NeoVirtualList from '~/list/NeoVirtualList.svelte';
@@ -290,7 +290,7 @@
 
     <div class="column content">
       <span class="label">Virtual list</span>
-      <NeoVirtualList items={virtual}>
+      <NeoVirtualList items={virtual} buffer="10">
         {#snippet children({ item })}
           <NeoListBaseItem {item} />
         {/snippet}
