@@ -30,6 +30,7 @@
     loading: false,
     shadow: true,
     scrollToLoader: false,
+    rounded: true,
     nullable: true,
     disabled: false,
     readonly: false,
@@ -169,13 +170,13 @@
     ].map(item => ({ ...item, id: getUUID(), before: avatar })),
   );
 
-  const generated = Array.from({ length: 1000 }).fill(0).map((_, i) => ({
+  const generated = $state(Array.from({ length: 1000 }).fill(0).map((_, i) => ({
     label: `Virtual item ${i + 1}`,
     description: `This is a virtual item with index ${i + 1}. It is used to demonstrate the NeoVirtualList component.`,
     tags: ['virtual', 'list', 'item', 'demo'],
     value: i + 1,
     id: getUUID(),
-  }));
+  })));
 
   const virtual = $derived(isEmpty ? [] : generated);
 
@@ -188,6 +189,20 @@
     list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
     sectionList.push({ label: `Section item ${sectionList.length + 1}`, value: sectionList.length + 1, id: getUUID() });
     customSectionList.push({ label: `Custom Section item ${customSectionList.length + 1}`, value: customSectionList.length + 1, id: getUUID() });
+    complexList.push({
+      label: `Complex item ${complexList.length + 1}`,
+      value: complexList.length + 1,
+      description: `This is a complex item with index ${complexList.length + 1}. It has a custom avatar and before snippet.`,
+      id: getUUID(),
+      before: avatar,
+    });
+    virtual.push({
+      label: `Virtual item ${virtual.length + 1}`,
+      description: `This is a virtual item with index ${virtual.length + 1}. It is used to demonstrate the NeoVirtualList component.`,
+      tags: ['virtual', 'list', 'item', 'demo'],
+      value: virtual.length + 1,
+      id: getUUID(),
+    });
   };
 
   // remove a random element form the list
@@ -195,6 +210,8 @@
     if (list.length) list.splice(Math.floor(Math.random() * list.length), 1);
     if (sectionList.length) sectionList.splice(Math.floor(Math.random() * sectionList.length), 1);
     if (customSectionList.length) customSectionList.splice(Math.floor(Math.random() * customSectionList.length), 1);
+    if (complexList.length) complexList.splice(Math.floor(Math.random() * complexList.length), 1);
+    if (virtual.length) virtual.splice(Math.floor(Math.random() * virtual.length), 1);
   };
 </script>
 
@@ -202,6 +219,7 @@
   <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={isEmpty}>Empty</NeoButton>
     <NeoButton toggle bind:checked={options.shadow}>Shadow</NeoButton>
+    <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.loading}>Loading</NeoButton>
     <NeoButton toggle bind:checked={options.scrollToLoader}>Scroll to loader</NeoButton>
     <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
@@ -210,6 +228,9 @@
     <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
     <NeoButton toggle bind:checked={options.flip}>Flip</NeoButton>
     <NeoButton toggle bind:checked={options.dim}>Dim</NeoButton>
+  </NeoButtonGroup>
+
+  <NeoButtonGroup text rounded>
     <NeoButton onclick={onAdd}>Add</NeoButton>
     <NeoButton onclick={onRemove}>Remove</NeoButton>
   </NeoButtonGroup>
@@ -250,12 +271,12 @@
   <div class="row">
     <!--  Virtual list  -->
     <div class="column content">
-      <span class="label">Sortable Card list</span>
+      <span class="label">Simple list</span>
       <NeoSimpleList {...options} items={virtual} />
     </div>
 
     <div class="column content">
-      <span class="label">Sortable Card list</span>
+      <span class="label">Virtual list</span>
       <NeoVirtualList items={virtual}>
         {#snippet children({ item })}
           <NeoListBaseItem {item} />

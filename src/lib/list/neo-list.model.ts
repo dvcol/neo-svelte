@@ -271,7 +271,39 @@ export interface NeoListSelectState<Selected = NeoListSelectedItem | NeoListSele
   nullable?: boolean;
 }
 
-export interface NeoListState<Item = NeoListItemOrSection> {
+export interface NeoListBaseProps {
+  // States
+
+  /**
+   * Inverts the flow of the list (flex-direction: column-reverse).
+   *
+   * @default false
+   */
+  flip?: boolean;
+
+  // Styles
+
+  /**
+   * Whether to dim the opacity of inactive tabs on hover.
+   */
+  dim?: boolean;
+  /**
+   * Whether to display a shadow when scrolling content.
+   *
+   * @default true
+   */
+  shadow?: boolean;
+  /**
+   * Overrides the default scrollbars.
+   */
+  scrollbar?: boolean;
+  /**
+   * Whether to round the corners of the list items.
+   */
+  rounded?: BorderRadiusInput;
+}
+
+export interface NeoListState<Item = NeoListItemOrSection> extends Pick<NeoListBaseProps, 'flip'> {
   // States
   /**
    * List items to display.
@@ -298,6 +330,10 @@ export interface NeoListState<Item = NeoListItemOrSection> {
    */
   loading?: boolean;
   /**
+   * If the list is currently being scrolled.
+   */
+  scrolling?: boolean;
+  /**
    * Disable all items in the list.
    */
   disabled?: boolean;
@@ -311,12 +347,6 @@ export interface NeoListState<Item = NeoListItemOrSection> {
    * @default false
    */
   reverse?: boolean;
-  /**
-   * Inverts the flow of the list (flex-direction: column-reverse).
-   *
-   * @default false
-   */
-  flip?: boolean;
   /**
    * Whether to display a divider above items in the list.
    * If an item divider option is set, it will take precedence over the list divider.
@@ -377,24 +407,6 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   out?: HTMLTransitionProps['out'];
 
   // Styles
-  /**
-   * Whether to dim the opacity of inactive tabs on hover.
-   */
-  dim?: boolean;
-  /**
-   * Whether to display a shadow when scrolling content.
-   *
-   * @default true
-   */
-  shadow?: boolean;
-  /**
-   * Overrides the default scrollbars.
-   */
-  scrollbar?: boolean;
-  /**
-   * Whether to round the corners of the list items.
-   */
-  rounded?: BorderRadiusInput;
   /**
    * Whether to scroll to the bottom when loading additional items.
    *
@@ -469,7 +481,7 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Optional props to pass to the list section.
    */
   sectionProps?: NeoListBaseSectionProps<Value, Tag>;
-} & HTMLRefProps &
+} & NeoListBaseProps & HTMLRefProps &
 HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
 NeoListState & NeoListSelectState<Selected>;
 

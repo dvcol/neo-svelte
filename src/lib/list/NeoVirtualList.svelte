@@ -3,6 +3,7 @@
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { isSafari } from '@dvcol/common-utils/common/browser';
+  import { watch } from '@dvcol/svelte-utils/watch';
   import { onMount, tick } from 'svelte';
 
   import { defaultVirtualKey } from '~/list/neo-virtual-list.model.js';
@@ -31,7 +32,7 @@
     // Events
     onscroll,
 
-    // Transition
+    // List Transition
     in: inAction,
     out: outAction,
     transition: transitionAction,
@@ -67,10 +68,11 @@
 
   const totalHeight = $derived.by(() => {
     let total = rows.heights.reduce((x, y) => x + y, 0);
-    if (!content.ref) return total;
-    const style = getComputedStyle(content.ref);
+    if (!viewport) return total;
+    const style = getComputedStyle(viewport);
     total += Number.parseInt(style.paddingBlockEnd, 10);
     total += Number.parseInt(style.paddingBlockStart, 10);
+    return total;
   });
 
   const averageHeight = $derived.by<number>(() => {
@@ -129,20 +131,17 @@
     await computeCursor(scrollTop);
     computeBottomPadding();
 
-    const totalHeight = rows.heights.reduce((x, y) => x + y, 0);
+    // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
     if (scrollTop + viewportHeight > totalHeight && viewport) {
-      // If we scroll outside the viewport scroll to the top.
-      viewport.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
+      viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
     }
 
     for (const row of rows.refs) resizeObserver?.observe(row);
   }
 
-  async function handleScroll(e: SvelteEvent<UIEvent>) {
-    if (!viewport) return onscroll?.(e);
-
+  function handleResize() {
+    if (!viewport) return;
     const { scrollTop } = viewport;
-    const previous = cursor.start;
 
     for (let v = 0; v < rows.refs.length; v += 1) {
       const itemIndex = cursor.start + v;
@@ -184,29 +183,24 @@
     content.bottom = 0;
     for (let k = cursor.end; k < items.length; k++) content.bottom += rows.heights[k] || averageHeight;
 
-    // prevent jumping if we scrolled up into unknown territory
-    if (cursor.start < previous && viewport) {
-      await tick();
-      let expectedHeight = 0;
-      let actualHeight = 0;
-      for (let k = cursor.start; k < previous; k += 1) {
-        if (!rows.refs[k - cursor.start]) continue;
-        expectedHeight += rows.heights[k] || averageHeight;
-        actualHeight += itemHeight || (rows.refs[k - cursor.start]).offsetHeight;
-      }
-      const difference = actualHeight - expectedHeight;
-      viewport.scrollTo(0, scrollTop + difference);
-    }
-
     // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
     if (scrollTop + viewportHeight > totalHeight && viewport) {
       viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
     }
+  }
+
+  function handleScroll(e: SvelteEvent<UIEvent>) {
+    if (!viewport) return onscroll?.(e);
+    handleResize();
     return onscroll?.(e);
   }
 
   // whenever `items` changes, invalidate the current heightmap
-  $effect(refresh);
+  $effect(() => {
+    void refresh();
+  });
+
+  watch(handleResize, () => items.length, { skip: 1 });
 
   // trigger initial refresh
   onMount(() => {

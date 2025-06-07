@@ -5,9 +5,8 @@ import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
 import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
 import type { NeoListBaseSectionProps } from '~/list/neo-list-base-section.model.js';
-import type { NeoListItem, NeoListItemRender, NeoListMethods, NeoListSectionRender, NeoListState } from '~/list/neo-list.model.js';
-import type { HTMAnimationProps, HTMLTransitionProps } from '~/utils/action.utils.js';
-import type { BorderRadiusInput } from '~/utils/border.utils.js';
+import type { NeoListBaseProps, NeoListItem, NeoListItemRender, NeoListMethods, NeoListSectionRender, NeoListState } from '~/list/neo-list.model.js';
+import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps, SvelteEvent } from '~/utils/html-element.utils.js';
 import type { SizeInput } from '~/utils/style.utils.js';
 
@@ -44,12 +43,7 @@ export type NeoSimpleListProps<Value = unknown, Tag extends keyof HTMLElementTag
    */
   children?: Snippet<[Context]>;
 
-  // Animation
-  /**
-   * Transition function to apply when removing items from the list.
-   * Note: unique `id` is required for entering/leaving transitions.
-   */
-  animate?: HTMAnimationProps['animate'];
+  // Transitions
   /**
    * Transition function to apply when adding items to the list.
    * Note: unique `id` is required for entering/leaving transitions.
@@ -62,24 +56,6 @@ export type NeoSimpleListProps<Value = unknown, Tag extends keyof HTMLElementTag
   out?: HTMLTransitionProps['out'];
 
   // Styles
-  /**
-   * Whether to dim the opacity of inactive tabs on hover.
-   */
-  dim?: boolean;
-  /**
-   * Whether to display a shadow when scrolling content.
-   *
-   * @default true
-   */
-  shadow?: boolean;
-  /**
-   * Overrides the default scrollbars.
-   */
-  scrollbar?: boolean;
-  /**
-   * Whether to round the corners of the list items.
-   */
-  rounded?: BorderRadiusInput;
   /**
    * Whether to scroll to the bottom when loading additional items.
    *
@@ -149,6 +125,6 @@ export type NeoSimpleListProps<Value = unknown, Tag extends keyof HTMLElementTag
    * Optional props to pass to the list section.
    */
   sectionProps?: NeoListBaseSectionProps<Value, Tag>;
-} & HTMLRefProps &
+} & NeoListBaseProps & HTMLRefProps &
 HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
 NeoListState<NeoListItem>;

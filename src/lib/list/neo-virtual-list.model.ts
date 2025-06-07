@@ -1,6 +1,8 @@
+import type { NeoListBaseProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 
-import type { HTMLNeoBaseElement, HTMLTagProps } from '~/utils/html-element.utils.js';
+import type { HTMLTransitionProps } from '~/utils/action.utils.js';
+import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 
 export interface NeoVirtualItem<T> {
   id: string | number;
@@ -22,7 +24,7 @@ export const defaultVirtualKey: NeoVirtualKey<unknown> = (item) => {
   if ('id' in item) return item?.id as string | number | undefined;
 };
 
-export interface NeoVirtualListProps<T, Tag extends keyof HTMLElementTagNameMap = 'ul'> extends Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'> {
+export interface NeoVirtualListProps<T, Tag extends keyof HTMLElementTagNameMap = 'ul'> extends Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>, HTMLRefProps, HTMLTransitionProps, NeoListBaseProps {
   // Snippet
   /**
    * Snippet to render each item in the list.
@@ -43,7 +45,7 @@ export interface NeoVirtualListProps<T, Tag extends keyof HTMLElementTagNameMap 
    *
    * @default 'ul'
    */
-  tag?: Tag;
+  tag?: Tag | keyof HTMLElementTagNameMap;
   /**
    * The items to render in the list.
    */

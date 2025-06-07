@@ -1,34 +1,9 @@
-import type { AnimationFunction, TransitionFunction, TransitionProps } from '@dvcol/svelte-utils/transition';
+import type { AnimationFunction, AnimationWithProps, TransitionFunction, TransitionProps, TransitionWithProps } from '@dvcol/svelte-utils/transition';
 import type { Action } from 'svelte/action';
 
 import { emptyAnimation, emptyTransition } from '@dvcol/svelte-utils/transition';
 
 export const emptyUse: Action<HTMLElement, any> = () => ({});
-
-export interface TransitionWithProps<
-  T extends TransitionProps = TransitionProps,
-  F extends TransitionFunction<T> | AnimationFunction<T> = TransitionFunction<T>,
-> {
-  /**
-   * Transition function.
-   */
-  use: F;
-  /**
-   * Optional transition props.
-   */
-  props?: T;
-}
-
-export interface AnimationWithProps<T extends TransitionProps = TransitionProps> {
-  /**
-   * Transition function.
-   */
-  use: AnimationFunction<T>;
-  /**
-   * Optional transition props.
-   */
-  props?: T;
-}
 
 export function isTransitionWithProps<T extends TransitionProps, F extends TransitionFunction<T> | AnimationFunction<T> = TransitionFunction<T>>(transition: F | TransitionWithProps<T, F>): transition is TransitionWithProps<T, F> {
   return 'use' in transition && transition.use !== undefined;

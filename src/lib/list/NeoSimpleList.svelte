@@ -1,11 +1,13 @@
 <script lang="ts">
+  import type { TransitionFunction, TransitionProps } from '@dvcol/svelte-utils/transition';
+
   import type { NeoListItem, NeoListMethods, NeoListProps } from '~/list/neo-list.model.js';
   import type { NeoSimpleListContext, NeoSimpleListProps } from '~/list/neo-simple-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { isSafari } from '@dvcol/common-utils/common/browser';
   import { debounce } from '@dvcol/common-utils/common/debounce';
-  import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze } from '@dvcol/svelte-utils/transition';
+  import { emptyTransition, scaleFreeze } from '@dvcol/svelte-utils/transition';
   import { tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
@@ -15,10 +17,10 @@
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoVirtualList from '~/list/NeoVirtualList.svelte';
-  import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { toSize } from '~/utils/style.utils.js';
-  import { quickCircOutProps, quickDurationProps, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
+  import { quickDurationProps, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
 
   let {
     // Snippets
@@ -37,6 +39,7 @@
     filter = $bindable(item => !item?.hidden),
     sort = $bindable(() => 0),
     loading = false,
+    scrolling = $bindable(false),
     scrollToLoader,
     scrollTolerance = 1,
 
@@ -60,7 +63,6 @@
     // Animation
     in: inAction = { use: scale, props: quickScaleProps },
     out: outAction = { use: fade, props: { ...quickScaleProps, delay: quickScaleProps?.duration } },
-    animate = { use: flipToggle, props: quickCircOutProps },
 
     // Events
     onScrollTop,
@@ -75,7 +77,6 @@
     ...rest
   }: NeoSimpleListProps = $props();
 
-  // TODO - animate/in/out
   // TODO - loading
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
@@ -84,7 +85,7 @@
   const empty = $derived(!filtered?.length);
   const missing = $derived(filtered?.some(item => item.id === undefined || item.id === null));
 
-  const onScrollEvent = (e?: SvelteEvent) => {
+  const onScrollEvent = debounce((e?: SvelteEvent) => {
     if (!ref) return;
     // if at the top console.info('top');
     if (ref.scrollTop === 0) {
@@ -96,7 +97,7 @@
       if (flip) return onScrollTop?.(e);
       else return onScrollBottom?.(e);
     }
-  };
+  }, 25);
 
   export const scrollToTop: NeoListMethods['scrollToTop'] = debounce((options?: ScrollToOptions) => {
     if (!ref) return false;
@@ -172,10 +173,22 @@
     });
   });
 
-  const onscroll: NeoListProps['onscroll'] = debounce((e) => {
+  const stopScrolling = debounce(() => {
+    scrolling = false;
+  }, 'ontouchstart' in window ? 300 : 150);
+
+  const onscroll: NeoListProps['onscroll'] = (e) => {
+    scrolling = true;
     rest?.onscroll?.(e);
     onScrollEvent(e);
-  }, 25);
+    if (!ref || 'onscrollend' in ref) return;
+    stopScrolling();
+  };
+
+  const onscrollend: NeoListProps['onscrollend'] = (e) => {
+    rest?.onscrollend?.(e);
+    stopScrolling();
+  };
 
   const renderDivider = (index: number, array: NeoListItem[], position: 'top' | 'bottom') => {
     if (position === 'top') return index && (showDivider(array[index]?.divider, 'top') ?? showDivider(divider, 'top'));
@@ -186,11 +199,19 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
-  const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
-  const animateProps = $derived(toTransitionProps(animate));
-  const inFn = $derived(missing ? emptyTransition : toTransition(inAction));
+  // Skip first animation in virtual list
+  let counter = 0;
+
+  const inFn = $derived<TransitionFunction<TransitionProps>>((...args) => {
+    counter++;
+    if (missing || scrolling || counter < 1) return emptyTransition(...args);
+    return toTransition(inAction)?.(...args);
+  });
   const inProps = $derived(toTransitionProps(inAction));
-  const outFn = $derived(missing ? emptyTransition : toTransition(outAction));
+  const outFn = $derived<TransitionFunction<TransitionProps>>((...args) => {
+    if (missing || scrolling || counter < 1) return emptyTransition(...args);
+    return toTransition(outAction)?.(...args);
+  });
   const outProps = $derived(toTransitionProps(outAction));
 </script>
 
@@ -222,9 +243,9 @@
 
 {#snippet list()}
   <NeoVirtualList
-    this={tag}
-    role="list"
     bind:ref
+    role="list"
+    {tag}
     {rounded}
     {flip}
     {dim}
@@ -234,6 +255,7 @@
     in={{ use: scaleFreeze, props: quickScaleProps }}
     {...rest}
     {onscroll}
+    {onscrollend}
     class={['neo-list-items', rest?.class]}
   >
     <!-- Before -->
@@ -252,10 +274,9 @@
         class:neo-list-item={true}
         style:--neo-list-item-color={getColorVariable(item.color)}
         {...item.containerProps}
+        out:inFn={inProps}
+        in:outFn={outProps}
       >
-        <!--        animate:animateFn={animateProps} -->
-        <!--        out:inFn={inProps} -->
-        <!--        in:outFn={outProps} -->
         {#if renderDivider(index, filtered, flip && !isSafari() ? 'bottom' : 'top') ?? showDivider(divider, flip && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
