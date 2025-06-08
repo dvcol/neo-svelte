@@ -3,7 +3,7 @@
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
-  import { onMount, tick } from 'svelte';
+  import { onDestroy, onMount, tick } from 'svelte';
 
   import { defaultVirtualKey } from '~/list/neo-virtual-list.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -37,10 +37,14 @@
 
     // Other Props
     contentProps,
+    beforeProps,
+    afterProps,
     ...rest
   }: NeoVirtualListProps<T> = $props();
 
   const { tag: contentTag = 'div', ...contentRest } = $derived(contentProps ?? {});
+  const { tag: beforeTag = 'div', ...beforeRest } = $derived(beforeProps ?? {});
+  const { tag: afterTag = 'div', ...afterRest } = $derived(afterProps ?? {});
 
   // Height of the list viewport
   let viewportHeight = $state(0);
@@ -52,8 +56,16 @@
   });
 
   // Rows wrapper
-  const content = $state<{ ref?: HTMLElement; top: number; bottom: number }>({
+  const content = $state<{
+    ref?: HTMLElement;
+    before?: HTMLElement;
+    after?: HTMLElement;
+    top: number;
+    bottom: number;
+  }>({
     ref: undefined,
+    before: undefined,
+    after: undefined,
     top: 0,
     bottom: 0,
   });
@@ -70,6 +82,9 @@
     const style = getComputedStyle(viewport);
     total += Number.parseInt(style.paddingBlockEnd, 10);
     total += Number.parseInt(style.paddingBlockStart, 10);
+    // add before and after height
+    total += Math.max(content.before?.offsetHeight ?? 0, 0);
+    total += Math.max(content.after?.offsetHeight ?? 0, 0);
     return total;
   });
 
@@ -118,8 +133,17 @@
     }
   }
 
-  const resizeObserver: ResizeObserver = new ResizeObserver(refresh);
-  async function refresh() {
+  function ensureViewport() {
+    if (!viewport) return;
+    const { scrollTop } = viewport;
+    // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
+    if ((scrollTop + viewportHeight > totalHeight) && viewport) {
+      viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
+    }
+  }
+
+  const rowObserver: ResizeObserver = new ResizeObserver(refresh);
+  export async function refresh() {
     // wait until the DOM is up to date
     await tick();
 
@@ -128,13 +152,9 @@
 
     await computeCursor(scrollTop);
     computeBottomPadding();
+    ensureViewport();
 
-    // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
-    if ((scrollTop + viewportHeight > totalHeight) && viewport) {
-      viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
-    }
-
-    for (const row of rows.refs) resizeObserver?.observe(row);
+    for (const row of rows.refs) rowObserver?.observe(row);
   }
 
   function handleResize() {
@@ -181,13 +201,10 @@
     content.bottom = 0;
     for (let k = cursor.end; k < items.length; k++) content.bottom += rows.heights[k] || averageHeight;
 
-    // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
-    if ((scrollTop + viewportHeight > totalHeight) && viewport) {
-      viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
-    }
+    ensureViewport();
   }
 
-  function handleScroll(e: SvelteEvent<UIEvent>) {
+  export function handleScroll(e: SvelteEvent<UIEvent>) {
     if (!viewport) return onscroll?.(e);
     handleResize();
     return onscroll?.(e);
@@ -204,6 +221,10 @@
   onMount(() => {
     if (!content.ref) return;
     rows.refs = content.ref.children as HTMLCollectionOf<HTMLElement>;
+  });
+
+  onDestroy(() => {
+    rowObserver?.disconnect();
   });
 
   const context = $derived<NeoVirtualContext<T>>({
@@ -240,11 +261,32 @@
     style:padding-bottom="{content.bottom}px"
     {...contentRest}
   >
-    {@render before?.(context)}
+    {#if before && cursor.start === 0}
+      <svelte:element
+        this={beforeTag}
+        bind:this={content.before}
+        class:neo-virtual-list-before={true}
+        role="none"
+        {...beforeRest}
+      >
+        {@render before(context)}
+      </svelte:element>
+    {/if}
     {#each visible as { id, index, item } (id)}
       {@render children?.({ id, index, item }, context)}
     {/each}
-    {@render after?.(context)}
+
+    {#if after && cursor.end === items.length}
+      <svelte:element
+        this={afterTag}
+        bind:this={content.after}
+        class:neo-virtual-list-after={true}
+        role="none"
+        {...afterRest}
+      >
+        {@render after(context)}
+      </svelte:element>
+    {/if}
   </svelte:element>
 </svelte:element>
 
@@ -277,7 +319,15 @@
       }
     }
 
+    &-before,
+    &-after {
+      display: flex;
+      flex-direction: column;
+    }
+
     &.neo-scroll {
+      padding-block: var(--neo-list-scroll-padding, 0.625rem);
+
       &.neo-shadow {
         @include mixin.fade-scroll(1rem);
       }

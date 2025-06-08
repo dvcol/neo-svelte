@@ -72,4 +72,12 @@ export interface NeoVirtualListProps<T, Tag extends keyof HTMLElementTagNameMap 
    * Optional properties to pass to the content element wrapping item rows.
    */
   contentProps?: HTMLNeoBaseElement & HTMLTagProps;
+  /**
+   * Optional properties to pass to the tag element wrapping the before snippet.
+   */
+  beforeProps?: HTMLNeoBaseElement & HTMLTagProps;
+  /**
+   * Optional properties to pass to the element wrapping the after snippet.
+   */
+  afterProps?: HTMLNeoBaseElement & HTMLTagProps;
 }

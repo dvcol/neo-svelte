@@ -30,7 +30,7 @@
     loading: false,
     shadow: true,
     scrollToLoader: false,
-    rounded: true,
+    rounded: false,
     nullable: true,
     disabled: false,
     readonly: false,
@@ -327,7 +327,6 @@
             before: true,
             beforeProps: { width: '1.875rem', height: '1.875rem' },
           }}
-          buttonProps={{ rounded: true }}
         >
           {#snippet before(context)}
             <NeoListSearch rounded elevation={hovered || focused ? 2 : elevation} {context} />

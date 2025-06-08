@@ -485,6 +485,8 @@
       padding-block: var(--neo-list-padding, 0.375rem);
 
       &.neo-scroll {
+        padding-block: var(--neo-list-scroll-padding, 0.625rem);
+
         &.neo-shadow {
           @include mixin.fade-scroll(1rem);
         }
@@ -503,7 +505,7 @@
     }
 
     &-loader.neo-select {
-      gap: var(--neo-gap-4xs, 0.25rem);
+      gap: var(--neo-gap-xs, 0.625rem);
     }
 
     &-item {
