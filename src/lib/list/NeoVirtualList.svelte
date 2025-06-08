@@ -2,7 +2,6 @@
   import type { NeoVirtualContext, NeoVirtualItem, NeoVirtualListProps } from '~/list/neo-virtual-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-  import { isSafari } from '@dvcol/common-utils/common/browser';
   import { watch } from '@dvcol/svelte-utils/watch';
   import { onMount, tick } from 'svelte';
 
@@ -24,7 +23,6 @@
     buffer = 3,
 
     // Style
-    flip,
     dim,
     shadow = true,
     scrollbar = true,
@@ -132,7 +130,7 @@
     computeBottomPadding();
 
     // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
-    if (scrollTop + viewportHeight > totalHeight && viewport) {
+    if ((scrollTop + viewportHeight > totalHeight) && viewport) {
       viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
     }
 
@@ -184,7 +182,7 @@
     for (let k = cursor.end; k < items.length; k++) content.bottom += rows.heights[k] || averageHeight;
 
     // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
-    if (scrollTop + viewportHeight > totalHeight && viewport) {
+    if ((scrollTop + viewportHeight > totalHeight) && viewport) {
       viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
     }
   }
@@ -224,7 +222,6 @@
 <svelte:element
   this={tag}
   class:neo-virtual-list={true}
-  class:neo-flip={flip && !isSafari()}
   class:neo-scroll={scrollbar}
   class:neo-shadow={shadow}
   bind:this={viewport}
@@ -287,14 +284,5 @@
 
       @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
     }
-
-    &.neo-flip {
-      // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
-      @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
-        flex-direction: column-reverse;
-        justify-content: end;
-      }
-    }
-
   }
 </style>

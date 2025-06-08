@@ -272,15 +272,6 @@ export interface NeoListSelectState<Selected = NeoListSelectedItem | NeoListSele
 }
 
 export interface NeoListBaseProps {
-  // States
-
-  /**
-   * Inverts the flow of the list (flex-direction: column-reverse).
-   *
-   * @default false
-   */
-  flip?: boolean;
-
   // Styles
 
   /**
@@ -303,7 +294,7 @@ export interface NeoListBaseProps {
   rounded?: BorderRadiusInput;
 }
 
-export interface NeoListState<Item = NeoListItemOrSection> extends Pick<NeoListBaseProps, 'flip'> {
+export interface NeoListState<Item = NeoListItemOrSection> {
   // States
   /**
    * List items to display.
@@ -325,6 +316,12 @@ export interface NeoListState<Item = NeoListItemOrSection> extends Pick<NeoListB
    */
   sort?: (a: Item, b: Item) => number;
 
+  /**
+   * Inverts the flow of the list (flex-direction: column-reverse).
+   *
+   * @default false
+   */
+  flip?: boolean;
   /**
    * If the list is currently loading additional items.
    */

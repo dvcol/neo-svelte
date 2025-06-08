@@ -8,7 +8,6 @@
   import { isSafari } from '@dvcol/common-utils/common/browser';
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { emptyTransition, scaleFreeze } from '@dvcol/svelte-utils/transition';
-  import { tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -120,17 +119,6 @@
   $effect(() => {
     if (!loading || !scrollToLoader) return;
     scrollToBottom();
-  });
-
-  const scrollReverse = async () => {
-    await tick();
-    if (!ref) return;
-    ref.scrollTo({ top: ref.scrollHeight, behavior: 'instant' });
-  };
-
-  $effect(() => {
-    if (!flip || !ref) return;
-    scrollReverse();
   });
 
   const context = $derived<NeoSimpleListContext>({
@@ -251,7 +239,6 @@
     role="list"
     {tag}
     {rounded}
-    {flip}
     {dim}
     {shadow}
     {scrollbar}
