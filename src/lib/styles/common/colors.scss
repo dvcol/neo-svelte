@@ -66,7 +66,9 @@
 
   // Background
   --neo-background-color: var(--neo-white-soft);
+  --neo-background-color-hover: oklch(from var(--neo-background-color) calc(l - 0.01) c h);
   --neo-background-color-tinted: color-mix(in srgb, var(--neo-background-color), currentcolor 2%);
+  --neo-background-color-tinted-hover: color-mix(in srgb, var(--neo-background-color), currentcolor 3%);
   --neo-background-color-secondary: color-mix(in srgb, var(--neo-background-color), black 5%);
   --neo-background-color-secondary-hover: color-mix(in srgb, var(--neo-background-color), black 8%);
   --neo-background-color-backdrop: color-mix(in srgb, transparent, var(--neo-background-color) 20%);
@@ -90,7 +92,9 @@
 
   // Background
   --neo-glass-background-color: color-mix(in srgb, transparent, currentcolor 1%);
+  --neo-glass-background-color-hover: color-mix(in srgb, transparent, currentcolor 2%);
   --neo-glass-background-color-tinted: color-mix(in srgb, transparent, currentcolor 5%);
+  --neo-glass-background-color-tinted-hover: color-mix(in srgb, transparent, currentcolor 4%);
 
   // Shadow
   --neo-glass-shadow-color-light: oklch(from var(--neo-shadow-color-light) l c h / 60%);
@@ -148,6 +152,7 @@
 
   // Background
   --neo-dark-background-color: var(--neo-grey);
+  --neo-dark-background-color-hover: oklch(from var(--neo-dark-background-color) calc(l - 0.005) c h);
   --neo-dark-background-color-secondary: color-mix(in srgb, var(--neo-dark-background-color), white 5%);
   --neo-dark-background-color-secondary-hover: color-mix(in srgb, var(--neo-dark-background-color), white 8%);
   --neo-dark-background-color-backdrop: color-mix(in srgb, transparent, var(--neo-background-color) 20%);
@@ -166,9 +171,6 @@
   /******************
    ** glass colors **
    ******************/
-
-  // Background
-  --neo-dark-glass-background-color: color-mix(in srgb, currentcolor, transparent 99%);
 
   // Shadow
   --neo-dark-glass-shadow-color-light: oklch(from var(--neo-dark-shadow-color-light) l c h / 60%);
@@ -229,6 +231,7 @@
 
   // Background
   --neo-background-color: var(--neo-dark-background-color);
+  --neo-background-color-hover: var(--neo-dark-background-color-hover);
   --neo-background-color-secondary: var(--neo-dark-background-color-secondary);
   --neo-background-color-secondary-hover: var(--neo-dark-background-color-secondary-hover);
   --neo-background-color-backdrop: var(--neo-dark-background-color-backdrop);
@@ -256,7 +259,6 @@
   --neo-glass-border-color-flat-highlight: var(--neo-dark-glass-border-color-flat-highlight);
 
   // Background
-  --neo-glass-background-color: var(--neo-dark-glass-background-color);
   --neo-glass-shadow-color-light: var(--neo-dark-glass-shadow-color-light);
   --neo-glass-shadow-color-dark: var(--neo-dark-glass-shadow-color-dark);
 

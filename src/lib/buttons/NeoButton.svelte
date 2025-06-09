@@ -319,12 +319,13 @@
     transition:
             opacity 0.3s ease,
             color 0.15s ease,
-            background-color 0.3s ease,
+            background-color 0.15s ease,
             border-color 0.3s ease,
             backdrop-filter 0.3s ease,
             border-radius 0.3s ease,
             box-shadow 0.3s ease-out;
     appearance: none;
+    will-change: background-color, box-shadow;
 
     &.neo-loading {
       cursor: wait;
@@ -395,7 +396,7 @@
       transition:
               opacity 0.3s ease,
               color 0.15s ease,
-              background-color 0.3s ease,
+              background-color 0.15s ease,
               border-color 0.3s ease,
               backdrop-filter 0.3s ease,
               border-radius 0.3s ease,
@@ -404,6 +405,21 @@
       &.neo-scale .neo-content {
         color: var(--neo-btn-text-color-active, var(--neo-text-color-active));
         scale: var(--neo-btn-scale-pressed, 0.98);
+      }
+    }
+
+    &.neo-inset-hover,
+    &.neo-inset {
+      &:focus-visible,
+      &:hover,
+      &.neo-pressed,
+      &:active:not(
+          .neo-loading,
+          :disabled,
+          [disabled='true'],
+          :has(:global(:where(.neo-button.neo-propagation:active)))
+        ) {
+        background-color: var(--neo-btn-bg-color-hover, var(--neo-background-color-hover));
       }
     }
 
@@ -447,12 +463,28 @@
     }
 
     &.neo-glass {
+      --neo-background-color-tinted-hover: var(--neo-glass-background-color-tinted-hover);
       --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
       --neo-skeleton-color: var(--neo-glass-skeleton-color);
       --neo-border-color: var(--neo-glass-border-color);
 
       background-color: var(--neo-btn-bg-color, var(--neo-glass-background-color));
       backdrop-filter: var(--neo-btn-backdrop-filter, var(--neo-blur-2) var(--neo-saturate-3));
+
+      &.neo-inset-hover,
+      &.neo-inset {
+        &:hover,
+        &:focus-visible,
+        &.neo-pressed,
+        &:active:not(
+          .neo-loading,
+          :disabled,
+          [disabled='true'],
+          :has(:global(:where(.neo-button.neo-propagation:active)))
+        ) {
+          background-color: var(--neo-btn-bg-color-hover, var(--neo-glass-background-color-hover));
+        }
+      }
 
       &:not(
           .neo-inset,
@@ -506,6 +538,21 @@
 
     &.neo-tinted {
       background-color: var(--neo-btn-bg-color, var(--neo-background-color-tinted));
+
+      &.neo-inset-hover,
+      &.neo-inset {
+        &:hover,
+        &:focus-visible,
+        &.neo-pressed,
+        &:active:not(
+          .neo-loading,
+          :disabled,
+          [disabled='true'],
+          :has(:global(:where(.neo-button.neo-propagation:active)))
+        )  {
+          background-color: var(--neo-btn-bg-color-hover, var(--neo-background-color-tinted-hover));
+        }
+      }
     }
 
     &.neo-rounded {
@@ -529,7 +576,7 @@
         transition:
                 opacity 0.3s ease,
                 color 0.15s ease,
-                background-color 0.3s ease,
+                background-color 0.15s ease,
                 border-color 0.3s ease,
                 backdrop-filter 0.3s ease,
                 border-radius 0.3s ease,

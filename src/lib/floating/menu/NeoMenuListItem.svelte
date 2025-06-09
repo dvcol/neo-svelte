@@ -181,6 +181,8 @@
 
 <style lang="scss">
   .neo-menu-item {
+    --neo-btn-bg-color-hover: var(--neo-menu-bg-color-hover, transparent);
+
     padding: 0 var(--neo-menu-padding, var(--neo-gap-4xs, 0.25rem));
     color: var(--neo-list-item-color, inherit);
 
