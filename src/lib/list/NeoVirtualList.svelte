@@ -58,8 +58,8 @@
   // Rows wrapper
   const content = $state<{
     ref?: HTMLElement;
-    before?: HTMLElement;
-    after?: HTMLElement;
+    before?: number;
+    after?: number;
     top: number;
     bottom: number;
   }>({
@@ -76,35 +76,36 @@
     heights: [],
   });
 
-  const totalHeight = $derived.by(() => {
-    let total = rows.heights.reduce((x, y) => x + y, 0);
-    if (!viewport) return total;
-    const style = getComputedStyle(viewport);
-    total += Number.parseInt(style.paddingBlockEnd, 10);
-    total += Number.parseInt(style.paddingBlockStart, 10);
-    // add before and after height
-    total += Math.max(content.before?.offsetHeight ?? 0, 0);
-    total += Math.max(content.after?.offsetHeight ?? 0, 0);
-    return total;
-  });
-
-  const averageHeight = $derived.by<number>(() => {
-    if (!cursor.end) return 0;
-    // Calculate averageHeight based on all known heights, not just rendered
-    const heights = rows.heights.filter(Boolean);
-    return (heights.reduce((x, y) => x + y, 0) / heights.length) || itemHeight || 1;
-  });
-
   const visible: Array<NeoVirtualItem<T>> = $derived(
     items.slice(cursor.start, cursor.end).map((item, index) => {
       return { id: key?.(item) ?? index + cursor.start, index, item };
     }),
   );
 
+  const getTotalHeight = () => {
+    let total = rows.heights.reduce((x, y) => x + y, 0);
+    if (!viewport) return total;
+    const style = getComputedStyle(viewport);
+    total += Number.parseInt(style.paddingBlockEnd, 10);
+    total += Number.parseInt(style.paddingBlockStart, 10);
+    // add before and after height
+    total += Math.max(content.before ?? 0, 0);
+    total += Math.max(content.after ?? 0, 0);
+    return total;
+  };
+
+  const getAverageHeight = () => {
+    if (!cursor.end) return 0;
+    // Calculate averageHeight based on all known heights, not just rendered
+    const heights = rows.heights.filter(Boolean);
+    return (heights.reduce((x, y) => x + y, 0) / heights.length) || itemHeight || 1;
+  };
+
   async function computeCursor(scrollTop: number) {
     let contentHeight = content.top - scrollTop;
     let i = cursor.start;
 
+    const averageHeight = getAverageHeight();
     while (contentHeight < viewportHeight && i < items.length) {
       let row = rows.refs[i - cursor.start];
       if (!row) {
@@ -120,6 +121,7 @@
   }
 
   function computeBottomPadding() {
+    const averageHeight = getAverageHeight();
     // Calculate bottom padding based on the remaining items
     const remaining = items.length - cursor.end;
     content.bottom = remaining * averageHeight;
@@ -136,6 +138,7 @@
   function ensureViewport() {
     if (!viewport) return;
     const { scrollTop } = viewport;
+    const totalHeight = getTotalHeight();
     // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
     if ((scrollTop + viewportHeight > totalHeight) && viewport) {
       viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
@@ -170,6 +173,7 @@
     let i = 0;
     let y = 0;
 
+    const averageHeight = getAverageHeight();
     // Fill top padding until the first item is visible
     while (i < items.length) {
       // Ensure rowHeight is not 0
@@ -264,7 +268,7 @@
     {#if before && cursor.start === 0}
       <svelte:element
         this={beforeTag}
-        bind:this={content.before}
+        bind:offsetHeight={content.before}
         class:neo-virtual-list-before={true}
         role="none"
         {...beforeRest}
@@ -279,7 +283,7 @@
     {#if after && cursor.end === items.length}
       <svelte:element
         this={afterTag}
-        bind:this={content.after}
+        bind:offsetHeight={content.after}
         class:neo-virtual-list-after={true}
         role="none"
         {...afterRest}
