@@ -355,6 +355,11 @@
       &.neo-reverse {
         justify-content: flex-end;
         text-align: end;
+
+        .neo-list-item-tags {
+          justify-content: flex-end;
+          text-align: end;
+        }
       }
 
       &:hover:not(.neo-disabled, .neo-button) {
