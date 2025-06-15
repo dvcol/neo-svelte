@@ -33,7 +33,7 @@
     disabled: _disabled,
     readonly: _readonly,
     highlight,
-    selector = '.neo-list-item.neo-list-item-select',
+    selector = '.neo-list-item',
     flip,
     arrow,
     toggle,
