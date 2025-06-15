@@ -89,6 +89,10 @@ export interface NeoListBaseItemProps<
    */
   selector?: string;
   /**
+   * Reverse the next/previous focusable sibling selection direction using arrow keys.
+   */
+  flip?: boolean;
+  /**
    * If true, the item will be rounded.
    */
   rounded?: BorderRadiusInput;

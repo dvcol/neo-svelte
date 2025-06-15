@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
+  import type { NeoTooltipHTMLElement, NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
   import type { SizeOption } from '~/utils/style.utils.js';
 
@@ -119,6 +119,7 @@
   const tooltipBlur = $derived(computeGlassFilter(blur, true));
   const tooltipShadow = $derived(computeShadowElevation(elevation, { glass: true }, PositiveMinMaxElevation));
 
+  let wrapperRef = $state<HTMLElement>();
   const host = $derived.by(() => {
     if (!target) return;
     if (typeof target === 'function') return target();
@@ -132,7 +133,7 @@
     get elements() {
       return {
         floating: ref,
-        reference: host ?? triggerRef,
+        reference: host ?? wrapperRef,
       };
     },
     get open() {
@@ -146,7 +147,7 @@
       }
       if (_reason === 'hover' && !_open && (keepOpenOnHover || focus)) return;
       if (_reason === 'click' && _open && keepOpenOnClick) return;
-      open = _open;
+      if (_reason !== 'click') open = _open;
     },
     get middleware() {
       const middleware = [
@@ -274,18 +275,19 @@
     return floating.update();
   }
 
-  const addMethods = <T extends HTMLElement>(element?: T) => {
+  const addMethods = <T extends HTMLElement>(element?: T | null): NeoTooltipHTMLElement<T> | undefined => {
     if (!element) return;
-    if (!Object.hasOwn(element, 'toggle')) {
-      Object.assign(element, { toggle });
-    }
-    if (!Object.hasOwn(element, 'update')) {
-      Object.assign(element, { update });
-    }
+    if (!Object.hasOwn(element, 'toggle')) Object.assign(element, { toggle });
+    if (!Object.hasOwn(element, 'update')) Object.assign(element, { update });
+    return element;
   };
 
-  $effect(() => addMethods(ref));
-  $effect(() => addMethods(triggerRef));
+  $effect(() => {
+    addMethods(ref);
+  });
+  $effect(() => {
+    triggerRef = addMethods(floating.elements.reference as HTMLElement);
+  });
 
   const computeSize = <T extends 'width' | 'height'>(value: NeoTooltipProps[T], dimension: T): SizeOption<T> | undefined => {
     const tSize = dimension === 'width' ? triggerRef?.offsetWidth : triggerRef?.offsetHeight;
@@ -343,7 +345,7 @@
 {#if !target}
   <svelte:element
     this={triggerTag}
-    bind:this={triggerRef}
+    bind:this={wrapperRef}
     class:neo-tooltip-trigger={true}
     onfocusin={triggerHandler?.onfocus}
     onfocusout={triggerHandler?.onblur}

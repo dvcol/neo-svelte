@@ -1,7 +1,10 @@
 <script lang="ts">
+  import type { NeoTooltipContext } from 'src/lib/index.js';
+
   import type { NeoMenuProps } from '~/floating/menu/neo-menu.model.js';
 
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
+  import { tick } from 'svelte';
 
   import { setMenuContext } from '~/floating/menu/neo-menu-context.svelte.js';
   import NeoMenuList from '~/floating/menu/NeoMenuList.svelte';
@@ -24,7 +27,8 @@
     padding = '0',
     openOnHover = true,
     openOnFocus = false,
-    openOnClick = false,
+    openOnClick = true,
+    unmountOnClose = false,
     role = 'menu',
 
     // Styles
@@ -63,40 +67,67 @@
     open = tooltipOpen || context.children;
   });
 
-  const host = $derived.by(() => {
-    if (triggerRef) return triggerRef;
-    if (!target) return;
-    if (typeof target === 'function') return target();
-    return target;
-  });
+  const toggleListener = async (e: KeyboardEvent) => {
+    // if tab && open, focus next element
+    if (e.key === 'Tab' && open) {
+      if (e.shiftKey !== position?.includes('top')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      return getFocusableElement(ref)?.focus();
+    }
 
-  const onkeydown = (e: KeyboardEvent) => {
-    if (!['ArrowUp', 'ArrowDown'].includes(e.key)) return;
+    if (!['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft'].includes(e.key)) return;
     e.preventDefault();
     e.stopPropagation();
-    open = e.key === 'ArrowDown';
-    if (open && ref) getFocusableElement(ref)?.focus();
+
+    const was = open;
+    if (position?.includes('bottom')) triggerRef?.toggle?.(e.key === 'ArrowDown');
+    if (position?.includes('top')) triggerRef?.toggle?.(e.key === 'ArrowUp');
+    if (position?.includes('right')) triggerRef?.toggle?.(e.key === 'ArrowRight');
+    if (position?.includes('left')) triggerRef?.toggle?.(e.key === 'ArrowLeft');
+    await tick();
+    if (was && open && ref) getFocusableElement(ref)?.focus();
+  };
+
+  const closeListener = async (e: KeyboardEvent) => {
+    if (!triggerRef) return;
+    if (position?.includes('bottom') && e.key !== 'ArrowUp') return;
+    if (position?.includes('top') && e.key !== 'ArrowDown') return;
+    if (position?.includes('right') && e.key !== 'ArrowLeft') return;
+    if (position?.includes('left') && e.key !== 'ArrowRight') return;
+    const selector = baseProps?.selector || '.neo-menu-item';
+    if (!(e.target instanceof HTMLElement)) return;
+    if (e.target?.closest(selector)?.previousElementSibling) return;
+    if (!e.target?.closest(selector)?.parentElement?.classList.contains('neo-menu-list')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    triggerRef?.toggle?.(false);
+    getFocusableElement(triggerRef)?.focus();
   };
 
   $effect(() => {
-    host?.addEventListener('keydown', onkeydown);
-    return () => host?.removeEventListener('keydown', onkeydown);
+    triggerRef?.addEventListener('keydown', toggleListener);
+    ref?.addEventListener('keydown', closeListener);
+    return () => {
+      triggerRef?.removeEventListener('keydown', toggleListener);
+      ref?.removeEventListener('keydown', closeListener);
+    };
   });
 </script>
 
-{#snippet tooltip()}
+{#snippet tooltip({ placement }: NeoTooltipContext)}
   <NeoMenuList
     {items}
     {shadow}
     {scrollbar}
     {reverse}
-    {flip}
+    flip={flip ?? placement.includes('top')}
     {baseProps}
     {itemProps}
     {dividerProps}
     {keepOpenOnSelect}
     rounded={rounded === true ? 'xl' : rounded}
-    tooltipProps={{ role, portal, padding, openOnHover, openOnFocus, openOnClick, ...rest }}
+    tooltipProps={{ role, portal, padding, openOnHover, openOnFocus, openOnClick, unmountOnClose, ...rest }}
     {...menuProps}
     {onMenu}
     {onSelect}
@@ -118,6 +149,7 @@
   {openOnHover}
   {openOnFocus}
   {openOnClick}
+  {unmountOnClose}
   rounded={rounded === true ? 'xl' : rounded}
   {...rest}
   {tooltip}

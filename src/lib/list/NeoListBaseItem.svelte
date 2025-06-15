@@ -2,7 +2,7 @@
   import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
-  import { getFocusableElement } from '@dvcol/common-utils/common/element';
+  import { getFocusableElement, getLastFocusableElement } from '@dvcol/common-utils/common/element';
   import { getUUID } from '@dvcol/common-utils/common/string';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -34,6 +34,7 @@
     readonly: _readonly,
     highlight,
     selector = '.neo-list-item.neo-list-item-select',
+    flip,
     arrow,
     toggle,
     rounded,
@@ -62,21 +63,26 @@
     touched = true;
   });
 
+  const getFocusable = (action: 'next' | 'previous', ...args: Parameters<typeof getFocusableElement>) => {
+    if (action === 'previous') return getLastFocusableElement(...args);
+    return getFocusableElement(...args);
+  };
+
   const getNextTarget = (element: EventTarget | HTMLElement | null, action: 'next' | 'previous') => {
     const sibling: keyof HTMLElement = `${action}ElementSibling`;
     if (!(element instanceof HTMLElement)) return;
     let li = element?.closest<HTMLElement>(selector);
     let next = li?.[sibling];
-    let target = getFocusableElement(next);
+    let target = getFocusable(action, next);
     if (target) return target.focus();
     while (next?.[sibling]) {
       if (target) return target.focus();
       next = next?.[sibling];
-      target = getFocusableElement(next);
+      target = getFocusable(action, next);
     }
     if (!li?.parentElement || li?.dataset?.section === undefined) return;
     li = li.parentElement.closest<HTMLElement>(selector);
-    return getFocusableElement(li?.[sibling])?.focus();
+    return getFocusable(action, li?.[sibling])?.focus();
   };
 
   const lines = $derived.by(() => {
@@ -236,7 +242,9 @@
     onkeydown={(e) => {
       if (disabled) return;
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        getNextTarget(e.target, e.key === 'ArrowDown' ? 'next' : 'previous');
+        let action: 'next' | 'previous' = e.key === 'ArrowDown' ? 'next' : 'previous';
+        if (flip) action = action === 'next' ? 'previous' : 'next';
+        getNextTarget(e.target, action);
         e.preventDefault();
       }
       buttonProps?.onkeydown?.(e);

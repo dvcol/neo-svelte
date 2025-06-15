@@ -80,8 +80,6 @@
     ...rest
   }: NeoSimpleListProps = $props();
 
-  // TODO - loading
-
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const filtered = $derived(items?.filter(item => filter(item)).sort((a, b) => sort(a, b)));
@@ -270,7 +268,7 @@
         out:inFn={inProps}
         in:outFn={outProps}
       >
-        {#if renderDivider(index, filtered, flip && !isSafari() ? 'bottom' : 'top') ?? showDivider(divider, flip && !isSafari() ? 'bottom' : 'top')}
+        {#if renderDivider(index, filtered, flip && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if customItem && !item.render}

@@ -19,7 +19,6 @@
     color: '',
     rounded: false,
     reverse: false,
-    flip: false,
     keepOpenOnSelect: false,
     keepOpenOnHover: false,
 
@@ -130,7 +129,6 @@
     <NeoButton toggle bind:checked={options.keepOpenOnHover}>Keep Open (Hover)</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
-    <NeoButton toggle bind:checked={options.flip}>Flip</NeoButton>
   </NeoButtonGroup>
 </div>
 

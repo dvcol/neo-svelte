@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@dvcol/common-utils':
-        specifier: ^1.32.0
-        version: 1.32.0
+        specifier: ^1.34.0
+        version: 1.34.0
       '@dvcol/svelte-utils':
         specifier: ^1.17.1
         version: 1.17.1(svelte@5.33.4)
@@ -423,8 +423,8 @@ packages:
   '@dual-bundle/import-meta-resolve@4.1.0':
     resolution: {integrity: sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg==}
 
-  '@dvcol/common-utils@1.32.0':
-    resolution: {integrity: sha512-7zz6Eg0u31vS0j8JoognHvY6/oLub5HaTd8cdGouPhiQkRvYMZotVlltjB3do11UxyF2WKEPh8zGETDcEZM9BA==}
+  '@dvcol/common-utils@1.34.0':
+    resolution: {integrity: sha512-8PojenuhCK8FZyWcToYII5W0WNiaYw+wi6UPfPExHbA2gANuBtjVzdZVYVOJNEMdHXMNatR9b3m37ppl8+1Mnw==}
     engines: {node: '>=20', pnpm: '>= 8'}
 
   '@dvcol/eslint-config@1.6.1':
@@ -5821,7 +5821,7 @@ snapshots:
 
   '@dual-bundle/import-meta-resolve@4.1.0': {}
 
-  '@dvcol/common-utils@1.32.0':
+  '@dvcol/common-utils@1.34.0':
     dependencies:
       pretty-bytes: 6.1.1
       uuid: 11.0.5
@@ -5881,18 +5881,18 @@ snapshots:
 
   '@dvcol/svelte-simple-router@2.7.2(svelte@5.33.4)':
     dependencies:
-      '@dvcol/common-utils': 1.32.0
+      '@dvcol/common-utils': 1.34.0
       '@dvcol/svelte-utils': 1.18.0(svelte@5.33.4)
       svelte: 5.33.4
 
   '@dvcol/svelte-utils@1.17.1(svelte@5.33.4)':
     dependencies:
-      '@dvcol/common-utils': 1.32.0
+      '@dvcol/common-utils': 1.34.0
       svelte: 5.33.4
 
   '@dvcol/svelte-utils@1.18.0(svelte@5.33.4)':
     dependencies:
-      '@dvcol/common-utils': 1.32.0
+      '@dvcol/common-utils': 1.34.0
       svelte: 5.33.4
 
   '@emnapi/core@1.4.3':

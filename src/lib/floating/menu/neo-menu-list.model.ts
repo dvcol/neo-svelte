@@ -13,7 +13,7 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    *
    * @default 'ul'
    */
-  tag?: Tag;
+  tag?: Tag | keyof HTMLElementTagNameMap;
 
   /**
    * The parent item (if any).
@@ -58,6 +58,13 @@ export type NeoMenuListProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    * @default false
    */
   reverse?: boolean;
+  /**
+   * Whether to display a divider above items in the list.
+   * If an item divider option is set, it will take precedence over the list divider.
+   *
+   * @default false
+   */
+  divider?: boolean;
   /**
    * Inverts the flow of the list (flex-direction: column-reverse).
    *

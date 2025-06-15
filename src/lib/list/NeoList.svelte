@@ -360,7 +360,7 @@
         out:inFn={inProps}
         in:outFn={outProps}
       >
-        {#if renderDivider(i, visible, flip && !isSafari() ? 'bottom' : 'top') ?? showDivider(divider, flip && !isSafari() ? 'bottom' : 'top')}
+        {#if renderDivider(i, visible, flip && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if isSection(item)}
@@ -368,7 +368,7 @@
           {#if customSection && !item.render}
             {@render customSection(list, sectionContext)}
           {:else}
-            <NeoListBaseSection section={item} {index} {context} {select} {list} {reverse} {...sectionProps} />
+            <NeoListBaseSection section={item} {index} {context} {select} {list} {reverse} {flip} {...sectionProps} />
           {/if}
         {:else if customItem && !item.render}
           {@render customItem({ item, index, checked, context })}
@@ -383,6 +383,7 @@
             {buttonProps}
             {reverse}
             {rounded}
+            flip={flip && !isSafari()}
             disabled={item.disabled || disabled || section?.disabled}
             readonly={item.readonly || readonly || section?.readonly || (!isNullable && checked)}
             {...itemProps}

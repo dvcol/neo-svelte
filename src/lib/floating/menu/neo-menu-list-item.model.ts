@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 
 import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
+import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
@@ -44,23 +45,27 @@ export interface NeoMenuContext<Value = unknown, Tag extends keyof HTMLElementTa
    */
   item: NeoMenuItem<Value, Tag>;
   /**
+   * The parent item (if any).
+   */
+  parent?: NeoMenuItem<Value, Tag>;
+  /**
+   * The array of items this item belongs to.
+   */
+  array?: NeoMenuItem<Value, Tag>[];
+  /**
    * The index of the item in the menu.
    */
   index: number;
   /**
-   * The length of the parent menu list.
+   * The index of the parent section in the menu (if any).
    */
-  length: number;
+  sectionIndex?: number;
   /**
    * The nested level of the menu.
    *
    * @default 1
    */
   level?: number;
-  /**
-   * The parent item (if any).
-   */
-  parent?: NeoMenuItem<Value, Tag>;
 
   // Tooltip props
   /**
@@ -106,6 +111,12 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * @default 'li'
    */
   tag?: Tag;
+  /**
+   * The tag name of the menu element.
+   *
+   * @default 'ul'
+   */
+  menuTag?: keyof HTMLElementTagNameMap;
 
   // Tooltip Props
   /**
@@ -134,8 +145,23 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * @default false
    */
   reverse?: boolean;
+  /**
+   * Whether to display a divider above items in the list.
+   * If an item divider option is set, it will take precedence over the list divider.
+   *
+   * @default false
+   */
+  divider?: boolean;
+  /**
+   * Reverse the next/previous focusable sibling selection direction using arrow keys.
+   */
+  flip?: boolean;
 
   // Other props
+  /**
+   * Optional props to pass to the divider (if any.
+   */
+  dividerProps?: Partial<NeoDividerProps>;
   /**
    * Optional props to pass to the tooltip (if any).
    */
@@ -152,5 +178,5 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * Optional props to pass to the button.
    */
   buttonProps?: NeoButtonProps;
-} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'index' | 'length' | 'level' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'> &
+} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'parent' | 'array' | 'index' | 'sectionIndex' | 'level' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'> &
 Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

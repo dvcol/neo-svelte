@@ -112,9 +112,8 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] sections
     - [x] keyboard navigation
   - [x] scroll shadow
-  - [ ] virtualized
-  - [ ] infinite scroll
-  - [ ] drag & drop
+  - [x] virtualized
+  - [x] infinite scroll
   - [ ] pagination
   - [ ] drag & drop
   - [ ] timeline
@@ -156,7 +155,7 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
   - [x] popselect
   - [x] popstepper
 
-- [ ] Modal/dialog
+- [x] Modal/dialog
 
   - [x] HTML Dialog
     - [x] animation (slide/fade)
@@ -172,6 +171,15 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] scrollable
     - [x] close button
     - [ ] persistant
+
+- [ ] Command Palette
+
+  - [ ] list
+  - [ ] header
+  - [ ] footer
+  - [ ] panel
+  - [ ] shortcuts
+  - [ ] expanded buttons
 
 - [x] menu
 

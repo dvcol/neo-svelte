@@ -2,12 +2,10 @@
   import type { NeoMenuItem } from '~/floating/menu/neo-menu-list-item.model.js';
   import type { NeoMenuListProps } from '~/floating/menu/neo-menu-list.model.js';
 
-  import { getUUID } from '@dvcol/common-utils/common/string';
+  import { isSafari } from '@dvcol/common-utils/common/browser';
   import { tick } from 'svelte';
 
-  import NeoDivider from '~/divider/NeoDivider.svelte';
   import NeoMenuListItem from '~/floating/menu/NeoMenuListItem.svelte';
-  import { showDivider } from '~/list/neo-list.model.js';
 
   let {
     ref = $bindable(),
@@ -25,6 +23,7 @@
     scrollbar,
     rounded,
     reverse,
+    divider,
     flip,
 
     // Events
@@ -51,54 +50,34 @@
   });
 </script>
 
-{#snippet line(item: NeoMenuItem, index = 0, length = 0)}
-  <NeoMenuListItem
-    {keepOpenOnSelect}
-    {rounded}
-    {reverse}
-    {...itemProps}
-    {parent}
-    {item}
-    {index}
-    {length}
-    {level}
-    {tooltipProps}
-    {baseProps}
-    menuProps={{ tag, shadow, scrollbar, rounded, reverse, flip, dividerProps, tooltipProps, baseProps, ...rest, ...item.menuProps }}
-    onMenu={(i, e) => {
-      item.menuProps?.onMenu?.(i, e);
-      onMenu?.(i, e);
-    }}
-    onSelect={(i, e) => {
-      item.menuProps?.onSelect?.(i, e);
-      onSelect?.(i, e);
-    }}
-  />
-{/snippet}
-
-{#snippet list(array: NeoMenuItem[])}
+{#snippet list(array: NeoMenuItem[], sectionIndex = undefined)}
   {#each array as item, index (item.id ?? index)}
-    {#if index && showDivider(item.divider, 'top')}
-      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
-    {/if}
-    {#if item.section}
-      {@const labelId = item.label ? `neo-menu-section-label-${getUUID()}` : undefined}
-      {#if labelId}
-        <span id={labelId} class="neo-menu-list-section-label" class:neo-sticky={item.sticky} class:neo-reverse={reverse || item.reverse}>
-          {item.label}
-        </span>
-      {/if}
-      <svelte:element this={tag} role="menu">
-        {#if item.items}
-          {@render list(item.items)}
-        {/if}
-      </svelte:element>
-    {:else}
-      {@render line(item, index, array.length)}
-    {/if}
-    {#if index < array.length - 1 && showDivider(item.divider, 'bottom') && !showDivider(array[index + 1]?.divider, 'bottom')}
-      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-menu-item-divider', item.dividerProps?.class]} />
-    {/if}
+    <NeoMenuListItem
+      {keepOpenOnSelect}
+      {rounded}
+      {reverse}
+      menuTag={tag}
+      {...itemProps}
+      {item}
+      {parent}
+      {array}
+      {index}
+      {sectionIndex}
+      {level}
+      {divider}
+      flip={flip && !isSafari()}
+      {tooltipProps}
+      {baseProps}
+      menuProps={{ tag, shadow, scrollbar, rounded, reverse, flip, divider, dividerProps, tooltipProps, baseProps, ...rest, ...item.menuProps }}
+      onMenu={(i, e) => {
+        item.menuProps?.onMenu?.(i, e);
+        onMenu?.(i, e);
+      }}
+      onSelect={(i, e) => {
+        item.menuProps?.onSelect?.(i, e);
+        onSelect?.(i, e);
+      }}
+    />
   {/each}
 {/snippet}
 
@@ -133,30 +112,6 @@
       --neo-divider-margin: var(--neo-menu-margin, var(--neo-gap-3xs, 0.3125rem));
     }
 
-    &-section {
-      &-label {
-        display: inline-flex;
-        padding: 0.25rem 0.6125rem;
-        transition: color 0.3s ease;
-        margin-block-end: 0.125rem;
-
-        &.neo-sticky {
-          position: sticky;
-          top: -0.5rem;
-          z-index: var(--neo-z-index-in-front, 1);
-          background: var(
-            --neo-list-section-bg-color,
-            linear-gradient(to top, transparent 5%, oklch(from var(--neo-background-color) l c h / 50%) 20%, var(--neo-background-color))
-          );
-        }
-
-        &.neo-reverse {
-          justify-content: flex-end;
-          text-align: end;
-        }
-      }
-    }
-
     &.neo-scroll,
     &.neo-rounded {
       padding-block: var(--neo-menu-scroll-padding, 0.5rem);
@@ -166,7 +121,7 @@
         padding: 0 var(--neo-menu-padding, var(--neo-gap-xxs, 0.5rem));
       }
 
-      .neo-menu-list-section-label {
+      :global(.neo-menu-item-section-label) {
         top: -0.75rem;
       }
     }
@@ -180,8 +135,11 @@
     }
 
     &.neo-flip {
-      flex-direction: column-reverse;
-      justify-content: end;
+      // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
+      @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
+        flex-direction: column-reverse;
+        justify-content: end;
+      }
     }
   }
 </style>

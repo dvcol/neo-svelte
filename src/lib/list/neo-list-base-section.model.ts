@@ -33,4 +33,10 @@ export type NeoListBaseSectionProps<Value = unknown, Tag extends keyof HTMLEleme
    * @default false
    */
   reverse?: boolean;
+  /**
+   * Inverts the flow of the list (flex-direction: column-reverse).
+   *
+   * @default false
+   */
+  flip?: boolean;
 } & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

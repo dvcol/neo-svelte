@@ -17,6 +17,7 @@
     select,
     highlight,
     reverse,
+    flip,
 
     // Other props
     ...rest
@@ -31,8 +32,6 @@
   {#if section.label}
     <div id={labelId} class="neo-list-section-title" class:neo-sticky={section.sticky} class:neo-reverse={reverse}>
       <NeoMark class="neo-list-section-title-mark" value={section.label} filter={highlight} />
-      <span>test</span>
-      <span>end</span>
     </div>
   {/if}
   <svelte:element
@@ -40,6 +39,7 @@
     role={select ? 'listbox' : 'list'}
     aria-labelledby={labelId}
     class:neo-list-section-list={true}
+    class:neo-flip={flip}
     {...rest}
     {...section.sectionProps}
   >
@@ -49,6 +49,16 @@
 
 <style lang="scss">
   .neo-list-section {
+    &-list {
+      display: flex;
+      flex-direction: column;
+
+      &.neo-flip {
+        flex-direction: column-reverse;
+        justify-content: end;
+      }
+    }
+
     &-title {
       display: inline-flex;
       padding: 0.25rem 0.6125rem;
