@@ -9,6 +9,7 @@
   import { fade } from 'svelte/transition';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
+  import NeoNotificationProvider from '~/floating/notification/NeoNotificationProvider.svelte';
   import NeoPortalContainer from '~/floating/portal/NeoPortalContainer.svelte';
   import NeoIconGithub from '~/icons/NeoIconGithub.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
@@ -66,32 +67,34 @@
 </script>
 
 <NeoThemeProvider>
-  <NeoPortalContainer>
-    <div class="container">
-      <header class="row header">
-        <NeoTabs rounded pressed dim tag="nav" {active} onchange={onClick}>
-          {#each routes as route (route)}
-            <NeoTab tabId={route} onpointerenter={() => onHover(route)}>{sentenceCase(route)}</NeoTab>
-          {/each}
+  <NeoNotificationProvider>
+    <NeoPortalContainer>
+      <div class="container">
+        <header class="row header">
+          <NeoTabs rounded pressed dim tag="nav" {active} onchange={onClick}>
+            {#each routes as route (route)}
+              <NeoTab tabId={route} onpointerenter={() => onHover(route)}>{sentenceCase(route)}</NeoTab>
+            {/each}
 
-          <NeoTabDivider aria-hidden="true" />
+            <NeoTabDivider aria-hidden="true" />
 
-          <NeoButton role="tab" aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
-            {#snippet icon()}
-              <NeoIconGithub stroke="2" scale="1.125" />
-            {/snippet}
-          </NeoButton>
-        </NeoTabs>
+            <NeoButton role="tab" aria-label="Go to Github" title="Go to Github" href="https://github.com/dvcol/neo-svelte" target="_blank">
+              {#snippet icon()}
+                <NeoIconGithub stroke="2" scale="1.125" />
+              {/snippet}
+            </NeoButton>
+          </NeoTabs>
 
-        <NeoThemeSelector rounded source reset remember />
-        <NeoThemePicker rounded />
-      </header>
+          <NeoThemeSelector rounded source reset remember />
+          <NeoThemePicker rounded />
+        </header>
 
-      <main class="column view">
-        <RouterView {router} {transition} />
-      </main>
-    </div>
-  </NeoPortalContainer>
+        <main class="column view">
+          <RouterView {router} {transition} />
+        </main>
+      </div>
+    </NeoPortalContainer>
+  </NeoNotificationProvider>
 </NeoThemeProvider>
 
 <style lang="scss">

@@ -23,6 +23,7 @@ export const Route = {
   Tooltips: 'tooltips' as const,
   Dialog: 'dialog' as const,
   Menu: 'menu' as const,
+  Notification: 'notification' as const,
   Any: 'any' as const,
 } as const;
 

@@ -578,60 +578,13 @@
     }
 
     &[data-modal='true'] {
-      position: fixed;
-
-      &[data-placement='center'] {
-        inset: 0;
-        margin: var(--neo-dialog-margin, auto);
-      }
-
-      &[data-placement^='top'],
-      &[data-placement='right-start'],
-      &[data-placement='left-start'] {
-        top: 0;
-        bottom: auto;
-        margin-top: var(--neo-dialog-safe-margin, var(--neo-gap));
-      }
-
-      &[data-placement^='bottom'],
-      &[data-placement='right-end'],
-      &[data-placement='left-end'] {
-        top: auto;
-        bottom: 0;
-        margin-bottom: var(--neo-dialog-safe-margin, var(--neo-gap));
-      }
-
-      &[data-placement^='left'],
-      &[data-placement='bottom-start'],
-      &[data-placement='top-start'] {
-        right: auto;
-        left: 0;
-        margin-left: var(--neo-dialog-safe-margin, var(--neo-gap));
-      }
-
-      &[data-placement^='right'],
-      &[data-placement='bottom-end'],
-      &[data-placement='top-end'] {
-        right: 0;
-        left: auto;
-        margin-right: var(--neo-dialog-safe-margin, var(--neo-gap));
-      }
-
-      &[data-placement='right'],
-      &[data-placement='left'] {
-        top: 0;
-        bottom: 0;
-        margin-top: var(--neo-dialog-margin-top, auto);
-        margin-bottom: var(--neo-dialog-margin-bottom, auto);
-      }
-
-      &[data-placement='top'],
-      &[data-placement='bottom'] {
-        right: 0;
-        left: 0;
-        margin-right: var(--neo-dialog-margin-bottom, auto);
-        margin-left: var(--neo-dialog-margin-top, auto);
-      }
+      @include mixin.fixed(
+        $margin: --neo-dialog-margin,
+        $margin-top: --neo-dialog-margin-top,
+        $margin-bottom: --neo-dialog-margin-bottom,
+        $margin-left: --neo-dialog-margin-left,
+        $margin-right: --neo-dialog-margin-right,
+      );
 
       &.neo-slide {
         @include mixin.slide-in;

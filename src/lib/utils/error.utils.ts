@@ -6,6 +6,7 @@ export const NeoErrorType = {
   NeoCollapse: 'NeoCollapse',
   NeoForm: 'NeoForm',
   NeoProgress: 'NeoProgress',
+  NeoNotification: 'NeoNotification',
 } as const;
 
 export type NeoErrorTypes = (typeof NeoErrorType)[keyof typeof NeoErrorType];
@@ -87,5 +88,33 @@ export class NeoErrorFormDuplicateId extends NeoError {
 export class NeoErrorProgressContextNotFound extends NeoError {
   constructor() {
     super('Progress context not found', NeoErrorType.NeoProgress);
+  }
+}
+
+export class NeoErrorNotificationNotFound extends NeoError {
+  readonly id?: string;
+  constructor(id?: string) {
+    super(`Notification '${id}' not found`, NeoErrorType.NeoNotification);
+    this.id = id;
+  }
+}
+
+export class NeoErrorNotificationDuplicateId extends NeoError {
+  readonly id: string;
+  constructor(id: string) {
+    super(`Notification stack with id '${id}' already exists`, NeoErrorType.NeoNotification);
+    this.id = id;
+  }
+}
+
+export class NeoErrorNotificationProviderNotFound extends NeoError {
+  constructor() {
+    super('Notification provider not found. Please ensure you have a provider in your app.', NeoErrorType.NeoNotification);
+  }
+}
+
+export class NeoErrorNotificationServiceNotFound extends NeoError {
+  constructor(id?: string) {
+    super(`Notification service not found.${id ? ` Make sure you have a service with id '${id}'.` : ''}`, NeoErrorType.NeoNotification);
   }
 }

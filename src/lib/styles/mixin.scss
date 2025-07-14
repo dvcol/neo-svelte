@@ -459,6 +459,67 @@
   }
 }
 
+@mixin fixed(
+  $margin: --neo-floating-margin,
+  $margin-top: --neo-floating-margin-top,
+  $margin-bottom: --neo-floating-margin-bottom,
+  $margin-left: --neo-floating-margin-left,
+  $margin-right: --neo-floating-margin-right,
+  $margin-default: var(--neo-gap)
+) {
+  position: fixed;
+  margin: var($margin, $margin-default);
+
+  &[data-placement='center'] {
+    inset: 0;
+    margin: var($margin, auto);
+  }
+
+  &[data-placement^='top'],
+  &[data-placement='right-start'],
+  &[data-placement='left-start'] {
+    top: 0;
+    bottom: auto;
+  }
+
+  &[data-placement^='bottom'],
+  &[data-placement='right-end'],
+  &[data-placement='left-end'] {
+    top: auto;
+    bottom: 0;
+  }
+
+  &[data-placement^='left'],
+  &[data-placement='bottom-start'],
+  &[data-placement='top-start'] {
+    right: auto;
+    left: 0;
+  }
+
+  &[data-placement^='right'],
+  &[data-placement='bottom-end'],
+  &[data-placement='top-end'] {
+    right: 0;
+    left: auto;
+  }
+
+  &[data-placement='right'],
+  &[data-placement='left'] {
+    top: 0;
+    bottom: 0;
+    margin-top: var($margin-top, auto);
+    margin-bottom: var($margin-bottom, auto);
+  }
+
+  &[data-placement='top'],
+  &[data-placement='bottom'] {
+    right: 0;
+    left: 0;
+    margin-right: var($margin-right, auto);
+    margin-left: var($margin-left, auto);
+  }
+}
+
 @mixin fade-backdrop(
   $toggle: [open],
   // Opacity

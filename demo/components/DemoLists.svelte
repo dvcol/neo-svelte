@@ -127,7 +127,7 @@
   const customSectionList = $state([...list.slice(0, 4), sectionA, customSection, sectionB]);
   const withCustomSection = $derived<NeoListProps['items']>(isEmpty ? [] : customSectionList);
 
-  const complexList = $state<NeoListProps['items']>(
+  const complexList = $state<NonNullable<NeoListProps['items']>>(
     [
       { label: 'John Doe', value: 'John', description: 'john.doe@gmail.com' },
       { label: 'Peter Jackson', value: 'Peter', description: 'peter.jackson@icloud.me' },
@@ -196,7 +196,7 @@
   let hovered = $state(false);
   let focused = $state(false);
   const elevation = $state(0);
-  const withComplexList = $derived<NeoListProps['items']>(isEmpty ? [] : complexList);
+  const withComplexList = $derived<NonNullable<NeoListProps['items']>>(isEmpty ? [] : complexList);
 
   const onAdd = () => {
     list.push({ label: `Line item ${list.length + 1}`, value: list.length + 1, id: getUUID() });
