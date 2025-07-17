@@ -1,19 +1,18 @@
 <script lang="ts">
 
-  import type {
-    NeoNotification,
-    NeoNotificationDeQueued,
-    NeoNotificationQueued,
-    NeoNotificationStackProps,
-    NeoNotificationStackService,
-  } from '~/floating/notification/neo-notification.model.js';
+  import type { NeoNotificationStackService } from '~/floating/notification/neo-notification-provider.model.js';
+  import type { NeoNotificationStackProps } from '~/floating/notification/neo-notification-stack.model.js';
+  import type { NeoNotification, NeoNotificationDeQueued, NeoNotificationQueued } from '~/floating/notification/neo-notification.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { onDestroy, onMount } from 'svelte';
   import { SvelteMap } from 'svelte/reactivity';
 
   import { NeoPlacements } from '~/floating/common/neo-placement.model.js';
-  import { getNeoNotificationProviderContext, NeoNotificationStatus } from '~/floating/notification/neo-notification.model.js';
+  import { getNeoNotificationProviderContext } from '~/floating/notification/neo-notification-provider.model.js';
+  import { NeoNotificationStackDirection, NeoNotificationStatus } from '~/floating/notification/neo-notification.model.js';
+  import NeoNotificationItem from '~/floating/notification/NeoNotificationItem.svelte';
+  import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { NeoErrorNotificationNotFound } from '~/utils/error.utils.js';
 
   let {
@@ -24,13 +23,29 @@
     id = $bindable<string>(getUUID()),
     ref = $bindable(),
     tag = 'ol',
-    placement = NeoPlacements.TopEnd,
-    duration = 10000,
     queue = $bindable(new SvelteMap<NeoNotificationQueued['id'], NeoNotificationQueued>()),
+    duration = 10000,
+    max = 6,
+
+    // Position
+    placement = NeoPlacements.BottomEnd,
+    direction,
+    portal,
 
     // Other props
+    portalProps,
     ...rest
   }: NeoNotificationStackProps = $props();
+
+  const reverse = $derived.by(() => {
+    if (direction !== undefined) return direction === NeoNotificationStackDirection.Down;
+    return placement?.startsWith('top') || NeoPlacements.TopStart === placement || NeoPlacements.TopEnd === placement;
+  });
+
+  const visible = $derived.by(() => {
+    if (!queue) return [];
+    return Array.from(queue.values()).map((item, index) => ({ item, index })).slice(-max);
+  });
 
   export function add(item: NeoNotification): NeoNotificationQueued {
     const { promise, resolve } = Promise.withResolvers<NeoNotificationDeQueued>();
@@ -71,7 +86,7 @@
         item.duration = options.duration ?? item.duration ?? duration;
 
         // Remove the item from the queue before restarting
-        if (options.unshift) queue.delete(id);
+        if (options.unshift) queue.delete(response.id);
 
         if (item.duration) {
           item.timeout = setTimeout(() => {
@@ -127,38 +142,44 @@
   onDestroy(() => {
     context.unregister(id);
   });
-
 </script>
 
-<svelte:element
-  bind:this={ref}
-  this={tag}
-  id="neo-notification-stack-${id}"
-  aria-live="polite"
-  aria-relevant="additions text"
-  aria-atomic="false"
-  data-placement={placement}
-  class:neo-notification-container={true}
-  {...rest}
->
-  {#each Array.from(queue.values()).reverse() as item, index (item.id ?? index)}
-    {#if children}
-      {@render children?.(item)}
-    {:else}
-      <div class="neo-notification-item">
-        Item {index + 1}: {item.id} - {item.timeout}
-      </div>
-    {/if}
-  {/each}
-</svelte:element>
+<NeoPortal enabled={portal} {...portalProps}>
+  <svelte:element
+    bind:this={ref}
+    this={tag}
+    id="neo-notification-stack-${id}"
+    aria-live="polite"
+    aria-relevant="additions text"
+    aria-atomic="false"
+    data-placement={placement}
+    class:neo-notification-stack={true}
+    {...rest}
+  >
+    {#each visible as { item, index }, i (item.id ?? i)}
+      <NeoNotificationItem
+        tag={['ul', 'ol'].includes(tag) ? 'li' : 'div'}
+        index={i}
+        setsize={queue.size}
+        posinset={index + 1}
+
+        {item}
+        {reverse}
+        {children}
+      />
+    {/each}
+  </svelte:element>
+</NeoPortal>
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-notification-container {
-    z-index: var(--neo-z-index-layer-ui, 1000);
-    width: fit-content;
-    height: fit-content;
+  .neo-notification-stack {
+    z-index: var(--neo-z-index-layer-top, 1000);
+    gap: var(--neo-notification-stack-gap, var(--neo-gap));
+    width: 100%;
+    list-style: none;
+    pointer-events: none;
 
     @include mixin.fixed(
       $margin: --neo-notification-margin,
@@ -166,6 +187,7 @@
       $margin-bottom: --neo-notification-margin-bottom,
       $margin-left: --neo-notification-margin-left,
       $margin-right: --neo-notification-margin-right,
+      $align-items: true,
     );
   }
 </style>

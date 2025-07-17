@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type {
-    NeoNotificationProviderContext,
-    NeoNotificationStackService,
-    NotificationProviderProps,
-  } from '~/floating/notification/neo-notification.model.js';
+
+  import type { NeoNotificationProviderContext, NeoNotificationStackService, NotificationProviderProps } from '~/floating/notification/neo-notification-provider.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { SvelteMap } from 'svelte/reactivity';
 
-  import { setNeoNotificationProviderContext } from '~/floating/notification/neo-notification.model.js';
+  import {
+
+    setNeoNotificationProviderContext,
+  } from '~/floating/notification/neo-notification-provider.model.js';
   import NeoNotificationStack from '~/floating/notification/NeoNotificationStack.svelte';
   import { NeoErrorNotificationDuplicateId } from '~/utils/error.utils.js';
 

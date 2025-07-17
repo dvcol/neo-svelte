@@ -1,5 +1,8 @@
 <script lang="ts">
-  import type { NeoNotificationStackProps } from '~/floating/notification/neo-notification.model';
+
+  import type { NeoNotificationStackProps } from '~/floating/notification/neo-notification-stack.model';
+
+  import { randomInt } from '@dvcol/common-utils/common/math';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -29,7 +32,7 @@
   const pushNotification = () => {
     if (!stack) return;
     (window as any).stack = (window as any).stack || [];
-    (window as any).stack.push(stack.add({ }));
+    (window as any).stack.push(stack.add({ containerProps: { style: `height: ${randomInt(2, 6)}rem` } }));
   };
 
 </script>
@@ -125,16 +128,6 @@
     word-break: break-all;
   }
 
-  .lorem {
-    @include flex.column($center: false, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
-
-    margin: 0 auto;
-
-    p {
-      max-width: 80ch;
-    }
-  }
-
   .column {
     @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
   }
@@ -143,9 +136,5 @@
     @include flex.row($center: true, $gap: var(--neo-gap-xl), $flex: 0 1 auto);
 
     margin: 2rem 0;
-
-    .row {
-      margin: 0;
-    }
   }
 </style>

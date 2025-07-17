@@ -465,10 +465,16 @@
   $margin-bottom: --neo-floating-margin-bottom,
   $margin-left: --neo-floating-margin-left,
   $margin-right: --neo-floating-margin-right,
-  $margin-default: var(--neo-gap)
+  $margin-default: var(--neo-gap),
+  $align-items: false
 ) {
   position: fixed;
   margin: var($margin, $margin-default);
+
+  @if $align-items {
+    display: flex;
+    flex-direction: column;
+  }
 
   &[data-placement='center'] {
     inset: 0;
@@ -494,6 +500,10 @@
   &[data-placement='top-start'] {
     right: auto;
     left: 0;
+
+    @if $align-items {
+      align-items: start;
+    }
   }
 
   &[data-placement^='right'],
@@ -501,6 +511,10 @@
   &[data-placement='top-end'] {
     right: 0;
     left: auto;
+
+    @if $align-items {
+      align-items: end;
+    }
   }
 
   &[data-placement='right'],
@@ -517,6 +531,14 @@
     left: 0;
     margin-right: var($margin-right, auto);
     margin-left: var($margin-left, auto);
+  }
+
+  @if $align-items {
+    &[data-placement='top'],
+    &[data-placement='bottom'],
+    &[data-placement='center'] {
+      align-items: center;
+    }
   }
 }
 
