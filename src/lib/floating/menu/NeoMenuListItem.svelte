@@ -43,7 +43,7 @@
     keepOpenOnSelect,
 
     placement = 'right-start',
-    offset = (p?: NeoTooltipPlacement) => ({ mainAxis: 8, crossAxis: p?.endsWith('start') ? -6 : 6 }),
+    offset: _offset,
 
     // Styles
     rounded,
@@ -61,6 +61,11 @@
     menuProps,
     ...rest
   }: NeoMenuListItemProps = $props();
+
+  const offset = $derived.by(() => {
+    if (_offset !== undefined) return _offset;
+    return (p?: NeoTooltipPlacement) => ({ mainAxis: rounded ? 12 : 9, crossAxis: p?.endsWith('start') ? -6 : 6 });
+  });
 
   const items = $derived(item?.items);
 

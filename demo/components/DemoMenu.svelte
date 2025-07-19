@@ -183,7 +183,7 @@
     <div class="column">
       <span class="label">Rich Menu</span>
 
-      <NeoMenu bind:open={open.menuRich} {...options} items={itemsRich}>
+      <NeoMenu bind:open={open.menuRich} {...options} items={itemsRich} itemProps={{ offset: options.rounded ? 18 : 10 }}>
         <NeoButton elevation="0" toggle bind:checked={open.menuRich}>Open</NeoButton>
       </NeoMenu>
     </div>
