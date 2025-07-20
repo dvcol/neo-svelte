@@ -2,10 +2,10 @@ import type { Snippet } from 'svelte';
 import type { SvelteMap } from 'svelte/reactivity';
 
 import type { NeoNotificationPlacement } from '~/floating/common/neo-placement.model.js';
-import type { NeoNotificationQueued, NeoNotificationStackDirections } from '~/floating/notification/neo-notification.model.js';
+import type { NeoNotification, NeoNotificationQueued, NeoNotificationStackDirections } from '~/floating/notification/neo-notification.model.js';
 import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 
-export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameMap = 'ol'> {
+export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameMap = 'ol'> extends Pick<NeoNotification, 'duration'> {
   // Snippets
   children?: Snippet<[NeoNotificationQueued]>;
 
@@ -16,15 +16,20 @@ export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameM
   ref?: HTMLElementTagNameMap[Tag];
   tag?: Tag;
 
-  /**
-   * Duration in milliseconds for which the notification will be displayed.
-   * If not specified, the notification will remain until manually dismissed.
-   *
-   * @default 0 (indefinite)
-   */
-  duration?: number;
-  queue?: SvelteMap<NeoNotificationQueued['id'], NeoNotificationQueued>;
+  queue?: SvelteMap<NonNullable<NeoNotificationQueued['id']>, NeoNotificationQueued>;
+  paused?: boolean;
+  hovered?: boolean;
+  focused?: boolean;
+  expand?: boolean;
+  delay?: number;
   max?: number;
+
+  // Item Props
+  /**
+   * If true, notifications timeout will be paused while the user hovers over the notification.
+   * @default true
+   */
+  pauseOnHover?: boolean;
 
   // Placement
   placement?: NeoNotificationPlacement;

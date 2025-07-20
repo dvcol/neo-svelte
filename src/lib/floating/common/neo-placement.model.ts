@@ -4,7 +4,7 @@ export type NeoPlacement = UseFloatingOptions['placement'];
 
 export type NeoTooltipPlacement = NeoPlacement | 'auto';
 export type NeoDialogPlacement = NeoPlacement | 'center';
-export type NeoNotificationPlacement = NeoPlacement | 'center';
+export type NeoNotificationPlacement = NeoPlacement;
 
 export const NeoPlacements: Record<string, NeoPlacement> = {
   Top: 'top',

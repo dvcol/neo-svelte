@@ -60,6 +60,12 @@ export interface NeoNotificationStackService {
   update: (id: string, update: Omit<NeoNotification, 'id'>) => NeoNotificationQueued;
 
   /**
+   * Pauses or resumes the notification stack.
+   * @param pause - If true, pauses the stack; if false, resumes it.
+   */
+  pause: (pause?: boolean) => void;
+
+  /**
    * Restarts a notification in the stack with a new duration.
    * @param id - The ID of the notification to restart.
    * @param options - Whether to unshift the notification to the front of the queue.

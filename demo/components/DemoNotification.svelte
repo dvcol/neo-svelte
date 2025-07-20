@@ -6,7 +6,7 @@
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
+  import { NeoPlacements } from '~/floating/common/neo-placement.model.js';
   import NeoNotificationStack from '~/floating/notification/NeoNotificationStack.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
@@ -16,8 +16,9 @@
   import { positionOptions } from '../utils/placement.utils';
 
   const container = $state<NeoNotificationStackProps>({
-    placement: NeoDialogPlacements.TopEnd,
+    placement: NeoPlacements.TopEnd,
     duration: 0,
+    expand: false,
   });
 
   const options = $state({
@@ -25,23 +26,20 @@
     color: '',
   });
 
-  const position = [{ value: 'center', label: 'Center' }, ...positionOptions];
-
   let stack = $state<NeoNotificationStack>();
 
   const pushNotification = () => {
     if (!stack) return;
     (window as any).stack = (window as any).stack || [];
-    (window as any).stack.push(stack.add({ containerProps: { style: `height: ${randomInt(2, 6)}rem` } }));
+    (window as any).stack.push(stack.add({
+      containerProps: { style: `height: ${8 ?? randomInt(2, 6)}rem; width: ${20 ?? randomInt(10, 20)}rem` },
+    }),
+    );
   };
 
 </script>
 
 <div class="row">
-  <NeoButtonGroup text rounded>
-    <!--    <NeoButton toggle bind:checked={container.glass}>Glass</NeoButton> -->
-  </NeoButtonGroup>
-
   <NeoNumberStep
     label="Duration"
     placement="left"
@@ -65,7 +63,7 @@
     floating={false}
     bind:value={container.placement}
     containerProps={{ style: 'margin-left: 6.75rem' }}
-    options={position}
+    options={positionOptions}
     size={15}
     openOnFocus
     rounded
@@ -102,14 +100,21 @@
   />
 </div>
 
-<NeoNotificationStack bind:this={stack} {...container} />
+<div class="row">
+  <NeoButtonGroup text rounded>
+    <NeoButton toggle bind:checked={container.expand}>Expand</NeoButton>
+    <NeoButton onclick={stack?.clear}>Clear</NeoButton>
+  </NeoButtonGroup>
+</div>
+
+<NeoNotificationStack bind:this={stack} {...container} expand={container.expand ? true : undefined} />
 
 <section>
   <div class="row">
     <div class="column">
       <span class="label">Notification</span>
 
-      <NeoButton elevation="0" onclick={pushNotification}>Open</NeoButton>
+      <NeoButton elevation="0" onclick={pushNotification}>Default</NeoButton>
     </div>
   </div>
 </section>

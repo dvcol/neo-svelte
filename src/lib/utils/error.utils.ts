@@ -91,6 +91,12 @@ export class NeoErrorProgressContextNotFound extends NeoError {
   }
 }
 
+export class NeoErrorNotificationMissingId extends NeoError {
+  constructor() {
+    super('Notification id is required', NeoErrorType.NeoNotification);
+  }
+}
+
 export class NeoErrorNotificationNotFound extends NeoError {
   readonly id?: string;
   constructor(id?: string) {

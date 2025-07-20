@@ -1,10 +1,13 @@
 import type { NeoNotificationStackProps } from '~/floating/notification/neo-notification-stack.model.js';
 import type { NeoNotificationQueued } from '~/floating/notification/neo-notification.model.js';
+import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-export interface NeoNotificationItemProps<Tag extends keyof HTMLElementTagNameMap = 'li'> {
+export interface NeoNotificationItemProps<Tag extends keyof HTMLElementTagNameMap = 'li'> extends Omit<HTMLNeoBaseElement, 'children'> {
   children?: NeoNotificationStackProps['children'];
 
   ref?: HTMLElement;
+  hovered?: boolean;
+  focused?: boolean;
 
   tag?: Tag | keyof HTMLElementTagNameMap;
 
@@ -13,6 +16,11 @@ export interface NeoNotificationItemProps<Tag extends keyof HTMLElementTagNameMa
 
   posinset: number;
   setsize: number;
+  visible?: number;
 
+  expand?: boolean;
   reverse?: boolean;
+  draggable?: boolean;
+
+  onChange?: (event: { item: NeoNotificationQueued; index: number; hovered: boolean; focused: boolean }) => void;
 }
