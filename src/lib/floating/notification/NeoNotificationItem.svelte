@@ -2,6 +2,7 @@
   import type { NeoNotificationItemProps } from '~/floating/notification/neo-notification-item.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
+  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { flyFrom } from '@dvcol/svelte-utils';
   import { focusin } from '@dvcol/svelte-utils/focusin';
   import { hovering } from '@dvcol/svelte-utils/hovering';
@@ -26,6 +27,7 @@
     draggable,
     placement,
     threshold = 3,
+    stagger = 16,
 
     onChange: onStateChange,
 
@@ -43,7 +45,7 @@
 
   const translate = $derived.by(() => {
     if ((posinset === setsize) && reverse) return;
-    if (!expand) return `0 ${(reverse ? 0 : -(ref?.offsetHeight ?? 0)) + 6 * (visible - 1 - index) * (reverse ? -1 : 1)}px`;
+    if (!expand) return `0 ${(reverse ? 0 : -(ref?.offsetHeight ?? 0)) + stagger * (visible - 1 - index) * (reverse ? 1 : -1)}px`;
 
     const { parent, array } = getNotifications();
     if (!array?.length) return;
@@ -60,8 +62,6 @@
     if (expand) return;
     return 1 - (visible - 1 - index) * 0.05;
   });
-
-  const onChange = () => onStateChange?.({ item, index, hovered, focused });
 
   let initial: { x: number; y: number } | false = $state(false);
   let offset: { x: number; y: number } = $state({ x: 0, y: 0 });
@@ -116,7 +116,7 @@
 
   const outParams = $derived.by(() => {
     let x: string | number = 0;
-    let y: string | number = `${reverse ? '-' : ''}50%`;
+    let y: string | number = last && !first && !expand ? 0 : `${reverse ? '-' : ''}50%`;
 
     // If moving left/right
     if (Math.abs(offset.y) < Math.abs(offset.x)) {
@@ -137,6 +137,11 @@
       opacity: 0,
     };
   });
+
+  const onChange = debounce(() => {
+    if (Math.abs(offset.x) > 16 || Math.abs(offset.y) > 16) return;
+    onStateChange?.({ item, index, hovered, focused });
+  }, 100);
 
 // TODO restart on touch
   // TODO drag stack on placement change

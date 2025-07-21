@@ -40,6 +40,12 @@ export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameM
    * @default 3 (1/3 of the stack height/width)
    */
   threshold?: number;
+  /**
+   * The offset in pixels to apply when stacking notifications.
+   * @see expand
+   * @default 16
+   */
+  stagger?: number;
 
   // Placement
   placement?: NeoNotificationPlacement;
