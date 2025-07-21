@@ -141,7 +141,6 @@
 // TODO restart on touch
   // TODO drag stack on placement change
   // TODO : dimiss on click ?
-  // TODO : dimiss on side scroll ?
   // TODO : dimiss on ESC if focused
 </script>
 
@@ -184,7 +183,7 @@
   }}
   in:flyFrom={inParams}
   out:flyFrom={outParams}
-  onpointerdown={startDrag}
+  onpointerdowncapture={startDrag}
 >
   {#if children}
     {@render children?.(item)}
@@ -211,6 +210,7 @@
 
     &.neo-draggable {
       cursor: grab;
+      touch-action: none;
     }
 
     &.neo-dragging {

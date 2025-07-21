@@ -486,6 +486,7 @@
 
       &.neo-handle {
         cursor: grab;
+        touch-action: none;
 
         &:active,
         &[data-moving='true'] {

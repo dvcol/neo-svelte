@@ -126,6 +126,7 @@
     cursor: grab;
     transition: opacity 0.3s ease-in;
     appearance: none;
+    touch-action: none;
 
     &:active {
       cursor: grabbing;
