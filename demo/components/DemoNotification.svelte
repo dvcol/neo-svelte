@@ -2,11 +2,9 @@
 
   import type { NeoNotificationStackProps } from '~/floating/notification/neo-notification-stack.model';
 
-  import { randomInt } from '@dvcol/common-utils/common/math';
-
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
-  import { NeoPlacements } from '~/floating/common/neo-placement.model.js';
+  import { NeoNotificationPlacements } from '~/floating/common/neo-placement.model.js';
   import NeoNotificationStack from '~/floating/notification/NeoNotificationStack.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
@@ -15,8 +13,10 @@
   import { colorOptions } from '../utils/color.utils';
   import { positionOptions } from '../utils/placement.utils';
 
+  const position = positionOptions.filter(o => !o.value?.startsWith('left') && !o.value?.startsWith('right'));
+
   const container = $state<NeoNotificationStackProps>({
-    placement: NeoPlacements.TopEnd,
+    placement: NeoNotificationPlacements.TopEnd,
     duration: 0,
     expand: false,
   });
@@ -32,7 +32,7 @@
     if (!stack) return;
     (window as any).stack = (window as any).stack || [];
     (window as any).stack.push(stack.add({
-      containerProps: { style: `height: ${8 ?? randomInt(2, 6)}rem; width: ${20 ?? randomInt(10, 20)}rem` },
+      containerProps: { style: `height: ${5}rem; width: ${20}rem` },
     }),
     );
   };
@@ -63,7 +63,7 @@
     floating={false}
     bind:value={container.placement}
     containerProps={{ style: 'margin-left: 6.75rem' }}
-    options={positionOptions}
+    options={position}
     size={15}
     openOnFocus
     rounded

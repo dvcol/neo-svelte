@@ -20,7 +20,9 @@ export interface NeoNotificationItemProps<Tag extends keyof HTMLElementTagNameMa
 
   expand?: boolean;
   reverse?: boolean;
-  draggable?: boolean;
+  draggable?: NeoNotificationStackProps['draggable'];
+  placement?: NeoNotificationStackProps['placement'];
+  threshold?: NeoNotificationStackProps['threshold'];
 
   onChange?: (event: { item: NeoNotificationQueued; index: number; hovered: boolean; focused: boolean }) => void;
 }

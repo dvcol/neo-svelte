@@ -1,12 +1,11 @@
 import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
 
-export type NeoPlacement = UseFloatingOptions['placement'];
+export type NeoPlacement = NonNullable<UseFloatingOptions['placement']>;
 
 export type NeoTooltipPlacement = NeoPlacement | 'auto';
 export type NeoDialogPlacement = NeoPlacement | 'center';
-export type NeoNotificationPlacement = NeoPlacement;
 
-export const NeoPlacements: Record<string, NeoPlacement> = {
+export const NeoPlacements = {
   Top: 'top',
   TopStart: 'top-start',
   TopEnd: 'top-end',
@@ -19,25 +18,36 @@ export const NeoPlacements: Record<string, NeoPlacement> = {
   Right: 'right',
   RightStart: 'right-start',
   RightEnd: 'right-end',
-} as const;
+} as const satisfies Record<string, NeoPlacement>;
 
-export const NeoTooltipPlacements: Record<string, NeoTooltipPlacement> = {
+export const NeoTooltipPlacements = {
   ...NeoPlacements,
-  Auto: 'auto' as const,
-} as const;
+  Auto: 'auto',
+} as const satisfies Record<string, NeoTooltipPlacement>;
 
-export const NeoDialogPlacements: Record<string, NeoDialogPlacement> = {
+export const NeoDialogPlacements = {
   ...NeoPlacements,
-  Center: 'center' as const,
-} as const;
+  Center: 'center',
+} as const satisfies Record<string, NeoDialogPlacement>;
 
-export function reversePlacement(placement?: NeoTooltipPlacement): NeoTooltipPlacement {
+export const NeoNotificationPlacements = {
+  Top: 'top',
+  TopStart: 'top-start',
+  TopEnd: 'top-end',
+  Bottom: 'bottom',
+  BottomStart: 'bottom-start',
+  BottomEnd: 'bottom-end',
+} as const satisfies Partial<Record<string, NeoDialogPlacement>>;
+
+export type NeoNotificationPlacement = (typeof NeoNotificationPlacements)[keyof typeof NeoNotificationPlacements];
+
+export function reversePlacement(placement?: NeoTooltipPlacement): NeoTooltipPlacement | undefined {
   if (placement?.startsWith('right')) return placement?.replace('right', 'left') as NeoTooltipPlacement;
   if (placement?.startsWith('left')) return placement?.replace('left', 'right') as NeoTooltipPlacement;
   return placement;
 }
 
-export function invertPlacement(placement?: NeoTooltipPlacement): NeoTooltipPlacement {
+export function invertPlacement(placement?: NeoTooltipPlacement): NeoTooltipPlacement | undefined {
   if (placement?.startsWith('top')) return placement?.replace('top', 'bottom') as NeoTooltipPlacement;
   if (placement?.startsWith('bottom')) return placement?.replace('bottom', 'top') as NeoTooltipPlacement;
   return placement;

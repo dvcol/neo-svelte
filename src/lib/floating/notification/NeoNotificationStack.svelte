@@ -9,7 +9,7 @@
   import { onDestroy, onMount } from 'svelte';
   import { SvelteMap } from 'svelte/reactivity';
 
-  import { NeoPlacements } from '~/floating/common/neo-placement.model.js';
+  import { NeoNotificationPlacements } from '~/floating/common/neo-placement.model.js';
   import { getNeoNotificationProviderContext } from '~/floating/notification/neo-notification-provider.model.js';
   import { NeoNotificationStackDirection, NeoNotificationStatus } from '~/floating/notification/neo-notification.model.js';
   import NeoNotificationItem from '~/floating/notification/NeoNotificationItem.svelte';
@@ -35,9 +35,11 @@
     // Item Props
     duration = 10000,
     pauseOnHover = true,
+    draggable = true,
+    threshold = 3,
 
     // Position
-    placement = NeoPlacements.BottomEnd,
+    placement = NeoNotificationPlacements.BottomEnd,
     direction,
     portal,
 
@@ -65,7 +67,6 @@
 
   const reverse = $derived.by(() => {
     if (direction !== undefined) return direction === NeoNotificationStackDirection.Down;
-    if ([NeoPlacements.TopStart, NeoPlacements.TopEnd].includes(placement)) return true;
     return placement?.startsWith('top');
   });
 
@@ -216,10 +217,14 @@
         posinset={index + 1}
         setsize={queue.size}
         visible={visible.length}
+
         expand={expanded}
+        {reverse}
+        {draggable}
+        {placement}
+        {threshold}
 
         {item}
-        {reverse}
         {children}
 
         onChange={(state) => {
@@ -239,6 +244,8 @@
 
   .neo-notification-stack {
     z-index: var(--neo-z-index-layer-top, 1000);
+    width: 0;
+    height: 0;
     list-style: none;
     pointer-events: none;
 

@@ -1,8 +1,8 @@
 import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
 
-import type { NeoSelectOption } from '~/inputs/neo-select.model.js';
+import type { NeoListItem } from '~/list/neo-list.model.js';
 
-export const positionOptions: NeoSelectOption<UseFloatingOptions['placement']>[] = [
+export const positionOptions: NeoListItem<UseFloatingOptions['placement']>[] = [
   { value: 'top-start', label: 'Top Start' },
   { value: 'top', label: 'Top' },
   { value: 'top-end', label: 'Top End' },

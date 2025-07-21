@@ -87,7 +87,7 @@ export interface NeoNotificationQueued extends NeoNotificationDeQueued {
    * Force the notification to be de-queued with the specified status.
    * @param status
    */
-  cancel: (status: NeoNotificationStatuses) => NeoNotificationDeQueued;
+  cancel: (status?: NeoNotificationStatuses) => NeoNotificationDeQueued;
   /**
    * Update the notification with new properties while in the queue.
    * @param update

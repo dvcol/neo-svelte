@@ -30,6 +30,16 @@ export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameM
    * @default true
    */
   pauseOnHover?: boolean;
+  /**
+   * If true, notifications can be dragged to dismiss them.
+   * @default true
+   */
+  draggable?: boolean;
+  /**
+   * The fraction of the notification stack height/width that must be scrolled before the notification is considered dismissed.
+   * @default 3 (1/3 of the stack height/width)
+   */
+  threshold?: number;
 
   // Placement
   placement?: NeoNotificationPlacement;
