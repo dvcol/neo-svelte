@@ -29,14 +29,15 @@
     hovered = $bindable(false),
     focused = $bindable(false),
     expand,
-    delay = 200,
+    delay = 100,
     max = expand ? 6 : 3,
 
     // Item Props
     duration = 10000,
     pauseOnHover = true,
     draggable = true,
-    threshold = 3,
+    swipeable = true,
+    threshold = { x: 3, y: 2 },
 
     // Position
     placement = NeoNotificationPlacements.BottomEnd,
@@ -221,6 +222,7 @@
         expand={expanded}
         {reverse}
         {draggable}
+        {swipeable}
         {placement}
         {threshold}
 
@@ -243,7 +245,7 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-notification-stack {
-    z-index: var(--neo-z-index-layer-top, 1000);
+    z-index: var(--neo-z-index-layer-top, 2000000000);
     width: 0;
     height: 0;
     list-style: none;

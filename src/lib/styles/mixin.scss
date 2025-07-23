@@ -391,14 +391,16 @@
   $border-radius: --neo-floating-border-radius,
   $border-radius-rounded: --neo-floating-border-radius-rounded,
   $box-shadow: --neo-floating-box-shadow,
+  $default-box-shadow: --neo-glass-box-shadow-raised-1,
   $backdrop-filter: --neo-floating-backdrop-filter,
+  $default-filter: --neo-blur-3,
   $z-index: --neo-floating-z-index,
   $elevation: --neo-floating-elevation,
+  $transition: true,
   $borderless: false,
   $tinted: false,
   $filled: false
 ) {
-  z-index: var($z-index, calc(var(--neo-z-index-layer-ui, 1000) + var($elevation, 1)));
   color: var($color, inherit);
   background-color: var($background-color, var(--neo-glass-background-color));
   border: var(--neo-border-width, 1px) solid var($border-color, var(--neo-glass-background-color));
@@ -408,14 +410,21 @@
   );
   border-radius: var($border-radius, var(--neo-border-radius));
   outline: none;
-  box-shadow: var($box-shadow, var(--neo-glass-box-shadow-raised-1));
-  backdrop-filter: var($backdrop-filter, var(--neo-blur-3));
-  transition:
-    box-shadow 0.3s ease-out,
-    backdrop-filter 0.3s ease,
-    border-radius 0.3s ease,
-    border-color 0.3s ease,
-    padding 0.3s ease;
+  box-shadow: var($box-shadow, var($default-box-shadow));
+  backdrop-filter: var($backdrop-filter, var($default-filter));
+
+  @if $transition {
+    transition:
+      box-shadow 0.3s ease-out,
+      backdrop-filter 0.3s ease,
+      border-radius 0.3s ease,
+      border-color 0.3s ease,
+      padding 0.3s ease;
+  }
+
+  @if $z-index {
+    z-index: var($z-index, calc(var(--neo-z-index-layer-ui, 1000) + var($elevation, 1)));
+  }
 
   @if $padding {
     padding: var($padding, var(--neo-gap-3xs) var(--neo-gap-xs));

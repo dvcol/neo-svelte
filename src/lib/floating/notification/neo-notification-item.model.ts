@@ -21,9 +21,11 @@ export interface NeoNotificationItemProps<Tag extends keyof HTMLElementTagNameMa
   expand?: boolean;
   reverse?: boolean;
   draggable?: NeoNotificationStackProps['draggable'];
+  swipeable?: NeoNotificationStackProps['swipeable'];
   placement?: NeoNotificationStackProps['placement'];
   threshold?: NeoNotificationStackProps['threshold'];
   stagger?: NeoNotificationStackProps['stagger'];
 
-  onChange?: (event: { item: NeoNotificationQueued; index: number; hovered: boolean; focused: boolean }) => void;
+  onChange?: (payload: { item: NeoNotificationQueued; index: number; hovered: boolean; focused: boolean; event: PointerEvent | FocusEvent }) => void;
+  onDrag?: (payload: { item: NeoNotificationQueued; index: number; event: PointerEvent; initial: { x: number; y: number } | false; offset: { x: number; y: number } }) => void;
 }

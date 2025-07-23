@@ -7,6 +7,8 @@
   import { focusin } from '@dvcol/svelte-utils/focusin';
   import { hovering } from '@dvcol/svelte-utils/hovering';
 
+  import { NeoNotificationPlacements } from '~/floating/common/neo-placement.model.js';
+
   let {
     children,
 
@@ -25,11 +27,13 @@
     expand,
     reverse,
     draggable,
-    placement,
-    threshold = 3,
+    swipeable,
+    placement = NeoNotificationPlacements.BottomEnd,
+    threshold = { x: 3, y: 2 },
     stagger = 16,
 
     onChange: onStateChange,
+    onDrag,
 
     ...rest
   }: NeoNotificationItemProps = $props();
@@ -43,13 +47,19 @@
     return { parent, array };
   }
 
+  function getTotalHeight(el?: HTMLElement): number {
+    if (!el) return 0;
+    const styles = getComputedStyle(el);
+    return el.offsetHeight + (Number.parseFloat(styles.marginTop) || 0) + (Number.parseFloat(styles.marginBottom) || 0);
+  }
+
   const translate = $derived.by(() => {
     if ((posinset === setsize) && reverse) return;
-    if (!expand) return `0 ${(reverse ? 0 : -(ref?.offsetHeight ?? 0)) + stagger * (visible - 1 - index) * (reverse ? 1 : -1)}px`;
+    if (!expand) return `0 ${(reverse ? 0 : -getTotalHeight(ref)) + stagger * (visible - 1 - index) * (reverse ? 1 : -1)}px`;
 
     const { parent, array } = getNotifications();
     if (!array?.length) return;
-    const heights = Array.from(array).map((el: HTMLElement) => el.offsetHeight);
+    const heights = Array.from(array).map(getTotalHeight);
     if (!heights?.length) return;
     const bottom = reverse ? index + 1 : index;
     const offset = heights.slice(bottom, heights.length).reduce((acc, h) => acc + h, 0);
@@ -63,47 +73,95 @@
     return 1 - (visible - 1 - index) * 0.05;
   });
 
-  let initial: { x: number; y: number } | false = $state(false);
-  let offset: { x: number; y: number } = $state({ x: 0, y: 0 });
+  let initial: Record<'x' | 'y', number> | false = $state(false);
+  let offset: Record<'x' | 'y', number> = $state({ x: 0, y: 0 });
 
   const transform = $derived.by(() => {
     if (!draggable || !initial) return;
     return `translate(${offset.x}px, ${offset.y}px)`;
   });
 
-  const onDrap = (e: SvelteEvent<PointerEvent>) => {
+  const onDragMove = (event: PointerEvent) => {
     if (!draggable || !initial) return;
-    offset = { x: e.movementX + offset.x, y: e.movementY + offset.y };
+    offset = { x: event.movementX + offset.x, y: event.movementY + offset.y };
+    onDrag?.({ item, index, event, offset, initial });
   };
 
-  const cancelDrap = () => {
+  const cancelDrag = ({
+    top = placement?.startsWith('top'),
+    bottom = placement?.startsWith('bottom'),
+    start = placement?.endsWith('start'),
+    end = placement?.endsWith('end'),
+    fraction = threshold,
+  } = {}) => {
     if (!ref) return false;
-    if (placement?.startsWith('top') && (offset.y < -ref.clientHeight / threshold)) return true;
-    if (placement?.startsWith('bottom') && (offset.y > ref.clientHeight / threshold)) return true;
-    if (placement?.endsWith('end') && (offset.x > ref.clientWidth / threshold)) return true;
-    return placement?.endsWith('start') && (offset.x < -ref.clientWidth / threshold);
+    const { x, y } = typeof fraction === 'number' ? { x: fraction, y: fraction } : fraction;
+    if (top && (offset.y < -ref.clientHeight / y)) return true;
+    if (bottom && (offset.y > ref.clientHeight / y)) return true;
+    if (end && (offset.x > ref.clientWidth / x)) return true;
+    return start && (offset.x < -ref.clientWidth / x);
   };
 
-  const endDrap = () => {
-    if (cancelDrap()) item.cancel();
-    window.removeEventListener('pointermove', onDrap);
-    window.removeEventListener('pointerup', endDrap);
-    window.removeEventListener('pointercancel', endDrap);
-    window.removeEventListener('pointerleave', endDrap);
+  const onDragEnd = (event: PointerEvent) => {
+    if (cancelDrag()) item.cancel();
+    window.removeEventListener('pointermove', onDragMove);
+    window.removeEventListener('pointerup', onDragEnd);
+    window.removeEventListener('pointercancel', onDragEnd);
+    window.removeEventListener('pointerleave', onDragEnd);
     initial = false;
+    onDrag?.({ item, index, event, offset, initial });
     setTimeout(() => {
       offset = { x: 0, y: 0 };
     });
   };
 
-  const startDrag = (e: SvelteEvent<PointerEvent>) => {
+  const onDragStart = (event: PointerEvent) => {
     if (!draggable) return;
-    initial = { x: e.clientX, y: e.clientY };
-    e.preventDefault();
-    window.addEventListener('pointermove', onDrap);
-    window.addEventListener('pointerup', endDrap);
-    window.addEventListener('pointercancel', endDrap);
-    window.addEventListener('pointerleave', endDrap);
+    initial = { x: event.clientX, y: event.clientY };
+    event.preventDefault();
+    window.addEventListener('pointermove', onDragMove);
+    window.addEventListener('pointerup', onDragEnd);
+    window.addEventListener('pointercancel', onDragEnd);
+    window.addEventListener('pointerleave', onDragEnd);
+    onDrag?.({ item, index, event, offset, initial });
+  };
+
+  const onWheelEnd = debounce(() => {
+    if (cancelDrag()) item.cancel();
+    initial = false;
+    setTimeout(() => {
+      offset = { x: 0, y: 0 };
+    });
+  }, 100);
+
+  const onWheel = (event: SvelteEvent<WheelEvent>) => {
+    if (!swipeable) return;
+    event.preventDefault();
+    const axis = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? 'x' : 'y';
+    const off = axis === 'x' ? 'y' : 'x';
+    if (['top', 'bottom'].includes(placement) && axis === 'x') return;
+    if (placement?.endsWith('start') && axis === 'x' && (event.deltaX < 0)) return;
+    if (placement?.endsWith('end') && axis === 'x' && (event.deltaX > 0)) return;
+    if (placement?.startsWith('top') && axis === 'y' && (event.deltaY < 0)) return;
+    if (placement?.startsWith('bottom') && axis === 'y' && (event.deltaY > 0)) return;
+    onWheelEnd.cancel();
+    const delta = axis === 'x' ? event.deltaX : event.deltaY;
+    if (!initial) initial = ({ [axis]: delta, [off]: 0 } as Record<'x' | 'y', number>);
+    offset[axis] -= delta;
+    onWheelEnd();
+  };
+
+  const onLeave = debounce(() => {
+    window?.removeEventListener('wheel', onWheel);
+    ref?.removeEventListener('pointerleave', onLeave);
+    onWheelEnd();
+  }, 300);
+
+  const onEnter = () => {
+    if (!swipeable || !ref) return;
+    onLeave.cancel();
+    window.addEventListener('wheel', onWheel, { passive: false });
+    ref.addEventListener('pointerleave', onLeave);
   };
 
   const inParams = $derived({
@@ -138,13 +196,23 @@
     };
   });
 
-  const onChange = debounce(() => {
+  const onChange = debounce((_, event: PointerEvent | FocusEvent) => {
     if (Math.abs(offset.x) > 16 || Math.abs(offset.y) > 16) return;
-    onStateChange?.({ item, index, hovered, focused });
+    onStateChange?.({ item, index, hovered, focused, event });
   }, 100);
 
+  $effect(() => {
+    if (!ref) return;
+    ref.addEventListener('pointerdown', onDragStart);
+    ref.addEventListener('pointerenter', onEnter);
+    return () => {
+      if (!ref) return;
+      ref.removeEventListener('pointerdown', onDragStart);
+      ref.removeEventListener('pointerenter', onEnter);
+    };
+  });
+
 // TODO restart on touch
-  // TODO drag stack on placement change
   // TODO : dimiss on click ?
   // TODO : dimiss on ESC if focused
 </script>
@@ -188,7 +256,6 @@
   }}
   in:flyFrom={inParams}
   out:flyFrom={outParams}
-  onpointerdowncapture={startDrag}
 >
   {#if children}
     {@render children?.(item)}
@@ -203,14 +270,35 @@
   @use 'src/lib/styles/mixin' as mixin;
 
   .neo-notification-stack-item {
+    @include mixin.floating(
+            $padding: false,
+            $color: --neo-notification-color,
+            $background-color: --neo-notification-bg-color,
+            $border-color: --neo-notification-border-color,
+            $border-radius: --neo-notification-border-radius,
+            $border-radius-rounded: --neo-notification-border-radius-rounded,
+            $box-shadow: --neo-notification-box-shadow,
+            $backdrop-filter: --neo-notification-content-filter,
+            $z-index: --neo-z-index-layer-top,
+            $elevation: --neo-notification-z-index,
+            $transition: false,
+            $borderless: true,
+            $tinted: true,
+            $filled: true
+    );
+
     position: absolute;
-    z-index: calc(var(--neo-z-index-layer-top, 1000) + var(--neo-notification-z-index, 1));
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    box-sizing: border-box;
+    margin: var(--neo-notification-margin, var(--neo-gap-4xs));
     transition: transform 0.6s ease, translate 0.6s ease, width 0.3s ease, height 0.3s ease, scale 0.3s ease;
     pointer-events: auto;
-    will-change: transform, opacity, scale, translate;
+    will-change: transform, opacity, scale, translate, backdrop-filter;
 
     &[inert] {
-      z-index: var(--neo-z-index-layer-top, 1000);
+      z-index: var(--neo-z-index-layer-top, 2000000000);
     }
 
     &.neo-draggable {
@@ -224,9 +312,10 @@
   }
 
   .neo-notification {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
-    background: black;
-    border-radius: var(--neo-border-radius, 0.5rem);
   }
 </style>

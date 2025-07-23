@@ -36,10 +36,15 @@ export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameM
    */
   draggable?: boolean;
   /**
+   * If true, notifications can be swiped to dismiss them.
+   * @default true
+   */
+  swipeable?: boolean;
+  /**
    * The fraction of the notification stack height/width that must be scrolled before the notification is considered dismissed.
    * @default 3 (1/3 of the stack height/width)
    */
-  threshold?: number;
+  threshold?: number | { x: number; y: number };
   /**
    * The offset in pixels to apply when stacking notifications.
    * @see expand
