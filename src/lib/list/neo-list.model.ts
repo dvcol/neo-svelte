@@ -527,3 +527,16 @@ export function findByValueInList<Value = unknown>(value: Value, array: NeoListI
   });
   return search ? result : undefined;
 }
+
+export function findByValuesInList<Value = unknown>(
+  values: Value | Value[],
+  array: NeoListItemOrSection<Value>[],
+): undefined | NeoListSelectedItem<Value> | NeoListSelectedItem<Value>[] {
+  if (!Array.isArray(values)) return findByValueInList(values, array);
+  const result: NeoListSelectedItem<Value>[] = [];
+  values.forEach((value) => {
+    const item = findByValueInList(value, array);
+    if (item) result.push(item);
+  });
+  return result;
+}

@@ -16,7 +16,7 @@
   import NeoIconDoubleChevron from '~/icons/NeoIconDoubleChevron.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import { displayValue, transformValue } from '~/inputs/neo-select.model.js';
-  import { findByValueInList } from '~/list/neo-list.model.js';
+  import { findByValuesInList } from '~/list/neo-list.model.js';
   import NeoImage from '~/media/NeoImage.svelte';
   import { coerce, computeButtonTemplate, getDefaultElevation, getDefaultHoverElevation, MaxShadowElevation } from '~/utils/shadow.utils.js';
 
@@ -132,12 +132,13 @@
    * Reflects change in input value to selected value
    */
   const reflectValue = () => {
-    selected = findByValueInList(value, items);
+    selected = findByValuesInList(value, items);
     if (selected === undefined) value = undefined;
   };
 
   watch(() => {
     if (!value || transformed === value) return;
+    if (Array.isArray(value) && Array.isArray(transformed) && value.every(v => transformed.includes(v))) return;
     reflectValue();
   }, () => value);
 
