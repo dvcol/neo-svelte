@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { NeoNotificationItemProps } from '~/floating/notification/neo-notification-item.model.js';
-  import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { flyFrom } from '@dvcol/svelte-utils';
@@ -31,9 +30,11 @@
     placement = NeoNotificationPlacements.BottomEnd,
     threshold = { x: 3, y: 2 },
     stagger = 16,
+    swiped,
 
     onChange: onStateChange,
     onDrag,
+    onCancel,
 
     ...rest
   }: NeoNotificationItemProps = $props();
@@ -81,41 +82,54 @@
     return `translate(${offset.x}px, ${offset.y}px)`;
   });
 
-  const onDragMove = (event: PointerEvent) => {
+  function onDragMove(event: PointerEvent) {
     if (!draggable || !initial) return;
     offset = { x: event.movementX + offset.x, y: event.movementY + offset.y };
     onDrag?.({ item, index, event, offset, initial });
   };
 
-  const cancelDrag = ({
+  function cancelDrag({
     top = placement?.startsWith('top'),
     bottom = placement?.startsWith('bottom'),
     start = placement?.endsWith('start'),
     end = placement?.endsWith('end'),
     fraction = threshold,
-  } = {}) => {
+  } = {}) {
     if (!ref) return false;
     const { x, y } = typeof fraction === 'number' ? { x: fraction, y: fraction } : fraction;
     if (top && (offset.y < -ref.clientHeight / y)) return true;
     if (bottom && (offset.y > ref.clientHeight / y)) return true;
     if (end && (offset.x > ref.clientWidth / x)) return true;
     return start && (offset.x < -ref.clientWidth / x);
-  };
+  }
 
-  const onDragEnd = (event: PointerEvent) => {
-    if (cancelDrag()) item.cancel();
+  function resetState() {
+    initial = false;
+    setTimeout(() => {
+      offset = { x: 0, y: 0 };
+    });
+  }
+
+  let cancelled = $state(false);
+  function cancelItem(event: PointerEvent | WheelEvent) {
+    if (cancelled || !cancelDrag()) return cancelled;
+    cancelled = true;
+    item.cancel();
+    onCancel?.({ item, index, event });
+    return cancelled;
+  }
+
+  function onDragEnd(event: PointerEvent) {
+    cancelItem(event);
     window.removeEventListener('pointermove', onDragMove);
     window.removeEventListener('pointerup', onDragEnd);
     window.removeEventListener('pointercancel', onDragEnd);
     window.removeEventListener('pointerleave', onDragEnd);
-    initial = false;
+    resetState();
     onDrag?.({ item, index, event, offset, initial });
-    setTimeout(() => {
-      offset = { x: 0, y: 0 };
-    });
-  };
+  }
 
-  const onDragStart = (event: PointerEvent) => {
+  function onDragStart(event: PointerEvent) {
     if (!draggable) return;
     initial = { x: event.clientX, y: event.clientY };
     event.preventDefault();
@@ -124,19 +138,14 @@
     window.addEventListener('pointercancel', onDragEnd);
     window.addEventListener('pointerleave', onDragEnd);
     onDrag?.({ item, index, event, offset, initial });
-  };
+  }
 
-  const onWheelEnd = debounce(() => {
-    if (cancelDrag()) item.cancel();
-    initial = false;
-    setTimeout(() => {
-      offset = { x: 0, y: 0 };
-    });
-  }, 100);
+  const debounceReset = debounce(resetState, 100);
 
-  const onWheel = (event: SvelteEvent<WheelEvent>) => {
+  function onWheel(event: WheelEvent) {
     if (!swipeable) return;
     event.preventDefault();
+    if (swiped) return;
     const axis = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? 'x' : 'y';
     const off = axis === 'x' ? 'y' : 'x';
     if (['top', 'bottom'].includes(placement) && axis === 'x') return;
@@ -144,25 +153,36 @@
     if (placement?.endsWith('end') && axis === 'x' && (event.deltaX > 0)) return;
     if (placement?.startsWith('top') && axis === 'y' && (event.deltaY < 0)) return;
     if (placement?.startsWith('bottom') && axis === 'y' && (event.deltaY > 0)) return;
-    onWheelEnd.cancel();
+    debounceReset.cancel();
     const delta = axis === 'x' ? event.deltaX : event.deltaY;
     if (!initial) initial = ({ [axis]: delta, [off]: 0 } as Record<'x' | 'y', number>);
     offset[axis] -= delta;
-    onWheelEnd();
-  };
+    onDrag?.({ item, index, event, offset, initial });
+    if (cancelItem(event)) {
+      removeWheel();
+      return resetState();
+    }
+    debounceReset();
+  }
 
-  const onLeave = debounce(() => {
+  function removeWheel() {
     window?.removeEventListener('wheel', onWheel);
     ref?.removeEventListener('pointerleave', onLeave);
-    onWheelEnd();
-  }, 300);
+  }
 
-  const onEnter = () => {
+  const debounceLeave = debounce(removeWheel, 300);
+
+  function onLeave() {
+    if (!cancelled) return debounceLeave();
+    removeWheel();
+  }
+
+  function onEnter() {
     if (!swipeable || !ref) return;
-    onLeave.cancel();
+    debounceLeave.cancel();
     window.addEventListener('wheel', onWheel, { passive: false });
     ref.addEventListener('pointerleave', onLeave);
-  };
+  }
 
   const inParams = $derived({
     y: last && !first ? 0 : `${reverse ? '-' : ''}150%`,

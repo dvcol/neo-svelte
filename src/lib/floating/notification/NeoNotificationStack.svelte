@@ -183,6 +183,11 @@
     });
   }
 
+  let swiped = $state(false);
+  const debounceSwiped = debounce((swipe: boolean) => {
+    swiped = swipe;
+  }, 600);
+
   const context = getNeoNotificationProviderContext();
 
   onMount(() => {
@@ -225,6 +230,7 @@
         {swipeable}
         {placement}
         {threshold}
+        {swiped}
 
         {item}
         {children}
@@ -235,6 +241,13 @@
           setActive(hovered || focused);
           if (!pauseOnHover) return;
           pause(hovered || focused);
+        }}
+
+        onCancel={({ event }) => {
+          if (!(event instanceof WheelEvent)) return;
+          swiped = true;
+          debounceSwiped.cancel();
+          debounceSwiped(false);
         }}
       />
     {/each}
