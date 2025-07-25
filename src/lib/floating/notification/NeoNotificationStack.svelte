@@ -29,7 +29,7 @@
     hovered = $bindable(false),
     focused = $bindable(false),
     expand,
-    delay = 100,
+    delay = 900,
     max = expand ? 6 : 3,
 
     // Item Props
