@@ -39,8 +39,7 @@
     (window as any).stack.push(stack.add({
       title: `Item: ${new Date().toLocaleTimeString()}`,
       subtitle: 'Subtitle: this is a notification item',
-      content: `This is a notification item created at ${new Date().toLocaleTimeString()}.
-      You can customize it with various properties.`,
+      content: `Notification created at ${new Date().toLocaleTimeString()}.\nYou can customize it with various properties.`,
       ...notif,
     }));
   };
@@ -140,34 +139,39 @@
   <div class="row">
     <span class="label">Custom</span>
 
-    <NeoButton elevation="0" onclick={() => pushNotification()}>Default</NeoButton>
     <NeoButton
+      label="Default"
+      elevation="0"
+      onclick={() => pushNotification()}
+    />
+    <NeoButton
+      label="Compact"
       elevation="0" onclick={() => pushNotification({
         title: undefined,
         subtitle: undefined,
         content: `This is a notification item created at ${new Date().toLocaleTimeString()}.`,
       })}
-    >Compact</NeoButton>
+    />
     <NeoButton
+      label="Action"
       elevation="0"
-      onclick={() => pushNotification({ actionProps: {
-        label: 'Action',
-        onclick: () => {
-          return 'dismissed';
+      onclick={() => pushNotification({
+        actionProps: {
+          label: 'Action',
+          onclick: () => {
+            return 'dismissed';
+          },
         },
-      } })}
-    >
-      Action
-    </NeoButton>
+      })}
+    />
     <NeoButton
+      label="Progress"
       elevation="0"
       onclick={() => pushNotification({
         progress: true,
         pauseOnHover: false,
       })}
-    >
-      Progress
-    </NeoButton>
+    />
   </div>
 </section>
 

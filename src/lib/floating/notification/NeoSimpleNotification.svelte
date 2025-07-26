@@ -102,6 +102,7 @@
   aria-live="polite"
   role={item.type === NeoNotificationType.Error ? 'alert' : 'status'}
   data-size={notifSize}
+  style:--neo-notification-height="{height}px"
   {...rest}
 >
   <div class="neo-notification-body" class:neo-after={showAfter}>
@@ -282,9 +283,7 @@
       flex-direction: column;
       align-items: flex-end;
       justify-content: space-around;
-      height: stretch;
-      height: -webkit-fill-available;     /* Chrome/Safari */
-      height: -moz-available;            /* Firefox */
+      min-height: var(--neo-notification-height, 100%);
       transition: margin 0.3s ease;
 
      &.neo-rounded :global(.neo-notification-close-button) {
