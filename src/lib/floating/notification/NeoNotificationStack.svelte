@@ -11,7 +11,7 @@
 
   import { NeoNotificationPlacements } from '~/floating/common/neo-placement.model.js';
   import { getNeoNotificationProviderContext } from '~/floating/notification/neo-notification-provider.model.js';
-  import { NeoNotificationStackDirection, NeoNotificationStatus } from '~/floating/notification/neo-notification.model.js';
+  import { NeoNotificationEvent, NeoNotificationStackDirection, NeoNotificationStatus } from '~/floating/notification/neo-notification.model.js';
   import NeoNotificationItem from '~/floating/notification/NeoNotificationItem.svelte';
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { NeoErrorNotificationMissingId, NeoErrorNotificationNotFound } from '~/utils/error.utils.js';
@@ -19,6 +19,8 @@
   let {
     // Snippets
     children,
+    before,
+    after,
 
     // Stats
     id = $bindable<string>(getUUID()),
@@ -38,6 +40,19 @@
     draggable = true,
     swipeable = true,
     threshold = { x: 3, y: 2 },
+    restartOnTouch,
+    progress,
+    loading,
+    close = true,
+
+    // Style
+    elevation = 1,
+    blur,
+    color,
+    filled,
+    tinted,
+    rounded,
+    borderless,
 
     // Position
     placement = NeoNotificationPlacements.BottomEnd,
@@ -46,6 +61,9 @@
 
     // Other props
     portalProps,
+    containerProps,
+    actionProps,
+    closeProps,
     ...rest
   }: NeoNotificationStackProps = $props();
 
@@ -98,6 +116,7 @@
         response.removed = Date.now();
         response.status = status;
         resolve(response);
+        item.onChange?.(NeoNotificationEvent.Status, item);
         return response;
       },
       update: (update: Omit<NeoNotification, 'id'>): NeoNotificationQueued => {
@@ -106,6 +125,7 @@
         if (!item) throw new NeoErrorNotificationNotFound(response.id);
         if ('id' in update) delete update.id; // Ensure we don't overwrite the id
         Object.assign(item, update);
+        item.onChange?.(NeoNotificationEvent.Update, item);
         if (item.duration) return item.restart();
         return item;
       },
@@ -130,6 +150,7 @@
 
         // Re-add the item to the queue
         if (options.unshift) queue.set(response.id, item);
+        item.onChange?.(NeoNotificationEvent.Restart, item);
         return item;
       },
     };
@@ -178,7 +199,9 @@
     if (!_paused) return resume();
     queue?.forEach((item) => {
       if (!item.timeout) return;
+      if (!(item.pauseOnHover ?? pauseOnHover)) return;
       item.paused = Date.now();
+      item.onChange?.(NeoNotificationEvent.Paused, item);
       clearTimeout(item.timeout);
     });
   }
@@ -233,13 +256,31 @@
         {swiped}
 
         {item}
+        {before}
+        {after}
         {children}
+
+        {restartOnTouch}
+        {progress}
+        {loading}
+        {close}
+
+        {elevation}
+        {blur}
+        {color}
+        {filled}
+        {tinted}
+        {rounded}
+        {borderless}
+
+        {containerProps}
+        {actionProps}
+        {closeProps}
 
         onChange={(state) => {
           hovered = state.hovered;
           focused = state.focused;
           setActive(hovered || focused);
-          if (!pauseOnHover) return;
           pause(hovered || focused);
         }}
 

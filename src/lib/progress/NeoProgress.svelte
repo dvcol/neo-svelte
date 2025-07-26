@@ -11,6 +11,7 @@
 
   import { percent } from '@dvcol/common-utils';
   import { clamp } from '@dvcol/common-utils/common/math';
+  import { onDestroy, onMount } from 'svelte';
 
   import { setProgressContext } from '~/progress/neo-progress-service.svelte.js';
   import { NeoProgressDirection, NeoProgressStatus } from '~/progress/neo-progress.model.js';
@@ -35,6 +36,8 @@
     step = 1,
     tick = 500,
     timeout,
+    autoStart,
+    autoComplete,
 
     // Styles
     low, // threshold for tinting
@@ -159,6 +162,11 @@
     return status;
   }
 
+  function stepUp({ pending = indeterminate } = {}) {
+    if (value < max) value += step;
+    else complete({ pending });
+  }
+
   export function start({ pending = indeterminate, expire = timeout, indeterminate: startIndeterminate, ...seed }: NeoProgressStart = {}): undefined | NeoProgressStatuses {
     clear();
     if (startIndeterminate) {
@@ -166,10 +174,7 @@
     } else {
       change(seed);
       status = NeoProgressStatus.Active;
-      intervalId = setInterval(() => {
-        if (value < max) value += step;
-        else complete({ pending });
-      }, tick);
+      intervalId = setInterval(() => stepUp({ pending }), tick);
     }
     if (expire) timeoutId = setTimeout(() => complete(), expire);
     return status;
@@ -269,6 +274,17 @@
       change,
       complete,
     } satisfies NeoProgressMethods);
+  });
+
+  onMount(() => {
+    if (!autoStart) return;
+    stepUp(typeof autoStart === 'boolean' ? {} : autoStart);
+    start(typeof autoStart === 'boolean' ? {} : autoStart);
+  });
+
+  onDestroy(() => {
+    if (!autoComplete) return;
+    complete(typeof autoComplete === 'boolean' ? {} : autoComplete);
   });
 </script>
 

@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { NeoIconButtonProps } from '~/buttons/neo-icon-button.model.js';
+  import type { NeoCloseButtonProps } from '~/buttons/neo-close-button.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoIconClose from '~/icons/NeoIconClose.svelte';
+  import { getColorVariable } from '~/utils/index.js';
 
   let {
     // Button props
@@ -11,18 +12,36 @@
     hovered = $bindable(false),
     focused = $bindable(false),
 
+    // States
+    hoverColor,
+    size,
+
     // Other Props
     iconProps,
     ...rest
-  }: NeoIconButtonProps = $props();
+  }: NeoCloseButtonProps = $props();
 
+  const iconSize = $derived.by(() => {
+    switch (size) {
+      case 'sm':
+        return 0.6875;
+      case 'lg':
+        return 1;
+      default:
+        return 0.875;
+    }
+  });
 </script>
 
 {#snippet icon()}
-  <NeoIconClose size="0.875rem" {...iconProps} />
+  <NeoIconClose size="{iconSize}rem" {...iconProps} />
 {/snippet}
 
-<div class="neo-close-button">
+<div
+  data-size={size}
+  class="neo-close-button"
+  style:--neo-close-color={getColorVariable(hoverColor)}
+>
   <NeoButton bind:ref bind:checked bind:hovered bind:focused {icon} {...rest} />
 </div>
 
@@ -30,8 +49,14 @@
   .neo-close-button {
     display: contents;
 
-    --neo-btn-text-color-hover: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
+    --neo-btn-text-color-hover: oklch(from var(--neo-close-color) l c h / 75%);
     --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
+
+    &[data-size='sm'] {
+      --neo-btn-padding-empty: var(--neo-btn-close-padding, var(--neo-gap-3xs, 0.3125rem));
+      --neo-btn-padding: var(--neo-btn-close-padding, var(--neo-gap-3xs, 0.3125rem));
+      --neo-btn-margin: var(--neo-btn-close-margin, var(--neo-gap-xxs, 0.5rem));
+    }
 
     > :global(.neo-button) {
       :global(.neo-icon) {

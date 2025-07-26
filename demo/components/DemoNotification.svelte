@@ -1,6 +1,7 @@
 <script lang="ts">
 
   import type { NeoNotificationStackProps } from '~/floating/notification/neo-notification-stack.model';
+  import type { NeoNotification } from '~/floating/notification/neo-notification.model';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -8,7 +9,7 @@
   import NeoNotificationStack from '~/floating/notification/NeoNotificationStack.svelte';
   import NeoNumberStep from '~/inputs/NeoNumberStep.svelte';
   import NeoSelect from '~/inputs/NeoSelect.svelte';
-  import { DefaultShadowElevation, MaxShadowElevation } from '~/utils/shadow.utils';
+  import { MaxShadowElevation } from '~/utils/shadow.utils';
 
   import { colorOptions } from '../utils/color.utils';
   import { positionOptions } from '../utils/placement.utils';
@@ -17,24 +18,31 @@
 
   const container = $state<NeoNotificationStackProps>({
     placement: NeoNotificationPlacements.TopEnd,
-    duration: 0,
+    duration: 5000,
     expand: false,
-  });
-
-  const options = $state({
-    elevation: DefaultShadowElevation,
+    draggable: true,
+    swipeable: true,
+    close: true,
+    loading: false,
+    elevation: 1,
     color: '',
+    filled: false,
+    tinted: false,
+    rounded: false,
+    borderless: false,
   });
-
   let stack = $state<NeoNotificationStack>();
 
-  const pushNotification = () => {
+  const pushNotification = (notif?: NeoNotification) => {
     if (!stack) return;
     (window as any).stack = (window as any).stack || [];
     (window as any).stack.push(stack.add({
-      containerProps: { style: `height: ${5}rem; width: ${20}rem` },
-    }),
-    );
+      title: `Item: ${new Date().toLocaleTimeString()}`,
+      subtitle: 'Subtitle: this is a notification item',
+      content: `This is a notification item created at ${new Date().toLocaleTimeString()}.
+      You can customize it with various properties.`,
+      ...notif,
+    }));
   };
 
 </script>
@@ -46,7 +54,7 @@
     center
     bind:value={container.duration}
     min={0}
-    max={10000}
+    max={60000}
     defaultValue={0}
     step={1000}
     nullable={false}
@@ -69,14 +77,17 @@
     rounded
     glass
   />
+</div>
+
+<div class="row">
   <NeoNumberStep
     label="Elevation"
     placement="left"
     center
-    bind:value={options.elevation}
+    bind:value={container.elevation}
     min={0}
     max={MaxShadowElevation}
-    defaultValue={DefaultShadowElevation}
+    defaultValue={1}
     nullable={false}
     floating={false}
     groupProps={{ style: 'margin-left: 6rem' }}
@@ -89,9 +100,9 @@
     placeholder="Select color"
     placement="left"
     floating={false}
-    color={options.color}
+    color={container.color}
     size={10}
-    bind:value={options.color}
+    bind:value={container.color}
     containerProps={{ style: 'margin-left: 6rem' }}
     options={colorOptions}
     openOnFocus
@@ -103,6 +114,13 @@
 <div class="row">
   <NeoButtonGroup text rounded>
     <NeoButton toggle bind:checked={container.expand}>Expand</NeoButton>
+    <NeoButton toggle bind:checked={container.draggable}>Draggable</NeoButton>
+    <NeoButton toggle bind:checked={container.swipeable}>Swipeable</NeoButton>
+    <NeoButton toggle bind:checked={container.close}>Close</NeoButton>
+    <NeoButton toggle bind:checked={container.loading}>Loading</NeoButton>
+    <NeoButton toggle bind:checked={container.tinted}>Tinted</NeoButton>
+    <NeoButton toggle bind:checked={container.filled}>Filled</NeoButton>
+    <NeoButton toggle bind:checked={container.rounded}>Rounded</NeoButton>
     <NeoButton onclick={stack?.clear}>Clear</NeoButton>
   </NeoButtonGroup>
 </div>
@@ -111,11 +129,45 @@
 
 <section>
   <div class="row">
-    <div class="column">
-      <span class="label">Notification</span>
+    <span class="label">Semantic types</span>
 
-      <NeoButton elevation="0" onclick={pushNotification}>Default</NeoButton>
-    </div>
+    <NeoButton elevation="0" onclick={() => pushNotification({ type: 'info' })}>Info</NeoButton>
+    <NeoButton elevation="0" onclick={() => pushNotification({ type: 'warning' })}>Warning</NeoButton>
+    <NeoButton elevation="0" onclick={() => pushNotification({ type: 'error' })}>Error</NeoButton>
+    <NeoButton elevation="0" onclick={() => pushNotification({ type: 'success' })}>Success</NeoButton>
+  </div>
+
+  <div class="row">
+    <span class="label">Custom</span>
+
+    <NeoButton elevation="0" onclick={() => pushNotification()}>Default</NeoButton>
+    <NeoButton
+      elevation="0" onclick={() => pushNotification({
+        title: undefined,
+        subtitle: undefined,
+        content: `This is a notification item created at ${new Date().toLocaleTimeString()}.`,
+      })}
+    >Compact</NeoButton>
+    <NeoButton
+      elevation="0"
+      onclick={() => pushNotification({ actionProps: {
+        label: 'Action',
+        onclick: () => {
+          return 'dismissed';
+        },
+      } })}
+    >
+      Action
+    </NeoButton>
+    <NeoButton
+      elevation="0"
+      onclick={() => pushNotification({
+        progress: true,
+        pauseOnHover: false,
+      })}
+    >
+      Progress
+    </NeoButton>
   </div>
 </section>
 
@@ -131,10 +183,6 @@
     max-width: 80vw;
     white-space: pre-line;
     word-break: break-all;
-  }
-
-  .column {
-    @include flex.column($center: true, $gap: var(--neo-gap-lg), $flex: 0 1 auto);
   }
 
   .row {

@@ -255,9 +255,9 @@ See examples in the demo (code [here](https://github.com/dvcol/neo-svelte/tree/f
     - [x] fake typos
     - [x] random pauses
 
-- [ ] Alerts
-  - [ ] toast
-  - [ ] rich notification
+- [x] Alerts
+  - [x] toast
+  - [x] rich notification
 - [ ] container
   - [x] transition
   - [ ] split/resizable

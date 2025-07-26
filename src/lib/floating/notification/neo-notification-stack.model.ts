@@ -1,13 +1,16 @@
-import type { Snippet } from 'svelte';
 import type { SvelteMap } from 'svelte/reactivity';
 
 import type { NeoNotificationPlacement } from '~/floating/common/neo-placement.model.js';
 import type { NeoNotification, NeoNotificationQueued, NeoNotificationStackDirections } from '~/floating/notification/neo-notification.model.js';
 import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 
-export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameMap = 'ol'> extends Pick<NeoNotification, 'duration'> {
+export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameMap = 'ol'>
+  extends Pick<NeoNotification, 'duration' | 'restartOnTouch' | 'pauseOnHover' | 'progressProps' | 'actionProps'
+    | 'closeProps' | 'containerProps' | 'close' | 'loading' | 'progress'
+    | 'elevation' | 'blur' | 'color' | 'rounded' | 'tinted' | 'filled' | 'borderless'
+    | 'before' | 'after'> {
   // Snippets
-  children?: Snippet<[NeoNotificationQueued]>;
+  children?: NeoNotification['render'];
 
   /**
    * Unique identifier for the notification stack.
@@ -25,11 +28,6 @@ export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameM
   max?: number;
 
   // Item Props
-  /**
-   * If true, notifications timeout will be paused while the user hovers over the notification.
-   * @default true
-   */
-  pauseOnHover?: boolean;
   /**
    * If true, notifications can be dragged to dismiss them.
    * @default true
@@ -51,6 +49,8 @@ export interface NeoNotificationStackProps<Tag extends keyof HTMLElementTagNameM
    * @default 16
    */
   stagger?: number;
+
+  // Styles
 
   // Placement
   placement?: NeoNotificationPlacement;

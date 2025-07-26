@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model.js';
+  import type { NeoProgressChange, NeoProgressComplete, NeoProgressStart, NeoProgressStatuses } from '~/progress/neo-progress.model.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
 
-  import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
+  import { NeoProgressDirection, NeoProgressStatus } from '~/progress/neo-progress.model.js';
   import NeoProgress from '~/progress/NeoProgress.svelte';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShallowMinMaxElevation, parseBlur } from '~/utils/shadow.utils.js';
@@ -37,7 +38,7 @@
     rounded,
     pressed,
     glass,
-    start,
+    start: startOnEnter,
     track = true,
     immediate = $bindable(false),
 
@@ -108,13 +109,39 @@
     rounded,
     pressed,
     glass,
-    start,
+    start: startOnEnter,
     track,
 
     // Shadow
     elevation,
     blur,
   });
+
+  let instance = $state<NeoProgress>();
+
+  export function change(payload: NeoProgressChange = {}): undefined | NeoProgressStatuses {
+    return instance!.change(payload);
+  }
+
+  export function complete(payload: NeoProgressComplete = {}): undefined | NeoProgressStatuses | Promise<undefined | NeoProgressStatuses> {
+    return instance!.complete(payload);
+  }
+
+  export function cancel(defer = true): undefined | NeoProgressStatuses | Promise<undefined | NeoProgressStatuses> {
+    return instance!.cancel(defer);
+  }
+
+  export function start(payload: NeoProgressStart = {}): undefined | NeoProgressStatuses {
+    return instance!.start(payload);
+  }
+
+  export function stop(): undefined | NeoProgressStatuses {
+    return instance!.stop();
+  }
+
+  export function reset(restart = status === NeoProgressStatus.Active, _start?: NeoProgressStart): undefined | NeoProgressStatuses {
+    return instance!.reset(restart, _start);
+  }
 </script>
 
 {#if typeof before === 'function'}
@@ -129,7 +156,7 @@
   class:neo-progress-bar={true}
   class:neo-borderless={borderless || !track}
   class:neo-flat={!elevation}
-  class:neo-start={start}
+  class:neo-start={startOnEnter}
   class:neo-glass={glass}
   class:neo-inset={elevation < 0}
   class:neo-rounded={rounded}
@@ -148,7 +175,7 @@
   style:--neo-progress-bar-border-radius={computeBorderRadius(rounded)}
   {...containerRest}
 >
-  <NeoProgress bind:ref bind:status bind:value bind:buffer {direction} {width} {height} {track} {immediate} children={progress} {...rest} />
+  <NeoProgress bind:this={instance} bind:ref bind:status bind:value bind:buffer {direction} {width} {height} {track} {immediate} children={progress} {...rest} />
   {#each marks as position, index (index)}
     {#if position !== undefined}
       <span bind:this={refs[index]} class="neo-progress-bar-mark" style:--neo-progress-bar-mark-position="{position}%">

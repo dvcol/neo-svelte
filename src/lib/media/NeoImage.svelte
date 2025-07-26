@@ -4,7 +4,7 @@
   import { onMount } from 'svelte';
 
   import NeoIconImage from '~/icons/NeoIconImage.svelte';
-  import NeoIconWarning from '~/icons/NeoIconWarning.svelte';
+  import NeoIconInfo from '~/icons/NeoIconWarning.svelte';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -98,7 +98,7 @@
 >
   <div class="neo-image-icon">
     {#if error}
-      <NeoIconWarning />
+      <NeoIconInfo />
       {@render children?.()}
     {:else}
       <NeoIconImage delay={0.3} />

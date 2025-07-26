@@ -76,6 +76,14 @@ export interface NeoProgressState {
    * Optional timeout in milliseconds to complete the progress, regardless of value, buffer, tick rate or step size.
    */
   timeout?: number;
+  /**
+   * If true, the progress will start automatically when the component is mounted.
+   */
+  autoStart?: boolean | NeoProgressStart;
+  /**
+   * If true, the progress will complete automatically when the component is unmounted.
+   */
+  autoComplete?: boolean | NeoProgressComplete;
 
   // Styles
   /**

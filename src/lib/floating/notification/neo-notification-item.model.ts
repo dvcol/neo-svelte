@@ -1,8 +1,13 @@
 import type { NeoNotificationStackProps } from '~/floating/notification/neo-notification-stack.model.js';
-import type { NeoNotificationQueued } from '~/floating/notification/neo-notification.model.js';
+import type { NeoNotification, NeoNotificationQueued } from '~/floating/notification/neo-notification.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
-export interface NeoNotificationItemProps<Tag extends keyof HTMLElementTagNameMap = 'li'> extends Omit<HTMLNeoBaseElement, 'children'> {
+export interface NeoNotificationItemProps<Tag extends keyof HTMLElementTagNameMap = 'li'>
+  extends Omit<HTMLNeoBaseElement, 'children' | 'color'>, Pick<NeoNotification, 'restartOnTouch'
+    | 'containerProps' | 'progressProps' | 'actionProps' | 'closeProps'
+    | 'close' | 'loading' | 'progress'
+    | 'elevation' | 'blur' | 'color' | 'rounded' | 'tinted' | 'filled' | 'borderless'
+    | 'before' | 'after'> {
   children?: NeoNotificationStackProps['children'];
 
   ref?: HTMLElement;
@@ -35,5 +40,5 @@ export interface NeoNotificationItemProps<Tag extends keyof HTMLElementTagNameMa
 
   onChange?: (payload: { item: NeoNotificationQueued; index: number; hovered: boolean; focused: boolean; event: PointerEvent | FocusEvent }) => void;
   onDrag?: (payload: { item: NeoNotificationQueued; index: number; event: PointerEvent | WheelEvent; initial: { x: number; y: number } | false; offset: { x: number; y: number } }) => void;
-  onCancel?: (payload: { item: NeoNotificationQueued; index: number; event: PointerEvent | WheelEvent }) => void;
+  onCancel?: (payload: { item: NeoNotificationQueued; index: number; event: PointerEvent | WheelEvent | MouseEvent }) => void;
 }

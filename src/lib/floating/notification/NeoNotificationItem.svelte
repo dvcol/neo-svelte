@@ -5,12 +5,22 @@
   import { flyFrom } from '@dvcol/svelte-utils';
   import { focusin } from '@dvcol/svelte-utils/focusin';
   import { hovering } from '@dvcol/svelte-utils/hovering';
+  import { onDestroy, onMount } from 'svelte';
 
   import { NeoNotificationPlacements } from '~/floating/common/neo-placement.model.js';
+  import { NeoNotificationEvent, NeoNotificationStatus, NeoNotificationType } from '~/floating/notification/neo-notification.model.js';
+  import NeoSimpleNotification from '~/floating/notification/NeoSimpleNotification.svelte';
+  import { computeBorderRadius } from '~/utils/border.utils.js';
+  import { getColorVariable } from '~/utils/colors.utils.js';
+  import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';
 
   let {
+    // Snippets
     children,
+    before,
+    after,
 
+    // State
     ref = $bindable(),
     hovered = $bindable(false),
     focused = $bindable(false),
@@ -23,6 +33,16 @@
     setsize,
     visible = 0,
 
+    // Style
+    elevation: _elevation = 1,
+    blur: _blur,
+    color: _color,
+    filled,
+    tinted,
+    rounded: _rounded,
+    borderless,
+
+    // Behavior
     expand,
     reverse,
     draggable,
@@ -31,13 +51,48 @@
     threshold = { x: 3, y: 2 },
     stagger = 16,
     swiped,
+    restartOnTouch,
+
+    progress,
+    loading,
+    close = true,
+
+    // Events
 
     onChange: onStateChange,
     onDrag,
     onCancel,
 
+    // Other Props
+
+    containerProps: _containerProps,
+    progressProps,
+    actionProps,
+    closeProps,
     ...rest
   }: NeoNotificationItemProps = $props();
+
+  const { tag: containerTag, ...containerProps } = $derived(_containerProps ?? {});
+  const { id, tag: itemTag, ...itemProps } = $derived(item?.containerProps ?? {});
+
+  const elevation = $derived(coerce(item.elevation ?? _elevation!, PositiveMinMaxElevation));
+  const blur = $derived(coerce(item.blur ?? _blur ?? _elevation!, PositiveMinMaxElevation));
+
+  const filter = $derived(computeGlassFilter(blur, true));
+  const shadow = $derived(computeShadowElevation(elevation, { glass: true }, PositiveMinMaxElevation));
+
+  const color = $derived.by(() => {
+    if (item.color) return getColorVariable(item.color);
+    if (_color) return getColorVariable(_color);
+    if (item.type === NeoNotificationType.Info) return getColorVariable('primary');
+    return getColorVariable(item.type);
+  });
+
+  const rounded = $derived.by(() => {
+    const isRounded = item.rounded ?? _rounded;
+    if (isRounded === true) return 'xl';
+    return isRounded;
+  });
 
   const first = $derived(index === visible - 1);
   const last = $derived(index === 0);
@@ -111,10 +166,10 @@
   }
 
   let cancelled = $state(false);
-  function cancelItem(event: PointerEvent | WheelEvent) {
+  function cancelItem(event: PointerEvent | WheelEvent | MouseEvent, status = NeoNotificationStatus.Dismissed) {
     if (cancelled || !cancelDrag()) return cancelled;
     cancelled = true;
-    item.cancel();
+    item.cancel(status);
     onCancel?.({ item, index, event });
     return cancelled;
   }
@@ -232,17 +287,24 @@
     };
   });
 
-// TODO restart on touch
-  // TODO : dimiss on click ?
-  // TODO : dimiss on ESC if focused
+  onMount(() => {
+    item.visible = Date.now();
+    item.onChange?.(NeoNotificationEvent.Visible, item);
+  });
+
+  onDestroy(() => {
+    item.hidden = Date.now();
+    item.onChange?.(NeoNotificationEvent.Hidden, item);
+  });
 </script>
 
 <svelte:element
   {...rest}
-  {...item.containerProps}
+  {...containerProps}
+  {...itemProps}
   bind:this={ref}
-  this={tag}
-  data-id={item.id}
+  this={itemTag ?? containerTag ?? tag}
+  data-id={id}
   data-index={index}
   data-first={first}
   data-last={last}
@@ -252,7 +314,16 @@
   class:neo-notification-stack-item={true}
   class:neo-draggable={draggable}
   class:neo-dragging={transform}
-  style:--neo-notification-z-index={index}
+  class:neo-rounded={rounded}
+  class:neo-tinted={item.tinted ?? tinted}
+  class:neo-filled={item.filled ?? filled}
+  class:neo-flat={!elevation}
+  class:neo-borderless={item.borderless ?? borderless}
+  style:--neo-notification-border-radius={computeBorderRadius(item.rounded ?? rounded)}
+  style:--neo-notification-color={color}
+  style:--neo-notification-box-shadow={shadow}
+  style:--neo-notification-filter={filter}
+  style:--neo-notification-elevation={index}
   style:scale
   style:translate
   style:transform
@@ -277,12 +348,31 @@
   in:flyFrom={inParams}
   out:flyFrom={outParams}
 >
-  {#if children}
+  {#if item.render}
+    {@render item.render?.(item)}
+  {:else if children}
     {@render children?.(item)}
   {:else}
-    <div class="neo-notification">
-      Item: {new Date(item.added).toLocaleTimeString()}
-    </div>
+    <NeoSimpleNotification
+      {before}
+      {after}
+
+      {item}
+      {index}
+
+      {restartOnTouch}
+      {progress}
+      {loading}
+      {close}
+
+      {rounded}
+
+      {progressProps}
+      {actionProps}
+      {closeProps}
+
+      {onCancel}
+    />
   {/if}
 </svelte:element>
 
@@ -291,20 +381,21 @@
 
   .neo-notification-stack-item {
     @include mixin.floating(
-            $padding: false,
-            $color: --neo-notification-color,
-            $background-color: --neo-notification-bg-color,
-            $border-color: --neo-notification-border-color,
-            $border-radius: --neo-notification-border-radius,
-            $border-radius-rounded: --neo-notification-border-radius-rounded,
-            $box-shadow: --neo-notification-box-shadow,
-            $backdrop-filter: --neo-notification-content-filter,
-            $z-index: --neo-z-index-layer-top,
-            $elevation: --neo-notification-z-index,
-            $transition: false,
-            $borderless: true,
-            $tinted: true,
-            $filled: true
+      $padding: false,
+      $color: --neo-notification-color,
+      $background-color: --neo-notification-bg-color,
+      $border-color: --neo-notification-border-color,
+      $border-radius: --neo-notification-border-radius,
+      $border-radius-rounded: --neo-notification-border-radius-rounded,
+      $box-shadow: --neo-notification-box-shadow,
+      $backdrop-filter: --neo-notification-content-filter,
+      $z-index: --neo-notification-z-index,
+      $base-z-index: --neo-z-index-layer-top,
+      $elevation: --neo-notification-elevation,
+      $transition: false,
+      $borderless: true,
+      $tinted: true,
+      $filled: true
     );
 
     position: absolute;
@@ -313,7 +404,16 @@
     flex-direction: column;
     box-sizing: border-box;
     margin: var(--neo-notification-margin, var(--neo-gap-4xs));
-    transition: transform 0.6s ease, translate 0.6s ease, width 0.3s ease, height 0.3s ease, scale 0.3s ease;
+    transition:
+      transform 0.6s ease,
+      translate 0.6s ease,
+      width 0.3s ease,
+      height 0.3s ease,
+      scale 0.3s ease,
+      box-shadow 0.3s ease-out,
+      backdrop-filter 0.3s ease,
+      border-radius 0.3s ease,
+      border-color 0.3s ease;
     pointer-events: auto;
     will-change: transform, opacity, scale, translate, backdrop-filter;
 
@@ -334,8 +434,42 @@
   .neo-notification {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
     height: 100%;
+
+    :global(.neo-notification-close-button) {
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover,
+    &:active,
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      :global(.neo-notification-close-button) {
+        opacity: 1;
+      }
+    }
+
+    &-content {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      width: max-content;
+      min-width: min(10rem, 80vw);
+      max-width: calc(100vw - 2rem);
+      padding: var(--neo-notification-padding, 0.5rem 1rem);
+    }
+
+    &-actions {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+      height: stretch;
+      height: -webkit-fill-available;     /* Chrome/Safari */
+      height: -moz-available;            /* Firefox */
+    }
   }
 </style>

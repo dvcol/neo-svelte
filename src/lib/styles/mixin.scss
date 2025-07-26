@@ -395,6 +395,7 @@
   $backdrop-filter: --neo-floating-backdrop-filter,
   $default-filter: --neo-blur-3,
   $z-index: --neo-floating-z-index,
+  $base-z-index: --neo-z-index-layer-ui,
   $elevation: --neo-floating-elevation,
   $transition: true,
   $borderless: false,
@@ -423,7 +424,7 @@
   }
 
   @if $z-index {
-    z-index: var($z-index, calc(var(--neo-z-index-layer-ui, 1000) + var($elevation, 1)));
+    z-index: var($z-index, calc(var($base-z-index, 1000) + var($elevation, 1)));
   }
 
   @if $padding {
