@@ -42,3 +42,60 @@
   @include animation.spin-in($scale);
   @include animation.spin-out($scale);
 }
+
+@mixin wave-transition($target: root, $waviness: var(--neo-waviness, 1.75)) {
+  --neo-frequency: calc(#{$waviness} * 3.14); // 3.14 is pi
+  --neo-time: 0;
+
+  &::view-transition-old(#{$target}) {
+    animation: none;
+  }
+
+  &::view-transition-new(#{$target}) {
+    animation: 2s ease-in both neo-time-in;
+    clip-path: polygon(
+      0% 0%,
+      0% calc(sin((0 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      4% calc(sin((0.04 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      8% calc(sin((0.08 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      12% calc(sin((0.12 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      16% calc(sin((0.16 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      20% calc(sin((0.2 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      24% calc(sin((0.24 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      28% calc(sin((0.28 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      32% calc(sin((0.32 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      36% calc(sin((0.36 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      40% calc(sin((0.4 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      44% calc(sin((0.44 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      48% calc(sin((0.48 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      52% calc(sin((0.52 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      56% calc(sin((0.56 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      60% calc(sin((0.6 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      64% calc(sin((0.64 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      68% calc(sin((0.68 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      72% calc(sin((0.72 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      76% calc(sin((0.76 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      80% calc(sin((0.8 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      84% calc(sin((0.84 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      88% calc(sin((0.88 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      92% calc(sin((0.92 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      96% calc(sin((0.96 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      100% calc(sin((1 + var(--neo-time)) * var(--neo-frequency) * 0.8) * 6% + 100% * var(--neo-time)),
+      100% 0%
+    );
+  }
+
+  @include animation.time-in;
+}
+
+@mixin circle-transition($target: root) {
+  &::view-transition-old(#{$target}) {
+    animation-delay: 1s;
+  }
+
+  &::view-transition-new(#{$target}) {
+    animation: 1s ease-in-out circle-in;
+  }
+
+  @include animation.circle-in(var(--neo-transition-trigger-x, 50%), var(--neo-transition-trigger-y, 0%));
+}

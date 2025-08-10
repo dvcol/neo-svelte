@@ -22,6 +22,15 @@ export const NeoSource = {
   BottomLeft: 'bottom-left',
 } as const;
 
+export const NeoTransition = {
+  None: 'none',
+  Spin: 'neo-spin',
+  Wave: 'neo-wave',
+  Circle: 'neo-circle',
+} as const;
+
+export type NeoTransitions = (typeof NeoTransition)[keyof typeof NeoTransition];
+
 export type NeoSources = (typeof NeoSource)[keyof typeof NeoSource];
 
 export interface INeoThemeProviderContext {
@@ -48,7 +57,7 @@ export interface INeoThemeProviderContext {
   /**
    * The theme transition to apply when changing theme.
    */
-  readonly transition: string;
+  readonly transition: NeoTransitions;
   /**
    * The target to which scope the theme variables
    */
@@ -107,12 +116,13 @@ export interface NeoThemeProviderProps<Tag extends keyof HTMLElementTagNameMap =
 
 export const NeoThemeRoot = 'neo-theme-root';
 
-export const NeoThemeStorageKey: Record<string, `neo-${keyof INeoThemeProviderContext}`> = {
+export const NeoThemeStorageKey: Record<string, `neo-${keyof INeoThemeProviderContext | 'in-flight'}`> = {
   Reset: 'neo-reset' as const,
   Theme: 'neo-theme' as const,
   Source: 'neo-source' as const,
   Remember: 'neo-remember' as const,
   Transition: 'neo-transition' as const,
+  InFlight: 'neo-in-flight' as const,
 } as const;
 
 export type NeoThemeStorageKeys = (typeof NeoThemeStorageKey)[keyof typeof NeoThemeStorageKey];
@@ -136,5 +146,5 @@ export const getReset = () => getBoolean(getSavedReset(), true);
 export const getSavedRemember = () => localStorage?.getItem(NeoThemeStorageKey.Remember);
 export const getRemember = () => getBoolean(getSavedRemember(), true);
 
-export const getSavedTransition = () => localStorage?.getItem(NeoThemeStorageKey.Transition);
-export const getTransition = () => getSavedTransition() || 'none';
+export const getSavedTransition = () => localStorage?.getItem(NeoThemeStorageKey.Transition) as NeoTransitions | null;
+export const getTransition = () => getSavedTransition() || NeoTransition.None;

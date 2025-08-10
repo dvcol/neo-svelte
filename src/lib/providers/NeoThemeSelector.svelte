@@ -23,7 +23,7 @@
 
   const dark = $derived(context.theme === NeoTheme.Dark);
 
-  const onTheme = () => context.update({ theme: dark ? NeoTheme.Light : NeoTheme.Dark });
+  const onTheme = () => context.update({ theme: dark ? NeoTheme.Light : NeoTheme.Dark }, ref);
 </script>
 
 <NeoButton

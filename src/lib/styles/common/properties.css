@@ -39,3 +39,9 @@
   inherits: false;
   initial-value: 1;
 }
+
+@property --neo-time {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}

@@ -47,6 +47,18 @@
       @include transition.spin-transition;
     }
 
+    &[neo-transition='neo-wave'] {
+      @include transition.wave-transition;
+    }
+
+    &[neo-transition='neo-circle'] {
+      @include transition.circle-transition;
+    }
+
+    &[neo-in-flight='true'] {
+      cursor: not-allowed;
+    }
+
     /* override semantic color if dark mode is enabled */
     &[neo-theme='dark'] {
       @include colors.dark-theme;

@@ -7,6 +7,7 @@
   import NeoResetSelector from '~/providers/NeoResetSelector.svelte';
   import NeoSourceSelector from '~/providers/NeoSourceSelector.svelte';
   import NeoThemeSelector from '~/providers/NeoThemeSelector.svelte';
+  import NeoTransitionSelector from '~/providers/NeoTransitionSelector.svelte';
 
   const {
     // Snippet
@@ -21,8 +22,11 @@
     reset: showReset,
     rememberLabel,
     remember: showRemember,
+    themeTransitionLabel,
+    themeTransition: showTransition,
 
     // Other props
+    themeTransitionProps,
     rememberProps,
     sourceProps,
     themeProps,
@@ -39,6 +43,9 @@
   {/if}
   {#if showTheme}
     <NeoThemeSelector label={themeLabel} {...themeProps} />
+  {/if}
+  {#if showTransition}
+    <NeoTransitionSelector label={themeTransitionLabel} {...themeTransitionProps} />
   {/if}
   {#if showReset}
     <NeoResetSelector label={resetLabel} {...resetProps} />

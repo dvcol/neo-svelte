@@ -6,6 +6,7 @@ import type { NeoResetSelectorProps } from '~/providers/neo-reset-selector.model
 import type { NeoSourceSelectorProps } from '~/providers/neo-source-selector.model.js';
 import type { INeoThemeProviderContext } from '~/providers/neo-theme-provider.model.js';
 import type { NeoThemeSelectorProps } from '~/providers/neo-theme-selector.model.js';
+import type { NeoTransitionSelectorProps } from '~/providers/neo-transition-selector.model.js';
 
 export type NeoThemeSelectorsProps = {
   // Snippet
@@ -56,6 +57,16 @@ export type NeoThemeSelectorsProps = {
    * @default Remember
    */
   rememberLabel?: NeoRememberSelectorProps['label'];
+  /**
+   * Which transition to use when changing the theme.
+   */
+  themeTransition?: boolean;
+  /**
+   * The label to show in the transition selector.
+   *
+   * @default Transition: <transition>
+   */
+  themeTransitionLabel?: NeoTransitionSelectorProps['label'];
 
   // Other Props
 
@@ -75,4 +86,8 @@ export type NeoThemeSelectorsProps = {
    * The props to pass to the remember button.
    */
   rememberProps?: NeoRememberSelectorProps;
+  /**
+   * The props to pass to the transition button.
+   */
+  themeTransitionProps?: NeoTransitionSelectorProps;
 } & Omit<NeoButtonGroupProps, 'children'>;

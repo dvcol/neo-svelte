@@ -146,3 +146,27 @@
     }
   }
 }
+
+@mixin time-in($start: -0.1, $end: 1.1) {
+  @keyframes neo-time-in {
+    0% {
+      --neo-time: #{$start};
+    }
+
+    100% {
+      --neo-time: #{$end};
+    }
+  }
+}
+
+@mixin circle-in($circle-x: 50%, $circle-y: 0%, $size: 120%) {
+  @keyframes circle-in {
+    from {
+      clip-path: circle(0% at #{$circle-x} #{$circle-y});
+    }
+
+    to {
+      clip-path: circle(#{$size} at #{$circle-x} #{$circle-y});
+    }
+  }
+}

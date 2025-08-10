@@ -85,7 +85,7 @@
             </NeoButton>
           </NeoTabs>
 
-          <NeoThemeSelector rounded source reset remember />
+          <NeoThemeSelector rounded source reset remember themeTransition />
           <NeoThemePicker rounded />
         </header>
 

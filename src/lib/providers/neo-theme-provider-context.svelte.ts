@@ -10,17 +10,49 @@ import styles from '~/providers/neo-theme-provider.scss?url';
 
 type NeoThemeProviderRoot = INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root']);
 
-async function transitionViewTheme(context: NeoThemeProviderContextState, theme: INeoThemeProviderContext['theme']) {
-  const { promise, resolve, reject } = Promise.withResolvers<void>();
+function isRootElement(root: INeoThemeProviderContext['root']): root is HTMLElement {
+  return !!root && root instanceof HTMLElement;
+}
 
-  document.startViewTransition(() => {
-    if (!context.root) return reject(new NeoErrorThemeTargetNotFound());
-    if (!('setAttribute' in context.root)) return reject(new NeoErrorThemeInvalidTarget());
-    context.root.setAttribute(NeoThemeStorageKey.Theme, theme);
-    resolve();
+export function computeCircleStart(element?: HTMLElement, { viewportWidth = window.innerWidth, viewportHeight = window.innerHeight } = {}): { x?: number; y?: number } {
+  if (!element) return {};
+  // Get button's position relative to the viewport
+  const rect = element.getBoundingClientRect();
+
+  // Calculate center of the button
+  const buttonCenterX = rect.left + (rect.width / 2);
+  const buttonCenterY = rect.top + (rect.height / 2);
+
+  // Convert to percentages
+  const xPercentage = (buttonCenterX / viewportWidth) * 100;
+  const yPercentage = (buttonCenterY / viewportHeight) * 100;
+
+  return {
+    x: Math.round(xPercentage),
+    y: Math.round(yPercentage),
+  };
+}
+
+async function transitionViewTheme(root: INeoThemeProviderContext['root'], theme: INeoThemeProviderContext['theme'], trigger?: HTMLElement) {
+  if (trigger && isRootElement(root)) {
+    const { x, y } = computeCircleStart(trigger);
+    if (x) root.style.setProperty('--neo-transition-trigger-x', `${x}%`);
+    if (y) root.style.setProperty('--neo-transition-trigger-y', `${y}%`);
+  }
+
+  const transition = document.startViewTransition(() => {
+    if (!root) throw new NeoErrorThemeTargetNotFound();
+    if (!('setAttribute' in root)) throw new NeoErrorThemeInvalidTarget();
+    root.setAttribute(NeoThemeStorageKey.InFlight, 'true');
+    root.setAttribute(NeoThemeStorageKey.Theme, theme);
   });
 
-  return promise;
+  await transition.finished;
+
+  if (!isRootElement(root)) return;
+  root.removeAttribute(NeoThemeStorageKey.InFlight);
+  root.style.removeProperty('--neo-transition-trigger-x');
+  root.style.removeProperty('--neo-transition-trigger-y');
 }
 
 export type NeoThemeProviderContextState = Partial<Omit<INeoThemeProviderContext, 'root'>> & { root?: NeoThemeProviderRoot };
@@ -67,6 +99,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
       theme: this.theme,
       source: this.source,
       remember: this.remember,
+      transition: this.transition,
       root: this.root,
     };
   }
@@ -80,25 +113,28 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.#root = root ?? this.root;
   }
 
-  update(partial: Partial<NeoThemeProviderContextState>) {
+  update(partial: Partial<NeoThemeProviderContextState>, trigger?: HTMLElement) {
     untrack(() => {
       if (partial.reset !== undefined) this.#reset = partial.reset;
       if (partial.theme !== undefined) this.#theme = partial.theme;
       if (partial.source !== undefined) this.#source = partial.source;
       if (partial.remember !== undefined) this.#remember = partial.remember;
+      if (partial.transition !== undefined) this.#transition = partial.transition;
       if (partial.root !== undefined) this.#root = partial.root;
 
-      this.sync();
+      this.sync(trigger);
     });
   }
 
-  private async setTheme(theme: INeoThemeProviderContext['theme']) {
+  private async setTheme(theme: INeoThemeProviderContext['theme'], trigger?: HTMLElement) {
     if (!this.root) throw new NeoErrorThemeTargetNotFound();
     if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
-    if (this.theme === this.root.getAttribute(NeoThemeStorageKey.Theme)) return;
+    if (this.theme === this.root.getAttribute(NeoThemeStorageKey.Theme)) {
+      return this.root.setAttribute(NeoThemeStorageKey.Transition, this.transition);
+    }
 
     if ('startViewTransition' in document && this.root.getAttribute(NeoThemeStorageKey.Transition)?.startsWith('neo')) {
-      return transitionViewTheme(this, theme);
+      return transitionViewTheme(this.root, theme, trigger);
     }
 
     this.root.setAttribute(NeoThemeStorageKey.Transition, 'false');
@@ -132,13 +168,13 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     else target.after(link);
   }
 
-  sync() {
+  sync(trigger?: HTMLElement) {
     if (!this.root) throw new NeoErrorThemeTargetNotFound();
     if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
 
     this.import(this.root);
     this.root.setAttribute(NeoThemeRoot, '');
-    void this.setTheme(this.theme);
+    void this.setTheme(this.theme, trigger);
     this.setSource(this.source);
 
     if (this.reset) this.root.setAttribute(NeoThemeStorageKey.Reset, '');
