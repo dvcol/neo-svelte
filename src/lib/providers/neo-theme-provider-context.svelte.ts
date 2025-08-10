@@ -3,18 +3,33 @@ import type { INeoThemeProviderContext } from '~/providers/neo-theme-provider.mo
 import { wait } from '@dvcol/common-utils/common/promise';
 import { getContext, setContext, untrack } from 'svelte';
 
-import { getRemember, getReset, getSource, getTheme, NeoThemeRoot, NeoThemeStorageKey } from '~/providers/neo-theme-provider.model.js';
+import { getRemember, getReset, getSource, getTheme, getTransition, NeoThemeRoot, NeoThemeStorageKey } from '~/providers/neo-theme-provider.model.js';
 import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorThemeTargetNotFound } from '~/utils/error.utils.js';
 
 import styles from '~/providers/neo-theme-provider.scss?url';
 
 type NeoThemeProviderRoot = INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root']);
+
+async function transitionViewTheme(context: NeoThemeProviderContextState, theme: INeoThemeProviderContext['theme']) {
+  const { promise, resolve, reject } = Promise.withResolvers<void>();
+
+  document.startViewTransition(() => {
+    if (!context.root) return reject(new NeoErrorThemeTargetNotFound());
+    if (!('setAttribute' in context.root)) return reject(new NeoErrorThemeInvalidTarget());
+    context.root.setAttribute(NeoThemeStorageKey.Theme, theme);
+    resolve();
+  });
+
+  return promise;
+}
+
 export type NeoThemeProviderContextState = Partial<Omit<INeoThemeProviderContext, 'root'>> & { root?: NeoThemeProviderRoot };
 export class NeoThemeProviderContext implements INeoThemeProviderContext {
   #reset = $state<INeoThemeProviderContext['reset']>(getReset());
   #theme = $state<INeoThemeProviderContext['theme']>(getTheme());
   #source = $state<INeoThemeProviderContext['source']>(getSource());
   #remember = $state<INeoThemeProviderContext['remember']>(getRemember());
+  #transition = $state<INeoThemeProviderContext['transition']>(getTransition());
   #root = $state<INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root'])>(document?.documentElement);
   #ready = $state<INeoThemeProviderContext['ready']>(false);
 
@@ -32,6 +47,10 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
 
   get remember() {
     return this.#remember;
+  }
+
+  get transition() {
+    return this.#transition;
   }
 
   get root() {
@@ -52,11 +71,12 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     };
   }
 
-  constructor({ reset, theme, source, remember, root }: NeoThemeProviderContextState) {
+  constructor({ reset, theme, source, remember, transition, root }: NeoThemeProviderContextState) {
     this.#reset = reset ?? this.reset;
     this.#theme = theme ?? this.theme;
     this.#source = source ?? this.source;
     this.#remember = remember ?? this.remember;
+    this.#transition = transition ?? this.transition;
     this.#root = root ?? this.root;
   }
 
@@ -77,10 +97,14 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
     if (this.theme === this.root.getAttribute(NeoThemeStorageKey.Theme)) return;
 
+    if ('startViewTransition' in document && this.root.getAttribute(NeoThemeStorageKey.Transition)?.startsWith('neo')) {
+      return transitionViewTheme(this, theme);
+    }
+
     this.root.setAttribute(NeoThemeStorageKey.Transition, 'false');
     this.root.setAttribute(NeoThemeStorageKey.Theme, theme);
     await wait();
-    this.root.removeAttribute(NeoThemeStorageKey.Transition);
+    this.root.setAttribute(NeoThemeStorageKey.Transition, this.transition);
   }
 
   private setSource(source: INeoThemeProviderContext['source']) {
@@ -128,10 +152,12 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
       localStorage.setItem(NeoThemeStorageKey.Reset, Boolean(this.reset).toString());
       localStorage.setItem(NeoThemeStorageKey.Theme, this.theme);
       localStorage.setItem(NeoThemeStorageKey.Source, this.source);
+      localStorage.setItem(NeoThemeStorageKey.Transition, this.transition);
     } else {
       localStorage.removeItem(NeoThemeStorageKey.Reset);
       localStorage.removeItem(NeoThemeStorageKey.Theme);
       localStorage.removeItem(NeoThemeStorageKey.Source);
+      localStorage.removeItem(NeoThemeStorageKey.Transition);
     }
   }
 
@@ -143,6 +169,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.root.removeAttribute(NeoThemeStorageKey.Reset);
     this.root.removeAttribute(NeoThemeStorageKey.Theme);
     this.root.removeAttribute(NeoThemeStorageKey.Source);
+    this.root.removeAttribute(NeoThemeStorageKey.Transition);
     this.#ready = false;
   }
 }

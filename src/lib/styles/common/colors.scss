@@ -7,6 +7,7 @@
   --neo-black: oklch(0% 0 0deg);
   --neo-grey: oklch(from var(--neo-black) calc(l + 0.29) c calc(h + 266));
   --neo-grey-dark: oklch(from var(--neo-grey) calc(l + 0.1) c h);
+  --neo-grey-light: oklch(from var(--neo-grey) calc(l + 0.2) c h);
   --neo-blue: oklch(50% 0.302 264.206deg);
   --neo-blue-dark: oklch(from var(--neo-blue) calc(l + 0.35) c h);
   --neo-purple-light: oklch(from var(--neo-purple) calc(l + 0.35) c h);

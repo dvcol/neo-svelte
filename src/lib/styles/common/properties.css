@@ -27,3 +27,15 @@
   initial-value: transparent;
   inherits: true;
 }
+
+@property --neo-rotation {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --neo-scale {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}

@@ -1,3 +1,4 @@
+// Import common styles
 @use './common/colors' as colors;
 @use './common/easing' as easing;
 @use './common/typography' as typography;
@@ -5,6 +6,9 @@
 @use './common/spacing' as spacing;
 @use './common/utils' as utils;
 @use './common/properties';
+
+// Import transition styles
+@use './transition' as transition;
 
 @mixin theme($root: neo-theme-root) {
   [#{$root}] {
@@ -37,6 +41,10 @@
       *::after {
         transition: none !important;
       }
+    }
+
+    &[neo-transition='neo-spin'] {
+      @include transition.spin-transition;
     }
 
     /* override semantic color if dark mode is enabled */

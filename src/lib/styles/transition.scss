@@ -1,0 +1,44 @@
+@use './animation' as animation;
+
+@mixin spin-transition(
+  $target: root,
+  $scale: var(--neo-spin-transition-target, 0.9),
+  $speed: var(--neo-spin-transition-speed, 2s),
+  $easing: var(
+      --neo-spin-transition-easing,
+      linear(0, 0.324 9.1%, 0.584 18.6%, 0.782 28.6%, 0.858 33.8%, 0.92 39.2%, 0.997 49.5%, 1.021 55.1%, 1.033 61%, 1.035 71.7%, 1)
+    ),
+  $backdrop: var(--neo-spin-transition-backdrop, var(--neo-grey-light, #60605e))
+) {
+  &::view-transition {
+    background: $backdrop;
+  }
+
+  &::view-transition-image-pair(#{$target}) {
+    transform-origin: 50% 50% 100vw;
+    transform-style: preserve-3d;
+    perspective: 2500px;
+    perspective-origin: center;
+    filter: drop-shadow(0 0 6px hsl(165deg 11% 3%)) drop-shadow(0 0 25px hsl(165deg 11% 3% / 50%));
+  }
+
+  &::view-transition-old(#{$target}),
+  &::view-transition-new(#{$target}) {
+    transform: translateZ(-50vw) scale(var(--neo-scale)) rotateY(var(--neo-rotation)) translateZ(50vw);
+    transform-origin: 50% 50% 0;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    animation: $speed $easing;
+  }
+
+  &::view-transition-old(#{$target}) {
+    animation-name: neo-spin-out;
+  }
+
+  &::view-transition-new(#{$target}) {
+    animation-name: neo-spin-in;
+  }
+
+  @include animation.spin-in($scale);
+  @include animation.spin-out($scale);
+}

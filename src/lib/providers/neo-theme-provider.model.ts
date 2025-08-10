@@ -46,6 +46,10 @@ export interface INeoThemeProviderContext {
    */
   readonly remember: boolean;
   /**
+   * The theme transition to apply when changing theme.
+   */
+  readonly transition: string;
+  /**
    * The target to which scope the theme variables
    */
   readonly root?: HTMLElement | ShadowRoot;
@@ -103,7 +107,7 @@ export interface NeoThemeProviderProps<Tag extends keyof HTMLElementTagNameMap =
 
 export const NeoThemeRoot = 'neo-theme-root';
 
-export const NeoThemeStorageKey: Record<string, `neo-${keyof INeoThemeProviderContext | 'transition'}`> = {
+export const NeoThemeStorageKey: Record<string, `neo-${keyof INeoThemeProviderContext}`> = {
   Reset: 'neo-reset' as const,
   Theme: 'neo-theme' as const,
   Source: 'neo-source' as const,
@@ -131,3 +135,6 @@ export const getReset = () => getBoolean(getSavedReset(), true);
 
 export const getSavedRemember = () => localStorage?.getItem(NeoThemeStorageKey.Remember);
 export const getRemember = () => getBoolean(getSavedRemember(), true);
+
+export const getSavedTransition = () => localStorage?.getItem(NeoThemeStorageKey.Transition);
+export const getTransition = () => getSavedTransition() || 'none';

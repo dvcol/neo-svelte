@@ -94,3 +94,55 @@
     }
   }
 }
+
+@mixin spin-in($scale: var(--neo-scale-target, 0.9)) {
+  @keyframes neo-spin-in {
+    0% {
+      --neo-rotation: -90deg;
+
+      animation-timing-function: ease-in-out;
+    }
+
+    20% {
+      --neo-scale: #{$scale};
+      --neo-rotation: -90deg;
+    }
+
+    85% {
+      --neo-scale: #{$scale};
+      --neo-rotation: 0deg;
+
+      animation-timing-function: ease-in-out;
+    }
+
+    100% {
+      --neo-rotation: 0deg;
+    }
+  }
+}
+
+@mixin spin-out($scale: var(--neo-scale-target, 0.9)) {
+  @keyframes neo-spin-out {
+    0% {
+      --neo-rotation: 0deg;
+
+      animation-timing-function: ease-in-out;
+    }
+
+    20% {
+      --neo-scale: #{$scale};
+      --neo-rotation: 0deg;
+    }
+
+    85% {
+      --neo-scale: 0.8;
+      --neo-rotation: 90deg;
+
+      animation-timing-function: ease-in-out;
+    }
+
+    100% {
+      --neo-rotation: 90deg;
+    }
+  }
+}
