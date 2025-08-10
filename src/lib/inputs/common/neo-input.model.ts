@@ -321,6 +321,10 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    * If false, the input will not be registered with the form context.
    */
   register?: NeoInputValidationProps<T>['register'];
+  /**
+   * If true, the cursor will be set to pointer when hovering the input.
+   */
+  clickable?: boolean;
 
   // Styles
 

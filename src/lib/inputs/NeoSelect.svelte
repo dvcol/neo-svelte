@@ -214,6 +214,7 @@
   {nullable}
   {autocomplete}
   {...rest}
+  clickable
   readonly
   inert
   tabindex={-1}

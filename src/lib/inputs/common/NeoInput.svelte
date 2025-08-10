@@ -53,6 +53,7 @@
     focusin = $bindable(false),
     disabled,
     readonly,
+    clickable,
 
     loading,
     clearable,
@@ -373,6 +374,7 @@
     class:neo-flat={!elevation}
     class:neo-hover-flat={hoverFlat}
     class:neo-flat-hover={flatHover}
+    class:neo-pointer={clickable ?? rest.type === 'select'}
     style:flex
     style:width={width?.absolute}
     style:min-width={width?.min}
@@ -586,6 +588,10 @@
         cursor: inherit;
       }
 
+      &.neo-pointer {
+        cursor: var(--neo-input-cursor, pointer);
+      }
+
       &.neo-borderless {
         border-color: transparent !important;
       }
@@ -721,6 +727,7 @@
 
       &.neo-disabled {
         box-shadow: var(--neo-box-shadow-flat) !important;
+        cursor: not-allowed;
         opacity: var(--neo-input-opacity-disabled, var(--neo-opacity-disabled));
 
         &:not(.neo-borderless) {
