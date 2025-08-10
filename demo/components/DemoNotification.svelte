@@ -21,7 +21,7 @@
     duration: 5000,
     expand: false,
     draggable: true,
-    swipeable: true,
+    swipeable: false,
     close: true,
     loading: false,
     elevation: 1,

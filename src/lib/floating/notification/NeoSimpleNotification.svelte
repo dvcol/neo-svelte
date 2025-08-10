@@ -50,6 +50,9 @@
     ...rest
   }: NeoSimpleNotificationProps = $props();
 
+  // Height of the notification body
+  let bodyHeight = $state(0);
+
   const onCloseButton = (event: SvelteEvent<MouseEvent>) => {
     item.cancel(NeoNotificationStatus.Dismissed);
     onCancel?.({ item, index, event });
@@ -102,10 +105,10 @@
   aria-live="polite"
   role={item.type === NeoNotificationType.Error ? 'alert' : 'status'}
   data-size={notifSize}
-  style:--neo-notification-height="{height}px"
+  style:--neo-notification-height="{bodyHeight}px"
   {...rest}
 >
-  <div class="neo-notification-body" class:neo-after={showAfter}>
+  <div bind:offsetHeight={bodyHeight} class="neo-notification-body" class:neo-after={showAfter}>
     {#if showBefore}
       <div class="neo-notification-before" transition:scaleWidth={quickDurationProps}>
         {#if item.loading ?? loading}
@@ -159,7 +162,8 @@
         <NeoCloseButton
           rounded
           text
-          size="sm"
+          size="md"
+          inline={notifSize === 'sm'}
           aria-label="Close notification"
           title="Close"
           transition={{ use: scale, props: quickDurationProps }}
@@ -200,8 +204,6 @@
 
     :global(.neo-notification-close-button) {
       margin-bottom: auto;
-
-      // margin-left: var(--neo-gap-3xs, 0.3125rem);
       opacity: 0.5;
       transition: opacity 0.3s ease;
       transition-duration: 0.6s;
@@ -283,16 +285,28 @@
       flex-direction: column;
       align-items: flex-end;
       justify-content: space-around;
-      min-height: var(--neo-notification-height, 100%);
+      height: 100%;
+      min-height: var(--neo-notification-height, strech);
       transition: margin 0.3s ease;
 
      &.neo-rounded :global(.neo-notification-close-button) {
-          margin-right: var(--neo-gap-4xs, 0.25rem);
+       margin-right: var(--neo-gap-xxs, 0.25rem);
       }
     }
 
     &-progress {
       margin-top: var(--neo-gap-4xs, 0.25rem);
+    }
+
+    &[data-size='sm'] {
+      :global(.neo-notification-close-button) {
+        margin-left: var(--neo-gap-4xs, 0.25rem);
+      }
+
+      &.neo-rounded :global(.neo-notification-close-button) {
+        margin-top: auto;
+        margin-right: var(--neo-gap-5xs, 0.125rem);
+      }
     }
 
     &[data-size='md'] {
@@ -306,10 +320,6 @@
 
       .neo-notification-before {
         margin-inline-end: var(--neo-gap-xs, 0.625rem);
-      }
-
-      .neo-notification-actions.neo-rounded {
-        margin-block: var(--neo-gap-5xs, 0.125rem);
       }
     }
 
@@ -328,10 +338,6 @@
 
       .neo-notification-before {
         margin-inline-end: var(--neo-gap-sm, 0.75rem)
-      }
-
-      .neo-notification-actions.neo-rounded {
-        margin-block: var(--neo-gap-5xs, 0.125rem);
       }
     }
   }

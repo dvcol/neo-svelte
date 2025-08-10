@@ -38,7 +38,7 @@
     duration = 10000,
     pauseOnHover = true,
     draggable = true,
-    swipeable = true,
+    swipeable = false,
     threshold = { x: 3, y: 2 },
     restartOnTouch,
     progress,

@@ -15,6 +15,7 @@
     // States
     hoverColor,
     size,
+    inline,
 
     // Other Props
     iconProps,
@@ -25,6 +26,8 @@
     switch (size) {
       case 'sm':
         return 0.6875;
+      case 'md':
+        return 0.75;
       case 'lg':
         return 1;
       default:
@@ -40,6 +43,7 @@
 <div
   data-size={size}
   class="neo-close-button"
+  class:neo-inline={inline}
   style:--neo-close-color={getColorVariable(hoverColor)}
 >
   <NeoButton bind:ref bind:checked bind:hovered bind:focused {icon} {...rest} />
@@ -52,10 +56,15 @@
     --neo-btn-text-color-hover: oklch(from var(--neo-close-color) l c h / 75%);
     --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
 
+   &.neo-inline :global(.neo-button) {
+      margin-block: auto;
+    }
+
+    &[data-size='md'],
     &[data-size='sm'] {
       --neo-btn-padding-empty: var(--neo-btn-close-padding, var(--neo-gap-3xs, 0.3125rem));
       --neo-btn-padding: var(--neo-btn-close-padding, var(--neo-gap-3xs, 0.3125rem));
-      --neo-btn-margin: var(--neo-btn-close-margin, var(--neo-gap-xxs, 0.5rem));
+      --neo-btn-margin: var(--neo-btn-close-margin, var(--neo-gap-3xs, 0.3125rem));
     }
 
     > :global(.neo-button) {

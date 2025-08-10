@@ -12,4 +12,5 @@ export type NeoCloseButtonSizes = (typeof NeoCloseButtonSize)[keyof typeof NeoCl
 export interface NeoCloseButtonProps extends NeoIconButtonProps {
   hoverColor?: Color | CSSStyleDeclaration['color'];
   size?: NeoCloseButtonSizes;
+  inline?: boolean;
 }

@@ -186,6 +186,7 @@
 
   function onDragStart(event: PointerEvent) {
     if (!draggable) return;
+    if (event.button !== 0) return; // Only left click
     initial = { x: event.clientX, y: event.clientY };
     event.preventDefault();
     window.addEventListener('pointermove', onDragMove);
