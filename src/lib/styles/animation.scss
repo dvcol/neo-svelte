@@ -135,7 +135,7 @@
     }
 
     85% {
-      --neo-scale: 0.8;
+      --neo-scale: #{$scale};
       --neo-rotation: 90deg;
 
       animation-timing-function: ease-in-out;
