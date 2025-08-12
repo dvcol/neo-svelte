@@ -50,9 +50,6 @@
     ...rest
   }: NeoSimpleNotificationProps = $props();
 
-  // Height of the notification body
-  let bodyHeight = $state(0);
-
   const onCloseButton = (event: SvelteEvent<MouseEvent>) => {
     item.cancel(NeoNotificationStatus.Dismissed);
     onCancel?.({ item, index, event });
@@ -105,10 +102,9 @@
   aria-live="polite"
   role={item.type === NeoNotificationType.Error ? 'alert' : 'status'}
   data-size={notifSize}
-  style:--neo-notification-height="{bodyHeight}px"
   {...rest}
 >
-  <div bind:offsetHeight={bodyHeight} class="neo-notification-body" class:neo-after={showAfter}>
+  <div class="neo-notification-body" class:neo-after={showAfter}>
     {#if showBefore}
       <div class="neo-notification-before" transition:scaleWidth={quickDurationProps}>
         {#if item.loading ?? loading}
@@ -196,7 +192,8 @@
 
 <style lang="scss">
   .neo-notification {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
     align-items: center;
     justify-content: space-between;
     width: 100%;
