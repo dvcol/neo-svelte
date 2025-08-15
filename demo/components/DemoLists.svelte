@@ -22,6 +22,7 @@
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListSearch from '~/list/NeoListSearch.svelte';
   import NeoSimpleList from '~/list/NeoSimpleList.svelte';
+  import NeoVirtualList2 from '~/list/NeoVirtualList2.svelte';
   import NeoVirtualList from '~/list/NeoVirtualList.svelte';
   import { Colors } from '~/utils/colors.utils';
   import { quickDurationProps } from '~/utils/transition.utils';
@@ -295,6 +296,15 @@
           <NeoListBaseItem {item} />
         {/snippet}
       </NeoVirtualList>
+    </div>
+
+    <div class="column content">
+      <span class="label">Virtual list 2</span>
+      <NeoVirtualList2 items={virtual} buffer="10">
+        {#snippet children({ item })}
+          <NeoListBaseItem {item} />
+        {/snippet}
+      </NeoVirtualList2>
     </div>
   </div>
 </section>

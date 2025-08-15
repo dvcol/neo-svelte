@@ -1,30 +1,31 @@
+import type { VirtualItem } from '@tanstack/virtual-core';
 import type { NeoListBaseProps } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 
-export interface NeoVirtualItem<T> {
-  id: string | number;
-  index: number;
+export interface NeoVirtualItem<T> extends VirtualItem {
   item: T;
 }
 
 export interface NeoVirtualContext<T> {
   items: Array<T>;
   visible: Array<NeoVirtualItem<T>>;
-  start: number;
-  end: number;
 }
 
-export type NeoVirtualKey<T> = (item: T) => string | number | undefined;
+export type NeoVirtualKey<T> = (item: T, index: number) => string | number;
 
-export const defaultVirtualKey: NeoVirtualKey<unknown> = (item) => {
-  if (typeof item !== 'object' || item === null) return;
-  if ('id' in item) return item?.id as string | number | undefined;
+export const defaultVirtualKey: NeoVirtualKey<unknown> = (item, index) => {
+  if (typeof item !== 'object' || item === null) return index;
+  if ('id' in item) {
+    if (typeof item.id === 'string' || typeof item.id === 'number') return item.id;
+    return JSON.stringify(item.id);
+  }
+  return index;
 };
 
-export interface NeoVirtualListProps<T, Tag extends keyof HTMLElementTagNameMap = 'ul'> extends Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>, HTMLRefProps, HTMLTransitionProps, NeoListBaseProps {
+export interface NeoVirtualListProps<T, Tag extends keyof HTMLElementTagNameMap = 'div'> extends Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>, HTMLRefProps, HTMLTransitionProps, NeoListBaseProps {
   // Snippet
   /**
    * Snippet to render each item in the list.
