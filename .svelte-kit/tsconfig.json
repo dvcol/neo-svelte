@@ -18,6 +18,9 @@
 			],
 			"$lib/*": [
 				"../src/lib/*"
+			],
+			"$app/types": [
+				"./types/index.d.ts"
 			]
 		},
 		"rootDirs": [
