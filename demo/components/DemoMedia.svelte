@@ -33,7 +33,7 @@
   let broken = $state(false);
   const image = $derived.by<NeoImageProps>(() => {
     if (fallback) return { src: brokenLink, fallback: src };
-    if (broken) return { src: brokenLink };
+    if (broken) return { src: brokenLink, alt: 'Broken image' };
     return { src };
   });
 

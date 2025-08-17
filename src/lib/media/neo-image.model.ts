@@ -23,6 +23,13 @@ export interface NeoImageProps extends Omit<HTMLImgAttributes, 'width' | 'height
    */
   skeleton?: boolean;
   /**
+   * Keep alternative text visible when the image is not loaded or errored.
+   * By default, the alt text is only visible to screen readers for accessibility.
+   *
+   * @default false
+   */
+  showAltText?: boolean;
+  /**
    * How long to wait before showing the skeleton if the image is not loaded or errored (in milliseconds).
    *
    * @default 0

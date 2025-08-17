@@ -22,6 +22,7 @@
     loaded = $bindable(false),
     skeleton,
     delay = 0,
+    showAltText,
 
     // Styles
     rounded,
@@ -108,6 +109,7 @@
     bind:this={ref}
     class:neo-image-img={true}
     class:neo-rounded={rounded}
+    class:neo-alt-text={showAltText}
     {src}
     {alt}
     loading="lazy"
@@ -182,8 +184,21 @@
     &.neo-error {
       background-color: var(--neo-image-error-bg, color-mix(in srgb, var(--neo-skeleton-color) 75%, var(--neo-dark-color-error-75)));
 
-      .neo-image-img {
-        visibility: hidden;
+      .neo-image-img:not(.neo-alt-text) {
+        align-content: flex-end;
+        opacity: 0;
+
+        &[alt] {
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+        }
+
+        &:not([alt]) {
+          display: none;
+          width: 0;
+          height: 0;
+        }
       }
 
       .neo-image-icon {
