@@ -172,7 +172,6 @@
       @include mixin.skeleton($content: false);
 
       .neo-image-img {
-        visibility: hidden;
         opacity: 0;
       }
 
@@ -185,19 +184,13 @@
       background-color: var(--neo-image-error-bg, color-mix(in srgb, var(--neo-skeleton-color) 75%, var(--neo-dark-color-error-75)));
 
       .neo-image-img:not(.neo-alt-text) {
-        align-content: flex-end;
         opacity: 0;
 
         &[alt] {
-          width: 1px;
-          height: 1px;
+          align-content: flex-end;
           overflow: hidden;
-        }
-
-        &:not([alt]) {
-          display: none;
-          width: 0;
-          height: 0;
+          white-space: pre-line;
+          overflow-wrap: anywhere;
         }
       }
 
