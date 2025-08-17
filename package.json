@@ -86,6 +86,11 @@
       "import": "./dist/floating/menu/index.js",
       "svelte": "./dist/floating/menu/index.js"
     },
+    "./floating/notification": {
+      "types": "./dist/floating/notification/index.d.ts",
+      "import": "./dist/floating/notification/index.js",
+      "svelte": "./dist/floating/notification/index.js"
+    },
     "./floating/portal": {
       "types": "./dist/floating/portal/index.d.ts",
       "import": "./dist/floating/portal/index.js",
