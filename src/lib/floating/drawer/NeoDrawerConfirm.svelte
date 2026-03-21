@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import type { NeoDialogConfirmProps } from '~/floating/dialog/neo-dialog-confirm.model.js';
   import type { NeoDialogContext } from '~/floating/dialog/neo-dialog.model.js';
+  import type { NeoDrawerConfirmProps } from '~/floating/drawer/neo-drawer.model.js';
 
   import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
   import NeoConfirm from '~/floating/common/NeoConfirm.svelte';
@@ -17,7 +17,6 @@
     // Dialog Props
     ref = $bindable(),
     open = $bindable(false),
-    modal = $bindable(true),
     moved = $bindable({ x: 0, y: 0 }),
     returnValue = $bindable(),
     closedby,
@@ -74,7 +73,7 @@
     dialogProps,
     backdropProps,
     ...rest
-  }: NeoDialogConfirmProps = $props();
+  }: NeoDrawerConfirmProps = $props();
 
   const close = () => {
     if (!ref) return Logger.error('NeoDialogConfirm: ref is not defined');
@@ -111,7 +110,6 @@
 <NeoDrawer
   bind:ref
   bind:open
-  bind:modal
   bind:moved
   bind:outside
   bind:placement

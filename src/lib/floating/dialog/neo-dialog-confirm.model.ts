@@ -3,16 +3,16 @@ import type { MouseEventHandler } from 'svelte/elements';
 import type { NeoConfirmProps } from '~/floating/common/neo-confirm.model.js';
 import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
 
-export type NeoDialogConfirmProps = {
+export type NeoDialogConfirmProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
   // Snippet
   /**
    * Element(s) to render inside the trigger.
    */
-  children?: NeoDialogProps['children'] | string;
+  children?: NeoDialogProps<Tag>['children'] | string;
   /**
    * Element(s) to render inside the header once open.
    */
-  header?: NeoDialogProps['children'] | string;
+  header?: NeoDialogProps<Tag>['children'] | string;
 
   // Events
   /**
@@ -37,9 +37,9 @@ export type NeoDialogConfirmProps = {
   /**
    * Optional props to pass to the dialog.
    */
-  dialogProps?: Omit<NeoDialogProps, 'ref' | 'open' | 'children' | 'header' | 'modal' | 'returnValue'>;
+  dialogProps?: Omit<NeoDialogProps<Tag>, 'ref' | 'open' | 'children' | 'header' | 'modal' | 'returnValue'>;
 } & Pick<
-  NeoDialogProps,
+  NeoDialogProps<Tag>,
   | 'ref'
   | 'open'
   | 'modal'
@@ -69,5 +69,5 @@ export type NeoDialogConfirmProps = {
   | 'transition'
   | 'use'
   | 'backdropProps'
-> &
-Omit<NeoConfirmProps, 'children' | 'header'>;
+>
+& Omit<NeoConfirmProps, 'children' | 'header'>;

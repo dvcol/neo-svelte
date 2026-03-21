@@ -5,7 +5,7 @@ import type { NeoDialogContext, NeoDialogProps } from '~/floating/dialog/neo-dia
 import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
 import type { NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
-export type NeoDialogStepperProps = {
+export type NeoDialogStepperProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> = {
   // Snippet
   /**
    * Element(s) to render inside the stepper.
@@ -26,7 +26,7 @@ export type NeoDialogStepperProps = {
   /**
    * The dialog element reference.
    */
-  dialogRef?: NeoDialogProps['ref'];
+  dialogRef?: NeoDialogProps<Tag>['ref'];
 
   // Events
   /**
@@ -51,9 +51,9 @@ export type NeoDialogStepperProps = {
   /**
    * Optional props to pass to the dialog.
    */
-  dialogProps?: Omit<NeoDialogProps, 'ref' | 'open' | 'children' | 'header' | 'modal' | 'returnValue'>;
+  dialogProps?: Omit<NeoDialogProps<Tag>, 'ref' | 'open' | 'children' | 'header' | 'modal' | 'returnValue'>;
 } & Pick<
-  NeoDialogProps,
+  NeoDialogProps<Tag>,
   | 'ref'
   | 'open'
   | 'modal'
@@ -83,5 +83,5 @@ export type NeoDialogStepperProps = {
   | 'transition'
   | 'use'
   | 'backdropProps'
-> &
-Omit<NeoFloatingStepperProps, 'placement'>;
+>
+& Omit<NeoFloatingStepperProps, 'placement'>;

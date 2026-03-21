@@ -2,8 +2,8 @@
   import type { MouseEventHandler } from 'svelte/elements';
 
   import type { NeoFloatingStepperProps } from '~/floating/common/neo-floating-stepper.model.js';
-  import type { NeoDialogStepperProps } from '~/floating/dialog/neo-dialog-stepper.model.js';
   import type { NeoDialogContext } from '~/floating/dialog/neo-dialog.model.js';
+  import type { NeoDrawerStepperProps } from '~/floating/drawer/neo-drawer.model.js';
   import type { NeoStepperBeforeEvent, NeoStepperContext } from '~/stepper/neo-stepper.model.js';
 
   import { NeoDialogPlacements } from '~/floating/common/neo-placement.model.js';
@@ -18,7 +18,6 @@
     // Dialog Props
     dialogRef = $bindable(),
     open = $bindable(false),
-    modal = $bindable(true),
     moved = $bindable({ x: 0, y: 0 }),
     returnValue = $bindable(),
     closedby,
@@ -81,7 +80,7 @@
     dialogProps,
     backdropProps,
     ...rest
-  }: NeoDialogStepperProps = $props();
+  }: NeoDrawerStepperProps = $props();
 
   const marks = $derived<boolean>(_marks ?? steps?.some(s => s?.markProps) ?? !!rest?.markProps);
 
@@ -149,7 +148,6 @@
 <NeoDrawer
   bind:ref={dialogRef}
   bind:open
-  bind:modal
   bind:moved
   bind:outside
   bind:placement

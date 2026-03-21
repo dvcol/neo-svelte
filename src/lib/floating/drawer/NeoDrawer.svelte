@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
   import type { NeoMovable, NeoMovableLimits, NeoMovableSnap } from '~/floating/dialog/use-movable.svelte.js';
+  import type { NeoDrawerProps } from '~/floating/drawer/neo-drawer.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
 
@@ -11,7 +11,6 @@
     id = `neo-drawer-${getUUID()}`,
     ref = $bindable(),
     open = $bindable(false),
-    modal = $bindable(true),
     moved = $bindable({ x: 0, y: 0 }),
     returnValue = $bindable(),
 
@@ -21,13 +20,13 @@
     movable: _movable,
 
     // Sizing
-    full = modal,
+    full = true,
 
     // Style
     elevation = 1,
 
     ...rest
-  }: NeoDialogProps = $props();
+  }: NeoDrawerProps = $props();
 
   const getLimits = (limits: NeoMovableLimits = {}): NeoMovableLimits => {
     if (!placement) return limits;
@@ -73,12 +72,14 @@
 </script>
 
 <div class:neo-drawer={true}>
-  <NeoDialog bind:ref bind:open bind:modal bind:moved bind:returnValue bind:placement bind:outside {id} {movable} {full} {elevation} {...rest} />
+  <NeoDialog modal bind:ref bind:open bind:moved bind:returnValue bind:placement bind:outside {id} {movable} {full} {elevation} {...rest} />
 </div>
 
 <style lang="scss">
   .neo-drawer {
     display: contents;
+
+    --neo-dialog-margin: none;
 
     :global(> .neo-dialog[data-placement^='top']) {
       border-top-left-radius: 0;

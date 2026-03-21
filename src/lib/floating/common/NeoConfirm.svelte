@@ -160,7 +160,7 @@
         margin-top: 0.75rem;
       }
 
-      &-close {
+      &-close :global(> .neo-confirm-close .neo-confirm-control-close-button) {
         float: right;
         margin-top: -0.75rem;
       }
