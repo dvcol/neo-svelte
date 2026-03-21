@@ -1,4 +1,6 @@
-<script lang="ts">
+<script lang="ts" generics="Id extends TabId, Value = any">
+  import type { TabId } from 'src/lib/index.js';
+
   import type { NeoTabPanelProps } from '~/nav/neo-tab-panel.model.js';
 
   import { emptyTransition } from '@dvcol/svelte-utils/transition';
@@ -29,9 +31,9 @@
 
     // Other props
     ...rest
-  }: NeoTabPanelProps = $props();
+  }: NeoTabPanelProps<Id, Value> = $props();
 
-  const context = getTabContext();
+  const context = getTabContext<Id, Value>();
   const active = $derived(context?.active === tabId);
   const orientation = $derived(context?.state?.vertical ? 'y' : 'x');
 
@@ -53,7 +55,7 @@
     toTransitionProps(outAction ?? transitionAction, animated ? { [orientation]: `${100 * direction}%`, duration: 600 } : undefined),
   );
 
-  const paneId = $derived(tabId ? `neo-tab-panel-${String(tabId)}` : undefined);
+  const paneId = $derived(tabId ? `neo-tab-panel-${String(tabId)}` as Id : undefined);
   $effect.pre(() => {
     untrack(() => {
       if (!tabId || !paneId) return;
@@ -70,7 +72,7 @@
   <svelte:element
     this={tag}
     role="tabpanel"
-    id={paneId}
+    id={paneId?.toString()}
     aria-labelledby={tabId ? `neo-tab-${String(tabId)}` : undefined}
     data-tab-id={tabId ?? (empty ? 'empty' : undefined)}
     bind:this={ref}

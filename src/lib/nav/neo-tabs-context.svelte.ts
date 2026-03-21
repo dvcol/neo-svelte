@@ -8,16 +8,16 @@ import { SvelteMap } from 'svelte/reactivity';
 import { NeoErrorMissingTabId } from '~/utils/error.utils.js';
 import { Logger } from '~/utils/logger.utils.js';
 
-export interface NeoTabContextPosition {
-  id: TabId;
+export interface NeoTabContextPosition<Id extends TabId> {
+  id: Id;
   top: number;
   left: number;
   width: number;
   height: number;
 }
-export interface NeoTabContextPositions {
-  oldTab?: NeoTabContextPosition;
-  newTab?: NeoTabContextPosition;
+export interface NeoTabContextPositions<Id extends TabId> {
+  oldTab?: NeoTabContextPosition<Id>;
+  newTab?: NeoTabContextPosition<Id>;
 }
 
 type NeoTabContextOptions = {
@@ -47,31 +47,31 @@ type NeoTabContextOptions = {
   close?: boolean;
 } & Pick<NeoButtonGroupProps, 'elevation' | 'pressed' | 'convex' | 'borderless' | 'glass' | 'start' | 'vertical'>;
 
-export type NeoTabsContext<T = unknown> = NeoTabContextOptions & {
+export type NeoTabsContext<Id extends TabId, Value = unknown> = NeoTabContextOptions & {
   // States
   /**
    * The active tab ID.
    */
-  active?: TabId;
+  active?: Id;
   /**
    * The active tab value.
    */
-  value?: NeoTabContextValue<T>;
+  value?: NeoTabContextValue<Value>;
 };
 
-interface NeoTabContextCallbacks<T = unknown> {
-  onChange?: OnChange<T>;
-  onClose?: OnClose<T>;
+interface NeoTabContextCallbacks<Id extends TabId, Value = unknown> {
+  onChange?: OnChange<Id, Value>;
+  onClose?: OnClose<Id, Value>;
 }
 
-export class NeoTabContext<T = unknown> {
-  readonly #tabs: Map<TabId, NeoTabContextValue<T>> = new SvelteMap();
-  readonly #panes: Map<TabId, TabId> = new SvelteMap();
-  readonly #onChange?: OnChange<T>;
-  readonly #onClose?: OnClose<T>;
-  #active?: TabId = $state();
-  #previous?: TabId = $state();
-  #position: NeoTabContextPositions = $state({});
+export class NeoTabContext<Id extends TabId, Value = unknown> {
+  readonly #tabs: Map<Id, NeoTabContextValue<Value>> = new SvelteMap();
+  readonly #panes: Map<Id, Id> = new SvelteMap();
+  readonly #onChange?: OnChange<Id, Value>;
+  readonly #onClose?: OnClose<Id, Value>;
+  #active?: Id = $state();
+  #previous?: Id = $state();
+  #position: NeoTabContextPositions<Id> = $state({});
   #options: NeoTabContextOptions = $state({});
 
   get active() {
@@ -90,7 +90,7 @@ export class NeoTabContext<T = unknown> {
     return this.#position;
   }
 
-  get state(): NeoTabsContext {
+  get state(): NeoTabsContext<Id, Value> {
     return {
       ...this.#options,
       active: this.active,
@@ -98,17 +98,17 @@ export class NeoTabContext<T = unknown> {
     };
   }
 
-  constructor({ onChange, onClose }: NeoTabContextCallbacks<T> = {}) {
+  constructor({ onChange, onClose }: NeoTabContextCallbacks<Id, Value> = {}) {
     this.#onChange = onChange;
     this.#onClose = onClose;
   }
 
-  getValue(tabId?: TabId) {
+  getValue(tabId?: Id) {
     if (!tabId) return;
     return this.#tabs.get(tabId);
   }
 
-  getPane(tabId?: TabId) {
+  getPane(tabId?: Id) {
     if (!tabId) return;
     return this.#panes.get(tabId);
   }
@@ -118,7 +118,7 @@ export class NeoTabContext<T = unknown> {
     if (!options.slide) delete this.#position.oldTab;
   }
 
-  #getPosition(tabId?: TabId) {
+  #getPosition(tabId?: Id) {
     if (!tabId) return;
     const _ref = this.getValue(tabId)?.ref;
     const parent = _ref?.parentElement?.getBoundingClientRect();
@@ -134,7 +134,7 @@ export class NeoTabContext<T = unknown> {
   }
 
   onPosition(_ref = this.value?.ref) {
-    const _new: NeoTabContextPositions = {
+    const _new: NeoTabContextPositions<Id> = {
       oldTab: this.#getPosition(this.position?.newTab?.id),
     };
     if (this.active) {
@@ -144,7 +144,7 @@ export class NeoTabContext<T = unknown> {
     return this.position;
   }
 
-  onChange(tabId?: TabId, emit = true) {
+  onChange(tabId?: Id, emit = true) {
     if (tabId === this.#active) {
       if (this.#active && this.state?.toggle) this.onChange();
       return;
@@ -156,11 +156,11 @@ export class NeoTabContext<T = unknown> {
     if (emit) this.#onChange?.(this.active, this.value, current);
   }
 
-  onClose(tabId?: TabId) {
+  onClose(tabId?: Id) {
     this.#onClose?.(tabId, this.value);
   }
 
-  register(tabId: TabId, value: Omit<NeoTabContextValue<T>, 'index'>, force = false) {
+  register(tabId: Id, value: Omit<NeoTabContextValue<Value>, 'index'>, force = false) {
     if (!tabId) throw new NeoErrorMissingTabId();
     if (this.#tabs.has(tabId) && !force) {
       return Logger.warn(`Tab ID '${String(tabId)}' already exists. Tab registration ignored.`, { existing: this.getValue(tabId), ignored: value });
@@ -173,7 +173,7 @@ export class NeoTabContext<T = unknown> {
    * @param tabId - The tab ID to remove.
    * @param discard - If true, the active tab will be discarded.
    */
-  remove(tabId: TabId, discard = true) {
+  remove(tabId: Id, discard = true) {
     this.#tabs.delete(tabId);
     if (!discard) return;
     if (this.#active === tabId) this.onChange();
@@ -185,7 +185,7 @@ export class NeoTabContext<T = unknown> {
     if (this.#active) this.onChange();
   }
 
-  registerPane(tabId: TabId, panelId: TabId) {
+  registerPane(tabId: Id, panelId: Id) {
     if (this.#panes.has(tabId)) {
       return Logger.warn(`Tab ID '${String(tabId)}' already exists. Pane registration ignored.`, {
         existing: this.#panes.get(tabId),
@@ -195,17 +195,17 @@ export class NeoTabContext<T = unknown> {
     this.#panes.set(tabId, panelId);
   }
 
-  removePane(tabId: TabId) {
+  removePane(tabId: Id) {
     this.#panes.delete(tabId);
   }
 }
 
 const NeoTabsContextSymbol = Symbol('NeoTabsContext');
 
-export function getTabContext<T = unknown>(): NeoTabContext<T> | undefined {
-  return getContext<NeoTabContext<T>>(NeoTabsContextSymbol);
+export function getTabContext<Id extends TabId, Value = unknown>(): NeoTabContext<Id, Value> | undefined {
+  return getContext<NeoTabContext<Id, Value>>(NeoTabsContextSymbol);
 }
 
-export function setTabContext<T = unknown>(callback?: NeoTabContextCallbacks<T>) {
-  return setContext(NeoTabsContextSymbol, new NeoTabContext<T>(callback));
+export function setTabContext<Id extends TabId, Value = unknown>(callback?: NeoTabContextCallbacks<Id, Value>) {
+  return setContext(NeoTabsContextSymbol, new NeoTabContext<Id, Value>(callback));
 }

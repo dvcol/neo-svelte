@@ -1,3 +1,4 @@
+import type { TabId } from 'src/lib/index.js';
 import type { Snippet } from 'svelte';
 
 import type { NeoCardProps } from '~/cards/neo-card.model.js';
@@ -14,11 +15,11 @@ export interface NeoTabsCardContext {
   animate?: boolean;
 }
 
-export type NeoTabsCardProps<T = unknown> = {
+export type NeoTabsCardProps<Id extends TabId, Value = unknown> = {
   /**
    * Snippet to display as the card content.
    */
-  children?: Snippet<[NeoTabsContext<T> | undefined]>;
+  children?: Snippet<[NeoTabsContext<Id, Value> | undefined]>;
 
   // Other props
   /**
@@ -26,8 +27,8 @@ export type NeoTabsCardProps<T = unknown> = {
    * @see animate
    */
   containerProps?: NeoTransitionContainerProps;
-} & NeoTabsCardContext &
-Omit<NeoCardProps, 'children'>;
+} & NeoTabsCardContext
+& Omit<NeoCardProps, 'children'>;
 
 export const NeoTabsCardContextSymbol = Symbol('NeoTabsCardContext');
 

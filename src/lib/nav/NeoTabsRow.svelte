@@ -1,5 +1,6 @@
-<script lang="ts">
+<script lang="ts" generics="Id extends TabId, Value = any">
   import type { NeoMenuItem } from '~/floating/menu/neo-menu-list-item.model.js';
+  import type { TabId } from '~/nav/neo-tab.model.js';
   import type { NeoTabContext, NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
   import type { NeoTabRowItem, NeoTabsRowProps } from '~/nav/neo-tabs-row.model.js';
 
@@ -47,14 +48,14 @@
     tabProps,
     collapseProps,
     ...rest
-  }: NeoTabsRowProps = $props();
+  }: NeoTabsRowProps<Id, Value> = $props();
 
-  function tabRowItemToMenuItem(item: NeoTabRowItem, next?: NeoTabRowItem): NeoMenuItem | undefined {
+  function tabRowItemToMenuItem(item: NeoTabRowItem<Id, Value>, next?: NeoTabRowItem<Id, Value>): NeoMenuItem<Value> | undefined {
     if (isTabRowDivider(item)) return undefined;
     return {
       id: item.tabId ?? `neo-tab-${getUUID()}`,
       label: item.label,
-      value: item.value,
+      value: item.value!,
       before: item.icon,
       reverse: item.reverse,
       disabled: item.disabled,
@@ -86,7 +87,7 @@
           });
         },
       },
-    };
+    } satisfies NeoMenuItem<Value>;
   }
 
   const visible = $derived(threshold ? tabs?.slice(0, -threshold) : tabs);
@@ -102,7 +103,7 @@
     return el.scrollWidth > el.clientWidth;
   };
 
-  let instance = $state<{ context: NeoTabContext }>();
+  let instance = $state<{ context: NeoTabContext<Id, Value> }>();
   let menu = $state<HTMLElement>();
 
   watch(
@@ -120,9 +121,9 @@
     () => [instance?.context, hidden],
   );
 
-  const onSelect = (item: NeoMenuItem, ctx: NeoTabContext) => {
+  const onSelect = (item: NeoMenuItem, ctx: NeoTabContext<Id, Value>) => {
     if (item?.id === undefined) return;
-    ctx.onChange(item.id);
+    ctx.onChange(item.id as Id);
   };
 
   const activeMenu = $derived(items.some(t => t.id === active));
@@ -152,7 +153,7 @@
 </script>
 
 <NeoTabs bind:this={instance} bind:ref bind:active bind:value bind:offsetWidth bind:offsetHeight nowrap {vertical} {...rest}>
-  {#snippet children(ctx: NeoTabsContext, context: NeoTabContext)}
+  {#snippet children(ctx: NeoTabsContext<Id, Value>, context: NeoTabContext<Id, Value>)}
 
     {@render innerChildren?.(ctx, { items, threshold, menuProps, collapseProps, iconProps })}
 
@@ -160,10 +161,11 @@
       {#if (isTabRowDivider(_props))}
         <NeoTabDivider vertical={!vertical} {..._props} />
       {:else}
+        {@const { menuProps: _, label: __, icon: ___, ...tabItemProps } = _props}
         <NeoTab
           register="force"
           {...tabProps}
-          {..._props}
+          {...tabItemProps}
           onfocus={(e) => {
             tabProps?.onfocus?.(e);
             _props?.onfocus?.(e);

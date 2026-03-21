@@ -11,7 +11,7 @@ import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { NeoTabsProps } from '~/nav/neo-tabs.model.js';
 import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
-export interface NeoTabRowItemButton<Value = unknown> extends NeoTabProps<Value> {
+export interface NeoTabRowItemButton<Id extends TabId, Value = unknown> extends NeoTabProps<Id, Value> {
   menuProps?: Partial<NeoMenuItem<Value>>;
   label?: string | undefined;
   icon?: Snippet<[unknown]>;
@@ -21,9 +21,9 @@ export interface NeoTabRowItemDivider extends NeoDividerProps {
   divider: true;
 }
 
-export type NeoTabRowItem<Value = unknown> = NeoTabRowItemButton<Value> | NeoTabRowItemDivider;
+export type NeoTabRowItem<Id extends TabId, Value = unknown> = NeoTabRowItemButton<Id, Value> | NeoTabRowItemDivider;
 
-export const isTabRowDivider = <Value = unknown>(item: NeoTabRowItem<Value>): item is NeoButtonRowItemDivider => item && 'divider' in item && item.divider;
+export const isTabRowDivider = <Id extends TabId, Value = unknown>(item: NeoTabRowItem<Id, Value>): item is NeoButtonRowItemDivider => item && 'divider' in item && item.divider;
 
 export interface NeoTabRowContext {
   /**
@@ -48,28 +48,28 @@ export interface NeoTabRowContext {
   collapseProps?: NeoButtonProps;
 }
 
-export type OnTabEvent<Event = SvelteEvent, Value = unknown> = (e: Event, tab: { tabId?: TabId; value?: Value }) => unknown;
+export type OnTabEvent<Id extends TabId, Event = SvelteEvent, Value = unknown> = (e: Event, tab: { tabId?: Id; value?: Value }) => unknown;
 
-export interface NeoTabsRowProps extends Omit<NeoTabRowContext, 'items'>, Omit<NeoTabsProps, 'children'> {
+export interface NeoTabsRowProps<Id extends TabId, Value = unknown> extends Omit<NeoTabRowContext, 'items'>, Omit<NeoTabsProps<Id, Value>, 'children'> {
   // Snippets
   /**
    * Snippet to display inside the tab row.
    */
-  children?: Snippet<[NeoTabsContext, NeoTabRowContext]>;
+  children?: Snippet<[NeoTabsContext<Id, Value>, NeoTabRowContext]>;
   /**
    * Snippet to display when tabs would overflow and are collapsed.
    */
-  collapsed?: Snippet<[NeoTabsContext, NeoTabRowContext]>;
+  collapsed?: Snippet<[NeoTabsContext<Id, Value>, NeoTabRowContext]>;
 
   // States
   /**
    * Reference to the inner HTML element.
    */
-  ref?: NeoTabsProps['ref'];
+  ref?: NeoTabsProps<Id, Value>['ref'];
   /**
    * The tabs to display in the row.
    */
-  tabs: NeoTabRowItem[];
+  tabs: NeoTabRowItem<Id, Value>[];
 
   // Button props
   /**
@@ -85,15 +85,15 @@ export interface NeoTabsRowProps extends Omit<NeoTabRowContext, 'items'>, Omit<N
   /**
    * Event handler for when a tab is hovered over.
    */
-  ontabhover?: OnTabEvent<PointerEvent>;
+  ontabhover?: OnTabEvent<Id, PointerEvent>;
   /**
    * Event handler for when a tab is focused.
    */
-  ontabfocus?: OnTabEvent<FocusEvent>;
+  ontabfocus?: OnTabEvent<Id, FocusEvent>;
 
   // Other props
   /**
    * Optional properties to pass to the tab components.
    */
-  tabProps?: NeoTabProps;
+  tabProps?: NeoTabProps<Id, Value>;
 }

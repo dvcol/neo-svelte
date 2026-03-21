@@ -1,4 +1,6 @@
-<script lang="ts">
+<script lang="ts" generics="Id extends TabId, Value = any">
+  import type { TabId } from 'src/lib/index.js';
+
   import type { NeoTabProps } from '~/nav/neo-tab.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
@@ -19,7 +21,7 @@
     // States
     ref = $bindable(),
     tag = 'div',
-    tabId = `neo-tab-${getUUID()}`,
+    tabId = `neo-tab-${getUUID()}` as Id,
     value,
     register = true,
 
@@ -33,9 +35,9 @@
     // Other props
     tabProps,
     ...rest
-  }: NeoTabProps = $props();
+  }: NeoTabProps<Id, Value> = $props();
 
-  const context = getTabContext();
+  const context = getTabContext<Id, Value>();
   const pane = $derived(context?.getPane(tabId)?.toString());
   const active = $derived(context?.active === tabId);
   const disabled = $derived(rest.disabled || (rest.disabled !== false && context?.state?.disabled));
@@ -46,7 +48,7 @@
   });
   const slide = $derived(context?.state?.slide);
 
-  const onClick: NeoTabProps['onclick'] = (e) => {
+  const onClick: NeoTabProps<Id, Value>['onclick'] = (e) => {
     context?.onChange(tabId);
     onclick?.(e);
   };

@@ -1,4 +1,6 @@
-<script lang="ts">
+<script lang="ts" generics="Id extends TabId, Value = any">
+  import type { TabId } from 'src/lib/index.js';
+
   import type { NeoTabsCardProps } from '~/nav/neo-tabs-card.model.js';
 
   import NeoCard from '~/cards/NeoCard.svelte';
@@ -19,9 +21,9 @@
     // Other props
     containerProps,
     ...rest
-  }: NeoTabsCardProps = $props();
+  }: NeoTabsCardProps<Id, Value> = $props();
 
-  const context = getTabContext();
+  const context = getTabContext<Id, Value>();
   const borderless = $derived(context?.state?.borderless);
   const elevation = $derived(context?.state?.elevation);
   const pressed = $derived(context?.state?.pressed);

@@ -1,6 +1,6 @@
-<script lang="ts">
+<script lang="ts" generics="Id extends TabId, Value = any">
   import type { NeoTabContextPositions } from '~/nav/neo-tabs-context.svelte.js';
-  import type { NeoTabsProps, OnChange } from '~/nav/neo-tabs.model.js';
+  import type { NeoTabsProps, OnChange, TabId } from '~/nav/neo-tabs.model.js';
 
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { height, width } from '@dvcol/svelte-utils/transition';
@@ -53,7 +53,7 @@
     // Other props
     containerProps,
     ...rest
-  }: NeoTabsProps = $props();
+  }: NeoTabsProps<Id, Value> = $props();
 
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
@@ -61,17 +61,17 @@
   const slideElevation = $derived(coerce(_slideElevation ?? getDefaultSlideElevation(elevation)));
 
   // reflect context active to component
-  const onChange: OnChange = (_tabId, _new, _old) => {
+  const onChange: OnChange<Id, Value> = (_tabId, _new, _old) => {
     active = _tabId;
     value = _new;
     onchange?.(_tabId, _new, _old);
   };
 
-  export const context = setTabContext({ onChange, onClose: onclose });
+  export const context = setTabContext<Id, Value>({ onChange, onClose: onclose });
   const transition = $derived(rest.vertical ? height : width);
 
   // Function to compute the transform
-  function transform({ oldTab, newTab }: NeoTabContextPositions) {
+  function transform({ oldTab, newTab }: NeoTabContextPositions<Id>) {
     if (!newTab) return;
     if (!oldTab) return;
 

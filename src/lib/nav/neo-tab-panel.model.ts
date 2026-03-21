@@ -5,20 +5,20 @@ import type { NeoTabsContext } from '~/nav/neo-tabs-context.svelte.js';
 import type { HTMLTransitionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
-export type NeoTabPanelProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
+export type NeoTabPanelProps<Id extends TabId, Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
 
   /**
    * Snippet to display as the tab content.
    */
-  children?: Snippet<[NeoTabsContext<Value> | undefined]>;
+  children?: Snippet<[NeoTabsContext<Id, Value> | undefined]>;
 
   // States
 
   /**
    * The tab id to associate with this panel.
    */
-  tabId?: TabId;
+  tabId?: Id;
   /**
    * If `true`, the pane will appear when no other tabs are active.
    */
@@ -38,6 +38,6 @@ export type NeoTabPanelProps<Value = unknown, Tag extends keyof HTMLElementTagNa
    * @default false
    */
   animate?: boolean;
-} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-HTMLRefProps &
-HTMLTransitionProps;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
+& HTMLRefProps
+& HTMLTransitionProps;

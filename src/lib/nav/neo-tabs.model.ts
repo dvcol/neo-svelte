@@ -7,27 +7,29 @@ import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps, HTMLTagProps } from '~/utils/html-element.utils.js';
 import type { ShadowElevation, ShadowElevationString } from '~/utils/shadow.utils.js';
 
+export type { TabId } from '~/nav/neo-tab.model.js';
+
 export interface NeoTabContextValue<Value = unknown> {
   index: number;
   value?: Value;
   ref?: HTMLElement;
 }
-export type OnChange<Value = unknown> = (tabId?: TabId, newValue?: NeoTabContextValue<Value>, oldValue?: NeoTabContextValue) => unknown;
-export type OnClose<Value = unknown> = (tabId?: TabId, value?: NeoTabContextValue<Value>) => unknown;
+export type OnChange<Id extends TabId, Value = unknown> = (tabId?: Id, newValue?: NeoTabContextValue<Value>, oldValue?: NeoTabContextValue<Value>) => unknown;
+export type OnClose<Id extends TabId, Value = unknown> = (tabId?: Id, value?: NeoTabContextValue<Value>) => unknown;
 
 export type NeoTabsSlideElevation = ShadowElevation | ShadowElevationString;
 export type NeoTabsContainerProps = HTMLNeoBaseElement & HTMLActionProps;
-export type NeoTabsProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
+export type NeoTabsProps<Id extends TabId, Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
 
   /**
    * Snippet to display as the tabs content.
    */
-  children?: Snippet<[NeoTabsContext<Value>, NeoTabContext<Value>]>;
+  children?: Snippet<[NeoTabsContext<Id, Value>, NeoTabContext<Id, Value>]>;
   /**
    * Optional snippet to expose context to other components.
    */
-  panes?: Snippet<[NeoTabsContext<Value>, NeoTabContext<Value>]>;
+  panes?: Snippet<[NeoTabsContext<Id, Value>, NeoTabContext<Id, Value>]>;
 
   // States
 
@@ -77,21 +79,21 @@ export type NeoTabsProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Event handler that fires when the active tab changes.
    */
-  onchange?: OnChange<Value>;
+  onchange?: OnChange<Id, Value>;
   /**
    * Event handler that fires when any close button is clicked.
    */
-  onclose?: OnClose<Value>;
+  onclose?: OnClose<Id, Value>;
   /**
    * Event handler that fires when the add button is clicked.
    */
-  onadd?: NeoTabProps['onclick'];
+  onadd?: NeoTabProps<Id, Value>['onclick'];
 
   // Other props
   /**
    * Optional props to pass to the tabs container.
    */
   containerProps?: NeoTabsContainerProps & HTMLTagProps;
-} & NeoTabsContext &
-Omit<NeoButtonGroupProps<Tag>, 'onchange' | 'children' | 'vertical' | 'ref'> &
-HTMLRefProps;
+} & NeoTabsContext<Id, Value>
+& Omit<NeoButtonGroupProps<Tag>, 'onchange' | 'children' | 'vertical' | 'ref'>
+& HTMLRefProps;

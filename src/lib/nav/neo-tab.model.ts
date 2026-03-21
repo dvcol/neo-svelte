@@ -6,13 +6,13 @@ import type { HTMLUseProps } from '~/utils/action.utils.js';
 import type { HTMLNeoBaseElement, HTMLRefProps } from '~/utils/html-element.utils.js';
 
 export type TabId = string | number | symbol;
-export type NeoTabProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
+export type NeoTabProps<Id extends TabId, Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
   // Snippets
 
   /**
    * Snippet to display as the tab content.
    */
-  children?: Snippet<[{ active: boolean; tabId: TabId; value?: unknown }]>;
+  children?: Snippet<[{ active: boolean; tabId: Id; value?: unknown }]>;
 
   // States
 
@@ -25,7 +25,7 @@ export type NeoTabProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    * A unique identifier for the tab.
    * If none is provided, the tab will be assigned a random id.
    */
-  tabId?: TabId;
+  tabId?: Id;
   /**
    * Optional value to associate with the tab.
    */
@@ -54,7 +54,7 @@ export type NeoTabProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap
   /**
    * Event handler that fires when the close button is clicked.
    */
-  onclose?: OnChange<Value>;
+  onclose?: OnChange<Id, Value>;
 
   // Other props
 
@@ -62,5 +62,5 @@ export type NeoTabProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap
    * Optional props to pass to the tab container.
    */
   tabProps?: HTMLNeoBaseElement & HTMLUseProps;
-} & Omit<NeoButtonProps, 'value' | 'children' | 'ref' | 'tag'> &
-HTMLRefProps;
+} & Omit<NeoButtonProps, 'value' | 'children' | 'ref' | 'tag'>
+& HTMLRefProps;
