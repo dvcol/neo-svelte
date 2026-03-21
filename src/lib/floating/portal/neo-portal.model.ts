@@ -1,16 +1,14 @@
 import type { mount, Snippet } from 'svelte';
 
-export type NeoPortalChildren<Props extends Record<string, any>, Exports extends Record<string, any>> = Parameters<typeof mount<Props, Exports>>[0];
-export type NeoPortalMountOptions<Props extends Record<string, any>, Exports extends Record<string, any>> = Parameters<
-  typeof mount<Props, Exports>
->[1];
+export type NeoPortalMountOptions = Pick<Parameters<typeof mount>[1], 'target' | 'anchor' | 'context' | 'intro'>;
 
 export interface NeoPortalUnmountOptions {
   outro?: boolean;
 }
 
-export type NeoPortalProps<Props extends Record<string, any> = Record<string, any>, Exports extends Record<string, any> = Record<string, any>> = {
+export type NeoPortalProps = {
   enabled?: boolean;
-  children: NeoPortalChildren<Props, Exports> | Snippet<[NeoPortalMountOptions<Props, Exports>['props']]>;
-} & Partial<NeoPortalMountOptions<Props, Exports>> &
-NeoPortalUnmountOptions;
+  children?: Snippet;
+}
+& Partial<NeoPortalMountOptions>
+& NeoPortalUnmountOptions;
