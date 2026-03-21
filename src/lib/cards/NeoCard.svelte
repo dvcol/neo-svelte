@@ -302,6 +302,18 @@
       backdrop-filter 0.3s ease,
       box-shadow 0.3s ease-out;
 
+    .neo-card-close {
+      display: flex;
+      flex: 0 0 auto;
+      align-self: flex-start;
+      justify-content: flex-end;
+      margin-left: auto;
+      opacity: 0;
+      transition: opacity 0.3s ease-out 0.15s;
+
+      --neo-btn-margin: 0.25rem;
+    }
+
     &-content {
       flex: 1 1 auto;
       overflow: auto;
@@ -407,18 +419,6 @@
     .neo-card-header {
       display: flex;
       align-items: center;
-    }
-
-    .neo-card-close {
-      display: flex;
-      flex: 0 0 auto;
-      align-self: flex-start;
-      justify-content: flex-end;
-      margin-left: auto;
-      opacity: 0;
-      transition: opacity 0.3s ease-out 0.15s;
-
-      --neo-btn-margin: 0.25rem;
     }
 
     &:focus-within,

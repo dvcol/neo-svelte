@@ -626,16 +626,6 @@
       touch-action: none;
       aspect-ratio: 1 / 1;
 
-      &:focus-visible,
-      &:active {
-        cursor: grabbing;
-        scale: 0.85;
-      }
-
-      &:focus-visible {
-        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-      }
-
       &-before,
       &-after {
         display: inline-flex;
@@ -648,19 +638,10 @@
       &-before {
         width: calc(var(--neo-range-min-width) - var(--neo-range-spacing) + var(--neo-range-progress, 0%));
 
-        &:not(.neo-range) {
-          margin-right: 0;
-          margin-left: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
-        }
-
         &.neo-range {
           width: calc(var(--neo-range-min-width) - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%));
           min-width: calc((var(--neo-range-spacing) / 2 + var(--neo-range-min-width)));
           margin-inline: calc((var(--neo-range-spacing) - var(--neo-range-min-width)) / 2);
-        }
-
-        &:not(.neo-array) {
-          background-color: var(--neo-range-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
         }
       }
 
@@ -671,6 +652,25 @@
         background-color: var(--neo-range-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
         border-top-left-radius: 0 !important;
         border-bottom-left-radius: 0 !important;
+      }
+
+      &:focus-visible,
+      &:active {
+        cursor: grabbing;
+        scale: 0.85;
+      }
+
+      &:focus-visible {
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+      }
+
+      &-before:not(.neo-range) {
+        margin-right: 0;
+        margin-left: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
+      }
+
+      &-before:not(.neo-array) {
+        background-color: var(--neo-range-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
       }
     }
 
