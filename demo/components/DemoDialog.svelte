@@ -2,6 +2,7 @@
   import type { NeoDialogConfirmProps } from '~/floating/dialog/neo-dialog-confirm.model.js';
   import type { NeoDialogStepperProps } from '~/floating/dialog/neo-dialog-stepper.model.js';
   import type { NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
+  import type { NeoDrawerProps } from '~/floating/drawer/neo-drawer.model';
   import type { NeoStepperStep } from '~/stepper/neo-stepper.model.js';
 
   import { wait } from '@dvcol/common-utils/common/promise';
@@ -66,7 +67,7 @@
     oncancel: () => console.info('Dialog cancelled'),
   });
 
-  const drawerOptions = $state<NeoDialogProps>({
+  const drawerOptions = $state<NeoDrawerProps>({
     ...options,
     placement: NeoDialogPlacements.Right,
     moved: { x: 0, y: 0 },
@@ -122,7 +123,7 @@
 
   const confirmOptions: NeoDialogConfirmProps = {
     dialog: lorem,
-    header: 'Confirm dialog',
+    // header: 'Confirm dialog',
     onClose: () => console.info('Confirm dialog button closed'),
     onConfirm: async () => {
       console.info('Confirm dialog button confirming...');
@@ -203,7 +204,9 @@
   <div class="row">
     <div class="row">
       <NeoButtonGroup text rounded>
-        <NeoButton toggle bind:checked={opts.modal}>Modal</NeoButton>
+        {#if !drawer}
+          <NeoButton toggle bind:checked={opts.modal}>Modal</NeoButton>
+        {/if}
         <NeoButton toggle bind:checked={opts.disableBodyScroll}>Body Scroll</NeoButton>
         <NeoButton toggle bind:checked={opts.closeOnClickOutside}>Closable</NeoButton>
         <NeoButton toggle bind:checked={opts.backdrop}>Backdrop</NeoButton>
@@ -445,7 +448,6 @@
       <NeoDrawer
         bind:dialogRef={refs[3]}
         bind:open={openDrawer}
-        bind:modal={drawerOptions.modal}
         bind:moved={drawerOptions.moved}
         bind:placement={drawerOptions.placement}
         bind:returnValue={drawerOptions.returnValue}
@@ -466,7 +468,6 @@
       <NeoDrawerConfirm
         bind:ref={refs[4]}
         bind:open={openDrawerConfirm}
-        bind:modal={drawerOptions.modal}
         bind:moved={drawerOptions.moved}
         bind:placement={drawerOptions.placement}
         bind:returnValue={drawerOptions.returnValue}
@@ -492,7 +493,6 @@
         bind:dialogRef={refs[5]}
         bind:active
         bind:open={openDrawerStepper}
-        bind:modal={drawerOptions.modal}
         bind:moved={drawerOptions.moved}
         bind:placement={drawerOptions.placement}
         bind:returnValue={drawerOptions.returnValue}

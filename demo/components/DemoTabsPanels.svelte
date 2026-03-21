@@ -81,7 +81,7 @@
 {/snippet}
 
 {#snippet content(word)}
-  <p>{Array.from({ length: 50 }, () => word).join(' ')}</p>
+  <p>{Array.from({ length: 50 }).fill(word).join(' ')}</p>
 {/snippet}
 
 {#snippet panes()}
