@@ -2,7 +2,7 @@ import type { Component, Snippet } from 'svelte';
 
 import type { NeoSuspenseProps } from '~/loading/neo-suspense.model.js';
 
-export type NeoLazyProps<Props extends Record<string, any> = object, Exports extends Record<string, any> = object, Bindings extends keyof Props | '' = string> = {
+export type NeoLazyProps<Props extends Record<string, any> = any, Exports extends Record<string, any> = any, Bindings extends keyof Props | '' = string> = {
   /**
    * The component to lazy load.
    */
@@ -10,7 +10,7 @@ export type NeoLazyProps<Props extends Record<string, any> = object, Exports ext
   /**
    * Optional props to pass to the component.
    */
-  props?: Record<string, any>;
+  props?: Props;
   /**
    * Children to render once the component is loaded.
    */
