@@ -22,14 +22,22 @@ on:
         required: false
         type: string
 
+# Permission to generate an OIDC token
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish-npm:
     name: ☁️ Publish
     runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@dvcol/neo-svelte
 
     steps:
       - name: ⛙ Checkout branch ${{ github.ref }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.commit-hash || 'main' }}
           fetch-depth: 0
@@ -38,13 +46,14 @@ jobs:
         uses: ./.github/actions/install
 
       - name: ☁️ Publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           # =================  ☁️ Publish =================
           # Check status
           git status
           git diff --color -U0 | cat
 
+          # Ensure npm 11.5.1 or later for trusted publishing
+          npm install -g npm@latest
+
           # Publish
-          pnpm publish
+          pnpm publish --provenance

@@ -9,7 +9,7 @@
   "homepage": "https://github.com/dvcol/neo-svelte",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dvcol/neo-svelte.git"
+    "url": "git+https://github.com/dvcol/neo-svelte.git"
   },
   "bugs": "https://github.com/dvcol/neo-svelte/issues",
   "keywords": [
