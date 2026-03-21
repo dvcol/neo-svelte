@@ -178,5 +178,5 @@ export type NeoMenuListItemProps<Value = unknown, Tag extends keyof HTMLElementT
    * Optional props to pass to the button.
    */
   buttonProps?: NeoButtonProps;
-} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'parent' | 'array' | 'index' | 'sectionIndex' | 'level' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'> &
-Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
+} & Pick<NeoMenuContext<Value, Tag>, 'item' | 'parent' | 'array' | 'index' | 'sectionIndex' | 'level' | 'parent' | 'open' | 'keepOpenOnSelect' | 'onMenu' | 'onSelect'>
+& Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

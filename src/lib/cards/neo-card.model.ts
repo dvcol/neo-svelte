@@ -199,8 +199,8 @@ export type NeoCardProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    * Props for the close button.
    */
   closeProps?: NeoIconButtonProps;
-} & NeoCardContext &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-HTMLFlexProps &
-HTMLActionProps &
-HTMLRefProps;
+} & NeoCardContext
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
+& HTMLFlexProps
+& HTMLActionProps
+& HTMLRefProps;

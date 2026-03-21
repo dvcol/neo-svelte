@@ -54,5 +54,5 @@ export type NeoTransitionContainerProps<Tag extends keyof HTMLElementTagNameMap 
    * Flow from right to left by default.
    */
   reverse?: boolean;
-} & HTMLTransitionProps &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+} & HTMLTransitionProps
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

@@ -250,7 +250,7 @@
     if (!marksRefs?.length || marksRefs.length < (marks?.length ?? 0)) return;
     return {
       start: toPixel((marksRefs[0]?.offsetWidth ?? 0) / 2),
-      end: toPixel((marksRefs[marksRefs.length - 1]?.offsetWidth ?? 0) / 2),
+      end: toPixel((marksRefs.at(-1)?.offsetWidth ?? 0) / 2),
     };
   });
 

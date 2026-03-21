@@ -114,9 +114,9 @@ export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'
    * Props to pass to the collapse container.
    */
   containerProps?: HTMLNeoBaseElement & HTMLTagProps;
-} & Partial<Omit<NeoCollapseContext, 'trigger' | 'triggerId'>> &
-HTMLRefProps &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+} & Partial<Omit<NeoCollapseContext, 'trigger' | 'triggerId'>>
+& HTMLRefProps
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
 export type NeoCollapseHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'section'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> & {
   /**

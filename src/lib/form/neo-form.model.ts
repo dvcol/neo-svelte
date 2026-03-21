@@ -44,7 +44,7 @@ export type NeoFormProps = {
    * Hide the fieldset border.
    */
   borderless?: NeoFieldsetProps['borderless'];
-} & HTMLNeoBaseElement<HTMLFormElement> &
-HTMLRefProps<HTMLFormElement>;
+} & HTMLNeoBaseElement<HTMLFormElement>
+& HTMLRefProps<HTMLFormElement>;
 
 export type NeoFormHTMLElement = HTMLFormElement & Pick<NeoFormProps, 'context'> & Pick<NeoFormContext, 'validate'>;

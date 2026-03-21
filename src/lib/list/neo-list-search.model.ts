@@ -42,12 +42,12 @@ export type NeoListSearchProps<Tag extends keyof HTMLElementTagNameMap = 'div'> 
    * Optional props to pass to the input.
    */
   inputProps?: NeoInputProps;
-} & HTMLRefProps<HTMLInputElement> &
-Pick<
+} & HTMLRefProps<HTMLInputElement>
+& Pick<
   NeoInputProps,
     'value' | 'valid' | 'dirty' | 'touched' | 'hovered' | 'focused' | 'focusin' | 'loading' | 'elevation' | 'hover' | 'blur' | 'pressed' | 'placeholder' | 'rounded' | 'borderless' | 'glass' | 'tinted' | 'color' | 'disabled' | 'skeleton' | 'readonly'
-> &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+>
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 
 function itemMatch(item: NeoListItem, search: string) {
   return item.label?.toLowerCase().includes(search) || item.description?.toLowerCase().includes(search);

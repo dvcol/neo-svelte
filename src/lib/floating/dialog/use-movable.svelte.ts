@@ -251,6 +251,8 @@ export const defaultMovable: NeoMovable = {
   handle: defaultHandle,
 };
 
+const translateRegex = /translate[^;]+/g;
+
 export function useMovable<Element extends HTMLElement, Handle extends HTMLElement>(options: NeoMovableUseOptions<Element, Handle>): NeoMovableUseResult<Element, Handle> {
   const offset = $derived(options.offset);
   const element = $derived(options.element);
@@ -285,7 +287,7 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
     if (!element) return;
     if (!translating) transition = element.style.transition;
     const computed = getComputedStyle(element).transition;
-    if (computed.includes('translate')) element.style.transition = computed.replace(/translate[^;]+/g, `translate ${duration}ms ${easing}`);
+    if (computed.includes('translate')) element.style.transition = computed.replace(translateRegex, `translate ${duration}ms ${easing}`);
     else element.style.transition = `${computed}, translate ${duration}ms ${easing}`;
 
     return { easing, duration };

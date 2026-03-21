@@ -82,5 +82,5 @@ export type NeoPopStepperProps = {
   | 'use'
   | 'onOpen'
   | 'onClose'
-> &
-Omit<NeoFloatingStepperProps, 'header' | 'children'>;
+>
+& Omit<NeoFloatingStepperProps, 'header' | 'children'>;

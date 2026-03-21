@@ -56,6 +56,6 @@ export type NeoAffixProps<Tag extends keyof HTMLElementTagNameMap = 'span'> = {
    * Props for the close button
    */
   closeProps?: HTMLButtonAttributes;
-} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-HTMLRefProps<HTMLElementTagNameMap[Tag]> &
-HTMLTransitionProps;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
+& HTMLRefProps<HTMLElementTagNameMap[Tag]>
+& HTMLTransitionProps;

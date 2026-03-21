@@ -96,5 +96,5 @@ export type NeoPopConfirmProps = {
   | 'use'
   | 'onOpen'
   | 'onClose'
-> &
-Omit<NeoConfirmProps, 'children' | 'header'>;
+>
+& Omit<NeoConfirmProps, 'children' | 'header'>;

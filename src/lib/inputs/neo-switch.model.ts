@@ -8,8 +8,8 @@ import type { NeoValidationProps } from '~/inputs/common/neo-validation.model.js
  *
  * @see [github issue #2308](https://github.com/sveltejs/svelte/issues/2308)
  */
-export type NeoSwitchProps = NeoBaseInputProps &
-  Pick<
+export type NeoSwitchProps = NeoBaseInputProps
+  & Pick<
     NeoInputProps,
     | 'id'
     | 'readonly'
@@ -31,10 +31,10 @@ export type NeoSwitchProps = NeoBaseInputProps &
     | 'flex'
     | 'width'
     | 'height'
-  > &
-  NeoCommonSwitchProps &
-  Pick<NeoLabelProps, 'label'> &
-  Pick<NeoValidationProps, 'error' | 'message' | 'messageProps'> & {
+  >
+  & NeoCommonSwitchProps
+  & Pick<NeoLabelProps, 'label'>
+  & Pick<NeoValidationProps, 'error' | 'message' | 'messageProps'> & {
     /**
      * Props to be passed to the switch button.
      */

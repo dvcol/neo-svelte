@@ -46,5 +46,5 @@ export type NeoScrollShadowProps<Tag extends keyof HTMLElementTagNameMap = 'div'
    * Custom overflow value
    */
   overflow?: CSSStyleDeclaration['overflow'];
-} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-HTMLRefProps<HTMLElementTagNameMap[Tag]>;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
+& HTMLRefProps<HTMLElementTagNameMap[Tag]>;

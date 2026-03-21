@@ -138,6 +138,6 @@ export type NeoSimpleListProps<Value = unknown, Tag extends keyof HTMLElementTag
    * Optional props to pass to the list section.
    */
   sectionProps?: NeoListBaseSectionProps<Value, Tag>;
-} & NeoListBaseProps & HTMLRefProps &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-NeoListState<NeoListItem>;
+} & NeoListBaseProps & HTMLRefProps
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
+& NeoListState<NeoListItem>;

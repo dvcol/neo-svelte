@@ -69,6 +69,8 @@ export interface NeoNotificationStackService {
    * Restarts a notification in the stack with a new duration.
    * @param id - The ID of the notification to restart.
    * @param options - Whether to unshift the notification to the front of the queue.
+   * @param options.duration - The new duration for the notification. If not provided, the original duration will be used.
+   * @param options.unshift - If true, the notification will be moved to the front of the queue. Default is false.
    */
   restart: (id: string, options?: { duration?: number; unshift?: boolean }) => NeoNotificationQueued;
 

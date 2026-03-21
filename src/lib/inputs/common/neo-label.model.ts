@@ -47,7 +47,7 @@ export type NeoLabelProps = {
    * The props to pass to the label container.
    */
   containerProps?: HTMLNeoBaseElement & HTMLTagProps;
-} & NeoLabelStates &
-HTMLRefProps<HTMLLabelElement> &
-HTMLLabelAttributes &
-HTMLUseProps;
+} & NeoLabelStates
+& HTMLRefProps<HTMLLabelElement>
+& HTMLLabelAttributes
+& HTMLUseProps;

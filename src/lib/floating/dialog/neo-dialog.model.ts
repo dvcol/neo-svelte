@@ -229,7 +229,7 @@ export type NeoDialogProps<Tag extends keyof HTMLElementTagNameMap = keyof HTMLE
    * Optional properties to pass to the portal element.
    */
   portalProps?: Omit<NeoPortalProps, 'children'>;
-} & HTMLFlexProps &
-HTMLActionProps &
-NeoDialogContext<Tag> &
-Omit<HTMLDialogAttributes, 'children'>;
+} & HTMLFlexProps
+& HTMLActionProps
+& NeoDialogContext<Tag>
+& Omit<HTMLDialogAttributes, 'children'>;

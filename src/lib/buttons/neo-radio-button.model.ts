@@ -17,8 +17,8 @@ export type NeoCommonRadioProps = Pick<
   elevation?: NeoRadioElevation;
 };
 
-export type NeoRadioButtonProps = NeoCommonRadioProps &
-  HTMLButtonAttributes & {
+export type NeoRadioButtonProps = NeoCommonRadioProps
+  & HTMLButtonAttributes & {
     /**
      * Any content to be displayed inside the radio button.
      */

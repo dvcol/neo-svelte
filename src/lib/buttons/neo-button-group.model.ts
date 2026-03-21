@@ -152,8 +152,8 @@ export type NeoButtonGroupProps<Tag extends keyof HTMLElementTagNameMap = 'div'>
    * Optional height constraints.
    */
   height?: SizeInput<'height'>;
-} & NeoButtonGroupContext &
-HTMLFlexProps &
-HTMLActionProps &
-HTMLRefProps &
-Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
+} & NeoButtonGroupContext
+& HTMLFlexProps
+& HTMLActionProps
+& HTMLRefProps
+& Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

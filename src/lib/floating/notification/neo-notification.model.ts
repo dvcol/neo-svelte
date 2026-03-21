@@ -211,7 +211,6 @@ export interface NeoNotification {
    * - status changes (e.g., from pending to dismissed)
    * - visibility changes (e.g., when the notification is shown or hidden)
    * - timeout changes (e.g., when the notification is paused, resumed, or restarted)
-   * @param payload
    */
   onChange?: (event: NeoNotificationEvents, item: NeoNotificationQueued) => void;
 
@@ -287,7 +286,6 @@ export interface NeoNotificationQueued extends NeoNotificationDeQueued {
   update: (update: Omit<NeoNotification, 'id'>) => NeoNotificationQueued;
   /**
    * Restart the notification's duration.
-   * @param options
    */
   restart: (options?: { duration?: number; unshift?: boolean }) => NeoNotificationQueued;
 }

@@ -121,5 +121,5 @@ export type NeoAccordionProps<Tag extends keyof HTMLElementTagNameMap = 'div'> =
    * The group settings to pass to the inner collapse group.
    */
   group?: Omit<NeoCollapseGroupProps, 'children'>;
-} & NeoAccordionContext &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+} & NeoAccordionContext
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

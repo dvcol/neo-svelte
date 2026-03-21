@@ -113,8 +113,8 @@ export interface NeoRangeTickContext {
   filled?: boolean;
 }
 
-export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation' | 'error' | 'context' | 'message' | 'messageProps'> &
-  NeoValidationState<NeoRangeValue> & {
+export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation' | 'error' | 'context' | 'message' | 'messageProps'>
+  & NeoValidationState<NeoRangeValue> & {
     // Snippets
     /**
      * A snippet or a string to display as the input label.
@@ -202,11 +202,11 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
      * Options to pass to the floating label.
      */
     floatingOptions?: UseFloatingOptions;
-  } & NeoRangeStates &
-  NeoRangeStyles &
-  HTMLActionProps &
-  HTMLRefProps &
-  HTMLNeoBaseElement<HTMLSpanElement>;
+  } & NeoRangeStates
+  & NeoRangeStyles
+  & HTMLActionProps
+  & HTMLRefProps
+  & HTMLNeoBaseElement<HTMLSpanElement>;
 
 export type NeoRangeValidationState = NeoValidationState<NeoRangeValue>;
 
@@ -223,9 +223,9 @@ export interface NeoRangeMethods<T extends NeoRangeValue = NeoRangeValue> {
   stepDown: (index?: 0 | 1) => T;
 }
 
-export type NeoRangeContext<T extends NeoRangeValue = NeoRangeValue> = NeoValidationFieldContext &
-  NeoRangeStates &
-  NeoRangeStyles &
-  NeoRangeMethods<T>;
+export type NeoRangeContext<T extends NeoRangeValue = NeoRangeValue> = NeoValidationFieldContext
+  & NeoRangeStates
+  & NeoRangeStyles
+  & NeoRangeMethods<T>;
 
 export type NeoRangeHTMLElement<T extends NeoRangeValue = NeoRangeValue> = HTMLElement & NeoRangeMethods<T>;

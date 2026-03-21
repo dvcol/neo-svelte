@@ -37,12 +37,10 @@ export type NeoPopSelectProps<Value = unknown> = {
   searchProps?: NeoListSearchProps;
   /**
    * Event listener that fires when an item is selected/deselected.
-   * @param event
    */
   onSelect?: NeoListProps<Value>['onSelect'];
   /**
    * Event listener that fires when an item is selected/deselected.
-   * @param value
    */
   onChange?: (current: Value, previous: Value) => void;
 
@@ -85,5 +83,5 @@ export type NeoPopSelectProps<Value = unknown> = {
   | 'use'
   | 'onOpen'
   | 'onClose'
-> &
-Omit<NeoListProps<Value>, 'ref' | 'children' | 'width' | 'height' | 'items'>;
+>
+& Omit<NeoListProps<Value>, 'ref' | 'children' | 'width' | 'height' | 'items'>;

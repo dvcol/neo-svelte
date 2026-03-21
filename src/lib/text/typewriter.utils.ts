@@ -409,9 +409,9 @@ async function doTypo<T extends TypeWriterLine[]>({
   onTypo,
   onAbort,
   controller,
-}: Pick<TypeWriterSliceOptions<T>, 'display' | 'speed' | 'controller' | 'onType' | 'onTypo' | 'onAbort'> &
-  TypeWriterDoOptions &
-  TypeWriterTypoOptions) {
+}: Pick<TypeWriterSliceOptions<T>, 'display' | 'speed' | 'controller' | 'onType' | 'onTypo' | 'onAbort'>
+  & TypeWriterDoOptions
+  & TypeWriterTypoOptions) {
   if (Math.random() >= odds) return;
   if (index % modulo !== 0) return;
   const char = text.charAt(index);

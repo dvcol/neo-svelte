@@ -17,8 +17,8 @@ export type NeoCommonCheckboxProps = Pick<
   elevation?: NeoCheckboxElevation;
 };
 
-export type NeoCheckboxButtonProps = NeoCommonCheckboxProps &
-  HTMLButtonAttributes & {
+export type NeoCheckboxButtonProps = NeoCommonCheckboxProps
+  & HTMLButtonAttributes & {
     /**
      * Any content to be displayed inside the checkbox button.
      */

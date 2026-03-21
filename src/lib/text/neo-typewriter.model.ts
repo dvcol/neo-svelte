@@ -25,9 +25,9 @@ export type NeoTypewriterProps<Tag extends keyof HTMLElementTagNameMap = 'div', 
 } & Pick<
   TypewriterOptions<Value[]>,
   'display' | 'speed' | 'typo' | 'pause' | 'iterations' | 'mode' | 'onTypo' | 'onStart' | 'onEnd' | 'onPause' | 'onType' | 'onAbort'
-> &
-HTMLRefProps<HTMLElementTagNameMap[Tag]> &
-Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
+>
+& HTMLRefProps<HTMLElementTagNameMap[Tag]>
+& Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
 
 export type NeoTypewriterHTMLElement<
   Tag extends keyof HTMLElementTagNameMap = 'div',

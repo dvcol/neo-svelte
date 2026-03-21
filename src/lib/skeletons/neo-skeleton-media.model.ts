@@ -87,6 +87,6 @@ export type NeoSkeletonMediaProps = {
    * Props to pass to the transition container.
    */
   transitionProps?: NeoSkeletonContainerProps['containerProps'];
-} & Pick<HTMLTransitionProps, 'in' | 'out'> &
-HTMLRefProps &
-HTMLNeoBaseElement;
+} & Pick<HTMLTransitionProps, 'in' | 'out'>
+& HTMLRefProps
+& HTMLNeoBaseElement;

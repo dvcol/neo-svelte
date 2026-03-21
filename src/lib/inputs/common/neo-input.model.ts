@@ -124,6 +124,8 @@ export interface NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElemen
   /**
    * Check the input validity.
    * @param update whether to check the input dirty and/or valid state.
+   * @param update.dirty whether to mark the input dirty
+   * @param update.valid whether to force a valid state
    */
   validate: (update?: { dirty?: boolean; valid?: boolean }) => NeoInputState<T>;
 }
@@ -131,8 +133,8 @@ export interface NeoInputMethods<T extends HTMLInputElement | HTMLTextAreaElemen
 export type NeoInputBlur = BlurElevation | BlurElevationString;
 export type NeoInputElevation = ShadowElevation | ShadowElevationString;
 export type NeoInputHoverElevation = ShadowHoverElevation | ShadowHoverElevationsString;
-export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = NeoValidationFieldContext<T, NeoInputValue<T>> &
-  Partial<NeoInputStyles & NeoInputMethods<T>>;
+export type NeoInputContext<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = NeoValidationFieldContext<T, NeoInputValue<T>>
+  & Partial<NeoInputStyles & NeoInputMethods<T>>;
 
 export const NeoInputLabelPlacement = {
   Inside: 'inside',
@@ -258,10 +260,10 @@ export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement |
    * The props to pass to the input display wrapper.
    */
   displayProps?: HTMLNeoBaseElement & HTMLTagProps;
-} & HTMLUseProps &
-HTMLRefProps<T> &
-NeoInputState<T> &
-NeoInputHTMLAttributes<T>;
+} & HTMLUseProps
+& HTMLRefProps<T>
+& NeoInputState<T>
+& NeoInputHTMLAttributes<T>;
 
 export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = {
   // Snippets
@@ -393,9 +395,9 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
    * The ref to bind to the label.
    */
   labelRef?: HTMLLabelElement;
-} & Omit<NeoBaseInputProps<T>, 'after' | 'before'> &
-NeoInputStyles &
-HTMLTransitionProps;
+} & Omit<NeoBaseInputProps<T>, 'after' | 'before'>
+& NeoInputStyles
+& HTMLTransitionProps;
 
 export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoInputHTMLElement> = {
   // Snippets
@@ -431,8 +433,8 @@ export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoIn
    * The ref to bind to the prefix.
    */
   beforeRef?: HTMLElement;
-} & NeoInputGroupProps<T> &
-HTMLInputAttributes & {
+} & NeoInputGroupProps<T>
+& HTMLInputAttributes & {
   files?: HTMLInputAttributes['bind:files'];
   group?: HTMLInputAttributes['bind:group'];
 };
@@ -476,8 +478,8 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
    * @default true
    */
   autoResize?: boolean | NeoTextAreaResize;
-} & Omit<NeoInputGroupProps<T>, 'hide' | 'display' | 'displayProps'> &
-HTMLTextareaAttributes;
+} & Omit<NeoInputGroupProps<T>, 'hide' | 'display' | 'displayProps'>
+& HTMLTextareaAttributes;
 
 export type NeoInputHTMLElement<T extends HTMLInputElement = HTMLInputElement> = T & Partial<NeoInputMethods<T>>;
 export type NeoSelectHTMLElement<T extends HTMLSelectElement = HTMLSelectElement> = T & Partial<NeoInputMethods<T>>;

@@ -55,8 +55,8 @@ export interface NeoValidationContext<
   error?: Snippet<[C]> | string;
 }
 
-export type NeoValidationFieldContext<T extends HTMLElement = HTMLElement, V extends NeoValidationValue = NeoValidationValue> = HTMLRefProps<T> &
-  NeoValidationState<V>;
+export type NeoValidationFieldContext<T extends HTMLElement = HTMLElement, V extends NeoValidationValue = NeoValidationValue> = HTMLRefProps<T>
+  & NeoValidationState<V>;
 
 export type NeoValidationProps<
   T extends HTMLElement = HTMLElement,
@@ -111,7 +111,7 @@ export type NeoValidationProps<
    * The props to pass to the message and error components.
    */
   messageProps?: HTMLNeoBaseElement & HTMLTagProps;
-} & HTMLTransitionProps &
-HTMLRefProps &
-NeoValidationContext<T, V, C> &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+} & HTMLTransitionProps
+& HTMLRefProps
+& NeoValidationContext<T, V, C>
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

@@ -63,8 +63,8 @@ export interface NeoStepperContext<Value = unknown> {
    * But, it will check if the target step is disabled.
    *
    * @param step - index of the step to navigate to.
-   * @param target - Optional step instance (extracted from the steps array if not provided).
    * @param reason - Optional reason for the navigation.
+   * @param target - Optional step instance (extracted from the steps array if not provided).
    */
   goToStep: (step: number, reason?: NeoStepperNavigations, target?: NeoStepperStep<Value>) => Promise<undefined | NeoStepperEvent<Value>>;
   /**
@@ -377,6 +377,6 @@ export type NeoStepperProps<Value = unknown, Tag extends keyof HTMLElementTagNam
    * Optional props to pass to all buttons.
    */
   buttonProps?: NeoButtonProps;
-} & Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'> &
-HTMLTransitionProps &
-HTMLRefProps;
+} & Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>
+& HTMLTransitionProps
+& HTMLRefProps;

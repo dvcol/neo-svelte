@@ -31,9 +31,9 @@ export interface NeoFilePickerContext<Multiple extends boolean = boolean> {
   files?: FileList;
 }
 
-export type NeoFilePickerValue<Multiple extends boolean = boolean> =
-  | (Multiple extends true ? FileList : Multiple extends false ? File : FileList | File)
-  | null;
+export type NeoFilePickerValue<Multiple extends boolean = boolean>
+  = | (Multiple extends true ? FileList : Multiple extends false ? File : FileList | File)
+    | null;
 
 export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
   // Snippet
@@ -115,8 +115,8 @@ export type NeoFilePickerProps<Multiple extends boolean = boolean> = {
    * Input Group properties to pass to the input group container.
    */
   groupProps?: NeoInputProps['containerProps'];
-} & NeoFilePickerContext<Multiple> &
-Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange' | 'label'>;
+} & NeoFilePickerContext<Multiple>
+& Omit<NeoInputProps, 'multiple' | 'oninput' | 'onchange' | 'label'>;
 
 export type NeoFilePickerCardProps = Omit<NeoCardProps, 'children'> & {
   /**

@@ -141,7 +141,7 @@ export type NeoPillProps<Tag extends keyof HTMLElementTagNameMap = 'div'> = {
    * Optional props to pass to the icon image component if the icon is a string.
    */
   imageProps?: Partial<NeoImageProps>;
-} & NeoPillContext &
-HTMLTransitionProps &
-HTMLUseProps &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
+} & NeoPillContext
+& HTMLTransitionProps
+& HTMLUseProps
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;

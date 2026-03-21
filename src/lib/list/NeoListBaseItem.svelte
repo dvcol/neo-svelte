@@ -149,7 +149,7 @@
       </span>
       {#if tags?.length}
         <div class="neo-list-item-tags">
-          {#each tags as tag}
+          {#each tags as tag, i (i)}
             {#if typeof tag === 'string'}
               <span class="neo-list-item-tag">{tag}</span>
             {:else if isButtonTag(tag)}

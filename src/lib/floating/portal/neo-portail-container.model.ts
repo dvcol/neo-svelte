@@ -10,5 +10,5 @@ export type NeoPortalContainerProps<Tag extends keyof HTMLElementTagNameMap = 'd
    * Whether to scale the container when a portal dialog is open.
    */
   scale?: boolean;
-} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-HTMLRefProps<HTMLElementTagNameMap[Tag]> & HTMLFlexProps;
+} & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
+& HTMLRefProps<HTMLElementTagNameMap[Tag]> & HTMLFlexProps;

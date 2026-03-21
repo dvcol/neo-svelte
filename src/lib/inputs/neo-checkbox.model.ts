@@ -8,8 +8,8 @@ import type { NeoValidationProps } from '~/inputs/common/neo-validation.model.js
  *
  * @see [github issue #2308](https://github.com/sveltejs/svelte/issues/2308)
  */
-export type NeoCheckboxProps = NeoBaseInputProps &
-  Pick<
+export type NeoCheckboxProps = NeoBaseInputProps
+  & Pick<
     NeoInputProps,
     | 'id'
     | 'readonly'
@@ -29,10 +29,10 @@ export type NeoCheckboxProps = NeoBaseInputProps &
     | 'flex'
     | 'width'
     | 'height'
-  > &
-  NeoCommonCheckboxProps &
-  Pick<NeoLabelProps, 'label'> &
-  Pick<NeoValidationProps, 'error' | 'message' | 'messageProps'> & {
+  >
+  & NeoCommonCheckboxProps
+  & Pick<NeoLabelProps, 'label'>
+  & Pick<NeoValidationProps, 'error' | 'message' | 'messageProps'> & {
     /**
      * Props to be passed to the checkbox button.
      */

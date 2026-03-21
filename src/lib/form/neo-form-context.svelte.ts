@@ -12,6 +12,8 @@ export type NeoFormContextFieldHTMLElement<Element extends HTMLElement = HTMLEle
   /**
    * Check the input validity.
    * @param update whether to check the input dirty and/or valid state.
+   * @param update.dirty whether to mark the input dirty
+   * @param update.valid whether to force a valid state
    */
   validate?: (update?: { dirty?: boolean; valid?: boolean }) => NeoValidationState<unknown>;
 };

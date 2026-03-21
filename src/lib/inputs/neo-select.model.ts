@@ -6,14 +6,14 @@ import type { NeoPopSelectProps } from '~/floating/tooltips/neo-pop-select.model
 import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoListItemOrSection, NeoListSelectedItem } from '~/list/neo-list.model.js';
 
-export type NeoNativeSelectOption<Value = any> =
-  | string
-  | number
-  | ({
-    value: Value;
-    label?: string | Snippet;
-    id?: string | number;
-  } & HTMLOptionAttributes);
+export type NeoNativeSelectOption<Value = any>
+  = | string
+    | number
+    | ({
+      value: Value;
+      label?: string | Snippet;
+      id?: string | number;
+    } & HTMLOptionAttributes);
 
 export type NeoNativeSelectProps<Value = any> = {
   /**

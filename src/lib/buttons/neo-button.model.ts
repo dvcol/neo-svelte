@@ -235,11 +235,11 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    * Optional props to pass to the icon image component if the icon is a string.
    */
   imageProps?: Partial<NeoImageProps>;
-} & NeoButtonStates &
-HTMLFlexProps &
-HTMLActionProps &
-HTMLRefProps &
-Partial<
+} & NeoButtonStates
+& HTMLFlexProps
+& HTMLActionProps
+& HTMLRefProps
+& Partial<
   Omit<
     Tag extends 'button' ? HTMLButtonAttributes : Tag extends 'a' ? HTMLAnchorAttributes : HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>,
       'onclick' | 'onkeydown' | 'onkeyup'

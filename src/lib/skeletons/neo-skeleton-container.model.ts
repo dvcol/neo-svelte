@@ -77,6 +77,6 @@ export type NeoSkeletonContainerProps<Tag extends keyof HTMLElementTagNameMap = 
    * Props for the transition container.
    */
   containerProps?: NeoTransitionContainerProps;
-} & Pick<HTMLTransitionProps, 'in' | 'out'> &
-HTMLRefProps &
-Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
+} & Pick<HTMLTransitionProps, 'in' | 'out'>
+& HTMLRefProps
+& Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;

@@ -34,8 +34,8 @@ export interface NeoPinState {
   // Other props
 }
 
-export type NeoPinProps = NeoPinState &
-  Omit<NeoInputProps, 'floating' | 'placement'> & {
+export type NeoPinProps = NeoPinState
+  & Omit<NeoInputProps, 'floating' | 'placement'> & {
     /**
      * Input Group properties to pass to the input group container.
      */
@@ -50,8 +50,8 @@ export interface NeoPinMethods {
   clear: () => Promise<void>;
 }
 
-export type NeoPinContext = NeoValidationFieldContext<NeoInputHTMLElement, string> &
-  NeoPinMethods & {
+export type NeoPinContext = NeoValidationFieldContext<NeoInputHTMLElement, string>
+  & NeoPinMethods & {
     /**
      * If true, the input will be disabled.
      */

@@ -8,8 +8,8 @@ export type NeoSwitchElevation = ShadowShallowElevation | ShadowShallowElevation
 
 export type NeoSwitchButtonContext = Pick<NeoInputProps, 'checked' | 'indeterminate' | 'disabled'>;
 
-export type NeoCommonSwitchProps = Pick<NeoInputProps, 'valid' | 'start' | 'glass' | 'rounded' | 'skeleton' | 'color' | 'tinted'> &
-  NeoSwitchButtonContext & {
+export type NeoCommonSwitchProps = Pick<NeoInputProps, 'valid' | 'start' | 'glass' | 'rounded' | 'skeleton' | 'color' | 'tinted'>
+  & NeoSwitchButtonContext & {
     // Snippets
     /**
      * Optional snippets to be displayed inside the switch button when checked;
@@ -31,8 +31,8 @@ export type NeoCommonSwitchProps = Pick<NeoInputProps, 'valid' | 'start' | 'glas
     elevation?: NeoSwitchElevation;
   };
 
-export type NeoSwitchButtonProps = NeoCommonSwitchProps &
-  HTMLButtonAttributes & {
+export type NeoSwitchButtonProps = NeoCommonSwitchProps
+  & HTMLButtonAttributes & {
     /**
      * Any content to be displayed inside the radio button.
      */

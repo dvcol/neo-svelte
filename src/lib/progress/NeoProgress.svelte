@@ -174,9 +174,9 @@
     } else {
       change(seed);
       status = NeoProgressStatus.Active;
-      intervalId = setInterval(() => stepUp({ pending }), tick);
+      intervalId = setInterval(stepUp, tick, { pending });
     }
-    if (expire) timeoutId = setTimeout(() => complete(), expire);
+    if (expire) timeoutId = setTimeout(complete, expire);
     return status;
   }
 

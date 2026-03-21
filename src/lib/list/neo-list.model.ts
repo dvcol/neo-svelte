@@ -93,9 +93,9 @@ export type NeoListItemRender<Value = unknown, Tag extends keyof HTMLElementTagN
 /**
  * TODO: Add support for video and audio
  */
-export type NeoBaseListItemMedia<Type extends NeoMediaTypes = typeof NeoMediaType.Image> = NeoMediaProps &
-  (Type extends typeof NeoMediaType.Image ?
-      {
+export type NeoBaseListItemMedia<Type extends NeoMediaTypes = typeof NeoMediaType.Image> = NeoMediaProps
+  & (Type extends typeof NeoMediaType.Image
+    ? {
         type?: typeof NeoMediaType.Image;
         image?: NeoImageProps;
       } : Record<string, never>);
@@ -218,7 +218,6 @@ export interface NeoListSelectEvent<Selected = NeoListSelectedItem | NeoListSele
 export interface NeoListSelectMethods<Value = unknown> {
   /**
    * Select an item in the list.
-   * @param index - The index of the item to select.
    *
    * @returns The selection event if the item was selected, undefined otherwise.
    */
@@ -478,12 +477,12 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Optional props to pass to the list section.
    */
   sectionProps?: NeoListBaseSectionProps<Value, Tag>;
-} & NeoListBaseProps & HTMLRefProps &
-HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-NeoListState & NeoListSelectState<Selected>;
+} & NeoListBaseProps & HTMLRefProps
+& HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
+& NeoListState & NeoListSelectState<Selected>;
 
-export type NeoListHTMLElement<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> &
-  NeoListMethods & NeoListSelectMethods<Value>;
+export type NeoListHTMLElement<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
+  & NeoListMethods & NeoListSelectMethods<Value>;
 
 export function findByIdInList<Value = unknown>(selection: NeoListSelectedItem<Value>, array: NeoListItemOrSection<Value>[]): NeoListSelectedItem<Value> | undefined {
   const result: NeoListSelectedItem<Value> = { index: -1 } as NeoListSelectedItem<Value>;

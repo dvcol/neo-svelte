@@ -94,5 +94,5 @@ export type NeoProgressBarProps<Tag extends keyof HTMLElementTagNameMap = 'div',
 
   // Other Props
   containerProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[ContainerTag]> & HTMLTagProps<ContainerTag>;
-} & NeoProgressBarStyle &
-Omit<NeoProgressProps<Tag>, 'children'>;
+} & NeoProgressBarStyle
+& Omit<NeoProgressProps<Tag>, 'children'>;
