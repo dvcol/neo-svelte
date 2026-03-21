@@ -440,6 +440,8 @@
 {/if}
 
 <style lang="scss">
+  @use 'src/lib/styles/mixin' as mixin;
+
   %input {
     color: inherit;
     font: inherit;
@@ -536,21 +538,16 @@
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
-    &:-webkit-autofill:active,
-    &:-webkit-autofill::first-line {
-      color: var(--neo-input-text-color, var(--neo-text-color, inherit)) !important;
-      text-decoration: none;
-      background-clip: text;
-      box-shadow: none;
-      appearance: none;
-      text-decoration-color: inherit;
-      caret-color: var(--neo-input-text-color, var(--neo-text-color, inherit));
-      -webkit-text-fill-color: var(--neo-input-text-color, var(--neo-text-color, inherit));
-      -webkit-text-stroke-color: var(--neo-input-text-color, var(--neo-text-color, inherit));
+    &:-webkit-autofill:active {
+      @include mixin.autofill(--neo-input-text-color, $stroke: true);
 
       &::selection {
         background-color: oklch(from var(--neo-input-text-color, var(--neo-text-color, inherit)) calc(l + 0.3) c h / 20%);
       }
+    }
+
+    &:-webkit-autofill::first-line {
+      @include mixin.autofill(--neo-input-text-color, $stroke: true);
     }
   }
 </style>

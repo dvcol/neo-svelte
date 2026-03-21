@@ -668,20 +668,16 @@
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
-    &:-webkit-autofill:active,
-    &:-webkit-autofill::first-line {
-      color: var(--neo-textarea-text-color, var(--neo-text-color, inherit)) !important;
-      text-decoration: none;
-      background-clip: text;
-      box-shadow: none;
-      appearance: none;
-      text-decoration-color: inherit;
-      caret-color: var(--neo-textarea-text-color, var(--neo-text-color, inherit));
-      -webkit-text-fill-color: var(--neo-textarea-text-color, var(--neo-text-color, inherit));
+    &:-webkit-autofill:active {
+      @include mixin.autofill(--neo-textarea-text-color);
 
       &::selection {
         background-color: oklch(from var(--neo-textarea-text-color, var(--neo-text-color, inherit)) calc(l + 0.3) c h / 20%);
       }
+    }
+
+    &:-webkit-autofill::first-line {
+      @include mixin.autofill(--neo-textarea-text-color);
     }
   }
 

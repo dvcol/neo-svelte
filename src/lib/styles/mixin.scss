@@ -732,3 +732,21 @@
     }
   }
 }
+
+/// Shared autofill styles for input/textarea elements.
+/// @param {string} $color-var - CSS variable for the text color (e.g. --neo-input-text-color).
+/// @param {bool} $stroke - Whether to include -webkit-text-stroke-color.
+@mixin autofill($color-var: --neo-input-text-color, $stroke: false) {
+  color: var(#{$color-var}, var(--neo-text-color, inherit)) !important;
+  text-decoration: none;
+  background-clip: text;
+  box-shadow: none;
+  appearance: none;
+  text-decoration-color: inherit;
+  caret-color: var(#{$color-var}, var(--neo-text-color, inherit));
+  -webkit-text-fill-color: var(#{$color-var}, var(--neo-text-color, inherit));
+
+  @if $stroke {
+    -webkit-text-stroke-color: var(#{$color-var}, var(--neo-text-color, inherit));
+  }
+}
