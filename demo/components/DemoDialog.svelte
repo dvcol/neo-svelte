@@ -123,7 +123,7 @@
 
   const confirmOptions: NeoDialogConfirmProps = {
     dialog: lorem,
-    // header: 'Confirm dialog',
+    header: 'Confirm dialog',
     onClose: () => console.info('Confirm dialog button closed'),
     onConfirm: async () => {
       console.info('Confirm dialog button confirming...');
