@@ -1,0 +1,12 @@
+minimumReleaseAge: 10080 # 7 days; 7 × 24 × 60 = 10080
+
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
+allowBuilds:
+  '@parcel/watcher': true
+  svelte-preprocess: true
+
+onlyBuiltDependencies:
+  - '@sveltejs/kit'

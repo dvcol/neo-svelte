@@ -4,9 +4,8 @@ import type { ViteUserConfig } from 'vitest/config';
 import { fileURLToPath, URL } from 'node:url';
 
 import { sveltekit } from '@sveltejs/kit/vite';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { svelte, vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { svelteTesting } from '@testing-library/svelte/vite';
-import { sveltePreprocess } from 'svelte-preprocess';
 import { checker } from 'vite-plugin-checker';
 import { defineConfig } from 'vitest/config';
 
@@ -18,7 +17,7 @@ const isWeb = process.env.VITE_MODE === 'WEB';
 if (isDev) {
   plugins.push(
     svelte({
-      preprocess: sveltePreprocess(),
+      preprocess: vitePreprocess(),
     }),
     checker({
       typescript: {
@@ -29,7 +28,7 @@ if (isDev) {
 } else if (isWeb) {
   plugins.push(
     svelte({
-      preprocess: sveltePreprocess(),
+      preprocess: vitePreprocess(),
     }),
   );
 } else {
