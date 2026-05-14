@@ -49,6 +49,8 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
+  // We want to mark as ready if there is no delay, but we don't want reactivity to prop changes
+  // svelte-ignore state_referenced_locally
   let ready = $state(delay === null);
   const loading = $derived(ready && !loaded && !error);
 
