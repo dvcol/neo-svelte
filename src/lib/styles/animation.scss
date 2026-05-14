@@ -61,6 +61,12 @@
 }
 
 @mixin indeterminate-slow($name: right, $axis: X, $polarity: positive) {
+  $translate: 110%;
+
+  @if $polarity != positive {
+    $translate: -110%;
+  }
+
   @keyframes indeterminate-slow-#{$name} {
     0% {
       transform: translate#{$axis }(0) scale#{$axis }(0);
@@ -72,12 +78,18 @@
 
     60%,
     100% {
-      transform: translate#{$axis }(#{if($polarity == positive, 110%, -110%)}) scale#{$axis }(0.6);
+      transform: translate#{$axis }(#{$translate}) scale#{$axis }(0.6);
     }
   }
 }
 
 @mixin indeterminate-fast($name: right, $axis: X, $polarity: positive, $size: grow) {
+  $translate: 110%;
+
+  @if $polarity != positive {
+    $translate: -110%;
+  }
+
   @keyframes indeterminate-fast-#{$name} {
     0%,
     40% {
@@ -90,7 +102,7 @@
 
     90%,
     100% {
-      transform: translate#{$axis }(#{if($polarity == positive, 110%, -110%)}) scale#{$axis }(0.1);
+      transform: translate#{$axis }(#{$translate}) scale#{$axis }(0.1);
     }
   }
 }
