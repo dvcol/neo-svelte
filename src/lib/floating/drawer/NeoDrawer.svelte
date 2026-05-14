@@ -72,7 +72,7 @@
 </script>
 
 <div class:neo-drawer={true}>
-  <NeoDialog modal bind:ref bind:open bind:moved bind:returnValue bind:placement bind:outside {id} {movable} {full} {elevation} {...rest} />
+  <NeoDialog bind:ref bind:open bind:moved bind:returnValue bind:placement bind:outside {id} {movable} {full} {elevation} {...rest} modal />
 </div>
 
 <style lang="scss">

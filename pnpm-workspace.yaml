@@ -1,5 +1,4 @@
 minimumReleaseAge: 10080 # 7 days; 7 × 24 × 60 = 10080
-
 shellEmulator: true
 
 trustPolicy: no-downgrade
@@ -7,6 +6,9 @@ trustPolicy: no-downgrade
 allowBuilds:
   '@parcel/watcher': true
   svelte-preprocess: true
+
+overrides:
+  yaml: 2.8.4 # remove when 2.9.0 is past minimumReleaseAge
 
 onlyBuiltDependencies:
   - '@sveltejs/kit'

@@ -115,6 +115,7 @@
         queue.delete(response.id);
         response.removed = Date.now();
         response.status = status;
+        item.status = status;
         resolve(response);
         item.onChange?.(NeoNotificationEvent.Status, item);
         return response;

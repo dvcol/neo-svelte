@@ -6,6 +6,7 @@ import { fileURLToPath, URL } from 'node:url';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { svelte, vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { svelteTesting } from '@testing-library/svelte/vite';
+import { playwright } from '@vitest/browser-playwright';
 import { checker } from 'vite-plugin-checker';
 import { defineConfig } from 'vitest/config';
 
@@ -56,14 +57,51 @@ const config: ViteUserConfig = {
     open: '/neo-svelte/',
   },
   test: {
-    include: ['test/**/*.{test,spec}.{js,ts}'],
-    exclude: ['test/setup.test.ts'],
-    environment: 'jsdom',
-    setupFiles: ['/test/setup.test.ts'],
     alias: {
       '~/': fileURLToPath(new URL('./src/lib', import.meta.url)),
       'src/': fileURLToPath(new URL('./src', import.meta.url)),
     },
+    passWithNoTests: true,
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: [
+            'src/**/*.{test,spec}.{js,ts}',
+            'test/**/*.{test,spec}.{js,ts}',
+          ],
+          exclude: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/.svelte-kit/**',
+            'test/setup.unit.ts',
+            'test/setup.browser.ts',
+            'src/**/*.browser.{test,spec}.{js,ts}',
+          ],
+          environment: 'jsdom',
+          setupFiles: ['./test/setup.unit.ts'],
+        },
+      },
+      {
+        extends: true,
+        resolve: {
+          conditions: ['browser'],
+        },
+        test: {
+          name: 'browser',
+          include: ['src/**/*.browser.{test,spec}.{js,ts}'],
+          exclude: ['**/node_modules/**', '**/dist/**', '**/.svelte-kit/**'],
+          setupFiles: ['./test/setup.browser.ts'],
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            headless: true,
+            instances: [{ browser: 'chromium' }],
+          },
+        },
+      },
+    ],
   },
 };
 

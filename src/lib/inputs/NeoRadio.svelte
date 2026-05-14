@@ -148,7 +148,10 @@
     {elevation}
     {color}
     {tinted}
-    onclick={() => ref?.click()}
+    onclick={() => {
+      if (disabled) return;
+      ref?.click();
+    }}
     {...buttonProps}
   />
   <NeoLabel bind:ref={labelRef} id={labelId} for={id} {label} {disabled} {required} {...labelProps} />

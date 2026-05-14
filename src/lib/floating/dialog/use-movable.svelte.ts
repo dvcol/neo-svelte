@@ -295,9 +295,10 @@ export function useMovable<Element extends HTMLElement, Handle extends HTMLEleme
   const stopTranslating = debounce(async (delay: number | undefined = snap.translate.duration) => {
     clearTimeout(timeout);
     const { resolve, promise } = Promise.withResolvers<boolean>();
+    const target = element;
     timeout = setTimeout(() => {
-      if (!element) return resolve(false);
-      element.style.transition = transition;
+      if (!target?.style) return resolve(false);
+      target.style.transition = transition;
       transition = '';
       translating = 0;
       resolve(true);

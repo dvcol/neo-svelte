@@ -207,7 +207,10 @@
     "lint:fix": "eslint . --fix",
     "style": "stylelint '**/*.{svelte,css,scss,less,html}' --go '{\"gitignore\":true}'",
     "style:fix": "pnpm run style --fix",
-    "test:unit": "vitest --run --coverage",
+    "test": "vitest --run",
+    "test:unit": "vitest --project unit --run",
+    "test:browser": "vitest --project browser --run",
+    "test:coverage": "vitest --project unit --run --coverage",
     "test:watch": "vitest",
     "release": "standard-version",
     "release:changelog": "extract-changelog-release > RELEASE.md"
@@ -221,6 +224,7 @@
   "dependencies": {
     "@dvcol/common-utils": "^1.34.0",
     "@dvcol/svelte-utils": "^1.21.1",
+    "@floating-ui/dom": "^1.7.0",
     "@skeletonlabs/floating-ui-svelte": "^0.3.9",
     "dompurify": "^3.4.3",
     "svelte": "^5.55.5"
@@ -243,7 +247,9 @@
     "@tsconfig/svelte": "^5.0.8",
     "@types/dom-view-transitions": "^1.0.6",
     "@types/node": "^25.7.0",
-    "@vitest/coverage-v8": "^4.1.6",
+    "@vitest/browser": "^4.1.5",
+    "@vitest/browser-playwright": "^4.1.6",
+    "@vitest/coverage-v8": "^4.1.5",
     "eslint": "^10.3.0",
     "eslint-plugin-format": "^2.0.1",
     "eslint-plugin-svelte": "^3.17.1",
@@ -253,6 +259,7 @@
     "lint-staged": "^17.0.4",
     "navigation-api-types": "^0.6.1",
     "npm-run-all2": "^8.0.4",
+    "playwright": "^1.59.1",
     "postcss": "^8.5.14",
     "postcss-syntax": "^0.36.2",
     "prettier": "^3.8.3",
@@ -265,6 +272,6 @@
     "typescript": "^6.0.3",
     "vite": "^8.0.12",
     "vite-plugin-checker": "^0.13.0",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.5"
   }
 }
