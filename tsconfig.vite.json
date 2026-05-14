@@ -7,8 +7,7 @@
     "moduleResolution": "bundler",
     "types": ["node", "vitest"],
     "strict": true,
-    "noEmit": true,
-    "skipLibCheck": true
+    "noEmit": true
   },
   "include": [
     "**/*.ts",

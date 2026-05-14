@@ -1,0 +1,9 @@
+allowBuilds:
+  '@parcel/watcher': true
+  svelte-preprocess: true
+
+onlyBuiltDependencies:
+  - '@sveltejs/kit'
+
+updateConfig:
+  minimumReleaseAge: 10080 # 7 days; 7 × 24 × 60 = 10080
