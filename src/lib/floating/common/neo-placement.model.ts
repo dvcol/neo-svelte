@@ -1,6 +1,6 @@
-import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
+import type { PopoverOptions } from '~/floating/common/popover/index.js';
 
-export type NeoPlacement = NonNullable<UseFloatingOptions['placement']>;
+export type NeoPlacement = NonNullable<PopoverOptions['placement']>;
 
 export type NeoTooltipPlacement = NeoPlacement | 'auto';
 export type NeoDialogPlacement = NeoPlacement | 'center';

@@ -1,16 +1,16 @@
-import type {
-  offset,
-  UseClickOptions,
-  UseDismissOptions,
-  UseFloatingOptions,
-  UseFloatingReturn,
-  UseFocusOptions,
-  UseHoverOptions,
-  UseRoleOptions,
-} from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
 
 import type { NeoTooltipPlacement } from '~/floating/common/neo-placement.model.js';
+import type {
+  ClickOptions,
+  DismissOptions,
+  FocusOptions,
+  HoverOptions,
+  offset,
+  Popover,
+  PopoverOptions,
+  RoleOptions,
+} from '~/floating/common/popover/index.js';
 import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
@@ -34,7 +34,7 @@ export type NeoTooltipSizeStrategies = (typeof NeoTooltipSizeStrategy)[keyof typ
 
 export type NeoTooltipElevation = PositiveShadowElevation | PositiveShadowElevationString;
 
-export type NeoTooltipContext = UseFloatingReturn;
+export type NeoTooltipContext = Popover;
 
 export type NeoTooltipToggle = (open?: boolean) => boolean;
 
@@ -59,7 +59,7 @@ export type NeoTooltipProps = {
   /**
    * The aria role of the tooltip.
    */
-  role?: UseRoleOptions['role'];
+  role?: RoleOptions['role'];
   /**
    * The HTML tag to use for the tooltip component.
    */
@@ -73,9 +73,9 @@ export type NeoTooltipProps = {
    */
   target?: HTMLElement | (() => HTMLElement);
   /**
-   * The floating options to pass to the useFloating hook.
+   * Extra options forwarded to the underlying `Popover` instance.
    */
-  options?: UseFloatingOptions;
+  options?: PopoverOptions;
   /**
    * Modifies the placement by translating the floating element along the specified axes.
    * A number (shorthand for mainAxis or distance), or an axes configuration object may be passed.
@@ -180,17 +180,17 @@ export type NeoTooltipProps = {
    *
    * @default 500
    */
-  hoverDelay?: UseHoverOptions['restMs'];
+  hoverDelay?: HoverOptions['restMs'];
   /**
    * The delay in milliseconds before the tooltip open state changes.
    *
    * @default 100
    */
-  openDelay?: UseHoverOptions['delay'];
+  openDelay?: HoverOptions['delay'];
   /**
-   * Options to pass to the useHover hook.
+   * Options to pass to the underlying `hover()` interaction.
    */
-  hoverOptions?: UseHoverOptions;
+  hoverOptions?: HoverOptions;
 
   // Focus
 
@@ -207,9 +207,9 @@ export type NeoTooltipProps = {
    */
   keepOpenOnFocus?: boolean;
   /**
-   * Options to pass to the useFocus hook.
+   * Options to pass to the underlying `focus()` interaction.
    */
-  focusOptions?: UseFocusOptions;
+  focusOptions?: FocusOptions;
 
   // Click
 
@@ -224,9 +224,9 @@ export type NeoTooltipProps = {
    */
   keepOpenOnClick?: boolean;
   /**
-   * Options to pass to the useClick hook.
+   * Options to pass to the underlying `click()` interaction.
    */
-  clickOptions?: UseClickOptions;
+  clickOptions?: ClickOptions;
 
   // Dismiss
 
@@ -235,9 +235,9 @@ export type NeoTooltipProps = {
    */
   closeOnDismiss?: boolean;
   /**
-   * Options to pass to the useDismiss hook.
+   * Options to pass to the underlying `dismiss()` interaction.
    */
-  dismissOptions?: UseDismissOptions;
+  dismissOptions?: DismissOptions;
 
   // Mounting
 
@@ -290,7 +290,7 @@ export type NeoTooltipProps = {
 
 export interface NeoTooltipMethods {
   toggle: (open?: boolean) => boolean;
-  update: UseFloatingReturn['update'];
+  update: Popover['update'];
 }
 
 export type NeoTooltipHTMLElement<T extends HTMLElement = HTMLElement> = T & Partial<NeoTooltipMethods>;

@@ -1,26 +1,23 @@
 <script lang="ts">
   import type { NeoTooltipHTMLElement, NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
-  import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
   import type { SizeOption } from '~/utils/style.utils.js';
 
-  import { toStyle } from '@dvcol/common-utils/common/class';
   import { watch } from '@dvcol/svelte-utils/watch';
-  import {
-    autoPlacement,
-    flip,
-    offset,
-    size,
-    useClick,
-    useDismiss,
-    useFloating,
-    useFocus,
-    useHover,
-    useInteractions,
-    useRole,
-  } from '@skeletonlabs/floating-ui-svelte';
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
   import { scale } from 'svelte/transition';
 
+  import {
+    autoPlacement,
+    click,
+    dismiss,
+    flip,
+    focus as focusInteraction,
+    hover,
+    offset,
+    Popover,
+    role as roleInteraction,
+    size,
+  } from '~/floating/common/popover/index.js';
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { isOffsetFunction, NeoTooltipSizeStrategy } from '~/floating/tooltips/neo-tooltip.model.js';
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
@@ -128,24 +125,18 @@
 
   const available = $state<{ width?: number; height?: number }>({});
 
-  let focus = $state(false);
-  export const floating = useFloating({
-    get elements() {
-      return {
-        floating: ref,
-        reference: host ?? wrapperRef,
-      };
-    },
+  let focusActive = $state(false);
+  export const floating: Popover = new Popover({
     get open() {
       return open;
     },
     onOpenChange(_open, _event, _reason) {
-      if (_reason === 'focus' && _open) focus = true;
+      if (_reason === 'focus' && _open) focusActive = true;
       if (_reason === 'focus' && !_open) {
         if (keepOpenOnFocus) return;
-        focus = _open;
+        focusActive = _open;
       }
-      if (_reason === 'hover' && !_open && (keepOpenOnHover || focus)) return;
+      if (_reason === 'hover' && !_open && (keepOpenOnHover || focusActive)) return;
       if (_reason === 'click' && _open && keepOpenOnClick) return;
       if (_reason !== 'click') open = _open;
     },
@@ -167,67 +158,57 @@
       if (placement === 'auto') return undefined;
       return placement;
     },
+    interactions: [
+      roleInteraction({
+        get role() {
+          return role ?? 'tooltip';
+        },
+      }),
+      hover({
+        get enabled() {
+          return openOnHover;
+        },
+        move: false,
+        get restMs() {
+          return hoverDelay;
+        },
+        get delay() {
+          return openDelay;
+        },
+        ...hoverOptions,
+      }),
+      focusInteraction({
+        get enabled() {
+          return openOnFocus;
+        },
+        // PR #164: bubbling focusin/focusout so a focusable child of a
+        // wrapper trigger opens the tooltip via tab navigation.
+        focusWithin: true,
+        ...focusOptions,
+      }),
+      click({
+        get enabled() {
+          return openOnClick;
+        },
+        ...clickOptions,
+      }),
+      dismiss({
+        get enabled() {
+          return closeOnDismiss;
+        },
+        ...dismissOptions,
+      }),
+    ],
     ...options,
   });
 
   // Reflect final position
   watch(
     () => {
-      position = floating?.placement;
+      position = floating.placement;
     },
-    () => floating?.placement,
+    () => floating.placement,
   );
-
-  const _role = useRole(floating.context, {
-    get role() {
-      return role ?? 'tooltip';
-    },
-  });
-  const _hover = useHover(floating.context, {
-    get enabled() {
-      return openOnHover;
-    },
-    move: false,
-    get restMs() {
-      return hoverDelay;
-    },
-    get delay() {
-      return openDelay;
-    },
-    ...hoverOptions,
-  });
-  const _focus = useFocus(floating.context, {
-    get enabled() {
-      return openOnFocus;
-    },
-    ...focusOptions,
-  });
-  const _click = useClick(floating.context, {
-    get enabled() {
-      return openOnClick;
-    },
-    ...clickOptions,
-  });
-  const _dismiss = useDismiss(floating.context, {
-    get enabled() {
-      return closeOnDismiss;
-    },
-    ...dismissOptions,
-  });
-  const interactions = useInteractions([_role, _hover, _focus, _click, _dismiss]);
-
-  const triggerHandler = $derived<HTMLNeoBaseElement>(interactions.getReferenceProps());
-  const tooltipHandler = $derived<HTMLNeoBaseElement>(interactions.getFloatingProps());
-
-  const tooltipStyle = $derived(floating?.floatingStyles?.replace(/transform:\s*translate\(([^,)]+),([^)]+)\)/, 'translate: $1 $2'));
-  const tooltipOrigin = $derived.by(() => {
-    if (rest?.style?.includes('transform-origin')) return;
-    if (floating.placement.startsWith('top')) return floating.placement.replace('top', 'bottom');
-    if (floating.placement.startsWith('bottom')) return floating.placement.replace('bottom', 'top');
-    if (floating.placement.startsWith('left')) return floating.placement.replace('left', 'right');
-    if (floating.placement.startsWith('right')) return floating.placement.replace('right', 'left');
-    return floating.placement;
-  });
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -237,39 +218,20 @@
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 
+  // Remote-trigger wiring: invoke popover.reference imperatively on the
+  // external host node. Reuses the exact same attachment code path as
+  // {@attach popover.reference} on the local wrapper case — listeners,
+  // ARIA writes, and cleanup all behave identically.
   $effect(() => {
     if (!host) return;
     triggerRef = host;
-    const listener: [string, EventListener][] = [
-      ...Object.entries(triggerHandler),
-      ['onfocusin', triggerHandler.onfocus],
-      ['onfocusout', triggerHandler.onblur],
-    ];
-    listener.forEach(([key, value]) => {
-      if (!triggerRef || !value) return;
-      if (typeof value !== 'function') {
-        triggerRef.setAttribute(key, value);
-      } else {
-        triggerRef.addEventListener(key.substring(2).toLowerCase(), value);
-      }
-    });
-    return () => {
-      if (!host) return;
-      listener.forEach(([key, value]) => {
-        if (!triggerRef) return;
-        if (typeof value !== 'function') {
-          triggerRef.removeAttribute(key);
-        } else {
-          triggerRef.removeEventListener(key.substring(2).toLowerCase(), value);
-        }
-      });
-    };
+    return floating.reference(host);
   });
 
   export function toggle(state = !open) {
     open = state;
     return open;
-  };
+  }
 
   export function update() {
     return floating.update();
@@ -286,7 +248,7 @@
     addMethods(ref);
   });
   $effect(() => {
-    triggerRef = addMethods(floating.elements.reference as HTMLElement);
+    triggerRef = addMethods(floating.referenceEl as HTMLElement);
   });
 
   const computeSize = <T extends 'width' | 'height'>(value: NeoTooltipProps[T], dimension: T): SizeOption<T> | undefined => {
@@ -347,9 +309,7 @@
     this={triggerTag}
     bind:this={wrapperRef}
     class:neo-tooltip-trigger={true}
-    onfocusin={triggerHandler?.onfocus}
-    onfocusout={triggerHandler?.onblur}
-    {...triggerHandler}
+    {@attach floating.reference}
     {...triggerRest}
   >
     {@render children?.(floating, toggle)}
@@ -375,7 +335,7 @@
       in:inFn={inProps}
       out:outFn={outProps}
       use:useFn={useProps}
-      {...tooltipHandler}
+      {@attach floating.floating}
       {...rest}
       {onpointerenter}
       {onfocusin}
@@ -388,14 +348,13 @@
       style:height={height?.absolute}
       style:min-height={height?.min}
       style:max-height={height?.max}
-      style:transform-origin={tooltipOrigin}
       style:--neo-tooltip-color={getColorVariable(color)}
       style:--neo-tooltip-box-shadow={tooltipShadow}
       style:--neo-tooltip-backdrop-filter={tooltipBlur}
       style:--neo-tooltip-padding={padding}
       style:--neo-tooltip-elevation={elevation}
       style:--neo-tooltip-border-radius={computeBorderRadius(rounded)}
-      style={toStyle(tooltipStyle, rest.style)}
+      style={rest.style}
     >
       {#if typeof tooltip === 'function'}
         {@render tooltip?.(floating, toggle)}

@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { UseFloatingReturn } from '@skeletonlabs/floating-ui-svelte';
-
   import type { NeoPopSelectProps } from '~/floating/tooltips/neo-pop-select.model.js';
   import type { NeoTooltipContext, NeoTooltipToggle } from '~/floating/tooltips/neo-tooltip.model.js';
   import type { NeoListContext, NeoListItemOrSection, NeoListSelectEvent } from '~/list/neo-list.model.js';
@@ -106,7 +104,7 @@
   {@render before?.(context)}
 {/snippet}
 
-{#snippet tooltip(floating: UseFloatingReturn)}
+{#snippet tooltip(floating: NeoTooltipContext)}
   <NeoList
     bind:ref={listRef}
     bind:selected

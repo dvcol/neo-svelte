@@ -1,6 +1,6 @@
-import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
 import type { Snippet } from 'svelte';
 
+import type { PopoverOptions } from '~/floating/common/popover/index.js';
 import type { NeoFormType } from '~/form/neo-form-context.svelte.js';
 import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
@@ -201,7 +201,7 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
     /**
      * Options to pass to the floating label.
      */
-    floatingOptions?: UseFloatingOptions;
+    floatingOptions?: PopoverOptions;
   } & NeoRangeStates
   & NeoRangeStyles
   & HTMLActionProps

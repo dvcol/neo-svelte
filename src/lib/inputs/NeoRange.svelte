@@ -10,11 +10,11 @@
   import { getUUID } from '@dvcol/common-utils/common/string';
   import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
   import { hovering } from '@dvcol/svelte-utils/hovering';
-  import { flip, offset, useFloating } from '@skeletonlabs/floating-ui-svelte';
   import { untrack } from 'svelte';
   import { innerWidth } from 'svelte/reactivity/window';
   import { fade } from 'svelte/transition';
 
+  import { flip, offset, Popover } from '~/floating/common/popover/index.js';
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
@@ -125,7 +125,7 @@
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
 
   const show = $derived(tooltips && (focused || hovered));
-  const lowerTooltip = useFloating({
+  const lowerTooltip = new Popover({
     get open() {
       return show;
     },
@@ -134,7 +134,7 @@
     ...floatingOptions,
   });
 
-  const upperTooltip = useFloating({
+  const upperTooltip = new Popover({
     get open() {
       return show;
     },
@@ -257,15 +257,15 @@
     };
   };
 
-  const handler = $derived(getDragHandler(lowerTooltip.elements.reference as HTMLElement));
-  const progressHandler = $derived(getDragHandler(upperTooltip.elements.reference as HTMLElement, 1));
+  const handler = $derived(getDragHandler(lowerTooltip.referenceEl as HTMLElement));
+  const progressHandler = $derived(getDragHandler(upperTooltip.referenceEl as HTMLElement, 1));
 
   const onClick: PointerEventHandler<HTMLElement> = (e) => {
     let index = 0;
-    if (isArray && lowerTooltip?.elements.reference && upperTooltip?.elements.reference) {
+    if (isArray && lowerTooltip.referenceEl && upperTooltip.referenceEl) {
       // select handle closest to the click
-      const lowerOffset = Math.abs(e.clientX - lowerTooltip.elements.reference.getBoundingClientRect().left);
-      const upperOffset = Math.abs(upperTooltip.elements.reference.getBoundingClientRect().left - e.clientX);
+      const lowerOffset = Math.abs(e.clientX - lowerTooltip.referenceEl.getBoundingClientRect().left);
+      const upperOffset = Math.abs(upperTooltip.referenceEl.getBoundingClientRect().left - e.clientX);
       index = lowerOffset <= upperOffset ? 0 : 1;
     }
     updateValue(e, index);
@@ -435,8 +435,8 @@
         style:--neo-range-handler-z-index={lastIndex ? 0 : 1}
         transition:fade={quickDurationProps}
         {...floatingProps}
-        bind:this={lowerTooltip.elements.floating}
-        style={toStyle(lowerTooltip.floatingStyles, floatingProps?.style)}
+        {@attach lowerTooltip.floating}
+        style={floatingProps?.style}
       >
         {#if tooltip}
           {@render tooltip({ lower: true, upper: false, value: lower }, context)}
@@ -451,8 +451,8 @@
         class:neo-rounded={rounded}
         transition:fade={quickDurationProps}
         {...floatingProps}
-        bind:this={upperTooltip.elements.floating}
-        style={toStyle(upperTooltip.floatingStyles, floatingProps?.style)}
+        {@attach upperTooltip.floating}
+        style={floatingProps?.style}
       >
         {#if tooltip}
           {@render tooltip({ lower: false, upper: true, value: upper }, context)}
@@ -491,7 +491,7 @@
               <!--   handle before   -->
             </span>
             <button
-              bind:this={lowerTooltip.elements.reference}
+              {@attach lowerTooltip.reference}
               type="button"
               class="neo-range-handle"
               style:--neo-range-handler-z-index={lastIndex ? 0 : 1}
@@ -505,7 +505,7 @@
                 <!--   handle before   -->
               </span>
               <button
-                bind:this={upperTooltip.elements.reference}
+                {@attach upperTooltip.reference}
                 type="button"
                 class="neo-range-handle"
                 aria-label="Drag to set upper value"

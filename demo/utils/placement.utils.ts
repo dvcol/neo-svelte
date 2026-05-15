@@ -1,8 +1,7 @@
-import type { UseFloatingOptions } from '@skeletonlabs/floating-ui-svelte';
-
+import type { PopoverOptions } from '~/floating/common/popover/index.js';
 import type { NeoListItem } from '~/list/neo-list.model.js';
 
-export const positionOptions: NeoListItem<UseFloatingOptions['placement']>[] = [
+export const positionOptions: NeoListItem<PopoverOptions['placement']>[] = [
   { value: 'top-start', label: 'Top Start' },
   { value: 'top', label: 'Top' },
   { value: 'top-end', label: 'Top End' },
