@@ -9,12 +9,16 @@
     placement?: string;
     closable?: boolean;
     rounded?: boolean;
+    open?: boolean;
+    unmountOnClose?: boolean;
   };
 
-  const {
+  let {
     placement = 'bottom',
     closable = true,
     rounded = false,
+    open = $bindable(false),
+    unmountOnClose = false,
   }: Props = $props();
 </script>
 
@@ -23,9 +27,10 @@
     <NeoPopConfirm
       {rounded}
       {closable}
+      bind:open
       header="Confirm"
       tooltip="Are you sure?"
-      tooltipProps={{ placement, openOnHover: false, openOnFocus: false }}
+      tooltipProps={{ placement, openOnHover: false, openOnFocus: false, unmountOnClose }}
     >
       {#snippet children(_: NeoTooltipContext, toggle: NeoTooltipToggle)}
         <NeoButton class="trigger" text {rounded} onclick={() => toggle()}>Click me</NeoButton>

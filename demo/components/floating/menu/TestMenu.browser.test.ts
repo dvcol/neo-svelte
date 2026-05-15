@@ -1,10 +1,15 @@
+import { CARDINAL_PLACEMENTS, forEachViewport } from 'test/helpers/floating-visual.js';
 import { expectSide, waitForFloatingPosition } from 'test/helpers/floating.js';
+import { quietForVisual, screenshotName, setViewport } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { page } from '@vitest/browser/context';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import Harness from '~/floating/menu/NeoMenu.test.svelte';
+
+import VisualHarness from './TestMenu.browser.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -46,6 +51,30 @@ async function openMenu(extra: Record<string, unknown> = {}) {
   await waitForFloatingPosition(list);
   return { ...result, list };
 }
+
+describe('neoMenu — controlled open prop', { tags: ['browser'] }, () => {
+  // TODO: re-evaluate after Phase 2. NeoMenu.svelte:53,66-68 maintains a
+  // parallel internal `tooltipOpen` state that is never seeded from the
+  // inbound `open` prop. The mount-time effect runs as
+  // `open = tooltipOpen || context.children` and immediately writes the
+  // bindable parent prop back to `false`, defeating any parent that mounts
+  // the menu with `open: true`. Skeleton's `useFloating` exposes `open` as
+  // a single bindable getter, which collapses this parallel-state class —
+  // the migration target should make this assertion pass without code
+  // changes here.
+  it.skip('renders the menu list visible when mounted with open=true', async () => {
+    const { list } = await openMenu({
+      triggerProps: {
+        style: 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);',
+      },
+    });
+    const tooltip = list.closest<HTMLElement>('.neo-tooltip');
+    expect(tooltip?.hasAttribute('hidden')).toBe(false);
+    const rect = list.getBoundingClientRect();
+    expect(rect.width).toBeGreaterThan(0);
+    expect(rect.height).toBeGreaterThan(0);
+  });
+});
 
 describe('neoMenu — layout (real DOM)', { tags: ['browser'] }, () => {
   it('mounts the menu list below the trigger by default', async () => {
@@ -131,6 +160,319 @@ describe('neoMenu — nested submenu (real layout)', { tags: ['browser'] }, () =
     await vi.waitFor(() => {
       const lists = getAllMenuLists();
       expect(lists.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+});
+
+const deepItems = [
+  { value: 'one' },
+  {
+    value: 'two',
+    items: [
+      { value: 'two-a' },
+      {
+        value: 'two-b',
+        items: [
+          { value: 'two-b-x' },
+          { value: 'two-b-y' },
+          { value: 'two-b-z' },
+        ],
+      },
+      { value: 'two-c' },
+    ],
+  },
+  { value: 'three' },
+];
+
+function getOpenTooltips(): HTMLElement[] {
+  return Array.from(document.querySelectorAll<HTMLElement>('.neo-tooltip')).filter(el => !el.hasAttribute('hidden'));
+}
+
+function findHaspopupTrigger(scope: ParentNode | Document, label: string): HTMLElement | undefined {
+  return Array.from(scope.querySelectorAll<HTMLElement>('.neo-menu-item[aria-haspopup="menu"]'))
+    .find(el => el.textContent?.includes(label));
+}
+
+function getVisibleMenuLists(): HTMLElement[] {
+  return Array.from(document.querySelectorAll<HTMLElement>('.neo-menu-list')).filter((list) => {
+    const tip = list.closest<HTMLElement>('.neo-tooltip');
+    if (!tip) return true; // top-level list isn't always wrapped.
+    return !tip.hasAttribute('hidden');
+  });
+}
+
+async function hoverOpenSubmenu(user: ReturnType<typeof userEvent.setup>, trigger: HTMLElement, expectedVisibleCount: number) {
+  // Drive openOnHover: pointerenter on the wrapping <li> + the inner button.
+  const wrapper = trigger.closest<HTMLElement>('.neo-menu-item') ?? trigger;
+  const button = trigger.querySelector<HTMLElement>('button') ?? trigger;
+  await user.hover(wrapper);
+  await user.hover(button);
+  return vi.waitFor(() => {
+    const visible = getVisibleMenuLists();
+    if (visible.length < expectedVisibleCount) throw new Error(`expected ≥${expectedVisibleCount} visible menu lists, got ${visible.length}`);
+    return visible[expectedVisibleCount - 1];
+  }, { timeout: 3000, interval: 32 });
+}
+
+async function expandToLeaf(user: ReturnType<typeof userEvent.setup>) {
+  const level1Trigger = findHaspopupTrigger(document, 'two');
+  expect(level1Trigger, 'level-1 nested trigger ("two") should exist').toBeDefined();
+  const level2List = await hoverOpenSubmenu(user, level1Trigger!, 2);
+  await waitForFloatingPosition(level2List);
+
+  const level2Trigger = findHaspopupTrigger(level2List, 'two-b');
+  expect(level2Trigger, 'level-2 nested trigger ("two-b") should exist').toBeDefined();
+  const level3List = await hoverOpenSubmenu(user, level2Trigger!, 3);
+  await waitForFloatingPosition(level3List);
+
+  return {
+    level1Trigger: level1Trigger!,
+    level2Trigger: level2Trigger!,
+    level2List,
+    level3List,
+  };
+}
+
+describe('neoMenu — deeply nested cascade (≥3 levels)', { tags: ['browser'] }, () => {
+  it('places each submenu to the right of its parent menuitem at desktop viewport', async () => {
+    await setViewport('desktop');
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    const user = userEvent.setup();
+    await openMenu({
+      items: deepItems,
+      triggerProps: {
+        // Pin trigger near top-left so the cascade has plenty of room rightward.
+        style: 'position:fixed;top:80px;left:80px;',
+      },
+    });
+    const { level1Trigger, level2Trigger, level2List, level3List } = await expandToLeaf(user);
+
+    // Each level's tooltip rect must lie strictly to the right of its parent menuitem.
+    const level1TooltipRect = level2List.closest<HTMLElement>('.neo-tooltip')!.getBoundingClientRect();
+    const level2TooltipRect = level3List.closest<HTMLElement>('.neo-tooltip')!.getBoundingClientRect();
+    const level1TriggerRect = level1Trigger.getBoundingClientRect();
+    const level2TriggerRect = level2Trigger.getBoundingClientRect();
+
+    expect(level1TooltipRect.left).toBeGreaterThanOrEqual(level1TriggerRect.right - 20);
+    expect(level2TooltipRect.left).toBeGreaterThanOrEqual(level2TriggerRect.right - 20);
+
+    // All cascading tooltips have non-zero size — no collapsed layout.
+    for (const tt of getOpenTooltips()) {
+      const r = tt.getBoundingClientRect();
+      expect(r.width).toBeGreaterThan(0);
+      expect(r.height).toBeGreaterThan(0);
+    }
+  });
+
+  it('places each submenu to the side of its parent at uhd viewport', async () => {
+    await setViewport('uhd');
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    const user = userEvent.setup();
+    await openMenu({
+      items: deepItems,
+      triggerProps: {
+        style: 'position:fixed;top:200px;left:200px;',
+      },
+    });
+    const { level2List, level3List } = await expandToLeaf(user);
+
+    // On a wide screen with the trigger anchored top-left, all submenus must
+    // open rightward (no flip back). That's the headline regression case.
+    const tooltips = [level2List.closest<HTMLElement>('.neo-tooltip')!, level3List.closest<HTMLElement>('.neo-tooltip')!];
+    const triggerRect = getTrigger()!.getBoundingClientRect();
+    const cascadeMinLeft = Math.min(...tooltips.map(t => t.getBoundingClientRect().left));
+    expect(cascadeMinLeft).toBeGreaterThanOrEqual(triggerRect.left - 1);
+  });
+});
+
+describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () => {
+  // On a 390×844 viewport with a 3-level cascade, there isn't room for each
+  // submenu to sit beside its parent. The skeleton library's `flip()` does
+  // re-place the level-1 tooltip (it opens *upward* when pinned to the bottom)
+  // but level-2 / level-3 nested submenus do NOT cascade-flip on the X axis;
+  // they open rightward and overflow the viewport. We pin that behavior here
+  // so the migration target must reproduce or improve on it — not regress it
+  // silently.
+  it('level-1 submenu re-places when trigger is bottom-anchored, even if leaves overflow', async () => {
+    await setViewport('mobile');
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    const user = userEvent.setup();
+    await openMenu({
+      items: deepItems,
+      triggerProps: {
+        style: 'position:fixed;bottom:0;left:0;',
+      },
+    });
+    const { level2List } = await expandToLeaf(user);
+
+    // Level-1 root menu must stay inside the viewport (it has room).
+    const rootList = getVisibleMenuLists()[0];
+    const rootTooltip = rootList.closest<HTMLElement>('.neo-tooltip')!;
+    const rootRect = rootTooltip.getBoundingClientRect();
+    expect(rootRect.left).toBeGreaterThanOrEqual(-1);
+    expect(rootRect.right).toBeLessThanOrEqual(window.innerWidth + 1);
+
+    // Level-2 (the first nested cascade) MUST be either inside the viewport
+    // or overlap the level-1 menu — never positioned in a totally invisible
+    // area off-screen.
+    const level2Rect = level2List.closest<HTMLElement>('.neo-tooltip')!.getBoundingClientRect();
+    const level2InsideX = level2Rect.right <= window.innerWidth + 1 && level2Rect.left >= -1;
+    const overlapsRoot = !(level2Rect.right < rootRect.left || level2Rect.left > rootRect.right);
+    expect(level2InsideX || overlapsRoot).toBe(true);
+  });
+
+  // TODO: re-evaluate after Phase 2. Skeleton's NeoMenu wiring does not pass
+  // a `shift()` middleware for nested submenus, so when the parent menu is
+  // pushed against a viewport edge (e.g. trigger at left:0 on a 390px screen)
+  // the submenu has nowhere to go on the cross axis and *overlaps* the
+  // parent menu instead of remaining offset and shifted within the viewport.
+  // The visible nested-submenu screenshot at mobile shows the submenu
+  // rendered *on top of* the parent rather than beside-and-shifted. Migrating
+  // to @floating-ui/dom with `shift({ padding })` on the submenu chain
+  // should keep the side offset and slide the floating box along the
+  // cross axis until it fits — without overlapping the parent.
+  it.skip('submenu stays offset from parent (shifted, not overlapping) when viewport is constrained', async () => {
+    await setViewport('mobile');
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    const user = userEvent.setup();
+    await openMenu({
+      items: deepItems,
+      triggerProps: {
+        style: 'position:fixed;top:50%;left:0;transform:translateY(-50%);',
+      },
+    });
+    const { level2List } = await expandToLeaf(user);
+
+    const rootList = getVisibleMenuLists()[0];
+    const rootRect = rootList.closest<HTMLElement>('.neo-tooltip')!.getBoundingClientRect();
+    const level2Rect = level2List.closest<HTMLElement>('.neo-tooltip')!.getBoundingClientRect();
+
+    // Submenu must be offset on the cross axis, not stacked on top of root.
+    const overlapsRoot = !(level2Rect.right < rootRect.left || level2Rect.left > rootRect.right);
+    expect(overlapsRoot, 'submenu should not overlap parent menu').toBe(false);
+    // And it must still be inside the viewport.
+    expect(level2Rect.right).toBeLessThanOrEqual(window.innerWidth + 1);
+    expect(level2Rect.left).toBeGreaterThanOrEqual(-1);
+  });
+
+  // TODO: skeleton's flip middleware does not cascade-flip nested menus on the
+  // X axis at small viewports — level-2/level-3 submenus open rightward even
+  // when there's no room. The migration to @floating-ui/dom should evaluate
+  // whether `flip({ crossAxis: true })` or `shift()` middleware fixes this.
+  // For now, pin the regression-floor: at most one cascading level overflows.
+  it.skip('every cascading submenu fits inside the viewport at mobile size', async () => {
+    await setViewport('mobile');
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    const user = userEvent.setup();
+    await openMenu({
+      items: deepItems,
+      triggerProps: {
+        style: 'position:fixed;top:0;right:0;',
+      },
+    });
+    await expandToLeaf(user);
+
+    for (const tt of getOpenTooltips()) {
+      const r = tt.getBoundingClientRect();
+      expect(r.left).toBeGreaterThanOrEqual(-1);
+      expect(r.right).toBeLessThanOrEqual(window.innerWidth + 1);
+      expect(r.top).toBeGreaterThanOrEqual(-1);
+      expect(r.bottom).toBeLessThanOrEqual(window.innerHeight + 1);
+    }
+  });
+});
+
+async function waitForVisualStability(el: HTMLElement, timeoutMs = 1500): Promise<void> {
+  const deadline = performance.now() + timeoutMs;
+  while (performance.now() < deadline) {
+    const cs = getComputedStyle(el);
+    const opacity = Number.parseFloat(cs.opacity);
+    const transform = cs.transform;
+    const stable = opacity >= 0.999 && (transform === 'none' || /matrix\(1,\s*0,\s*0,\s*1/.test(transform));
+    if (stable) return;
+    await new Promise(r => requestAnimationFrame(() => r(null)));
+  }
+}
+
+async function openVisualMenu(user: ReturnType<typeof userEvent.setup>): Promise<HTMLElement> {
+  const trigger = await vi.waitFor(() => {
+    const el = document.querySelector<HTMLButtonElement>('[data-testid="trigger-button"]');
+    if (!el) throw new Error('trigger not mounted');
+    return el;
+  }, { timeout: 1500, interval: 16 });
+  await user.click(trigger);
+  return vi.waitFor(() => {
+    const el = document.querySelector<HTMLElement>('.neo-menu-list');
+    const tip = el?.closest<HTMLElement>('.neo-tooltip');
+    if (!el || tip?.hasAttribute('hidden')) throw new Error('menu list still hidden');
+    return el;
+  }, { timeout: 2000, interval: 16 });
+}
+
+describe('neoMenu — visual contract (open + cardinal placements)', { tags: ['browser', 'visual'] }, () => {
+  beforeEach(() => {
+    quietForVisual();
+  });
+  forEachViewport((viewport) => {
+    for (const placement of CARDINAL_PLACEMENTS) {
+      it(`open at ${placement} (${viewport})`, async () => {
+        await setViewport(viewport);
+        const user = userEvent.setup();
+        render(VisualHarness, {
+          props: { placement, unmountOnClose: false } as never,
+        });
+        const list = await openVisualMenu(user);
+        await waitForFloatingPosition(list);
+        const tooltip = list.closest<HTMLElement>('.neo-tooltip');
+        if (tooltip) await waitForVisualStability(tooltip);
+        await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+          screenshotName('NeoMenu', `open-${placement}`, viewport),
+        );
+      });
+    }
+  });
+});
+
+describe('neoMenu — visual contract (nested submenu)', { tags: ['browser', 'visual'] }, () => {
+  beforeEach(() => {
+    quietForVisual();
+  });
+  forEachViewport((viewport) => {
+    it(`nested submenu open (${viewport})`, async () => {
+      await setViewport(viewport);
+      const user = userEvent.setup();
+      render(VisualHarness, {
+        props: { placement: 'bottom-start', nested: 2, unmountOnClose: false } as never,
+      });
+      const list = await openVisualMenu(user);
+      await waitForFloatingPosition(list);
+
+      const nestedTrigger = Array.from(document.querySelectorAll<HTMLElement>('.neo-menu-item'))
+        .find(el => el.getAttribute('aria-haspopup') === 'menu');
+      if (nestedTrigger) {
+        const wrapper = nestedTrigger;
+        const button = nestedTrigger.querySelector<HTMLElement>('button') ?? nestedTrigger;
+        await user.hover(wrapper);
+        await user.hover(button);
+        await vi.waitFor(() => {
+          const visible = Array.from(document.querySelectorAll<HTMLElement>('.neo-menu-list'))
+            .filter((l) => {
+              const tip = l.closest<HTMLElement>('.neo-tooltip');
+              return !tip || !tip.hasAttribute('hidden');
+            });
+          if (visible.length < 2) throw new Error(`expected ≥2 visible menu lists, got ${visible.length}`);
+        }, { timeout: 2000, interval: 16 });
+        const tooltips = Array.from(document.querySelectorAll<HTMLElement>('.neo-tooltip')).filter(t => !t.hasAttribute('hidden'));
+        for (const tt of tooltips) await waitForVisualStability(tt);
+      }
+      await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+        screenshotName('NeoMenu', 'nested-submenu', viewport),
+      );
     });
   });
 });

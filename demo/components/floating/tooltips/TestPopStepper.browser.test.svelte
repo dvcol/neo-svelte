@@ -10,12 +10,16 @@
     placement?: string;
     closable?: boolean;
     rounded?: boolean;
+    open?: boolean;
+    unmountOnClose?: boolean;
   };
 
-  const {
+  let {
     placement = 'bottom',
     closable = true,
     rounded = false,
+    open = $bindable(false),
+    unmountOnClose = false,
   }: Props = $props();
 
   let active = $state(0);
@@ -33,6 +37,7 @@
   <div class="visual-frame" data-testid="visual-target">
     <NeoPopStepper
       bind:active
+      bind:open
       {rounded}
       {closable}
       steps={[
@@ -42,7 +47,7 @@
       ] satisfies NeoStepperStep[]}
       header="Stepper"
       tooltip="Steps"
-      tooltipProps={{ placement, openOnHover: false, openOnFocus: false }}
+      tooltipProps={{ placement, openOnHover: false, openOnFocus: false, unmountOnClose }}
       children={trigger}
     />
   </div>

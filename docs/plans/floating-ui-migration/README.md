@@ -16,10 +16,11 @@
 
 ## Plan files
 
-This work is split into two plan files. They are designed to be read independently — each starts with a self-contained context recap so the second one can be executed without re-reading the first.
+This work is split into three plan files. They are designed to be read independently — each starts with a self-contained context recap so later phases can be executed without re-reading earlier ones.
 
 - [`phase-1.md`](./phase-1.md) — Phase 0 (test infrastructure) + Phase 1 (TNR coverage of all of `src/lib/`).
-- [`phase-2.md`](./phase-2.md) — Phase 2 (migration to `@floating-ui/dom` via `{@attach}`) + Phase 3 (verification).
+- [`phase-2.md`](./phase-2.md) — Phase 2 (first migration attempt to `@floating-ui/dom` via custom thin wrapper).
+- [`phase-3.md`](./phase-3.md) — Splinter the failed phase-2 attempt; re-port skeleton 1-1 in Svelte 5 idiomatic; widen Menu/Range browser coverage. **Current plan of record.**
 
 ## Direct migration surface (the only files that import `@skeletonlabs/floating-ui-svelte`)
 

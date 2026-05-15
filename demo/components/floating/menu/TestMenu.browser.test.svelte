@@ -12,15 +12,19 @@
     rounded?: boolean;
     reverse?: boolean;
     nested?: number;
+    open?: boolean;
+    unmountOnClose?: boolean;
   };
 
-  const {
+  let {
     placement = 'bottom-start',
     keepOpenOnSelect = false,
     keepOpenOnHover = false,
     rounded = false,
     reverse = false,
     nested = 1,
+    open = $bindable(false),
+    unmountOnClose = false,
   }: Props = $props();
 
   const baseItems: NeoMenuItem[] = [
@@ -41,8 +45,6 @@
   };
 
   const items = $derived(buildNestedItems(nested));
-
-  let open = $state(false);
 </script>
 
 <NeoThemeProvider>
@@ -55,8 +57,9 @@
       {keepOpenOnHover}
       {rounded}
       {reverse}
+      {unmountOnClose}
     >
-      <NeoButton class="trigger" elevation="0" toggle bind:checked={open}>Open Menu</NeoButton>
+      <NeoButton class="trigger" elevation="0" toggle bind:checked={open} data-testid="trigger-button">Open Menu</NeoButton>
     </NeoMenu>
   </div>
 </NeoThemeProvider>

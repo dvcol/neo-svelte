@@ -10,15 +10,19 @@
     openOnClick?: boolean;
     rounded?: boolean;
     search?: boolean;
+    open?: boolean;
+    unmountOnClose?: boolean;
   };
 
-  const {
+  let {
     placement = 'bottom',
     openOnHover = true,
     openOnFocus = false,
     openOnClick = false,
     rounded = false,
     search = false,
+    open = $bindable(false),
+    unmountOnClose = false,
   }: Props = $props();
 
   const items = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape'];
@@ -33,8 +37,9 @@
       {rounded}
       {search}
       bind:selected
+      bind:open
       height="20rem"
-      tooltipProps={{ placement, openOnHover, openOnFocus, openOnClick }}
+      tooltipProps={{ placement, openOnHover, openOnFocus, openOnClick, unmountOnClose }}
     >
       <NeoButton class="trigger" text {rounded}>Hover Select</NeoButton>
     </NeoPopSelect>
