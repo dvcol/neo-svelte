@@ -2,13 +2,13 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import NeoFormHarness from './NeoFormHarness.test.svelte';
+import NeoFormHarness from './NeoForm.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoForm — render', () => {
+describe('neoForm — render', { tags: ['jsdom'] }, () => {
   it('renders a <form> with class .neo-form and the children content', async () => {
     const { container } = render(NeoFormHarness, {
       props: { childrenText: 'fields' } as never,
@@ -60,7 +60,7 @@ describe('neoForm — render', () => {
   });
 });
 
-describe('neoForm — events', () => {
+describe('neoForm — events', { tags: ['jsdom'] }, () => {
   it('onsubmit is invoked when the form is submitted', async () => {
     const onsubmit = vi.fn((e: SubmitEvent) => e.preventDefault());
     const { container } = render(NeoFormHarness, {
@@ -84,7 +84,7 @@ describe('neoForm — events', () => {
   });
 });
 
-describe('neoForm — bindings', () => {
+describe('neoForm — bindings', { tags: ['jsdom'] }, () => {
   it('exposes a validate() method and a context getter on the form element', async () => {
     const { container } = render(NeoFormHarness, {
       props: { childrenText: 'x' } as never,

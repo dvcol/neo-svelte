@@ -12,7 +12,7 @@ function getColor(scope: ParentNode = document): HTMLInputElement | null {
   return scope.querySelector<HTMLInputElement>('input.neo-color-picker');
 }
 
-describe('neoColorPickerSelector', () => {
+describe('neoColorPickerSelector', { tags: ['jsdom'] }, () => {
   it('renders an <input type="color">', async () => {
     const { container } = render(NeoColorPickerSelector, { props: { value: '#abcdef' } as never });
     await tick();

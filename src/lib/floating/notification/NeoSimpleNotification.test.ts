@@ -1,13 +1,14 @@
 import type { NeoNotificationStackService } from '~/floating/notification/neo-notification-provider.model.js';
 import type { NeoNotification, NeoNotificationQueued } from '~/floating/notification/neo-notification.model.js';
 
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoNotificationStackHarness.test.svelte';
+import Harness from './NeoNotificationStack.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -33,7 +34,7 @@ function getNotification(): HTMLElement | null {
   return document.querySelector<HTMLElement>('.neo-notification');
 }
 
-describe('neoNotification — render & content', () => {
+describe('neoNotification — render & content', { tags: ['jsdom'] }, () => {
   it('renders title / subtitle / content text from the queued item', async () => {
     const instance = mountStack();
     instance.add({
@@ -118,7 +119,7 @@ describe('neoNotification — render & content', () => {
   });
 });
 
-describe('neoNotification — close button', () => {
+describe('neoNotification — close button', { tags: ['jsdom'] }, () => {
   it('renders a close button by default (close=true)', async () => {
     const instance = mountStack();
     instance.add({ id: 'c1', duration: 0 });
@@ -154,7 +155,7 @@ describe('neoNotification — close button', () => {
   });
 });
 
-describe('neoNotification — action button', () => {
+describe('neoNotification — action button', { tags: ['jsdom'] }, () => {
   it('renders an action button when actionProps is provided on the item', async () => {
     const instance = mountStack();
     instance.add({

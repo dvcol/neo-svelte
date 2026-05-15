@@ -2,13 +2,13 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoVirtualListHarness from './NeoVirtualListHarness.test.svelte';
+import NeoVirtualListHarness from './NeoVirtualList.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoVirtualList — render', () => {
+describe('neoVirtualList — render', { tags: ['jsdom'] }, () => {
   it('renders the before slot when cursor.start === 0', async () => {
     const items = [{ id: 1 }];
     const { container } = render(NeoVirtualListHarness, { props: { items, before: true } as never });

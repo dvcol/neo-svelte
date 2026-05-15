@@ -13,6 +13,18 @@
 			"src/*": [
 				"../src/*"
 			],
+			"test": [
+				"../test"
+			],
+			"test/*": [
+				"../test/*"
+			],
+			"demo": [
+				"../demo"
+			],
+			"demo/*": [
+				"../demo/*"
+			],
 			"$lib": [
 				"../src/lib"
 			],

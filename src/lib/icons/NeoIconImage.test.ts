@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconImage — defaults', () => {
+describe('neoIconImage — defaults', { tags: ['jsdom'] }, () => {
   it('renders the frame + line and the fill group', async () => {
     const { container } = render(NeoIconImage, { props: {} as never });
     await tick();
@@ -42,7 +42,7 @@ describe('neoIconImage — defaults', () => {
   });
 });
 
-describe('neoIconImage — delay', () => {
+describe('neoIconImage — delay', { tags: ['jsdom'] }, () => {
   it('delay forwards into begin attributes (delay=0 ⇒ "0s", "0.6s", "1s", "1.3s")', async () => {
     const { container } = render(NeoIconImage, { props: {} as never });
     await tick();

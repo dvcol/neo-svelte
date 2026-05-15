@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import Harness from './NeoRadioButtonHarness.test.svelte';
+import NeoRadioButton from './NeoRadioButton.svelte';
 
 afterEach(() => {
   cleanup();
@@ -13,9 +13,9 @@ function getRadio(scope: ParentNode = document): HTMLButtonElement | null {
   return scope.querySelector<HTMLButtonElement>('button.neo-radio-button');
 }
 
-describe('neoRadioButton — render', () => {
+describe('neoRadioButton — render', { tags: ['jsdom'] }, () => {
   it('renders <button role=radio> with aria-checked=false by default', async () => {
-    const { container } = render(Harness, {});
+    const { container } = render(NeoRadioButton, {});
     await tick();
     const rb = getRadio(container);
     expect(rb).not.toBeNull();
@@ -25,7 +25,7 @@ describe('neoRadioButton — render', () => {
   });
 
   it('checked=true reflects aria-checked=true and .neo-checked', async () => {
-    const { container } = render(Harness, { props: { checked: true } as never });
+    const { container } = render(NeoRadioButton, { props: { checked: true } as never });
     await tick();
     const rb = getRadio(container);
     expect(rb?.getAttribute('aria-checked')).toBe('true');
@@ -33,16 +33,16 @@ describe('neoRadioButton — render', () => {
   });
 
   it('disabled=true applies .neo-disabled', async () => {
-    const { container } = render(Harness, { props: { disabled: true } as never });
+    const { container } = render(NeoRadioButton, { props: { disabled: true } as never });
     await tick();
     expect(getRadio(container)?.classList.contains('neo-disabled')).toBe(true);
   });
 });
 
-describe('neoRadioButton — click toggles checked', () => {
+describe('neoRadioButton — click toggles checked', { tags: ['jsdom'] }, () => {
   it('click on unchecked sets checked=true and aria-checked=true', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, {});
+    const { container } = render(NeoRadioButton, {});
     await tick();
     const rb = getRadio(container)!;
     await user.click(rb);
@@ -52,7 +52,7 @@ describe('neoRadioButton — click toggles checked', () => {
 
   it('click on checked toggles back to unchecked', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { checked: true } as never });
+    const { container } = render(NeoRadioButton, { props: { checked: true } as never });
     await tick();
     const rb = getRadio(container)!;
     await user.click(rb);
@@ -62,7 +62,7 @@ describe('neoRadioButton — click toggles checked', () => {
 
   it('disabled blocks click from changing state', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { disabled: true } as never });
+    const { container } = render(NeoRadioButton, { props: { disabled: true } as never });
     await tick();
     const rb = getRadio(container)!;
     await user.click(rb);

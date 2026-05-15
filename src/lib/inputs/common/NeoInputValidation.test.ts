@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoInputValidation — visibility / disabled propagation', () => {
+describe('neoInputValidation — visibility / disabled propagation', { tags: ['jsdom'] }, () => {
   it('with no validation, no message, no error → wrapper is omitted (disabled)', async () => {
     const { container } = render(NeoInputValidation, {});
     await tick();
@@ -29,7 +29,7 @@ describe('neoInputValidation — visibility / disabled propagation', () => {
   });
 });
 
-describe('neoInputValidation — error gating', () => {
+describe('neoInputValidation — error gating', { tags: ['jsdom'] }, () => {
   it('validation=true + valid=false → exposes validationMessage as error', async () => {
     const { container } = render(NeoInputValidation, {
       props: { validation: true, valid: false, validationMessage: 'native bad' } as never,

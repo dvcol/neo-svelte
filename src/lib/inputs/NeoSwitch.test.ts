@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import Harness from './NeoSwitchHarness.test.svelte';
+import NeoSwitch from './NeoSwitch.svelte';
 
 afterEach(() => {
   cleanup();
@@ -21,9 +21,9 @@ function getButton(scope: ParentNode = document): HTMLButtonElement | null {
   return scope.querySelector<HTMLButtonElement>('button.neo-switch-button');
 }
 
-describe('neoSwitch — render', () => {
+describe('neoSwitch — render', { tags: ['jsdom'] }, () => {
   it('renders container, hidden native checkbox and styled switch button', async () => {
-    const { container } = render(Harness, {});
+    const { container } = render(NeoSwitch, {});
     await tick();
     expect(getContainer(container)).not.toBeNull();
     const input = getNativeInput(container);
@@ -35,7 +35,7 @@ describe('neoSwitch — render', () => {
   });
 
   it('renders a label when provided and links via for', async () => {
-    const { container } = render(Harness, { props: { label: 'Notif', id: 'sw-1' } as never });
+    const { container } = render(NeoSwitch, { props: { label: 'Notif', id: 'sw-1' } as never });
     await tick();
     const label = container.querySelector<HTMLLabelElement>('label.neo-label');
     expect(label?.textContent?.trim()).toBe('Notif');
@@ -43,22 +43,22 @@ describe('neoSwitch — render', () => {
   });
 
   it('checked=true reflects aria-checked=true on the button', async () => {
-    const { container } = render(Harness, { props: { checked: true } as never });
+    const { container } = render(NeoSwitch, { props: { checked: true } as never });
     await tick();
     expect(getButton(container)?.getAttribute('aria-checked')).toBe('true');
   });
 
   it('indeterminate=true reflects aria-checked="mixed"', async () => {
-    const { container } = render(Harness, { props: { indeterminate: true } as never });
+    const { container } = render(NeoSwitch, { props: { indeterminate: true } as never });
     await tick();
     expect(getButton(container)?.getAttribute('aria-checked')).toBe('mixed');
   });
 });
 
-describe('neoSwitch — interaction', () => {
+describe('neoSwitch — interaction', { tags: ['jsdom'] }, () => {
   it('clicking the switch button toggles checked through the native input', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, {});
+    const { container } = render(NeoSwitch, {});
     await tick();
     await user.click(getButton(container)!);
     await tick();
@@ -67,7 +67,7 @@ describe('neoSwitch — interaction', () => {
 
   it('disabled blocks clicks from changing state', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { disabled: true } as never });
+    const { container } = render(NeoSwitch, { props: { disabled: true } as never });
     await tick();
     await user.click(getButton(container)!);
     await tick();
@@ -75,7 +75,7 @@ describe('neoSwitch — interaction', () => {
   });
 
   it('loading=true renders the suffix loading icon', async () => {
-    const { container } = render(Harness, { props: { loading: true } as never });
+    const { container } = render(NeoSwitch, { props: { loading: true } as never });
     await tick();
     expect(container.querySelector('.neo-switch-loading')).not.toBeNull();
   });

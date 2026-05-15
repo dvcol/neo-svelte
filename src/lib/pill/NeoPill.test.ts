@@ -3,13 +3,13 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import NeoPillHarness from './NeoPillHarness.test.svelte';
+import NeoPillHarness from './NeoPill.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoPill — host element & content', () => {
+describe('neoPill — host element & content', { tags: ['jsdom'] }, () => {
   it('default tag=div renders the host with .neo-pill', async () => {
     const { container } = render(NeoPillHarness, { props: { label: 'hi' } as never });
     await tick();
@@ -62,7 +62,7 @@ describe('neoPill — host element & content', () => {
   });
 });
 
-describe('neoPill — size data-type', () => {
+describe('neoPill — size data-type', { tags: ['jsdom'] }, () => {
   it('size=small reflects data-type="small"', async () => {
     const { container } = render(NeoPillHarness, {
       props: { size: 'small', label: 'L' } as never,
@@ -94,7 +94,7 @@ describe('neoPill — size data-type', () => {
   });
 });
 
-describe('neoPill — close affix', () => {
+describe('neoPill — close affix', { tags: ['jsdom'] }, () => {
   it('close=true renders the close affix and clicking it fires onClose', async () => {
     const onClose = vi.fn();
     const user = userEvent.setup();
@@ -143,7 +143,7 @@ describe('neoPill — close affix', () => {
   });
 });
 
-describe('neoPill — style modifiers', () => {
+describe('neoPill — style modifiers', { tags: ['jsdom'] }, () => {
   it('rounded=true (default) adds .neo-rounded', async () => {
     const { container } = render(NeoPillHarness, { props: { label: 'L' } as never });
     await tick();
@@ -243,7 +243,7 @@ describe('neoPill — style modifiers', () => {
   });
 });
 
-describe('neoPill — elevation', () => {
+describe('neoPill — elevation', { tags: ['jsdom'] }, () => {
   it('elevation=0 (default) adds .neo-flat', async () => {
     const { container } = render(NeoPillHarness, {
       props: { elevation: 0, label: 'L' } as never,

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { invertPlacement, reversePlacement } from './neo-placement.model.js';
 
-describe('reversePlacement', () => {
+describe('reversePlacement', { tags: ['jsdom'] }, () => {
   it.each([
     ['right', 'left'],
     ['right-start', 'left-start'],
@@ -26,7 +26,7 @@ describe('reversePlacement', () => {
   });
 });
 
-describe('invertPlacement', () => {
+describe('invertPlacement', { tags: ['jsdom'] }, () => {
   it.each([
     ['top', 'bottom'],
     ['top-start', 'bottom-start'],

@@ -17,7 +17,7 @@ function fireImgEvent(scope: ParentNode, event: 'load' | 'error'): HTMLImageElem
   return img;
 }
 
-describe('neoImage — render', () => {
+describe('neoImage — render', { tags: ['jsdom'] }, () => {
   it('renders a div.neo-image wrapping an <img>', async () => {
     const { container } = render(NeoImage, { props: { src: PNG, alt: 'a' } as never });
     await tick();
@@ -101,7 +101,7 @@ describe('neoImage — render', () => {
   });
 });
 
-describe('neoImage — events', () => {
+describe('neoImage — events', { tags: ['jsdom'] }, () => {
   it('img onload sets data-loaded="true" and clears error', async () => {
     const onload = vi.fn();
     const { container } = render(NeoImage, { props: { src: PNG, onload } as never });

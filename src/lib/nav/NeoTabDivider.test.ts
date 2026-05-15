@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoTabDivider', () => {
+describe('neoTabDivider', { tags: ['jsdom'] }, () => {
   it('renders a divider with the neo-tab-divider class', async () => {
     const { container } = render(NeoTabDivider, { props: {} as never });
     await tick();

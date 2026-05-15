@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import Harness from './NeoCheckboxButtonHarness.test.svelte';
+import NeoCheckboxButton from './NeoCheckboxButton.svelte';
 
 afterEach(() => {
   cleanup();
@@ -13,9 +13,9 @@ function getCheckbox(scope: ParentNode = document): HTMLButtonElement | null {
   return scope.querySelector<HTMLButtonElement>('button.neo-checkbox-button');
 }
 
-describe('neoCheckboxButton — render', () => {
+describe('neoCheckboxButton — render', { tags: ['jsdom'] }, () => {
   it('renders a <button role=checkbox> with aria-checked=false by default', async () => {
-    const { container } = render(Harness, {});
+    const { container } = render(NeoCheckboxButton, {});
     await tick();
     const cb = getCheckbox(container);
     expect(cb).not.toBeNull();
@@ -25,7 +25,7 @@ describe('neoCheckboxButton — render', () => {
   });
 
   it('checked=true reflects aria-checked=true and .neo-checked', async () => {
-    const { container } = render(Harness, { props: { checked: true } as never });
+    const { container } = render(NeoCheckboxButton, { props: { checked: true } as never });
     await tick();
     const cb = getCheckbox(container);
     expect(cb?.getAttribute('aria-checked')).toBe('true');
@@ -33,7 +33,7 @@ describe('neoCheckboxButton — render', () => {
   });
 
   it('indeterminate=true reflects aria-checked="mixed" and .neo-checked', async () => {
-    const { container } = render(Harness, { props: { indeterminate: true } as never });
+    const { container } = render(NeoCheckboxButton, { props: { indeterminate: true } as never });
     await tick();
     const cb = getCheckbox(container);
     expect(cb?.getAttribute('aria-checked')).toBe('mixed');
@@ -41,16 +41,16 @@ describe('neoCheckboxButton — render', () => {
   });
 
   it('disabled=true applies .neo-disabled', async () => {
-    const { container } = render(Harness, { props: { disabled: true } as never });
+    const { container } = render(NeoCheckboxButton, { props: { disabled: true } as never });
     await tick();
     expect(getCheckbox(container)?.classList.contains('neo-disabled')).toBe(true);
   });
 });
 
-describe('neoCheckboxButton — click cycles state', () => {
+describe('neoCheckboxButton — click cycles state', { tags: ['jsdom'] }, () => {
   it('click on unchecked toggles to checked, sets touched=true, leaves aria-checked=true', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, {});
+    const { container } = render(NeoCheckboxButton, {});
     await tick();
     const cb = getCheckbox(container)!;
     await user.click(cb);
@@ -60,7 +60,7 @@ describe('neoCheckboxButton — click cycles state', () => {
 
   it('click on checked toggles back to unchecked', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { checked: true } as never });
+    const { container } = render(NeoCheckboxButton, { props: { checked: true } as never });
     await tick();
     const cb = getCheckbox(container)!;
     await user.click(cb);
@@ -70,7 +70,7 @@ describe('neoCheckboxButton — click cycles state', () => {
 
   it('click on indeterminate clears indeterminate and sets checked=true', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { indeterminate: true } as never });
+    const { container } = render(NeoCheckboxButton, { props: { indeterminate: true } as never });
     await tick();
     const cb = getCheckbox(container)!;
     expect(cb.getAttribute('aria-checked')).toBe('mixed');
@@ -82,7 +82,7 @@ describe('neoCheckboxButton — click cycles state', () => {
 
   it('disabled prevents click from changing state', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { disabled: true } as never });
+    const { container } = render(NeoCheckboxButton, { props: { disabled: true } as never });
     await tick();
     const cb = getCheckbox(container)!;
     await user.click(cb);
@@ -91,11 +91,11 @@ describe('neoCheckboxButton — click cycles state', () => {
   });
 });
 
-describe('neoCheckboxButton — onclick passthrough', () => {
+describe('neoCheckboxButton — onclick passthrough', { tags: ['jsdom'] }, () => {
   it('onclick prop fires on every click, regardless of checked state', async () => {
     const onclick = vi.fn();
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { onclick } as never });
+    const { container } = render(NeoCheckboxButton, { props: { onclick } as never });
     await tick();
     const cb = getCheckbox(container)!;
     await user.click(cb);
@@ -107,7 +107,7 @@ describe('neoCheckboxButton — onclick passthrough', () => {
     // The component only guards internal state on disabled; onclick attr fires still.
     const onclick = vi.fn();
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { disabled: true, onclick } as never });
+    const { container } = render(NeoCheckboxButton, { props: { disabled: true, onclick } as never });
     await tick();
     await user.click(getCheckbox(container)!);
     expect(onclick).toHaveBeenCalled();

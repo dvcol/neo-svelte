@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Colors, ColorVariables, getColorVariable } from './colors.utils.js';
 
-describe('getColorVariable', () => {
+describe('getColorVariable', { tags: ['jsdom'] }, () => {
   it('returns undefined for falsy color', () => {
     expect(getColorVariable()).toBeUndefined();
     expect(getColorVariable('')).toBe('');

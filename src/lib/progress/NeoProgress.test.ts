@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoProgress — render', () => {
+describe('neoProgress — render', { tags: ['jsdom'] }, () => {
   it('renders an element with role=progressbar and .neo-progress', async () => {
     const { container } = render(NeoProgress, { props: {} as never });
     await tick();

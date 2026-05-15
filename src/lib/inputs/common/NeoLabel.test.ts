@@ -13,7 +13,7 @@ function getLabel(scope: ParentNode = document): HTMLLabelElement | null {
   return scope.querySelector<HTMLLabelElement>('label.neo-label');
 }
 
-describe('neoLabel — render', () => {
+describe('neoLabel — render', { tags: ['jsdom'] }, () => {
   it('renders a <label> with .neo-label inside .neo-label-container', async () => {
     const { container } = render(NeoLabel, { props: { label: 'Email' } });
     await tick();
@@ -70,7 +70,7 @@ describe('neoLabel — render', () => {
   });
 });
 
-describe('neoLabel — for/click semantics', () => {
+describe('neoLabel — for/click semantics', { tags: ['jsdom'] }, () => {
   it('clicking the label focuses the associated <input> via for', async () => {
     const user = userEvent.setup();
     const { container } = render(NeoLabel, { props: { label: 'L', for: 'inp-1' } as never });

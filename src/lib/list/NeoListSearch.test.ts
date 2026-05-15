@@ -5,7 +5,6 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { itemLabelSort, itemSearchFilter } from './neo-list-search.model.js';
 import NeoListSearch from './NeoListSearch.svelte';
-import NeoListSearchHarness from './NeoListSearchHarness.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -15,7 +14,7 @@ function getInput(scope: ParentNode = document): HTMLInputElement | null {
   return scope.querySelector<HTMLInputElement>('input.neo-input');
 }
 
-describe('neoListSearch — render', () => {
+describe('neoListSearch — render', { tags: ['jsdom'] }, () => {
   it('renders a type=search input with the default placeholder', async () => {
     const { container } = render(NeoListSearch, {});
     await tick();
@@ -43,7 +42,7 @@ describe('neoListSearch — render', () => {
   });
 });
 
-describe('neoListSearch — filter / sort wiring', () => {
+describe('neoListSearch — filter / sort wiring', { tags: ['jsdom'] }, () => {
   it('typing updates context.highlight after the debounce delay', async () => {
     const context = {
       items: [],
@@ -68,7 +67,7 @@ describe('neoListSearch — filter / sort wiring', () => {
     } as never;
     const user = userEvent.setup();
     let invert: boolean | undefined;
-    const { container } = render(NeoListSearchHarness, {
+    const { container } = render(NeoListSearch, {
       props: {
         context,
         get invert() {
@@ -93,7 +92,7 @@ describe('neoListSearch — filter / sort wiring', () => {
   });
 });
 
-describe('itemSearchFilter', () => {
+describe('itemSearchFilter', { tags: ['jsdom'] }, () => {
   it('returns true when the search string is empty', () => {
     expect(itemSearchFilter({ value: 'x', label: 'Alpha' }, '')).toBe(true);
     expect(itemSearchFilter({ value: 'x', label: 'Alpha' })).toBe(true);
@@ -116,7 +115,7 @@ describe('itemSearchFilter', () => {
   });
 });
 
-describe('itemLabelSort', () => {
+describe('itemLabelSort', { tags: ['jsdom'] }, () => {
   const a = { value: 'a', label: 'Alpha' } as never;
   const b = { value: 'b', label: 'Bravo' } as never;
 

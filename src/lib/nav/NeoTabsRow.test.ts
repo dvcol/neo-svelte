@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoTabsRowHarness from './NeoTabsRowHarness.test.svelte';
+import NeoTabsRowHarness from './NeoTabsRow.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -18,7 +18,7 @@ function getTabButtons(scope: ParentNode = document): HTMLButtonElement[] {
   return Array.from(scope.querySelectorAll<HTMLButtonElement>('.neo-tab > button.neo-tab-button[role="tab"]'));
 }
 
-describe('neoTabsRow — render', () => {
+describe('neoTabsRow — render', { tags: ['jsdom'] }, () => {
   it('renders one tab per item with role=tab', async () => {
     const { container } = render(NeoTabsRowHarness, { props: { tabs: sampleTabs } as never });
     await tick();

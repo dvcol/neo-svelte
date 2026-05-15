@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ArrowPrefix, HexColorRegex, HexColorRegexString } from './regex.utils.js';
 
-describe('hexColorRegex', () => {
+describe('hexColorRegex', { tags: ['jsdom'] }, () => {
   it('matches 6-digit hex colors (case-insensitive)', () => {
     expect(HexColorRegex.test('#ff00aa')).toBe(true);
     expect(HexColorRegex.test('#FF00AA')).toBe(true);
@@ -29,7 +29,7 @@ describe('hexColorRegex', () => {
   });
 });
 
-describe('hexColorRegexString', () => {
+describe('hexColorRegexString', { tags: ['jsdom'] }, () => {
   it('encodes the same alternation as HexColorRegex (case-sensitive)', () => {
     const re = new RegExp(HexColorRegexString);
     expect(re.test('#ff00aa')).toBe(true);
@@ -38,7 +38,7 @@ describe('hexColorRegexString', () => {
   });
 });
 
-describe('arrowPrefix', () => {
+describe('arrowPrefix', { tags: ['jsdom'] }, () => {
   it('matches arrow keyboard event names like ArrowUp/ArrowDown', () => {
     expect(ArrowPrefix.test('ArrowUp')).toBe(true);
     expect(ArrowPrefix.test('ArrowDown')).toBe(true);

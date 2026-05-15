@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoProgressBar — render', () => {
+describe('neoProgressBar — render', { tags: ['jsdom'] }, () => {
   it('renders the bar wrapper with .neo-progress-bar and inner .neo-progress', async () => {
     const { container } = render(NeoProgressBar, { props: {} as never });
     await tick();

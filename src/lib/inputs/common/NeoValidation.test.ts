@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoValidation — render', () => {
+describe('neoValidation — render', { tags: ['jsdom'] }, () => {
   it('disabled=true renders only children (no wrapper)', async () => {
     const { container } = render(NeoValidation, { props: { disabled: true } as never });
     await tick();

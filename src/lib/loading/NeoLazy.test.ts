@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoLazyHarness from './NeoLazyHarness.test.svelte';
+import NeoLazyHarness from './NeoLazy.test.svelte';
 import NeoLazyTarget from './NeoLazyTarget.test.svelte';
 
 afterEach(() => {
@@ -13,7 +13,7 @@ async function flushMicrotasks(): Promise<void> {
   await Promise.resolve();
 }
 
-describe('neoLazy', () => {
+describe('neoLazy', { tags: ['jsdom'] }, () => {
   it('renders the default loader while the component promise is pending', async () => {
     const component = new Promise<{ default: typeof NeoLazyTarget }>(() => {});
     const { container } = render(NeoLazyHarness, {

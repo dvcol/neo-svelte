@@ -27,7 +27,7 @@ function makeFileList(...names: string[]): FileList {
   return list;
 }
 
-describe('neoFilePickerCard — empty state', () => {
+describe('neoFilePickerCard — empty state', { tags: ['jsdom'] }, () => {
   it('renders the empty placeholder when no files are provided', async () => {
     const { container } = render(NeoFilePickerCard, { props: { placeholder: 'Choose a file', dropText: 'Drop a File here' } as never });
     await tick();
@@ -52,7 +52,7 @@ describe('neoFilePickerCard — empty state', () => {
   });
 });
 
-describe('neoFilePickerCard — file list', () => {
+describe('neoFilePickerCard — file list', { tags: ['jsdom'] }, () => {
   it('renders a row per file with the file name', async () => {
     const files = makeFileList('a.txt', 'b.txt');
     const { container } = render(NeoFilePickerCard, { props: { files, placeholder: 'Choose a file' } as never });

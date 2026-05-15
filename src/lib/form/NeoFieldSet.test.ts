@@ -2,13 +2,13 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoFieldSetHarness from './NeoFieldSetHarness.test.svelte';
+import NeoFieldSetHarness from './NeoFieldSet.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoFieldSet — render', () => {
+describe('neoFieldSet — render', { tags: ['jsdom'] }, () => {
   it('renders a fieldset with .neo-fieldset and the children content', async () => {
     const { container } = render(NeoFieldSetHarness, {
       props: { childrenText: 'inside' } as never,
@@ -58,7 +58,7 @@ describe('neoFieldSet — render', () => {
   });
 });
 
-describe('neoFieldSet — modifiers', () => {
+describe('neoFieldSet — modifiers', { tags: ['jsdom'] }, () => {
   it('borderless=true adds .neo-borderless on the fieldset', async () => {
     const { container } = render(NeoFieldSetHarness, {
       props: { borderless: true, childrenText: 'x' } as never,
@@ -85,7 +85,7 @@ describe('neoFieldSet — modifiers', () => {
   });
 });
 
-describe('neoFieldSet — sizing (width / height via toSize)', () => {
+describe('neoFieldSet — sizing (width / height via toSize)', { tags: ['jsdom'] }, () => {
   it('plain string width forwards as inline width only', async () => {
     const { container } = render(NeoFieldSetHarness, {
       props: { width: '320px', childrenText: 'x' } as never,

@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoHtml — sanitization & rendering', () => {
+describe('neoHtml — sanitization & rendering', { tags: ['jsdom'] }, () => {
   it('renders no HTML elements when html is undefined', async () => {
     const { container } = render(NeoHtml, { props: {} as never });
     await tick();

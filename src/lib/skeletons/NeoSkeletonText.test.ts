@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoSkeletonText — defaults', () => {
+describe('neoSkeletonText — defaults', { tags: ['jsdom'] }, () => {
   it('renders .neo-skeleton-text with one paragraph and 6 lines (fallback)', async () => {
     const { container } = render(NeoSkeletonText, { props: {} as never });
     await tick();
@@ -50,7 +50,7 @@ describe('neoSkeletonText — defaults', () => {
   });
 });
 
-describe('neoSkeletonText — title', () => {
+describe('neoSkeletonText — title', { tags: ['jsdom'] }, () => {
   it('title=true renders an additional .neo-title line above paragraphs', async () => {
     const { container } = render(NeoSkeletonText, {
       props: { title: true, lines: 1 } as never,
@@ -66,7 +66,7 @@ describe('neoSkeletonText — title', () => {
   });
 });
 
-describe('neoSkeletonText — modifiers', () => {
+describe('neoSkeletonText — modifiers', { tags: ['jsdom'] }, () => {
   it('justify=true adds .neo-justify on each paragraph', async () => {
     const { container } = render(NeoSkeletonText, {
       props: { justify: true, lines: 1 } as never,
@@ -93,7 +93,7 @@ describe('neoSkeletonText — modifiers', () => {
   });
 });
 
-describe('neoSkeletonText — disabled bypass', () => {
+describe('neoSkeletonText — disabled bypass', { tags: ['jsdom'] }, () => {
   it('disabled=true with no content slot renders nothing', async () => {
     const { container } = render(NeoSkeletonText, {
       props: { disabled: true } as never,

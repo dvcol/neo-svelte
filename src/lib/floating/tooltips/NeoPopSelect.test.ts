@@ -1,10 +1,11 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoPopSelectHarness.test.svelte';
+import Harness from './NeoPopSelect.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -26,7 +27,7 @@ const items = [
   { value: 'cherry', label: 'Cherry' },
 ];
 
-describe('neoPopSelect — render', () => {
+describe('neoPopSelect — render', { tags: ['jsdom'] }, () => {
   it('renders the trigger element from children', () => {
     const { getByTestId } = renderWithPortalTarget(Harness, { items });
     expect(getByTestId('trigger-button').textContent).toBe('open select');
@@ -58,7 +59,7 @@ describe('neoPopSelect — render', () => {
   });
 });
 
-describe('neoPopSelect — search', () => {
+describe('neoPopSelect — search', { tags: ['jsdom'] }, () => {
   it('does not render the search input when search=false (default)', async () => {
     renderWithPortalTarget(Harness, { items, open: true, search: false });
     await tick();
@@ -72,7 +73,7 @@ describe('neoPopSelect — search', () => {
   });
 });
 
-describe('neoPopSelect — multiple', () => {
+describe('neoPopSelect — multiple', { tags: ['jsdom'] }, () => {
   it('selecting two options replaces the previous one when multiple is omitted (default single-select)', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
@@ -129,7 +130,7 @@ describe('neoPopSelect — multiple', () => {
   });
 });
 
-describe('neoPopSelect — selection', () => {
+describe('neoPopSelect — selection', { tags: ['jsdom'] }, () => {
   it('fires onSelect and onChange with the selected value when an option is clicked', async () => {
     const onSelect = vi.fn();
     const onChange = vi.fn();
@@ -147,7 +148,7 @@ describe('neoPopSelect — selection', () => {
   });
 });
 
-describe('neoPopSelect — items reactivity', () => {
+describe('neoPopSelect — items reactivity', { tags: ['jsdom'] }, () => {
   it('renders the new option set when items prop changes', async () => {
     const { rerender } = renderWithPortalTarget(Harness, { items, open: true });
     await tick();

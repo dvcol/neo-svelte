@@ -16,7 +16,7 @@ function getColor(scope: ParentNode = document): HTMLInputElement | null {
   return scope.querySelector<HTMLInputElement>('input.neo-color-picker');
 }
 
-describe('neoColorPicker — render', () => {
+describe('neoColorPicker — render', { tags: ['jsdom'] }, () => {
   it('renders a <input type="text"> for the hex value and a color selector', async () => {
     const { container } = render(NeoColorPicker, {});
     await tick();

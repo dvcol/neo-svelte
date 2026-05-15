@@ -17,7 +17,7 @@ function getContent(scope: ParentNode = document): HTMLElement | null {
   return scope.querySelector<HTMLElement>('.neo-list-item-content');
 }
 
-describe('neoListBaseItem — render', () => {
+describe('neoListBaseItem — render', { tags: ['jsdom'] }, () => {
   it('renders a non-button content when no href, onclick or select is provided', async () => {
     const { container } = render(NeoListBaseItem, { props: { item: { value: 'a', label: 'Alpha' }, index: 0 } as never });
     await tick();
@@ -88,7 +88,7 @@ describe('neoListBaseItem — render', () => {
   });
 });
 
-describe('neoListBaseItem — interaction', () => {
+describe('neoListBaseItem — interaction', { tags: ['jsdom'] }, () => {
   it('clicking the button calls item.onclick and onclick', async () => {
     const itemClick = vi.fn();
     const onclick = vi.fn();

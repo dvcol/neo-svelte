@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconUnplug — plug toggle', () => {
+describe('neoIconUnplug — plug toggle', { tags: ['jsdom'] }, () => {
   it('default plug=false: line-1 dashoffset=8 (hidden), line-2 dashoffset=8 (extending)', async () => {
     const { container } = render(NeoIconUnplug, { props: {} as never });
     await tick();
@@ -51,7 +51,7 @@ describe('neoIconUnplug — plug toggle', () => {
   });
 });
 
-describe('neoIconUnplug — pass-through', () => {
+describe('neoIconUnplug — pass-through', { tags: ['jsdom'] }, () => {
   it('size, scale, stroke forward', async () => {
     const { container } = render(NeoIconUnplug, {
       props: { size: '32px', scale: 2, stroke: 4 } as never,

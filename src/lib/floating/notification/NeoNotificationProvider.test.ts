@@ -1,12 +1,13 @@
 import type { NeoNotificationStackService } from '~/floating/notification/neo-notification-provider.model.js';
 import type { NeoNotification, NeoNotificationQueued } from '~/floating/notification/neo-notification.model.js';
 
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoNotificationProviderHarness.test.svelte';
+import Harness from './NeoNotificationProvider.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -36,7 +37,7 @@ async function captureService(props: Record<string, unknown> = {}): Promise<{
   return settled;
 }
 
-describe('neoNotificationProvider — default stack registration', () => {
+describe('neoNotificationProvider — default stack registration', { tags: ['jsdom'] }, () => {
   it('registers a default stack and exposes it via useNotificationService()', async () => {
     const { service, error } = await captureService();
     expect(error).toBeUndefined();
@@ -59,7 +60,7 @@ describe('neoNotificationProvider — default stack registration', () => {
   });
 });
 
-describe('neoNotificationProvider — service lookup', () => {
+describe('neoNotificationProvider — service lookup', { tags: ['jsdom'] }, () => {
   it('retrieves a specific stack by id', async () => {
     const { service } = await captureService({
       stack: { id: 'a' },
@@ -93,7 +94,7 @@ describe('neoNotificationProvider — service lookup', () => {
   });
 });
 
-describe('neoNotificationProvider — duplicate id', () => {
+describe('neoNotificationProvider — duplicate id', { tags: ['jsdom'] }, () => {
   it('throws DuplicateId when two stacks register the same id', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => {
@@ -106,7 +107,7 @@ describe('neoNotificationProvider — duplicate id', () => {
   });
 });
 
-describe('neoNotificationProvider — service contract', () => {
+describe('neoNotificationProvider — service contract', { tags: ['jsdom'] }, () => {
   it('the service exposes add/remove/get/update/restart/clear/pause', async () => {
     const { service } = await captureService();
     await tick();

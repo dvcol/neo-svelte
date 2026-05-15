@@ -13,7 +13,7 @@ function getContainer(scope: ParentNode = document): HTMLElement | null {
   return scope.querySelector<HTMLElement>('.neo-affix-container');
 }
 
-describe('neoAffix — render', () => {
+describe('neoAffix — render', { tags: ['jsdom'] }, () => {
   it('renders a <span> wrapper by default with .neo-affix-container', async () => {
     const { container } = render(NeoAffix, {});
     await tick();
@@ -77,7 +77,7 @@ describe('neoAffix — render', () => {
   });
 });
 
-describe('neoAffix — clear button', () => {
+describe('neoAffix — clear button', { tags: ['jsdom'] }, () => {
   it('disabled=true prevents the clear button from rendering', async () => {
     vi.useFakeTimers();
     try {

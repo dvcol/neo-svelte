@@ -10,7 +10,7 @@ import {
   NeoThemeStorageKey,
 } from '~/providers/neo-theme-provider.model.js';
 
-import NeoSelectorsHarness from './NeoSelectorsHarness.test.svelte';
+import NeoSelectorsHarness from './NeoThemeSelectors.test.svelte';
 
 beforeEach(() => {
   localStorage.clear();
@@ -38,7 +38,7 @@ function host(container: ParentNode): HTMLElement {
   return container.querySelector<HTMLElement>('[data-testid="selectors-provider-host"]')!;
 }
 
-describe('neoThemeSelector — render & toggle', () => {
+describe('neoThemeSelector — render & toggle', { tags: ['jsdom'] }, () => {
   it('renders a button labelled "Toggle dark theme" when current theme is light', async () => {
     const { container } = render(NeoSelectorsHarness, {
       props: {
@@ -94,7 +94,7 @@ describe('neoThemeSelector — render & toggle', () => {
   });
 });
 
-describe('neoSourceSelector — cycles through sources', () => {
+describe('neoSourceSelector — cycles through sources', { tags: ['jsdom'] }, () => {
   it('renders a "Cycle light source origin" button', async () => {
     const { container } = render(NeoSelectorsHarness, {
       props: {
@@ -141,7 +141,7 @@ describe('neoSourceSelector — cycles through sources', () => {
   });
 });
 
-describe('neoResetSelector — toggles reset', () => {
+describe('neoResetSelector — toggles reset', { tags: ['jsdom'] }, () => {
   it('renders "Toggle on style reset" when reset=false initially', async () => {
     const { container } = render(NeoSelectorsHarness, {
       props: {
@@ -194,7 +194,7 @@ describe('neoResetSelector — toggles reset', () => {
   });
 });
 
-describe('neoRememberSelector — toggles localStorage persistence', () => {
+describe('neoRememberSelector — toggles localStorage persistence', { tags: ['jsdom'] }, () => {
   it('renders the Remember button with the correct aria-label', async () => {
     const { container } = render(NeoSelectorsHarness, {
       props: {
@@ -233,7 +233,7 @@ describe('neoRememberSelector — toggles localStorage persistence', () => {
   });
 });
 
-describe('neoTransitionSelector — cycles through transitions', () => {
+describe('neoTransitionSelector — cycles through transitions', { tags: ['jsdom'] }, () => {
   it('renders the Cycle theme transition button', async () => {
     const { container } = render(NeoSelectorsHarness, {
       props: {
@@ -280,7 +280,7 @@ describe('neoTransitionSelector — cycles through transitions', () => {
   });
 });
 
-describe('neoThemeSelectors composite — visibility flags', () => {
+describe('neoThemeSelectors composite — visibility flags', { tags: ['jsdom'] }, () => {
   it('all selector flags off — only the harness renders no selector buttons', async () => {
     const { container } = render(NeoSelectorsHarness, {
       props: {

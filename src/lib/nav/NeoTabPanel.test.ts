@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoTabsHarness from './NeoTabsHarness.test.svelte';
+import NeoTabsHarness from './NeoTabs.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -13,7 +13,7 @@ const sampleTabs = [
   { tabId: 't2', label: 'Two' },
 ];
 
-describe('neoTabPanel', () => {
+describe('neoTabPanel', { tags: ['jsdom'] }, () => {
   it('renders only the active panel inside <NeoTabs>', async () => {
     const { container } = render(NeoTabsHarness, { props: { tabs: sampleTabs, active: 't1' } as never });
     await tick();

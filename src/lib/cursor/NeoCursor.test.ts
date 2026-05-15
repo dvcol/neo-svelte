@@ -3,13 +3,13 @@ import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { getClosestClickable, getFirstDataNeoCursor } from './neo-cursor.model.js';
-import NeoCursorHarness from './NeoCursorHarness.test.svelte';
+import NeoCursorHarness from './NeoCursor.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoCursor — container rendering', () => {
+describe('neoCursor — container rendering', { tags: ['jsdom'] }, () => {
   it('with children but no target → wraps children in a .neo-cursor-container <div>', async () => {
     const { container } = render(NeoCursorHarness, {
       props: { childrenText: 'inside' } as never,
@@ -48,7 +48,7 @@ describe('neoCursor — container rendering', () => {
   });
 });
 
-describe('neoCursor — model helpers', () => {
+describe('neoCursor — model helpers', { tags: ['jsdom'] }, () => {
   it('getFirstDataNeoCursor returns the first ancestor data-neo-cursor attribute', () => {
     const root = document.createElement('div');
     const parent = document.createElement('div');

@@ -19,7 +19,7 @@ function getButtons(scope: ParentNode = document): HTMLButtonElement[] {
   return Array.from(scope.querySelectorAll<HTMLButtonElement>('.neo-list-item-button'));
 }
 
-describe('neoList — render', () => {
+describe('neoList — render', { tags: ['jsdom'] }, () => {
   it('renders a <ul role="list"> with one <li> per item', async () => {
     const { container } = render(NeoList, { props: { items } as never });
     await tick();
@@ -63,7 +63,7 @@ describe('neoList — render', () => {
   });
 });
 
-describe('neoList — selection (single)', () => {
+describe('neoList — selection (single)', { tags: ['jsdom'] }, () => {
   it('clicking an item selects it and fires onSelect', async () => {
     const onSelect = vi.fn();
     const user = userEvent.setup();
@@ -117,7 +117,7 @@ describe('neoList — selection (single)', () => {
   });
 });
 
-describe('neoList — selection (multiple)', () => {
+describe('neoList — selection (multiple)', { tags: ['jsdom'] }, () => {
   it('multiple=true allows accumulating selections', async () => {
     const user = userEvent.setup();
     const { container } = render(NeoList, { props: { items, select: true, multiple: true } as never });
@@ -144,7 +144,7 @@ describe('neoList — selection (multiple)', () => {
   });
 });
 
-describe('neoList — disabled / readonly', () => {
+describe('neoList — disabled / readonly', { tags: ['jsdom'] }, () => {
   it('disabled blocks selection from clicks', async () => {
     const onSelect = vi.fn();
     const user = userEvent.setup();

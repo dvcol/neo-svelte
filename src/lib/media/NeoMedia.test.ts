@@ -10,7 +10,7 @@ afterEach(() => {
 
 const PNG = 'https://example.test/a.png';
 
-describe('neoMedia — render', () => {
+describe('neoMedia — render', { tags: ['jsdom'] }, () => {
   it('renders a <figure> with .neo-media by default', async () => {
     const { container } = render(NeoMedia, { props: {} as never });
     await tick();
@@ -61,7 +61,7 @@ describe('neoMedia — render', () => {
   });
 });
 
-describe('neoMedia — style modifiers', () => {
+describe('neoMedia — style modifiers', { tags: ['jsdom'] }, () => {
   it('rounded=true adds .neo-rounded', async () => {
     const { container } = render(NeoMedia, { props: { rounded: true } as never });
     await tick();
@@ -117,7 +117,7 @@ describe('neoMedia — style modifiers', () => {
   });
 });
 
-describe('neoMedia — size', () => {
+describe('neoMedia — size', { tags: ['jsdom'] }, () => {
   it('width=number sets style.width to px', async () => {
     const { container } = render(NeoMedia, { props: { width: 400 } as never });
     await tick();

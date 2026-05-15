@@ -22,7 +22,7 @@ import {
   NeoErrorType,
 } from './error.utils.js';
 
-describe('neoError — base class', () => {
+describe('neoError — base class', { tags: ['jsdom'] }, () => {
   it('prefixes the message with the type', () => {
     const err = new NeoError('boom');
     expect(err.message).toBe('[NeoError]: boom');
@@ -40,7 +40,7 @@ describe('neoError — base class', () => {
   });
 });
 
-describe('theme errors', () => {
+describe('theme errors', { tags: ['jsdom'] }, () => {
   it('neoErrorThemeProvider sets type=NeoThemeProvider', () => {
     const err = new NeoErrorThemeProvider('x');
     expect(err.type).toBe('NeoThemeProvider');
@@ -60,7 +60,7 @@ describe('theme errors', () => {
   });
 });
 
-describe('missing-id errors', () => {
+describe('missing-id errors', { tags: ['jsdom'] }, () => {
   it('neoErrorMissingId default message', () => {
     expect(new NeoErrorMissingId(undefined, NeoErrorType.NeoForm).message).toBe('[NeoForm]: A unique ID is required.');
   });
@@ -78,13 +78,13 @@ describe('missing-id errors', () => {
   });
 });
 
-describe('form errors', () => {
+describe('form errors', { tags: ['jsdom'] }, () => {
   it('neoErrorFormDuplicateId has the canonical message', () => {
     expect(new NeoErrorFormDuplicateId().message).toBe('[NeoForm]: Field id already exists');
   });
 });
 
-describe('list errors', () => {
+describe('list errors', { tags: ['jsdom'] }, () => {
   it('neoErrorListSelectDisabled is scoped to NeoList', () => {
     const err = new NeoErrorListSelectDisabled();
     expect(err.type).toBe('NeoList');
@@ -92,14 +92,14 @@ describe('list errors', () => {
   });
 });
 
-describe('progress errors', () => {
+describe('progress errors', { tags: ['jsdom'] }, () => {
   it('neoErrorProgressContextNotFound is scoped to NeoProgress', () => {
     const err = new NeoErrorProgressContextNotFound();
     expect(err.type).toBe('NeoProgress');
   });
 });
 
-describe('notification errors', () => {
+describe('notification errors', { tags: ['jsdom'] }, () => {
   it('neoErrorNotificationMissingId requires id', () => {
     expect(new NeoErrorNotificationMissingId().message).toBe('[NeoNotification]: Notification id is required');
   });

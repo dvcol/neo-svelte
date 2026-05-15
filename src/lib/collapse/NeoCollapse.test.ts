@@ -3,13 +3,13 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoCollapseHarness from './NeoCollapseHarness.test.svelte';
+import NeoCollapseHarness from './NeoCollapse.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoCollapse — render', () => {
+describe('neoCollapse — render', { tags: ['jsdom'] }, () => {
   it('renders a trigger when label is provided', async () => {
     const { container } = render(NeoCollapseHarness, { props: { label: 'Title' } as never });
     await tick();
@@ -134,7 +134,7 @@ describe('neoCollapse — render', () => {
   });
 });
 
-describe('neoCollapse — interaction', () => {
+describe('neoCollapse — interaction', { tags: ['jsdom'] }, () => {
   it('clicking the trigger toggles open', async () => {
     const user = userEvent.setup();
     const { container } = render(NeoCollapseHarness, {

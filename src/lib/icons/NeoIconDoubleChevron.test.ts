@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconDoubleChevron — defaults', () => {
+describe('neoIconDoubleChevron — defaults', { tags: ['jsdom'] }, () => {
   it('renders two chevron paths', async () => {
     const { container } = render(NeoIconDoubleChevron, { props: {} as never });
     await tick();

@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoTabsCardHarness from './NeoTabsCardHarness.test.svelte';
+import NeoTabsCardHarness from './NeoTabsCard.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -13,7 +13,7 @@ const sampleTabs = [
   { tabId: 't2', label: 'Two' },
 ];
 
-describe('neoTabsCard', () => {
+describe('neoTabsCard', { tags: ['jsdom'] }, () => {
   it('renders a NeoCard wrapping the children snippet', async () => {
     const { container } = render(NeoTabsCardHarness, { props: { tabs: sampleTabs, active: 't1' } as never });
     await tick();

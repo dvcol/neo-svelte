@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoSuspenseHarness from './NeoSuspenseHarness.test.svelte';
+import NeoSuspenseHarness from './NeoSuspense.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -12,7 +12,7 @@ async function flushMicrotasks(): Promise<void> {
   await Promise.resolve();
 }
 
-describe('neoSuspense — loading state', () => {
+describe('neoSuspense — loading state', { tags: ['jsdom'] }, () => {
   it('delay=0 shows the default loader (NeoLoadingMatrix) immediately while pending', async () => {
     const promise = new Promise<string>(() => {}); // never resolves
     const { container } = render(NeoSuspenseHarness, {
@@ -62,7 +62,7 @@ describe('neoSuspense — loading state', () => {
   });
 });
 
-describe('neoSuspense — resolved state', () => {
+describe('neoSuspense — resolved state', { tags: ['jsdom'] }, () => {
   it('renders the result snippet with resolved.default when result is provided', async () => {
     // NeoSuspense passes `resolved?.default` to the result snippet — designed
     // for `import('./X.svelte')` style module promises.
@@ -90,7 +90,7 @@ describe('neoSuspense — resolved state', () => {
   });
 });
 
-describe('neoSuspense — error state', () => {
+describe('neoSuspense — error state', { tags: ['jsdom'] }, () => {
   it('renders the error snippet when the promise rejects', async () => {
     const promise = Promise.reject(new Error('boom'));
     const { container } = render(NeoSuspenseHarness, {

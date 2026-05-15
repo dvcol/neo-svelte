@@ -2,13 +2,13 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoBadgeHarness from './NeoBadgeHarness.test.svelte';
+import NeoBadgeHarness from './NeoBadge.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoBadge — host & content', () => {
+describe('neoBadge — host & content', { tags: ['jsdom'] }, () => {
   it('default container tag=div with .neo-badge-container and default placement="top-right"', async () => {
     const { container } = render(NeoBadgeHarness, { props: { value: '1' } as never });
     await tick();
@@ -44,7 +44,7 @@ describe('neoBadge — host & content', () => {
   });
 });
 
-describe('neoBadge — placement matrix', () => {
+describe('neoBadge — placement matrix', { tags: ['jsdom'] }, () => {
   const placements = ['top', 'top-right', 'top-left', 'bottom', 'bottom-right', 'bottom-left', 'right', 'left'] as const;
   for (const placement of placements) {
     it(`placement="${placement}" reflects on data-placement`, async () => {
@@ -57,7 +57,7 @@ describe('neoBadge — placement matrix', () => {
   }
 });
 
-describe('neoBadge — offset normalization', () => {
+describe('neoBadge — offset normalization', { tags: ['jsdom'] }, () => {
   it('numeric offset → "<n>px" on both x and y CSS vars', async () => {
     const { container } = render(NeoBadgeHarness, {
       props: { value: '1', offset: 4 } as never,

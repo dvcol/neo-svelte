@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import Harness from './NeoButtonHarness.test.svelte';
+import Harness from './NeoButton.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -17,7 +17,7 @@ function getAnchor(scope: ParentNode = document): HTMLAnchorElement | null {
   return scope.querySelector<HTMLAnchorElement>('a.neo-button');
 }
 
-describe('neoButton — render', () => {
+describe('neoButton — render', { tags: ['jsdom'] }, () => {
   it('renders a <button> element by default with type="button" and tabindex=0 not set (native button)', async () => {
     const { container } = render(Harness, { props: { bodyText: 'click me' } as never });
     await tick();
@@ -56,7 +56,7 @@ describe('neoButton — render', () => {
   });
 });
 
-describe('neoButton — disabled / readonly / loading', () => {
+describe('neoButton — disabled / readonly / loading', { tags: ['jsdom'] }, () => {
   it('disabled=true sets the disabled attribute on a native button', async () => {
     const { container } = render(Harness, { props: { disabled: true, label: 'd' } as never });
     await tick();
@@ -109,7 +109,7 @@ describe('neoButton — disabled / readonly / loading', () => {
   });
 });
 
-describe('neoButton — click & propagation', () => {
+describe('neoButton — click & propagation', { tags: ['jsdom'] }, () => {
   it('clicking fires onclick exactly once with a MouseEvent', async () => {
     const onclick = vi.fn();
     const user = userEvent.setup();
@@ -156,7 +156,7 @@ describe('neoButton — click & propagation', () => {
   });
 });
 
-describe('neoButton — toggle mode', () => {
+describe('neoButton — toggle mode', { tags: ['jsdom'] }, () => {
   it('toggle=true flips checked on each click and fires onchecked + onclick(checked)', async () => {
     const onchecked = vi.fn();
     const onclick = vi.fn();
@@ -180,7 +180,7 @@ describe('neoButton — toggle mode', () => {
   });
 });
 
-describe('neoButton — keyboard activation', () => {
+describe('neoButton — keyboard activation', { tags: ['jsdom'] }, () => {
   it('enter on a focused button triggers onclick (native)', async () => {
     const onclick = vi.fn();
     const user = userEvent.setup();
@@ -213,7 +213,7 @@ describe('neoButton — keyboard activation', () => {
   });
 });
 
-describe('neoButton — focus / hover bindables', () => {
+describe('neoButton — focus / hover bindables', { tags: ['jsdom'] }, () => {
   it('focusing the button flips focused state (via onfocus prop)', async () => {
     const onfocus = vi.fn();
     const onblur = vi.fn();

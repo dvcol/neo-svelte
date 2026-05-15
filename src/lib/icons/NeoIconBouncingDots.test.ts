@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconBouncingDots — defaults', () => {
+describe('neoIconBouncingDots — defaults', { tags: ['jsdom'] }, () => {
   it('renders three circles', async () => {
     const { container } = render(NeoIconBouncingDots, { props: {} as never });
     await tick();
@@ -38,7 +38,7 @@ describe('neoIconBouncingDots — defaults', () => {
   });
 });
 
-describe('neoIconBouncingDots — bounce / enter combinations', () => {
+describe('neoIconBouncingDots — bounce / enter combinations', { tags: ['jsdom'] }, () => {
   it('enter=false: circle opacity=1 and no enter <animate>', async () => {
     const { container } = render(NeoIconBouncingDots, { props: { enter: false } as never });
     await tick();
@@ -78,7 +78,7 @@ describe('neoIconBouncingDots — bounce / enter combinations', () => {
   });
 });
 
-describe('neoIconBouncingDots — pass-through', () => {
+describe('neoIconBouncingDots — pass-through', { tags: ['jsdom'] }, () => {
   it('size, scale, stroke forward to svg', async () => {
     const { container } = render(NeoIconBouncingDots, {
       props: { size: '2rem', scale: 2, stroke: 3 } as never,

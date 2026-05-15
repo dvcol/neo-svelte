@@ -1,11 +1,12 @@
 import type { NeoMovableUseResult } from '~/floating/dialog/use-movable.svelte.js';
 
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './UseMovableHarness.test.svelte';
+import Harness from './use-movable.svelte.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -39,7 +40,7 @@ function mountHarness(props: Record<string, unknown> = {}): {
 
 const arrowKey = (key: string): KeyboardEvent => new KeyboardEvent('keydown', { key, bubbles: true });
 
-describe('useMovable — translate string', () => {
+describe('useMovable — translate string', { tags: ['jsdom'] }, () => {
   it('translate combines offset.x and offset.y in px when no axis constraint', async () => {
     const { getResult } = mountHarness({ initialOffset: { x: 12, y: -8 } });
     await tick();
@@ -65,7 +66,7 @@ describe('useMovable — translate string', () => {
   });
 });
 
-describe('useMovable — keyboard arrows (enabled)', () => {
+describe('useMovable — keyboard arrows (enabled)', { tags: ['jsdom'] }, () => {
   it('arrowRight increments offset.x by step and ArrowLeft decrements it', async () => {
     const { getResult, getMovable } = mountHarness({ movable: { enabled: true, step: 4 } });
     await tick();
@@ -111,7 +112,7 @@ describe('useMovable — keyboard arrows (enabled)', () => {
   });
 });
 
-describe('useMovable — limits & contain', () => {
+describe('useMovable — limits & contain', { tags: ['jsdom'] }, () => {
   it('respects movable.limits.x.{min,max} clamping', async () => {
     const { getResult, getMovable } = mountHarness({
       movable: { enabled: true, step: 100, limits: { x: { min: -10, max: 10 } } },
@@ -144,7 +145,7 @@ describe('useMovable — limits & contain', () => {
   });
 });
 
-describe('useMovable — reset', () => {
+describe('useMovable — reset', { tags: ['jsdom'] }, () => {
   it('reset() returns offset to {0, 0}', async () => {
     const { getResult, getMovable } = mountHarness({
       movable: { enabled: true, step: 4 },
@@ -168,7 +169,7 @@ describe('useMovable — reset', () => {
   });
 });
 
-describe('useMovable — cleanup contract', () => {
+describe('useMovable — cleanup contract', { tags: ['jsdom'] }, () => {
   it('does not throw when the host element is unmounted before the stopTranslating timer fires', async () => {
     vi.useFakeTimers();
     try {

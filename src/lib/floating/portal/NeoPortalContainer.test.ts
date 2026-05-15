@@ -4,7 +4,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import Harness from './NeoPortalContainerHarness.test.svelte';
+import Harness from './NeoPortalContainer.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -30,7 +30,7 @@ async function captureContext(props: Record<string, unknown> = {}): Promise<NeoP
   return ctx;
 }
 
-describe('neoPortalContainer — render', () => {
+describe('neoPortalContainer — render', { tags: ['jsdom'] }, () => {
   it('renders the body inside a div tagged .neo-portal-container by default', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -65,7 +65,7 @@ describe('neoPortalContainer — render', () => {
   });
 });
 
-describe('neoPortalContainer — context', () => {
+describe('neoPortalContainer — context', { tags: ['jsdom'] }, () => {
   it('exposes a NeoPortalContext via getNeoPortalContext()', async () => {
     const ctx = await captureContext();
     expect(ctx).toBeDefined();

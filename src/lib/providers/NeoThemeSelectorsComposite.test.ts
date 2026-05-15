@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { NeoThemeRoot, NeoThemeStorageKey } from '~/providers/neo-theme-provider.model.js';
 
-import NeoThemeSelectorsHarness from './NeoThemeSelectorsHarness.test.svelte';
+import NeoThemeSelectorsHarness from './NeoThemeSelectorsComposite.test.svelte';
 
 beforeEach(() => {
   localStorage.clear();
@@ -28,7 +28,7 @@ async function fireStylesheetLoad(): Promise<void> {
   await tick();
 }
 
-describe('neoThemeSelectors composite — visibility flags drive selector rendering', () => {
+describe('neoThemeSelectors composite — visibility flags drive selector rendering', { tags: ['jsdom'] }, () => {
   it('default: only the theme selector is visible (theme defaults to true; others default to undefined)', async () => {
     const { container } = render(NeoThemeSelectorsHarness, { props: {} as never });
     await fireStylesheetLoad();

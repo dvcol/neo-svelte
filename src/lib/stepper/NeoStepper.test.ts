@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import NeoStepperHarness from './NeoStepperHarness.test.svelte';
+import NeoStepperHarness from './NeoStepper.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -19,7 +19,7 @@ function getButton(scope: ParentNode, label: string): HTMLButtonElement {
   return scope.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!;
 }
 
-describe('neoStepper — render', () => {
+describe('neoStepper — render', { tags: ['jsdom'] }, () => {
   it('renders the stepper with .neo-stepper', async () => {
     const { container } = render(NeoStepperHarness, { props: { steps: sampleSteps } as never });
     await tick();
@@ -130,7 +130,7 @@ describe('neoStepper — render', () => {
 // destroyed effect gets read. Same root cause as the skipped multi-step test
 // in NeoDialogStepper.test.ts:84-93. Asserting onBeforeStep fires with the
 // expected reason still pins the navigation contract.
-describe('neoStepper — navigation', () => {
+describe('neoStepper — navigation', { tags: ['jsdom'] }, () => {
   it('clicking next fires onBeforeStep with reason="next"', async () => {
     const onBeforeStep = vi.fn();
     const user = userEvent.setup();

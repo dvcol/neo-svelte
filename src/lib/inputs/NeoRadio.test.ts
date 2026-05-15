@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import Harness from './NeoRadioHarness.test.svelte';
+import NeoRadio from './NeoRadio.svelte';
 
 afterEach(() => {
   cleanup();
@@ -21,9 +21,9 @@ function getButton(scope: ParentNode = document): HTMLButtonElement | null {
   return scope.querySelector<HTMLButtonElement>('button.neo-radio-button');
 }
 
-describe('neoRadio — render', () => {
+describe('neoRadio — render', { tags: ['jsdom'] }, () => {
   it('renders container, hidden native radio and styled radio button', async () => {
-    const { container } = render(Harness, {});
+    const { container } = render(NeoRadio, {});
     await tick();
     expect(getContainer(container)).not.toBeNull();
     const input = getNativeInput(container);
@@ -35,7 +35,7 @@ describe('neoRadio — render', () => {
   });
 
   it('renders a label when provided', async () => {
-    const { container } = render(Harness, { props: { label: 'Choice', id: 'r-1' } as never });
+    const { container } = render(NeoRadio, { props: { label: 'Choice', id: 'r-1' } as never });
     await tick();
     const label = container.querySelector<HTMLLabelElement>('label.neo-label');
     expect(label?.textContent?.trim()).toBe('Choice');
@@ -43,16 +43,16 @@ describe('neoRadio — render', () => {
   });
 
   it('checked=true reflects aria-checked=true on the button', async () => {
-    const { container } = render(Harness, { props: { checked: true } as never });
+    const { container } = render(NeoRadio, { props: { checked: true } as never });
     await tick();
     expect(getButton(container)?.getAttribute('aria-checked')).toBe('true');
   });
 });
 
-describe('neoRadio — interaction', () => {
+describe('neoRadio — interaction', { tags: ['jsdom'] }, () => {
   it('clicking the radio button checks the native input', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, {});
+    const { container } = render(NeoRadio, {});
     await tick();
     await user.click(getButton(container)!);
     await tick();
@@ -63,7 +63,7 @@ describe('neoRadio — interaction', () => {
     const user = userEvent.setup();
     // value=`'a'` keeps Svelte 5 `bind:group` from matching the default
     // `group === undefined`, which would otherwise render the input pre-checked.
-    const { container } = render(Harness, { props: { disabled: true, value: 'a' } as never });
+    const { container } = render(NeoRadio, { props: { disabled: true, value: 'a' } as never });
     await tick();
     expect(getNativeInput(container)?.checked).toBe(false);
     await user.click(getButton(container)!);
@@ -72,13 +72,13 @@ describe('neoRadio — interaction', () => {
   });
 
   it('disabled is reflected on the styled button class', async () => {
-    const { container } = render(Harness, { props: { disabled: true } as never });
+    const { container } = render(NeoRadio, { props: { disabled: true } as never });
     await tick();
     expect(getButton(container)?.classList.contains('neo-disabled')).toBe(true);
   });
 
   it('loading=true renders the suffix loading icon', async () => {
-    const { container } = render(Harness, { props: { loading: true } as never });
+    const { container } = render(NeoRadio, { props: { loading: true } as never });
     await tick();
     expect(container.querySelector('.neo-radio-loading')).not.toBeNull();
   });

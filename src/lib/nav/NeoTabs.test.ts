@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import NeoTabsHarness from './NeoTabsHarness.test.svelte';
+import NeoTabsHarness from './NeoTabs.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -23,7 +23,7 @@ function getActivePanels(scope: ParentNode = document): HTMLElement[] {
   return Array.from(scope.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
 }
 
-describe('neoTabs — render', () => {
+describe('neoTabs — render', { tags: ['jsdom'] }, () => {
   it('renders one tab button and tablist for each tab', async () => {
     const { container } = render(NeoTabsHarness, { props: { tabs: sampleTabs } as never });
     await tick();
@@ -84,7 +84,7 @@ describe('neoTabs — render', () => {
   });
 });
 
-describe('neoTabs — interaction', () => {
+describe('neoTabs — interaction', { tags: ['jsdom'] }, () => {
   it('clicking a tab activates it and fires onchange', async () => {
     const onchange = vi.fn();
     const user = userEvent.setup();
@@ -141,7 +141,7 @@ describe('neoTabs — interaction', () => {
   });
 });
 
-describe('neoTabs — style modifiers', () => {
+describe('neoTabs — style modifiers', { tags: ['jsdom'] }, () => {
   it('line=true adds .neo-line', async () => {
     const { container } = render(NeoTabsHarness, { props: { tabs: sampleTabs, line: true } as never });
     await tick();

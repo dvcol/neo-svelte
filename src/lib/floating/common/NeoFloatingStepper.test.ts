@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import Harness from './NeoFloatingStepperHarness.test.svelte';
+import NeoFloatingStepper from './NeoFloatingStepper.svelte';
 
 afterEach(() => {
   cleanup();
@@ -23,9 +23,9 @@ function findButton(aria: string, scope: ParentNode = document): HTMLButtonEleme
   return scope.querySelector<HTMLButtonElement>(`button[aria-label="${aria}"]`);
 }
 
-describe('neoFloatingStepper — render', () => {
+describe('neoFloatingStepper — render', { tags: ['jsdom'] }, () => {
   it('renders a wrapper, the underlying stepper, and Cancel/Next controls', async () => {
-    const { container } = render(Harness, { props: { steps } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps } as never });
     await tick();
     expect(getRoot(container)).not.toBeNull();
     expect(container.querySelector('.neo-stepper')).not.toBeNull();
@@ -34,22 +34,22 @@ describe('neoFloatingStepper — render', () => {
   });
 
   it('uses the supplied id and derives header id from it', async () => {
-    const { container } = render(Harness, { props: { id: 'fs', steps, headerText: 'h' } as never });
+    const { container } = render(NeoFloatingStepper, { props: { id: 'fs', steps, header: 'h' } as never });
     await tick();
     expect(container.querySelector('#fs')).not.toBeNull();
     expect(container.querySelector('#fs-header')).not.toBeNull();
   });
 });
 
-describe('neoFloatingStepper — header matrix', () => {
+describe('neoFloatingStepper — header matrix', { tags: ['jsdom'] }, () => {
   it('does not render header when no header is supplied', async () => {
-    const { container } = render(Harness, { props: { steps } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps } as never });
     await tick();
     expect(container.querySelector('.neo-floating-stepper-header')).toBeNull();
   });
 
-  it('renders header element with the title when headerText is supplied', async () => {
-    const { container } = render(Harness, { props: { steps, headerText: 'Wizard' } as never });
+  it('renders header element with the title when header is supplied', async () => {
+    const { container } = render(NeoFloatingStepper, { props: { steps, header: 'Wizard' } as never });
     await tick();
     const header = container.querySelector<HTMLElement>('.neo-floating-stepper-header');
     expect(header).not.toBeNull();
@@ -57,37 +57,37 @@ describe('neoFloatingStepper — header matrix', () => {
   });
 
   it('header tag defaults to h6 and is overridable via headerProps.tag', async () => {
-    const { container, rerender } = render(Harness, { props: { steps, headerText: 'h' } as never });
+    const { container, rerender } = render(NeoFloatingStepper, { props: { steps, header: 'h' } as never });
     await tick();
     expect(container.querySelector<HTMLElement>('.neo-floating-stepper-title')?.tagName).toBe('H6');
-    await rerender({ steps, headerText: 'h', headerProps: { tag: 'h3' } } as never);
+    await rerender({ steps, header: 'h', headerProps: { tag: 'h3' } } as never);
     await tick();
     expect(container.querySelector<HTMLElement>('.neo-floating-stepper-title')?.tagName).toBe('H3');
   });
 });
 
-describe('neoFloatingStepper — closable matrix', () => {
+describe('neoFloatingStepper — closable matrix', { tags: ['jsdom'] }, () => {
   it('closable=true (default) renders a close button somewhere', async () => {
-    const { container } = render(Harness, { props: { steps } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps } as never });
     await tick();
     expect(getCloseWrapper(container)).not.toBeNull();
   });
 
   it('closable=false omits the close button entirely', async () => {
-    const { container } = render(Harness, { props: { steps, closable: false } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps, closable: false } as never });
     await tick();
     expect(getCloseWrapper(container)).toBeNull();
   });
 
   it('with header set, the close button is placed inside the header area', async () => {
-    const { container } = render(Harness, { props: { steps, headerText: 'h' } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps, header: 'h' } as never });
     await tick();
     const header = container.querySelector<HTMLElement>('.neo-floating-stepper-header');
     expect(header?.querySelector('.neo-floating-stepper-close')).not.toBeNull();
   });
 
   it('with no header but progress=true (default), close button is rendered (in progress slot)', async () => {
-    const { container } = render(Harness, { props: { steps } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps } as never });
     await tick();
     // No header => not in header area
     expect(container.querySelector('.neo-floating-stepper-header')).toBeNull();
@@ -96,7 +96,7 @@ describe('neoFloatingStepper — closable matrix', () => {
   });
 
   it('with no header and progress=false, close button uses the inside slot variant', async () => {
-    const { container } = render(Harness, { props: { steps, progress: false } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps, progress: false } as never });
     await tick();
     const closeWrapper = getCloseWrapper(container);
     expect(closeWrapper).not.toBeNull();
@@ -107,7 +107,7 @@ describe('neoFloatingStepper — closable matrix', () => {
     const onClose = vi.fn();
     const closeOnClick = vi.fn();
     const user = userEvent.setup();
-    const { container } = render(Harness, {
+    const { container } = render(NeoFloatingStepper, {
       props: { steps, onClose, closeProps: { onclick: closeOnClick } } as never,
     });
     await tick();
@@ -120,11 +120,11 @@ describe('neoFloatingStepper — closable matrix', () => {
   });
 });
 
-describe('neoFloatingStepper — navigation', () => {
+describe('neoFloatingStepper — navigation', { tags: ['jsdom'] }, () => {
   it('clicking Next on a non-final step calls onBeforeStep with reason="next"', async () => {
     const onBeforeStep = vi.fn();
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { steps, onBeforeStep } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps, onBeforeStep } as never });
     await tick();
     await user.click(findButton('Go to next step', container)!);
     await tick();
@@ -136,7 +136,7 @@ describe('neoFloatingStepper — navigation', () => {
   it('clicking Cancel fires onCancel with reason="cancel"', async () => {
     const onCancel = vi.fn();
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { steps, onCancel } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps, onCancel } as never });
     await tick();
     await user.click(findButton('Cancel stepper', container)!);
     await tick();
@@ -148,7 +148,7 @@ describe('neoFloatingStepper — navigation', () => {
   it('on a single-step stepper, clicking Next fires onConfirm with reason="next"', async () => {
     const onConfirm = vi.fn();
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { steps: [{ id: 'only' }], onConfirm } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps: [{ id: 'only' }], onConfirm } as never });
     await tick();
     await user.click(findButton('Go to next step', container)!);
     await tick();
@@ -158,29 +158,29 @@ describe('neoFloatingStepper — navigation', () => {
   });
 
   it('on the last step, the next button label is "Confirm"', async () => {
-    const { container } = render(Harness, { props: { steps, active: steps.length - 1 } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps, active: steps.length - 1 } as never });
     await tick();
     const next = findButton('Go to next step', container);
     expect(next?.textContent).toContain('Confirm');
   });
 
   it('on a non-last step, the next button label is "Next"', async () => {
-    const { container } = render(Harness, { props: { steps, active: 0 } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps, active: 0 } as never });
     await tick();
     const next = findButton('Go to next step', container);
     expect(next?.textContent).toContain('Next');
   });
 });
 
-describe('neoFloatingStepper — progress prop', () => {
+describe('neoFloatingStepper — progress prop', { tags: ['jsdom'] }, () => {
   it('progress=true (default) renders a progress bar', async () => {
-    const { container } = render(Harness, { props: { steps } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps } as never });
     await tick();
     expect(container.querySelector('.neo-progress, .neo-stepper-progress')).not.toBeNull();
   });
 
   it('progress=false hides the progress bar', async () => {
-    const { container } = render(Harness, { props: { steps, progress: false } as never });
+    const { container } = render(NeoFloatingStepper, { props: { steps, progress: false } as never });
     await tick();
     expect(container.querySelector('.neo-stepper-progress')).toBeNull();
   });

@@ -24,7 +24,7 @@ function getAddButton(scope: ParentNode = document): HTMLButtonElement | null {
   return scope.querySelector<HTMLButtonElement>('button[aria-label="Add files"]');
 }
 
-describe('neoFilePicker — render', () => {
+describe('neoFilePicker — render', { tags: ['jsdom'] }, () => {
   it('renders an <input type="file"> wrapped in a drop container by default', async () => {
     const { container } = render(NeoFilePicker, {});
     await tick();

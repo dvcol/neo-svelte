@@ -15,7 +15,7 @@ function getButton(scope: ParentNode = document): HTMLButtonElement | null {
   return scope.querySelector<HTMLButtonElement>('button.neo-button');
 }
 
-describe('neoArrowButton', () => {
+describe('neoArrowButton', { tags: ['jsdom'] }, () => {
   it('renders a NeoButton with an arrow icon (default direction=right)', async () => {
     const { container } = render(NeoArrowButton, { props: { label: 'Next' } as never });
     await tick();
@@ -47,7 +47,7 @@ describe('neoArrowButton', () => {
   });
 });
 
-describe('neoCancelButton', () => {
+describe('neoCancelButton', { tags: ['jsdom'] }, () => {
   it('clicking fires onclick', async () => {
     const onclick = vi.fn();
     const user = userEvent.setup();
@@ -64,7 +64,7 @@ describe('neoCancelButton', () => {
   });
 });
 
-describe('neoCloseButton', () => {
+describe('neoCloseButton', { tags: ['jsdom'] }, () => {
   it('size prop is reflected on the wrapper data-size', async () => {
     const { container } = render(NeoCloseButton, { props: { size: 'sm' } as never });
     await tick();

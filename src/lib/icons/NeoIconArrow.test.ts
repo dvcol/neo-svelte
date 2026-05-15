@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconArrow — defaults', () => {
+describe('neoIconArrow — defaults', { tags: ['jsdom'] }, () => {
   it('renders an svg with both line + chevron paths and direction="right"', async () => {
     const { container } = render(NeoIconArrow, { props: {} as never });
     await tick();
@@ -36,7 +36,7 @@ describe('neoIconArrow — defaults', () => {
   });
 });
 
-describe('neoIconArrow — direction matrix', () => {
+describe('neoIconArrow — direction matrix', { tags: ['jsdom'] }, () => {
   const matrix: Record<string, { line: string; chevron: string }> = {
     right: { line: 'M3 12h17.5', chevron: 'M21 12l-7 7M21 12l-7 -7' },
     left: { line: 'M21 12h-17.5', chevron: 'M3 12l7 7M3 12l7 -7' },
@@ -54,7 +54,7 @@ describe('neoIconArrow — direction matrix', () => {
   }
 });
 
-describe('neoIconArrow — modifiers', () => {
+describe('neoIconArrow — modifiers', { tags: ['jsdom'] }, () => {
   it('expanded=true adds .neo-expanded on both line and chevron', async () => {
     const { container } = render(NeoIconArrow, { props: { expanded: true } as never });
     await tick();
@@ -95,7 +95,7 @@ describe('neoIconArrow — modifiers', () => {
   });
 });
 
-describe('neoIconArrow — css custom properties', () => {
+describe('neoIconArrow — css custom properties', { tags: ['jsdom'] }, () => {
   it('start, end, delay forward as CSS custom properties', async () => {
     const { container } = render(NeoIconArrow, {
       props: { start: '10%', end: '20%', delay: 0.4 } as never,

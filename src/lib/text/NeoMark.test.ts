@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoMark — render & tokenization', () => {
+describe('neoMark — render & tokenization', { tags: ['jsdom'] }, () => {
   it('default tag=span renders the host element with .neo-mark', async () => {
     const { container } = render(NeoMark, { props: { value: 'Hello' } as never });
     await tick();

@@ -2,13 +2,13 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoSkeletonContainerHarness from './NeoSkeletonContainerHarness.test.svelte';
+import NeoSkeletonContainerHarness from './NeoSkeletonContainer.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoSkeletonContainer — disabled (bypass)', () => {
+describe('neoSkeletonContainer — disabled (bypass)', { tags: ['jsdom'] }, () => {
   it('disabled=true renders the content slot directly without skeleton wrapper', async () => {
     const { container } = render(NeoSkeletonContainerHarness, {
       props: { disabled: true, contentText: 'real', skeletonText: 'sk' } as never,
@@ -19,7 +19,7 @@ describe('neoSkeletonContainer — disabled (bypass)', () => {
   });
 });
 
-describe('neoSkeletonContainer — loading branch', () => {
+describe('neoSkeletonContainer — loading branch', { tags: ['jsdom'] }, () => {
   it('loading=true (default) with content + skeleton renders skeleton inside .neo-skeleton-container', async () => {
     const { container } = render(NeoSkeletonContainerHarness, {
       props: { contentText: 'real', skeletonText: 'sk' } as never,
@@ -58,7 +58,7 @@ describe('neoSkeletonContainer — loading branch', () => {
   });
 });
 
-describe('neoSkeletonContainer — loaded branch', () => {
+describe('neoSkeletonContainer — loaded branch', { tags: ['jsdom'] }, () => {
   it('loading=false renders the content snippet inside .neo-skeleton-content-container', async () => {
     const { container } = render(NeoSkeletonContainerHarness, {
       props: { loading: false, contentText: 'real', skeletonText: 'sk' } as never,

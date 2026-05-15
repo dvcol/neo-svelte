@@ -17,7 +17,7 @@ function getToggle(scope: ParentNode = document): HTMLButtonElement | null {
   return scope.querySelector<HTMLButtonElement>('button.neo-password-toggle');
 }
 
-describe('neoPassword — render', () => {
+describe('neoPassword — render', { tags: ['jsdom'] }, () => {
   it('renders an <input type="password"> by default', async () => {
     const { container } = render(NeoPassword, {});
     await tick();
@@ -47,7 +47,7 @@ describe('neoPassword — render', () => {
   });
 });
 
-describe('neoPassword — visibility toggle', () => {
+describe('neoPassword — visibility toggle', { tags: ['jsdom'] }, () => {
   it('clicking the toggle flips the input type between password and text', async () => {
     const user = userEvent.setup();
     const { container } = render(NeoPassword, {});

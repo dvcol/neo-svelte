@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconAudio — defaults', () => {
+describe('neoIconAudio — defaults', { tags: ['jsdom'] }, () => {
   it('renders 6 path bars, each with an animate child', async () => {
     const { container } = render(NeoIconAudio, { props: {} as never });
     await tick();
@@ -33,7 +33,7 @@ describe('neoIconAudio — defaults', () => {
   });
 });
 
-describe('neoIconAudio — animated / repeat', () => {
+describe('neoIconAudio — animated / repeat', { tags: ['jsdom'] }, () => {
   it('animated=false sets begin="indefinite" on every bar', async () => {
     const { container } = render(NeoIconAudio, { props: { animated: false } as never });
     await tick();

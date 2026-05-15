@@ -5,7 +5,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import Harness from './NeoBaseInputHarness.test.svelte';
+import Harness from './NeoBaseInput.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -19,7 +19,7 @@ function getSelect(scope: ParentNode = document): HTMLSelectElement | null {
   return scope.querySelector<HTMLSelectElement>('select.neo-input');
 }
 
-describe('neoBaseInput — render', () => {
+describe('neoBaseInput — render', { tags: ['jsdom'] }, () => {
   it('renders <input> by default with .neo-input', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -78,7 +78,7 @@ describe('neoBaseInput — render', () => {
   });
 });
 
-describe('neoBaseInput — exposed methods', () => {
+describe('neoBaseInput — exposed methods', { tags: ['jsdom'] }, () => {
   it('exposes mark/clear/change/validate on the ref', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -164,7 +164,7 @@ describe('neoBaseInput — exposed methods', () => {
   });
 });
 
-describe('neoBaseInput — setCustomValidity round trip', () => {
+describe('neoBaseInput — setCustomValidity round trip', { tags: ['jsdom'] }, () => {
   it('setCustomValidity is reflected via validate() in validationMessage', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -179,7 +179,7 @@ describe('neoBaseInput — setCustomValidity round trip', () => {
   });
 });
 
-describe('neoBaseInput — focus / blur behavior', () => {
+describe('neoBaseInput — focus / blur behavior', { tags: ['jsdom'] }, () => {
   it('focus marks touched=true and fires onfocus', async () => {
     const onfocus = vi.fn();
     const onblur = vi.fn();
@@ -205,7 +205,7 @@ describe('neoBaseInput — focus / blur behavior', () => {
   });
 });
 
-describe('neoBaseInput — input events', () => {
+describe('neoBaseInput — input events', { tags: ['jsdom'] }, () => {
   it('typing fires oninput and onchange', async () => {
     const oninput = vi.fn();
     const onchange = vi.fn();
@@ -232,7 +232,7 @@ describe('neoBaseInput — input events', () => {
   });
 });
 
-describe('neoBaseInput — display passthrough', () => {
+describe('neoBaseInput — display passthrough', { tags: ['jsdom'] }, () => {
   it('display="text" renders the wrapper with .neo-input class', async () => {
     const { container } = render(Harness, { props: { display: 'shown' } as never });
     await tick();

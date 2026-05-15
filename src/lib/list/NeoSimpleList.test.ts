@@ -14,7 +14,7 @@ const sampleItems = [
   { id: 3, value: 'c', label: 'Charlie' },
 ];
 
-describe('neoSimpleList — render', () => {
+describe('neoSimpleList — render', { tags: ['jsdom'] }, () => {
   it('renders the empty placeholder when items=[] and not loading', async () => {
     const { container } = render(NeoSimpleList, { props: { items: [] } as never });
     await tick();

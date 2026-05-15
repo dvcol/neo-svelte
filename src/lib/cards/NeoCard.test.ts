@@ -3,13 +3,13 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import NeoCardHarness from './NeoCardHarness.test.svelte';
+import NeoCardHarness from './NeoCard.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoCard — render & content', () => {
+describe('neoCard — render & content', { tags: ['jsdom'] }, () => {
   it('default tag=div renders the host with .neo-card and role="none"', async () => {
     const { container } = render(NeoCardHarness, {
       props: { contentText: 'hi' } as never,
@@ -68,7 +68,7 @@ describe('neoCard — render & content', () => {
   });
 });
 
-describe('neoCard — close button', () => {
+describe('neoCard — close button', { tags: ['jsdom'] }, () => {
   it('close=true with header renders a NeoCloseButton in the header', async () => {
     const { container } = render(NeoCardHarness, {
       props: { close: true, headerText: 'h', contentText: 'c' } as never,
@@ -106,7 +106,7 @@ describe('neoCard — close button', () => {
   });
 });
 
-describe('neoCard — style modifiers', () => {
+describe('neoCard — style modifiers', { tags: ['jsdom'] }, () => {
   it('rounded=true adds .neo-rounded', async () => {
     const { container } = render(NeoCardHarness, {
       props: { rounded: true, contentText: 'c' } as never,

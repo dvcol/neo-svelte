@@ -2,13 +2,13 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import Harness from './NeoPortalTargetHarness.test.svelte';
+import Harness from './NeoPortalTarget.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoPortalTarget', () => {
+describe('neoPortalTarget', { tags: ['jsdom'] }, () => {
   it('renders its children inline (no wrapper element)', async () => {
     const { container } = render(Harness, {});
     await tick();

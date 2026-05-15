@@ -1,10 +1,11 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup, fireEvent, waitFor } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoTooltipHarness.test.svelte';
+import Harness from './NeoTooltip.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -14,7 +15,7 @@ function getTooltip(): HTMLElement | null {
   return document.querySelector<HTMLElement>('.neo-tooltip');
 }
 
-describe('neoTooltip — render', () => {
+describe('neoTooltip — render', { tags: ['jsdom'] }, () => {
   it('renders the trigger children inline when no target is provided', () => {
     const { getByTestId } = renderWithPortalTarget(Harness, { triggerLabel: 'Click me' });
     const trigger = getByTestId('trigger-content');
@@ -56,7 +57,7 @@ describe('neoTooltip — render', () => {
   });
 });
 
-describe('neoTooltip — ARIA', () => {
+describe('neoTooltip — ARIA', { tags: ['jsdom'] }, () => {
   it('floating element exposes role="tooltip" by default and a stable id', () => {
     renderWithPortalTarget(Harness, { open: true });
     const tooltip = getTooltip();
@@ -81,7 +82,7 @@ describe('neoTooltip — ARIA', () => {
   });
 });
 
-describe('neoTooltip — bindable open & exposed methods', () => {
+describe('neoTooltip — bindable open & exposed methods', { tags: ['jsdom'] }, () => {
   it('reflects external open=true by rendering the tooltip', async () => {
     const { rerender } = renderWithPortalTarget(Harness, { open: false });
     expect(getTooltip()).toBeNull();
@@ -130,7 +131,7 @@ describe('neoTooltip — bindable open & exposed methods', () => {
   });
 });
 
-describe('neoTooltip — events', () => {
+describe('neoTooltip — events', { tags: ['jsdom'] }, () => {
   it('fires onChange / onOpen when transitioning closed -> open', async () => {
     const onChange = vi.fn();
     const onOpen = vi.fn();
@@ -170,7 +171,7 @@ function getTrigger(container: HTMLElement): HTMLElement {
   return node;
 }
 
-describe('neoTooltip — openOnHover', () => {
+describe('neoTooltip — openOnHover', { tags: ['jsdom'] }, () => {
   it('opens via mouseenter when openOnHover=true and other interactions disabled', async () => {
     const onChange = vi.fn();
     const { container } = renderWithPortalTarget(Harness, {
@@ -229,7 +230,7 @@ describe('neoTooltip — openOnHover', () => {
  * "neoTooltip — keyboard focus opens (real :focus-visible)". jsdom only
  * verifies the `openOnFocus=false` negative path here.
  */
-describe('neoTooltip — openOnFocus', () => {
+describe('neoTooltip — openOnFocus', { tags: ['jsdom'] }, () => {
   it.skip('opens via focus when openOnFocus=true and other interactions disabled', async () => {
     const onChange = vi.fn();
     const { container } = renderWithPortalTarget(Harness, {
@@ -265,7 +266,7 @@ describe('neoTooltip — openOnFocus', () => {
  * pinned here as skipped tests — they should be unskipped (or the prop removed)
  * after the migration to @floating-ui/dom in Phase 2.
  */
-describe('neoTooltip — openOnClick (expected behavior, currently broken)', () => {
+describe('neoTooltip — openOnClick (expected behavior, currently broken)', { tags: ['jsdom'] }, () => {
   it.skip('opens on click when openOnClick=true and other flags disabled', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
@@ -295,7 +296,7 @@ describe('neoTooltip — openOnClick (expected behavior, currently broken)', () 
   });
 });
 
-describe('neoTooltip — interaction flag combinations', () => {
+describe('neoTooltip — interaction flag combinations', { tags: ['jsdom'] }, () => {
   it('hover and focus compose: mouseenter opens when both openOnHover and openOnFocus are true', async () => {
     const onChange = vi.fn();
     const { container } = renderWithPortalTarget(Harness, {
@@ -340,7 +341,7 @@ describe('neoTooltip — interaction flag combinations', () => {
  * (and what `bind:open` reflects). DOM removal is incidentally driven by
  * skeleton's `floating.open` getter and is exercised in the browser project.
  */
-describe('neoTooltip — dismiss', () => {
+describe('neoTooltip — dismiss', { tags: ['jsdom'] }, () => {
   it('escape key invokes onChange(false) when closeOnDismiss=true', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
@@ -376,7 +377,7 @@ describe('neoTooltip — dismiss', () => {
   });
 });
 
-describe('neoTooltip — external target', () => {
+describe('neoTooltip — external target', { tags: ['jsdom'] }, () => {
   it('attaches to an external target element rather than rendering an inline trigger', async () => {
     const target = document.createElement('button');
     target.textContent = 'external';
@@ -394,7 +395,7 @@ describe('neoTooltip — external target', () => {
   });
 });
 
-describe('neoTooltip — portal', () => {
+describe('neoTooltip — portal', { tags: ['jsdom'] }, () => {
   it('mounts the tooltip into document.body when portal=true', () => {
     const { container } = renderWithPortalTarget(Harness, { open: true, portal: true });
     const tooltip = getTooltip();

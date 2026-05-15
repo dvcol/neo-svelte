@@ -1,10 +1,11 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup, fireEvent } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoDialogHarness.test.svelte';
+import Harness from './NeoDialog.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -14,7 +15,7 @@ function getDialog(): HTMLElement | null {
   return document.querySelector<HTMLElement>('.neo-dialog');
 }
 
-describe('neoDialog — render & open sync', () => {
+describe('neoDialog — render & open sync', { tags: ['jsdom'] }, () => {
   it('does not render the dialog markup when unmountOnClose=true (default) and open=false', () => {
     renderWithPortalTarget(Harness, { open: false });
     expect(getDialog()).toBeNull();
@@ -73,7 +74,7 @@ describe('neoDialog — render & open sync', () => {
   });
 });
 
-describe('neoDialog — close & returnValue', () => {
+describe('neoDialog — close & returnValue', { tags: ['jsdom'] }, () => {
   it('close(value) sets returnValue on the native dialog element', async () => {
     let captured: HTMLDialogElement | undefined;
     renderWithPortalTarget(Harness, {
@@ -107,7 +108,7 @@ describe('neoDialog — close & returnValue', () => {
   });
 });
 
-describe('neoDialog — closeOnClickOutside (non-native, modal)', () => {
+describe('neoDialog — closeOnClickOutside (non-native, modal)', { tags: ['jsdom'] }, () => {
   it('window pointerdown outside the dialog closes it when closeOnClickOutside=true and open', async () => {
     const oncancel = vi.fn();
     renderWithPortalTarget(Harness, {
@@ -159,7 +160,7 @@ describe('neoDialog — closeOnClickOutside (non-native, modal)', () => {
   });
 });
 
-describe('neoDialog — ARIA & data attrs', () => {
+describe('neoDialog — ARIA & data attrs', { tags: ['jsdom'] }, () => {
   it('non-native dialog exposes role="dialog" and aria-modal reflecting modal', async () => {
     renderWithPortalTarget(Harness, { open: true, tag: 'div', modal: true });
     await tick();
@@ -228,7 +229,7 @@ describe('neoDialog — ARIA & data attrs', () => {
   });
 });
 
-describe('neoDialog — unmountOnClose matrix', () => {
+describe('neoDialog — unmountOnClose matrix', { tags: ['jsdom'] }, () => {
   it('unmountOnClose=true (default) does not render the dialog when initially closed', async () => {
     renderWithPortalTarget(Harness, { open: false });
     await tick();
@@ -255,7 +256,7 @@ describe('neoDialog — unmountOnClose matrix', () => {
   });
 });
 
-describe('neoDialog — modal matrix (non-native)', () => {
+describe('neoDialog — modal matrix (non-native)', { tags: ['jsdom'] }, () => {
   it('modal=true sets aria-modal="true"', async () => {
     renderWithPortalTarget(Harness, { open: true, tag: 'div', modal: true });
     await tick();

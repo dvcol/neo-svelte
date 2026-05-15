@@ -5,7 +5,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import Harness from './NeoInputHarness.test.svelte';
+import Harness from './NeoInput.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -19,7 +19,7 @@ function getGroup(scope: ParentNode = document): HTMLElement | null {
   return scope.querySelector<HTMLElement>('.neo-input-group');
 }
 
-describe('neoInput — render', () => {
+describe('neoInput — render', { tags: ['jsdom'] }, () => {
   it('renders an <input> wrapped in .neo-input-group', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -65,7 +65,7 @@ describe('neoInput — render', () => {
   });
 });
 
-describe('neoInput — bindable state flips', () => {
+describe('neoInput — bindable state flips', { tags: ['jsdom'] }, () => {
   it('focusing the input flips touched=true and focused=true', async () => {
     const onfocus = vi.fn();
     const { container } = render(Harness, { props: { onfocus } as never });
@@ -98,7 +98,7 @@ describe('neoInput — bindable state flips', () => {
   });
 });
 
-describe('neoInput — clearable', () => {
+describe('neoInput — clearable', { tags: ['jsdom'] }, () => {
   it('clearable adds an affix clear button when input has value and is focused', async () => {
     const user = userEvent.setup();
     const { container } = render(Harness, { props: { clearable: true, value: 'hi' } as never });
@@ -134,7 +134,7 @@ describe('neoInput — clearable', () => {
   });
 });
 
-describe('neoInput — affix snippets / before / after', () => {
+describe('neoInput — affix snippets / before / after', { tags: ['jsdom'] }, () => {
   it('aria-invalid is wired on the input from valid state', async () => {
     const { container, rerender } = render(Harness, {});
     await tick();
@@ -155,7 +155,7 @@ describe('neoInput — affix snippets / before / after', () => {
   });
 });
 
-describe('neoInput — methods passthrough on ref', () => {
+describe('neoInput — methods passthrough on ref', { tags: ['jsdom'] }, () => {
   it('ref exposes mark/clear/change/validate', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -176,7 +176,7 @@ describe('neoInput — methods passthrough on ref', () => {
   });
 });
 
-describe('neoInput — disabled / readonly', () => {
+describe('neoInput — disabled / readonly', { tags: ['jsdom'] }, () => {
   it('disabled adds .neo-disabled to the group and disables input', async () => {
     const { container } = render(Harness, { props: { disabled: true } as never });
     await tick();
@@ -192,7 +192,7 @@ describe('neoInput — disabled / readonly', () => {
   });
 });
 
-describe('neoInput — style flags', () => {
+describe('neoInput — style flags', { tags: ['jsdom'] }, () => {
   it('rounded=true sets .neo-rounded on the group', async () => {
     const { container } = render(Harness, { props: { rounded: true } as never });
     await tick();

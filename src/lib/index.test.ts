@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import * as PublicAPI from './index.js';
 
-describe('public barrel (src/lib/index.ts)', () => {
+describe('public barrel (src/lib/index.ts)', { tags: ['jsdom'] }, () => {
   it('re-exports a substantive number of named entries (smoke check)', () => {
     expect(Object.keys(PublicAPI).length).toBeGreaterThan(50);
   });

@@ -12,7 +12,7 @@ function getLoaders(scope: ParentNode = document): HTMLElement[] {
   return Array.from(scope.querySelectorAll<HTMLElement>('.neo-list-base-loader'));
 }
 
-describe('neoListBaseLoader — render', () => {
+describe('neoListBaseLoader — render', { tags: ['jsdom'] }, () => {
   it('renders 3 loader rows by default when loading=true', async () => {
     const { container } = render(NeoListBaseLoader, {});
     await tick();

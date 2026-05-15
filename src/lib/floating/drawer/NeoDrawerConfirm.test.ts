@@ -1,10 +1,11 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoDrawerConfirmHarness.test.svelte';
+import Harness from './NeoDrawerConfirm.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -28,7 +29,7 @@ function getControlButton(label: 'Cancel' | 'Confirm'): HTMLButtonElement | null
   );
 }
 
-describe('neoDrawerConfirm — render', () => {
+describe('neoDrawerConfirm — render', { tags: ['jsdom'] }, () => {
   it('does not render the confirm body when open=false', () => {
     renderWithPortalTarget(Harness, {});
     expect(getConfirm()).toBeNull();
@@ -57,7 +58,7 @@ describe('neoDrawerConfirm — render', () => {
   });
 });
 
-describe('neoDrawerConfirm — closable matrix', () => {
+describe('neoDrawerConfirm — closable matrix', { tags: ['jsdom'] }, () => {
   it('renders a close button by default (closable defaults to true when closedby is unset)', async () => {
     renderWithPortalTarget(Harness, { open: true });
     await tick();
@@ -71,7 +72,7 @@ describe('neoDrawerConfirm — closable matrix', () => {
   });
 });
 
-describe('neoDrawerConfirm — onCancel / onConfirm', () => {
+describe('neoDrawerConfirm — onCancel / onConfirm', { tags: ['jsdom'] }, () => {
   it('clicking Cancel fires onCancel and closes the dialog', async () => {
     const onCancel = vi.fn();
     const user = userEvent.setup();

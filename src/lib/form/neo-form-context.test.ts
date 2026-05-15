@@ -15,7 +15,7 @@ function field(overrides: Partial<Parameters<NeoFormContext['register']>[0]> = {
   };
 }
 
-describe('neoFormContext — registration', () => {
+describe('neoFormContext — registration', { tags: ['jsdom'] }, () => {
   it('register adds a field by id and stores it in fields', () => {
     const ctx = new NeoFormContext('form-1');
     ctx.register(field({ id: 'a' }));
@@ -53,7 +53,7 @@ describe('neoFormContext — registration', () => {
   });
 });
 
-describe('neoFormContext — values & initials', () => {
+describe('neoFormContext — values & initials', { tags: ['jsdom'] }, () => {
   it('keys values by id when name is undefined', () => {
     const ctx = new NeoFormContext('form-1');
     ctx.register(field({ id: 'a', state: { touched: false, dirty: false, valid: true, value: 1, initial: 0 } }));
@@ -92,7 +92,7 @@ describe('neoFormContext — values & initials', () => {
   });
 });
 
-describe('neoFormContext — touched / dirty / valid aggregations', () => {
+describe('neoFormContext — touched / dirty / valid aggregations', { tags: ['jsdom'] }, () => {
   it('touched=true when at least one field is touched', () => {
     const ctx = new NeoFormContext();
     ctx.register(field({ id: 'a', state: { touched: false, dirty: false, valid: true } }));
@@ -125,7 +125,7 @@ describe('neoFormContext — touched / dirty / valid aggregations', () => {
   });
 });
 
-describe('neoFormContext — messages & errors omit nullish entries', () => {
+describe('neoFormContext — messages & errors omit nullish entries', { tags: ['jsdom'] }, () => {
   it('only fields with truthy messages appear', () => {
     const ctx = new NeoFormContext();
     ctx.register(field({ id: 'a', state: { touched: false, dirty: false, valid: true, value: 1 }, message: 'ok' }));
@@ -141,7 +141,7 @@ describe('neoFormContext — messages & errors omit nullish entries', () => {
   });
 });
 
-describe('neoFormContext — validate()', () => {
+describe('neoFormContext — validate()', { tags: ['jsdom'] }, () => {
   it('calls ref.validate() on every registered field that has one', () => {
     const ctx = new NeoFormContext();
     const validateA = vi.fn();

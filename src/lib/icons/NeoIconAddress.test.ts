@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconAddress — defaults', () => {
+describe('neoIconAddress — defaults', { tags: ['jsdom'] }, () => {
   it('renders the pin path, dot circle, and base path', async () => {
     const { container } = render(NeoIconAddress, { props: {} as never });
     await tick();
@@ -41,7 +41,7 @@ describe('neoIconAddress — defaults', () => {
   });
 });
 
-describe('neoIconAddress — enter / filled combinations', () => {
+describe('neoIconAddress — enter / filled combinations', { tags: ['jsdom'] }, () => {
   it('enter=true: pin stroke-dashoffset starts at 40 with stroke-dashoffset animate', async () => {
     const { container } = render(NeoIconAddress, { props: {} as never });
     await tick();
@@ -77,7 +77,7 @@ describe('neoIconAddress — enter / filled combinations', () => {
   });
 });
 
-describe('neoIconAddress — repeat prop', () => {
+describe('neoIconAddress — repeat prop', { tags: ['jsdom'] }, () => {
   it('repeat="indefinite" (default) sets repeatCount on the rotation animateTransform', async () => {
     const { container } = render(NeoIconAddress, { props: {} as never });
     await tick();

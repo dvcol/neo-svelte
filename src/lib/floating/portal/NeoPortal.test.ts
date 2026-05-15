@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import Harness from './NeoPortalHarness.test.svelte';
+import Harness from './NeoPortal.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -16,7 +16,7 @@ function getContent(scope: ParentNode = document): HTMLElement | null {
   return scope.querySelector<HTMLElement>('[data-testid="portal-content"]');
 }
 
-describe('neoPortal — enabled toggle', () => {
+describe('neoPortal — enabled toggle', { tags: ['jsdom'] }, () => {
   it('renders inline (inside the host) when enabled=false (default)', async () => {
     const { container } = render(Harness, { props: { bodyText: 'inline' } });
     await tick();
@@ -85,7 +85,7 @@ describe('neoPortal — enabled toggle', () => {
   });
 });
 
-describe('neoPortal — enabled flips at runtime', () => {
+describe('neoPortal — enabled flips at runtime', { tags: ['jsdom'] }, () => {
   it('switching enabled false → true → false moves the node out and back', async () => {
     const { container, rerender } = render(Harness, { props: { enabled: false, bodyText: 'flip' } });
     await tick();

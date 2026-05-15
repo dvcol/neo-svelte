@@ -19,6 +19,10 @@ if (process.env.NODE_ENV !== 'development') {
       '~/*': './src/lib/*',
       'src': './src',
       'src/*': './src/*',
+      'test': './test',
+      'test/*': './test/*',
+      'demo': './demo',
+      'demo/*': './demo/*',
     },
   };
 }

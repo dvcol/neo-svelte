@@ -1,9 +1,10 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../test/helpers/render.js';
-import Harness from './NeoRangeHarness.test.svelte';
+import NeoRange from './NeoRange.svelte';
 
 afterEach(() => {
   cleanup();
@@ -27,9 +28,9 @@ function snapshot(): { value: string | undefined; lower: string | undefined; upp
   };
 }
 
-describe('neoRange — render', () => {
+describe('neoRange — render', { tags: ['jsdom'] }, () => {
   it('renders the rail and a single handle for a number value', () => {
-    renderWithPortalTarget(Harness, { value: 50 });
+    renderWithPortalTarget(NeoRange as never, { value: 50 });
     const container = getContainer();
     expect(container).not.toBeNull();
     expect(container?.dataset.value).toBe('50');
@@ -40,7 +41,7 @@ describe('neoRange — render', () => {
   });
 
   it('renders two handles for an array value (dual-handle)', () => {
-    renderWithPortalTarget(Harness, { value: [10, 80] });
+    renderWithPortalTarget(NeoRange as never, { value: [10, 80] });
     const container = getContainer();
     expect(container?.dataset.array).toBe('true');
     expect(container?.dataset.lower).toBe('10');
@@ -52,21 +53,21 @@ describe('neoRange — render', () => {
   });
 });
 
-describe('neoRange — clamping', () => {
+describe('neoRange — clamping', { tags: ['jsdom'] }, () => {
   it('clamps an out-of-range scalar value into [min, max] on mount', async () => {
-    renderWithPortalTarget(Harness, { value: 150, min: 0, max: 100 });
+    renderWithPortalTarget(NeoRange as never, { value: 150, min: 0, max: 100 });
     await tick();
     expect(snapshot().value).toBe('100');
   });
 
   it('clamps a below-min scalar to min', async () => {
-    renderWithPortalTarget(Harness, { value: -20, min: 10, max: 50 });
+    renderWithPortalTarget(NeoRange as never, { value: -20, min: 10, max: 50 });
     await tick();
     expect(snapshot().value).toBe('10');
   });
 
   it('clamps an out-of-range tuple value', async () => {
-    renderWithPortalTarget(Harness, { value: [-5, 120], min: 0, max: 100 });
+    renderWithPortalTarget(NeoRange as never, { value: [-5, 120], min: 0, max: 100 });
     await tick();
     const s = snapshot();
     expect(s.lower).toBe('0');
@@ -74,9 +75,9 @@ describe('neoRange — clamping', () => {
   });
 });
 
-describe('neoRange — tooltips visibility', () => {
+describe('neoRange — tooltips visibility', { tags: ['jsdom'] }, () => {
   it('does not render the value tooltip while focused when tooltips=false', async () => {
-    renderWithPortalTarget(Harness, { value: 50, min: 0, max: 100, tooltips: false });
+    renderWithPortalTarget(NeoRange as never, { value: 50, min: 0, max: 100, tooltips: false });
     const [handle] = getHandles();
     handle.focus();
     await tick();
@@ -84,7 +85,7 @@ describe('neoRange — tooltips visibility', () => {
   });
 
   it('renders the value tooltip while focused when tooltips=true (default)', async () => {
-    renderWithPortalTarget(Harness, { value: 50, min: 0, max: 100, tooltips: true });
+    renderWithPortalTarget(NeoRange as never, { value: 50, min: 0, max: 100, tooltips: true });
     const [handle] = getHandles();
     handle.focus();
     await tick();
@@ -92,9 +93,9 @@ describe('neoRange — tooltips visibility', () => {
   });
 });
 
-describe('neoRange — keyboard step', () => {
+describe('neoRange — keyboard step', { tags: ['jsdom'] }, () => {
   it('arrowRight increments value by step', async () => {
-    renderWithPortalTarget(Harness, { value: 10, min: 0, max: 100, step: 5 });
+    renderWithPortalTarget(NeoRange as never, { value: 10, min: 0, max: 100, step: 5 });
     const [handle] = getHandles();
     handle.focus();
     handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
@@ -103,7 +104,7 @@ describe('neoRange — keyboard step', () => {
   });
 
   it('arrowLeft decrements value by step', async () => {
-    renderWithPortalTarget(Harness, { value: 50, min: 0, max: 100, step: 10 });
+    renderWithPortalTarget(NeoRange as never, { value: 50, min: 0, max: 100, step: 10 });
     const [handle] = getHandles();
     handle.focus();
     handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
@@ -112,7 +113,7 @@ describe('neoRange — keyboard step', () => {
   });
 
   it('keyboard step does not push value past max', async () => {
-    renderWithPortalTarget(Harness, { value: 100, min: 0, max: 100, step: 5 });
+    renderWithPortalTarget(NeoRange as never, { value: 100, min: 0, max: 100, step: 5 });
     const [handle] = getHandles();
     handle.focus();
     handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
@@ -121,7 +122,7 @@ describe('neoRange — keyboard step', () => {
   });
 
   it('ignores non-arrow keys', async () => {
-    renderWithPortalTarget(Harness, { value: 50, min: 0, max: 100, step: 5 });
+    renderWithPortalTarget(NeoRange as never, { value: 50, min: 0, max: 100, step: 5 });
     const [handle] = getHandles();
     handle.focus();
     handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -130,7 +131,7 @@ describe('neoRange — keyboard step', () => {
   });
 
   it('does not change value when readonly=true', async () => {
-    renderWithPortalTarget(Harness, { value: 50, min: 0, max: 100, step: 5, readonly: true });
+    renderWithPortalTarget(NeoRange as never, { value: 50, min: 0, max: 100, step: 5, readonly: true });
     const [handle] = getHandles();
     handle.focus();
     handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
@@ -139,7 +140,7 @@ describe('neoRange — keyboard step', () => {
   });
 
   it('does not change value when disabled=true', async () => {
-    renderWithPortalTarget(Harness, { value: 50, min: 0, max: 100, step: 5, disabled: true });
+    renderWithPortalTarget(NeoRange as never, { value: 50, min: 0, max: 100, step: 5, disabled: true });
     const [handle] = getHandles();
     handle.focus();
     handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
@@ -148,7 +149,7 @@ describe('neoRange — keyboard step', () => {
   });
 
   it('disabled and readonly together still suppress keyboard step (composition)', async () => {
-    renderWithPortalTarget(Harness, {
+    renderWithPortalTarget(NeoRange as never, {
       value: 50,
       min: 0,
       max: 100,
@@ -164,7 +165,7 @@ describe('neoRange — keyboard step', () => {
   });
 
   it('moves only the lower handle when ArrowRight is pressed on the lower thumb of a dual-handle range', async () => {
-    renderWithPortalTarget(Harness, { value: [10, 80], min: 0, max: 100, step: 5 });
+    renderWithPortalTarget(NeoRange as never, { value: [10, 80], min: 0, max: 100, step: 5 });
     const [lower, upper] = getHandles();
     expect(lower).toBeDefined();
     expect(upper).toBeDefined();

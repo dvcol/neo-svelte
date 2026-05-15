@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import Harness from './NeoSwitchButtonHarness.test.svelte';
+import NeoSwitchButton from './NeoSwitchButton.svelte';
 
 afterEach(() => {
   cleanup();
@@ -13,9 +13,9 @@ function getSwitch(scope: ParentNode = document): HTMLButtonElement | null {
   return scope.querySelector<HTMLButtonElement>('button.neo-switch-button');
 }
 
-describe('neoSwitchButton — render', () => {
+describe('neoSwitchButton — render', { tags: ['jsdom'] }, () => {
   it('renders <button role=switch> with aria-checked=false by default', async () => {
-    const { container } = render(Harness, {});
+    const { container } = render(NeoSwitchButton, {});
     await tick();
     const sw = getSwitch(container);
     expect(sw).not.toBeNull();
@@ -24,7 +24,7 @@ describe('neoSwitchButton — render', () => {
   });
 
   it('checked=true reflects aria-checked=true and .neo-checked', async () => {
-    const { container } = render(Harness, { props: { checked: true } as never });
+    const { container } = render(NeoSwitchButton, { props: { checked: true } as never });
     await tick();
     const sw = getSwitch(container);
     expect(sw?.getAttribute('aria-checked')).toBe('true');
@@ -32,7 +32,7 @@ describe('neoSwitchButton — render', () => {
   });
 
   it('indeterminate=true reflects aria-checked="mixed" and .neo-indeterminate', async () => {
-    const { container } = render(Harness, { props: { indeterminate: true } as never });
+    const { container } = render(NeoSwitchButton, { props: { indeterminate: true } as never });
     await tick();
     const sw = getSwitch(container);
     expect(sw?.getAttribute('aria-checked')).toBe('mixed');
@@ -40,7 +40,7 @@ describe('neoSwitchButton — render', () => {
   });
 
   it('valid=true applies .neo-valid; valid=false applies .neo-invalid', async () => {
-    const { container, rerender } = render(Harness, { props: { valid: true } as never });
+    const { container, rerender } = render(NeoSwitchButton, { props: { valid: true } as never });
     await tick();
     expect(getSwitch(container)?.classList.contains('neo-valid')).toBe(true);
     expect(getSwitch(container)?.classList.contains('neo-invalid')).toBe(false);
@@ -51,10 +51,10 @@ describe('neoSwitchButton — render', () => {
   });
 });
 
-describe('neoSwitchButton — click toggles', () => {
+describe('neoSwitchButton — click toggles', { tags: ['jsdom'] }, () => {
   it('click flips checked, clears indeterminate', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { indeterminate: true } as never });
+    const { container } = render(NeoSwitchButton, { props: { indeterminate: true } as never });
     await tick();
     const sw = getSwitch(container)!;
     expect(sw.getAttribute('aria-checked')).toBe('mixed');
@@ -66,7 +66,7 @@ describe('neoSwitchButton — click toggles', () => {
 
   it('click on checked flips back to unchecked', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { checked: true } as never });
+    const { container } = render(NeoSwitchButton, { props: { checked: true } as never });
     await tick();
     const sw = getSwitch(container)!;
     await user.click(sw);
@@ -76,7 +76,7 @@ describe('neoSwitchButton — click toggles', () => {
 
   it('disabled blocks click from changing state', async () => {
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { disabled: true } as never });
+    const { container } = render(NeoSwitchButton, { props: { disabled: true } as never });
     await tick();
     const sw = getSwitch(container)!;
     await user.click(sw);
@@ -86,11 +86,11 @@ describe('neoSwitchButton — click toggles', () => {
   });
 });
 
-describe('neoSwitchButton — onclick passthrough', () => {
+describe('neoSwitchButton — onclick passthrough', { tags: ['jsdom'] }, () => {
   it('onclick prop fires per click', async () => {
     const onclick = vi.fn();
     const user = userEvent.setup();
-    const { container } = render(Harness, { props: { onclick } as never });
+    const { container } = render(NeoSwitchButton, { props: { onclick } as never });
     await tick();
     await user.click(getSwitch(container)!);
     await user.click(getSwitch(container)!);

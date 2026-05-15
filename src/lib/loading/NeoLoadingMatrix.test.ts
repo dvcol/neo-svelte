@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoLoadingMatrix', () => {
+describe('neoLoadingMatrix', { tags: ['jsdom'] }, () => {
   it('renders a div.neo-loading-matrix containing the loader icon by default', async () => {
     const { container } = render(NeoLoadingMatrix, { props: {} as never });
     await tick();

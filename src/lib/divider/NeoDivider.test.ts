@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoDivider — render & ARIA', () => {
+describe('neoDivider — render & ARIA', { tags: ['jsdom'] }, () => {
   it('renders a div with role="separator" and default horizontal orientation', async () => {
     const { container } = render(NeoDivider, { props: {} as never });
     await tick();

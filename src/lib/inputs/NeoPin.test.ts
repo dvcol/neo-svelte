@@ -17,7 +17,7 @@ function getGroups(scope: ParentNode = document): HTMLElement[] {
   return Array.from(scope.querySelectorAll<HTMLElement>('.neo-pin-group'));
 }
 
-describe('neoPin — render', () => {
+describe('neoPin — render', { tags: ['jsdom'] }, () => {
   it('renders a single group with the default 4 cells', async () => {
     const { container } = render(NeoPin, {});
     await tick();
@@ -54,7 +54,7 @@ describe('neoPin — render', () => {
   });
 });
 
-describe('neoPin — interaction', () => {
+describe('neoPin — interaction', { tags: ['jsdom'] }, () => {
   it('typing into a cell advances focus to the next cell', async () => {
     const user = userEvent.setup();
     const { container } = render(NeoPin, { props: { count: 4, type: 'text' } as never });

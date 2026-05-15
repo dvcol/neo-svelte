@@ -1,10 +1,11 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup, waitFor } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoPopStepperHarness.test.svelte';
+import Harness from './NeoPopStepper.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -20,7 +21,7 @@ function findButton(aria: string): HTMLButtonElement | null {
   return document.querySelector<HTMLButtonElement>(`button[aria-label="${aria}"]`);
 }
 
-describe('neoPopStepper — render', () => {
+describe('neoPopStepper — render', { tags: ['jsdom'] }, () => {
   it('renders the trigger element', () => {
     const { getByTestId } = renderWithPortalTarget(Harness, { steps });
     expect(getByTestId('trigger-button').textContent).toBe('open');
@@ -45,7 +46,7 @@ describe('neoPopStepper — render', () => {
   });
 });
 
-describe('neoPopStepper — navigation', () => {
+describe('neoPopStepper — navigation', { tags: ['jsdom'] }, () => {
   it('clicking Next on a non-final step calls onBeforeStep with reason="next"', async () => {
     const onBeforeStep = vi.fn();
     const user = userEvent.setup();
@@ -103,7 +104,7 @@ describe('neoPopStepper — navigation', () => {
   });
 });
 
-describe('neoPopStepper — closable', () => {
+describe('neoPopStepper — closable', { tags: ['jsdom'] }, () => {
   it('renders a close button by default (closable defaults to true)', async () => {
     renderWithPortalTarget(Harness, { steps, open: true });
     await tick();

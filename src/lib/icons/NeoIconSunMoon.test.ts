@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconSunMoon — initial render branches', () => {
+describe('neoIconSunMoon — initial render branches', { tags: ['jsdom'] }, () => {
   it('default state="sun" + enter=true renders the sun-enter branch (3 paths in <g>)', async () => {
     const { container } = render(NeoIconSunMoon, { props: {} as never });
     await tick();
@@ -44,7 +44,7 @@ describe('neoIconSunMoon — initial render branches', () => {
   });
 });
 
-describe('neoIconSunMoon — pass-through props', () => {
+describe('neoIconSunMoon — pass-through props', { tags: ['jsdom'] }, () => {
   it('size and scale forward to the svg', async () => {
     const { container } = render(NeoIconSunMoon, {
       props: { size: '32px', scale: 2 } as never,

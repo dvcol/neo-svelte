@@ -1,9 +1,10 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoDrawerHarness.test.svelte';
+import Harness from './NeoDrawer.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -17,7 +18,7 @@ function getDrawerWrapper(): HTMLElement | null {
   return document.querySelector<HTMLElement>('.neo-drawer');
 }
 
-describe('neoDrawer — render & open sync', () => {
+describe('neoDrawer — render & open sync', { tags: ['jsdom'] }, () => {
   it('mounts a .neo-drawer wrapper around the dialog', async () => {
     renderWithPortalTarget(Harness, { open: true });
     await tick();
@@ -44,7 +45,7 @@ describe('neoDrawer — render & open sync', () => {
   });
 });
 
-describe('neoDrawer — modal is forced (cannot be disabled)', () => {
+describe('neoDrawer — modal is forced (cannot be disabled)', { tags: ['jsdom'] }, () => {
   // The NeoDrawer component hard-codes `modal` on the underlying NeoDialog;
   // its public type also Omits `modal`. Verify modal=true regardless of attempts to override.
   it('data-modal="true" with default props', async () => {
@@ -60,7 +61,7 @@ describe('neoDrawer — modal is forced (cannot be disabled)', () => {
   });
 });
 
-describe('neoDrawer — placement → axis mapping (NeoDrawer.svelte:40-50)', () => {
+describe('neoDrawer — placement → axis mapping (NeoDrawer.svelte:40-50)', { tags: ['jsdom'] }, () => {
   it.each([
     ['right', 'x'],
     ['left', 'x'],
@@ -87,7 +88,7 @@ describe('neoDrawer — placement → axis mapping (NeoDrawer.svelte:40-50)', ()
   });
 });
 
-describe('neoDrawer — placement → snap limits (NeoDrawer.svelte:31-38)', () => {
+describe('neoDrawer — placement → snap limits (NeoDrawer.svelte:31-38)', { tags: ['jsdom'] }, () => {
   // The drawer's getLimits() injects min=0 / max=0 on the relevant axis based on placement.
   // The data-axis attribute already verifies axis derivation; here we verify the limits
   // path indirectly: with movable enabled and no explicit limits, the dialog should mount
@@ -119,7 +120,7 @@ describe('neoDrawer — placement → snap limits (NeoDrawer.svelte:31-38)', () 
   });
 });
 
-describe('neoDrawer — full sizing default', () => {
+describe('neoDrawer — full sizing default', { tags: ['jsdom'] }, () => {
   it('full=true by default — adds the .neo-full-size class', async () => {
     renderWithPortalTarget(Harness, { open: true });
     await tick();
@@ -133,7 +134,7 @@ describe('neoDrawer — full sizing default', () => {
   });
 });
 
-describe('neoDrawer — closable matrix', () => {
+describe('neoDrawer — closable matrix', { tags: ['jsdom'] }, () => {
   it('closable defaults to true (closedby unset) — close button rendered', async () => {
     renderWithPortalTarget(Harness, { open: true });
     await tick();

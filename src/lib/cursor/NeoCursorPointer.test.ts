@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoCursorPointer — render gating', () => {
+describe('neoCursorPointer — render gating', { tags: ['jsdom'] }, () => {
   it('renders nothing when show=false', async () => {
     const { container } = render(NeoCursorPointer, { props: { show: false } as never });
     await tick();
@@ -24,7 +24,7 @@ describe('neoCursorPointer — render gating', () => {
   });
 });
 
-describe('neoCursorPointer — data attributes & CSS vars', () => {
+describe('neoCursorPointer — data attributes & CSS vars', { tags: ['jsdom'] }, () => {
   it('reflects cursor type on data-cursor', async () => {
     const { container } = render(NeoCursorPointer, {
       props: { show: true, cursor: 'text', position: { x: 0, y: 0 } } as never,
@@ -70,7 +70,7 @@ describe('neoCursorPointer — data attributes & CSS vars', () => {
   });
 });
 
-describe('neoCursorPointer — pressure & tilt classes', () => {
+describe('neoCursorPointer — pressure & tilt classes', { tags: ['jsdom'] }, () => {
   it('pressure flag + touching + contact.pressure.point > 0 → .neo-pressure', async () => {
     const { container } = render(NeoCursorPointer, {
       props: {

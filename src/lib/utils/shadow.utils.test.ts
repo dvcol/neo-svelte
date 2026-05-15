@@ -23,7 +23,7 @@ import {
   parseBlur,
 } from './shadow.utils.js';
 
-describe('coerce', () => {
+describe('coerce', { tags: ['jsdom'] }, () => {
   it('returns the elevation untouched when within bounds', () => {
     expect(coerce<number>(2, { min: -5, max: 5 })).toBe(2);
   });
@@ -51,7 +51,7 @@ describe('coerce', () => {
   });
 });
 
-describe('parseBlur', () => {
+describe('parseBlur', { tags: ['jsdom'] }, () => {
   it('returns the min default (1) when no blur is provided', () => {
     expect(parseBlur(undefined, 3)).toBe(1);
   });
@@ -71,7 +71,7 @@ describe('parseBlur', () => {
   });
 });
 
-describe('isShadowFlat', () => {
+describe('isShadowFlat', { tags: ['jsdom'] }, () => {
   it('matches flat shadow expressions', () => {
     expect(isShadowFlat('var(--neo-box-shadow-flat)')).toBe(true);
     expect(isShadowFlat('something flat;')).toBe(true);
@@ -83,7 +83,7 @@ describe('isShadowFlat', () => {
   });
 });
 
-describe('computeElevation', () => {
+describe('computeElevation', { tags: ['jsdom'] }, () => {
   it('returns the elevation when within range', () => {
     expect(computeElevation(2)).toBe(2);
   });
@@ -102,7 +102,7 @@ describe('computeElevation', () => {
   });
 });
 
-describe('computeShadowElevation', () => {
+describe('computeShadowElevation', { tags: ['jsdom'] }, () => {
   it('returns the flat token at level 0', () => {
     expect(computeShadowElevation(0)).toBe('var(--neo-box-shadow-flat)');
   });
@@ -149,7 +149,7 @@ describe('computeShadowElevation', () => {
   });
 });
 
-describe('computeHoverShadowElevation', () => {
+describe('computeHoverShadowElevation', { tags: ['jsdom'] }, () => {
   it('returns undefined when hover is missing or zero', () => {
     expect(computeHoverShadowElevation(2, undefined)).toBeUndefined();
     expect(computeHoverShadowElevation(2, 0)).toBeUndefined();
@@ -167,7 +167,7 @@ describe('computeHoverShadowElevation', () => {
   });
 });
 
-describe('computeGlassFilter', () => {
+describe('computeGlassFilter', { tags: ['jsdom'] }, () => {
   it('returns undefined when glass is not enabled', () => {
     expect(computeGlassFilter(2)).toBeUndefined();
     expect(computeGlassFilter(2, false)).toBeUndefined();
@@ -191,7 +191,7 @@ describe('computeGlassFilter', () => {
   });
 });
 
-describe('computeButtonTemplate', () => {
+describe('computeButtonTemplate', { tags: ['jsdom'] }, () => {
   it('returns NeoTextButton for non-negative elevation', () => {
     expect(computeButtonTemplate(0)).toBe(NeoTextButton);
     expect(computeButtonTemplate(3)).toBe(NeoTextButton);
@@ -216,7 +216,7 @@ describe('computeButtonTemplate', () => {
   });
 });
 
-describe('default elevation helpers', () => {
+describe('default elevation helpers', { tags: ['jsdom'] }, () => {
   it('getDefaultElevation falls back to DefaultShadowElevation by default', () => {
     expect(getDefaultElevation()).toBe(DefaultShadowElevation);
     expect(getDefaultElevation(false)).toBe(DefaultShadowElevation);
@@ -255,7 +255,7 @@ describe('default elevation helpers', () => {
   });
 });
 
-describe('exposed constants', () => {
+describe('exposed constants', { tags: ['jsdom'] }, () => {
   it('keep the documented default values', () => {
     expect(DefaultShadowActiveElevation).toBe(-2);
     expect(DefaultShadowPressedElevation).toBe(-2);

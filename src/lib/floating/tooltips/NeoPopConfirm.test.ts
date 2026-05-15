@@ -1,10 +1,11 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup, waitFor } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoPopConfirmHarness.test.svelte';
+import Harness from './NeoPopConfirm.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -18,7 +19,7 @@ function getControlButton(label: 'Cancel' | 'Confirm' | 'Close confirmation tool
   return document.querySelector<HTMLButtonElement>(`button[aria-label="${label} confirmation tooltip"], button[aria-label="${label}"]`);
 }
 
-describe('neoPopConfirm — render', () => {
+describe('neoPopConfirm — render', { tags: ['jsdom'] }, () => {
   it('renders the trigger element', () => {
     const { getByTestId } = renderWithPortalTarget(Harness, {});
     expect(getByTestId('trigger-button').textContent).toBe('open');
@@ -51,7 +52,7 @@ describe('neoPopConfirm — render', () => {
   });
 });
 
-describe('neoPopConfirm — closable', () => {
+describe('neoPopConfirm — closable', { tags: ['jsdom'] }, () => {
   it('renders a close button by default (closable defaults to true)', async () => {
     renderWithPortalTarget(Harness, { open: true });
     await tick();
@@ -114,7 +115,7 @@ describe('neoPopConfirm — closable', () => {
   });
 });
 
-describe('neoPopConfirm — onCancel / onConfirm', () => {
+describe('neoPopConfirm — onCancel / onConfirm', { tags: ['jsdom'] }, () => {
   it('clicking Cancel fires onCancel and closes the confirm', async () => {
     const onCancel = vi.fn();
     let captured = true;

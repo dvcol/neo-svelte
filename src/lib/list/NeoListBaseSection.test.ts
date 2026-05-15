@@ -2,13 +2,13 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoListBaseSectionHarness from './NeoListBaseSectionHarness.test.svelte';
+import NeoListBaseSectionHarness from './NeoListBaseSection.test.svelte';
 
 afterEach(() => {
   cleanup();
 });
 
-describe('neoListBaseSection — render', () => {
+describe('neoListBaseSection — render', { tags: ['jsdom'] }, () => {
   it('renders a label and a <ul role="list"> by default', async () => {
     const section = { id: 's', items: [{ id: 1, value: 'a', label: 'Alpha' }], label: 'Section A' };
     const { container } = render(NeoListBaseSectionHarness, { props: { section, index: 0 } as never });

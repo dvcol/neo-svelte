@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoCollapseGroupHarness from './NeoCollapseGroupHarness.test.svelte';
+import NeoCollapseGroupHarness from './NeoCollapseGroup.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -23,7 +23,7 @@ const sections = [
   { id: 's3', label: 'Three' },
 ];
 
-describe('neoCollapseGroup', () => {
+describe('neoCollapseGroup', { tags: ['jsdom'] }, () => {
   it('renders each child collapse with its own trigger', async () => {
     const { container } = render(NeoCollapseGroupHarness, { props: { sections } as never });
     await tick();

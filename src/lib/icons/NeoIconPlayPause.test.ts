@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconPlayPause — branch render', () => {
+describe('neoIconPlayPause — branch render', { tags: ['jsdom'] }, () => {
   it('default state="play" + enter=true renders a play triangle path', async () => {
     const { container } = render(NeoIconPlayPause, { props: {} as never });
     await tick();
@@ -46,7 +46,7 @@ describe('neoIconPlayPause — branch render', () => {
   });
 });
 
-describe('neoIconPlayPause — pass-through', () => {
+describe('neoIconPlayPause — pass-through', { tags: ['jsdom'] }, () => {
   it('size, scale, stroke forward to svg / paths', async () => {
     const { container } = render(NeoIconPlayPause, {
       props: { size: '32px', scale: 2, stroke: 4 } as never,

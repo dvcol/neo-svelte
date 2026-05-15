@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoTransitionContainer — host & class modifiers', () => {
+describe('neoTransitionContainer — host & class modifiers', { tags: ['jsdom'] }, () => {
   it('default tag=div renders the host with .neo-transition-container', async () => {
     const { container } = render(NeoTransitionContainer, { props: {} as never });
     await tick();

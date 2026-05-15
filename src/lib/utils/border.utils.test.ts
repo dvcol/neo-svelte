@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { BorderRadiusSize, computeBorderRadius } from './border.utils.js';
 
-describe('computeBorderRadius', () => {
+describe('computeBorderRadius', { tags: ['jsdom'] }, () => {
   it('returns undefined for boolean or undefined input (variant flags handled by caller)', () => {
     expect(computeBorderRadius()).toBeUndefined();
     expect(computeBorderRadius(true)).toBeUndefined();

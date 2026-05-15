@@ -15,14 +15,14 @@ import {
   toTransitionProps,
 } from './action.utils.js';
 
-describe('emptyUse', () => {
+describe('emptyUse', { tags: ['jsdom'] }, () => {
   it('returns an empty action object regardless of arguments', () => {
     const result = emptyUse(document.createElement('div'), { foo: 'bar' });
     expect(result).toEqual({});
   });
 });
 
-describe('isTransitionWithProps', () => {
+describe('isTransitionWithProps', { tags: ['jsdom'] }, () => {
   it('returns true when the value is a { use } wrapper', () => {
     expect(isTransitionWithProps({ use: emptyTransition })).toBe(true);
   });
@@ -36,7 +36,7 @@ describe('isTransitionWithProps', () => {
   });
 });
 
-describe('toTransition', () => {
+describe('toTransition', { tags: ['jsdom'] }, () => {
   it('unwraps a { use, props } object to its function', () => {
     const fn: TransitionFunction = () => ({});
     expect(toTransition({ use: fn })).toBe(fn);
@@ -57,7 +57,7 @@ describe('toTransition', () => {
   });
 });
 
-describe('toAnimation', () => {
+describe('toAnimation', { tags: ['jsdom'] }, () => {
   it('unwraps and falls back to emptyAnimation by default', () => {
     expect(toAnimation()).toBe(emptyAnimation);
     const fn: AnimationFunction = () => ({});
@@ -71,7 +71,7 @@ describe('toAnimation', () => {
   });
 });
 
-describe('toTransitionProps', () => {
+describe('toTransitionProps', { tags: ['jsdom'] }, () => {
   it('returns the .props of a wrapper', () => {
     expect(toTransitionProps({ use: emptyTransition, props: { duration: 200 } })).toEqual({ duration: 200 });
   });
@@ -86,7 +86,7 @@ describe('toTransitionProps', () => {
   });
 });
 
-describe('isActionWithProps', () => {
+describe('isActionWithProps', { tags: ['jsdom'] }, () => {
   it('returns true when the value has a defined use', () => {
     expect(isActionWithProps({ use: emptyUse })).toBe(true);
   });
@@ -100,7 +100,7 @@ describe('isActionWithProps', () => {
   });
 });
 
-describe('toAction', () => {
+describe('toAction', { tags: ['jsdom'] }, () => {
   it('returns emptyUse when called with nothing', () => {
     expect(toAction()).toBe(emptyUse);
   });
@@ -116,7 +116,7 @@ describe('toAction', () => {
   });
 });
 
-describe('toActionProps', () => {
+describe('toActionProps', { tags: ['jsdom'] }, () => {
   it('returns undefined when no action is provided', () => {
     expect(toActionProps()).toBeUndefined();
   });

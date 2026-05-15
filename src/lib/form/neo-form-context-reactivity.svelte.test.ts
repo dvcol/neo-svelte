@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { NeoFormContext } from './neo-form-context.svelte.js';
 
-describe('neoFormContext — reactivity through $derived', () => {
+describe('neoFormContext — reactivity through $derived', { tags: ['jsdom'] }, () => {
   it('touched flips when a registered field.state.touched is mutated', () => {
     const cleanup = $effect.root(() => {
       const ctx = new NeoFormContext();

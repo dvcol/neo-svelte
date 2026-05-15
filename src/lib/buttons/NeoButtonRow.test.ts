@@ -13,7 +13,7 @@ function getButtons(scope: ParentNode = document): HTMLButtonElement[] {
   return Array.from(scope.querySelectorAll<HTMLButtonElement>('button.neo-button'));
 }
 
-describe('neoButtonRow — render', () => {
+describe('neoButtonRow — render', { tags: ['jsdom'] }, () => {
   it('renders no buttons when items array is empty', async () => {
     const { container } = render(NeoButtonRow, { props: { items: [] } as never });
     await tick();
@@ -48,7 +48,7 @@ describe('neoButtonRow — render', () => {
   });
 });
 
-describe('neoButtonRow — prop passthrough', () => {
+describe('neoButtonRow — prop passthrough', { tags: ['jsdom'] }, () => {
   it('item.disabled disables the rendered button', async () => {
     const items = [{ id: 'a', label: 'A', disabled: true }];
     const { container } = render(NeoButtonRow, { props: { items } as never });
@@ -79,7 +79,7 @@ describe('neoButtonRow — prop passthrough', () => {
   });
 });
 
-describe('neoButtonRow — vertical', () => {
+describe('neoButtonRow — vertical', { tags: ['jsdom'] }, () => {
   it('vertical=true applies .neo-vertical to the underlying group', async () => {
     const { container } = render(NeoButtonRow, { props: { items: [{ id: 'a', label: 'A' }], vertical: true } as never });
     await tick();

@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoScrollShadow — render & modifiers', () => {
+describe('neoScrollShadow — render & modifiers', { tags: ['jsdom'] }, () => {
   it('default tag=div with class neo-scroll-shadow + neo-vertical (default direction)', async () => {
     const { container } = render(NeoScrollShadow, { props: {} as never });
     await tick();

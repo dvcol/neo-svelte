@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoTypewriter — host & class modifiers', () => {
+describe('neoTypewriter — host & class modifiers', { tags: ['jsdom'] }, () => {
   it('default tag=div renders the host with .neo-typewriter and .neo-caret', async () => {
     const { container } = render(NeoTypewriter, { props: { value: '' } as never });
     await tick();

@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import NeoAccordionHarness from './NeoAccordionHarness.test.svelte';
+import NeoAccordionHarness from './NeoAccordion.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -14,7 +14,7 @@ const sections = [
   { id: 'a2', label: 'Two' },
 ];
 
-describe('neoAccordion — render', () => {
+describe('neoAccordion — render', { tags: ['jsdom'] }, () => {
   it('renders each child collapse', async () => {
     const { container } = render(NeoAccordionHarness, { props: { sections } as never });
     await tick();

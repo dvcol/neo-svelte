@@ -1,10 +1,11 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../test/helpers/render.js';
-import Harness from './NeoSelectHarness.test.svelte';
+import NeoSelect from './NeoSelect.svelte';
 
 afterEach(() => {
   cleanup();
@@ -26,16 +27,16 @@ const options = [
   { value: 'cherry', label: 'Cherry' },
 ];
 
-describe('neoSelect — render', () => {
+describe('neoSelect — render', { tags: ['jsdom'] }, () => {
   it('renders the toggle button with aria-label', () => {
-    renderWithPortalTarget(Harness, { options });
+    renderWithPortalTarget(NeoSelect as never, { options });
     const toggle = getToggle();
     expect(toggle).not.toBeNull();
     expect(toggle?.getAttribute('aria-label')).toBe('Toggle select dropdown');
   });
 
   it('keeps the popover mounted but hidden when closed (unmountOnClose default)', async () => {
-    renderWithPortalTarget(Harness, { options, open: false });
+    renderWithPortalTarget(NeoSelect as never, { options, open: false });
     await tick();
     const tooltip = document.querySelector<HTMLElement>('.neo-tooltip');
     expect(tooltip).not.toBeNull();
@@ -43,7 +44,7 @@ describe('neoSelect — render', () => {
   });
 
   it('reveals the option list when opened', async () => {
-    renderWithPortalTarget(Harness, { options, open: true });
+    renderWithPortalTarget(NeoSelect as never, { options, open: true });
     await tick();
     const items = getOptions();
     expect(items).toHaveLength(options.length);
@@ -51,10 +52,10 @@ describe('neoSelect — render', () => {
   });
 });
 
-describe('neoSelect — toggle (disabled / readonly matrix)', () => {
+describe('neoSelect — toggle (disabled / readonly matrix)', { tags: ['jsdom'] }, () => {
   it('clicking the toggle button opens the popover when neither disabled nor readonly', async () => {
     const user = userEvent.setup();
-    renderWithPortalTarget(Harness, { options });
+    renderWithPortalTarget(NeoSelect as never, { options });
     await tick();
     const tooltip = document.querySelector<HTMLElement>('.neo-tooltip');
     expect(tooltip?.hasAttribute('hidden')).toBe(true);
@@ -65,7 +66,7 @@ describe('neoSelect — toggle (disabled / readonly matrix)', () => {
 
   it('does not toggle when disabled=true', async () => {
     const user = userEvent.setup();
-    renderWithPortalTarget(Harness, { options, disabled: true });
+    renderWithPortalTarget(NeoSelect as never, { options, disabled: true });
     await tick();
     const tooltip = document.querySelector<HTMLElement>('.neo-tooltip');
     await user.click(getToggle()!);
@@ -75,7 +76,7 @@ describe('neoSelect — toggle (disabled / readonly matrix)', () => {
 
   it('does not toggle when readonly=true', async () => {
     const user = userEvent.setup();
-    renderWithPortalTarget(Harness, { options, readonly: true });
+    renderWithPortalTarget(NeoSelect as never, { options, readonly: true });
     await tick();
     const tooltip = document.querySelector<HTMLElement>('.neo-tooltip');
     await user.click(getToggle()!);
@@ -84,12 +85,12 @@ describe('neoSelect — toggle (disabled / readonly matrix)', () => {
   });
 });
 
-describe('neoSelect — selection', () => {
+describe('neoSelect — selection', { tags: ['jsdom'] }, () => {
   it('clicking an option fires onSelect and onChange with the option value', async () => {
     const onSelect = vi.fn();
     const onChange = vi.fn();
     const user = userEvent.setup();
-    renderWithPortalTarget(Harness, { options, open: true, onSelect, onChange });
+    renderWithPortalTarget(NeoSelect as never, { options, open: true, onSelect, onChange });
     await tick();
     const [first] = getOptions();
     const button = first.querySelector<HTMLElement>('button, [role="button"]') ?? first;
@@ -101,25 +102,25 @@ describe('neoSelect — selection', () => {
   });
 });
 
-describe('neoSelect — search', () => {
+describe('neoSelect — search', { tags: ['jsdom'] }, () => {
   it('does not render the search input when search=false (default)', async () => {
-    renderWithPortalTarget(Harness, { options, open: true, search: false });
+    renderWithPortalTarget(NeoSelect as never, { options, open: true, search: false });
     await tick();
     expect(document.querySelector('.neo-list-search')).toBeNull();
   });
 
   it('renders the search input when search=true', async () => {
-    renderWithPortalTarget(Harness, { options, open: true, search: true });
+    renderWithPortalTarget(NeoSelect as never, { options, open: true, search: true });
     await tick();
     expect(document.querySelector('.neo-list-search')).not.toBeNull();
   });
 });
 
-describe('neoSelect — multiple', () => {
+describe('neoSelect — multiple', { tags: ['jsdom'] }, () => {
   it('selecting two options replaces the previous one when multiple is omitted (default single-select)', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    renderWithPortalTarget(Harness, { options, open: true, onChange });
+    renderWithPortalTarget(NeoSelect as never, { options, open: true, onChange });
     await tick();
     const items = getOptions();
     const click = async (i: number): Promise<void> => {
@@ -135,7 +136,7 @@ describe('neoSelect — multiple', () => {
   it('selecting two options accumulates them when multiple=true', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    renderWithPortalTarget(Harness, { options, open: true, multiple: true, onChange });
+    renderWithPortalTarget(NeoSelect as never, { options, open: true, multiple: true, onChange });
     await tick();
     const items = getOptions();
     const click = async (i: number): Promise<void> => {
@@ -149,10 +150,10 @@ describe('neoSelect — multiple', () => {
   });
 });
 
-describe('neoSelect — clearable', () => {
+describe('neoSelect — clearable', { tags: ['jsdom'] }, () => {
   it('does not render a clear affix when clearable=false (default) even after selecting', async () => {
     const user = userEvent.setup();
-    renderWithPortalTarget(Harness, { options, clearable: false, open: true, multiple: true });
+    renderWithPortalTarget(NeoSelect as never, { options, clearable: false, open: true, multiple: true });
     await tick();
     const [first] = getOptions();
     const button = first.querySelector<HTMLElement>('button, [role="button"]') ?? first;
@@ -163,7 +164,7 @@ describe('neoSelect — clearable', () => {
 
   it('renders a clear affix when clearable=true with a selection while the popover is open', async () => {
     const user = userEvent.setup();
-    renderWithPortalTarget(Harness, { options, clearable: true, open: true, multiple: true });
+    renderWithPortalTarget(NeoSelect as never, { options, clearable: true, open: true, multiple: true });
     await tick();
     const [first] = getOptions();
     const button = first.querySelector<HTMLElement>('button, [role="button"]') ?? first;
@@ -175,9 +176,9 @@ describe('neoSelect — clearable', () => {
   });
 });
 
-describe('neoSelect — items reactivity', () => {
+describe('neoSelect — items reactivity', { tags: ['jsdom'] }, () => {
   it('renders the new option set when options prop changes', async () => {
-    const { rerender } = renderWithPortalTarget(Harness, { options, open: true });
+    const { rerender } = renderWithPortalTarget(NeoSelect as never, { options, open: true });
     await tick();
     expect(getOptions()).toHaveLength(3);
     await rerender({ options: [...options, { value: 'date', label: 'Date' }], open: true });

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { NeoPortalContext } from '~/floating/portal/neo-portal-context.svelte.js';
 
-describe('neoPortalContext', () => {
+describe('neoPortalContext', { tags: ['jsdom'] }, () => {
   it('exposes the id passed to the constructor', () => {
     const ctx = new NeoPortalContext('ctx-1');
     expect(ctx.id).toBe('ctx-1');

@@ -17,7 +17,7 @@ function getButtons(scope: ParentNode = document): HTMLButtonElement[] {
   return Array.from(scope.querySelectorAll<HTMLButtonElement>('button.neo-button'));
 }
 
-describe('neoNumberStep — render', () => {
+describe('neoNumberStep — render', { tags: ['jsdom'] }, () => {
   it('renders a number input wrapped in .neo-number-step', async () => {
     const { container } = render(NeoNumberStep, {});
     await tick();
@@ -47,7 +47,7 @@ describe('neoNumberStep — render', () => {
   });
 });
 
-describe('neoNumberStep — interaction', () => {
+describe('neoNumberStep — interaction', { tags: ['jsdom'] }, () => {
   it('increment button increases value by step and fires onStepUp', async () => {
     const onStepUp = vi.fn();
     const user = userEvent.setup();

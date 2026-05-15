@@ -1,10 +1,11 @@
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoMenuHarness.test.svelte';
+import Harness from './NeoMenu.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -30,7 +31,7 @@ const items = [
   { value: 'three' },
 ];
 
-describe('neoMenu — render', () => {
+describe('neoMenu — render', { tags: ['jsdom'] }, () => {
   it('renders the trigger element', () => {
     const { getByTestId } = renderWithPortalTarget(Harness, { items });
     expect(getByTestId('trigger-button').textContent).toBe('open');
@@ -66,7 +67,7 @@ describe('neoMenu — render', () => {
   });
 });
 
-describe('neoMenu — selection', () => {
+describe('neoMenu — selection', { tags: ['jsdom'] }, () => {
   it('fires onSelect for leaf items, not onMenu', async () => {
     const onSelect = vi.fn();
     const onMenu = vi.fn();
@@ -98,7 +99,7 @@ describe('neoMenu — selection', () => {
   });
 });
 
-describe('neoMenu — keepOpenOnSelect', () => {
+describe('neoMenu — keepOpenOnSelect', { tags: ['jsdom'] }, () => {
   it('clicking a leaf calls onSelect (default keepOpenOnSelect path runs the dismiss branch)', async () => {
     const onSelect = vi.fn();
     const user = userEvent.setup();
@@ -142,7 +143,7 @@ describe('neoMenu — keepOpenOnSelect', () => {
   });
 });
 
-describe('neoMenu — items reactivity', () => {
+describe('neoMenu — items reactivity', { tags: ['jsdom'] }, () => {
   it('renders the new item set when items prop changes', async () => {
     const { rerender } = renderWithPortalTarget(Harness, { items, open: true });
     await tick();

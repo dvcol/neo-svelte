@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import Harness from './NeoHandleHarness.test.svelte';
+import Harness from './NeoHandle.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -20,7 +20,7 @@ function getHandle(placement: string, scope: ParentNode = document): HTMLButtonE
   return scope.querySelector<HTMLButtonElement>(`button.neo-handle[data-placement="${placement}"]`);
 }
 
-describe('neoHandle — enabled toggle', () => {
+describe('neoHandle — enabled toggle', { tags: ['jsdom'] }, () => {
   it('renders the handle group + a single top handle by default', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -40,7 +40,7 @@ describe('neoHandle — enabled toggle', () => {
   });
 });
 
-describe('neoHandle — placement prop', () => {
+describe('neoHandle — placement prop', { tags: ['jsdom'] }, () => {
   it('placement="bottom" renders a single bottom handle', async () => {
     const { container } = render(Harness, { props: { placement: 'bottom' } as never });
     await tick();
@@ -74,7 +74,7 @@ describe('neoHandle — placement prop', () => {
   });
 });
 
-describe('neoHandle — outside adds the opposite handle', () => {
+describe('neoHandle — outside adds the opposite handle', { tags: ['jsdom'] }, () => {
   it('outside="left" adds the right handle when default placement="top"', async () => {
     const { container } = render(Harness, { props: { outside: 'left' } as never });
     await tick();
@@ -97,7 +97,7 @@ describe('neoHandle — outside adds the opposite handle', () => {
   });
 });
 
-describe('neoHandle — position prop', () => {
+describe('neoHandle — position prop', { tags: ['jsdom'] }, () => {
   it('position defaults to "inside" and is reflected on group + handles', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -113,7 +113,7 @@ describe('neoHandle — position prop', () => {
   });
 });
 
-describe('neoHandle — axis prop', () => {
+describe('neoHandle — axis prop', { tags: ['jsdom'] }, () => {
   it('axis is omitted by default', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -133,7 +133,7 @@ describe('neoHandle — axis prop', () => {
   });
 });
 
-describe('neoHandle — visible prop', () => {
+describe('neoHandle — visible prop', { tags: ['jsdom'] }, () => {
   it('visible=true (default) renders the inner divider in the handle', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -147,7 +147,7 @@ describe('neoHandle — visible prop', () => {
   });
 });
 
-describe('neoHandle — accessibility', () => {
+describe('neoHandle — accessibility', { tags: ['jsdom'] }, () => {
   it('handles expose an aria-label and title for assistive tech', async () => {
     const { container } = render(Harness, { props: { placement: 'right' } as never });
     await tick();

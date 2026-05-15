@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoNativeSelect — render', () => {
+describe('neoNativeSelect — render', { tags: ['jsdom'] }, () => {
   it('renders <option> per options entry, supports {value} primitives', async () => {
     const { container } = render(NeoNativeSelect, {
       props: { options: ['a', 'b', { value: 'c', label: 'C-label' }] } as never,

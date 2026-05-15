@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { isSizeOption, toPixel, toSize } from './style.utils.js';
 
-describe('toPixel', () => {
+describe('toPixel', { tags: ['jsdom'] }, () => {
   it('returns undefined for nullish, 0, or empty input (truthy gate)', () => {
     expect(toPixel()).toBeUndefined();
     expect(toPixel(0)).toBeUndefined();
@@ -19,7 +19,7 @@ describe('toPixel', () => {
   });
 });
 
-describe('isSizeOption', () => {
+describe('isSizeOption', { tags: ['jsdom'] }, () => {
   it('returns true for objects', () => {
     expect(isSizeOption({ absolute: '100px' })).toBe(true);
     expect(isSizeOption({})).toBe(true);
@@ -31,7 +31,7 @@ describe('isSizeOption', () => {
   });
 });
 
-describe('toSize', () => {
+describe('toSize', { tags: ['jsdom'] }, () => {
   it('returns undefined for nullish input', () => {
     expect(toSize()).toBeUndefined();
     expect(toSize(0)).toBeUndefined();

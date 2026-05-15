@@ -46,6 +46,8 @@ const config: ViteUserConfig = {
     alias: {
       '~': fileURLToPath(new URL('./src/lib', import.meta.url)),
       'src': fileURLToPath(new URL('./src', import.meta.url)),
+      'test': fileURLToPath(new URL('./test', import.meta.url)),
+      'demo': fileURLToPath(new URL('./demo', import.meta.url)),
     },
   },
   server: {
@@ -60,8 +62,16 @@ const config: ViteUserConfig = {
     alias: {
       '~/': fileURLToPath(new URL('./src/lib', import.meta.url)),
       'src/': fileURLToPath(new URL('./src', import.meta.url)),
+      'test/': fileURLToPath(new URL('./test', import.meta.url)),
+      'demo/': fileURLToPath(new URL('./demo', import.meta.url)),
     },
     passWithNoTests: true,
+    // Declare tags used via `describe(name, { tags: [...] }, fn)`. See README "Testing" section.
+    tags: [
+      { name: 'jsdom', description: 'Unit / contract tests under src/lib/** (jsdom env).' },
+      { name: 'browser', description: 'Real-browser tests under demo/** (Playwright + chromium).' },
+      { name: 'visual', description: 'Screenshot / TNR contracts; subset of browser. Filter with --tag visual to regen.' },
+    ],
     projects: [
       {
         extends: true,
@@ -77,7 +87,10 @@ const config: ViteUserConfig = {
             '**/.svelte-kit/**',
             'test/setup.unit.ts',
             'test/setup.browser.ts',
+            // Defence-in-depth: browser tests live under demo/**, but if one is
+            // mistakenly added under src/** it must not run in the jsdom project.
             'src/**/*.browser.{test,spec}.{js,ts}',
+            'demo/**',
           ],
           environment: 'jsdom',
           setupFiles: ['./test/setup.unit.ts'],
@@ -90,7 +103,7 @@ const config: ViteUserConfig = {
         },
         test: {
           name: 'browser',
-          include: ['src/**/*.browser.{test,spec}.{js,ts}'],
+          include: ['demo/**/*.browser.{test,spec}.{js,ts}'],
           exclude: ['**/node_modules/**', '**/dist/**', '**/.svelte-kit/**'],
           setupFiles: ['./test/setup.browser.ts'],
           browser: {
@@ -98,6 +111,15 @@ const config: ViteUserConfig = {
             provider: playwright(),
             headless: true,
             instances: [{ browser: 'chromium' }],
+            // Auto-failure screenshots land next to reference baselines under
+            // __screenshots__/, polluting the visual contract folder. Disable
+            // them — failure attachments still go to .vitest-attachments/.
+            screenshotFailures: false,
+            expect: {
+              toMatchScreenshot: {
+                comparatorOptions: { allowedMismatchedPixelRatio: 0.01 },
+              },
+            },
           },
         },
       },

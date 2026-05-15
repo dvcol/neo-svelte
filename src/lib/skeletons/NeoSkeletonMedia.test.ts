@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoSkeletonMedia — render & default classes', () => {
+describe('neoSkeletonMedia — render & default classes', { tags: ['jsdom'] }, () => {
   it('rounded=true adds .neo-rounded', async () => {
     const { container } = render(NeoSkeletonMedia, { props: { rounded: true } as never });
     await tick();
@@ -28,7 +28,7 @@ describe('neoSkeletonMedia — render & default classes', () => {
   });
 });
 
-describe('neoSkeletonMedia — type → icon', () => {
+describe('neoSkeletonMedia — type → icon', { tags: ['jsdom'] }, () => {
   it('default type=empty renders no icon SVG', async () => {
     const { container } = render(NeoSkeletonMedia, { props: {} as never });
     await tick();
@@ -60,7 +60,7 @@ describe('neoSkeletonMedia — type → icon', () => {
   });
 });
 
-describe('neoSkeletonMedia — sizing forwarded to inner element', () => {
+describe('neoSkeletonMedia — sizing forwarded to inner element', { tags: ['jsdom'] }, () => {
   it('aspect-ratio defaults to "4 / 3" for non-video types', async () => {
     const { container } = render(NeoSkeletonMedia, { props: { type: 'image' } as never });
     await tick();
@@ -103,7 +103,7 @@ describe('neoSkeletonMedia — sizing forwarded to inner element', () => {
   });
 });
 
-describe('neoSkeletonMedia — disabled bypass', () => {
+describe('neoSkeletonMedia — disabled bypass', { tags: ['jsdom'] }, () => {
   it('disabled=true (with no content slot) suppresses the skeleton render', async () => {
     const { container } = render(NeoSkeletonMedia, {
       props: { disabled: true } as never,

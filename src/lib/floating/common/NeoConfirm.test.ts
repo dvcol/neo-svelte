@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import Harness from './NeoConfirmHarness.test.svelte';
+import Harness from './NeoConfirm.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -25,7 +25,7 @@ function getConfirmButton(scope: ParentNode = document): HTMLButtonElement | nul
   return scope.querySelector<HTMLButtonElement>('button[aria-label="Confirm confirmation tooltip"]');
 }
 
-describe('neoConfirm — render', () => {
+describe('neoConfirm — render', { tags: ['jsdom'] }, () => {
   it('renders a div.neo-confirm by default with the body and Cancel/Confirm controls', async () => {
     const { container } = render(Harness, { props: { bodyText: 'do this?' } as never });
     await tick();
@@ -94,7 +94,7 @@ describe('neoConfirm — render', () => {
   });
 });
 
-describe('neoConfirm — closable matrix', () => {
+describe('neoConfirm — closable matrix', { tags: ['jsdom'] }, () => {
   it('renders a close button by default (closable=true) when no header is set, inside content area', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -125,7 +125,7 @@ describe('neoConfirm — closable matrix', () => {
   });
 });
 
-describe('neoConfirm — rounded class', () => {
+describe('neoConfirm — rounded class', { tags: ['jsdom'] }, () => {
   it('does not apply .neo-rounded by default', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -139,7 +139,7 @@ describe('neoConfirm — rounded class', () => {
   });
 });
 
-describe('neoConfirm — disabled matrix', () => {
+describe('neoConfirm — disabled matrix', { tags: ['jsdom'] }, () => {
   it('disabled=false leaves both buttons enabled', async () => {
     const { container } = render(Harness, { props: { disabled: false } as never });
     await tick();
@@ -169,7 +169,7 @@ describe('neoConfirm — disabled matrix', () => {
   });
 });
 
-describe('neoConfirm — loading matrix', () => {
+describe('neoConfirm — loading matrix', { tags: ['jsdom'] }, () => {
   it('loading.cancel=true applies .neo-loading on Cancel', async () => {
     const { container } = render(Harness, { props: { loading: { cancel: true } } as never });
     await tick();
@@ -199,7 +199,7 @@ describe('neoConfirm — loading matrix', () => {
   });
 });
 
-describe('neoConfirm — events', () => {
+describe('neoConfirm — events', { tags: ['jsdom'] }, () => {
   it('clicking close fires onClose and closeProps.onclick (in that order)', async () => {
     const onClose = vi.fn();
     const closeOnClick = vi.fn();

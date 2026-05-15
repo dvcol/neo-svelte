@@ -96,7 +96,7 @@ const basicIcons = [
   ['NeoIconWave', NeoIconWave],
 ] as const;
 
-describe('basic neo icons — render an svg with the default 1em sizing', () => {
+describe('basic neo icons — render an svg with the default 1em sizing', { tags: ['jsdom'] }, () => {
   for (const [name, Component] of basicIcons) {
     it(`${name} renders an svg with width=1em`, async () => {
       const { container } = render(Component, { props: {} as never });
@@ -110,7 +110,7 @@ describe('basic neo icons — render an svg with the default 1em sizing', () => 
   }
 });
 
-describe('basic neo icons — size, scale, stroke pass-through', () => {
+describe('basic neo icons — size, scale, stroke pass-through', { tags: ['jsdom'] }, () => {
   for (const [name, Component] of basicIcons) {
     it(`${name} forwards size and scale to the svg`, async () => {
       const { container } = render(Component, {
@@ -125,7 +125,7 @@ describe('basic neo icons — size, scale, stroke pass-through', () => {
   }
 });
 
-describe('basic neo icons — extra svg attributes pass through (data-*, aria-*)', () => {
+describe('basic neo icons — extra svg attributes pass through (data-*, aria-*)', { tags: ['jsdom'] }, () => {
   for (const [name, Component] of basicIcons) {
     it(`${name} forwards data-testid and aria-label`, async () => {
       const { container } = render(Component, {

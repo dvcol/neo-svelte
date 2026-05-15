@@ -1,12 +1,13 @@
 import type { NeoNotificationStackService } from '~/floating/notification/neo-notification-provider.model.js';
 import type { NeoNotification, NeoNotificationDeQueued, NeoNotificationQueued, NeoNotificationStatuses } from '~/floating/notification/neo-notification.model.js';
 
+import { renderWithPortalTarget } from 'test/helpers/render.js';
+
 import { cleanup } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithPortalTarget } from '../../../../test/helpers/render.js';
-import Harness from './NeoNotificationStackHarness.test.svelte';
+import Harness from './NeoNotificationStack.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -36,7 +37,7 @@ function getStack(): HTMLElement | null {
   return document.querySelector<HTMLElement>('.neo-notification-stack');
 }
 
-describe('neoNotificationStack — render', () => {
+describe('neoNotificationStack — render', { tags: ['jsdom'] }, () => {
   it('mounts an empty stack with aria-live="polite"', () => {
     mountStack();
     const stack = getStack();
@@ -62,7 +63,7 @@ describe('neoNotificationStack — render', () => {
   });
 });
 
-describe('neoNotificationStack — add / queue lifecycle', () => {
+describe('neoNotificationStack — add / queue lifecycle', { tags: ['jsdom'] }, () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -151,7 +152,7 @@ describe('neoNotificationStack — add / queue lifecycle', () => {
   });
 });
 
-describe('neoNotificationStack — duration / restart / expiry', () => {
+describe('neoNotificationStack — duration / restart / expiry', { tags: ['jsdom'] }, () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -193,7 +194,7 @@ describe('neoNotificationStack — duration / restart / expiry', () => {
   });
 });
 
-describe('neoNotificationStack — pause / resume', () => {
+describe('neoNotificationStack — pause / resume', { tags: ['jsdom'] }, () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -239,7 +240,7 @@ describe('neoNotificationStack — pause / resume', () => {
   });
 });
 
-describe('neoNotificationStack — max / visible window', () => {
+describe('neoNotificationStack — max / visible window', { tags: ['jsdom'] }, () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -279,7 +280,7 @@ describe('neoNotificationStack — max / visible window', () => {
   });
 });
 
-describe('neoNotificationStack — onChange / status transitions', () => {
+describe('neoNotificationStack — onChange / status transitions', { tags: ['jsdom'] }, () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -338,7 +339,7 @@ describe('neoNotificationStack — onChange / status transitions', () => {
   });
 });
 
-describe('neoNotificationStack — error paths', () => {
+describe('neoNotificationStack — error paths', { tags: ['jsdom'] }, () => {
   it('remove(id) on a missing id throws NotFound', () => {
     const { instance } = mountStack();
     expect(() => instance.remove('nope')).toThrow();

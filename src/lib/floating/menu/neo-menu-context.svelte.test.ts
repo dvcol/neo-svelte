@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { NeoMenuContext } from './neo-menu-context.svelte.js';
 
-describe('neoMenuContext', () => {
+describe('neoMenuContext', { tags: ['jsdom'] }, () => {
   it('reflects parent.open and aggregates children open in `parent`', () => {
     const root = $effect.root(() => {
       let parentOpen = false;

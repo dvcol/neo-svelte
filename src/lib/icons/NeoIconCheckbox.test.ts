@@ -13,7 +13,7 @@ const squarePath = 'M4 12v-7c0 -0.55 0.45 -1 1 -1h14c0.55 0 1 0.45 1 1v14c0 0.55
 const checkPath = 'M8 12l3 3l5 -5';
 const indeterminatePath = 'M7 12h10';
 
-describe('neoIconCheckbox — defaults', () => {
+describe('neoIconCheckbox — defaults', { tags: ['jsdom'] }, () => {
   it('renders an svg with the check path and no border path', async () => {
     const { container } = render(NeoIconCheckbox, { props: {} as never });
     await tick();
@@ -34,7 +34,7 @@ describe('neoIconCheckbox — defaults', () => {
   });
 });
 
-describe('neoIconCheckbox — border + circle/square', () => {
+describe('neoIconCheckbox — border + circle/square', { tags: ['jsdom'] }, () => {
   it('border=true adds the square border path by default', async () => {
     const { container } = render(NeoIconCheckbox, { props: { border: true } as never });
     await tick();
@@ -61,7 +61,7 @@ describe('neoIconCheckbox — border + circle/square', () => {
   });
 });
 
-describe('neoIconCheckbox — checked / indeterminate', () => {
+describe('neoIconCheckbox — checked / indeterminate', { tags: ['jsdom'] }, () => {
   it('indeterminate=true renders the dash path instead of the check path', async () => {
     const { container } = render(NeoIconCheckbox, { props: { indeterminate: true } as never });
     await tick();
@@ -97,7 +97,7 @@ describe('neoIconCheckbox — checked / indeterminate', () => {
   });
 });
 
-describe('neoIconCheckbox — draw + enter combinations', () => {
+describe('neoIconCheckbox — draw + enter combinations', { tags: ['jsdom'] }, () => {
   it('border=true + checked=true + draw=true: border stroke-dashoffset=64 (will animate)', async () => {
     const { container } = render(NeoIconCheckbox, {
       props: { border: true, checked: true, draw: true } as never,

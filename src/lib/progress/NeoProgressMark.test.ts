@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoProgressMark', () => {
+describe('neoProgressMark', { tags: ['jsdom'] }, () => {
   it('renders a button with an aria-label that reflects the position', async () => {
     const { container } = render(NeoProgressMark, { props: { position: 50 } as never });
     await tick();

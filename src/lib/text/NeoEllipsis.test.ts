@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoEllipsis', () => {
+describe('neoEllipsis', { tags: ['jsdom'] }, () => {
   it('renders a span.neo-ellipsis with the provided value', async () => {
     const { container } = render(NeoEllipsis, { props: { value: 'hello world' } as never });
     await tick();

@@ -8,7 +8,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe('neoIconCircleLoading — animations', () => {
+describe('neoIconCircleLoading — animations', { tags: ['jsdom'] }, () => {
   it('renders two paths inside <g>: spinner (transform-rotate) + base ring', async () => {
     const { container } = render(NeoIconCircleLoading, { props: {} as never });
     await tick();
@@ -53,7 +53,7 @@ describe('neoIconCircleLoading — animations', () => {
   });
 });
 
-describe('neoIconCircleLoading — pass-through', () => {
+describe('neoIconCircleLoading — pass-through', { tags: ['jsdom'] }, () => {
   it('size and stroke forward', async () => {
     const { container } = render(NeoIconCircleLoading, {
       props: { size: '32px', stroke: 4 } as never,

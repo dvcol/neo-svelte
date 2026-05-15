@@ -12,7 +12,7 @@ function getInput(scope: ParentNode = document): HTMLInputElement | null {
   return scope.querySelector<HTMLInputElement>('input.neo-input-date-time');
 }
 
-describe('neoDateTime — render', () => {
+describe('neoDateTime — render', { tags: ['jsdom'] }, () => {
   it('renders a <input type="date"> by default', async () => {
     const { container } = render(NeoDateTime, {});
     await tick();

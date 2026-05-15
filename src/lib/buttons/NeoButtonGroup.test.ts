@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import Harness from './NeoButtonGroupHarness.test.svelte';
+import Harness from './NeoButtonGroup.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -12,7 +12,7 @@ function getGroup(scope: ParentNode = document): HTMLElement | null {
   return scope.querySelector<HTMLElement>('.neo-button-group');
 }
 
-describe('neoButtonGroup — render', () => {
+describe('neoButtonGroup — render', { tags: ['jsdom'] }, () => {
   it('renders a div.neo-button-group by default with children', async () => {
     const { container } = render(Harness, {});
     await tick();
@@ -30,7 +30,7 @@ describe('neoButtonGroup — render', () => {
   });
 });
 
-describe('neoButtonGroup — style flags', () => {
+describe('neoButtonGroup — style flags', { tags: ['jsdom'] }, () => {
   it('vertical=true applies .neo-vertical', async () => {
     const { container } = render(Harness, { props: { vertical: true } as never });
     await tick();

@@ -9,7 +9,7 @@ import {
   NeoThemeStorageKey,
 } from '~/providers/neo-theme-provider.model.js';
 
-import NeoThemeProviderHarness from './NeoThemeProviderHarness.test.svelte';
+import NeoThemeProviderHarness from './NeoThemeProvider.test.svelte';
 
 beforeEach(() => {
   localStorage.clear();
@@ -41,7 +41,7 @@ async function fireStylesheetLoad(): Promise<void> {
   await tick();
 }
 
-describe('neoThemeProvider — host & lifecycle', () => {
+describe('neoThemeProvider — host & lifecycle', { tags: ['jsdom'] }, () => {
   it('default tag=div renders the host element with .neo-theme-provider', async () => {
     const { container } = render(NeoThemeProviderHarness, { props: {} as never });
     await fireStylesheetLoad();
@@ -89,7 +89,7 @@ describe('neoThemeProvider — host & lifecycle', () => {
   });
 });
 
-describe('neoThemeProvider — applies theme attributes to host', () => {
+describe('neoThemeProvider — applies theme attributes to host', { tags: ['jsdom'] }, () => {
   it('sets the neo-theme-root marker attribute on the host', async () => {
     const { container } = render(NeoThemeProviderHarness, {
       props: { theme: NeoTheme.Light } as never,
@@ -145,7 +145,7 @@ describe('neoThemeProvider — applies theme attributes to host', () => {
   });
 });
 
-describe('neoThemeProvider — remember persists to localStorage', () => {
+describe('neoThemeProvider — remember persists to localStorage', { tags: ['jsdom'] }, () => {
   it('remember=true mirrors theme/source/reset/transition into localStorage', async () => {
     render(NeoThemeProviderHarness, {
       props: {
