@@ -3,6 +3,7 @@ import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import NeoSimpleList from './NeoSimpleList.svelte';
+import NeoSimpleListHarness from './NeoSimpleList.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -48,5 +49,56 @@ describe('neoSimpleList — render', { tags: ['jsdom'] }, () => {
     const { container } = render(NeoSimpleList, { props: { items } as never });
     await tick();
     expect(container.querySelector('.neo-list.neo-empty')).not.toBeNull();
+  });
+});
+
+describe('neoSimpleList — component-instance API', { tags: ['jsdom'] }, () => {
+  interface SimpleListInstance {
+    scrollToTop: (options?: ScrollToOptions) => unknown;
+    scrollToBottom: (options?: ScrollToOptions) => unknown;
+  }
+
+  function captureInstance(props: Record<string, unknown> = {}): {
+    instance: SimpleListInstance;
+    container: HTMLElement;
+    getRef: () => HTMLElement | undefined;
+  } {
+    let instance: SimpleListInstance | undefined;
+    let ref: HTMLElement | undefined;
+    const { container } = render(NeoSimpleListHarness, {
+      props: {
+        items: sampleItems,
+        ...props,
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+        ref,
+      } as never,
+    });
+    // Find the outermost ref-bound element (NeoSimpleList binds ref onto the
+    // inner list element which carries `[role="list"]`).
+    return {
+      instance: instance as SimpleListInstance,
+      container,
+      getRef: () => ref ?? container.querySelector<HTMLElement>('[role="list"]') ?? undefined,
+    };
+  }
+
+  it('exposes scrollToTop / scrollToBottom on the component instance', async () => {
+    const { instance } = captureInstance();
+    await tick();
+    expect(typeof instance.scrollToTop).toBe('function');
+    expect(typeof instance.scrollToBottom).toBe('function');
+  });
+
+  it('does not attach scrollToTop / scrollToBottom onto the DOM ref', async () => {
+    const { getRef } = captureInstance();
+    await tick();
+    const list = getRef()!;
+    expect(list).toBeInstanceOf(HTMLElement);
+    for (const method of ['scrollToTop', 'scrollToBottom'] as const) {
+      expect(Object.hasOwn(list, method)).toBe(false);
+      expect((list as unknown as Record<string, unknown>)[method]).toBeUndefined();
+    }
   });
 });

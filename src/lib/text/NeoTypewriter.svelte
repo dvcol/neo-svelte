@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoTypewriterHTMLElement, NeoTypewriterProps } from '~/text/neo-typewriter.model.js';
+  import type { NeoTypewriterProps } from '~/text/neo-typewriter.model.js';
   import type { TypeWriterLine, TypewriterOptions } from '~/text/typewriter.utils.js';
 
   import { untrack } from 'svelte';
@@ -108,21 +108,6 @@
     return abort;
   });
 
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, {
-      get writing() {
-        return writing;
-      },
-      get promise() {
-        return promise;
-      },
-      write: (_value: string | TypeWriterLine | (string | TypeWriterLine)[]) => {
-        value = _value;
-      },
-      abort,
-    } satisfies NeoTypewriterHTMLElement);
-  });
 </script>
 
 <svelte:element

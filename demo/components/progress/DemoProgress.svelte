@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoSelectOption } from '~/inputs/neo-select.model';
   import type { NeoProgressBarContext, NeoProgressBarProps } from '~/progress/neo-progress-bar.model';
-  import type { NeoProgressHTMLElement, NeoProgressProps, NeoProgressStatuses } from '~/progress/neo-progress.model';
+  import type { NeoProgressProps, NeoProgressStatuses } from '~/progress/neo-progress.model';
   import type { SvelteEvent } from '~/utils/html-element.utils';
 
   import { colorOptions } from 'demo/utils/color.utils';
@@ -42,7 +42,7 @@
   ];
 
   let controlledState = $state<NeoProgressStatuses>();
-  let controlled = $state<NeoProgressHTMLElement>();
+  let controlled = $state<ReturnType<typeof NeoProgressBar>>();
   const onStopStart = (e: SvelteEvent<MouseEvent>) => {
     if (!controlled) return;
     if (controlledState === NeoProgressStatus.Active) controlled.stop();
@@ -224,7 +224,7 @@
     <div class="column content" class:vertical>
       <span class="label">Controlled & Label</span>
       <div class="progress-label">
-        <NeoProgressBar aria-label="Controlled and label" {...bar} bind:ref={controlled} bind:status={controlledState} direction={options.direction}>
+        <NeoProgressBar aria-label="Controlled and label" {...bar} bind:this={controlled} bind:status={controlledState} direction={options.direction}>
           {#snippet before(ctx: NeoProgressBarContext)}
             <span class="progress-label-value" data-placement={ctx.direction}>{ctx.value}%</span>
           {/snippet}

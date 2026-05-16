@@ -3,7 +3,7 @@ import type { HTMLDialogAttributes } from 'svelte/elements';
 
 import type { NeoHandleProps } from '~/floating/common/neo-handle.model.js';
 import type { NeoDialogPlacement } from '~/floating/common/neo-placement.model.js';
-import type { NeoMovable, NeoMovableOutside, NeoMovableResetOptions, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
+import type { NeoMovable, NeoMovableOutside, NeoMoved } from '~/floating/dialog/use-movable.svelte.js';
 import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
 import type { BorderRadiusInput } from '~/utils/border.utils.js';
@@ -15,27 +15,11 @@ import type { SizeInput } from '~/utils/style.utils.js';
 export type NeoDialogBlur = BlurElevation | BlurElevationString;
 export type NeoDialogElevation = PositiveShadowElevation | PositiveShadowElevationString;
 
-export type NeoDialogHTMLElement = HTMLDialogElement & {
-  /**
-   * Closes the dialog element.
-   *
-   * The argument, if provided, provides a return value.
-   * Emits a `cancel` event before closing the dialog.
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/requestClose)
-   */
-  requestClose?: (returnValue?: string) => void;
-  /**
-   * Resets the dialog offset.
-   */
-  reset?: (options?: NeoMovableResetOptions) => Promise<boolean>;
-};
-
 export interface NeoDialogContext<Tag extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap> {
   /**
    * The dialog element reference.
    */
-  ref?: NeoDialogHTMLElement;
+  ref?: HTMLDialogElement;
   /**
    * The HTML tag to use for the dialog element.
    *

@@ -49,6 +49,16 @@
     if (placement.startsWith('right') || placement.startsWith('left')) return ref.getBoundingClientRect().width / 2;
   };
 
+  let dialogInstance = $state<ReturnType<typeof NeoDialog>>();
+
+  export function reset(...args: Parameters<NonNullable<typeof dialogInstance>['reset']>) {
+    return dialogInstance?.reset(...args);
+  }
+
+  export function requestClose(...args: Parameters<NonNullable<typeof dialogInstance>['requestClose']>) {
+    return dialogInstance?.requestClose(...args);
+  }
+
   const movable = $derived.by((): NeoMovable => {
     const parsed: NeoMovable = typeof _movable === 'object' ? _movable : { enabled: !!_movable };
     const snap = typeof parsed.snap === 'object' ? parsed.snap : { enabled: !!parsed.snap, corner: parsed.snap === 'corner' };
@@ -72,7 +82,7 @@
 </script>
 
 <div class:neo-drawer={true}>
-  <NeoDialog bind:ref bind:open bind:moved bind:returnValue bind:placement bind:outside {id} {movable} {full} {elevation} {...rest} modal />
+  <NeoDialog bind:this={dialogInstance} bind:ref bind:open bind:moved bind:returnValue bind:placement bind:outside {id} {movable} {full} {elevation} {...rest} modal />
 </div>
 
 <style lang="scss">

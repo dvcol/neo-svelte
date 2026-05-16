@@ -160,7 +160,7 @@
     return shallowClone(selection, Array.isArray(selection) ? 3 : 2);
   };
 
-  const selectItem: NeoListSelectMethods['selectItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
+  export const selectItem: NeoListSelectMethods['selectItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
     if (disabled || readonly || !selection?.length) return;
     if (!select) throw new NeoErrorListSelectDisabled();
 
@@ -174,7 +174,7 @@
     return { type: 'select', previous, current: cloneSelection(), added: selection };
   };
 
-  const clearItem: NeoListSelectMethods['clearItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
+  export const clearItem: NeoListSelectMethods['clearItem'] = (...selection: NeoListSelectedItem[]): NeoListSelectEvent | undefined => {
     if (disabled || readonly) return;
     if (!select) throw new NeoErrorListSelectDisabled();
 
@@ -203,7 +203,7 @@
   /**
    * Re-selects the previous selection if it still exists in the list
    */
-  const reSelect: NeoListSelectMethods['reSelect'] = () => {
+  export const reSelect: NeoListSelectMethods['reSelect'] = () => {
     if (!select || missing || !selected) return;
     if (Array.isArray(selected) && !selected.length) return;
     const previous = cloneSelection();
@@ -270,14 +270,6 @@
     selectItem,
     clearItem,
     reSelect,
-  });
-
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, {
-      scrollToTop,
-      scrollToBottom,
-    });
   });
 
   const onscroll: NeoListProps['onscroll'] = debounce((e) => {

@@ -84,15 +84,93 @@ describe('neoForm — events', { tags: ['jsdom'] }, () => {
   });
 });
 
-describe('neoForm — bindings', { tags: ['jsdom'] }, () => {
-  it('exposes a validate() method and a context getter on the form element', async () => {
+describe('neoForm — component-instance API', { tags: ['jsdom'] }, () => {
+  it('exposes validate() and context on the component instance', async () => {
+    let instance: { validate: () => unknown; context: unknown } | undefined;
+    render(NeoFormHarness, {
+      props: {
+        childrenText: 'x',
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    await tick();
+    expect(instance).toBeDefined();
+    expect(typeof instance!.validate).toBe('function');
+    expect(instance!.context).toBeDefined();
+  });
+
+  it('does not attach validate/context onto the DOM form element', async () => {
     const { container } = render(NeoFormHarness, {
       props: { childrenText: 'x' } as never,
     });
     await tick();
     const form = container.querySelector<HTMLFormElement>('form')!;
-    // The $effect copies a `validate` and a `context` getter onto the form ref
-    expect(typeof (form as unknown as { validate: () => unknown }).validate).toBe('function');
-    expect((form as unknown as { context: unknown }).context).toBeDefined();
+    expect(Object.hasOwn(form, 'validate')).toBe(false);
+    expect(Object.hasOwn(form, 'context')).toBe(false);
+    expect((form as unknown as { validate?: unknown }).validate).toBeUndefined();
+    expect((form as unknown as { context?: unknown }).context).toBeUndefined();
+  });
+
+  it('instance.context is a NeoFormContext object exposed on the instance', async () => {
+    let instance: { context: { register: unknown; validate: unknown } } | undefined;
+    render(NeoFormHarness, {
+      props: {
+        childrenText: 'x',
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    await tick();
+    expect(instance!.context).toBeDefined();
+    expect(typeof instance!.context.register).toBe('function');
+    expect(typeof instance!.context.validate).toBe('function');
+  });
+
+  it('instance.validate() returns the aggregated NeoValidationState', async () => {
+    let instance: { validate: () => unknown } | undefined;
+    render(NeoFormHarness, {
+      props: {
+        childrenText: 'x',
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    await tick();
+    const state = instance!.validate() as Record<string, unknown>;
+    expect(state).toMatchObject({ touched: false, dirty: false, valid: true });
+    expect(state.value).toBeDefined();
+    expect(state.initial).toBeDefined();
+  });
+
+  it('instance.validate() invokes registered fields validate hooks (via context.register)', async () => {
+    let instance: { validate: () => unknown; context: { register: (f: unknown) => void } } | undefined;
+    render(NeoFormHarness, {
+      props: {
+        childrenText: 'x',
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    await tick();
+    const validateA = vi.fn();
+    const validateB = vi.fn();
+    instance!.context.register({
+      id: 'a',
+      ref: { validate: validateA } as never,
+      state: { touched: false, dirty: false, valid: true, value: undefined, initial: undefined },
+    });
+    instance!.context.register({
+      id: 'b',
+      ref: { validate: validateB } as never,
+      state: { touched: false, dirty: false, valid: true, value: undefined, initial: undefined },
+    });
+    instance!.validate();
+    expect(validateA).toHaveBeenCalledOnce();
+    expect(validateB).toHaveBeenCalledOnce();
   });
 });

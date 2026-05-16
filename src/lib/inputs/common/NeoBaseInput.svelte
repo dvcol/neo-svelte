@@ -198,11 +198,6 @@
   };
 
   $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, { mark, clear, change, validate });
-  });
-
-  $effect(() => {
     if (group === undefined) return;
     checked = !!ref?.checked;
   });

@@ -1,10 +1,11 @@
 import { renderWithPortalTarget } from 'test/helpers/render.js';
 
-import { cleanup } from '@testing-library/svelte';
+import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import NeoRange from './NeoRange.svelte';
+import NeoRangeHarness from './NeoRange.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -175,5 +176,91 @@ describe('neoRange — keyboard step', { tags: ['jsdom'] }, () => {
     const s = snapshot();
     expect(s.lower).toBe('15');
     expect(s.upper).toBe('80');
+  });
+});
+
+describe('neoRange — component-instance API', { tags: ['jsdom'] }, () => {
+  interface RangeInstance {
+    stepUp: (index?: 0 | 1) => unknown;
+    stepDown: (index?: 0 | 1) => unknown;
+  }
+
+  function captureInstance(props: Record<string, unknown> = {}): { instance: RangeInstance; ref: HTMLElement | undefined; container: HTMLElement } {
+    let instance: RangeInstance | undefined;
+    const { container } = render(NeoRangeHarness, {
+      props: {
+        value: 50,
+        min: 0,
+        max: 100,
+        step: 5,
+        ...props,
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    const capturedRef = container.querySelector<HTMLElement>('.neo-range-container') ?? undefined;
+    return { instance: instance as RangeInstance, ref: capturedRef, container };
+  }
+
+  it('exposes stepUp / stepDown on the component instance', async () => {
+    const { instance } = captureInstance();
+    await tick();
+    expect(typeof instance.stepUp).toBe('function');
+    expect(typeof instance.stepDown).toBe('function');
+  });
+
+  it('does not attach component methods onto the DOM ref', async () => {
+    const { ref } = captureInstance();
+    await tick();
+    expect(ref).toBeDefined();
+    for (const member of ['stepUp', 'stepDown'] as const) {
+      expect(Object.hasOwn(ref!, member)).toBe(false);
+      expect((ref as unknown as Record<string, unknown>)[member]).toBeUndefined();
+    }
+  });
+
+  it('instance.stepUp() decrements the scalar value by step (legacy semantics)', async () => {
+    const { instance } = captureInstance({ value: 50, step: 5 });
+    await tick();
+    instance.stepUp();
+    await tick();
+    expect(document.querySelector<HTMLElement>('.neo-range-container')?.dataset.value).toBe('45');
+  });
+
+  it('instance.stepDown() increments the scalar value by step (legacy semantics)', async () => {
+    const { instance } = captureInstance({ value: 50, step: 5 });
+    await tick();
+    instance.stepDown();
+    await tick();
+    expect(document.querySelector<HTMLElement>('.neo-range-container')?.dataset.value).toBe('55');
+  });
+
+  it('instance.stepUp(1) only mutates the upper thumb of a dual-handle range', async () => {
+    const { instance } = captureInstance({ value: [10, 80], step: 5 });
+    await tick();
+    instance.stepUp(1);
+    await tick();
+    const c = document.querySelector<HTMLElement>('.neo-range-container');
+    expect(c?.dataset.lower).toBe('10');
+    expect(c?.dataset.upper).toBe('75');
+  });
+
+  it('instance.stepUp/stepDown are no-ops when disabled', async () => {
+    const { instance } = captureInstance({ value: 50, disabled: true, step: 5 });
+    await tick();
+    instance.stepUp();
+    instance.stepDown();
+    await tick();
+    expect(document.querySelector<HTMLElement>('.neo-range-container')?.dataset.value).toBe('50');
+  });
+
+  it('instance.stepUp/stepDown are no-ops when readonly', async () => {
+    const { instance } = captureInstance({ value: 50, readonly: true, step: 5 });
+    await tick();
+    instance.stepUp();
+    instance.stepDown();
+    await tick();
+    expect(document.querySelector<HTMLElement>('.neo-range-container')?.dataset.value).toBe('50');
   });
 });

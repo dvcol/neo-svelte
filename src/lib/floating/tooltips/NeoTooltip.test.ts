@@ -82,52 +82,101 @@ describe('neoTooltip — ARIA', { tags: ['jsdom'] }, () => {
   });
 });
 
-describe('neoTooltip — bindable open & exposed methods', { tags: ['jsdom'] }, () => {
+describe('neoTooltip — bindable open', { tags: ['jsdom'] }, () => {
   it('reflects external open=true by rendering the tooltip', async () => {
     const { rerender } = renderWithPortalTarget(Harness, { open: false });
     expect(getTooltip()).toBeNull();
     await rerender({ open: true });
     expect(getTooltip()).not.toBeNull();
   });
+});
 
-  it('toggle() on the floating ref flips the open state', async () => {
-    let captured: HTMLElement | undefined;
-    const onRef = (r: HTMLElement | undefined): void => {
-      captured = r;
-    };
-    renderWithPortalTarget(Harness, {
-      open: false,
-      unmountOnClose: false,
-      onRef,
-    });
+interface TooltipInstance {
+  toggle: (state?: boolean) => boolean;
+  update: () => Promise<void>;
+  floating: { update: () => Promise<void> };
+}
+
+function captureInstance(props: Record<string, unknown> = {}): {
+  instance: TooltipInstance;
+  ref: HTMLElement | undefined;
+  triggerRef: HTMLElement | undefined;
+} {
+  let instance: TooltipInstance | undefined;
+  let ref: HTMLElement | undefined;
+  let triggerRef: HTMLElement | undefined;
+  renderWithPortalTarget(Harness, {
+    ...props,
+    onRef: (r: HTMLElement | undefined) => {
+      ref = r;
+    },
+    onTriggerRef: (r: HTMLElement | undefined) => {
+      triggerRef = r;
+    },
+    onInstance: (i: unknown) => {
+      instance = i as TooltipInstance;
+    },
+  });
+  return { instance: instance as TooltipInstance, ref, triggerRef };
+}
+
+describe('neoTooltip — component-instance API', { tags: ['jsdom'] }, () => {
+  it('exposes toggle / update / floating on the component instance', async () => {
+    const { instance } = captureInstance({ unmountOnClose: false });
     await tick();
-    const tooltip = captured as HTMLElement & { toggle?: (state?: boolean) => boolean };
-    expect(tooltip).toBeDefined();
-    expect(typeof tooltip.toggle).toBe('function');
-    expect(tooltip.toggle?.(true)).toBe(true);
-    await tick();
-    expect(tooltip.hasAttribute('hidden')).toBe(false);
-    expect(tooltip.toggle?.(false)).toBe(false);
-    await tick();
-    expect(tooltip.hasAttribute('hidden')).toBe(true);
+    expect(typeof instance.toggle).toBe('function');
+    expect(typeof instance.update).toBe('function');
+    expect(typeof instance.floating?.update).toBe('function');
   });
 
-  it('toggle() on the trigger ref also flips the open state', async () => {
-    let captured: HTMLElement | undefined;
-    const onTriggerRef = (r: HTMLElement | undefined): void => {
-      captured = r;
-    };
-    renderWithPortalTarget(Harness, {
-      open: false,
-      unmountOnClose: false,
-      onTriggerRef,
-    });
+  it('does not attach component methods onto the floating DOM ref', async () => {
+    const { ref } = captureInstance({ open: true, unmountOnClose: false });
     await tick();
-    const trig = captured as HTMLElement & { toggle?: (state?: boolean) => boolean };
-    expect(typeof trig.toggle).toBe('function');
-    trig.toggle?.(true);
+    expect(ref).toBeInstanceOf(HTMLElement);
+    for (const member of ['toggle', 'update'] as const) {
+      expect(Object.hasOwn(ref!, member)).toBe(false);
+      expect((ref as unknown as Record<string, unknown>)[member]).toBeUndefined();
+    }
+  });
+
+  it('does not attach component methods onto the trigger DOM ref', async () => {
+    const { triggerRef } = captureInstance({ open: false, unmountOnClose: false });
     await tick();
-    expect(getTooltip()?.hasAttribute('hidden')).toBe(false);
+    expect(triggerRef).toBeInstanceOf(HTMLElement);
+    for (const member of ['toggle', 'update'] as const) {
+      expect(Object.hasOwn(triggerRef!, member)).toBe(false);
+      expect((triggerRef as unknown as Record<string, unknown>)[member]).toBeUndefined();
+    }
+  });
+
+  it('instance.toggle(true) reveals the floating element; toggle(false) hides it', async () => {
+    const { instance, ref } = captureInstance({ open: false, unmountOnClose: false });
+    await tick();
+    expect(instance.toggle(true)).toBe(true);
+    await tick();
+    expect(ref?.hasAttribute('hidden')).toBe(false);
+    expect(instance.toggle(false)).toBe(false);
+    await tick();
+    expect(ref?.hasAttribute('hidden')).toBe(true);
+  });
+
+  it('instance.toggle() with no argument flips the current state', async () => {
+    const { instance, ref } = captureInstance({ open: false, unmountOnClose: false });
+    await tick();
+    expect(instance.toggle()).toBe(true);
+    await tick();
+    expect(ref?.hasAttribute('hidden')).toBe(false);
+    expect(instance.toggle()).toBe(false);
+    await tick();
+    expect(ref?.hasAttribute('hidden')).toBe(true);
+  });
+
+  it('instance.update() returns the Popover update promise', async () => {
+    const { instance } = captureInstance({ open: true, unmountOnClose: false });
+    await tick();
+    const result = instance.update();
+    expect(result).toBeInstanceOf(Promise);
+    await result;
   });
 });
 

@@ -1,17 +1,16 @@
 <script lang="ts">
   import type { NeoDialogStepperProps } from '~/floating/dialog/neo-dialog-stepper.model.js';
-  import type { NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
 
   import NeoDialogStepper from '~/floating/dialog/NeoDialogStepper.svelte';
 
   type HarnessProps = Partial<NeoDialogStepperProps> & {
     bodyText?: string;
     headerText?: string;
-    onRef?: (ref: NeoDialogHTMLElement | undefined) => void;
+    onRef?: (ref: HTMLDialogElement | undefined) => void;
   };
 
   let {
-    dialogRef = $bindable<NeoDialogHTMLElement | undefined>(undefined),
+    dialogRef = $bindable<HTMLDialogElement | undefined>(undefined),
     open = $bindable(false),
     modal = $bindable(true),
     active = $bindable(0),

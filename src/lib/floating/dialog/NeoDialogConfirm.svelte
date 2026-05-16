@@ -76,10 +76,19 @@
     ...rest
   }: NeoDialogConfirmProps = $props();
 
+  let dialogInstance = $state<ReturnType<typeof NeoDialog>>();
+
+  export function reset(...args: Parameters<NonNullable<typeof dialogInstance>['reset']>) {
+    return dialogInstance?.reset(...args);
+  }
+
+  export function requestClose(...args: Parameters<NonNullable<typeof dialogInstance>['requestClose']>) {
+    return dialogInstance?.requestClose(...args);
+  }
+
   const close = () => {
-    if (!ref) return Logger.error('NeoDialogConfirm: ref is not defined');
-    if (ref.requestClose) return ref.requestClose();
-    ref.close();
+    if (!dialogInstance) return Logger.error('NeoDialogConfirm: dialog instance is not defined');
+    return dialogInstance.requestClose();
   };
 
   const onCloseButton: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -109,6 +118,7 @@
 </script>
 
 <NeoDialog
+  bind:this={dialogInstance}
   bind:ref
   bind:open
   bind:modal

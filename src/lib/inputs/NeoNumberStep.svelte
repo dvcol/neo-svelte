@@ -51,6 +51,8 @@
     ...rest
   }: NeoNumberStepProps = $props();
 
+  let inputInstance = $state<ReturnType<typeof NeoInput>>();
+
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const increment = (e: MouseEvent) => {
@@ -95,7 +97,7 @@
   watch(
     () => {
       if (focusin) return;
-      ref?.validate?.();
+      inputInstance?.validate?.();
     },
     () => focusin,
     { skip: 1 },
@@ -147,6 +149,7 @@
   {...containerRest}
 >
   <NeoInput
+    bind:this={inputInstance}
     bind:ref
     bind:containerRef
     bind:validationRef

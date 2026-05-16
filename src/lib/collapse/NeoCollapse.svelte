@@ -66,26 +66,6 @@
     group?.update(id);
   }
 
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, {
-      get trigger() {
-        return triggerRef;
-      },
-      toggle,
-    });
-  });
-
-  $effect(() => {
-    if (!triggerRef) return;
-    Object.assign(triggerRef, {
-      get section() {
-        return ref;
-      },
-      toggle,
-    });
-  });
-
   $effect.pre(() => {
     if (standalone || !group) return;
     untrack(() =>

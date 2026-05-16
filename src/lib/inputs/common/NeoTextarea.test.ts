@@ -1,4 +1,4 @@
-import type { NeoTextareaHTMLElement } from '~/inputs/common/neo-input.model.js';
+import type { NeoInputMethods } from '~/inputs/common/neo-input.model.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -6,6 +6,7 @@ import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import NeoTextarea from '~/inputs/common/NeoTextarea.svelte';
+import Harness from './NeoTextarea.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -19,7 +20,30 @@ function getGroup(scope: ParentNode = document): HTMLElement | null {
   return scope.querySelector<HTMLElement>('.neo-textarea-group');
 }
 
+interface TextareaInstance extends NeoInputMethods<HTMLTextAreaElement> {
+  resize: () => void;
+}
+
+function captureInstance(props: Record<string, unknown> = {}): { instance: TextareaInstance; container: HTMLElement } {
+  let instance: TextareaInstance | undefined;
+  const { container } = render(Harness, {
+    props: {
+      ...props,
+      onInstance: (i: unknown) => {
+        instance = i as never;
+      },
+    } as never,
+  });
+  return { instance: instance as TextareaInstance, container };
+}
+
 describe('neoTextarea — render', { tags: ['jsdom'] }, () => {
+  it('renders a <textarea.neo-input>', async () => {
+    const { container } = render(Harness, {});
+    await tick();
+    expect(getTextarea(container)).not.toBeNull();
+  });
+
   it('renders a <textarea> wrapped in .neo-textarea-group', async () => {
     const { container } = render(NeoTextarea, {});
     await tick();
@@ -115,39 +139,87 @@ describe('neoTextarea — clearable', { tags: ['jsdom'] }, () => {
   });
 });
 
-describe('neoTextarea — methods', { tags: ['jsdom'] }, () => {
-  it('change(value) updates the textarea value and triggers validation', async () => {
-    const { container } = render(NeoTextarea, { props: { required: true } as never });
+describe('neoTextarea — component-instance API', { tags: ['jsdom'] }, () => {
+  it('exposes mark/clear/change/validate/resize on the component instance', async () => {
+    const { instance } = captureInstance();
     await tick();
-    const ta = getTextarea(container) as NeoTextareaHTMLElement;
-    const state = await ta.change!('updated');
-    await tick();
-    expect(ta.value).toBe('updated');
-    expect(state?.valid).toBe(true);
+    expect(typeof instance.mark).toBe('function');
+    expect(typeof instance.clear).toBe('function');
+    expect(typeof instance.change).toBe('function');
+    expect(typeof instance.validate).toBe('function');
+    expect(typeof instance.resize).toBe('function');
   });
 
-  it('mark({ touched, dirty }) reflects on group dataset and invokes onmark', async () => {
+  it('does not attach component methods onto the DOM ref', async () => {
+    const { container } = captureInstance();
+    await tick();
+    const ta = getTextarea(container)!;
+    for (const member of ['mark', 'clear', 'change', 'validate', 'resize'] as const) {
+      expect(Object.hasOwn(ta, member)).toBe(false);
+      expect((ta as unknown as Record<string, unknown>)[member]).toBeUndefined();
+    }
+  });
+
+  it('change() updates value and runs validation', async () => {
+    const { instance, container } = captureInstance({ required: true });
+    await tick();
+    const ta = getTextarea(container)!;
+    const state = await instance.change('hello');
+    expect(ta.value).toBe('hello');
+    expect(state.valid).toBe(true);
+  });
+
+  it('clear() resets the textarea value and fires onclear', async () => {
+    const onclear = vi.fn();
+    const oninput = vi.fn();
+    const { instance, container } = captureInstance({ value: 'hello', onclear, oninput });
+    await tick();
+    const ta = getTextarea(container)!;
+    await instance.clear();
+    expect(ta.value).toBe('');
+    expect(onclear).toHaveBeenCalledTimes(1);
+    expect(oninput).toHaveBeenCalledTimes(1);
+  });
+
+  it('clear() with nullable=false falls back to defaultValue', async () => {
+    const { instance, container } = captureInstance({ value: 'changed', defaultValue: 'init', nullable: false });
+    await tick();
+    const ta = getTextarea(container)!;
+    await instance.clear();
+    expect(ta.value).toBe('init');
+  });
+
+  it('mark() updates touched/valid/dirty and invokes onmark', async () => {
     const onmark = vi.fn();
-    const { container } = render(NeoTextarea, { props: { onmark } as never });
+    const { instance } = captureInstance({ onmark });
     await tick();
-    const ta = getTextarea(container) as NeoTextareaHTMLElement;
-    ta.mark!({ touched: true, dirty: true });
-    await tick();
+    instance.mark({ touched: true, valid: true, dirty: true });
     expect(onmark).toHaveBeenCalledTimes(1);
+  });
+
+  it('mark({ touched, dirty }) reflects on group dataset', async () => {
+    const { instance, container } = captureInstance({});
+    await tick();
+    instance.mark({ touched: true, dirty: true });
+    await tick();
     const group = getGroup(container)!;
     expect(group.dataset.touched).toBe('true');
     expect(group.dataset.dirty).toBe('true');
   });
 
-  it('clear() resets value and fires onclear', async () => {
-    const onclear = vi.fn();
-    const { container } = render(NeoTextarea, { props: { value: 'hello', onclear } as never });
+  it('validate() reflects native checkValidity', async () => {
+    const { instance, container } = captureInstance({ required: true });
     await tick();
-    const ta = getTextarea(container) as NeoTextareaHTMLElement;
-    await ta.clear!();
+    const ta = getTextarea(container)!;
+    expect(instance.validate().valid).toBe(false);
+    ta.value = 'something';
+    expect(instance.validate().valid).toBe(true);
+  });
+
+  it('resize() does not throw when invoked on a freshly-mounted textarea', async () => {
+    const { instance } = captureInstance({ autoResize: true });
     await tick();
-    expect(ta.value).toBe('');
-    expect(onclear).toHaveBeenCalledTimes(1);
+    expect(() => instance.resize()).not.toThrow();
   });
 });
 

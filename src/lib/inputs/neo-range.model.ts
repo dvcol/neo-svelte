@@ -248,5 +248,3 @@ export type NeoRangeContext<T extends NeoRangeValue = NeoRangeValue> = NeoValida
   & NeoRangeStates
   & NeoRangeStyles
   & NeoRangeMethods<T>;
-
-export type NeoRangeHTMLElement<T extends NeoRangeValue = NeoRangeValue> = HTMLElement & NeoRangeMethods<T>;

@@ -1,6 +1,8 @@
 <script lang="ts">
   import NeoCollapse from '~/collapse/NeoCollapse.svelte';
 
+  type CollapseInstance = ReturnType<typeof NeoCollapse>;
+
   let {
     open = $bindable(false),
     label,
@@ -13,6 +15,10 @@
     unmountOnClose,
     fade,
     content = 'collapse-content',
+    ref = $bindable<HTMLElement | undefined>(undefined),
+    triggerRef = $bindable<HTMLElement | undefined>(undefined),
+    instance = $bindable<CollapseInstance | undefined>(undefined),
+    onInstance,
   }: {
     open?: boolean;
     label?: string;
@@ -25,10 +31,21 @@
     unmountOnClose?: boolean;
     fade?: boolean;
     content?: string;
+    ref?: HTMLElement;
+    triggerRef?: HTMLElement;
+    instance?: CollapseInstance;
+    onInstance?: (instance: CollapseInstance | undefined) => void;
   } = $props();
+
+  $effect(() => {
+    onInstance?.(instance);
+  });
 </script>
 
 <NeoCollapse
+  bind:this={instance}
+  bind:ref
+  bind:triggerRef
   bind:open
   {label}
   {description}

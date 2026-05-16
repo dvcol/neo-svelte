@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 
-import type { NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
+import type { NeoInputProps } from '~/inputs/common/neo-input.model.js';
 import type { NeoValidationFieldContext } from '~/inputs/common/neo-validation.model.js';
 
 export interface NeoPinState {
@@ -50,7 +50,7 @@ export interface NeoPinMethods {
   clear: () => Promise<void>;
 }
 
-export type NeoPinContext = NeoValidationFieldContext<NeoInputHTMLElement, string>
+export type NeoPinContext = NeoValidationFieldContext<HTMLInputElement, string>
   & NeoPinMethods & {
     /**
      * If true, the input will be disabled.

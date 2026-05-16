@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
+  import type { NeoInputContext } from '~/inputs/common/neo-input.model.js';
   import type { NeoSwitchProps } from '~/inputs/neo-switch.model.js';
 
   import { toStyle } from '@dvcol/common-utils/common/class';
@@ -78,6 +78,8 @@
     ...rest
   }: NeoSwitchProps = $props();
 
+  let baseInputInstance = $state<ReturnType<typeof NeoBaseInput>>();
+
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const labelId = $derived(label ? `neo-switch-label-${getUUID()}` : undefined);
@@ -88,15 +90,15 @@
 
   let visible = $state(false);
   let messageId = $state(`neo-switch-message-${getUUID()}`);
-  const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
+  const context = $derived<NeoInputContext<HTMLInputElement>>({
     // Ref
     ref,
 
     // Methods
-    mark: ref?.mark,
-    clear: ref?.clear,
-    change: ref?.change,
-    validate: ref?.validate,
+    mark: baseInputInstance?.mark,
+    clear: baseInputInstance?.clear,
+    change: baseInputInstance?.change,
+    validate: baseInputInstance?.validate,
 
     // State
     value: checked,
@@ -184,6 +186,7 @@
       aria-invalid={valid === undefined ? undefined : !valid}
       aria-describedby={visible ? messageId : undefined}
       {id}
+      bind:this={baseInputInstance}
       bind:ref
       bind:initial
       bind:group

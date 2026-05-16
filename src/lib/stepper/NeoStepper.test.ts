@@ -207,3 +207,83 @@ describe('neoStepper — navigation', { tags: ['jsdom'] }, () => {
     expect(onBeforeStep).not.toHaveBeenCalled();
   });
 });
+
+describe('neoStepper — component-instance API', { tags: ['jsdom'] }, () => {
+  interface StepperInstance { goTo: (i: number) => Promise<unknown>; goPrevious: () => Promise<unknown>; goNext: () => Promise<unknown> }
+
+  function captureInstance(props: Record<string, unknown> = {}): { instance: StepperInstance; container: HTMLElement } {
+    let instance: StepperInstance | undefined;
+    const { container } = render(NeoStepperHarness, {
+      props: {
+        steps: sampleSteps,
+        ...props,
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    return { instance: instance as StepperInstance, container };
+  }
+
+  it('exposes goTo / goPrevious / goNext on the component instance', async () => {
+    const { instance } = captureInstance();
+    await tick();
+    expect(typeof instance.goTo).toBe('function');
+    expect(typeof instance.goPrevious).toBe('function');
+    expect(typeof instance.goNext).toBe('function');
+  });
+
+  it('does not attach goTo / previous / next onto the DOM ref', async () => {
+    const { container } = captureInstance();
+    await tick();
+    const stepperEl = container.querySelector<HTMLElement>('.neo-stepper')!;
+    for (const method of ['goTo', 'previous', 'next'] as const) {
+      expect(Object.hasOwn(stepperEl, method)).toBe(false);
+      expect((stepperEl as unknown as Record<string, unknown>)[method]).toBeUndefined();
+    }
+  });
+
+  it('instance.goTo(2) navigates to step 3 (active=2)', async () => {
+    let reachedIndex = -1;
+    const onStep = vi.fn((event: { current: number; step: { id: string } }) => {
+      if (event?.step?.id === 's3') reachedIndex = event.current;
+    });
+    const { instance } = captureInstance({ active: 0, onStep });
+    await tick();
+    await instance.goTo(2);
+    expect(reachedIndex).toBe(2);
+    expect(onStep).toHaveBeenCalled();
+  });
+
+  it('instance.goNext advances by one step', async () => {
+    const onStep = vi.fn();
+    const { instance } = captureInstance({ active: 0, onStep });
+    await tick();
+    await instance.goNext();
+    const lastCall = onStep.mock.calls.at(-1)![0] as { step: { id: string } };
+    expect(lastCall.step.id).toBe('s2');
+  });
+
+  it('instance.goPrevious goes back by one step', async () => {
+    const onStep = vi.fn();
+    const { instance } = captureInstance({ active: 2, onStep });
+    await tick();
+    await instance.goPrevious();
+    const lastCall = onStep.mock.calls.at(-1)![0] as { step: { id: string } };
+    expect(lastCall.step.id).toBe('s2');
+  });
+
+  it('instance.goTo skips disabled targets (returns undefined, no transition)', async () => {
+    const steps = [
+      { id: 's1', label: 'One' },
+      { id: 's2', label: 'Two', disabled: true },
+      { id: 's3', label: 'Three' },
+    ];
+    const onStep = vi.fn();
+    const { instance } = captureInstance({ steps, active: 0, onStep });
+    await tick();
+    const result = await instance.goTo(1);
+    expect(result).toBeUndefined();
+    expect(onStep).not.toHaveBeenCalled();
+  });
+});

@@ -1,17 +1,16 @@
 <script lang="ts">
   import type { NeoDialogConfirmProps } from '~/floating/dialog/neo-dialog-confirm.model.js';
-  import type { NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
 
   import NeoDialogConfirm from '~/floating/dialog/NeoDialogConfirm.svelte';
 
   type HarnessProps = Partial<NeoDialogConfirmProps> & {
     bodyText?: string;
     headerText?: string;
-    onRef?: (ref: NeoDialogHTMLElement | undefined) => void;
+    onRef?: (ref: HTMLDialogElement | undefined) => void;
   };
 
   let {
-    ref = $bindable<NeoDialogHTMLElement | undefined>(undefined),
+    ref = $bindable<HTMLDialogElement | undefined>(undefined),
     open = $bindable(false),
     modal = $bindable(true),
     bodyText = 'are you sure?',

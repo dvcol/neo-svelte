@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NeoTooltipHTMLElement, NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
+  import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
   import type { SizeOption } from '~/utils/style.utils.js';
 
   import { watch } from '@dvcol/svelte-utils/watch';
@@ -117,13 +117,6 @@
   const tooltipBlur = $derived(computeGlassFilter(blur, true));
   const tooltipShadow = $derived(computeShadowElevation(elevation, { glass: true }, PositiveMinMaxElevation));
 
-  let wrapperRef = $state<HTMLElement>();
-  const host = $derived.by(() => {
-    if (!target) return;
-    if (typeof target === 'function') return target();
-    return target;
-  });
-
   const available = $state<{ width?: number; height?: number }>({});
 
   let focusActive = $state(false);
@@ -239,14 +232,16 @@
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 
-  // Remote-trigger wiring: invoke popover.reference imperatively on the
-  // external host node. Reuses the exact same attachment code path as
-  // {@attach popover.reference} on the local wrapper case — listeners,
-  // ARIA writes, and cleanup all behave identically.
+  // Remote-trigger wiring: attach imperatively when an external host is provided.
+  // Local wrapper case is handled by {@attach floating.reference} in the template.
+  // In both cases, floating.referenceEl is the source of truth for triggerRef.
   $effect(() => {
-    if (!host) return;
-    triggerRef = host;
-    return floating.reference(host);
+    const host = typeof target === 'function' ? target() : target;
+    if (host) return floating.reference(host);
+  });
+
+  $effect(() => {
+    triggerRef = floating.referenceEl as HTMLElement;
   });
 
   export function toggle(state = !open) {
@@ -258,20 +253,6 @@
   export function update() {
     return floating.update();
   }
-
-  const addMethods = <T extends HTMLElement>(element?: T | null): NeoTooltipHTMLElement<T> | undefined => {
-    if (!element) return;
-    if (!Object.hasOwn(element, 'toggle')) Object.assign(element, { toggle });
-    if (!Object.hasOwn(element, 'update')) Object.assign(element, { update });
-    return element;
-  };
-
-  $effect(() => {
-    addMethods(ref);
-  });
-  $effect(() => {
-    triggerRef = addMethods(floating.referenceEl as HTMLElement);
-  });
 
   const computeSize = <T extends 'width' | 'height'>(value: NeoTooltipProps[T], dimension: T): SizeOption<T> | undefined => {
     const tSize = dimension === 'width' ? triggerRef?.offsetWidth : triggerRef?.offsetHeight;
@@ -329,7 +310,6 @@
 {#if !target}
   <svelte:element
     this={triggerTag}
-    bind:this={wrapperRef}
     class:neo-tooltip-trigger={true}
     {@attach floating.reference}
     {...triggerRest}

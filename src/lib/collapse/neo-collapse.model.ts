@@ -117,11 +117,3 @@ export type NeoCollapseProps<Tag extends keyof HTMLElementTagNameMap = 'section'
 } & Partial<Omit<NeoCollapseContext, 'trigger' | 'triggerId'>>
 & HTMLRefProps
 & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
-
-export type NeoCollapseHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'section'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]> & {
-  /**
-   * Toggles the collapsed section.
-   * @param open
-   */
-  toggle: (open?: boolean) => void;
-};

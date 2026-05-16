@@ -155,14 +155,6 @@
     scrollToBottom,
   });
 
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, {
-      scrollToTop,
-      scrollToBottom,
-    });
-  });
-
   const stopScrolling = debounce(() => {
     scrolling = false;
   }, 'ontouchstart' in window ? 300 : 150);

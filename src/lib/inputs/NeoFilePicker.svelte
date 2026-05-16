@@ -3,7 +3,7 @@
 
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoInputContext, NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
+  import type { NeoInputContext } from '~/inputs/common/neo-input.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
@@ -95,6 +95,8 @@
     ...rest
   }: NeoFilePickerProps = $props();
 
+  let inputInstance = $state<ReturnType<typeof NeoInput>>();
+
   const { tag: containerTag = 'div', ...containerRest } = $derived(containerProps ?? {});
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(pressed)));
@@ -126,7 +128,7 @@
 
   const onClear: MouseEventHandler<HTMLButtonElement> = (e) => {
     e?.stopPropagation();
-    ref?.clear?.();
+    inputInstance?.clear?.();
   };
 
   const onclick = (e: SvelteEvent<MouseEvent>) => {
@@ -246,15 +248,15 @@
   let validationMessage = $state<string>(ref?.validationMessage ?? '');
 
   let initial = $state();
-  const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
+  const context = $derived<NeoInputContext<HTMLInputElement>>({
     // Ref
     ref,
 
     // Methods
-    mark: ref?.mark,
-    clear: ref?.clear,
-    change: ref?.change,
-    validate: ref?.validate,
+    mark: inputInstance?.mark,
+    clear: inputInstance?.clear,
+    change: inputInstance?.change,
+    validate: inputInstance?.validate,
 
     // State
     initial,
@@ -311,7 +313,7 @@
   </NeoButton>
 {/snippet}
 
-{#snippet overlay(ctx: NeoInputContext<NeoInputHTMLElement>)}
+{#snippet overlay(ctx: NeoInputContext<HTMLInputElement>)}
   <div class="neo-drop-overlay">
     {dropText}
   </div>
@@ -320,6 +322,7 @@
 
 {#snippet input()}
   <NeoInput
+    bind:this={inputInstance}
     bind:ref
     bind:validationRef
     bind:files

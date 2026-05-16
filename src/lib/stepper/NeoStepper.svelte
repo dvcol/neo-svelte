@@ -254,15 +254,6 @@
     };
   });
 
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, {
-      goTo,
-      previous: goPrevious,
-      next: goNext,
-    });
-  });
-
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 </script>

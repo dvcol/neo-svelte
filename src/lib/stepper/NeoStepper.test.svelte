@@ -4,6 +4,7 @@
   import NeoStepper from '~/stepper/NeoStepper.svelte';
 
   type HarnessStep = NeoStepperStep & { label?: string };
+  type StepperInstance = ReturnType<typeof NeoStepper>;
 
   let {
     steps = [],
@@ -17,6 +18,9 @@
     disabled,
     onStep,
     onBeforeStep,
+    ref = $bindable<HTMLElement | undefined>(undefined),
+    instance = $bindable<StepperInstance | undefined>(undefined),
+    onInstance,
   }: {
     steps?: HarnessStep[];
     active?: number;
@@ -29,7 +33,14 @@
     disabled?: boolean;
     onStep?: (...args: any[]) => void;
     onBeforeStep?: (...args: any[]) => void;
+    ref?: HTMLElement;
+    instance?: StepperInstance;
+    onInstance?: (instance: StepperInstance | undefined) => void;
   } = $props();
+
+  $effect(() => {
+    onInstance?.(instance);
+  });
 
   // Neutralize fly/scale transitions in jsdom — leftover transitions outlive
   // unmount and crash the Svelte 5 runtime with `get_fn(...) is not a function`
@@ -38,6 +49,8 @@
 </script>
 
 <NeoStepper
+  bind:this={instance}
+  bind:ref
   {steps}
   bind:active
   {vertical}

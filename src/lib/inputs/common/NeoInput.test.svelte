@@ -3,7 +3,12 @@
 
   import NeoInput from '~/inputs/common/NeoInput.svelte';
 
-  type HarnessProps = Partial<NeoInputProps>;
+  type InputInstance = ReturnType<typeof NeoInput>;
+
+  type HarnessProps = Partial<NeoInputProps> & {
+    instance?: InputInstance;
+    onInstance?: (instance: InputInstance | undefined) => void;
+  };
 
   let {
     ref = $bindable(),
@@ -18,11 +23,18 @@
     hovered = $bindable(false),
     focused = $bindable(false),
     focusin = $bindable(false),
+    instance = $bindable<InputInstance | undefined>(undefined),
+    onInstance,
     ...rest
   }: HarnessProps = $props();
+
+  $effect(() => {
+    onInstance?.(instance);
+  });
 </script>
 
 <NeoInput
+  bind:this={instance}
   bind:ref
   bind:value
   bind:files

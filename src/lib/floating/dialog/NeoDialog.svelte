@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoHandlePlacements } from '~/floating/common/neo-handle.model.js';
-  import type { NeoDialogContext, NeoDialogHTMLElement, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
-  import type { NeoMovable, NeoMovableHandlers } from '~/floating/dialog/use-movable.svelte.js';
+  import type { NeoDialogContext, NeoDialogProps } from '~/floating/dialog/neo-dialog.model.js';
+  import type { NeoMovable, NeoMovableHandlers, NeoMovableResetOptions } from '~/floating/dialog/use-movable.svelte.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { isIOS } from '@dvcol/common-utils/common/browser';
@@ -127,12 +127,17 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
-  const onCancel = (e: SvelteEvent = new Event('cancel', { bubbles: false, cancelable: true })) => {
+  const onCancel = (_e: SvelteEvent = new Event('cancel', { bubbles: false, cancelable: true })) => {
     if (!ref) return;
-    if (isNative && !ref.open) return;
-    if (ref.requestClose) return ref.requestClose();
-    ref.close();
-    oncancel?.(e);
+    if (isNative) {
+      if (!ref.open) return;
+      if (ref.requestClose) return ref.requestClose();
+      return ref.close();
+    }
+    // Non-native: surface 'cancel' then 'close' so wired listeners (including onClose / oncancel) fire
+    if (!open) return;
+    ref.dispatchEvent(new Event('cancel', { bubbles: false, cancelable: true }));
+    ref.dispatchEvent(new Event('close', { bubbles: false, cancelable: true }));
   };
 
   const onClick: NeoDialogProps['onclick'] = (e) => {
@@ -230,9 +235,31 @@
   // Capture close dialog from external sources (esc key for example)
   const onClose = async (e: SvelteEvent) => {
     if (open) open = false;
+    if (isNative && ref) returnValue = ref.returnValue;
     if (movable.resetOnClose) await moving.reset();
     return onclose?.(e);
   };
+
+  // Sync ref.returnValue when bindable returnValue is updated externally so a subsequent native close() returns it
+  $effect(() => {
+    if (!ref || !isNative) return;
+    if (returnValue === undefined) return;
+    if (ref.returnValue === returnValue) return;
+    ref.returnValue = returnValue;
+  });
+
+  // Native <dialog> only fires 'close'/'cancel' on close. Calling ref.show() / ref.showModal() directly opens
+  // the element at the DOM level without a corresponding event — observe the native [open] attribute to flip
+  // the bindable `open` so direct DOM-level opens stay in sync with component state.
+  $effect(() => {
+    if (!ref || !isNative) return;
+    const target = ref;
+    const observer = new MutationObserver(() => {
+      if (target.open && !open) open = true;
+    });
+    observer.observe(target, { attributes: true, attributeFilter: ['open'] });
+    return () => observer.disconnect();
+  });
 
   // Sync dialog state with component state
   $effect(() => {
@@ -271,52 +298,16 @@
     return () => portalContext.closeDialog(id);
   });
 
-  $effect.pre(() => {
+  export const reset = (options?: NeoMovableResetOptions) => moving.reset(options);
+
+  export function requestClose(value?: string) {
+    if (value !== undefined) returnValue = value;
     if (!ref) return;
-    Object.defineProperty(ref, 'returnValue', {
-      get() {
-        return returnValue;
-      },
-      set(val?: any) {
-        returnValue = val;
-      },
-      configurable: true,
-    });
-    ref.reset = moving.reset;
-    // Monkey patch dialog methods to sync inner states
-    const { close, requestClose, show, showModal, dispatchEvent } = ref;
-    ref.show = () => {
-      modal = false;
-      open = true;
-      return show?.call(ref);
-    };
-    ref.showModal = () => {
-      modal = true;
-      open = true;
-      return showModal?.call(ref);
-    };
-    ref.close = (returnVal?: any) => {
-      if (returnVal !== undefined) returnValue = returnVal;
-      open = false;
-      if (!close) return dispatchEvent.call(ref, new Event('close', { bubbles: false, cancelable: true }));
-      return close?.call(ref, returnVal);
-    };
-    if (!requestClose) {
-      ref.requestClose = (returnVal?: any) => {
-        if (returnVal !== undefined) returnValue = returnVal;
-        open = false;
-        dispatchEvent.call(ref, new Event('cancel', { bubbles: false, cancelable: true }));
-        if (!close) return dispatchEvent.call(ref, new Event('close', { bubbles: false, cancelable: true }));
-        return close?.call(ref, returnVal);
-      };
-    } else {
-      ref.requestClose = (returnVal?: any) => {
-        if (returnVal !== undefined) returnValue = returnVal;
-        open = false;
-        return requestClose.call(ref, returnVal);
-      };
-    }
-  });
+    if (isNative && ref.requestClose) return ref.requestClose(value);
+    ref.dispatchEvent(new Event('cancel', { bubbles: false, cancelable: true }));
+    if (isNative) return ref.close(value);
+    ref.dispatchEvent(new Event('close', { bubbles: false, cancelable: true }));
+  }
 
   const scrollLock = useMobileScrollLock();
   $effect(() => {
@@ -381,7 +372,7 @@
   {#if !unmountOnClose || open}
     <svelte:element
       this={tag}
-      bind:this={ref as NeoDialogHTMLElement}
+      bind:this={ref as HTMLDialogElement}
       data-open={open}
       data-modal={modal}
       data-axis={movable.axis}

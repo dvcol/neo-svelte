@@ -2,7 +2,7 @@
   import type { DragEventHandler, KeyboardEventHandler, PointerEventHandler } from 'svelte/elements';
 
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoRangeContext, NeoRangeHTMLElement, NeoRangeProps, NeoRangeValidationState, NeoRangeValue } from '~/inputs/neo-range.model.js';
+  import type { NeoRangeContext, NeoRangeProps, NeoRangeValidationState, NeoRangeValue } from '~/inputs/neo-range.model.js';
 
   import { round } from '@dvcol/common-utils';
   import { toStyle } from '@dvcol/common-utils/common/class';
@@ -338,14 +338,6 @@
     form,
     type: 'range',
     state: { valid, dirty, touched, value, initial },
-  });
-
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, {
-      stepUp,
-      stepDown,
-    } satisfies Partial<NeoRangeHTMLElement>);
   });
 
   let slider = $state<HTMLElement>();

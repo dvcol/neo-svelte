@@ -1,16 +1,15 @@
 <script lang="ts">
-  import type { NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
   import type { NeoDrawerProps } from '~/floating/drawer/neo-drawer.model.js';
 
   import NeoDrawer from '~/floating/drawer/NeoDrawer.svelte';
 
   type HarnessProps = Partial<NeoDrawerProps> & {
     bodyText?: string;
-    onRef?: (ref: NeoDialogHTMLElement | undefined) => void;
+    onRef?: (ref: HTMLDialogElement | undefined) => void;
   };
 
   let {
-    ref = $bindable<NeoDialogHTMLElement | undefined>(undefined),
+    ref = $bindable<HTMLDialogElement | undefined>(undefined),
     open = $bindable(false),
     returnValue = $bindable<string | undefined>(),
     bodyText = 'drawer body',

@@ -3,7 +3,12 @@
 
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
 
-  type HarnessProps = Partial<NeoBaseInputProps>;
+  type BaseInputInstance = ReturnType<typeof NeoBaseInput>;
+
+  type HarnessProps = Partial<NeoBaseInputProps> & {
+    instance?: BaseInputInstance;
+    onInstance?: (instance: BaseInputInstance | undefined) => void;
+  };
 
   let {
     ref = $bindable(),
@@ -18,11 +23,18 @@
     dirty = $bindable(false),
     focused = $bindable(false),
     validationMessage = $bindable(),
+    instance = $bindable<BaseInputInstance | undefined>(undefined),
+    onInstance,
     ...rest
   }: HarnessProps = $props();
+
+  $effect(() => {
+    onInstance?.(instance);
+  });
 </script>
 
 <NeoBaseInput
+  bind:this={instance}
   bind:ref
   bind:value
   bind:files

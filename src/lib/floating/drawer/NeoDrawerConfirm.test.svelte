@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
   import type { NeoDrawerConfirmProps } from '~/floating/drawer/neo-drawer.model.js';
 
   import NeoDrawerConfirm from '~/floating/drawer/NeoDrawerConfirm.svelte';
@@ -7,11 +6,11 @@
   type HarnessProps = Partial<NeoDrawerConfirmProps> & {
     bodyText?: string;
     headerText?: string;
-    onRef?: (ref: NeoDialogHTMLElement | undefined) => void;
+    onRef?: (ref: HTMLDialogElement | undefined) => void;
   };
 
   let {
-    ref = $bindable<NeoDialogHTMLElement | undefined>(undefined),
+    ref = $bindable<HTMLDialogElement | undefined>(undefined),
     open = $bindable(false),
     bodyText = 'are you sure?',
     headerText,

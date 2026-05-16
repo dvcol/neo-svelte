@@ -481,9 +481,6 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
 & HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
 & NeoListState & NeoListSelectState<Selected>;
 
-export type NeoListHTMLElement<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>
-  & NeoListMethods & NeoListSelectMethods<Value>;
-
 export function findByIdInList<Value = unknown>(selection: NeoListSelectedItem<Value>, array: NeoListItemOrSection<Value>[]): NeoListSelectedItem<Value> | undefined {
   const result: NeoListSelectedItem<Value> = { index: -1 } as NeoListSelectedItem<Value>;
   const search = array?.some((item, index) => {

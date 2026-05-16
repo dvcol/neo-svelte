@@ -3,7 +3,6 @@
     NeoProgressChange,
     NeoProgressComplete,
     NeoProgressContext,
-    NeoProgressMethods,
     NeoProgressProps,
     NeoProgressStart,
     NeoProgressStatuses,
@@ -262,18 +261,6 @@
     cancel,
     change,
     complete,
-  });
-
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, {
-      start,
-      stop,
-      reset,
-      cancel,
-      change,
-      complete,
-    } satisfies NeoProgressMethods);
   });
 
   onMount(() => {

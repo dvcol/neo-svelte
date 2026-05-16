@@ -118,7 +118,7 @@
   let openDrawerConfirm = $state(false);
   let openDrawerStepper = $state(false);
 
-  const refs = $state([]);
+  const instances = $state([]);
 
   const confirmOptions: NeoDialogConfirmProps = {
     dialog: lorem,
@@ -193,7 +193,7 @@
   };
 
   const reset = async () => {
-    await Promise.all(refs.map(ref => ref?.reset?.({ translate: true })));
+    await Promise.all(instances.map(instance => instance?.reset({ translate: true })));
     options.moved = { x: 0, y: 0 };
     drawerOptions.moved = { x: 0, y: 0 };
   };
@@ -379,7 +379,7 @@
       <NeoButton elevation="0" toggle bind:checked={openDefault}>Open</NeoButton>
 
       <NeoDialog
-        bind:ref={refs[0]}
+        bind:this={instances[0]}
         bind:open={openDefault}
         bind:modal={options.modal}
         bind:moved={options.moved}
@@ -398,7 +398,7 @@
       <NeoButton elevation="0" toggle bind:checked={openConfirm}>Open</NeoButton>
 
       <NeoDialogConfirm
-        bind:ref={refs[1]}
+        bind:this={instances[1]}
         bind:open={openConfirm}
         bind:modal={options.modal}
         bind:moved={options.moved}
@@ -419,7 +419,7 @@
       <NeoButton elevation="0" toggle bind:checked={openStepper}>Open</NeoButton>
 
       <NeoDialogStepper
-        bind:dialogRef={refs[2]}
+        bind:this={instances[2]}
         bind:active
         bind:open={openStepper}
         bind:modal={options.modal}
@@ -445,7 +445,7 @@
       <NeoButton elevation="0" toggle bind:checked={openDrawer}>Open</NeoButton>
 
       <NeoDrawer
-        bind:dialogRef={refs[3]}
+        bind:this={instances[3]}
         bind:open={openDrawer}
         bind:moved={drawerOptions.moved}
         bind:placement={drawerOptions.placement}
@@ -465,7 +465,7 @@
       <NeoButton elevation="0" toggle bind:checked={openDrawerConfirm}>Open</NeoButton>
 
       <NeoDrawerConfirm
-        bind:ref={refs[4]}
+        bind:this={instances[4]}
         bind:open={openDrawerConfirm}
         bind:moved={drawerOptions.moved}
         bind:placement={drawerOptions.placement}
@@ -489,7 +489,7 @@
       <NeoButton elevation="0" toggle bind:checked={openDrawerStepper}>Open</NeoButton>
 
       <NeoDrawerStepper
-        bind:dialogRef={refs[5]}
+        bind:this={instances[5]}
         bind:active
         bind:open={openDrawerStepper}
         bind:moved={drawerOptions.moved}

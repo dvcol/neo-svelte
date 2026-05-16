@@ -145,7 +145,7 @@ export const NeoInputLabelPlacement = {
 
 export type NeoInputLabelPlacements = (typeof NeoInputLabelPlacement)[keyof typeof NeoInputLabelPlacement];
 
-export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement = NeoInputHTMLElement> = {
+export type NeoBaseInputProps<T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement = HTMLInputElement> = {
   // Snippets
   /**
    * A snippet to display as the input children.
@@ -399,7 +399,7 @@ export type NeoInputGroupProps<T extends HTMLInputElement | HTMLTextAreaElement 
 & NeoInputStyles
 & HTMLTransitionProps;
 
-export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = NeoInputHTMLElement> = {
+export type NeoInputProps<T extends HTMLInputElement | HTMLSelectElement = HTMLInputElement> = {
   // Snippets
 
   /**
@@ -451,7 +451,7 @@ export interface NeoTextAreaResize {
   max?: number;
 }
 
-export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElement> = {
+export type NeoTextareaProps<T extends HTMLTextAreaElement = HTMLTextAreaElement> = {
   /**
    * Fall back value when the textarea value is cleared.
    */
@@ -480,7 +480,3 @@ export type NeoTextareaProps<T extends HTMLTextAreaElement = NeoTextareaHTMLElem
   autoResize?: boolean | NeoTextAreaResize;
 } & Omit<NeoInputGroupProps<T>, 'hide' | 'display' | 'displayProps'>
 & HTMLTextareaAttributes;
-
-export type NeoInputHTMLElement<T extends HTMLInputElement = HTMLInputElement> = T & Partial<NeoInputMethods<T>>;
-export type NeoSelectHTMLElement<T extends HTMLSelectElement = HTMLSelectElement> = T & Partial<NeoInputMethods<T>>;
-export type NeoTextareaHTMLElement<T extends HTMLTextAreaElement = HTMLTextAreaElement> = T & Partial<NeoInputMethods<T>> & { resize?: () => void };

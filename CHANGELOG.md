@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## Unreleased
+
+### ⚠ BREAKING CHANGES
+
+* **components:** drop `NeoXxxHTMLElement` ref-method aliases across the library. Component-level methods (`toggle`, `update`, `reset`, `requestClose`, `validate`, `clear`, `mark`, `change`, `start`, `stop`, `cancel`, `complete`, `goTo`, `goPrevious`, `goNext`, `previous`, `next`, `scrollToTop`, `scrollToBottom`, `selectItem`, `clearItem`, `reSelect`, `write`, `abort`, `resize`, `stepUp`, `stepDown`) are no longer attached to the bound DOM `ref`. Consumers must use `bind:this={instance}` on the component to access them. Affected: `NeoTooltip`, `NeoForm`, `NeoProgress`, `NeoStepper`, `NeoCollapse`, `NeoList`, `NeoSimpleList`, `NeoTypewriter`, `NeoBaseInput`, `NeoTextarea`, `NeoPin`, `NeoRange`, `NeoDialog`. `NeoDialog` additionally drops the `Object.defineProperty(ref, 'returnValue', …)` accessor and the `show`/`showModal`/`close`/`requestClose` monkey-patches; the `bindable` `open` is now synced via native `'close'` and `'cancel'` events on the dialog element.
+
 ## [1.2.0](https://github.com/dvcol/neo-svelte/compare/v1.1.2...v1.2.0) (2026-03-21)
 
 

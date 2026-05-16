@@ -84,6 +84,16 @@
 
   const marks = $derived<boolean>(_marks ?? steps?.some(s => s?.markProps) ?? !!rest?.markProps);
 
+  let drawerInstance = $state<ReturnType<typeof NeoDrawer>>();
+
+  export function reset(...args: Parameters<NonNullable<typeof drawerInstance>['reset']>) {
+    return drawerInstance?.reset(...args);
+  }
+
+  export function requestClose(...args: Parameters<NonNullable<typeof drawerInstance>['requestClose']>) {
+    return drawerInstance?.requestClose(...args);
+  }
+
   const onCloseButton: MouseEventHandler<HTMLButtonElement> = (e) => {
     open = false;
     onClose?.(e);
@@ -146,6 +156,7 @@
 {/snippet}
 
 <NeoDrawer
+  bind:this={drawerInstance}
   bind:ref={dialogRef}
   bind:open
   bind:moved

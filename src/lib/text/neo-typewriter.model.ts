@@ -28,26 +28,3 @@ export type NeoTypewriterProps<Tag extends keyof HTMLElementTagNameMap = 'div', 
 >
 & HTMLRefProps<HTMLElementTagNameMap[Tag]>
 & Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'>;
-
-export type NeoTypewriterHTMLElement<
-  Tag extends keyof HTMLElementTagNameMap = 'div',
-  Value extends string | TypeWriterLine = string | TypeWriterLine,
-> = Partial<HTMLElementTagNameMap[Tag]> & {
-  /**
-   * Whether the typewriter is currently writing text.
-   */
-  writing?: boolean;
-  /**
-   * The promise that resolves when the typewriter completes writing text.
-   */
-  promise?: Promise<string | undefined>;
-  /**
-   * Writes the given value to the typewriter.
-   * @param value
-   */
-  write: (value: Value | Value[]) => void;
-  /**
-   * Clears the typewriter and stops writing text.
-   */
-  abort: () => void;
-};

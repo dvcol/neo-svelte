@@ -2,7 +2,6 @@
   import type { EventHandler } from 'svelte/elements';
 
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
   import type { NeoPinContext, NeoPinProps } from '~/inputs/neo-pin.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
@@ -16,6 +15,8 @@
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
+
+  type NeoInputInstance = ReturnType<typeof NeoInput>;
   import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { ArrowPrefix } from '~/utils/regex.utils.js';
   import { coerce, DefaultShadowElevation } from '~/utils/shadow.utils.js';
@@ -96,7 +97,8 @@
 
   const labelId = $derived(label ? `neo-pin-label-${getUUID()}` : undefined);
 
-  const refs = $state<NeoInputHTMLElement[][]>(Array.from<NeoInputHTMLElement[]>({ length: Number(groups) }).fill([]));
+  const refs = $state<HTMLInputElement[][]>(Array.from<HTMLInputElement[]>({ length: Number(groups) }).fill([]));
+  const instances = $state<NeoInputInstance[][]>(Array.from<NeoInputInstance[]>({ length: Number(groups) }).fill([]));
   const values = $state<string[][]>(Array.from<string[]>({ length: Number(groups) }).fill(Array.from<string>({ length: Number(count) }).fill('')));
   const touches = $state<boolean[][]>(Array.from<boolean[]>({ length: Number(groups) }).fill(Array.from<boolean>({ length: Number(count) }).fill(false)));
   const dirtiness = $state<boolean[][]>(Array.from<boolean[]>({ length: Number(groups) }).fill(Array.from<boolean>({ length: Number(count) }).fill(false)));
@@ -149,7 +151,7 @@
     if (e.key === 'ArrowUp') data = !Number.isNaN(Number(_value)) ? String(Math.min(Number(_value) + 1, Number(max))) : _value.toUpperCase();
     if (e.key === 'ArrowDown') data = !Number.isNaN(Number(_value)) ? String(Math.max(Number(_value) - 1, Number(min))) : _value.toLowerCase();
     if (!data?.length) return;
-    return refs?.[i]?.[j]?.change?.(
+    return instances?.[i]?.[j]?.change?.(
       data,
       new InputEvent('input', {
         bubbles: true,
@@ -172,7 +174,7 @@
     const _group = !j ? i - 1 : i;
     const _count = !j ? count - 1 : j - 1;
 
-    refs?.[_group]?.[_count]?.clear?.(
+    instances?.[_group]?.[_count]?.clear?.(
       undefined,
       new InputEvent('input', {
         bubbles: true,
@@ -184,7 +186,14 @@
   };
 
   export async function clear() {
-    await Promise.all(refs?.map(group => group?.map(input => input?.clear?.())));
+    const promises: Promise<unknown>[] = [];
+    instances?.forEach((group) => {
+      group?.forEach((input) => {
+        const result = input?.clear?.();
+        if (result) promises.push(result);
+      });
+    });
+    await Promise.all(promises);
     focus(0, 0, { last: true });
   }
 
@@ -198,7 +207,7 @@
       if (char === separator && index % count === 0) return;
       if (_group >= groups) return;
 
-      refs?.[_group]?.[_count]?.change?.(
+      instances?.[_group]?.[_count]?.change?.(
         char,
         new InputEvent('input', {
           bubbles: true,
@@ -252,7 +261,7 @@
     outer: () => touched,
     input: () => {
       if (touched) return;
-      refs?.forEach(group => group?.forEach(input => input?.mark?.({ touched: false })));
+      instances?.forEach(group => group?.forEach(input => input?.mark?.({ touched: false })));
     },
     inner: () => mergedTouched,
     output: () => {
@@ -265,7 +274,7 @@
     outer: () => dirty,
     input: () => {
       if (dirty) return;
-      refs?.forEach(group => group?.forEach(input => input?.mark?.({ dirty: false })));
+      instances?.forEach(group => group?.forEach(input => input?.mark?.({ dirty: false })));
     },
     inner: () => mergedDirty,
     output: () => {
@@ -330,11 +339,6 @@
     form: rest?.form,
     type,
     state: { valid, dirty, touched, value, initial },
-  });
-
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, { clear, validate });
   });
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
@@ -413,6 +417,7 @@
         <div class="neo-pin-group">
           {#each { length: Number(count) } as __, j (j)}
             <NeoInput
+              bind:this={instances[i][j]}
               bind:ref={refs[i][j]}
               bind:value={values[i][j]}
               bind:dirty={dirtiness[i][j]}

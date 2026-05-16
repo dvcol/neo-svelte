@@ -292,7 +292,7 @@ export type NeoTooltipProps = {
   /**
    * Reference to the trigger element.
    */
-  triggerRef?: HTMLRefProps<NeoTooltipHTMLElement>['ref'];
+  triggerRef?: HTMLRefProps<HTMLElement>['ref'];
   /**
    * Properties to pass to the trigger element.
    */
@@ -302,13 +302,6 @@ export type NeoTooltipProps = {
    */
   portalProps?: Omit<NeoPortalProps, 'children'>;
 } & HTMLFlexProps
-& HTMLRefProps<NeoTooltipHTMLElement>
+& HTMLRefProps<HTMLElement>
 & HTMLActionProps
 & Omit<HTMLNeoBaseElement, 'children'>;
-
-export interface NeoTooltipMethods {
-  toggle: (open?: boolean) => boolean;
-  update: Popover['update'];
-}
-
-export type NeoTooltipHTMLElement<T extends HTMLElement = HTMLElement> = T & Partial<NeoTooltipMethods>;

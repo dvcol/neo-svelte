@@ -2,7 +2,6 @@
   import type { NeoInputProps, NeoInputState } from '~/inputs/common/neo-input.model.js';
   import type { NeoDateTimeProps } from '~/inputs/neo-date-time.model.js';
   import type { NeoFilePickerProps } from '~/inputs/neo-file-picker.model.js';
-  import type { NeoRangeHTMLElement } from '~/inputs/neo-range.model.js';
   import type { NeoNativeSelectOption } from '~/inputs/neo-select.model.js';
   import type { NeoListItem } from '~/list/neo-list.model.js';
 
@@ -153,7 +152,7 @@
   const switchState = new ValidationState({ type: 'checkbox' });
   const switchGroupState = new ValidationState({ type: 'checkbox' });
 
-  const rangeState = new ValidationState<NeoRangeHTMLElement>({ type: 'range', value: 0 });
+  const rangeState = new ValidationState<HTMLElement>({ type: 'range', value: 0 });
   const rangeArrayState = new ValidationState({ type: 'range', value: [25, 75] });
   const rangeMinMaxState = new ValidationState({ type: 'range', value: [-100, 100] });
   const rangeSteppedState = new ValidationState({ type: 'range', value: 50 });

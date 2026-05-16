@@ -1,15 +1,30 @@
 <script lang="ts">
+  import type { NeoFormProps } from '~/form/neo-form.model.js';
+
   import NeoForm from '~/form/NeoForm.svelte';
 
-  interface HarnessProps {
+  type FormInstance = ReturnType<typeof NeoForm>;
+
+  interface HarnessProps extends Partial<NeoFormProps> {
     childrenText?: string;
-    legend?: string;
-    [key: string]: unknown;
+    instance?: FormInstance;
+    onInstance?: (instance: FormInstance | undefined) => void;
   }
 
-  const { childrenText, legend, ...rest }: HarnessProps = $props();
+  let {
+    childrenText,
+    legend,
+    ref = $bindable<HTMLFormElement | undefined>(undefined),
+    instance = $bindable<FormInstance | undefined>(undefined),
+    onInstance,
+    ...rest
+  }: HarnessProps = $props();
+
+  $effect(() => {
+    onInstance?.(instance);
+  });
 </script>
 
-<NeoForm {...rest} {legend}>
+<NeoForm bind:this={instance} bind:ref {...rest} {legend}>
   <span data-testid="form-content">{childrenText}</span>
 </NeoForm>

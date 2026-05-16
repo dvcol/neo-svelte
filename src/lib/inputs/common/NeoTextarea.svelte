@@ -7,7 +7,6 @@
     NeoInputMethods,
     NeoInputState,
     NeoInputValue,
-    NeoTextareaHTMLElement,
     NeoTextareaProps,
   } from '~/inputs/common/neo-input.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -75,7 +74,7 @@
     flex: _flex,
     width: _width,
     height: _height,
-    resize,
+    resize: _resize,
     autoResize = true,
     fitContent,
 
@@ -285,7 +284,7 @@
     return autoResize.max * lineHeight;
   });
 
-  const resizeHeight = () => {
+  export function resize(): void {
     if (!autoResize || !ref) return;
 
     const isScrolled = ref.scrollHeight && ref.scrollHeight > ref.clientHeight;
@@ -298,10 +297,10 @@
     if (!scrollHeight) ref.style.height = '';
     else if (max) ref.style.height = `${Math.min(max, scrollHeight)}px`;
     else ref.style.height = `${scrollHeight}px`;
-  };
+  }
 
   watch(
-    () => resizeHeight,
+    () => resize,
     () => [value, autoResize, first],
   );
 
@@ -310,15 +309,10 @@
     updateRefs();
   });
 
-  $effect(() => {
-    if (!ref) return;
-    Object.assign(ref, { mark, clear, change, validate, resize: resizeHeight });
-  });
-
   let visible = $state(false);
   let messageId = $state(`neo-textarea-message-${getUUID()}`);
 
-  const context = $derived<NeoInputContext<NeoTextareaHTMLElement>>({
+  const context = $derived<NeoInputContext<HTMLTextAreaElement>>({
     // Ref
     ref,
 
@@ -412,7 +406,7 @@
     class:neo-scroll={scrollbar}
     class:neo-affix={affix || after}
     class:neo-fit-content={fitContent}
-    style:resize
+    style:resize={_resize}
     {rows}
     {defaultValue}
     onblur={onBlur}

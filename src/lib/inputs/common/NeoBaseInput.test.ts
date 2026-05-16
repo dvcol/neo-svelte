@@ -1,4 +1,4 @@
-import type { NeoInputHTMLElement } from '~/inputs/common/neo-input.model.js';
+import type { NeoInputMethods } from '~/inputs/common/neo-input.model.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -17,6 +17,21 @@ function getInput(scope: ParentNode = document): HTMLInputElement | null {
 
 function getSelect(scope: ParentNode = document): HTMLSelectElement | null {
   return scope.querySelector<HTMLSelectElement>('select.neo-input');
+}
+
+interface BaseInputInstance extends NeoInputMethods<HTMLInputElement> {}
+
+function captureInstance(props: Record<string, unknown> = {}): { instance: BaseInputInstance; container: HTMLElement } {
+  let instance: BaseInputInstance | undefined;
+  const { container } = render(Harness, {
+    props: {
+      ...props,
+      onInstance: (i: unknown) => {
+        instance = i as never;
+      },
+    } as never,
+  });
+  return { instance: instance as BaseInputInstance, container };
 }
 
 describe('neoBaseInput — render', { tags: ['jsdom'] }, () => {
@@ -78,35 +93,43 @@ describe('neoBaseInput — render', { tags: ['jsdom'] }, () => {
   });
 });
 
-describe('neoBaseInput — exposed methods', { tags: ['jsdom'] }, () => {
-  it('exposes mark/clear/change/validate on the ref', async () => {
-    const { container } = render(Harness, {});
+describe('neoBaseInput — component-instance API', { tags: ['jsdom'] }, () => {
+  it('exposes mark/clear/change/validate on the component instance', async () => {
+    const { instance } = captureInstance();
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
-    expect(typeof input.mark).toBe('function');
-    expect(typeof input.clear).toBe('function');
-    expect(typeof input.change).toBe('function');
-    expect(typeof input.validate).toBe('function');
+    expect(typeof instance.mark).toBe('function');
+    expect(typeof instance.clear).toBe('function');
+    expect(typeof instance.change).toBe('function');
+    expect(typeof instance.validate).toBe('function');
+  });
+
+  it('does not attach component methods onto the DOM ref', async () => {
+    const { container } = captureInstance();
+    await tick();
+    const input = getInput(container)!;
+    for (const member of ['mark', 'clear', 'change', 'validate'] as const) {
+      expect(Object.hasOwn(input, member)).toBe(false);
+      expect((input as unknown as Record<string, unknown>)[member]).toBeUndefined();
+    }
   });
 
   it('validate() reflects native checkValidity into valid', async () => {
     const onmark = vi.fn();
-    const { container } = render(Harness, { props: { required: true, onmark } as never });
+    const { instance, container } = captureInstance({ required: true, onmark });
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
-    const state = input.validate!();
+    const input = getInput(container)!;
+    const state = instance.validate();
     expect(state.valid).toBe(false);
     input.value = 'foo';
-    const state2 = input.validate!();
+    const state2 = instance.validate();
     expect(state2.valid).toBe(true);
   });
 
   it('mark() updates touched/valid/dirty and invokes onmark', async () => {
     const onmark = vi.fn();
-    const { container } = render(Harness, { props: { onmark } as never });
+    const { instance } = captureInstance({ onmark });
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
-    input.mark!({ touched: true, valid: true, dirty: true });
+    instance.mark({ touched: true, valid: true, dirty: true });
     expect(onmark).toHaveBeenCalledTimes(1);
     const arg = onmark.mock.calls[0][0] as { touched?: boolean; valid?: boolean; dirty?: boolean };
     expect(arg.touched).toBe(true);
@@ -115,66 +138,66 @@ describe('neoBaseInput — exposed methods', { tags: ['jsdom'] }, () => {
   });
 
   it('change() updates value and runs validation', async () => {
-    const { container } = render(Harness, { props: { required: true } as never });
+    const { instance, container } = captureInstance({ required: true });
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
-    const state = await input.change!('hello');
+    const input = getInput(container)!;
+    const state = await instance.change('hello');
     expect(input.value).toBe('hello');
     expect(state.valid).toBe(true);
   });
 
   it('change() on type=checkbox toggles checked', async () => {
-    const { container } = render(Harness, { props: { type: 'checkbox' } as never });
+    const { instance, container } = captureInstance({ type: 'checkbox' });
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
+    const input = getInput(container)!;
     expect(input.checked).toBe(false);
-    await input.change!(true);
+    await instance.change(true);
     expect(input.checked).toBe(true);
-    await input.change!(false);
+    await instance.change(false);
     expect(input.checked).toBe(false);
   });
 
   it('clear() resets value, fires onclear and oninput', async () => {
     const onclear = vi.fn();
     const oninput = vi.fn();
-    const { container } = render(Harness, { props: { value: 'hello', onclear, oninput } as never });
+    const { instance, container } = captureInstance({ value: 'hello', onclear, oninput });
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
-    await input.clear!();
+    const input = getInput(container)!;
+    await instance.clear();
     expect(input.value).toBe('');
     expect(onclear).toHaveBeenCalledTimes(1);
     expect(oninput).toHaveBeenCalledTimes(1);
   });
 
   it('clear() on type=checkbox resets checked to false', async () => {
-    const { container } = render(Harness, { props: { type: 'checkbox', checked: true } as never });
+    const { instance, container } = captureInstance({ type: 'checkbox', checked: true });
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
+    const input = getInput(container)!;
     expect(input.checked).toBe(true);
-    await input.clear!();
+    await instance.clear();
     expect(input.checked).toBe(false);
   });
 
   it('clear() with nullable=false falls back to defaultValue', async () => {
-    const { container } = render(Harness, { props: { value: 'changed', defaultValue: 'init', nullable: false } as never });
+    const { instance, container } = captureInstance({ value: 'changed', defaultValue: 'init', nullable: false });
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
-    await input.clear!();
+    const input = getInput(container)!;
+    await instance.clear();
     expect(input.value).toBe('init');
   });
 });
 
 describe('neoBaseInput — setCustomValidity round trip', { tags: ['jsdom'] }, () => {
   it('setCustomValidity is reflected via validate() in validationMessage', async () => {
-    const { container } = render(Harness, {});
+    const { instance, container } = captureInstance();
     await tick();
-    const input = getInput(container) as NeoInputHTMLElement;
+    const input = getInput(container)!;
     input.setCustomValidity('Bad input');
-    const state = input.validate!();
+    const state = instance.validate();
     expect(state.valid).toBe(false);
     expect(input.validationMessage).toBe('Bad input');
     input.setCustomValidity('');
-    const state2 = input.validate!();
+    const state2 = instance.validate();
     expect(state2.valid).toBe(true);
   });
 });

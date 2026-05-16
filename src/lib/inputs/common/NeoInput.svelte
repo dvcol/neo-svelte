@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
-  import type { NeoInputContext, NeoInputHTMLElement, NeoInputProps } from '~/inputs/common/neo-input.model.js';
+  import type { NeoInputContext, NeoInputMethods, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
@@ -104,7 +104,15 @@
     validationProps,
     messageProps,
     ...rest
-  }: NeoInputProps<NeoInputHTMLElement> = $props();
+  }: NeoInputProps<HTMLInputElement> = $props();
+
+  let baseInputInstance = $state<ReturnType<typeof NeoBaseInput>>();
+
+  type BaseMethods = NeoInputMethods<HTMLInputElement>;
+  export const validate = ((...args: Parameters<BaseMethods['validate']>) => baseInputInstance!.validate!(...args)) as BaseMethods['validate'];
+  export const mark = ((...args: Parameters<BaseMethods['mark']>) => baseInputInstance!.mark!(...args)) as BaseMethods['mark'];
+  export const clear = ((...args: Parameters<BaseMethods['clear']>) => baseInputInstance!.clear!(...args)) as BaseMethods['clear'];
+  export const change = ((...args: Parameters<BaseMethods['change']>) => baseInputInstance!.change!(...args)) as BaseMethods['change'];
 
   const { tag: afterTag = 'span', ...afterRest } = $derived(afterProps ?? {});
   const { tag: beforeTag = 'span', ...beforeRest } = $derived(beforeProps ?? {});
@@ -150,7 +158,7 @@
 
   const onClear = () => {
     if (disabled || readonly) return;
-    ref?.clear?.();
+    baseInputInstance?.clear?.();
   };
 
   const onFocus = () => {
@@ -198,15 +206,15 @@
   let visible = $state(false);
   let messageId = $state(`neo-textarea-message-${getUUID()}`);
 
-  const context = $derived<NeoInputContext<NeoInputHTMLElement>>({
+  const context = $derived<NeoInputContext<HTMLInputElement>>({
     // Ref
     ref,
 
     // Methods
-    mark: ref?.mark,
-    clear: ref?.clear,
-    change: ref?.change,
-    validate: ref?.validate,
+    mark: baseInputInstance?.mark,
+    clear: baseInputInstance?.clear,
+    change: baseInputInstance?.change,
+    validate: baseInputInstance?.validate,
 
     // State
     initial,
@@ -314,6 +322,7 @@
   <NeoBaseInput
     aria-invalid={valid === undefined ? undefined : !valid}
     aria-describedby={visible ? messageId : undefined}
+    bind:this={baseInputInstance}
     bind:ref
     bind:files
     bind:initial

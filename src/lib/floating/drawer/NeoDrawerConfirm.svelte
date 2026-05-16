@@ -75,10 +75,19 @@
     ...rest
   }: NeoDrawerConfirmProps = $props();
 
+  let drawerInstance = $state<ReturnType<typeof NeoDrawer>>();
+
+  export function reset(...args: Parameters<NonNullable<typeof drawerInstance>['reset']>) {
+    return drawerInstance?.reset(...args);
+  }
+
+  export function requestClose(...args: Parameters<NonNullable<typeof drawerInstance>['requestClose']>) {
+    return drawerInstance?.requestClose(...args);
+  }
+
   const close = () => {
-    if (!ref) return Logger.error('NeoDialogConfirm: ref is not defined');
-    if (ref.requestClose) return ref.requestClose();
-    ref.close();
+    if (!drawerInstance) return Logger.error('NeoDrawerConfirm: drawer instance is not defined');
+    return drawerInstance.requestClose();
   };
 
   const onCloseButton: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -108,6 +117,7 @@
 </script>
 
 <NeoDrawer
+  bind:this={drawerInstance}
   bind:ref
   bind:open
   bind:moved

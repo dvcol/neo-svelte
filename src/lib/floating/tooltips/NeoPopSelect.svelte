@@ -83,9 +83,11 @@
     onChange?.(current, previous);
   };
 
+  let tooltipInstance = $state<ReturnType<typeof NeoTooltip>>();
+
   watch(
     () => {
-      tooltipRef?.update?.();
+      tooltipInstance?.update();
     },
     () => [items, selected],
   );
@@ -125,6 +127,7 @@
 {/snippet}
 
 <NeoTooltip
+  bind:this={tooltipInstance}
   bind:ref={tooltipRef}
   bind:triggerRef
   bind:position

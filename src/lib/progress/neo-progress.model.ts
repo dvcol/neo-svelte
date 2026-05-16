@@ -242,5 +242,3 @@ export interface NeoProgressComplete {
   /** Whether to await indeterminate animation before completing. (defaults to true) */
   defer?: boolean;
 }
-
-export type NeoProgressHTMLElement<Tag extends keyof HTMLElementTagNameMap = 'div'> = HTMLElementTagNameMap[Tag] & NeoProgressMethods;

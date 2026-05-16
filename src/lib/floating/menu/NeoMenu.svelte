@@ -50,6 +50,7 @@
     ...rest
   }: NeoMenuProps = $props();
 
+  let tooltipInstance = $state<ReturnType<typeof NeoTooltip>>();
   let tooltipOpen = $state(false);
   const context = setMenuContext({
     get open() {
@@ -81,10 +82,10 @@
     e.stopPropagation();
 
     const was = open;
-    if (position?.includes('bottom')) triggerRef?.toggle?.(e.key === 'ArrowDown');
-    if (position?.includes('top')) triggerRef?.toggle?.(e.key === 'ArrowUp');
-    if (position?.includes('right')) triggerRef?.toggle?.(e.key === 'ArrowRight');
-    if (position?.includes('left')) triggerRef?.toggle?.(e.key === 'ArrowLeft');
+    if (position?.includes('bottom')) tooltipInstance?.toggle(e.key === 'ArrowDown');
+    if (position?.includes('top')) tooltipInstance?.toggle(e.key === 'ArrowUp');
+    if (position?.includes('right')) tooltipInstance?.toggle(e.key === 'ArrowRight');
+    if (position?.includes('left')) tooltipInstance?.toggle(e.key === 'ArrowLeft');
     await tick();
     if (was && open && ref) getFocusableElement(ref)?.focus();
   };
@@ -101,7 +102,7 @@
     if (!e.target?.closest(selector)?.parentElement?.classList.contains('neo-menu-list')) return;
     e.preventDefault();
     e.stopPropagation();
-    triggerRef?.toggle?.(false);
+    tooltipInstance?.toggle(false);
     getFocusableElement(triggerRef)?.focus();
   };
 
@@ -135,6 +136,7 @@
 {/snippet}
 
 <NeoTooltip
+  bind:this={tooltipInstance}
   bind:ref
   bind:triggerRef
   bind:position

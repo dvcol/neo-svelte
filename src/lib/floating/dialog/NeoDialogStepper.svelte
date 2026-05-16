@@ -86,6 +86,16 @@
 
   const marks = $derived<boolean>(_marks ?? steps?.some(s => s?.markProps) ?? !!rest?.markProps);
 
+  let dialogInstance = $state<ReturnType<typeof NeoDialog>>();
+
+  export function reset(...args: Parameters<NonNullable<typeof dialogInstance>['reset']>) {
+    return dialogInstance?.reset(...args);
+  }
+
+  export function requestClose(...args: Parameters<NonNullable<typeof dialogInstance>['requestClose']>) {
+    return dialogInstance?.requestClose(...args);
+  }
+
   const onCloseButton: MouseEventHandler<HTMLButtonElement> = (e) => {
     open = false;
     onClose?.(e);
@@ -148,6 +158,7 @@
 {/snippet}
 
 <NeoDialog
+  bind:this={dialogInstance}
   bind:ref={dialogRef}
   bind:open
   bind:modal

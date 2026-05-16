@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { NeoDialogHTMLElement } from '~/floating/dialog/neo-dialog.model.js';
   import type { NeoDrawerStepperProps } from '~/floating/drawer/neo-drawer.model.js';
 
   import NeoDrawerStepper from '~/floating/drawer/NeoDrawerStepper.svelte';
@@ -7,11 +6,11 @@
   type HarnessProps = Partial<NeoDrawerStepperProps> & {
     bodyText?: string;
     headerText?: string;
-    onRef?: (ref: NeoDialogHTMLElement | undefined) => void;
+    onRef?: (ref: HTMLDialogElement | undefined) => void;
   };
 
   let {
-    dialogRef = $bindable<NeoDialogHTMLElement | undefined>(undefined),
+    dialogRef = $bindable<HTMLDialogElement | undefined>(undefined),
     open = $bindable(false),
     active = $bindable(0),
     steps = [],

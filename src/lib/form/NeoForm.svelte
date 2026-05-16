@@ -36,6 +36,8 @@
 
   export const context = setNeoFormContext(id);
 
+  export const validate = () => context.validate();
+
   const onReset: FormEventHandler<HTMLFormElement> = (e) => {
     context.validate();
     onreset?.(e);
@@ -47,16 +49,7 @@
   };
 
   $effect(() => {
-    if (!ref) return;
     ctx = context;
-    Object.assign(ref, {
-      get context() {
-        return context;
-      },
-      validate() {
-        return context.validate();
-      },
-    });
   });
 </script>
 

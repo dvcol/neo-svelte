@@ -4,6 +4,7 @@ import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import NeoList from './NeoList.svelte';
+import NeoListHarness from './NeoList.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -164,5 +165,89 @@ describe('neoList — disabled / readonly', { tags: ['jsdom'] }, () => {
     await user.click(getButtons(container)[0]);
     await tick();
     expect(onSelect).not.toHaveBeenCalled();
+  });
+});
+
+describe('neoList — component-instance API', { tags: ['jsdom'] }, () => {
+  interface ListInstance {
+    scrollToTop: (options?: ScrollToOptions) => unknown;
+    scrollToBottom: (options?: ScrollToOptions) => unknown;
+    selectItem: (...selection: { index: number; item: { id: number } }[]) => { type: string } | undefined;
+    clearItem: (...selection: { index: number; item: { id: number } }[]) => { type: string } | undefined;
+    reSelect: () => unknown;
+  }
+
+  function captureInstance(props: Record<string, unknown> = {}): {
+    instance: ListInstance;
+    container: HTMLElement;
+    getRef: () => HTMLElement | undefined;
+  } {
+    let instance: ListInstance | undefined;
+    const { container } = render(NeoListHarness, {
+      props: {
+        items,
+        select: true,
+        ...props,
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    return {
+      instance: instance as ListInstance,
+      container,
+      getRef: () => container.querySelector<HTMLElement>('[role="listbox"], [role="list"]') ?? undefined,
+    };
+  }
+
+  it('exposes scrollToTop / scrollToBottom / selectItem / clearItem / reSelect on the component instance', async () => {
+    const { instance } = captureInstance();
+    await tick();
+    expect(typeof instance.scrollToTop).toBe('function');
+    expect(typeof instance.scrollToBottom).toBe('function');
+    expect(typeof instance.selectItem).toBe('function');
+    expect(typeof instance.clearItem).toBe('function');
+    expect(typeof instance.reSelect).toBe('function');
+  });
+
+  it('does not attach methods onto the DOM ref', async () => {
+    const { getRef } = captureInstance();
+    await tick();
+    const list = getRef()!;
+    expect(list).toBeInstanceOf(HTMLElement);
+    for (const method of ['scrollToTop', 'scrollToBottom', 'selectItem', 'clearItem', 'reSelect'] as const) {
+      expect(Object.hasOwn(list, method)).toBe(false);
+      expect((list as unknown as Record<string, unknown>)[method]).toBeUndefined();
+    }
+  });
+
+  it('instance.selectItem mutates the selection and emits via onSelect', async () => {
+    const onSelect = vi.fn();
+    const { instance, container } = captureInstance({ onSelect });
+    await tick();
+    const event = instance.selectItem({ index: 1, item: items[1] });
+    await tick();
+    expect(event?.type).toBe('select');
+    expect(container.querySelectorAll('li[aria-selected="true"]')).toHaveLength(1);
+    expect(container.querySelector('li[aria-selected="true"]')?.getAttribute('data-id')).toBe('2');
+  });
+
+  it('instance.clearItem removes a previously selected item', async () => {
+    const { instance, container } = captureInstance({ multiple: true });
+    await tick();
+    instance.selectItem({ index: 0, item: items[0] }, { index: 2, item: items[2] });
+    await tick();
+    expect(container.querySelectorAll('li[aria-selected="true"]')).toHaveLength(2);
+    const event = instance.clearItem({ index: 0, item: items[0] });
+    await tick();
+    expect(event?.type).toBe('clear');
+    expect(container.querySelectorAll('li[aria-selected="true"]')).toHaveLength(1);
+    expect(container.querySelector('li[aria-selected="true"]')?.getAttribute('data-id')).toBe('3');
+  });
+
+  it('instance.reSelect is a function and returns undefined when nothing is selected', async () => {
+    const { instance } = captureInstance();
+    await tick();
+    expect(instance.reSelect()).toBeUndefined();
   });
 });

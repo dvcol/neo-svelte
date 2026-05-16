@@ -175,3 +175,89 @@ describe('neoCollapse — interaction', { tags: ['jsdom'] }, () => {
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
   });
 });
+
+describe('neoCollapse — component-instance API', { tags: ['jsdom'] }, () => {
+  interface CollapseInstance { toggle: (state?: boolean) => void }
+
+  function captureInstance(props: Record<string, unknown> = {}): { instance: CollapseInstance; container: HTMLElement } {
+    let instance: CollapseInstance | undefined;
+    const { container } = render(NeoCollapseHarness, {
+      props: {
+        label: 'Title',
+        ...props,
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    return { instance: instance as CollapseInstance, container };
+  }
+
+  it('exposes toggle on the component instance', async () => {
+    const { instance } = captureInstance();
+    await tick();
+    expect(typeof instance.toggle).toBe('function');
+  });
+
+  it('does not attach toggle onto the section DOM ref', async () => {
+    const { container } = captureInstance({ open: true, unmountOnClose: false });
+    await tick();
+    const section = container.querySelector<HTMLElement>('.neo-collapse-content')!;
+    expect(Object.hasOwn(section, 'toggle')).toBe(false);
+    expect((section as unknown as Record<string, unknown>).toggle).toBeUndefined();
+  });
+
+  it('does not attach toggle onto the trigger DOM ref', async () => {
+    const { container } = captureInstance();
+    await tick();
+    const trigger = container.querySelector<HTMLButtonElement>('.neo-collapse-trigger')!;
+    expect(Object.hasOwn(trigger, 'toggle')).toBe(false);
+    expect((trigger as unknown as Record<string, unknown>).toggle).toBeUndefined();
+  });
+
+  it('instance.toggle() flips the open state on the trigger', async () => {
+    const { instance, container } = captureInstance({ open: false, unmountOnClose: false });
+    await tick();
+    const trigger = container.querySelector<HTMLButtonElement>('.neo-collapse-trigger')!;
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    instance.toggle();
+    await tick();
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    instance.toggle();
+    await tick();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('instance.toggle(true) opens; instance.toggle(false) closes', async () => {
+    const { instance, container } = captureInstance({ open: false, unmountOnClose: false });
+    await tick();
+    const trigger = container.querySelector<HTMLButtonElement>('.neo-collapse-trigger')!;
+    instance.toggle(true);
+    await tick();
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    instance.toggle(true);
+    await tick();
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    instance.toggle(false);
+    await tick();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('instance.toggle is a no-op when disabled=true', async () => {
+    const { instance, container } = captureInstance({ open: false, disabled: true, unmountOnClose: false });
+    await tick();
+    const trigger = container.querySelector<HTMLButtonElement>('.neo-collapse-trigger')!;
+    instance.toggle(true);
+    await tick();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('instance.toggle is a no-op when readonly=true', async () => {
+    const { instance, container } = captureInstance({ open: false, readonly: true, unmountOnClose: false });
+    await tick();
+    const trigger = container.querySelector<HTMLButtonElement>('.neo-collapse-trigger')!;
+    instance.toggle(true);
+    await tick();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  });
+});

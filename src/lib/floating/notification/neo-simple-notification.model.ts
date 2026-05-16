@@ -1,6 +1,5 @@
 import type { NeoNotificationItemProps } from '~/floating/notification/neo-notification-item.model.js';
 import type { NeoNotification } from '~/floating/notification/neo-notification.model.js';
-import type { NeoProgressHTMLElement } from '~/progress/neo-progress.model.js';
 import type { HTMLNeoBaseElement } from '~/utils/html-element.utils.js';
 
 export interface NeoSimpleNotificationProps<Tag extends keyof HTMLElementTagNameMap = 'div'>
@@ -15,7 +14,7 @@ export interface NeoSimpleNotificationProps<Tag extends keyof HTMLElementTagName
   children?: NeoNotification['render'];
 
   ref?: HTMLElement;
-  bar?: NeoProgressHTMLElement;
+  bar?: HTMLDivElement;
   height?: HTMLElement['offsetHeight'];
   tag?: Tag | keyof HTMLElementTagNameMap;
 }

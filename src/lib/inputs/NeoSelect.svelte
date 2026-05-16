@@ -85,6 +85,8 @@
     ...rest
   }: NeoSelectProps = $props();
 
+  let inputInstance = $state<ReturnType<typeof NeoInput>>();
+
   const items = $derived<NeoListItemOrSection[]>(options?.map(i => (typeof i === 'object' ? i : { value: i })));
 
   const tooltipDisabled = $derived(!!rest?.disabled || !!readonly);
@@ -119,7 +121,7 @@
     () => selected,
     {
       skip: 1,
-      next: () => ref?.validate?.(),
+      next: () => inputInstance?.validate?.(),
     },
   );
 
@@ -176,6 +178,7 @@
 {/snippet}
 
 <NeoInput
+  bind:this={inputInstance}
   bind:ref
   bind:containerRef
   bind:validationRef
