@@ -176,8 +176,9 @@
   "files": [
     "!dist/**/*.spec.*",
     "!dist/**/*.test.*",
-    "*.md",
+    "CHANGELOG.md",
     "LICENSE",
+    "README.md",
     "dist"
   ],
   "engines": {

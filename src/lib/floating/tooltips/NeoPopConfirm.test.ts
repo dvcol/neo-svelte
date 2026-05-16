@@ -169,7 +169,7 @@ describe('neoPopConfirm — onCancel / onConfirm', { tags: ['jsdom'] }, () => {
     const click = user.click(confirm);
     await tick();
     // Loading state must be reflected on the confirm button while the promise is pending.
-    expect(confirm.getAttribute('aria-busy') ?? confirm.dataset.loading ?? '').toMatch(/true|/);
+    expect(confirm.getAttribute('aria-busy') ?? confirm.dataset.loading ?? '').toMatch(/true/);
     resolveFn();
     await click;
     expect(onConfirm).toHaveBeenCalledTimes(1);

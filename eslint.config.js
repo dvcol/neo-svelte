@@ -5,12 +5,15 @@ export default defineSvelteConfig(
     ignores: [
       '.github/copilot-instructions.md',
       'README.md',
+      'AGENTS.md',
+      'ROADMAP.md',
+      'CHANGELOG.md',
     ],
   },
   // Library code (src/lib/**) MUST NOT import demo or test-harness files.
   // The published package depends only on its own source tree; demo helpers,
   // visual harnesses and browser tests live one-way under demo/**.
-  // See README "Testing" section.
+  // See AGENTS.md "Import boundary" section.
   {
     files: ['src/lib/**/*.{ts,js,svelte}'],
     rules: {
@@ -18,7 +21,7 @@ export default defineSvelteConfig(
         patterns: [
           {
             group: ['**/demo/**', '../../../demo/**', '../../demo/**', '../demo/**'],
-            message: 'src/lib/** must not import from demo/** — see README "Testing" section (one-way import boundary).',
+            message: 'src/lib/** must not import from demo/** — see AGENTS.md "Import boundary" section (one-way import boundary).',
           },
         ],
       }],
@@ -32,7 +35,7 @@ export default defineSvelteConfig(
     rules: {
       'no-restricted-syntax': ['error', {
         selector: 'Program',
-        message: 'Browser tests must live under demo/**, not src/lib/** — see README "Testing" section.',
+        message: 'Browser tests must live under demo/**, not src/lib/** — see AGENTS.md "Folder layout & naming" section.',
       }],
     },
   },
