@@ -1,8 +1,9 @@
 import { expectSide, waitForFloatingPosition } from 'test/helpers/floating.js';
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
-import { userEvent } from '@vitest/browser/context';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { page, userEvent } from '@vitest/browser/context';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import NeoSelect from '~/inputs/NeoSelect.svelte';
 
@@ -238,5 +239,52 @@ describe('neoSelect — interaction regressions (post-popover-migration)', { tag
     await waitHidden();
     await userEvent.click(affix);
     await waitVisible();
+  });
+});
+
+function getStage(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-testid="visual-target"]');
+}
+
+describe('neoSelect — visual contract (themed)', { tags: ['browser', 'visual'] }, () => {
+  beforeEach(() => {
+    quietForVisual();
+  });
+
+  it('placeholder / value × multiple / clearable / disabled × rounded / tinted / glass × required / readonly / skeleton matrix (desktop)', { timeout: 30000 }, async () => {
+    await setViewport('desktop');
+    render(VisualHarness, { props: { variant: 'matrix' } as never });
+    const stage = await vi.waitFor(() => {
+      const el = getStage();
+      if (!el) throw new Error('stage not mounted');
+      return el;
+    });
+    await vi.waitFor(() => {
+      const triggers = stage.querySelectorAll<HTMLElement>('button.neo-input-group');
+      expect(triggers.length).toBe(12);
+      for (const t of triggers) expect(t.getBoundingClientRect().width).toBeGreaterThan(0);
+    });
+    await new Promise(r => setTimeout(r, 600));
+    freezeSvgAnimations(stage);
+    await waitForVisualStability(stage);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoSelect', 'matrix-closed', 'desktop'),
+    );
+  });
+
+  it('open state — portalled dropdown', async () => {
+    await setViewport('desktop');
+    render(VisualHarness, { props: { open: true, openOnFocus: false, openOnHover: false } as never });
+    const dropdown = await vi.waitFor(() => {
+      const all = Array.from(document.querySelectorAll<HTMLElement>('.neo-tooltip'));
+      const visible = all.find(el => !el.hasAttribute('hidden'));
+      if (!visible) throw new Error(`no visible tooltip among ${all.length}`);
+      return visible;
+    }, { timeout: 1500, interval: 16 });
+    await waitForFloatingPosition(dropdown);
+    await waitForVisualStability(dropdown);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoSelect', 'matrix-open', 'desktop'),
+    );
   });
 });

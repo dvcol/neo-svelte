@@ -63,3 +63,47 @@ export function quietForVisual(): void {
 export const DEFAULT_COMPARATOR = {
   comparatorOptions: { allowedMismatchedPixelRatio: 0.01 },
 } as const;
+
+/**
+ * Skip every in-document SVG SMIL animation (`<animate>` / `<animateTransform>`)
+ * to its end state, then pause the SVG timeline. The neo icons use SMIL with
+ * `fill="freeze"` to draw their strokes in over ~0.4s; without this, snapshots
+ * captured before the animation completes show partial paths.
+ */
+export function freezeSvgAnimations(root: ParentNode = document): void {
+  if (typeof document === 'undefined') return;
+  const svgs = root.querySelectorAll<SVGSVGElement>('svg');
+  for (const svg of svgs) {
+    try {
+      // Fast-forward each timeline far past any chained `begin` offsets so
+      // every `<animate fill="freeze">` settles on its final value, then
+      // pause the SVG clock so indefinite loops (BouncingDots, CircleLoading)
+      // stop advancing between consecutive screenshot captures.
+      if (typeof svg.setCurrentTime === 'function') svg.setCurrentTime(1000);
+      if (typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
+    } catch {
+      // SVGs without active SMIL throw on setCurrentTime in some browsers — ignore.
+    }
+  }
+}
+
+/**
+ * Poll computed style until the element has finished its in-flight Svelte
+ * transition (opacity ≈ 1, transform either none or identity matrix).
+ * `quietForVisual` only disables CSS transitions; Svelte's `scale`/`fly`/`fade`
+ * transitions tween opacity and transform via JS each frame, so the screenshot
+ * must wait for them to settle.
+ */
+const IDENTITY_MATRIX_RE = /matrix\(1,\s*0,\s*0,\s*1/;
+
+export async function waitForVisualStability(el: HTMLElement, timeoutMs = 1500): Promise<void> {
+  const deadline = performance.now() + timeoutMs;
+  while (performance.now() < deadline) {
+    const cs = getComputedStyle(el);
+    const opacity = Number.parseFloat(cs.opacity);
+    const transform = cs.transform;
+    const stable = opacity >= 0.999 && (transform === 'none' || IDENTITY_MATRIX_RE.test(transform));
+    if (stable) return;
+    await new Promise(r => requestAnimationFrame(() => r(null)));
+  }
+}

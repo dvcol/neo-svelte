@@ -1,9 +1,14 @@
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
+import { page } from '@vitest/browser/context';
 import { tick } from 'svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import NeoRadio from '~/inputs/NeoRadio.svelte';
+
+import VisualHarness from './TestRadio.browser.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -48,5 +53,38 @@ describe('neoRadio — disabled (real browser)', { tags: ['browser'] }, () => {
     await tick();
 
     expect(getNativeInput(container)?.checked).toBe(true);
+  });
+});
+
+function getStage(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-testid="visual-stage"]');
+}
+
+describe('neoRadio — visual contract (themed)', { tags: ['browser', 'visual'] }, () => {
+  beforeEach(() => {
+    quietForVisual();
+  });
+
+  it('checked / disabled × glass / tinted / sharp / required / loading matrix (desktop)', { timeout: 30000 }, async () => {
+    await setViewport('desktop');
+    render(VisualHarness, { props: {} as never });
+    const stage = await vi.waitFor(() => {
+      const el = getStage();
+      if (!el) throw new Error('stage not mounted');
+      return el;
+    });
+    await vi.waitFor(() => {
+      const radios = stage.querySelectorAll<HTMLElement>('.neo-radio-container');
+      expect(radios.length).toBe(13);
+      for (const r of radios) expect(r.getBoundingClientRect().width).toBeGreaterThan(0);
+    });
+    // NeoIconRadio uses chained SMIL <animate> to draw the dot — wait then
+    // freeze so the indicator is fully rendered before snapshot capture.
+    await new Promise(r => setTimeout(r, 800));
+    freezeSvgAnimations(stage);
+    await waitForVisualStability(stage);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoRadio', 'matrix', 'desktop'),
+    );
   });
 });
