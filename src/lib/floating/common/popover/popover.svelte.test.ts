@@ -150,7 +150,7 @@ describe('popover — phase 2 core', () => {
       floating.remove();
     });
 
-    it('writes translate (PR #165) instead of transform', async () => {
+    it('writes translate instead of transform', async () => {
       const reference = document.createElement('div');
       const floating = document.createElement('div');
       document.body.append(reference, floating);
@@ -166,7 +166,7 @@ describe('popover — phase 2 core', () => {
       await result.update();
       await tick();
       expect(floating.style.translate).toMatch(/var\(--neo-popover-translate-override,\s*\dpx \d+px\)|var\(--neo-popover-translate-override, \d+px \d+px\)/);
-      // No bare `transform: translate(...)` written by Popover (PR #165 contract).
+      // No bare `transform: translate(...)` written by Popover.
       expect(floating.style.transform).toBe('');
       teardown();
       reference.remove();

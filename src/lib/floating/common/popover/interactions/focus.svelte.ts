@@ -3,7 +3,7 @@ import type { FocusOptions, Interaction, ListenerMap } from '../popover.types.js
 /**
  * Focus-driven open/close.
  *
- * - `focusWithin` (skeleton PR #164): when `true`, listens for bubbling
+ * - `focusWithin`: when `true`, listens for bubbling
  *   `focusin` / `focusout` so a focusable child of a wrapper trigger can
  *   open the floating. Default `false` keeps non-bubbling `focus` / `blur`
  *   for the trigger-is-the-focus-target case. Reactive — flippable at

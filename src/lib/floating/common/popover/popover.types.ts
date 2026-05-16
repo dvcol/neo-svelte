@@ -70,9 +70,22 @@ export interface PopoverOptions {
   onOpenChange?: (open: boolean, event?: Event, reason?: OpenChangeReason) => void;
   /** Where to place the floating element relative to its reference. @default 'bottom' */
   placement?: Placement;
-  /** User middleware. `size()` is always prepended internally. @default [] */
+  /**
+   * User middleware. `size()` is always prepended internally.
+   *
+   * Reactive on **reference identity** only. Mutating the array in place
+   * after construction is not tracked — return a new array from a getter
+   * to update.
+   * @default []
+   */
   middleware?: (Middleware | undefined | null | false)[];
-  /** Interaction factories — read once at construction. @default [] */
+  /**
+   * Interaction factories — read **once** at construction. Wrapping in a
+   * getter has no runtime effect after the first read; conditional
+   * enabling at runtime should pass a getter for `enabled` on the
+   * interaction itself, not a conditional array entry.
+   * @default []
+   */
   interactions?: Interaction[];
   /** Remote trigger element. Wraps in a getter to react. */
   target?: Element | null;
@@ -111,7 +124,7 @@ export interface FocusOptions {
   /**
    * Use bubbling `focusin` / `focusout` instead of non-bubbling `focus` /
    * `blur`. Required when the reference is a wrapper containing a focusable
-   * child (skeleton PR #164). Reactive — pass via getter to flip at runtime;
+   * child. Reactive — pass via getter to flip at runtime;
    * both event-pair listeners stay bound, the inactive pair gates out before
    * doing any work.
    * @default false

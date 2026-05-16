@@ -60,7 +60,7 @@ describe('focus() interaction', () => {
     });
   });
 
-  describe('focusWithin=true (PR #164)', () => {
+  describe('focusWithin=true', () => {
     it('opens when a child of the reference receives focus (focusin bubbles up)', () => {
       const reference = document.createElement('div');
       const child = document.createElement('input');

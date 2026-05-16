@@ -73,9 +73,19 @@ export type NeoTooltipProps = {
    */
   target?: HTMLElement | (() => HTMLElement);
   /**
-   * Extra options forwarded to the underlying `Popover` instance.
+   * Additive options forwarded to the underlying `Popover` instance.
+   *
+   * - `target` and `autoUpdate` have no top-level NeoTooltip prop and are
+   *   passed through reactively.
+   * - `onOpenChange` runs as a **pre-hook** before NeoTooltip's local
+   *   handler. Call `event.preventDefault()` from inside the callback to
+   *   veto the local `keepOpenOn*` chain and the `bind:open` write.
+   *
+   * `placement` is intentionally excluded — use the top-level
+   * `placement` prop. `open`, `middleware`, and `interactions` are
+   * NeoTooltip-internal and not overridable here.
    */
-  options?: PopoverOptions;
+  options?: Pick<PopoverOptions, 'target' | 'autoUpdate' | 'onOpenChange'>;
   /**
    * Modifies the placement by translating the floating element along the specified axes.
    * A number (shorthand for mainAxis or distance), or an axes configuration object may be passed.

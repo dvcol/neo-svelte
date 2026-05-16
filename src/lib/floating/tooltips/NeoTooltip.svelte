@@ -131,6 +131,8 @@
       return open;
     },
     onOpenChange(_open, _event, _reason) {
+      options?.onOpenChange?.(_open, _event, _reason);
+      if (_event?.defaultPrevented) return;
       if (_reason === 'focus' && _open) focusActive = true;
       if (_reason === 'focus' && !_open) {
         if (keepOpenOnFocus) return;
@@ -166,40 +168,55 @@
       }),
       hover({
         get enabled() {
-          return openOnHover;
+          return hoverOptions?.enabled ?? openOnHover;
         },
-        move: false,
+        get move() {
+          return hoverOptions?.move ?? false;
+        },
         get restMs() {
-          return hoverDelay;
+          return hoverOptions?.restMs ?? hoverDelay;
         },
         get delay() {
-          return openDelay;
+          return hoverOptions?.delay ?? openDelay;
         },
-        ...hoverOptions,
       }),
       focusInteraction({
         get enabled() {
-          return openOnFocus;
+          return focusOptions?.enabled ?? openOnFocus;
         },
-        // PR #164: bubbling focusin/focusout so a focusable child of a
-        // wrapper trigger opens the tooltip via tab navigation.
-        focusWithin: true,
-        ...focusOptions,
+        get focusWithin() {
+          return focusOptions?.focusWithin ?? true;
+        },
       }),
       click({
         get enabled() {
-          return openOnClick;
+          return clickOptions?.enabled ?? openOnClick;
         },
-        ...clickOptions,
+        get event() {
+          return clickOptions?.event;
+        },
+        get toggle() {
+          return clickOptions?.toggle;
+        },
+        get ignoreMouse() {
+          return clickOptions?.ignoreMouse;
+        },
+        get keyboardHandlers() {
+          return clickOptions?.keyboardHandlers;
+        },
       }),
       dismiss({
         get enabled() {
-          return closeOnDismiss;
+          return dismissOptions?.enabled ?? closeOnDismiss;
         },
-        ...dismissOptions,
       }),
     ],
-    ...options,
+    get target() {
+      return options?.target;
+    },
+    get autoUpdate() {
+      return options?.autoUpdate;
+    },
   });
 
   // Reflect final position

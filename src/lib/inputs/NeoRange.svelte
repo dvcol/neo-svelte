@@ -89,6 +89,7 @@
     validationRef = $bindable(),
     validationProps,
     floatingProps,
+    floatingOffset = 6,
     floatingOptions,
     ...rest
   }: NeoRangeProps = $props();
@@ -125,23 +126,28 @@
   const boxShadow = $derived(computeShadowElevation(-Math.abs(elevation), { glass, pressed: elevation > 0 }, DefaultShallowMinMaxElevation));
 
   const show = $derived(tooltips && (focused || hovered));
-  const lowerTooltip = new Popover({
+  const buildTooltipOptions = () => ({
     get open() {
       return show;
     },
-    placement: 'bottom',
-    middleware: [flip(), offset(6)],
-    ...floatingOptions,
-  });
-
-  const upperTooltip = new Popover({
-    get open() {
-      return show;
+    get onOpenChange() {
+      return floatingOptions?.onOpenChange;
     },
-    placement: 'bottom',
-    middleware: [flip(), offset(6)],
-    ...floatingOptions,
+    get placement() {
+      return floatingOptions?.placement ?? 'bottom';
+    },
+    get middleware() {
+      return [flip(), offset(floatingOffset)];
+    },
+    get target() {
+      return floatingOptions?.target;
+    },
+    get autoUpdate() {
+      return floatingOptions?.autoUpdate;
+    },
   });
+  const lowerTooltip = new Popover(buildTooltipOptions());
+  const upperTooltip = new Popover(buildTooltipOptions());
 
   const updateTooltips = () => {
     lowerTooltip.update();

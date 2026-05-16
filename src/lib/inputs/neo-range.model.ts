@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 
-import type { PopoverOptions } from '~/floating/common/popover/index.js';
+import type { offset, PopoverOptions } from '~/floating/common/popover/index.js';
 import type { NeoFormType } from '~/form/neo-form-context.svelte.js';
 import type { NeoInputValidationProps } from '~/inputs/common/neo-input-validation.model.js';
 import type { NeoLabelProps } from '~/inputs/common/neo-label.model.js';
@@ -199,9 +199,30 @@ export type NeoRangeProps = Pick<NeoInputValidationProps, 'valid' | 'validation'
      */
     floatingProps?: HTMLNeoBaseElement<HTMLSpanElement>;
     /**
-     * Options to pass to the floating label.
+     * Distance between the trigger and the floating tooltip, forwarded to
+     * `@floating-ui/dom`'s `offset()` middleware.
+     *
+     * @default 6
      */
-    floatingOptions?: PopoverOptions;
+    floatingOffset?: Parameters<typeof offset>[0];
+    /**
+     * Options forwarded to the underlying `Popover` instances backing the
+     * lower/upper value tooltips.
+     *
+     * Pass each reactive field as a getter (`{ get placement() { … } }`)
+     * — spreading a static object into the prop freezes its values at
+     * first render.
+     *
+     * Excluded fields and why:
+     * - `open` — NeoRange owns the tooltip open state via
+     *   `tooltips && (focused || hovered)`.
+     * - `middleware` — NeoRange owns positioning (`flip()` + `offset()`);
+     *   use the top-level `floatingOffset` prop to tune spacing.
+     * - `interactions` — read **once** at construction by the underlying
+     *   class; exposing it would mislead consumers into expecting
+     *   reactivity.
+     */
+    floatingOptions?: Pick<PopoverOptions, 'placement' | 'target' | 'autoUpdate' | 'onOpenChange'>;
   } & NeoRangeStates
   & NeoRangeStyles
   & HTMLActionProps
