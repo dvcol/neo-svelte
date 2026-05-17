@@ -5,6 +5,7 @@ import type { NeoDividerProps } from '~/divider/neo-divider.model.js';
 import type { NeoListBaseItemProps } from '~/list/neo-list-base-item.model.js';
 import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
 import type { NeoListBaseSectionProps } from '~/list/neo-list-base-section.model.js';
+import type { NeoVirtualItemHeight, NeoVirtualKey, NeoVirtualListProps } from '~/list/neo-virtual-list.model.js';
 import type { NeoImageProps } from '~/media/neo-image.model.js';
 import type { NeoMediaProps, NeoMediaType, NeoMediaTypes } from '~/media/neo-media.model.js';
 import type { NeoPillProps } from '~/pill/neo-pill.model.js';
@@ -198,6 +199,8 @@ export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagName
 
 export const isSection = <Value = unknown>(item: NeoListItem<Value> | NeoListSection<Value>): item is NeoListSection<Value> => 'items' in item;
 
+export const hasSections = <Value = unknown>(items: NeoListItemOrSection<Value>[] = []): boolean => items.some(isSection);
+
 export interface NeoListSelectedItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> {
   index: number;
   item: NeoListItem<Value, Tag>;
@@ -242,11 +245,23 @@ export interface NeoListMethods {
   /**
    * Scroll the list to the top.
    */
-  scrollToTop: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
+  scrollToTop: (options?: ScrollToOptions) => HTMLElement | false;
   /**
    * Scroll the list to the bottom.
    */
-  scrollToBottom: (options?: ScrollToOptions) => Promise<HTMLElement | false>;
+  scrollToBottom: (options?: ScrollToOptions) => HTMLElement | false;
+  /**
+   * Scroll the list so that the item at the given index is visible.
+   *
+   * @note Only available in virtual mode; otherwise returns `false`.
+   */
+  scrollToIndex: (index: number, options?: ScrollToOptions & { align?: 'start' | 'center' | 'end' }) => HTMLElement | false;
+  /**
+   * Force a re-measure of all currently rendered rows and recompute the offset map.
+   *
+   * @note Only meaningful in virtual mode with dynamic measurement; otherwise a no-op.
+   */
+  refresh: () => void;
 }
 
 export type NeoListItemOrSection<Value = unknown> = NeoListItem<Value> | NeoListSection<Value>;
@@ -451,6 +466,49 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * @param event
    */
   onScrollBottom?: (event?: SvelteEvent) => void;
+
+  // Virtualization
+  /**
+   * Opt into virtual scrolling.
+   *
+   * Auto-disabled (with `Logger.warn`) when sections are present or `flip` is set.
+   *
+   * @default false
+   */
+  virtual?: boolean;
+  /**
+   * Item height in pixels.
+   *
+   * Provide a number for fixed-size rows (fastest path), a function for caller-known
+   * per-item heights, or omit to measure dynamically. Only used when `virtual` is true.
+   */
+  itemHeight?: NeoVirtualItemHeight<NeoListItemOrSection<Value>>;
+  /**
+   * Initial estimate (px) used for unmeasured rows in dynamic measurement mode.
+   * Refines automatically as rows are measured. Only used when `virtual` is true.
+   *
+   * @default 40
+   */
+  estimatedItemHeight?: number;
+  /**
+   * Number of rows to render outside the visible window (above and below).
+   * Only used when `virtual` is true.
+   *
+   * @default 3
+   */
+  buffer?: number;
+  /**
+   * Stable key function. Heights are cached by this key so reorders preserve
+   * measurements. Only used when `virtual` is true.
+   *
+   * @default (item, i) => item.id ?? i
+   */
+  key?: NeoVirtualKey<NeoListItemOrSection<Value>>;
+  /**
+   * Optional props to forward to the inner `NeoVirtualList` (advanced).
+   * Only used when `virtual` is true.
+   */
+  virtualProps?: Partial<Omit<NeoVirtualListProps<NeoListItemOrSection<Value>>, 'items' | 'children' | 'before' | 'after' | 'itemHeight' | 'buffer' | 'estimatedItemHeight' | 'key'>>;
 
   // Other Props
   /**

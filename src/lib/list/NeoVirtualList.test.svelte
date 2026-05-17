@@ -1,25 +1,37 @@
-<script lang="ts">
+<script lang="ts" generics="T extends { id: number | string }">
+  import type { NeoVirtualListMethods, NeoVirtualListProps } from '~/list/neo-virtual-list.model.js';
+
   import NeoVirtualList from '~/list/NeoVirtualList.svelte';
 
-  const {
-    items,
-    before: showBefore,
-    after: showAfter,
-    scrollbar,
-    shadow,
-    dim,
-  }: {
-    items: { id: number }[];
+  type Props = {
+    items: T[];
     before?: boolean;
     after?: boolean;
-    scrollbar?: boolean;
-    shadow?: boolean;
-    dim?: boolean;
-  } = $props();
+    itemHeight?: NeoVirtualListProps<T>['itemHeight'];
+    estimatedItemHeight?: number;
+    buffer?: number;
+    scrolling?: boolean;
+    onScrollTop?: NeoVirtualListProps<T>['onScrollTop'];
+    onScrollBottom?: NeoVirtualListProps<T>['onScrollBottom'];
+    methods?: NeoVirtualListMethods | undefined;
+  };
+
+  let {
+    items,
+    before: showBefore = false,
+    after: showAfter = false,
+    itemHeight,
+    estimatedItemHeight,
+    buffer,
+    scrolling = $bindable(false),
+    onScrollTop,
+    onScrollBottom,
+    methods = $bindable(),
+  }: Props = $props();
 </script>
 
-{#snippet rowSnippet({ index, item }: { index: number; item: { id: number } })}
-  <div class="neo-virtual-row" data-id={item.id} data-index={index}>row {item.id}</div>
+{#snippet rowSnippet({ item, index }: { item: T; index: number }, _ctx: unknown, register: (el: Element) => void | (() => void))}
+  <li class="neo-virtual-row" data-id={item.id} data-index={index} {@attach register}>row {String(item.id)}</li>
 {/snippet}
 
 {#snippet beforeSnippet()}
@@ -31,10 +43,14 @@
 {/snippet}
 
 <NeoVirtualList
+  bind:this={methods}
+  bind:scrolling
   {items}
-  {scrollbar}
-  {shadow}
-  {dim}
+  {itemHeight}
+  {estimatedItemHeight}
+  {buffer}
+  {onScrollTop}
+  {onScrollBottom}
   before={showBefore ? beforeSnippet : undefined}
   after={showAfter ? afterSnippet : undefined}
   children={rowSnippet}

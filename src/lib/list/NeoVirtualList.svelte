@@ -1,36 +1,40 @@
 <script lang="ts" generics="T">
-  import type { NeoVirtualContext, NeoVirtualItem, NeoVirtualListProps } from '~/list/neo-virtual-list.model.js';
-  import type { SvelteEvent } from '~/utils/html-element.utils.js';
+  import type {
+    NeoVirtualContext,
+    NeoVirtualItem,
+    NeoVirtualListMethods,
+    NeoVirtualListProps,
+    NeoVirtualRegister,
+  } from '~/list/neo-virtual-list.model.js';
 
-  import { watch } from '@dvcol/svelte-utils/watch';
-  import { onDestroy, onMount, tick } from 'svelte';
+  import { onDestroy, onMount, untrack } from 'svelte';
 
   import { defaultVirtualKey } from '~/list/neo-virtual-list.model.js';
   import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
   let {
-    // Snippet
+    // Snippets
     children,
     before,
     after,
 
     // State
-    ref: viewport = $bindable(),
+    ref = $bindable(),
     tag = 'ul',
     items = [],
-    key = defaultVirtualKey,
+    key = defaultVirtualKey as never,
     itemHeight,
+    estimatedItemHeight = 40,
     buffer = 3,
-
-    // Style
-    dim,
-    shadow = true,
-    scrollbar = true,
+    scrolling = $bindable(false),
 
     // Events
     onscroll,
+    onScrollTop,
+    onScrollBottom,
+    scrollTolerance = 1,
 
-    // List Transition
+    // List Transitions (mounted on the viewport itself)
     in: inAction,
     out: outAction,
     transition: transitionAction,
@@ -46,198 +50,352 @@
   const { tag: beforeTag = 'div', ...beforeRest } = $derived(beforeProps ?? {});
   const { tag: afterTag = 'div', ...afterRest } = $derived(afterProps ?? {});
 
-  // Height of the list viewport
+  // ---------------------------------------------------------------- Sizing --
+
+  const fixedHeight = $derived(typeof itemHeight === 'number' ? itemHeight : null);
+  const heightFn = $derived(typeof itemHeight === 'function' ? itemHeight : null);
+  const dynamicMode = $derived(fixedHeight == null && !heightFn);
+
+  // Heights cached by stable item key. Survives reorder.
+  const heights = new Map<string | number, number>();
+
+  function resolveId(item: T, index: number): string | number {
+    const id = (key as (item: T, index: number) => string | number | undefined)?.(item, index);
+    return id ?? index;
+  }
+
+  // Running average of measured heights. Refines as more rows measure.
+  // Falls back to `estimatedItemHeight` (read via $derived to stay reactive
+  // when the caller updates it).
+  const initialEstimate = $derived(estimatedItemHeight);
+  let measuredAvg = $state(0);
+  function refreshAvg() {
+    if (heights.size === 0) {
+      measuredAvg = 0;
+      return;
+    }
+    let sum = 0;
+    for (const h of heights.values()) sum += h;
+    measuredAvg = sum / heights.size;
+  }
+
+  function effectiveEstimate(): number {
+    return measuredAvg || initialEstimate;
+  }
+
+  // -------------------------------------------------------- Offsets (sums) --
+  // offsets[i] = sum of heights of items [0..i). offsets[items.length] = total.
+
+  let offsets = $state<Float64Array>(new Float64Array(1));
+  let total = $state(0);
+
+  function rebuildOffsets() {
+    const len = items.length;
+    const next = new Float64Array(len + 1);
+    let acc = 0;
+    if (fixedHeight != null) {
+      const h = fixedHeight;
+      for (let i = 0; i < len; i++) {
+        next[i] = acc;
+        acc += h;
+      }
+    } else if (heightFn) {
+      for (let i = 0; i < len; i++) {
+        next[i] = acc;
+        acc += heightFn(items[i]!, i);
+      }
+    } else {
+      const est = effectiveEstimate();
+      for (let i = 0; i < len; i++) {
+        next[i] = acc;
+        acc += heights.get(resolveId(items[i]!, i)) ?? est;
+      }
+    }
+    next[len] = acc;
+    offsets = next;
+    total = acc;
+  }
+
+  // ---------------------------------------------------------------- Cursor --
+
+  const cursor = $state({ start: 0, end: 0 });
   let viewportHeight = $state(0);
 
-  // Rendered items
-  const cursor = $state({
-    start: 0,
-    end: 0,
-  });
+  /**
+   * Largest i such that offsets[i] <= y. Binary search in dynamic mode;
+   * direct division in fixed mode.
+   */
+  function indexAtOffset(y: number): number {
+    const len = items.length;
+    if (!len) return 0;
+    if (fixedHeight != null) {
+      return Math.max(0, Math.min(len - 1, Math.floor(y / fixedHeight)));
+    }
+    let lo = 0;
+    let hi = offsets.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >>> 1;
+      if (offsets[mid]! <= y) lo = mid;
+      else hi = mid - 1;
+    }
+    return Math.max(0, Math.min(len - 1, lo));
+  }
 
-  // Rows wrapper
-  const content = $state<{
-    ref?: HTMLElement;
-    before?: number;
-    after?: number;
-    top: number;
-    bottom: number;
-  }>({
-    ref: undefined,
-    before: undefined,
-    after: undefined,
-    top: 0,
-    bottom: 0,
-  });
-
-  // Rows items
-  const rows = $state<{ refs: HTMLCollectionOf<HTMLElement>; heights: number[] }>({
-    refs: [] as unknown as HTMLCollectionOf<HTMLElement>,
-    heights: [],
-  });
-
-  const visible: Array<NeoVirtualItem<T>> = $derived(
-    items.slice(cursor.start, cursor.end).map((item, index) => {
-      return { id: key?.(item) ?? index + cursor.start, index, item };
-    }),
-  );
-
-  const getTotalHeight = () => {
-    let total = rows.heights.reduce((x, y) => x + y, 0);
-    if (!viewport) return total;
-    const style = getComputedStyle(viewport);
-    total += Number.parseInt(style.paddingBlockEnd, 10);
-    total += Number.parseInt(style.paddingBlockStart, 10);
-    // add before and after height
-    total += Math.max(content.before ?? 0, 0);
-    total += Math.max(content.after ?? 0, 0);
-    return total;
-  };
-
-  const getAverageHeight = () => {
-    if (!cursor.end) return 0;
-    // Calculate averageHeight based on all known heights, not just rendered
-    const heights = rows.heights.filter(Boolean);
-    return (heights.reduce((x, y) => x + y, 0) / heights.length) || itemHeight || 1;
-  };
-
-  async function computeCursor(scrollTop: number) {
-    let contentHeight = content.top - scrollTop;
-    let i = cursor.start;
-
-    const averageHeight = getAverageHeight();
-    while (contentHeight < viewportHeight && i < items.length) {
-      let row = rows.refs[i - cursor.start];
-      if (!row) {
-        cursor.end = i + 1;
-        await tick(); // render the newly visible row
-        row = rows.refs[i - cursor.start];
+  function recomputeCursor() {
+    if (!ref) return;
+    const len = items.length;
+    if (!len) {
+      if (cursor.start !== 0 || cursor.end !== 0) {
+        cursor.start = 0;
+        cursor.end = 0;
       }
-      contentHeight += (rows.heights[i] = row?.offsetHeight || averageHeight);
-      i += 1;
+      return;
     }
-
-    cursor.end = Math.min(items.length, i + buffer); // Add buffer to the end
+    const top = ref.scrollTop;
+    const bottom = top + viewportHeight;
+    const startIdx = indexAtOffset(top);
+    const endIdx = indexAtOffset(bottom) + 1;
+    const start = Math.max(0, startIdx - buffer);
+    const end = Math.min(len, endIdx + buffer);
+    if (cursor.start !== start) cursor.start = start;
+    if (cursor.end !== end) cursor.end = end;
   }
 
-  function computeBottomPadding() {
-    const averageHeight = getAverageHeight();
-    // Calculate bottom padding based on the remaining items
-    const remaining = items.length - cursor.end;
-    content.bottom = remaining * averageHeight;
+  // ------------------------------------------------------- Scroll handling --
 
-    // Ensure heights array is long enough
-    rows.heights.length = items.length;
+  let scrollFrame = 0;
+  function scheduleRecompute() {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(() => {
+      scrollFrame = 0;
+      recomputeCursor();
+    });
+  }
 
-    // Fill remaining heights with averageHeight
-    for (let k = cursor.end; k < items.length; k++) {
-      if (rows.heights[k] === undefined) rows.heights[k] = averageHeight;
+  const isTouch = typeof window !== 'undefined' && 'ontouchstart' in window;
+  const scrollIdleMs = isTouch ? 300 : 150;
+  let stopScrollingTimer: ReturnType<typeof setTimeout> | 0 = 0;
+  function markScrolling() {
+    if (!scrolling) scrolling = true;
+    if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
+    stopScrollingTimer = setTimeout(() => {
+      scrolling = false;
+      stopScrollingTimer = 0;
+    }, scrollIdleMs);
+  }
+
+  function fireEdgeEvents(e: Event) {
+    if (!ref) return;
+    const top = ref.scrollTop;
+    if (top === 0) return onScrollTop?.(e);
+    if (Math.abs(top + ref.clientHeight - ref.scrollHeight) <= scrollTolerance) {
+      return onScrollBottom?.(e);
     }
   }
 
-  function ensureViewport() {
-    if (!viewport) return;
-    const { scrollTop } = viewport;
-    const totalHeight = getTotalHeight();
-    // If we scroll outside the viewport scroll to the top to prevent extra space at the bottom.
-    if ((scrollTop + viewportHeight > totalHeight) && viewport) {
-      viewport?.scrollTo(0, Math.max(0, totalHeight - viewportHeight));
-    }
+  function handleScroll(e: Event) {
+    markScrolling();
+    scheduleRecompute();
+    fireEdgeEvents(e);
+    onscroll?.(e as never);
   }
 
-  const rowObserver: ResizeObserver = new ResizeObserver(refresh);
-  export async function refresh() {
-    // wait until the DOM is up to date
-    await tick();
+  // ------------------------------------------- Measurement (shared RO) -----
 
-    if (!viewport) return;
-    const { scrollTop } = viewport;
-
-    await computeCursor(scrollTop);
-    computeBottomPadding();
-    ensureViewport();
-
-    for (const row of rows.refs) rowObserver?.observe(row);
+  let measureFrame = 0;
+  let measureDirty = false;
+  function scheduleOffsetRebuild() {
+    measureDirty = true;
+    if (measureFrame) return;
+    measureFrame = requestAnimationFrame(() => {
+      measureFrame = 0;
+      if (!measureDirty) return;
+      measureDirty = false;
+      refreshAvg();
+      rebuildOffsets();
+      recomputeCursor();
+      ensureScrollInBounds();
+    });
   }
 
-  function handleResize() {
-    if (!viewport) return;
-    const { scrollTop } = viewport;
+  const observer = typeof ResizeObserver === 'undefined'
+    ? null
+    : new ResizeObserver((entries) => {
+      if (!dynamicMode) return; // ignore measurements when caller controls heights
+      let changed = false;
+      for (const entry of entries) {
+        const el = entry.target as HTMLElement;
+        const id = readKey(el);
+        if (id == null) continue;
+        const next = entry.borderBoxSize?.[0]?.blockSize ?? el.offsetHeight;
+        if (!next) continue; // skip zero-height (display:none, not laid out)
+        if (heights.get(id) !== next) {
+          heights.set(id, next);
+          changed = true;
+        }
+      }
+      if (changed) scheduleOffsetRebuild();
+    });
 
-    for (let v = 0; v < rows.refs.length; v += 1) {
-      const itemIndex = cursor.start + v;
-      if (itemIndex >= items.length) continue;
-      rows.heights[itemIndex] = itemHeight || (rows.refs[v]).offsetHeight;
-    }
-
-    let i = 0;
-    let y = 0;
-
-    const averageHeight = getAverageHeight();
-    // Fill top padding until the first item is visible
-    while (i < items.length) {
-      // Ensure rowHeight is not 0
-      const rowHeight = rows.heights[i] || averageHeight;
-      // Stop if the current item's bottom edge is past the scrollTop minus buffer considerations
-      if (y + rowHeight > scrollTop) break;
-      y += rowHeight;
-      i += 1;
-    }
-
-    cursor.start = Math.max(0, i - buffer);
-
-    // Re-compute the top padding including buffer
-    content.top = 0;
-    for (let k = 0; k < cursor.start; k++) content.top += rows.heights[k] || averageHeight;
-
-    // Fill until we reach the bottom of the viewport
-    while (i < items.length) {
-      y += rows.heights[i] || averageHeight;
-      i += 1;
-      if (y > scrollTop + viewportHeight) break;
-    }
-    cursor.end = Math.min(items.length, i + buffer);
-
-    // Fill unknown heights with the new average
-    for (let k = 0; k < items.length; k++) if (!rows.heights[k]) rows.heights[k] = averageHeight;
-
-    // Calculate bottom padding including buffer
-    content.bottom = 0;
-    for (let k = cursor.end; k < items.length; k++) content.bottom += rows.heights[k] || averageHeight;
-
-    ensureViewport();
+  function writeKey(el: HTMLElement, id: string | number) {
+    el.dataset.virtualKey = String(id);
+    el.dataset.virtualKeyType = typeof id === 'number' ? 'n' : 's';
   }
 
-  export function handleScroll(e: SvelteEvent<UIEvent>) {
-    if (!viewport) return onscroll?.(e);
-    handleResize();
-    return onscroll?.(e);
+  function readKey(el: HTMLElement): string | number | undefined {
+    const raw = el.dataset.virtualKey;
+    if (raw == null) return;
+    return el.dataset.virtualKeyType === 'n' ? Number(raw) : raw;
   }
 
-  // whenever `items` changes, invalidate the current heightmap
-  $effect(() => {
-    void refresh();
+  /**
+   * Svelte 5 attachment factory, memoized by id.
+   *
+   * Returned closures are passed to children snippets and spread via
+   * `{@attach register}` on the consumer's row element. Memoizing by id
+   * prevents the attachment from re-running on every re-render of a row
+   * that hasn't actually changed key.
+   */
+  const registerCache = new Map<string | number, NeoVirtualRegister>();
+  function makeRegister(id: string | number): NeoVirtualRegister {
+    const cached = registerCache.get(id);
+    if (cached) return cached;
+    const fn: NeoVirtualRegister = (node) => {
+      const el = node as HTMLElement;
+      writeKey(el, id);
+      if (!dynamicMode) return;
+      const h = el.offsetHeight;
+      if (h && heights.get(id) !== h) {
+        heights.set(id, h);
+        scheduleOffsetRebuild();
+      }
+      observer?.observe(el);
+      return () => observer?.unobserve(el);
+    };
+    registerCache.set(id, fn);
+    return fn;
+  }
+
+  function ensureScrollInBounds() {
+    if (!ref) return;
+    const max = Math.max(0, total - viewportHeight);
+    if (ref.scrollTop > max) ref.scrollTo({ top: max });
+  }
+
+  // ----------------------------------------------------------- Visible slice
+
+  const visible = $derived.by<NeoVirtualItem<T>[]>(() => {
+    const out: NeoVirtualItem<T>[] = [];
+    for (let i = cursor.start; i < cursor.end; i++) {
+      const item = items[i] as T;
+      out.push({ id: resolveId(item, i), index: i, item });
+    }
+    return out;
   });
 
-  watch(handleResize, () => items.length, { skip: 1 });
+  const padTop = $derived(offsets[Math.min(cursor.start, offsets.length - 1)] ?? 0);
+  const padBottom = $derived(Math.max(0, total - (offsets[Math.min(cursor.end, offsets.length - 1)] ?? 0)));
 
-  // trigger initial refresh
+  // ------------------------------------------------- Reactive triggers ----
+
+  // Rebuild offsets when items / sizing change. GC stale heights in dynamic mode.
+  $effect(() => {
+    /* eslint-disable no-unused-expressions */
+    items;
+    fixedHeight;
+    heightFn;
+    estimatedItemHeight;
+    /* eslint-enable no-unused-expressions */
+    untrack(() => {
+      if (heights.size || registerCache.size) {
+        const present = new Set<string | number>();
+        for (let i = 0; i < items.length; i++) present.add(resolveId(items[i]!, i));
+        if (dynamicMode) {
+          for (const k of heights.keys()) if (!present.has(k)) heights.delete(k);
+          refreshAvg();
+        }
+        for (const k of registerCache.keys()) if (!present.has(k)) registerCache.delete(k);
+      }
+      rebuildOffsets();
+      recomputeCursor();
+      ensureScrollInBounds();
+    });
+  });
+
+  // React to viewportHeight changes (resize) without going through scroll.
+  $effect(() => {
+    // eslint-disable-next-line no-unused-expressions
+    viewportHeight;
+    untrack(recomputeCursor);
+  });
+
   onMount(() => {
-    if (!content.ref) return;
-    rows.refs = content.ref.children as HTMLCollectionOf<HTMLElement>;
+    rebuildOffsets();
+    recomputeCursor();
   });
 
   onDestroy(() => {
-    rowObserver?.disconnect();
+    observer?.disconnect();
+    if (scrollFrame) cancelAnimationFrame(scrollFrame);
+    if (measureFrame) cancelAnimationFrame(measureFrame);
+    if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
   });
+
+  // -------------------------------------------------- Public methods ------
+
+  /** Force a re-measure of currently rendered rows + offset rebuild. */
+  export const refresh: NeoVirtualListMethods['refresh'] = () => {
+    if (dynamicMode && ref) {
+      const rows = ref.querySelectorAll<HTMLElement>('[data-virtual-key]');
+      for (const el of rows) {
+        const id = readKey(el);
+        if (id == null) continue;
+        const h = el.offsetHeight;
+        if (h) heights.set(id, h);
+      }
+      refreshAvg();
+    }
+    rebuildOffsets();
+    recomputeCursor();
+  };
+
+  export const scrollToTop: NeoVirtualListMethods['scrollToTop'] = (options) => {
+    if (!ref) return false;
+    ref.scrollTo({ top: 0, behavior: 'smooth', ...options });
+    return ref;
+  };
+
+  export const scrollToBottom: NeoVirtualListMethods['scrollToBottom'] = (options) => {
+    if (!ref) return false;
+    ref.scrollTo({ top: total, behavior: 'smooth', ...options });
+    return ref;
+  };
+
+  export const scrollToIndex: NeoVirtualListMethods['scrollToIndex'] = (index, options) => {
+    if (!ref || index < 0 || index >= items.length) return false;
+    const align = options?.align ?? 'start';
+    let target = offsets[index] ?? 0;
+    const itemH = (offsets[index + 1] ?? total) - target;
+    if (align === 'center') target = target - viewportHeight / 2 + itemH / 2;
+    else if (align === 'end') target = target - viewportHeight + itemH;
+    target = Math.max(0, Math.min(Math.max(0, total - viewportHeight), target));
+    ref.scrollTo({ top: target, behavior: 'smooth', ...options });
+    return ref;
+  };
+
+  // ------------------------------------------------------------ Context ---
 
   const context = $derived<NeoVirtualContext<T>>({
     items,
     visible,
     start: cursor.start,
     end: cursor.end,
+    total,
+    viewport: viewportHeight,
+    scrolling,
   });
 
+  // Mount transitions on the viewport itself (in/out of the whole list).
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
@@ -247,9 +405,7 @@
 <svelte:element
   this={tag}
   class:neo-virtual-list={true}
-  class:neo-scroll={scrollbar}
-  class:neo-shadow={shadow}
-  bind:this={viewport}
+  bind:this={ref}
   bind:offsetHeight={viewportHeight}
   {...rest}
   onscroll={handleScroll}
@@ -259,16 +415,13 @@
   <svelte:element
     this={contentTag}
     class:neo-virtual-list-contents={true}
-    class:neo-dim={dim}
-    bind:this={content.ref}
-    style:padding-top="{content.top}px"
-    style:padding-bottom="{content.bottom}px"
+    style:padding-top="{padTop}px"
+    style:padding-bottom="{padBottom}px"
     {...contentRest}
   >
     {#if before && cursor.start === 0}
       <svelte:element
         this={beforeTag}
-        bind:offsetHeight={content.before}
         class:neo-virtual-list-before={true}
         role="none"
         {...beforeRest}
@@ -276,14 +429,12 @@
         {@render before(context)}
       </svelte:element>
     {/if}
-    {#each visible as { id, index, item } (id)}
-      {@render children?.({ id, index, item }, context)}
+    {#each visible as v (v.id)}
+      {@render children(v, context, makeRegister(v.id))}
     {/each}
-
     {#if after && cursor.end === items.length}
       <svelte:element
         this={afterTag}
-        bind:offsetHeight={content.after}
         class:neo-virtual-list-after={true}
         role="none"
         {...afterRest}
@@ -295,8 +446,6 @@
 </svelte:element>
 
 <style lang="scss">
-  @use 'src/lib/styles/mixin' as mixin;
-
   .neo-virtual-list {
     position: relative;
     display: flex;
@@ -305,38 +454,17 @@
     height: 100%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-inline: var(--neo-list-padding, 0.375rem);
-    padding-block: var(--neo-list-padding, 0.375rem);
 
     &-contents {
       display: flex;
       flex: 0 0 auto;
       flex-direction: column;
-
-      &.neo-dim {
-        &:hover :global(> *:not(:hover, :has(*:focus-visible))),
-        &:has(> * :global(*:focus-visible)) > *:not(:hover, :has(:global(*:focus-visible))) {
-          opacity: 0.6;
-          transition-timing-function: linear;
-          transition-duration: 0.6s;
-        }
-      }
     }
 
     &-before,
     &-after {
       display: flex;
       flex-direction: column;
-    }
-
-    &.neo-scroll {
-      padding-block: var(--neo-list-scroll-padding, 0.625rem);
-
-      &.neo-shadow {
-        @include mixin.fade-scroll(1rem);
-      }
-
-      @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
     }
   }
 </style>

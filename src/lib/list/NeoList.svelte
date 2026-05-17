@@ -1,6 +1,7 @@
 <script lang="ts">
   import type {
     NeoListContext,
+    NeoListItem,
     NeoListItemOrSection,
     NeoListMethods,
     NeoListProps,
@@ -10,6 +11,7 @@
     NeoListSelectEvent,
     NeoListSelectMethods,
   } from '~/list/neo-list.model.js';
+  import type { NeoVirtualContext, NeoVirtualItem, NeoVirtualListMethods, NeoVirtualRegister } from '~/list/neo-virtual-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { isSafari } from '@dvcol/common-utils/common/browser';
@@ -22,16 +24,17 @@
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import NeoIconList from '~/icons/NeoIconList.svelte';
-  import { findByIdInList, isSection, showDivider } from '~/list/neo-list.model.js';
+  import { findByIdInList, hasSections, isSection, showDivider } from '~/list/neo-list.model.js';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
+  import NeoVirtualList from '~/list/NeoVirtualList.svelte';
   import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { NeoErrorListSelectDisabled } from '~/utils/error.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
   import { toSize } from '~/utils/style.utils.js';
-  import { quickCircOutProps, quickDurationProps, quickScaleProps, shortDuration } from '~/utils/transition.utils.js';
+  import { quickCircOutProps, quickDurationProps, quickScaleProps } from '~/utils/transition.utils.js';
 
   let {
     // Snippets
@@ -51,6 +54,7 @@
     filter = $bindable(item => !item?.hidden),
     sort = $bindable(() => 0),
     loading = false,
+    scrolling = $bindable(false),
     scrollToLoader,
     scrollTolerance = 1,
 
@@ -64,6 +68,14 @@
     reverse,
     flip,
     dim,
+
+    // Virtualization
+    virtual = false,
+    itemHeight,
+    estimatedItemHeight = 40,
+    buffer = 3,
+    key,
+    virtualProps,
 
     // Styles
     shadow = true,
@@ -103,6 +115,23 @@
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
+  // ------------------------------------------------------ Virtual gating ----
+
+  const sections = $derived(hasSections(items));
+  const virtualEnabled = $derived(virtual && !sections && !flip);
+
+  let virtualWarned = false;
+  $effect(() => {
+    if (!virtual) {
+      virtualWarned = false;
+      return;
+    }
+    if (virtualEnabled || virtualWarned) return;
+    virtualWarned = true;
+    if (sections) Logger.warn('NeoList: `virtual` is disabled when items contain sections — falling back to non-virtual rendering.');
+    else if (flip) Logger.warn('NeoList: `virtual` is disabled when `flip` is set — falling back to non-virtual rendering.');
+  });
+
   const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
     multiple && (Array.isArray(list) || list === undefined);
 
@@ -110,31 +139,46 @@
 
   const onScrollEvent = (e?: SvelteEvent) => {
     if (!ref) return;
-    // if at the top console.info('top');
     if (ref.scrollTop === 0) {
       if (flip) return onScrollBottom?.(e);
       else return onScrollTop?.(e);
     }
-    // if at the bottom console.info('bottom');
     if (Math.abs(Math.abs(ref.scrollTop) + ref.clientHeight - ref.scrollHeight) <= scrollTolerance) {
       if (flip) return onScrollTop?.(e);
       else return onScrollBottom?.(e);
     }
   };
 
-  export const scrollToTop: NeoListMethods['scrollToTop'] = debounce((options?: ScrollToOptions) => {
+  // -------------------------------------------------- Imperative methods ----
+  // In virtual mode, scroll methods delegate to NeoVirtualList (bound below).
+  // Otherwise they operate directly on the local DOM ref.
+
+  let virtualList = $state<NeoVirtualListMethods | undefined>();
+
+  export const scrollToTop: NeoListMethods['scrollToTop'] = (options) => {
+    if (virtualEnabled && virtualList) return virtualList.scrollToTop(options);
     if (!ref) return false;
     ref.scrollTo({ top: flip ? -ref.scrollHeight : 0, behavior: 'smooth', ...options });
     onScrollEvent();
     return ref;
-  }, shortDuration / 2);
+  };
 
-  export const scrollToBottom: NeoListMethods['scrollToBottom'] = debounce((options?: ScrollToOptions) => {
+  export const scrollToBottom: NeoListMethods['scrollToBottom'] = (options) => {
+    if (virtualEnabled && virtualList) return virtualList.scrollToBottom(options);
     if (!ref?.scrollHeight) return false;
     ref.scrollTo({ top: flip ? 0 : ref.scrollHeight, behavior: 'smooth', ...options });
     onScrollEvent();
     return ref;
-  }, shortDuration / 2);
+  };
+
+  export const scrollToIndex: NeoListMethods['scrollToIndex'] = (index, options) => {
+    if (virtualEnabled && virtualList) return virtualList.scrollToIndex(index, options);
+    return false;
+  };
+
+  export const refresh: NeoListMethods['refresh'] = () => {
+    if (virtualEnabled && virtualList) virtualList.refresh();
+  };
 
   $effect(() => {
     if (!loading || !scrollToLoader) return;
@@ -148,7 +192,7 @@
   };
 
   $effect(() => {
-    if (!flip || !ref) return;
+    if (!flip || !ref || virtualEnabled) return;
     scrollReverse();
   });
 
@@ -237,6 +281,7 @@
     readonly,
     reverse,
     flip,
+    scrolling,
 
     // Selection
     select,
@@ -267,6 +312,8 @@
     // Methods
     scrollToTop,
     scrollToBottom,
+    scrollToIndex,
+    refresh,
     selectItem,
     clearItem,
     reSelect,
@@ -286,12 +333,46 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
+  // Transitions: in virtual mode, suppress per-row mount/unmount transitions while
+  // the user is actively scrolling — the cursor advance would otherwise fire
+  // transitions on every row that crosses the buffer boundary.
   const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
   const animateProps = $derived(toTransitionProps(animate));
-  const inFn = $derived(missing ? emptyTransition : toTransition(inAction));
+  const inFn = $derived.by(() => {
+    if (missing) return emptyTransition;
+    if (virtualEnabled && scrolling) return emptyTransition;
+    return toTransition(inAction);
+  });
   const inProps = $derived(toTransitionProps(inAction));
-  const outFn = $derived(missing ? emptyTransition : toTransition(outAction));
+  const outFn = $derived.by(() => {
+    if (missing) return emptyTransition;
+    if (virtualEnabled && scrolling) return emptyTransition;
+    return toTransition(outAction);
+  });
   const outProps = $derived(toTransitionProps(outAction));
+
+  // ---------------------- Virtual mode: filtered/sorted slice ---------------
+  // Sections are guaranteed absent in virtual mode (gated above), so we can
+  // operate on a flat array.
+
+  const visibleItems = $derived.by<NeoListItem[]>(() => {
+    if (!virtualEnabled) return [];
+    const flat = items as NeoListItem[];
+    const filtered: NeoListItem[] = [];
+    for (let i = 0; i < flat.length; i++) {
+      const it = flat[i]!;
+      if (filter(it)) filtered.push(it);
+    }
+    return filtered.sort(sort);
+  });
+
+  // eslint-disable-next-line style/operator-linebreak
+  const virtualKey = $derived(key ??
+    ((item: NeoListItemOrSection, index: number) => (item.id as string | number | undefined) ?? index));
+
+  // Resolve original (unfiltered) index for selection lookup so toggleItem
+  // matches `findByIdInList` semantics in non-virtual mode.
+  const itemOriginalIndex = (item: NeoListItem) => (items as NeoListItem[]).indexOf(item);
 </script>
 
 {#snippet loader(show = loading)}
@@ -390,6 +471,54 @@
   {/if}
 {/snippet}
 
+{#snippet virtualRow(v: NeoVirtualItem<NeoListItem>, _ctx: NeoVirtualContext<NeoListItem>, register: NeoVirtualRegister)}
+  {@const item = v.item}
+  {@const originalIndex = itemOriginalIndex(item)}
+  {@const checked = isChecked({ index: originalIndex, item })}
+  <svelte:element
+    this={item.tag ?? 'li'}
+    role={select ? 'option' : 'listitem'}
+    data-id={item?.id}
+    data-index={originalIndex}
+    aria-selected={checked}
+    aria-posinset={v.index + 1}
+    aria-setsize={visibleItems.length}
+    class:neo-list-item={true}
+    class:neo-checked={checked}
+    class:neo-list-item-select={select}
+    style:--neo-list-item-color={getColorVariable(item.color)}
+    {...item.containerProps}
+    {@attach register}
+  >
+    {#if customItem && !item.render}
+      {@render customItem({ item, index: originalIndex, checked, context })}
+    {:else}
+      <NeoListBaseItem
+        {item}
+        index={originalIndex}
+        {context}
+        {checked}
+        {select}
+        {highlight}
+        {buttonProps}
+        {reverse}
+        {rounded}
+        flip={false}
+        disabled={item.disabled || disabled}
+        readonly={item.readonly || readonly || (!isNullable && checked)}
+        {...itemProps}
+        onclick={select ? () => toggleItem({ index: originalIndex, item }, checked) : undefined}
+      />
+    {/if}
+  </svelte:element>
+{/snippet}
+
+{#snippet virtualLoader()}
+  {#if loading}
+    {@render loader(true)}
+  {/if}
+{/snippet}
+
 <svelte:element
   this={containerTag}
   class:neo-list={true}
@@ -405,7 +534,34 @@
   {...containerRest}
 >
   {@render before?.(context)}
-  {#if !empty || loading}
+  {#if virtualEnabled && (!empty || loading)}
+    <NeoVirtualList
+      bind:this={virtualList}
+      bind:ref
+      bind:scrolling
+      {tag}
+      role={select ? 'listbox' : 'list'}
+      items={visibleItems}
+      key={virtualKey}
+      {itemHeight}
+      {estimatedItemHeight}
+      {buffer}
+      {scrollTolerance}
+      {onScrollTop}
+      {onScrollBottom}
+      class={[
+        'neo-list-items',
+        scrollbar && 'neo-scroll',
+        shadow && 'neo-shadow',
+        dim && 'neo-dim',
+      ]}
+      in={{ use: scaleFreeze, props: quickScaleProps }}
+      onscroll={rest?.onscroll}
+      after={virtualLoader}
+      {...virtualProps}
+      children={virtualRow}
+    />
+  {:else if !empty || loading}
     <svelte:element
       this={tag}
       role={select ? 'listbox' : 'list'}
@@ -460,7 +616,7 @@
       transition-delay: 0s;
     }
 
-    &-items,
+    :global(.neo-list-items),
     &-empty {
       position: relative;
       display: flex;
@@ -472,24 +628,24 @@
       border-radius: var(--neo-list-border-radius, var(--neo-border-radius));
     }
 
-    &-items {
+    :global(.neo-list-items) {
       overflow: auto;
       padding-inline: var(--neo-list-padding, 0.375rem);
       padding-block: var(--neo-list-padding, 0.375rem);
 
-      &.neo-scroll {
+      &:global(.neo-scroll) {
         padding-block: var(--neo-list-scroll-padding, 0.625rem);
 
-        &.neo-shadow {
+        &:global(.neo-shadow) {
           @include mixin.fade-scroll(1rem);
         }
 
         @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
       }
 
-      &.neo-dim {
-        &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
-        &:has(> .neo-list-item :global(*:focus-visible)) > .neo-list-item:not(:hover, .neo-checked, :has(:global(*:focus-visible))) {
+      &:global(.neo-dim) {
+        &:hover > :global(.neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible))),
+        &:has(> :global(.neo-list-item :global(*:focus-visible))) > :global(.neo-list-item:not(:hover, .neo-checked, :has(:global(*:focus-visible)))) {
           opacity: 0.6;
           transition-timing-function: linear;
           transition-duration: 0.6s;
@@ -547,7 +703,7 @@
       flex-direction: column-reverse;
       justify-content: end;
 
-      .neo-list-items {
+      :global(.neo-list-items) {
         // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
         @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
           flex-direction: column-reverse;

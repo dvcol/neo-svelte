@@ -21,7 +21,6 @@
   import NeoList from '~/list/NeoList.svelte';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListSearch from '~/list/NeoListSearch.svelte';
-  import NeoSimpleList from '~/list/NeoSimpleList.svelte';
   import NeoVirtualList from '~/list/NeoVirtualList.svelte';
   import { Colors } from '~/utils/colors.utils';
   import { quickDurationProps } from '~/utils/transition.utils';
@@ -282,17 +281,26 @@
 
 <section>
   <div class="row">
-    <!--  Virtual list  -->
+    <!-- NeoList non-virtual (1k items, baseline) -->
     <div class="column content">
-      <span class="label">Simple list</span>
-      <NeoSimpleList {...options} items={virtual} />
+      <span class="label">NeoList (non-virtual)</span>
+      <NeoList aria-label="Non-virtual list" {...options} items={virtual} />
     </div>
 
+    <!-- NeoList virtual (sugar over NeoVirtualList) -->
     <div class="column content">
-      <span class="label">Virtual list</span>
-      <NeoVirtualList items={virtual} buffer="10">
-        {#snippet children({ item })}
-          <NeoListBaseItem {item} />
+      <span class="label">NeoList (virtual)</span>
+      <NeoList aria-label="Virtual list" virtual {...options} items={virtual} buffer={10} />
+    </div>
+
+    <!-- NeoVirtualList primitive (consumer owns row markup) -->
+    <div class="column content">
+      <span class="label">NeoVirtualList (primitive)</span>
+      <NeoVirtualList items={virtual} buffer={10}>
+        {#snippet children({ item }, _ctx, register)}
+          <li class="neo-list-item" {@attach register}>
+            <NeoListBaseItem {item} />
+          </li>
         {/snippet}
       </NeoVirtualList>
     </div>
