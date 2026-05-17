@@ -233,6 +233,106 @@ describe('popover — phase 5 interactions framework', () => {
     });
   });
 
+  describe('onOpenChange dispatch — lifecycle hook', () => {
+    it('fires synchronously on real open transitions only', () => {
+      const calls: Array<{ open: boolean }> = [];
+      const probe: Interaction = () => ({
+        onOpenChange: (open) => {
+          calls.push({ open });
+        },
+      });
+      let open = $state(false);
+      const { teardown } = withRoot(() => new Popover({
+        interactions: [probe],
+        get open() {
+          return open;
+        },
+      }));
+      flushSync();
+      expect(calls).toEqual([]);
+      open = true;
+      flushSync();
+      expect(calls).toEqual([{ open: true }]);
+      open = false;
+      flushSync();
+      expect(calls).toEqual([{ open: true }, { open: false }]);
+      teardown();
+    });
+
+    it('does not re-dispatch on equal-value writes', () => {
+      let dispatches = 0;
+      const probe: Interaction = () => ({
+        onOpenChange: () => {
+          dispatches++;
+        },
+      });
+      let open = $state(true);
+      const { teardown } = withRoot(() => new Popover({
+        interactions: [probe],
+        get open() {
+          return open;
+        },
+      }));
+      flushSync();
+      expect(dispatches).toBe(1);
+      open = true;
+      flushSync();
+      expect(dispatches).toBe(1);
+      teardown();
+    });
+
+    it('invokes returned cleanup on the matching close transition', () => {
+      let cleanupCalls = 0;
+      const probe: Interaction = () => ({
+        onOpenChange: (open) => {
+          if (open) return () => cleanupCalls++;
+        },
+      });
+      let open = $state(false);
+      const { teardown } = withRoot(() => new Popover({
+        interactions: [probe],
+        get open() {
+          return open;
+        },
+      }));
+      flushSync();
+      open = true;
+      flushSync();
+      expect(cleanupCalls).toBe(0);
+      open = false;
+      flushSync();
+      expect(cleanupCalls).toBe(1);
+      open = true;
+      flushSync();
+      open = false;
+      flushSync();
+      expect(cleanupCalls).toBe(2);
+      teardown();
+    });
+
+    it('disposes interaction lifecycle when the constructing root disposes', () => {
+      const calls: boolean[] = [];
+      const probe: Interaction = () => ({
+        onOpenChange: (open) => {
+          calls.push(open);
+        },
+      });
+      let open = $state(true);
+      const { teardown } = withRoot(() => new Popover({
+        interactions: [probe],
+        get open() {
+          return open;
+        },
+      }));
+      flushSync();
+      expect(calls).toEqual([true]);
+      teardown();
+      open = false;
+      flushSync();
+      expect(calls).toEqual([true]);
+    });
+  });
+
   describe('role() — non-tooltip role mapping (parity)', () => {
     it('dialog: floating gets role="dialog", reference gets aria-expanded + aria-controls', () => {
       const reference = document.createElement('button');

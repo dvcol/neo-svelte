@@ -84,7 +84,11 @@ describe('click() interaction', () => {
       teardown();
     });
 
-    it('does not toggle close if openEvent.type is not click (e.g. focus)', () => {
+    it('toggles close even when the popover was opened by a non-click event (e.g. focus)', () => {
+      // Regression: previously, a `sameTriggerType` check bailed close when the
+      // popover was opened by focus/hover/keyboard. That caused 2-click toggles
+      // when clicking a NeoSelect chevron after tab focus opened the dropdown.
+      // A click on the trigger is always a deliberate toggle.
       const reference = document.createElement('button');
       const onOpenChange = vi.fn();
       let open = $state(true);
@@ -102,7 +106,8 @@ describe('click() interaction', () => {
       reference.dispatchEvent(pointer());
       reference.dispatchEvent(new MouseEvent('click'));
       const closes = onOpenChange.mock.calls.filter(c => c[0] === false);
-      expect(closes).toHaveLength(0);
+      expect(closes).toHaveLength(1);
+      expect(closes[0]).toEqual([false, expect.any(MouseEvent), 'click']);
       open = false;
       flushSync();
       teardown();

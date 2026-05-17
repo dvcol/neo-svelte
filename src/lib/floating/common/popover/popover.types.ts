@@ -32,10 +32,20 @@ export type AriaFn = () => Record<string, string | undefined>;
 /**
  * Per-element descriptor produced by an interaction. `Popover` merges every
  * interaction's reference/floating descriptors into the merged attachments.
+ *
+ * `onOpenChange` is dispatched **synchronously** by `Popover` only when the
+ * resolved `open` value actually transitions (false→true or true→false), after
+ * the consumer's `onOpenChange` has run. The optional return value is invoked
+ * on the matching close transition — use it to unbind document listeners or
+ * resources acquired on open.
+ *
+ * Contract: do **not** call `ctx.onOpenChange` synchronously from inside this
+ * hook. Re-entrance is not guarded.
  */
 export interface InteractionDescriptor {
   reference?: { listeners?: ListenerMap; aria?: AriaFn };
   floating?: { listeners?: ListenerMap; aria?: AriaFn };
+  onOpenChange?: (open: boolean, event?: Event, reason?: OpenChangeReason) => void | (() => void);
 }
 
 /**

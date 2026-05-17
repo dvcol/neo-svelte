@@ -14,9 +14,11 @@ import type { DismissOptions, Interaction } from '../popover.types.js';
  *  - Ancestor scroll does NOT close. Position pipeline already follows the
  *    reference; closing on every scroll surprises users.
  *
- * The document listeners are bound only while `popover.open && enabled`;
- * flipping either tears them down. Reactive read of `ctx.popover.open`
- * inside an `$effect` is the entire wiring.
+ * Listeners are bound only on the open transition (via `onOpenChange`,
+ * dispatched synchronously by `Popover`). The cleanup returned by
+ * `onOpenChange(true, …)` is invoked on the matching close transition. The
+ * `enabled` flag is gated inside the handlers so flipping it at runtime
+ * short-circuits without re-binding.
  */
 export function dismiss(options: DismissOptions = {}): Interaction {
   return (ctx) => {
@@ -32,26 +34,26 @@ export function dismiss(options: DismissOptions = {}): Interaction {
     }
 
     function onKeyDown(event: KeyboardEvent): void {
-      if (event.key !== 'Escape') return;
+      if (!enabled || event.key !== 'Escape') return;
       ctx.onOpenChange(false, event, 'escape-key');
     }
 
     function onPointerDown(event: PointerEvent): void {
-      if (isInside(event.target)) return;
+      if (!enabled || isInside(event.target)) return;
       ctx.onOpenChange(false, event, 'outside-press');
     }
 
-    $effect(() => {
-      if (!enabled || !ctx.popover.open) return;
-      const doc = ctx.popover.floatingEl?.ownerDocument ?? document;
-      doc.addEventListener('keydown', onKeyDown, true);
-      doc.addEventListener('pointerdown', onPointerDown, true);
-      return () => {
-        doc.removeEventListener('keydown', onKeyDown, true);
-        doc.removeEventListener('pointerdown', onPointerDown, true);
-      };
-    });
-
-    return {};
+    return {
+      onOpenChange(open: boolean) {
+        if (!open) return;
+        const doc = ctx.popover.floatingEl?.ownerDocument ?? document;
+        doc.addEventListener('keydown', onKeyDown, true);
+        doc.addEventListener('pointerdown', onPointerDown, true);
+        return () => {
+          doc.removeEventListener('keydown', onKeyDown, true);
+          doc.removeEventListener('pointerdown', onPointerDown, true);
+        };
+      },
+    };
   };
 }

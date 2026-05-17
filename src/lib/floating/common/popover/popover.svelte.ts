@@ -4,6 +4,7 @@ import type { Attachment } from 'svelte/attachments';
 import type { AutoUpdateOptionsLike, InteractionDescriptor, ListenerMap, OpenChangeReason, PopoverContext, PopoverOptions } from './popover.types.js';
 
 import { autoUpdate, computePosition, size } from '@floating-ui/dom';
+import { untrack } from 'svelte';
 
 import { getDevicePixelRatio, roundByDevicePixelRatio } from './utils/device-pixel-ratio.js';
 
@@ -140,6 +141,15 @@ export class Popover {
     this.#options = options;
 
     // Read-once interaction dispatch.
+    //
+    // `ctx.onOpenChange` is the **trigger-side** callback called by individual
+    // interactions (click/hover/focus/dismiss). It records `openEvent` for
+    // hover/click coordination and forwards to the consumer.
+    //
+    // The lifecycle dispatch (calling each interaction's `onOpenChange` hook)
+    // lives in a separate `$effect` below — it watches the resolved `this.open`
+    // signal so direct writes to a bound `open` (without going through this
+    // callback) and the initial `open: true` state both trigger the lifecycle.
     const ctx: PopoverContext = {
       popover: this,
       onOpenChange: (open, event, reason) => {
@@ -151,6 +161,42 @@ export class Popover {
     for (const factory of options.interactions ?? []) {
       this.#interactions.push(factory(ctx));
     }
+
+    // Lifecycle dispatch — synchronous, only on real transitions of `this.open`.
+    //
+    // Why an `$effect` and not a wrapped callback: bound `open` props can be
+    // written directly by consumers (e.g. parent flips a state) without ever
+    // calling `ctx.onOpenChange`, and `open: true` at construction needs to
+    // dispatch the open transition once on mount. Subscribing to `this.open`
+    // covers both cases.
+    //
+    // The `prev` guard makes equal-value re-runs a no-op — interactions only
+    // see real transitions, never every reactive flush. Per-interaction state
+    // (timers, document listeners) lives inside the interaction closures, not
+    // in this effect, so cascades that re-flush the consumer's effect root do
+    // not re-acquire/re-tear interaction resources.
+    let prev = false;
+    const cleanups: Array<(() => void) | undefined> = [];
+    $effect(() => {
+      const resolved = this.open;
+      // `untrack` is critical: interaction `onOpenChange` hooks can read
+      // reactive fields (e.g. dismiss reads `floatingEl?.ownerDocument`).
+      // Without `untrack` those reads would subscribe this effect to those
+      // fields and re-fire it when refs/attachments mutate, which tears down
+      // and re-creates listeners on every attachment cycle.
+      untrack(() => {
+        if (resolved === prev) return;
+        prev = resolved;
+        for (let i = 0; i < this.#interactions.length; i++) {
+          const ret = this.#interactions[i].onOpenChange?.(resolved);
+          if (resolved) cleanups[i] = typeof ret === 'function' ? ret : undefined;
+        }
+      });
+      return () => {
+        for (const c of cleanups) c?.();
+        cleanups.length = 0;
+      };
+    });
 
     // Paint-critical position write — must land on the same frame the floating
     // mounts/opens, otherwise the floating renders at (0, 0) for one frame.
@@ -213,6 +259,11 @@ export class Popover {
     if (node instanceof HTMLElement) {
       written = new Set<string>();
       const tracked = written;
+      // `$effect.root` is intentional: ARIA writes are scoped to the
+      // **attachment lifecycle**, not the parent component's. Without it the
+      // inner `$effect` would survive node detach and keep firing against a
+      // detached node until the consumer unmounts. The teardown returned at
+      // the bottom of this attachment disposes the root.
       ariaRoot = $effect.root(() => {
         $effect(() => {
           for (const desc of this.#interactions) {
@@ -282,6 +333,11 @@ export class Popover {
       written = new Set<string>();
       const tracked = written;
       writeAttribute(node, tracked, 'id', this.floatingId);
+      // `$effect.root` is intentional: ARIA writes are scoped to the
+      // **attachment lifecycle**, not the parent component's. Without it the
+      // inner `$effect` would survive node detach and keep firing against a
+      // detached node until the consumer unmounts. The teardown returned at
+      // the bottom of this attachment disposes the root.
       ariaRoot = $effect.root(() => {
         $effect(() => {
           for (const desc of this.#interactions) {

@@ -166,12 +166,13 @@ describe('neoPopConfirm — onCancel / onConfirm', { tags: ['jsdom'] }, () => {
     renderWithPortalTarget(Harness, { open: true, onConfirm });
     await tick();
     const confirm = getControlButton('Confirm')!;
-    const click = user.click(confirm);
+    await user.click(confirm);
     await tick();
     // Loading state must be reflected on the confirm button while the promise is pending.
-    expect(confirm.getAttribute('aria-busy') ?? confirm.dataset.loading ?? '').toMatch(/true/);
+    await waitFor(() => expect(confirm.classList.contains('neo-loading')).toBe(true));
     resolveFn();
-    await click;
+    await tick();
+    await waitFor(() => expect(confirm.classList.contains('neo-loading')).toBe(false));
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 });

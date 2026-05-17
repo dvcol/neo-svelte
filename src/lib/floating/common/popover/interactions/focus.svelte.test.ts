@@ -319,6 +319,119 @@ describe('focus() interaction', () => {
     });
   });
 
+  describe('pointerdown gate', () => {
+    it('suppresses focus open when a pointerdown is in flight (default mode)', () => {
+      const reference = document.createElement('button');
+      const onOpenChange = vi.fn();
+      const { teardown, result } = withRoot(() => new Popover({
+        onOpenChange,
+        interactions: [focus()],
+      }));
+      flushSync();
+      result.reference(reference);
+      flushSync();
+      reference.dispatchEvent(new PointerEvent('pointerdown'));
+      reference.dispatchEvent(new FocusEvent('focus'));
+      expect(onOpenChange).not.toHaveBeenCalled();
+      teardown();
+    });
+
+    it('suppresses focusin open when a pointerdown is in flight (focusWithin mode)', () => {
+      const reference = document.createElement('div');
+      const child = document.createElement('input');
+      reference.appendChild(child);
+      document.body.appendChild(reference);
+      const onOpenChange = vi.fn();
+      const { teardown, result } = withRoot(() => new Popover({
+        onOpenChange,
+        interactions: [focus({ focusWithin: true })],
+      }));
+      flushSync();
+      result.reference(reference);
+      flushSync();
+      reference.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+      child.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+      expect(onOpenChange).not.toHaveBeenCalled();
+      document.body.removeChild(reference);
+      teardown();
+    });
+
+    it('opens on tab-into focus (no preceding pointerdown)', () => {
+      const reference = document.createElement('button');
+      const onOpenChange = vi.fn();
+      const { teardown, result } = withRoot(() => new Popover({
+        onOpenChange,
+        interactions: [focus()],
+      }));
+      flushSync();
+      result.reference(reference);
+      flushSync();
+      // Genuine keyboard focus: no pointerdown precedes it.
+      reference.dispatchEvent(new FocusEvent('focus'));
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledWith(true, expect.any(FocusEvent), 'focus');
+      teardown();
+    });
+
+    it('clears the gate after the trailing click so subsequent focus events open normally', () => {
+      const reference = document.createElement('button');
+      const onOpenChange = vi.fn();
+      const { teardown, result } = withRoot(() => new Popover({
+        onOpenChange,
+        interactions: [focus()],
+      }));
+      flushSync();
+      result.reference(reference);
+      flushSync();
+      reference.dispatchEvent(new PointerEvent('pointerdown'));
+      reference.dispatchEvent(new MouseEvent('click'));
+      // Gate cleared by the click. A later focus (e.g. tab back into the trigger) should open.
+      reference.dispatchEvent(new FocusEvent('focus'));
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledWith(true, expect.any(FocusEvent), 'focus');
+      teardown();
+    });
+
+    it('clears the gate on the next macrotask if no click follows the pointerdown', () => {
+      const reference = document.createElement('button');
+      const onOpenChange = vi.fn();
+      const { teardown, result } = withRoot(() => new Popover({
+        onOpenChange,
+        interactions: [focus()],
+      }));
+      flushSync();
+      result.reference(reference);
+      flushSync();
+      reference.dispatchEvent(new PointerEvent('pointerdown'));
+      // No click — pointerdown alone (e.g. drag canceled). Gate releases on macrotask.
+      vi.advanceTimersByTime(0);
+      reference.dispatchEvent(new FocusEvent('focus'));
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledWith(true, expect.any(FocusEvent), 'focus');
+      teardown();
+    });
+
+    it('a second pointerdown re-arms the gate after a prior click cleared it', () => {
+      const reference = document.createElement('button');
+      const onOpenChange = vi.fn();
+      const { teardown, result } = withRoot(() => new Popover({
+        onOpenChange,
+        interactions: [focus()],
+      }));
+      flushSync();
+      result.reference(reference);
+      flushSync();
+      // First pointer cycle: pointerdown → click clears the gate.
+      reference.dispatchEvent(new PointerEvent('pointerdown'));
+      reference.dispatchEvent(new MouseEvent('click'));
+      // Second pointerdown re-arms; the focus event during this cycle must be suppressed.
+      reference.dispatchEvent(new PointerEvent('pointerdown'));
+      reference.dispatchEvent(new FocusEvent('focus'));
+      expect(onOpenChange).not.toHaveBeenCalled();
+      teardown();
+    });
+  });
+
   describe('cleanup', () => {
     it('clears the pending blur timer when the popover closes externally', () => {
       const reference = document.createElement('button');

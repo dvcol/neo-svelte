@@ -128,10 +128,7 @@
   bind:ref={tooltipRef}
   bind:triggerRef
   bind:position
-  bind:open={() => open || focused,
-    (value) => {
-      open = value;
-    }}
+  bind:open
   {tooltip}
   unmountOnClose={false}
   {target}

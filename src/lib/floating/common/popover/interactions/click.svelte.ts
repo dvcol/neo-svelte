@@ -11,11 +11,12 @@ const MOUSE_LIKE = new Set(['mouse', 'pen', '']);
  * - `event: 'mousedown'` listens directly on `mousedown`; the trailing
  *   click is then short-circuited (pointerType is set) to avoid double
  *   toggling.
- * - `toggle` (default true): re-pressing the open reference closes only
- *   when the most recent open event matched the trigger event type
- *   (`popover.openEvent.type === 'click'` for click mode, `'mousedown'`
- *   for mousedown mode). This avoids treating focus-then-click as a
- *   toggle close.
+ * - `toggle` (default true): re-pressing the open reference closes the
+ *   popover regardless of how it was opened (focus, hover, keyboard, …).
+ *   A click on the trigger is always a deliberate intent to toggle.
+ *   `mousedown` mode still discriminates `openEvent.type === 'mousedown'`
+ *   to short-circuit the trailing native click; that is unrelated to
+ *   cross-interaction discrimination.
  * - `keyboardHandlers` (default true): on non-`<button>` references,
  *   Enter toggles immediately and Space toggles on keyup (matching
  *   native button activation).
@@ -69,10 +70,7 @@ export function click(options: ClickOptions = {}): Interaction {
       }
       if (isMouseLike() && ignoreMouse) return;
 
-      const sameTriggerType = ctx.popover.openEvent
-        ? ctx.popover.openEvent.type === 'click'
-        : true;
-      if (ctx.popover.open && toggle && sameTriggerType) {
+      if (ctx.popover.open && toggle) {
         ctx.onOpenChange(false, event, 'click');
       } else {
         ctx.onOpenChange(true, event, 'click');

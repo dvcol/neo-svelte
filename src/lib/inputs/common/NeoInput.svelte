@@ -158,7 +158,8 @@
     ref?.focus();
   };
 
-  const onLabelClick = () => {
+  const onLabelClick = (e) => {
+    e.preventDefault();
     if (disabled || readonly || rest?.hidden || rest.type !== 'select') return;
     ref?.showPicker?.();
   };
@@ -838,6 +839,7 @@
           min-width: var(--neo-input-label-width);
           padding: 0.75rem 1rem 0.25rem;
           line-height: var(--neo-line-height-xs, 1rem);
+          pointer-events: none;
         }
 
         :global(.neo-label-container.neo-before .neo-label) {

@@ -227,7 +227,7 @@
     "@dvcol/svelte-utils": "^1.21.1",
     "@floating-ui/dom": "^1.7.0",
     "dompurify": "^3.4.3",
-    "svelte": "^5.55.5"
+    "svelte": "^5.55.8"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",

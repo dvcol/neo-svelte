@@ -12,9 +12,20 @@ import type { FocusOptions, Interaction, ListenerMap } from '../popover.types.js
  *   re-bind cost.
  * - The close path is debounced through `setTimeout(0)` so focus moving
  *   into the floating element doesn't trigger a flash close.
+ * - **Pointerdown gate** — focus opens are suppressed while a pointerdown
+ *   on the reference is in flight. Pointer-driven focus (clicking the
+ *   reference or a focusable child) lets the `click` interaction own the
+ *   open; `focus` only fires for genuine focus events (tab/keyboard).
+ *   Without this gate, a click on a focusable child of a wrapper trigger
+ *   races: `focusin` bubbles and sets `popover.openEvent.type='focusin'`,
+ *   then the trailing `click` sees a non-`'click'` `openEvent.type` and
+ *   bails its toggle path, requiring 2 clicks to close. The gate clears
+ *   after the trailing `click` fires (or, if no click follows, on the
+ *   next macrotask).
  *
  * Cross-cut: when `popover.open` flips false for any other reason, drop the
- * pending close timer. Reactive read replaces the old pubsub.
+ * pending close timer. Runs in `onOpenChange`, dispatched synchronously by
+ * `Popover` on real open transitions.
  */
 export function focus(options: FocusOptions = {}): Interaction {
   return (ctx) => {
@@ -27,11 +38,31 @@ export function focus(options: FocusOptions = {}): Interaction {
       blurTimeout = -1;
     }
 
+    let pointerActive = false;
+    let pointerClearTimeout: ReturnType<typeof setTimeout> | -1 = -1;
+    function clearPointerTimer(): void {
+      if (pointerClearTimeout !== -1) clearTimeout(pointerClearTimeout);
+      pointerClearTimeout = -1;
+    }
+    function onPointerDown(): void {
+      pointerActive = true;
+      clearPointerTimer();
+      pointerClearTimeout = setTimeout(() => {
+        pointerActive = false;
+        pointerClearTimeout = -1;
+      });
+    }
+    function onClickClear(): void {
+      pointerActive = false;
+      clearPointerTimer();
+    }
+
     function makeFocusHandler(eventType: 'focus' | 'focusin') {
       return (event: FocusEvent): void => {
         if (!enabled) return;
         if (focusWithin && eventType !== 'focusin') return;
         if (!focusWithin && eventType !== 'focus') return;
+        if (pointerActive) return;
         clearBlurTimer();
         ctx.onOpenChange(true, event, 'focus');
       };
@@ -56,19 +87,20 @@ export function focus(options: FocusOptions = {}): Interaction {
       };
     }
 
-    $effect(() => {
-      if (!ctx.popover.open) clearBlurTimer();
-    });
-
     const listeners: ListenerMap = {
       focus: makeFocusHandler('focus'),
       focusin: makeFocusHandler('focusin'),
       blur: makeBlurHandler('blur'),
       focusout: makeBlurHandler('focusout'),
+      pointerdown: onPointerDown,
+      click: onClickClear,
     };
 
     return {
       reference: { listeners },
+      onOpenChange(open: boolean) {
+        if (!open) clearBlurTimer();
+      },
     };
   };
 }

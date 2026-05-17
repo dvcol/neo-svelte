@@ -16,8 +16,8 @@ function getDelay(value: HoverOptions['delay'], prop: 'open' | 'close'): number 
  *   open, so re-entering an already-rendered floating doesn't get stuck.
  *
  * Cross-cutting state — clearing pending timers when the popover closes for
- * any other reason — uses a reactive read of `ctx.popover.open` inside an
- * effect root (replaces the old pubsub).
+ * any other reason — runs in `onOpenChange`, which `Popover` invokes
+ * synchronously on real open transitions (post-consumer-veto).
  */
 export function hover(options: HoverOptions = {}): Interaction {
   return (ctx) => {
@@ -88,17 +88,6 @@ export function hover(options: HoverOptions = {}): Interaction {
       closeWithDelay(event);
     }
 
-    // Cross-cut: when popover closes for any other reason, drop pending timers.
-    // Runs inside the popover's effect root (factories execute in the
-    // constructor, which is itself wrapped in the consumer's effect root).
-    $effect(() => {
-      if (!ctx.popover.open) {
-        clearOpenTimer();
-        clearRestTimer();
-        blockMouseMove = true;
-      }
-    });
-
     return {
       reference: {
         listeners: {
@@ -112,6 +101,12 @@ export function hover(options: HoverOptions = {}): Interaction {
           mouseenter: onFloatingMouseEnter,
           mouseleave: onFloatingMouseLeave,
         },
+      },
+      onOpenChange(open: boolean) {
+        if (open) return;
+        clearOpenTimer();
+        clearRestTimer();
+        blockMouseMove = true;
       },
     };
   };

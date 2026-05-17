@@ -183,16 +183,11 @@
   bind:dirty
   bind:valid
   bind:touched
-  bind:hovered={() => {
-      return hovered || open;
-    },
-    (_state) => {
-      hovered = _state;
-    }}
+  bind:hovered
   bind:focused
   bind:focusin
   bind:value
-  display={(customDisplay ?? display) ? (customDisplay ?? display?.(selected)) : undefined}
+  display={customDisplay ?? (display ? display(selected) : undefined)}
   {rounded}
   {floating}
   {clearable}
@@ -208,8 +203,6 @@
   {...rest}
   clickable
   readonly
-  inert
-  tabindex={-1}
   affixProps={{
     close,
     readonly,
@@ -217,8 +210,6 @@
     closeProps: { onclick: onClear, ...affixProps?.closeProps },
   }}
   containerProps={{
-    tag: 'button',
-    role: null,
     onkeydown,
     ...rest.containerProps,
   }}
