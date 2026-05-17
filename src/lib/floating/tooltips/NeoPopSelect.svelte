@@ -41,11 +41,13 @@
     filled,
     tinted,
     elevation,
+    disabled,
     openDelay,
     hoverDelay,
     openOnFocus,
     openOnHover,
     openOnClick,
+    clickOptions,
 
     // Sizing
     flex,
@@ -144,11 +146,13 @@
   {filled}
   {tinted}
   {elevation}
+  {disabled}
   {openDelay}
   {hoverDelay}
   {openOnFocus}
   {openOnHover}
   {openOnClick}
+  {clickOptions}
   {onClose}
   {onOpen}
   {use}

@@ -69,6 +69,14 @@ export type NeoTooltipProps = {
    */
   open?: boolean;
   /**
+   * If true, all open interactions (hover, focus, click) are inert.
+   *
+   * `dismiss` (Escape, outside-press) remains active so an externally-opened
+   * tooltip (`bind:open`) can still be closed by the user. `disabled` takes
+   * precedence over per-interaction `*.enabled` getters and `openOn*` flags.
+   */
+  disabled?: boolean;
+  /**
    * The target to attach the tooltip to.
    */
   target?: HTMLElement | (() => HTMLElement);

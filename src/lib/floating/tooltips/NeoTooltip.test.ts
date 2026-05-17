@@ -259,15 +259,8 @@ describe('neoTooltip — openOnFocus', { tags: ['jsdom'] }, () => {
   });
 });
 
-/**
- * Known bug: NeoTooltip.svelte:150 unconditionally drops the click reason in
- * onOpenChange, so `openOnClick=true` enables skeleton's useClick middleware
- * but the resulting state change is thrown away. The expected behavior is
- * pinned here as skipped tests — they should be unskipped (or the prop removed)
- * after the migration to @floating-ui/dom in Phase 2.
- */
-describe('neoTooltip — openOnClick (expected behavior, currently broken)', { tags: ['jsdom'] }, () => {
-  it.skip('opens on click when openOnClick=true and other flags disabled', async () => {
+describe('neoTooltip — openOnClick', { tags: ['jsdom'] }, () => {
+  it('opens on click when openOnClick=true and other flags disabled', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
     const { getByTestId } = renderWithPortalTarget(Harness, {
@@ -281,7 +274,7 @@ describe('neoTooltip — openOnClick (expected behavior, currently broken)', { t
     expect(onChange).toHaveBeenCalledWith(true);
   });
 
-  it.skip('does not open on click when openOnClick=false (and other flags disabled)', async () => {
+  it('does not open on click when openOnClick=false (and other flags disabled)', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
     const { getByTestId } = renderWithPortalTarget(Harness, {
@@ -293,6 +286,24 @@ describe('neoTooltip — openOnClick (expected behavior, currently broken)', { t
     await user.click(getByTestId('trigger-content'));
     await tick();
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('a second click on the same trigger toggles the tooltip closed', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    const { getByTestId } = renderWithPortalTarget(Harness, {
+      openOnHover: false,
+      openOnFocus: false,
+      openOnClick: true,
+      onChange,
+    });
+    const trigger = getByTestId('trigger-content');
+    await user.click(trigger);
+    await tick();
+    expect(onChange).toHaveBeenLastCalledWith(true);
+    await user.click(trigger);
+    await tick();
+    expect(onChange).toHaveBeenLastCalledWith(false);
   });
 });
 
@@ -333,6 +344,81 @@ describe('neoTooltip — interaction flag combinations', { tags: ['jsdom'] }, ()
     await user.click(getByTestId('trigger-content'));
     await tick();
     expect(onChange).not.toHaveBeenCalled();
+  });
+});
+
+describe('neoTooltip — disabled', { tags: ['jsdom'] }, () => {
+  it('disabled=true blocks hover from opening', async () => {
+    const onChange = vi.fn();
+    const { container } = renderWithPortalTarget(Harness, {
+      disabled: true,
+      openOnHover: true,
+      openOnFocus: false,
+      openOnClick: false,
+      hoverDelay: 0,
+      openDelay: 0,
+      onChange,
+    });
+    await fireEvent.mouseEnter(getTrigger(container));
+    await tick();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('disabled=true blocks focus from opening', async () => {
+    const onChange = vi.fn();
+    const { container } = renderWithPortalTarget(Harness, {
+      disabled: true,
+      openOnHover: false,
+      openOnFocus: true,
+      openOnClick: false,
+      onChange,
+    });
+    await fireEvent.focusIn(getTrigger(container));
+    await tick();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('disabled=true blocks click from opening', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    const { getByTestId } = renderWithPortalTarget(Harness, {
+      disabled: true,
+      openOnHover: false,
+      openOnFocus: false,
+      openOnClick: true,
+      onChange,
+    });
+    await user.click(getByTestId('trigger-content'));
+    await tick();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('disabled=true overrides clickOptions.enabled=true', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    const { getByTestId } = renderWithPortalTarget(Harness, {
+      disabled: true,
+      openOnHover: false,
+      openOnFocus: false,
+      openOnClick: false,
+      clickOptions: { enabled: true },
+      onChange,
+    });
+    await user.click(getByTestId('trigger-content'));
+    await tick();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('disabled=true still allows escape to close an externally-opened tooltip (dismiss remains active)', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    renderWithPortalTarget(Harness, { open: true, disabled: true, onChange });
+    await tick();
+    onChange.mockClear();
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith(false);
+    });
   });
 });
 

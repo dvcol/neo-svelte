@@ -67,6 +67,7 @@
     hoverDelay = 300,
     openOnHover = false,
     openOnFocus = false,
+    openOnClick = true,
 
     // Events
     onChange,
@@ -86,12 +87,7 @@
 
   const items = $derived<NeoListItemOrSection[]>(options?.map(i => (typeof i === 'object' ? i : { value: i })));
 
-  const toggle: FormEventHandler<HTMLElement> = (e) => {
-    if (rest?.disabled || readonly) return;
-    open = !open;
-    e.stopPropagation();
-    e.preventDefault();
-  };
+  const tooltipDisabled = $derived(!!rest?.disabled || !!readonly);
 
   const elevation = $derived(coerce(rest?.elevation ?? getDefaultElevation(rest?.pressed)));
   const template = $derived(computeButtonTemplate(elevation, rest?.pressed, rest?.glass));
@@ -108,7 +104,6 @@
     'disabled': rest.disabled,
     'start': rest.start,
     rounded,
-    'onclick': toggle,
     ...template,
     ...buttonProps,
     'class': ['neo-select-toggle', buttonProps?.class],
@@ -157,9 +152,6 @@
 
   const onkeydown: KeyboardEventHandler<HTMLElement> = (e) => {
     if (rest?.disabled || readonly) return;
-    if (e.key === 'Enter' || e.key === ' ') {
-      return toggle(e);
-    }
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       if (!open) open = true;
       e.preventDefault();
@@ -227,7 +219,6 @@
   containerProps={{
     tag: 'button',
     role: null,
-    onclick: toggle,
     onkeydown,
     ...rest.containerProps,
   }}
@@ -260,6 +251,8 @@
   {hoverDelay}
   {openOnFocus}
   {openOnHover}
+  {openOnClick}
+  disabled={tooltipDisabled}
   filled={!rest?.glass}
   elevation={tooltipElevation}
   {onClose}

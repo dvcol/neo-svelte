@@ -38,6 +38,7 @@
     elevation: DefaultShadowElevation,
     borderless: false,
 
+    disabled: false,
     placement: 'bottom',
     openOnHover: true,
     keepOpenOnHover: false,
@@ -173,6 +174,7 @@
 
 <div class="row">
   <NeoButtonGroup text rounded>
+    <NeoButton toggle bind:checked={options.disabled}>Disabled</NeoButton>
     <NeoButton toggle bind:checked={options.rounded}>Rounded</NeoButton>
     <NeoButton toggle bind:checked={options.filled}>Filled</NeoButton>
     <NeoButton toggle bind:checked={options.tinted}>Tinted</NeoButton>
@@ -308,6 +310,7 @@
         height="20rem"
         tooltipProps={options}
         onSelect={e => console.info('selected', e)}
+        disabled={options.disabled}
       >
         <NeoButton text rounded={options.rounded}>Hover select: {simpleSelected?.item?.value ?? 'none selected'}</NeoButton>
       </NeoPopSelect>
@@ -317,10 +320,11 @@
       <span class="label">Click pop select</span>
       <NeoPopSelect
         search
-        bind:open
+        bind:open={() => !options.disabled && open, v => open = v}
         bind:selected={complexSelected}
         items={complexItems}
         rounded={options.rounded}
+        disabled={options.disabled}
         height="28rem"
         tooltipProps={{ ...options, openOnFocus: false, openOnHover: false }}
         onScrollTop={e => console.info('scroll top', e)}

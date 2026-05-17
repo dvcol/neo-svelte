@@ -64,6 +64,36 @@ describe('neoSelect — toggle (disabled / readonly matrix)', { tags: ['jsdom'] 
     expect(tooltip?.hasAttribute('hidden')).toBe(false);
   });
 
+  // Regression: unfocused first click was opening then immediately closing
+  // due to redundant click listeners (manual `containerProps.onclick: toggle`
+  // racing the Popover `click()` interaction listener on the same button).
+  it('a single click on an unfocused toggle opens the popover and keeps it open', async () => {
+    const user = userEvent.setup();
+    renderWithPortalTarget(NeoSelect as never, { options });
+    await tick();
+    const toggle = getToggle()!;
+    const tooltip = document.querySelector<HTMLElement>('.neo-tooltip')!;
+    expect(document.activeElement).not.toBe(toggle);
+    expect(tooltip.hasAttribute('hidden')).toBe(true);
+    await user.click(toggle);
+    await tick();
+    expect(tooltip.hasAttribute('hidden')).toBe(false);
+  });
+
+  it('a second click on a focused toggle closes the popover', async () => {
+    const user = userEvent.setup();
+    renderWithPortalTarget(NeoSelect as never, { options });
+    await tick();
+    const toggle = getToggle()!;
+    const tooltip = document.querySelector<HTMLElement>('.neo-tooltip')!;
+    await user.click(toggle);
+    await tick();
+    expect(tooltip.hasAttribute('hidden')).toBe(false);
+    await user.click(toggle);
+    await tick();
+    expect(tooltip.hasAttribute('hidden')).toBe(true);
+  });
+
   it('does not toggle when disabled=true', async () => {
     const user = userEvent.setup();
     renderWithPortalTarget(NeoSelect as never, { options, disabled: true });
@@ -82,6 +112,66 @@ describe('neoSelect — toggle (disabled / readonly matrix)', { tags: ['jsdom'] 
     await user.click(getToggle()!);
     await tick();
     expect(tooltip?.hasAttribute('hidden')).toBe(true);
+  });
+
+  it('does not toggle when both disabled=true and readonly=true', async () => {
+    const user = userEvent.setup();
+    renderWithPortalTarget(NeoSelect as never, { options, disabled: true, readonly: true });
+    await tick();
+    const tooltip = document.querySelector<HTMLElement>('.neo-tooltip');
+    await user.click(getToggle()!);
+    await tick();
+    expect(tooltip?.hasAttribute('hidden')).toBe(true);
+  });
+});
+
+describe('neoSelect — keyboard', { tags: ['jsdom'] }, () => {
+  it('arrowDown on the toggle opens the popover', async () => {
+    const user = userEvent.setup();
+    renderWithPortalTarget(NeoSelect as never, { options });
+    await tick();
+    const toggle = getToggle()!;
+    const tooltip = document.querySelector<HTMLElement>('.neo-tooltip')!;
+    toggle.focus();
+    await user.keyboard('{ArrowDown}');
+    await tick();
+    expect(tooltip.hasAttribute('hidden')).toBe(false);
+  });
+
+  it('arrowUp on the toggle opens the popover', async () => {
+    const user = userEvent.setup();
+    renderWithPortalTarget(NeoSelect as never, { options });
+    await tick();
+    const toggle = getToggle()!;
+    const tooltip = document.querySelector<HTMLElement>('.neo-tooltip')!;
+    toggle.focus();
+    await user.keyboard('{ArrowUp}');
+    await tick();
+    expect(tooltip.hasAttribute('hidden')).toBe(false);
+  });
+
+  it('arrowDown does not open when disabled=true', async () => {
+    const user = userEvent.setup();
+    renderWithPortalTarget(NeoSelect as never, { options, disabled: true });
+    await tick();
+    const toggle = getToggle()!;
+    const tooltip = document.querySelector<HTMLElement>('.neo-tooltip')!;
+    toggle.focus();
+    await user.keyboard('{ArrowDown}');
+    await tick();
+    expect(tooltip.hasAttribute('hidden')).toBe(true);
+  });
+
+  it('arrowDown does not open when readonly=true', async () => {
+    const user = userEvent.setup();
+    renderWithPortalTarget(NeoSelect as never, { options, readonly: true });
+    await tick();
+    const toggle = getToggle()!;
+    const tooltip = document.querySelector<HTMLElement>('.neo-tooltip')!;
+    toggle.focus();
+    await user.keyboard('{ArrowDown}');
+    await tick();
+    expect(tooltip.hasAttribute('hidden')).toBe(true);
   });
 });
 

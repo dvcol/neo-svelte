@@ -127,6 +127,12 @@ export type NeoSelectProps<Value = any> = {
    */
   openOnHover?: NeoPopSelectProps<Value>['openOnHover'];
   /**
+   * Whether clicking the trigger toggles the dropdown.
+   *
+   * @default true
+   */
+  openOnClick?: NeoPopSelectProps<Value>['openOnClick'];
+  /**
    * Event listener that fires when an item is selected/deselected.
    * @param event
    */

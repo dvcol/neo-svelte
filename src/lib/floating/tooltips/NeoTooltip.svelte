@@ -37,6 +37,7 @@
     tag = 'div',
     ref = $bindable(),
     open = $bindable(false),
+    disabled = false,
     offset: spacing = 6,
     placement,
     position = $bindable(),
@@ -139,8 +140,8 @@
         focusActive = _open;
       }
       if (_reason === 'hover' && !_open && (keepOpenOnHover || focusActive)) return;
-      if (_reason === 'click' && _open && keepOpenOnClick) return;
-      if (_reason !== 'click') open = _open;
+      if (_reason === 'click' && !_open && keepOpenOnClick) return;
+      open = _open;
     },
     get middleware() {
       const middleware = [
@@ -168,6 +169,7 @@
       }),
       hover({
         get enabled() {
+          if (disabled) return false;
           return hoverOptions?.enabled ?? openOnHover;
         },
         get move() {
@@ -182,6 +184,7 @@
       }),
       focusInteraction({
         get enabled() {
+          if (disabled) return false;
           return focusOptions?.enabled ?? openOnFocus;
         },
         get focusWithin() {
@@ -190,6 +193,7 @@
       }),
       click({
         get enabled() {
+          if (disabled) return false;
           return clickOptions?.enabled ?? openOnClick;
         },
         get event() {
@@ -246,6 +250,7 @@
   });
 
   export function toggle(state = !open) {
+    if (disabled) return open;
     open = state;
     return open;
   }
@@ -309,13 +314,13 @@
   );
 
   const onpointerenter: NeoTooltipProps['onpointerenter'] = (e) => {
-    if (!openOnHover) return rest.onpointerenter?.(e);
+    if (disabled || !openOnHover) return rest.onpointerenter?.(e);
     open = true;
     rest.onpointerenter?.(e);
   };
 
   const onfocusin: NeoTooltipProps['onfocusin'] = (e) => {
-    if (!openOnFocus) return rest.onfocusin?.(e);
+    if (disabled || !openOnFocus) return rest.onfocusin?.(e);
     open = true;
     rest.onfocusin?.(e);
   };
