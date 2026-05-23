@@ -255,6 +255,24 @@
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
   const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
+
+  const focusinAttach = useFocusin({
+    get focusin() {
+      return focusin;
+    },
+    set focusin(_value) {
+      focusin = _value;
+    },
+  });
+
+  const hoveringAttach = useHovering({
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+  });
 </script>
 
 {#snippet prefix()}
@@ -405,22 +423,8 @@
     style:--neo-input-border-radius={computeBorderRadius(rounded)}
     out:outFn={outProps}
     in:inFn={inProps}
-    {@attach useFocusin({
-      get focusin() {
-        return focusin;
-      },
-      set focusin(_value) {
-        focusin = _value;
-      },
-    })}
-    {@attach useHovering({
-      get hovered() {
-        return hovered;
-      },
-      set hovered(_value) {
-        hovered = _value;
-      },
-    })}
+    {@attach focusinAttach}
+    {@attach hoveringAttach}
     {...containerRest}
   >
     {@render prefix()}

@@ -207,6 +207,15 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  const hoveringAttach = useHovering({
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+  });
 </script>
 
 <svelte:element
@@ -263,14 +272,7 @@
   in:inFn={inProps}
   out:outFn={outProps}
   use:useFn={useProps}
-  {@attach useHovering({
-    get hovered() {
-      return hovered;
-    },
-    set hovered(_value) {
-      hovered = _value;
-    },
-  })}
+  {@attach hoveringAttach}
 >
   <div class="neo-content" class:neo-reverse={reverse}>
     {#if loading || icon}

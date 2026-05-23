@@ -362,6 +362,24 @@
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
 
+  const focusinAttach = useFocusin({
+    get focusin() {
+      return focusin;
+    },
+    set focusin(_value) {
+      focusin = _value;
+    },
+  });
+
+  const hoveringAttach = useHovering({
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+  });
+
   const flex = $derived(visible ? undefined : _flex);
   const width = $derived(visible ? undefined : toSize(_width));
   const height = $derived(visible ? undefined : toSize(_height));
@@ -475,22 +493,8 @@
     style:--neo-textarea-border-radius={computeBorderRadius(rounded)}
     out:outFn={outProps}
     in:inFn={inProps}
-    {@attach useFocusin({
-      get focusin() {
-        return focusin;
-      },
-      set focusin(_value) {
-        focusin = _value;
-      },
-    })}
-    {@attach useHovering({
-      get hovered() {
-        return hovered;
-      },
-      set hovered(_value) {
-        hovered = _value;
-      },
-    })}
+    {@attach focusinAttach}
+    {@attach hoveringAttach}
     {...containerRest}
   >
     {#if label}

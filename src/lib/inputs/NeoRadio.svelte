@@ -79,6 +79,24 @@
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));
   const outProps = $derived(toTransitionProps(outAction ?? transitionAction));
+
+  const focusinAttach = useFocusin({
+    get focusin() {
+      return focused;
+    },
+    set focusin(_value) {
+      focused = _value;
+    },
+  });
+
+  const hoveringAttach = useHovering({
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+  });
 </script>
 
 <svelte:element
@@ -96,22 +114,8 @@
   style:max-height={height?.max}
   out:outFn={outProps}
   in:inFn={inProps}
-  {@attach useFocusin({
-    get focusin() {
-      return focused;
-    },
-    set focusin(_value) {
-      focused = _value;
-    },
-  })}
-  {@attach useHovering({
-    get hovered() {
-      return hovered;
-    },
-    set hovered(_value) {
-      hovered = _value;
-    },
-  })}
+  {@attach focusinAttach}
+  {@attach hoveringAttach}
   {...containerRest}
 >
   <NeoBaseInput

@@ -129,6 +129,24 @@
   const flex = $derived(visible ? undefined : _flex);
   const width = $derived(visible ? undefined : toSize(_width));
   const height = $derived(visible ? undefined : toSize(_height));
+
+  const focusinAttach = useFocusin({
+    get focusin() {
+      return focused;
+    },
+    set focusin(_value) {
+      focused = _value;
+    },
+  });
+
+  const hoveringAttach = useHovering({
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+  });
 </script>
 
 <NeoInputValidation
@@ -168,22 +186,8 @@
     style:min-height={height?.min}
     style:max-height={height?.max}
     style:--neo-checkbox-border-radius={computeBorderRadius(rounded)}
-    {@attach useFocusin({
-      get focusin() {
-        return focused;
-      },
-      set focusin(_value) {
-        focused = _value;
-      },
-    })}
-    {@attach useHovering({
-      get hovered() {
-        return hovered;
-      },
-      set hovered(_value) {
-        hovered = _value;
-      },
-    })}
+    {@attach focusinAttach}
+    {@attach hoveringAttach}
     {...containerRest}
   >
     <NeoBaseInput

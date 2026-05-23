@@ -297,6 +297,26 @@
     item.hidden = Date.now();
     item.onChange?.(NeoNotificationEvent.Hidden, item);
   });
+
+  const focusinAttach = useFocusin({
+    get focusin() {
+      return focused;
+    },
+    set focusin(_value) {
+      focused = _value;
+    },
+    onChange,
+  });
+
+  const hoveringAttach = useHovering({
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+    onChange,
+  });
 </script>
 
 <svelte:element
@@ -328,24 +348,8 @@
   style:scale
   style:translate
   style:transform
-  {@attach useFocusin({
-    get focusin() {
-      return focused;
-    },
-    set focusin(_value) {
-      focused = _value;
-    },
-    onChange,
-  })}
-  {@attach useHovering({
-    get hovered() {
-      return hovered;
-    },
-    set hovered(_value) {
-      hovered = _value;
-    },
-    onChange,
-  })}
+  {@attach focusinAttach}
+  {@attach hoveringAttach}
   in:flyFrom={inParams}
   out:flyFrom={outParams}
 >

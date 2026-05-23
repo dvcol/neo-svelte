@@ -291,6 +291,15 @@
 
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
+
+  const focusinAttach = useFocusin({
+    get focusin() {
+      return focusin;
+    },
+    set focusin(_value) {
+      focusin = _value;
+    },
+  });
 </script>
 
 {#snippet upload()}
@@ -471,14 +480,7 @@
   style:height={height?.absolute}
   style:min-height={height?.min}
   style:max-height={height?.max}
-  {@attach useFocusin({
-    get focusin() {
-      return focusin;
-    },
-    set focusin(_value) {
-      focusin = _value;
-    },
-  })}
+  {@attach focusinAttach}
   {...containerRest}
 >
   {#if drop && expanded}

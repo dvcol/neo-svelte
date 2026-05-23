@@ -143,6 +143,24 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  const focusinAttach = useFocusin({
+    get focusin() {
+      return focused;
+    },
+    set focusin(value) {
+      focused = value;
+    },
+  });
+
+  const hoveringAttach = useHovering({
+    get hovered() {
+      return hovered;
+    },
+    set hovered(value) {
+      hovered = value;
+    },
+  });
 </script>
 
 {#snippet closeBtn()}
@@ -207,22 +225,8 @@
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}
-  {@attach useFocusin({
-    get focusin() {
-      return focused;
-    },
-    set focusin(value) {
-      focused = value;
-    },
-  })}
-  {@attach useHovering({
-    get hovered() {
-      return hovered;
-    },
-    set hovered(value) {
-      hovered = value;
-    },
-  })}
+  {@attach focusinAttach}
+  {@attach hoveringAttach}
   {...rest}
 >
   {#if media}

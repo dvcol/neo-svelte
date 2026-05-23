@@ -363,6 +363,24 @@
 
   const useFn = $derived(toAction(use));
   const useProps = $derived(toActionProps(use));
+
+  const focusinAttach = useFocusin({
+    get focusin() {
+      return focused;
+    },
+    set focusin(_value) {
+      focused = _value;
+    },
+  });
+
+  const hoveringAttach = useHovering({
+    get hovered() {
+      return hovered;
+    },
+    set hovered(_value) {
+      hovered = _value;
+    },
+  });
 </script>
 
 <NeoInputValidation
@@ -409,22 +427,8 @@
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
-    {@attach useFocusin({
-      get focusin() {
-        return focused;
-      },
-      set focusin(_value) {
-        focused = _value;
-      },
-    })}
-    {@attach useHovering({
-      get hovered() {
-        return hovered;
-      },
-      set hovered(_value) {
-        hovered = _value;
-      },
-    })}
+    {@attach focusinAttach}
+    {@attach hoveringAttach}
     {...containerRest}
   >
     {#if lowerTooltip.open}
