@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { HTMLLabelAttributes } from 'svelte/elements';
+
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputMethods, NeoInputProps } from '~/inputs/common/neo-input.model.js';
 
@@ -166,7 +168,7 @@
     ref?.focus();
   };
 
-  const onLabelClick = (e) => {
+  const onLabelClick: HTMLLabelAttributes['onclick'] = (e) => {
     e.preventDefault();
     if (disabled || readonly || rest?.hidden || rest.type !== 'select') return;
     ref?.showPicker?.();

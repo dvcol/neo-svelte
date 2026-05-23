@@ -15,6 +15,7 @@
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { SwipeDirection } from '@dvcol/common-utils/common/touch';
   import { useSwipe } from '@dvcol/svelte-utils/swipe';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { fly, scale } from 'svelte/transition';
 
   import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
@@ -24,7 +25,6 @@
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoStepperNavigation, NeoStepperPlacement } from '~/stepper/neo-stepper.model.js';
-  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { Logger } from '~/utils/logger.utils.js';
   import { coerce, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
@@ -221,17 +221,25 @@
     }
   };
 
-  const swipeOptions = $derived<SwipeOptions>({
-    ...swipeProps,
-    tolerances: {
-      right: '50%',
-      left: '50%',
-      up: '50%',
-      down: '50%',
-      ...swipeProps?.tolerances,
+  const swipeOptions: SwipeOptions = {
+    get onSwipe() {
+      return onSwipe;
     },
-    onSwipe,
-  });
+    get tolerances(): SwipeOptions['tolerances'] {
+      return {
+        right: '50%',
+        left: '50%',
+        up: '50%',
+        down: '50%',
+        ...swipeProps?.tolerances,
+      };
+    },
+    get scroll() {
+      return swipeProps?.scroll;
+    },
+  };
+
+  const swipe = useSwipe(swipeOptions);
 
   const context = $derived<NeoStepperContext>({
     step,
@@ -390,7 +398,7 @@
   style:--neo-stepper-mark-margin-start={markMargin?.start}
   style:--neo-stepper-mark-margin-end={markMargin?.end}
   {...rest}
-  {@attach useSwipe(swipeOptions)}
+  {@attach swipe}
   bind:clientWidth
 >
   {@render before?.(context)}

@@ -1,4 +1,8 @@
 minimumReleaseAge: 10080 # 7 days; 7 × 24 × 60 = 10080
+
+minimumReleaseAgeExclude:
+  - '@dvcol/*'
+
 shellEmulator: true
 
 trustPolicy: no-downgrade
