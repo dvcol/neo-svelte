@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { NeoMediaContext, NeoMediaProps } from '~/media/neo-media.model.js';
 
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
+
   import { NeoMediaType } from '~/media/neo-media.model.js';
   import NeoImage from '~/media/NeoImage.svelte';
   import NeoSkeletonMedia from '~/skeletons/NeoSkeletonMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, getDefaultElevation, parseBlur } from '~/utils/shadow.utils.js';

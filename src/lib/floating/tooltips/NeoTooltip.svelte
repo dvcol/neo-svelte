@@ -2,6 +2,7 @@
   import type { NeoTooltipProps } from '~/floating/tooltips/neo-tooltip.model.js';
   import type { SizeOption } from '~/utils/style.utils.js';
 
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { watch } from '@dvcol/svelte-utils/watch';
   import { innerHeight, innerWidth } from 'svelte/reactivity/window';
   import { scale } from 'svelte/transition';
@@ -20,7 +21,7 @@
   } from '~/floating/common/popover/index.js';
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
   import { isOffsetFunction, NeoTooltipSizeStrategy } from '~/floating/tooltips/neo-tooltip.model.js';
-  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, DefaultShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';

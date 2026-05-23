@@ -2,13 +2,13 @@
   import type { NeoAffixProps } from '~/inputs/common/neo-affix.model.js';
 
   import { debounced } from '@dvcol/svelte-utils/debounce';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { fade } from 'svelte/transition';
 
   import NeoIconAlert from '~/icons/NeoIconAlert.svelte';
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoIconClear from '~/icons/NeoIconClear.svelte';
   import NeoIconConfirm from '~/icons/NeoIconConfirm.svelte';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
 
   let {

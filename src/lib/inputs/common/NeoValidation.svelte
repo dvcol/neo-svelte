@@ -2,9 +2,9 @@
   import type { NeoValidationContext, NeoValidationProps } from '~/inputs/common/neo-validation.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { fly } from 'svelte/transition';
 
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { defaultDuration } from '~/utils/transition.utils.js';
 

@@ -15,8 +15,8 @@ importers:
         specifier: ^1.34.0
         version: 1.34.0
       '@dvcol/svelte-utils':
-        specifier: ^1.21.1
-        version: 1.21.1(svelte@5.55.8(@typescript-eslint/types@8.59.3))
+        specifier: ../svelte-utils
+        version: link:../svelte-utils
       '@floating-ui/dom':
         specifier: ^1.7.0
         version: 1.7.6

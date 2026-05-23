@@ -8,7 +8,7 @@
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
+  import { useFocusin } from '@dvcol/svelte-utils/focusin';
   import { tick } from 'svelte';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -471,14 +471,14 @@
   style:height={height?.absolute}
   style:min-height={height?.min}
   style:max-height={height?.max}
-  use:focusing={{
+  {@attach useFocusin({
     get focusin() {
       return focusin;
     },
     set focusin(_value) {
       focusin = _value;
     },
-  }}
+  })}
   {...containerRest}
 >
   {#if drop && expanded}

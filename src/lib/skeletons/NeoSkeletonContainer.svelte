@@ -2,12 +2,12 @@
   import type { NeoSkeletonContainerProps } from '~/skeletons/neo-skeleton-container.model.js';
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
-  import { resize } from '@dvcol/svelte-utils/resize';
+  import { useResize } from '@dvcol/svelte-utils/resize';
   import { untrack } from 'svelte';
   import { fade } from 'svelte/transition';
 
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { quickScaleDelayProps, quickScaleProps } from '~/utils/transition.utils.js';
 
   let {
@@ -62,6 +62,12 @@
     if (!ref || loading) return;
     updateSize();
   });
+
+  const resize = useResize();
+  $effect(() => {
+    if (!resize.current) return;
+    updateSize();
+  });
 </script>
 
 {#if disabled}
@@ -86,7 +92,7 @@
         bind:this={ref}
         in:inFn={inProps}
         out:outFn={outProps}
-        use:resize={updateSize}
+        {@attach resize.observe}
         {...rest}
       >
         {@render content?.()}

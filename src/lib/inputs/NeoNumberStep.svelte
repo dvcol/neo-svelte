@@ -2,6 +2,7 @@
   import type { NeoButtonProps } from '~/buttons/neo-button.model.js';
   import type { NeoNumberStepProps } from '~/inputs/neo-number-step.model.js';
 
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { watch } from '@dvcol/svelte-utils/watch';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
@@ -9,7 +10,6 @@
   import NeoIconMinus from '~/icons/NeoIconMinus.svelte';
   import NeoInput from '~/inputs/common/NeoInput.svelte';
   import NeoImage from '~/media/NeoImage.svelte';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, computeButtonTemplate, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
   let {

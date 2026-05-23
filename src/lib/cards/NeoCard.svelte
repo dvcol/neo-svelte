@@ -1,12 +1,13 @@
 <script lang="ts">
   import type { NeoCardContext, NeoCardProps } from '~/cards/neo-card.model.js';
 
-  import { focusin } from '@dvcol/svelte-utils/focusin';
-  import { hovering } from '@dvcol/svelte-utils/hovering';
+  import { useFocusin } from '@dvcol/svelte-utils/focusin';
+  import { useHovering } from '@dvcol/svelte-utils/hovering';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
 
   import NeoCloseButton from '~/buttons/NeoCloseButton.svelte';
   import NeoDivider from '~/divider/NeoDivider.svelte';
-  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
@@ -206,22 +207,22 @@
   use:useFn={useProps}
   out:outFn={outProps}
   in:inFn={inProps}
-  use:focusin={{
+  {@attach useFocusin({
     get focusin() {
       return focused;
     },
     set focusin(value) {
       focused = value;
     },
-  }}
-  use:hovering={{
+  })}
+  {@attach useHovering({
     get hovered() {
       return hovered;
     },
     set hovered(value) {
       hovered = value;
     },
-  }}
+  })}
   {...rest}
 >
   {#if media}

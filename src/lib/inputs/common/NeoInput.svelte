@@ -4,15 +4,15 @@
 
   import { wait } from '@dvcol/common-utils/common/promise';
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
-  import { hovering } from '@dvcol/svelte-utils/hovering';
+  import { useFocusin } from '@dvcol/svelte-utils/focusin';
+  import { useHovering } from '@dvcol/svelte-utils/hovering';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
 
   import { NeoInputLabelPlacement } from '~/inputs/common/neo-input.model.js';
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoInputValidation from '~/inputs/common/NeoInputValidation.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
@@ -405,22 +405,22 @@
     style:--neo-input-border-radius={computeBorderRadius(rounded)}
     out:outFn={outProps}
     in:inFn={inProps}
-    use:focusing={{
+    {@attach useFocusin({
       get focusin() {
         return focusin;
       },
       set focusin(_value) {
         focusin = _value;
       },
-    }}
-    use:hovering={{
+    })}
+    {@attach useHovering({
       get hovered() {
         return hovered;
       },
       set hovered(_value) {
         hovered = _value;
       },
-    }}
+    })}
     {...containerRest}
   >
     {@render prefix()}

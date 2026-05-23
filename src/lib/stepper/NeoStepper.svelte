@@ -14,7 +14,7 @@
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { SwipeDirection } from '@dvcol/common-utils/common/touch';
-  import { swipe } from '@dvcol/svelte-utils/swipe';
+  import { useSwipe } from '@dvcol/svelte-utils/swipe';
   import { fly, scale } from 'svelte/transition';
 
   import NeoArrowButton from '~/buttons/NeoArrowButton.svelte';
@@ -24,7 +24,7 @@
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoProgressMark from '~/progress/NeoProgressMark.svelte';
   import { NeoStepperNavigation, NeoStepperPlacement } from '~/stepper/neo-stepper.model.js';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { Logger } from '~/utils/logger.utils.js';
   import { coerce, DefaultShadowShallowElevation, DefaultShallowMinMaxElevation } from '~/utils/shadow.utils.js';
   import { toPixel, toSize } from '~/utils/style.utils.js';
@@ -390,7 +390,7 @@
   style:--neo-stepper-mark-margin-start={markMargin?.start}
   style:--neo-stepper-mark-margin-end={markMargin?.end}
   {...rest}
-  use:swipe={swipeOptions}
+  {@attach useSwipe(swipeOptions)}
   bind:clientWidth
 >
   {@render before?.(context)}

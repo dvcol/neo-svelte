@@ -3,13 +3,13 @@
 
   import type { NeoButtonContext, NeoButtonProps } from '~/buttons/neo-button.model.js';
 
-  import { hovering } from '@dvcol/svelte-utils/hovering';
-  import { width } from '@dvcol/svelte-utils/transition';
+  import { useHovering } from '@dvcol/svelte-utils/hovering';
+  import { toTransition, toTransitionProps, width } from '@dvcol/svelte-utils/transition';
 
   import { NeoTextButton } from '~/buttons/neo-button.model.js';
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoImage from '~/media/NeoImage.svelte';
-  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {
@@ -263,14 +263,14 @@
   in:inFn={inProps}
   out:outFn={outProps}
   use:useFn={useProps}
-  use:hovering={{
+  {@attach useHovering({
     get hovered() {
       return hovered;
     },
     set hovered(_value) {
       hovered = _value;
     },
-  }}
+  })}
 >
   <div class="neo-content" class:neo-reverse={reverse}>
     {#if loading || icon}

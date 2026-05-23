@@ -7,10 +7,10 @@
     NeoVirtualRegister,
   } from '~/list/neo-virtual-list.model.js';
 
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { onDestroy, onMount, untrack } from 'svelte';
 
   import { defaultVirtualKey } from '~/list/neo-virtual-list.model.js';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
   let {
     // Snippets
@@ -50,7 +50,7 @@
   const { tag: beforeTag = 'div', ...beforeRest } = $derived(beforeProps ?? {});
   const { tag: afterTag = 'div', ...afterRest } = $derived(afterProps ?? {});
 
-  // ---------------------------------------------------------------- Sizing --
+  /* ------------------------------ Sizing --------------------------------- */
 
   const fixedHeight = $derived(typeof itemHeight === 'number' ? itemHeight : null);
   const heightFn = $derived(typeof itemHeight === 'function' ? itemHeight : null);
@@ -64,9 +64,11 @@
     return id ?? index;
   }
 
-  // Running average of measured heights. Refines as more rows measure.
-  // Falls back to `estimatedItemHeight` (read via $derived to stay reactive
-  // when the caller updates it).
+  /*
+   * Running average of measured heights. Refines as more rows measure.
+   * Falls back to `estimatedItemHeight` (read via $derived to stay reactive
+   * when the caller updates it).
+   */
   const initialEstimate = $derived(estimatedItemHeight);
   let measuredAvg = $state(0);
   function refreshAvg() {
@@ -83,8 +85,8 @@
     return measuredAvg || initialEstimate;
   }
 
-  // -------------------------------------------------------- Offsets (sums) --
-  // offsets[i] = sum of heights of items [0..i). offsets[items.length] = total.
+  /* --------------------------- Offsets (sums) ---------------------------- */
+  /* offsets[i] = sum of heights of items [0..i). offsets[items.length] = total. */
 
   let offsets = $state<Float64Array>(new Float64Array(1));
   let total = $state(0);
@@ -116,7 +118,7 @@
     total = acc;
   }
 
-  // ---------------------------------------------------------------- Cursor --
+  /* ------------------------------- Cursor -------------------------------- */
 
   const cursor = $state({ start: 0, end: 0 });
   let viewportHeight = $state(0);
@@ -161,12 +163,14 @@
     if (cursor.end !== end) cursor.end = end;
   }
 
-  // ------------------------------------------------------- Scroll handling --
+  /* --------------------------- Scroll handling --------------------------- */
 
-  // Cursor recompute runs synchronously on every scroll event so cursor.start/end
-  // and the derived padTop/padBottom stay in lock-step with the next paint.
-  // It is O(log n) (binary search) in dynamic mode and O(1) in fixed mode, so
-  // throttling via rAF would only re-introduce the off-by-one-frame white gap.
+  /*
+   * Cursor recompute runs synchronously on every scroll event so cursor.start/end
+   * and the derived padTop/padBottom stay in lock-step with the next paint.
+   * It is O(log n) (binary search) in dynamic mode and O(1) in fixed mode, so
+   * throttling via rAF would only re-introduce the off-by-one-frame white gap.
+   */
 
   const isTouch = typeof window !== 'undefined' && 'ontouchstart' in window;
   const scrollIdleMs = isTouch ? 300 : 150;
@@ -196,7 +200,7 @@
     onscroll?.(e as never);
   }
 
-  // ------------------------------------------- Measurement (shared RO) -----
+  /* ----------------------- Measurement (shared RO) ----------------------- */
 
   let measureFrame = 0;
   let measureDirty = false;
@@ -210,10 +214,12 @@
       refreshAvg();
       rebuildOffsets();
       recomputeCursor();
-      // Intentionally do NOT call ensureScrollInBounds() here: a measurement-
-      // driven rebuild during user scroll would re-clamp scrollTop and feed
-      // back into handleScroll → recomputeCursor → mount → register → rebuild.
-      // The master $effect handles items-driven clamping; the user owns scroll.
+    /*
+     * Intentionally do NOT call ensureScrollInBounds() here: a measurement-
+     * driven rebuild during user scroll would re-clamp scrollTop and feed
+     * back into handleScroll → recomputeCursor → mount → register → rebuild.
+     * The master $effect handles items-driven clamping; the user owns scroll.
+     */
     });
   }
 
@@ -263,9 +269,11 @@
       const el = node as HTMLElement;
       writeKey(el, id);
       if (!dynamicMode) return;
-      // Cache-warm only: seed the height when we have none yet. Genuine size
-      // changes after mount come through the ResizeObserver, so re-measuring
-      // on every scroll-driven re-mount would just fight handleScroll.
+      /*
+       * Cache-warm only: seed the height when we have none yet. Genuine size
+       * changes after mount come through the ResizeObserver, so re-measuring
+       * on every scroll-driven re-mount would just fight handleScroll.
+       */
       if (!heights.has(id)) {
         const h = el.offsetHeight;
         if (h) {
@@ -286,14 +294,16 @@
     if (ref.scrollTop > max) ref.scrollTo({ top: max, behavior: 'instant' });
   }
 
-  // ----------------------------------------------------------- Visible slice
+  /* ----------------------------- Visible slice ---------------------------- */
 
   const visible = $derived.by<NeoVirtualItem<T>[]>(() => {
     const out: NeoVirtualItem<T>[] = [];
-    // Clamp the cursor against the live `items.length` here — the master
-    // `$effect` that re-clamps cursor on items mutation runs *after* this
-    // derivation in the same tick, so `items[i]` would otherwise be `undefined`
-    // for indices past the new length and `key(undefined, i)` would crash.
+    /*
+     * Clamp the cursor against the live `items.length` here — the master
+     * `$effect` that re-clamps cursor on items mutation runs *after* this
+     * derivation in the same tick, so `items[i]` would otherwise be `undefined`
+     * for indices past the new length and `key(undefined, i)` would crash.
+     */
     const end = Math.min(cursor.end, items.length);
     for (let i = cursor.start; i < end; i++) {
       const item = items[i] as T;
@@ -305,12 +315,14 @@
   const padTop = $derived(offsets[Math.min(cursor.start, offsets.length - 1)] ?? 0);
   const padBottom = $derived(Math.max(0, total - (offsets[Math.min(cursor.end, offsets.length - 1)] ?? 0)));
 
-  // ------------------------------------------------- Reactive triggers ----
+  /* --------------------------- Reactive triggers ------------------------- */
 
-  // Rebuild offsets when items / sizing change. GC stale heights in dynamic mode.
-  // Note: estimatedItemHeight is intentionally NOT tracked here — rebuildOffsets
-  // reads it via effectiveEstimate() each call, so the rebuild path already
-  // reacts to estimate changes.
+  /*
+   * Rebuild offsets when items / sizing change. GC stale heights in dynamic mode.
+   * Note: estimatedItemHeight is intentionally NOT tracked here — rebuildOffsets
+   * reads it via effectiveEstimate() each call, so the rebuild path already
+   * reacts to estimate changes.
+   */
   $effect(() => {
     /* eslint-disable no-unused-expressions */
     items;
@@ -329,17 +341,19 @@
       }
       rebuildOffsets();
       recomputeCursor();
-      // Only clamp when items have actually shrunk past the current scrollTop.
-      // Calling ensureScrollInBounds() unconditionally on every items change
-      // dispatches a scroll event that re-enters handleScroll → recompute,
-      // which during a smooth scroll cascades into Svelte's effect-update loop.
+      /*
+       * Only clamp when items have actually shrunk past the current scrollTop.
+       * Calling ensureScrollInBounds() unconditionally on every items change
+       * dispatches a scroll event that re-enters handleScroll → recompute,
+       * which during a smooth scroll cascades into Svelte's effect-update loop.
+       */
       if (ref && ref.scrollTop > Math.max(0, total - viewportHeight)) {
         ensureScrollInBounds();
       }
     });
   });
 
-  // React to viewportHeight changes (resize) without going through scroll.
+  /* React to viewportHeight changes (resize) without going through scroll. */
   $effect(() => {
     // eslint-disable-next-line no-unused-expressions
     viewportHeight;
@@ -357,7 +371,7 @@
     if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
   });
 
-  // -------------------------------------------------- Public methods ------
+  /* ----------------------------- Public methods -------------------------- */
 
   /** Force a re-measure of currently rendered rows + offset rebuild. */
   export const refresh: NeoVirtualListMethods['refresh'] = () => {
@@ -383,9 +397,11 @@
 
   export const scrollToBottom: NeoVirtualListMethods['scrollToBottom'] = (options) => {
     if (!ref) return false;
-    // Use the actual scrollable max instead of `total` — `total` excludes the
-    // before/after slot heights, so targeting it would land short of the bottom
-    // and the next layout would emit further scroll events.
+    /*
+     * Use the actual scrollable max instead of `total` — `total` excludes the
+     * before/after slot heights, so targeting it would land short of the bottom
+     * and the next layout would emit further scroll events.
+     */
     const max = Math.max(0, ref.scrollHeight - ref.clientHeight);
     ref.scrollTo({ top: max, behavior: 'smooth', ...options });
     return ref;
@@ -403,7 +419,7 @@
     return ref;
   };
 
-  // ------------------------------------------------------------ Context ---
+  /* ------------------------------- Context ------------------------------- */
 
   const context = $derived<NeoVirtualContext<T>>({
     items,
@@ -415,7 +431,7 @@
     scrolling,
   });
 
-  // Mount transitions on the viewport itself (in/out of the whole list).
+  /* Mount transitions on the viewport itself (in/out of the whole list). */
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
   const outFn = $derived(toTransition(outAction ?? transitionAction));

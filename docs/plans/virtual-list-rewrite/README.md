@@ -38,7 +38,7 @@ These are inherent to the current approach. Rewrite from scratch.
   dynamic measurement. `estimatedItemHeight?: number` (default 40)
   is the initial estimate for unmeasured rows in dynamic mode.
 - **Buffer:** `buffer: number` rows above/below visible window,
-  default 3.
+  default 8.
 - **Layout:** padding-spacer top/bottom on a single content layer.
   Keeps CSS `position: sticky` working for non-virtual paths that
   use it (we explicitly _do not_ virtualize sticky-section lists).

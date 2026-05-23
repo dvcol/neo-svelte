@@ -7,8 +7,10 @@ import NeoVirtualListHarness from './NeoVirtualList.test.svelte';
 const ROW = 20;
 const VIEWPORT = 200;
 
-// jsdom-friendly fakes for offsetHeight, scrollTo, and ResizeObserver — the
-// component drives layout off these and jsdom doesn't perform layout.
+/*
+ * jsdom-friendly fakes for offsetHeight, scrollTo, and ResizeObserver.
+ * The component drives layout off these and jsdom doesn't perform layout.
+ */
 
 class FakeResizeObserver {
   static instances: FakeResizeObserver[] = [];
@@ -128,8 +130,10 @@ function setLayout(container: ParentNode, viewportHeight = VIEWPORT, rowHeight =
       return rowHeight;
     },
   });
-  // Re-fire all ResizeObserver entries — Svelte 5's bind:offsetHeight uses its
-  // own observer; we cannot target only ours, so fire everything.
+  /*
+   * Re-fire all ResizeObserver entries — Svelte 5's bind:offsetHeight uses its
+   * own observer; we cannot target only ours, so fire everything.
+   */
   for (const ro of FakeResizeObserver.instances) {
     for (const el of ro.els) ro.fire(el);
   }
@@ -184,8 +188,10 @@ describe('neoVirtualList — render', { tags: ['jsdom'] }, () => {
   });
 
   it('uses estimatedItemHeight for unmeasured rows in dynamic mode', async () => {
-    // Force rows to report 0 height so measurement is skipped and the
-    // estimate dictates how many rows fit the viewport.
+    /*
+     * Force rows to report 0 height so measurement is skipped and the
+     * estimate dictates how many rows fit the viewport.
+     */
     Object.defineProperty(HTMLLIElement.prototype, 'offsetHeight', {
       configurable: true,
       get() {
@@ -394,8 +400,10 @@ describe('neoVirtualList — imperative methods', { tags: ['jsdom'] }, () => {
   it('scrollToBottom scrolls to the actual scrollable max (scrollHeight - clientHeight)', async () => {
     const { container, methods } = withMethods(makeItems(50));
     const list = setLayout(container);
-    // Bottom target reads scrollHeight - clientHeight off the live element so
-    // it accounts for before/after slot heights, not just the offset prefix sum.
+    /*
+     * Bottom target reads scrollHeight - clientHeight off the live element so
+     * it accounts for before/after slot heights, not just the offset prefix sum.
+     */
     Object.defineProperty(list, 'scrollHeight', { configurable: true, value: 50 * ROW });
     const spy = vi.spyOn(list, 'scrollTo');
     await flush();

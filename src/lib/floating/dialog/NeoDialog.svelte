@@ -9,6 +9,7 @@
   import { closestClickableElement, getFocusableElement } from '@dvcol/common-utils/common/element';
   import { useMobileScrollLock } from '@dvcol/common-utils/common/mobile';
   import { getUUID } from '@dvcol/common-utils/common/string';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { fade as fadeFn, fly, scale as scaleFn } from 'svelte/transition';
 
   import { NeoHandlePlacement } from '~/floating/common/neo-handle.model.js';
@@ -23,7 +24,7 @@
   } from '~/floating/dialog/use-movable.svelte.js';
   import { getNeoPortalContext } from '~/floating/portal/neo-portal-context.svelte.js';
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
-  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { coerce, computeGlassFilter, computeShadowElevation, PositiveMinMaxElevation } from '~/utils/shadow.utils.js';

@@ -3,14 +3,14 @@
 
   import type { HTMLNeoBaseElement } from '~/utils/html-element.utils';
 
-  import { useWatchMedia } from '@dvcol/svelte-utils/media';
+  import { useMedia } from '@dvcol/svelte-utils/media';
 
   const { glass = true, row = false, children, ...rest }: { glass?: boolean; row?: boolean; children: Snippet } & HTMLNeoBaseElement = $props();
 
   let ref = $state<HTMLElement | null>(null);
 
-  const { matches } = useWatchMedia('(max-width: 1550px)');
-  const vertical = $derived.by(matches);
+  const media = useMedia('(max-width: 1550px)');
+  const vertical = $derived(media.current);
 
   const width = $derived.by(() => {
     if (!ref?.clientWidth) return '200%';

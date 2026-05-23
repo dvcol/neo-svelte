@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NeoTransitionContainerProps } from '~/containers/neo-transition-container.model.js';
 
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
 
   const {
     // Snippets

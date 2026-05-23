@@ -6,8 +6,9 @@
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
-  import { hovering } from '@dvcol/svelte-utils/hovering';
+  import { useFocusin } from '@dvcol/svelte-utils/focusin';
+  import { useHovering } from '@dvcol/svelte-utils/hovering';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { doubleBind } from '@dvcol/svelte-utils/watch';
 
   import NeoIconMinus from '~/icons/NeoIconMinus.svelte';
@@ -17,7 +18,7 @@
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
 
   type NeoInputInstance = ReturnType<typeof NeoInput>;
-  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { ArrowPrefix } from '~/utils/regex.utils.js';
   import { coerce, DefaultShadowElevation } from '~/utils/shadow.utils.js';
 
@@ -366,7 +367,7 @@
     use:useFn={useProps}
     out:outFn={outProps}
     in:inFn={inProps}
-    use:focusing={{
+    {@attach useFocusin({
       get focusin() {
         return focused;
       },
@@ -374,15 +375,15 @@
         focused = _value;
       },
       onChange: onFocusChange,
-    }}
-    use:hovering={{
+    })}
+    {@attach useHovering({
       get hovered() {
         return hovered;
       },
       set hovered(_value) {
         hovered = _value;
       },
-    }}
+    })}
     {...containerRest}
   >
     {#if before}

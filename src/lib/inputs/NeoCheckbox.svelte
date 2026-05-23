@@ -5,8 +5,8 @@
 
   import { toStyle } from '@dvcol/common-utils/common/class';
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
-  import { hovering } from '@dvcol/svelte-utils/hovering';
+  import { useFocusin } from '@dvcol/svelte-utils/focusin';
+  import { useHovering } from '@dvcol/svelte-utils/hovering';
   import { fade } from 'svelte/transition';
 
   import NeoCheckboxButton from '~/buttons/NeoCheckboxButton.svelte';
@@ -168,22 +168,22 @@
     style:min-height={height?.min}
     style:max-height={height?.max}
     style:--neo-checkbox-border-radius={computeBorderRadius(rounded)}
-    use:focusing={{
+    {@attach useFocusin({
       get focusin() {
         return focused;
       },
       set focusin(_value) {
         focused = _value;
       },
-    }}
-    use:hovering={{
+    })}
+    {@attach useHovering({
       get hovered() {
         return hovered;
       },
       set hovered(_value) {
         hovered = _value;
       },
-    }}
+    })}
     {...containerRest}
   >
     <NeoBaseInput

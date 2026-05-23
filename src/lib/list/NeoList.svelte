@@ -17,7 +17,8 @@
   import { isSafari } from '@dvcol/common-utils/common/browser';
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
-  import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze } from '@dvcol/svelte-utils/transition';
+  import { useIntersection } from '@dvcol/svelte-utils/intersection';
+  import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze, toAnimation, toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { watch } from '@dvcol/svelte-utils/watch';
   import { tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
@@ -29,7 +30,6 @@
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
   import NeoVirtualList from '~/list/NeoVirtualList.svelte';
-  import { toAnimation, toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { NeoErrorListSelectDisabled } from '~/utils/error.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
@@ -338,49 +338,21 @@
   // transitions are then skipped for rows outside the viewport — animating an
   // off-screen translate is invisible work anyway, and FLIP's per-row
   // getBoundingClientRect cost is what makes 1000-row mutations stutter.
-  const visibleRows: Set<Element> = new Set();
-  let io = $state<IntersectionObserver | null>(null);
-
-  $effect(() => {
-    if (!ref || virtualEnabled || typeof IntersectionObserver === 'undefined') {
-      io = null;
-      visibleRows.clear();
-      return;
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) visibleRows.add(entry.target);
-          else visibleRows.delete(entry.target);
-        }
-      },
-      // 50% rootMargin keeps a buffer above/below so a row scrolling toward the
-      // viewport is already marked visible by the time it animates in.
-      { root: ref, rootMargin: '50%' },
-    );
-    io = observer;
-    return () => {
-      observer.disconnect();
-      io = null;
-      visibleRows.clear();
-    };
+  // 50% rootMargin keeps a buffer above/below so a row scrolling toward the
+  // viewport is already marked visible by the time it animates in.
+  const intersection = useIntersection({
+    get root() {
+      return ref;
+    },
+    rootMargin: '50%',
   });
-
-  const observeRow = (node: Element) => {
-    if (!io) return;
-    io.observe(node);
-    return () => {
-      io?.unobserve(node);
-      visibleRows.delete(node);
-    };
-  };
 
   // Skip FLIP for rows outside the viewport. Falls back to `true` (skip) when
   // the IntersectionObserver hasn't run yet for a row — FLIP wouldn't be
   // visually meaningful for an unmeasured row anyway, and skipping avoids the
   // synchronous getBoundingClientRect cost on freshly-mounted rows during a
   // re-render storm.
-  const skipOffscreen = (node: Element) => !visibleRows.has(node);
+  const skipOffscreen = (node: Element) => !intersection.visible.has(node);
 
   // Transitions: in virtual mode, suppress per-row mount/unmount transitions while
   // the user is actively scrolling — the cursor advance would otherwise fire
@@ -481,7 +453,7 @@
         animate:animateFn={{ ...animateProps, skip: section ? true : skipOffscreen }}
         out:inFn={inProps}
         in:outFn={outProps}
-        {@attach observeRow}
+        {@attach virtualEnabled ? () => {} : intersection.observe}
       >
         {#if renderDivider(i, visible, flip && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />

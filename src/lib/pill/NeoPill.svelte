@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { NeoPillContext, NeoPillProps } from '~/pill/neo-pill.model.js';
 
-  import { width } from '@dvcol/svelte-utils/transition';
+  import { toTransition, toTransitionProps, width } from '@dvcol/svelte-utils/transition';
 
   import NeoAffix from '~/inputs/common/NeoAffix.svelte';
   import NeoImage from '~/media/NeoImage.svelte';
-  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import {

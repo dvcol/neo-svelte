@@ -122,14 +122,18 @@ describe('neoStepper — render', { tags: ['jsdom'] }, () => {
   });
 });
 
-// NOTE: navigation assertions stop at the onBeforeStep callback. Asserting on
-// rendered step content after navigation crashes the Svelte 5 runtime in jsdom
-// with `[TypeError: get_fn(...) is not a function]` — the outgoing step's
-// transition (NeoTransitionContainer + fly) is still resolving when its host
-// effect tears down on the next render, and a `$derived` belonging to the
-// destroyed effect gets read. Same root cause as the skipped multi-step test
-// in NeoDialogStepper.test.ts:84-93. Asserting onBeforeStep fires with the
-// expected reason still pins the navigation contract.
+/*
+ * NOTE: Navigation assertions stop at the onBeforeStep callback.
+ *
+ * Asserting on rendered step content after navigation crashes the Svelte 5
+ * runtime in jsdom with `[TypeError: get_fn(...) is not a function]` — the
+ * outgoing step's transition (NeoTransitionContainer + fly) is still resolving
+ * when its host effect tears down on the next render, and a `$derived` belonging
+ * to the destroyed effect gets read.
+ *
+ * Same root cause as the skipped multi-step test in NeoDialogStepper.test.ts:84-93.
+ * Asserting onBeforeStep fires with the expected reason still pins the navigation contract.
+ */
 describe('neoStepper — navigation', { tags: ['jsdom'] }, () => {
   it('clicking next fires onBeforeStep with reason="next"', async () => {
     const onBeforeStep = vi.fn();
@@ -147,9 +151,11 @@ describe('neoStepper — navigation', { tags: ['jsdom'] }, () => {
   it('clicking previous fires onBeforeStep with reason="previous"', async () => {
     const onBeforeStep = vi.fn();
     const user = userEvent.setup();
-    // loop=true keeps the previous button mounted at active=0; otherwise the
-    // active=1→0 transition removes the previous-button block mid-flight and
-    // triggers the same `get_fn` runtime crash.
+    /*
+     * loop=true keeps the previous button mounted at active=0; otherwise the
+     * active=1→0 transition removes the previous-button block mid-flight and
+     * triggers the same `get_fn` runtime crash.
+     */
     const { container } = render(NeoStepperHarness, {
       props: { steps: sampleSteps, active: 1, loop: true, onBeforeStep } as never,
     });
@@ -163,8 +169,10 @@ describe('neoStepper — navigation', { tags: ['jsdom'] }, () => {
   it('clicking cancel fires onBeforeStep with reason="cancel"', async () => {
     const onBeforeStep = vi.fn();
     const user = userEvent.setup();
-    // Single-step keeps cancel at index 0 → 0, avoiding the step-change render
-    // path that triggers the `get_fn` runtime crash.
+    /*
+     * Single-step keeps cancel at index 0 → 0, avoiding the step-change render
+     * path that triggers the `get_fn` runtime crash.
+     */
     const { container } = render(NeoStepperHarness, {
       props: { steps: [{ id: 's1', label: 'One' }], active: 0, onBeforeStep } as never,
     });

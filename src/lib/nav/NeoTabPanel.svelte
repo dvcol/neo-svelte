@@ -3,13 +3,12 @@
 
   import type { NeoTabPanelProps } from '~/nav/neo-tab-panel.model.js';
 
-  import { emptyTransition } from '@dvcol/svelte-utils/transition';
+  import { emptyTransition, toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { untrack } from 'svelte';
   import { fly } from 'svelte/transition';
 
   import { getTabsCardContext } from '~/nav/neo-tabs-card.model.js';
   import { getTabContext } from '~/nav/neo-tabs-context.svelte.js';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
 
   let {
     // Snippets

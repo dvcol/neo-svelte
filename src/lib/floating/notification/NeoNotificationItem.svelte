@@ -3,8 +3,8 @@
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { flyFrom } from '@dvcol/svelte-utils';
-  import { focusin } from '@dvcol/svelte-utils/focusin';
-  import { hovering } from '@dvcol/svelte-utils/hovering';
+  import { useFocusin } from '@dvcol/svelte-utils/focusin';
+  import { useHovering } from '@dvcol/svelte-utils/hovering';
   import { onDestroy, onMount } from 'svelte';
 
   import { NeoNotificationPlacements } from '~/floating/common/neo-placement.model.js';
@@ -328,7 +328,7 @@
   style:scale
   style:translate
   style:transform
-  use:focusin={{
+  {@attach useFocusin({
     get focusin() {
       return focused;
     },
@@ -336,8 +336,8 @@
       focused = _value;
     },
     onChange,
-  }}
-  use:hovering={{
+  })}
+  {@attach useHovering({
     get hovered() {
       return hovered;
     },
@@ -345,7 +345,7 @@
       hovered = _value;
     },
     onChange,
-  }}
+  })}
   in:flyFrom={inParams}
   out:flyFrom={outParams}
 >

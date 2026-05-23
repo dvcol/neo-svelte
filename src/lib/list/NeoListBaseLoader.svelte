@@ -2,12 +2,12 @@
   import type { NeoListBaseLoaderProps } from '~/list/neo-list-base-loader.model.js';
 
   import { clamp, randomInt } from '@dvcol/common-utils/common/math';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { circIn, circOut } from 'svelte/easing';
   import { fade } from 'svelte/transition';
 
   import NeoMedia from '~/media/NeoMedia.svelte';
   import NeoSkeletonText from '~/skeletons/NeoSkeletonText.svelte';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { quickScaleDelayProps, quickScaleProps } from '~/utils/transition.utils.js';
 
   const {

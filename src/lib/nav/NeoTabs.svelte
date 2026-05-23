@@ -3,14 +3,14 @@
   import type { NeoTabsProps, OnChange, TabId } from '~/nav/neo-tabs.model.js';
 
   import { toStyle } from '@dvcol/common-utils/common/class';
-  import { height, width } from '@dvcol/svelte-utils/transition';
+  import { height, toTransition, toTransitionProps, width } from '@dvcol/svelte-utils/transition';
   import { untrack } from 'svelte';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoIconAdd from '~/icons/NeoIconAdd.svelte';
   import { setTabContext } from '~/nav/neo-tabs-context.svelte.js';
-  import { toAction, toActionProps, toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toAction, toActionProps } from '~/utils/action.utils.js';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { coerce, computeShadowElevation, getDefaultElevation, getDefaultSlideElevation } from '~/utils/shadow.utils.js';
   import { shortFreezeTransition } from '~/utils/transition.utils.js';

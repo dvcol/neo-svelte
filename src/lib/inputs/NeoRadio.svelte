@@ -2,15 +2,15 @@
   import type { NeoRadioProps } from '~/inputs/neo-radio.model.js';
 
   import { getUUID } from '@dvcol/common-utils/common/string';
-  import { focusin as focusing } from '@dvcol/svelte-utils/focusin';
-  import { hovering } from '@dvcol/svelte-utils/hovering';
+  import { useFocusin } from '@dvcol/svelte-utils/focusin';
+  import { useHovering } from '@dvcol/svelte-utils/hovering';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { fade } from 'svelte/transition';
 
   import NeoRadioButton from '~/buttons/NeoRadioButton.svelte';
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoBaseInput from '~/inputs/common/NeoBaseInput.svelte';
   import NeoLabel from '~/inputs/common/NeoLabel.svelte';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
   import { coerce, DefaultShadowShallowElevation } from '~/utils/shadow.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickDurationProps } from '~/utils/transition.utils.js';
@@ -96,22 +96,22 @@
   style:max-height={height?.max}
   out:outFn={outProps}
   in:inFn={inProps}
-  use:focusing={{
+  {@attach useFocusin({
     get focusin() {
       return focused;
     },
     set focusin(_value) {
       focused = _value;
     },
-  }}
-  use:hovering={{
+  })}
+  {@attach useHovering({
     get hovered() {
       return hovered;
     },
     set hovered(_value) {
       hovered = _value;
     },
-  }}
+  })}
   {...containerRest}
 >
   <NeoBaseInput

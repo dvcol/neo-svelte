@@ -9,7 +9,7 @@
   import NeoIconVideo from '~/icons/NeoIconVideo.svelte';
   import { NeoSkeletonMediaType } from '~/skeletons/neo-skeleton-media.model.js';
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
-  import { toTransition, toTransitionProps } from '~/utils/action.utils.js';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
