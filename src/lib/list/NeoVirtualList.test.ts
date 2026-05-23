@@ -248,7 +248,7 @@ describe('neoVirtualList — slots', { tags: ['jsdom'] }, () => {
 });
 
 describe('neoVirtualList — scroll behavior', { tags: ['jsdom'] }, () => {
-  it('advances the cursor on scroll (rAF-coalesced)', async () => {
+  it('advances the cursor on scroll', async () => {
     const { container } = render(NeoVirtualListHarness, { props: { items: makeItems(200), itemHeight: ROW, buffer: 0 } as never });
     const list = setLayout(container);
     await flush();
@@ -391,14 +391,17 @@ describe('neoVirtualList — imperative methods', { tags: ['jsdom'] }, () => {
     expect(lastCall.top).toBe(0);
   });
 
-  it('scrollToBottom scrolls to total content height', async () => {
+  it('scrollToBottom scrolls to the actual scrollable max (scrollHeight - clientHeight)', async () => {
     const { container, methods } = withMethods(makeItems(50));
     const list = setLayout(container);
+    // Bottom target reads scrollHeight - clientHeight off the live element so
+    // it accounts for before/after slot heights, not just the offset prefix sum.
+    Object.defineProperty(list, 'scrollHeight', { configurable: true, value: 50 * ROW });
     const spy = vi.spyOn(list, 'scrollTo');
     await flush();
     methods.scrollToBottom();
     const lastCall = spy.mock.calls.at(-1)![0] as ScrollToOptions;
-    expect(lastCall.top).toBe(50 * ROW);
+    expect(lastCall.top).toBe(50 * ROW - VIEWPORT);
   });
 });
 

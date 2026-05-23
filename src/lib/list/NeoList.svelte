@@ -333,6 +333,55 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
+  // Viewport tracking for non-virtual mode: a single IntersectionObserver on the
+  // scroll container marks rows as visible / hidden. FLIP and mount/unmount
+  // transitions are then skipped for rows outside the viewport — animating an
+  // off-screen translate is invisible work anyway, and FLIP's per-row
+  // getBoundingClientRect cost is what makes 1000-row mutations stutter.
+  const visibleRows: Set<Element> = new Set();
+  let io = $state<IntersectionObserver | null>(null);
+
+  $effect(() => {
+    if (!ref || virtualEnabled || typeof IntersectionObserver === 'undefined') {
+      io = null;
+      visibleRows.clear();
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visibleRows.add(entry.target);
+          else visibleRows.delete(entry.target);
+        }
+      },
+      // 50% rootMargin keeps a buffer above/below so a row scrolling toward the
+      // viewport is already marked visible by the time it animates in.
+      { root: ref, rootMargin: '50%' },
+    );
+    io = observer;
+    return () => {
+      observer.disconnect();
+      io = null;
+      visibleRows.clear();
+    };
+  });
+
+  const observeRow = (node: Element) => {
+    if (!io) return;
+    io.observe(node);
+    return () => {
+      io?.unobserve(node);
+      visibleRows.delete(node);
+    };
+  };
+
+  // Skip FLIP for rows outside the viewport. Falls back to `true` (skip) when
+  // the IntersectionObserver hasn't run yet for a row — FLIP wouldn't be
+  // visually meaningful for an unmeasured row anyway, and skipping avoids the
+  // synchronous getBoundingClientRect cost on freshly-mounted rows during a
+  // re-render storm.
+  const skipOffscreen = (node: Element) => !visibleRows.has(node);
+
   // Transitions: in virtual mode, suppress per-row mount/unmount transitions while
   // the user is actively scrolling — the cursor advance would otherwise fire
   // transitions on every row that crosses the buffer boundary.
@@ -429,9 +478,10 @@
         class:neo-list-item-select={select}
         style:--neo-list-item-color={getColorVariable(item.color)}
         {...item.containerProps}
-        animate:animateFn={{ ...animateProps, skip: section }}
+        animate:animateFn={{ ...animateProps, skip: section ? true : skipOffscreen }}
         out:inFn={inProps}
         in:outFn={outProps}
+        {@attach observeRow}
       >
         {#if renderDivider(i, visible, flip && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
@@ -555,7 +605,6 @@
         shadow && 'neo-shadow',
         dim && 'neo-dim',
       ]}
-      in={{ use: scaleFreeze, props: quickScaleProps }}
       onscroll={rest?.onscroll}
       after={virtualLoader}
       {...virtualProps}
@@ -616,7 +665,6 @@
       transition-delay: 0s;
     }
 
-    :global(.neo-list-items),
     &-empty {
       position: relative;
       display: flex;
@@ -628,27 +676,36 @@
       border-radius: var(--neo-list-border-radius, var(--neo-border-radius));
     }
 
-    :global(.neo-list-items) {
-      overflow: auto;
-      padding-inline: var(--neo-list-padding, 0.375rem);
-      padding-block: var(--neo-list-padding, 0.375rem);
+    :global {
+      .neo-list-items {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-height: 100%;
+        margin: 0;
+        padding-inline: var(--neo-list-padding, 0.375rem);
+        padding-block: var(--neo-list-padding, 0.375rem);
+        overflow: auto;
+        border-radius: var(--neo-list-border-radius, var(--neo-border-radius));
 
-      &:global(.neo-scroll) {
-        padding-block: var(--neo-list-scroll-padding, 0.625rem);
+        &.neo-scroll {
+          padding-block: var(--neo-list-scroll-padding, 0.625rem);
 
-        &:global(.neo-shadow) {
-          @include mixin.fade-scroll(1rem);
+          &.neo-shadow {
+            @include mixin.fade-scroll(1rem);
+          }
+
+          @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
         }
 
-        @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
-      }
-
-      &:global(.neo-dim) {
-        &:hover > :global(.neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible))),
-        &:has(> :global(.neo-list-item :global(*:focus-visible))) > :global(.neo-list-item:not(:hover, .neo-checked, :has(:global(*:focus-visible)))) {
-          opacity: 0.6;
-          transition-timing-function: linear;
-          transition-duration: 0.6s;
+        &.neo-dim {
+          &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
+          &:has(.neo-list-item *:focus-visible) > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)) {
+            opacity: 0.6;
+            transition-timing-function: linear;
+            transition-duration: 0.6s;
+          }
         }
       }
     }

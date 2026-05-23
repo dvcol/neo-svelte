@@ -106,7 +106,7 @@ export interface NeoVirtualListProps<T, Tag extends keyof HTMLElementTagNameMap 
   estimatedItemHeight?: number;
   /**
    * Number of rows to render outside the visible window (above and below).
-   * @default 3
+   * @default 8
    */
   buffer?: number;
   /**

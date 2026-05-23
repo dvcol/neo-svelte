@@ -25,7 +25,7 @@
     key = defaultVirtualKey as never,
     itemHeight,
     estimatedItemHeight = 40,
-    buffer = 3,
+    buffer = 8,
     scrolling = $bindable(false),
 
     // Events
@@ -163,14 +163,10 @@
 
   // ------------------------------------------------------- Scroll handling --
 
-  let scrollFrame = 0;
-  function scheduleRecompute() {
-    if (scrollFrame) return;
-    scrollFrame = requestAnimationFrame(() => {
-      scrollFrame = 0;
-      recomputeCursor();
-    });
-  }
+  // Cursor recompute runs synchronously on every scroll event so cursor.start/end
+  // and the derived padTop/padBottom stay in lock-step with the next paint.
+  // It is O(log n) (binary search) in dynamic mode and O(1) in fixed mode, so
+  // throttling via rAF would only re-introduce the off-by-one-frame white gap.
 
   const isTouch = typeof window !== 'undefined' && 'ontouchstart' in window;
   const scrollIdleMs = isTouch ? 300 : 150;
@@ -195,7 +191,7 @@
 
   function handleScroll(e: Event) {
     markScrolling();
-    scheduleRecompute();
+    recomputeCursor();
     fireEdgeEvents(e);
     onscroll?.(e as never);
   }
@@ -214,7 +210,10 @@
       refreshAvg();
       rebuildOffsets();
       recomputeCursor();
-      ensureScrollInBounds();
+      // Intentionally do NOT call ensureScrollInBounds() here: a measurement-
+      // driven rebuild during user scroll would re-clamp scrollTop and feed
+      // back into handleScroll → recomputeCursor → mount → register → rebuild.
+      // The master $effect handles items-driven clamping; the user owns scroll.
     });
   }
 
@@ -264,10 +263,15 @@
       const el = node as HTMLElement;
       writeKey(el, id);
       if (!dynamicMode) return;
-      const h = el.offsetHeight;
-      if (h && heights.get(id) !== h) {
-        heights.set(id, h);
-        scheduleOffsetRebuild();
+      // Cache-warm only: seed the height when we have none yet. Genuine size
+      // changes after mount come through the ResizeObserver, so re-measuring
+      // on every scroll-driven re-mount would just fight handleScroll.
+      if (!heights.has(id)) {
+        const h = el.offsetHeight;
+        if (h) {
+          heights.set(id, h);
+          scheduleOffsetRebuild();
+        }
       }
       observer?.observe(el);
       return () => observer?.unobserve(el);
@@ -279,14 +283,19 @@
   function ensureScrollInBounds() {
     if (!ref) return;
     const max = Math.max(0, total - viewportHeight);
-    if (ref.scrollTop > max) ref.scrollTo({ top: max });
+    if (ref.scrollTop > max) ref.scrollTo({ top: max, behavior: 'instant' });
   }
 
   // ----------------------------------------------------------- Visible slice
 
   const visible = $derived.by<NeoVirtualItem<T>[]>(() => {
     const out: NeoVirtualItem<T>[] = [];
-    for (let i = cursor.start; i < cursor.end; i++) {
+    // Clamp the cursor against the live `items.length` here — the master
+    // `$effect` that re-clamps cursor on items mutation runs *after* this
+    // derivation in the same tick, so `items[i]` would otherwise be `undefined`
+    // for indices past the new length and `key(undefined, i)` would crash.
+    const end = Math.min(cursor.end, items.length);
+    for (let i = cursor.start; i < end; i++) {
       const item = items[i] as T;
       out.push({ id: resolveId(item, i), index: i, item });
     }
@@ -299,12 +308,14 @@
   // ------------------------------------------------- Reactive triggers ----
 
   // Rebuild offsets when items / sizing change. GC stale heights in dynamic mode.
+  // Note: estimatedItemHeight is intentionally NOT tracked here — rebuildOffsets
+  // reads it via effectiveEstimate() each call, so the rebuild path already
+  // reacts to estimate changes.
   $effect(() => {
     /* eslint-disable no-unused-expressions */
     items;
     fixedHeight;
     heightFn;
-    estimatedItemHeight;
     /* eslint-enable no-unused-expressions */
     untrack(() => {
       if (heights.size || registerCache.size) {
@@ -318,7 +329,13 @@
       }
       rebuildOffsets();
       recomputeCursor();
-      ensureScrollInBounds();
+      // Only clamp when items have actually shrunk past the current scrollTop.
+      // Calling ensureScrollInBounds() unconditionally on every items change
+      // dispatches a scroll event that re-enters handleScroll → recompute,
+      // which during a smooth scroll cascades into Svelte's effect-update loop.
+      if (ref && ref.scrollTop > Math.max(0, total - viewportHeight)) {
+        ensureScrollInBounds();
+      }
     });
   });
 
@@ -336,7 +353,6 @@
 
   onDestroy(() => {
     observer?.disconnect();
-    if (scrollFrame) cancelAnimationFrame(scrollFrame);
     if (measureFrame) cancelAnimationFrame(measureFrame);
     if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
   });
@@ -367,7 +383,11 @@
 
   export const scrollToBottom: NeoVirtualListMethods['scrollToBottom'] = (options) => {
     if (!ref) return false;
-    ref.scrollTo({ top: total, behavior: 'smooth', ...options });
+    // Use the actual scrollable max instead of `total` — `total` excludes the
+    // before/after slot heights, so targeting it would land short of the bottom
+    // and the next layout would emit further scroll events.
+    const max = Math.max(0, ref.scrollHeight - ref.clientHeight);
+    ref.scrollTo({ top: max, behavior: 'smooth', ...options });
     return ref;
   };
 
