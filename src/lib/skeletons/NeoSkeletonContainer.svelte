@@ -58,14 +58,10 @@
     ),
   );
 
+  const resize = useResize();
   $effect.pre(() => {
     if (!ref || loading) return;
-    updateSize();
-  });
-
-  const resize = useResize();
-  $effect(() => {
-    if (!resize.current) return;
+    resize.current;
     updateSize();
   });
 </script>
