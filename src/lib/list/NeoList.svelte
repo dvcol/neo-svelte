@@ -89,8 +89,8 @@
     height: _height,
 
     // Animation
-    in: inAction = { use: scale, props: quickScaleProps },
-    out: outAction = { use: fade, props: { ...quickScaleProps, delay: quickScaleProps?.duration } },
+    in: inAction = { use: fade, props: { ...quickScaleProps, delay: quickScaleProps?.duration } },
+    out: outAction = { use: scale, props: quickScaleProps },
     animate = { use: flipToggle, props: quickCircOutProps },
 
     // Events
@@ -592,8 +592,8 @@
         style:--neo-list-item-color={getColorVariable(item.color)}
         {...item.containerProps}
         animate:animateFn={{ ...animateProps, skip: section ? true : skipOffscreen }}
-        out:inFn={inProps}
-        in:outFn={outProps}
+        in:inFn={inProps}
+        out:outFn={outProps}
         {@attach virtual ? () => {} : intersection.observe}
       >
         {#if renderDivider(i, visible, flipActive && !isSafari() ? 'bottom' : 'top')}
