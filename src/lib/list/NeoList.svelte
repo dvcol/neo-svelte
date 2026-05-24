@@ -151,6 +151,21 @@
     return [];
   });
 
+  /*
+   * `divider` adds a NeoDivider above/below rows, varying their height.
+   * Numeric `itemHeight` then under/over-estimates each row, breaking
+   * cursor math. Auto-fall to dynamic measurement and warn once.
+   */
+  const effectiveItemHeight = $derived.by(() => {
+    if (virtual && divider && typeof itemHeight === 'number') {
+      const message = 'NeoList: numeric `itemHeight` is ignored when `virtual` and `divider` are both set — falling back to dynamic measurement (dividers vary row height).';
+      Logger.warn(message);
+      if (import.meta.env.DEV) console.warn(new Error(message));
+      return undefined;
+    }
+    return itemHeight;
+  });
+
   function isMultiple(list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined {
     return multiple && (Array.isArray(list) || list === undefined);
   }
@@ -357,6 +372,17 @@
     return showDivider(array[index].item.divider, 'bottom') && !showDivider(array[index + 1]?.item.divider, 'top');
   };
 
+  /*
+   * Virtual rows iterate over `visibleItems` (flat items, no `.item` wrapper)
+   * — adapter mirrors `renderDivider` semantics so divider decisions match
+   * the non-virtual flat path even across the cursor window boundary.
+   */
+  const renderFlatDivider = (index: number, array: NeoListItem[], position: 'top' | 'bottom') => {
+    if (position === 'top') return index && (showDivider(array[index]?.divider, 'top') ?? showDivider(divider, 'top'));
+    if (index >= array.length - 1) return false;
+    return showDivider(array[index].divider, 'bottom') && !showDivider(array[index + 1]?.divider, 'top');
+  };
+
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
@@ -551,6 +577,9 @@
     {...item.containerProps}
     {@attach register}
   >
+    {#if renderFlatDivider(v.index, visibleItems, 'top')}
+      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
+    {/if}
     {#if customItem && !item.render}
       {@render customItem({ item, index: originalIndex, checked, context })}
     {:else}
@@ -570,6 +599,9 @@
         {...itemProps}
         onclick={select ? () => toggleItem({ index: originalIndex, item, sectionIndex: undefined, section: undefined }, checked) : undefined}
       />
+    {/if}
+    {#if renderFlatDivider(v.index, visibleItems, 'bottom')}
+      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
     {/if}
   </svelte:element>
 {/snippet}
@@ -604,7 +636,7 @@
       role={select ? 'listbox' : 'list'}
       items={visibleItems}
       key={virtualKey}
-      {itemHeight}
+      itemHeight={effectiveItemHeight}
       {estimatedItemHeight}
       {buffer}
       {scrollTolerance}

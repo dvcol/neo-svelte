@@ -561,23 +561,14 @@ describe('neoList — keyboard ArrowUp/Down', { tags: ['jsdom'] }, () => {
 });
 
 /*
- * Phase 1.5: dividers in virtual mode.
+ * Phase 1.5 / 3.4: dividers in virtual mode.
  *
- * Today: virtualRow snippet (NeoList.svelte:496-536) does not call
- * `renderDivider` so no NeoDivider is mounted between virtual rows.
- * Phase 3.4 hooks dividers in and (when itemHeight is numeric) auto-falls
- * to dynamic measurement plus a warning.
+ * Virtual rows render NeoDivider above/below using the same showDivider
+ * semantics as the non-virtual flat path. Combining `divider` with a numeric
+ * `itemHeight` auto-falls to dynamic measurement and warns once.
  */
 describe('neoList — dividers in virtual', { tags: ['jsdom'] }, () => {
-  it('virtual (today): no NeoDivider rendered between rows even when divider=true', async () => {
-    const { container } = render(NeoList, {
-      props: { items: bigItems, virtual: true, divider: true, itemHeight: 30 } as never,
-    });
-    await flushVirtual();
-    expect(container.querySelector('.neo-list-item-divider')).toBeNull();
-  });
-
-  it.skip('virtual rows render NeoDivider when divider=true — TODO Phase 3.4 (NeoList.svelte:496-536 has no renderDivider)', async () => {
+  it('virtual rows render NeoDivider when divider=true', async () => {
     const { container } = render(NeoList, {
       props: { items: bigItems, virtual: true, divider: true } as never,
     });
@@ -585,14 +576,10 @@ describe('neoList — dividers in virtual', { tags: ['jsdom'] }, () => {
     expect(container.querySelectorAll('.neo-list-item-divider').length).toBeGreaterThan(0);
   });
 
-  it.skip('virtual + numeric itemHeight + divider auto-falls to dynamic measurement and warns — TODO Phase 3.4 (NeoList.svelte effectiveItemHeight)', async () => {
+  it('virtual + numeric itemHeight + divider auto-falls to dynamic measurement and warns', async () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     render(NeoList, { props: { items: bigItems, virtual: true, divider: true, itemHeight: 30 } as never });
     await flushVirtual();
-    /*
-     * Post-rework: passing both divider and a numeric itemHeight overrides
-     * the height to undefined (dynamic) and warns once.
-     */
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('divider'));
     warnSpy.mockRestore();
   });
