@@ -155,7 +155,11 @@
     return multiple && (Array.isArray(list) || list === undefined);
   }
 
-  const isNullable = $derived(multiple ? nullable || (isMultiple(selected) && (selected?.length ?? 0) > 1) : nullable);
+  const isNullable = $derived.by(() => {
+    if (!multiple) return nullable;
+    if (nullable) return true;
+    return isMultiple(selected) && (selected?.length ?? 0) > 1;
+  });
 
   const onScrollEvent = (e?: SvelteEvent) => {
     if (!ref) return;
