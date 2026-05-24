@@ -98,11 +98,7 @@ describe('neoDrawer — escape & outside click (modal forced on)', { tags: ['bro
     expect(oncancel).toHaveBeenCalled();
   });
 
-  // TODO: NeoDialog.svelte:152-155 (`onWindowKeydown`) closes the non-native
-  // dialog on Escape regardless of `closedby`. Drawer always wraps NeoDialog
-  // with tag !== 'dialog', so it inherits the bug — Escape must be a no-op
-  // when closedby="none". Pinning expected behavior; unskip after fix.
-  it.skip('escape is ignored when closedby="none"', async () => {
+  it('escape is ignored when closedby="none"', async () => {
     const user = userEvent.setup();
     const oncancel = vi.fn();
     await renderOpen({ placement: 'right', closedby: 'none', oncancel });

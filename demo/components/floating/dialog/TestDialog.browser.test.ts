@@ -104,12 +104,7 @@ describe('neoDialog — close interactions (real pointer / keyboard)', { tags: [
     expect(oncancel).toHaveBeenCalled();
   });
 
-  // TODO: NeoDialog.svelte:152-155 (`onWindowKeydown`) closes the non-native
-  // dialog on Escape regardless of `closedby`. Native <dialog> respects
-  // closedby="none" via the platform implementation, but the custom path used
-  // when tag !== 'dialog' should mirror that contract — Escape must be a no-op.
-  // Pinning expected behavior; unskip after fix.
-  it.skip('escape does not close when closedby="none" (non-native, modal)', async () => {
+  it('escape does not close when closedby="none" (non-native, modal)', async () => {
     const user = userEvent.setup();
     const oncancel = vi.fn();
     await renderOpen({ ...NON_NATIVE_MODAL, closedby: 'none', oncancel });

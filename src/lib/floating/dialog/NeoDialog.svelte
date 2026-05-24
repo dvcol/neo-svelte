@@ -157,6 +157,7 @@
 
   const onWindowKeydown = async (e: SvelteEvent<KeyboardEvent>) => {
     if (isNative || e.key !== 'Escape') return;
+    if (closedby === 'none') return;
     onCancel(e);
   };
 
