@@ -25,14 +25,6 @@
     onSelect: (i, e) => console.info('Select', shallowClone(i), e),
   });
 
-  const open = $state({
-    menu: false,
-    menuRich: false,
-    menuPanel: false,
-    externalMenu: false,
-    externalMenuPanel: false,
-  });
-
   const items = [
     { value: 'Line 1' },
     {
@@ -160,8 +152,8 @@
     <div class="column">
       <span class="label">Menu</span>
 
-      <NeoMenu bind:open={open.menu} {...options} {items}>
-        <NeoButton elevation="0" toggle bind:checked={open.menu}>Open</NeoButton>
+      <NeoMenu {...options} {items}>
+        <NeoButton elevation="0" toggle>Open</NeoButton>
       </NeoMenu>
     </div>
 
@@ -182,8 +174,8 @@
     <div class="column">
       <span class="label">Rich Menu</span>
 
-      <NeoMenu bind:open={open.menuRich} {...options} items={itemsRich} itemProps={{ offset: options.rounded ? 18 : 10 }}>
-        <NeoButton elevation="0" toggle bind:checked={open.menuRich}>Open</NeoButton>
+      <NeoMenu {...options} items={itemsRich} itemProps={{ offset: options.rounded ? 18 : 10 }}>
+        <NeoButton elevation="0" toggle>Open</NeoButton>
       </NeoMenu>
     </div>
 

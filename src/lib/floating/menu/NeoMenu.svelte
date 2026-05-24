@@ -25,7 +25,7 @@
     target,
     portal = true,
     padding = '0',
-    openOnHover = true,
+    openOnHover = false,
     openOnFocus = false,
     openOnClick = true,
     unmountOnClose = false,
@@ -128,7 +128,7 @@
     {dividerProps}
     {keepOpenOnSelect}
     rounded={rounded === true ? 'xl' : rounded}
-    tooltipProps={{ role, portal, padding, openOnHover, openOnFocus, openOnClick, unmountOnClose, ...rest }}
+    tooltipProps={{ placement: 'right-start', role, portal, padding, openOnHover, openOnFocus, openOnClick, unmountOnClose, ...rest }}
     {...menuProps}
     {onMenu}
     {onSelect}
