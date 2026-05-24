@@ -454,25 +454,33 @@
   const outProps = $derived(toTransitionProps(outAction));
 
   /**
-   * Per-row gates for virtual mode. Captured by closure so each virtualRow
-   * sees its own `key` without leaking through the DOM.
+   * Per-row gate functions for virtual mode. Live at component scope (not
+   * snippet scope) so neither the `in:` nor `out:` directive ever reads a
+   * `$derived` whose owning effect has been torn down — the row key flows
+   * through as the directive param (`={v.id}`), and the gate consults
+   * `prevKeys` / `currentKeys` (plain `Set`s) plus the component-level
+   * `inFn` / `inProps` / `outFn` / `outProps` deriveds (alive while the
+   * list is mounted).
+   *
+   * Earlier iterations wrapped these in `@const rowIn = virtualIn(v.id)`
+   * inside the snippet — but `@const` is implemented as a `$derived` whose
+   * owning effect IS the snippet's effect. When a row scrolls out of the
+   * cursor window, that effect tears down and the `out:` directive's
+   * subsequent read of the const triggers Svelte's `derived_inert`
+   * warning, which floods the console during scroll.
    *
    * Intro plays only for keys absent from `prevKeys` (the snapshot taken
    * *before* the mutation that mounted this row). Outro plays only for
    * keys absent from `currentKeys` (the snapshot taken after).
    */
-  function virtualIn(key: string | number): typeof inFn {
-    return (node, params, options) => {
-      if (prevKeys.has(key)) return { duration: 0 };
-      return inFn(node, params, options);
-    };
-  }
-  function virtualOut(key: string | number): typeof outFn {
-    return (node, params, options) => {
-      if (currentKeys.has(key)) return { duration: 0 };
-      return outFn(node, params, options);
-    };
-  }
+  const rowIn = (node: Element, key: string | number, options: { direction: 'in' | 'out' }): ReturnType<typeof inFn> => {
+    if (prevKeys.has(key)) return { duration: 0 };
+    return inFn(node, inProps ?? {}, options);
+  };
+  const rowOut = (node: Element, key: string | number, options: { direction: 'in' | 'out' }): ReturnType<typeof outFn> => {
+    if (currentKeys.has(key)) return { duration: 0 };
+    return outFn(node, outProps ?? {}, options);
+  };
 
   /* ------------------- Filtered/sorted slice (flat items) ---------------- */
   /*
@@ -640,8 +648,6 @@
   {@const sectionIndex = item.sectionIndex}
   {@const section = item.section}
   {@const checked = isChecked({ index: originalIndex, item, sectionIndex, section })}
-  {@const rowIn = virtualIn(v.id)}
-  {@const rowOut = virtualOut(v.id)}
   <svelte:element
     this={item.tag ?? 'li'}
     role={select ? 'option' : 'listitem'}
@@ -655,8 +661,8 @@
     class:neo-list-item-select={select}
     style:--neo-list-item-color={getColorVariable(item.color)}
     {...item.containerProps}
-    in:rowIn={inProps}
-    out:rowOut={outProps}
+    in:rowIn={v.id}
+    out:rowOut={v.id}
     {@attach register}
   >
     {#if renderFlatDivider(v.index, visibleItems, 'top')}

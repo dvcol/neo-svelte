@@ -3,6 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { flattenSectionsWithCascade } from './neo-list.model.js';
 import NeoList from './NeoList.svelte';
 import NeoListHarness from './NeoList.test.svelte';
 
@@ -602,6 +603,74 @@ describe('neoList — dividers in virtual', { tags: ['jsdom'] }, () => {
     await flushVirtual();
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('divider'));
     warnSpy.mockRestore();
+  });
+});
+
+describe('flattenSectionsWithCascade — divider propagation', { tags: ['jsdom'] }, () => {
+  it('stamps a top-only divider on the first child of every section after the first', () => {
+    const flat = flattenSectionsWithCascade([
+      { id: 's1', label: 'Group 1', divider: true, items: [
+        { id: 'a', label: 'a' },
+        { id: 'b', label: 'b' },
+      ] },
+      { id: 's2', label: 'Group 2', divider: true, items: [
+        { id: 'c', label: 'c' },
+        { id: 'd', label: 'd' },
+      ] },
+      { id: 's3', label: 'Group 3', divider: true, items: [
+        { id: 'e', label: 'e' },
+      ] },
+    ] as never);
+    expect(flat.map(i => i.divider)).toEqual([
+      undefined,
+      undefined, // first section is never decorated
+      { top: true },
+      undefined, // section 2 → top-only above first child
+      { top: true }, // section 3 → top-only above only child
+    ]);
+  });
+
+  it('does not propagate when the section has no divider', () => {
+    const flat = flattenSectionsWithCascade([
+      { id: 's1', label: 'Group 1', items: [{ id: 'a', label: 'a' }] },
+      { id: 's2', label: 'Group 2', items: [
+        { id: 'b', label: 'b' },
+        { id: 'c', label: 'c' },
+      ] },
+    ] as never);
+    expect(flat.every(i => i.divider === undefined)).toBe(true);
+  });
+
+  it('honors NeoListDividerOption (e.g. only-bottom suppresses top inheritance)', () => {
+    const flat = flattenSectionsWithCascade([
+      { id: 's1', label: 'Group 1', items: [{ id: 'a', label: 'a' }] },
+      { id: 's2', label: 'Group 2', divider: { bottom: true } as never, items: [
+        { id: 'b', label: 'b' },
+      ] },
+    ] as never);
+    // Section divider is `{ bottom: true }` → no top → first child gets nothing.
+    expect(flat[1].divider).toBeUndefined();
+  });
+
+  it('child divider wins over section divider', () => {
+    const flat = flattenSectionsWithCascade([
+      { id: 's1', label: 'Group 1', items: [{ id: 'a', label: 'a' }] },
+      { id: 's2', label: 'Group 2', divider: true, items: [
+        { id: 'b', label: 'b', divider: { bottom: true } as never },
+        { id: 'c', label: 'c' },
+      ] },
+    ] as never);
+    expect(flat[1].divider).toEqual({ bottom: true });
+    expect(flat[2].divider).toBeUndefined();
+  });
+
+  it('passes flat items through unchanged', () => {
+    const input = [
+      { id: 'a', label: 'a' },
+      { id: 'b', label: 'b', divider: true },
+    ];
+    const flat = flattenSectionsWithCascade(input as never);
+    expect(flat.map(i => i.divider)).toEqual([undefined, true]);
   });
 });
 

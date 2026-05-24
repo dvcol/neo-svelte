@@ -231,14 +231,24 @@ export interface NeoListVirtualItem<Value = unknown, Tag extends keyof HTMLEleme
  * the warning emitted when virtual + sections collide calls them out explicitly.
  * `sectionIndex` and `section` are stamped on each flattened child so virtual
  * selection events still carry section provenance.
+ *
+ * The section's `divider` prop is propagated onto the first flattened child
+ * of every section after the first, normalized to `{ top: true }` so only a
+ * top separator is drawn (a raw `divider: true` would also trigger the
+ * bottom check in `renderFlatDivider` and put a divider below the first
+ * item of the section). The first section is skipped to match the
+ * non-virtual path, which never renders a divider above its own first
+ * element. Children that already declare their own `divider` win.
  */
 export function flattenSectionsWithCascade<Value = unknown>(items: NeoListItemOrSection<Value>[] = []): NeoListVirtualItem<Value>[] {
   return items.flatMap<NeoListVirtualItem<Value>>((entry, sectionIndex) => {
     if (!isSection(entry)) return [entry];
-    return entry.items.map(child => ({
+    const inheritTop = sectionIndex > 0 && showDivider(entry.divider, 'top');
+    return entry.items.map((child, i) => ({
       ...child,
       disabled: child.disabled || entry.disabled,
       readonly: child.readonly || entry.readonly,
+      divider: child.divider ?? (i === 0 && inheritTop ? { top: true } : undefined),
       sectionIndex,
       section: entry,
     }));
