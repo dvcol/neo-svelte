@@ -2,14 +2,18 @@ import type { Snippet } from 'svelte';
 
 import type { NeoTooltipPlacement } from '~/floating/common/neo-placement.model.js';
 import type {
+  AutoPlacementOptions,
   ClickOptions,
   DismissOptions,
+  FlipOptions,
   FocusOptions,
   HoverOptions,
   offset,
   Popover,
   PopoverOptions,
   RoleOptions,
+  ShiftOptions,
+  SizeOptions,
 } from '~/floating/common/popover/index.js';
 import type { NeoPortalProps } from '~/floating/portal/neo-portal.model.js';
 import type { HTMLActionProps } from '~/utils/action.utils.js';
@@ -116,6 +120,33 @@ export type NeoTooltipProps = {
    * @default false
    */
   portal?: boolean;
+  /**
+   * Options forwarded to the floating-ui `flip()` middleware.
+   *
+   * Spread on top of NeoTooltip's defaults (`{ fallbackAxisSideDirection: 'end' }`),
+   * so user values win. Only used when `placement !== 'auto'`.
+   */
+  flipOptions?: FlipOptions;
+  /**
+   * Options forwarded to the floating-ui `shift()` middleware.
+   *
+   * Spread on top of NeoTooltip's defaults (`{ padding: 8 }`), so user values win.
+   */
+  shiftOptions?: ShiftOptions;
+  /**
+   * Options forwarded to the floating-ui `size()` middleware.
+   *
+   * The `apply` callback runs *after* NeoTooltip's internal `availableWidth` /
+   * `availableHeight` capture, so consumers can compose additional sizing logic
+   * without losing the built-in behavior.
+   */
+  sizeOptions?: SizeOptions;
+  /**
+   * Options forwarded to the floating-ui `autoPlacement()` middleware.
+   *
+   * Only used when `placement === 'auto'`.
+   */
+  autoPlacementOptions?: AutoPlacementOptions;
 
   // Styles
 

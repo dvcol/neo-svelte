@@ -24,3 +24,4 @@ export { hover } from './interactions/hover.svelte.js';
 export { role } from './interactions/role.svelte.js';
 
 export { autoPlacement, autoUpdate, computePosition, flip, offset, shift, size } from '@floating-ui/dom';
+export type { AutoPlacementOptions, FlipOptions, ShiftOptions, SizeOptions } from '@floating-ui/dom';

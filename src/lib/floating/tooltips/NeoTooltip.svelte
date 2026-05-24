@@ -46,6 +46,10 @@
     target,
     options,
     portal,
+    flipOptions,
+    shiftOptions,
+    sizeOptions,
+    autoPlacementOptions,
 
     // Styles
     color,
@@ -142,15 +146,17 @@
       const middleware = [
         offset((isOffsetFunction(spacing) ? spacing(position ?? placement) : spacing) ?? 6),
         size({
-          apply({ availableWidth, availableHeight }) {
-            available.width = availableWidth - 8;
-            available.height = availableHeight - 8;
+          ...sizeOptions,
+          apply(args) {
+            available.width = args.availableWidth - 8;
+            available.height = args.availableHeight - 8;
+            sizeOptions?.apply?.(args);
           },
         }),
       ];
-      if (placement === 'auto') middleware.push(autoPlacement());
-      else middleware.push(flip({ fallbackAxisSideDirection: 'end' }));
-      middleware.push(shift({ padding: 8 }));
+      if (placement === 'auto') middleware.push(autoPlacement(autoPlacementOptions));
+      else middleware.push(flip({ fallbackAxisSideDirection: 'end', ...flipOptions }));
+      middleware.push(shift({ padding: 8, ...shiftOptions }));
       return middleware;
     },
     get placement() {
