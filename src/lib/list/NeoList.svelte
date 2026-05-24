@@ -115,11 +115,13 @@
   const empty = $derived(!items?.length);
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
-  // ------------------------------------------------------ Virtual gating ----
-  // Resolved state surface — virtual is authoritative. `flip` and `sections`
-  // become warnings, not silent fallbacks. Downstream code reads these
-  // resolved values, never the raw props, so the rest of the component is
-  // ignorant of the precedence rule.
+  /* --------------------------- Virtual gating ---------------------------- */
+  /*
+   * Resolved state surface — virtual is authoritative. `flip` and `sections`
+   * become warnings, not silent fallbacks. Downstream code reads these
+   * resolved values, never the raw props, so the rest of the component is
+   * ignorant of the precedence rule.
+   */
 
   const sections = $derived(hasSections(items));
   const flipActive = $derived(flip && !virtual);
@@ -130,27 +132,23 @@
     return [];
   });
 
-  let flipWarned = false;
+  /*
+   * Each warning fires on the truthy edge of its derived collision predicate.
+   * `$effect` already only re-runs when tracked deps change, so a manual
+   * fire-once flag is redundant. Toggling `virtual` off → on with the
+   * collision still present re-arms the warning.
+   */
+  const flipCollision = $derived(virtual && flip);
   $effect(() => {
-    if (!virtual) {
-      flipWarned = false;
-      return;
-    }
-    if (!flip || flipWarned) return;
-    flipWarned = true;
+    if (!flipCollision) return;
     const message = 'NeoList: `flip` is fully disabled when `virtual` is enabled (column-reverse layout, edge events, scroll direction, and keyboard direction are all reverted to non-flipped).';
     Logger.warn(message);
     if (import.meta.env.DEV) console.warn(new Error(message));
   });
 
-  let sectionsWarned = false;
+  const sectionsCollision = $derived(virtual && sections);
   $effect(() => {
-    if (!virtual) {
-      sectionsWarned = false;
-      return;
-    }
-    if (!sections || sectionsWarned) return;
-    sectionsWarned = true;
+    if (!sectionsCollision) return;
     const message = 'NeoList: section headers are dropped and items flattened when `virtual` is enabled (`disabled`/`readonly` cascade to children; `sticky`/`render`/`empty`/`sectionProps` are lost).';
     Logger.warn(message);
     if (import.meta.env.DEV) console.warn(new Error(message));
@@ -173,9 +171,11 @@
     }
   };
 
-  // -------------------------------------------------- Imperative methods ----
-  // In virtual mode, scroll methods delegate to NeoVirtualList (bound below).
-  // Otherwise they operate directly on the local DOM ref.
+  /* ------------------------- Imperative methods -------------------------- */
+  /*
+   * In virtual mode, scroll methods delegate to NeoVirtualList (bound below).
+   * Otherwise they operate directly on the local DOM ref.
+   */
 
   let virtualList = $state<NeoVirtualListMethods | undefined>();
 
@@ -397,10 +397,13 @@
   });
   const outProps = $derived(toTransitionProps(outAction));
 
-  // ----------------------------- Filtered/sorted slice (flat items) --------
-  // Shared by both virtual and non-virtual flat paths so filter/sort behavior
-  // is identical across modes. Sectioned non-virtual keeps its inline
-  // pipeline at the `list` snippet — sections need per-section visibility.
+  /* ------------------- Filtered/sorted slice (flat items) ---------------- */
+  /*
+   * Shared by both virtual and non-virtual flat paths so filter/sort
+   * behavior is identical across modes. Sectioned non-virtual keeps its
+   * inline pipeline at the `list` snippet — sections need per-section
+   * visibility.
+   */
 
   const visibleItems = $derived.by<NeoListItem[]>(() => {
     if (sectionsActive) return [];
