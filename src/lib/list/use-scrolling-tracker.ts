@@ -13,12 +13,13 @@ import { onDestroy } from 'svelte';
  * Must be called during component initialization — `onDestroy` is wired
  * internally so callers don't need to remember to clean up.
  */
+/**
+ * Setter called with `true` on the first `mark()`, then with `false` once
+ * the idle window elapses without further marks.
+ */
+export type NeoScrollingTrackerSetter = (value: boolean) => void;
+
 export interface NeoScrollingTrackerOptions {
-  /**
-   * Called with `true` on the first `mark()`, then with `false` once the
-   * idle window elapses without further marks.
-   */
-  set: (value: boolean) => void;
   /**
    * Idle window (ms) before resetting to `false`. Defaults: 300 on touch
    * devices, 150 otherwise — mirroring native scrollend cadence.
@@ -50,12 +51,10 @@ export interface NeoScrollingTracker {
 
 const isTouch = typeof window !== 'undefined' && 'ontouchstart' in window;
 
-export function useScrollingTracker({
-  set,
-  idleMs,
-  touchIdleMs = 300,
-  pointerIdleMs = 150,
-}: NeoScrollingTrackerOptions): NeoScrollingTracker {
+export function useScrollingTracker(
+  setter: NeoScrollingTrackerSetter,
+  { idleMs, touchIdleMs = 300, pointerIdleMs = 150 }: NeoScrollingTrackerOptions = {},
+): NeoScrollingTracker {
   const resolved = idleMs ?? (isTouch ? touchIdleMs : pointerIdleMs);
   let timer: ReturnType<typeof setTimeout> | 0 = 0;
   const cancel = () => {
@@ -65,10 +64,10 @@ export function useScrollingTracker({
   onDestroy(cancel);
   return {
     mark() {
-      set(true);
+      setter(true);
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
-        set(false);
+        setter(false);
         timer = 0;
       }, resolved);
     },

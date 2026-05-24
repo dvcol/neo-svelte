@@ -375,10 +375,8 @@
    * the same tracker, so the bound flag has identical semantics in both
    * modes.
    */
-  const scrollingTracker = useScrollingTracker({
-    set: (v) => {
-      if (scrolling !== v) scrolling = v;
-    },
+  const scrollingTracker = useScrollingTracker((v) => {
+    if (scrolling !== v) scrolling = v;
   });
 
   const debouncedScroll: NonNullable<NeoListProps['onscroll']> = debounce((e) => {
