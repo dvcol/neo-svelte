@@ -4,8 +4,8 @@
   import type { NeoListSearchProps } from '~/list/neo-list-search.model.js';
   import type { NeoListItemOrSection } from '~/list/neo-list.model.js';
 
-  import { debounce } from '@dvcol/common-utils/common/debounce';
   import { getFocusableElement } from '@dvcol/common-utils/common/element';
+  import { debounced } from '@dvcol/svelte-utils/debounce';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoIconAlignBottom from '~/icons/NeoIconAlignBottom.svelte';
@@ -57,13 +57,23 @@
     ...rest
   }: NeoListSearchProps = $props();
 
-  const setFilter = debounce((_value: string) => {
+  let typed = $state<string | undefined>(undefined);
+
+  const filterDebounced = debounced({
+    value: () => typed,
+    get delay() {
+      return delay;
+    },
+  });
+
+  $effect(() => {
+    if (filterDebounced.current === undefined) return;
     if (!context) return Logger.warn('NeoListSearch: No `highlight` context is missing or invalid.', context);
-    context.highlight = _value;
-  }, delay);
+    context.highlight = filterDebounced.current;
+  });
 
   const oninput: FormEventHandler<HTMLInputElement> = (e) => {
-    setFilter(e?.currentTarget?.value);
+    typed = e?.currentTarget?.value ?? '';
     inputProps?.oninput?.(e);
   };
 
@@ -75,7 +85,7 @@
     inputProps?.onkeydown?.(e);
   };
 
-  const sortFunction = sort ? (a: NeoListItemOrSection, b: NeoListItemOrSection) => sort(a, b, invert) : undefined;
+  const sortFunction = $derived(sort ? (a: NeoListItemOrSection, b: NeoListItemOrSection) => sort(a, b, invert) : undefined);
   const onclick: FormEventHandler<HTMLButtonElement> = () => {
     if (!context) return;
     if (invert === false) {
@@ -91,7 +101,7 @@
     return invert ? 'Alphabetical order (descending)' : 'Alphabetical order (ascending)';
   });
 
-  const filterFunction = (item: NeoListItemOrSection) => filter(item, context?.highlight);
+  const filterFunction = $derived((item: NeoListItemOrSection) => filter(item, context?.highlight));
   $effect(() => {
     if (!context || context?.filter === filterFunction) return;
     context.filter = filterFunction;

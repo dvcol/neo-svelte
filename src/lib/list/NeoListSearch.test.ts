@@ -1,7 +1,7 @@
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
 import { tick } from 'svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { itemLabelSort, itemSearchFilter } from './neo-list-search.model.js';
 import NeoListSearch from './NeoListSearch.svelte';
@@ -56,6 +56,91 @@ describe('neoListSearch — filter / sort wiring', { tags: ['jsdom'] }, () => {
     await user.type(getInput(container)!, 'foo');
     await new Promise(resolve => setTimeout(resolve, 30));
     expect((context as { highlight?: string }).highlight).toBe('foo');
+  });
+
+  it('typing with delay > 0 only writes context.highlight after the debounce window', async () => {
+    vi.useFakeTimers();
+    try {
+      const context = {
+        items: [],
+        highlight: undefined as string | undefined,
+        filter: () => true,
+        sort: () => 0,
+      } as never;
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const { container } = render(NeoListSearch, { props: { context, delay: 200 } as never });
+      await tick();
+      await user.type(getInput(container)!, 'foo');
+      // Less than the window — highlight must remain unwritten.
+      vi.advanceTimersByTime(100);
+      await tick();
+      expect((context as { highlight?: string }).highlight).toBeUndefined();
+      vi.advanceTimersByTime(150);
+      await tick();
+      expect((context as { highlight?: string }).highlight).toBe('foo');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('changing the delay prop after mount updates the active debounce window', async () => {
+    vi.useFakeTimers();
+    try {
+      const context = {
+        items: [],
+        highlight: undefined as string | undefined,
+        filter: () => true,
+        sort: () => 0,
+      } as never;
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const { container, rerender } = render(NeoListSearch, { props: { context, delay: 500 } as never });
+      await tick();
+      await rerender({ context, delay: 10 } as never);
+      await tick();
+      await user.type(getInput(container)!, 'q');
+      vi.advanceTimersByTime(20);
+      await tick();
+      expect((context as { highlight?: string }).highlight).toBe('q');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('toggling sort=false → sort=fn re-enables the toggle button (sortFunction is reactive)', async () => {
+    // Pre-fix bug: const sortFunction = sort ? (...) : undefined evaluated once;
+    // sort=false at mount left sortFunction frozen at undefined even after the
+    // prop swapped to a real function. After the $derived fix the toggle
+    // appears once `sort` becomes truthy.
+    const context = {
+      items: [],
+      highlight: undefined as string | undefined,
+      filter: () => true,
+      sort: () => 0,
+    } as never;
+    const sortFn = vi.fn(() => 1);
+    const { container, rerender } = render(NeoListSearch, { props: { context, sort: false } as never });
+    await tick();
+    expect(container.querySelector('button[aria-label="Change sorting order"]')).toBeNull();
+    await rerender({ context, sort: sortFn } as never);
+    await tick();
+    expect(container.querySelector('button[aria-label="Change sorting order"]')).not.toBeNull();
+  });
+
+  it('toggling sort=fn → sort=false hides the toggle button', async () => {
+    const context = {
+      items: [],
+      highlight: undefined as string | undefined,
+      filter: () => true,
+      sort: () => 0,
+    } as never;
+    const { container, rerender } = render(NeoListSearch, {
+      props: { context, sort: () => 1 } as never,
+    });
+    await tick();
+    expect(container.querySelector('button[aria-label="Change sorting order"]')).not.toBeNull();
+    await rerender({ context, sort: false } as never);
+    await tick();
+    expect(container.querySelector('button[aria-label="Change sorting order"]')).toBeNull();
   });
 
   it('clicking the sort button cycles invert from undefined → true → false → undefined', async () => {
