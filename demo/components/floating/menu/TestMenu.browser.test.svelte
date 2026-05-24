@@ -13,6 +13,7 @@
     reverse?: boolean;
     nested?: number;
     open?: boolean;
+    openOnHover?: boolean;
     unmountOnClose?: boolean;
   };
 
@@ -24,6 +25,7 @@
     reverse = false,
     nested = 1,
     open = $bindable(false),
+    openOnHover = false,
     unmountOnClose = false,
   }: Props = $props();
 
@@ -55,6 +57,7 @@
       {placement}
       {keepOpenOnSelect}
       {keepOpenOnHover}
+      {openOnHover}
       {rounded}
       {reverse}
       {unmountOnClose}

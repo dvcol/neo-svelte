@@ -132,6 +132,7 @@ describe('neoMenu — nested submenu (real layout)', { tags: ['browser'] }, () =
   it('hovering a nested item opens its submenu', async () => {
     const user = userEvent.setup();
     await openMenu({
+      openOnHover: true,
       triggerProps: {
         style: 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);',
       },
@@ -224,6 +225,7 @@ describe('neoMenu — deeply nested cascade (≥3 levels)', { tags: ['browser'] 
     const user = userEvent.setup();
     await openMenu({
       items: deepItems,
+      openOnHover: true,
       triggerProps: {
         // Pin trigger near top-left so the cascade has plenty of room rightward.
         style: 'position:fixed;top:80px;left:80px;',
@@ -255,6 +257,7 @@ describe('neoMenu — deeply nested cascade (≥3 levels)', { tags: ['browser'] 
     const user = userEvent.setup();
     await openMenu({
       items: deepItems,
+      openOnHover: true,
       triggerProps: {
         style: 'position:fixed;top:200px;left:200px;',
       },
@@ -285,6 +288,7 @@ describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () =>
     const user = userEvent.setup();
     await openMenu({
       items: deepItems,
+      openOnHover: true,
       triggerProps: {
         style: 'position:fixed;bottom:0;left:0;',
       },
@@ -314,6 +318,7 @@ describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () =>
     const user = userEvent.setup();
     await openMenu({
       items: deepItems,
+      openOnHover: true,
       triggerProps: {
         style: 'position:fixed;top:50%;left:0;transform:translateY(-50%);',
       },
@@ -339,6 +344,7 @@ describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () =>
     const user = userEvent.setup();
     await openMenu({
       items: deepItems,
+      openOnHover: true,
       triggerProps: {
         style: 'position:fixed;top:0;right:0;',
       },
@@ -351,6 +357,29 @@ describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () =>
       expect(r.right).toBeLessThanOrEqual(window.innerWidth + 1);
       expect(r.top).toBeGreaterThanOrEqual(-1);
       expect(r.bottom).toBeLessThanOrEqual(window.innerHeight + 1);
+    }
+  });
+
+  it('cascading submenus stay horizontally offset from their parent (no vertical stacking)', async () => {
+    await setViewport('mobile');
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    const user = userEvent.setup();
+    await openMenu({
+      items: deepItems,
+      openOnHover: true,
+      triggerProps: {
+        style: 'position:fixed;top:0;right:0;',
+      },
+    });
+    await expandToLeaf(user);
+
+    const tooltips = getOpenTooltips();
+    for (let i = 1; i < tooltips.length; i++) {
+      const parent = tooltips[i - 1].getBoundingClientRect();
+      const child = tooltips[i].getBoundingClientRect();
+      const horizontallyDisjoint = child.right <= parent.left + 1 || child.left >= parent.right - 1;
+      expect(horizontallyDisjoint, `level-${i} submenu must sit beside its parent, not stack on it`).toBe(true);
     }
   });
 });
@@ -415,7 +444,7 @@ describe('neoMenu — visual contract (nested submenu)', { tags: ['browser', 'vi
       await setViewport(viewport);
       const user = userEvent.setup();
       render(VisualHarness, {
-        props: { placement: 'bottom-start', nested: 2, unmountOnClose: false } as never,
+        props: { placement: 'bottom-start', nested: 2, unmountOnClose: false, openOnHover: true } as never,
       });
       const list = await openVisualMenu(user);
       await waitForFloatingPosition(list);
