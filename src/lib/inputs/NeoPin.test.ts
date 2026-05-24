@@ -69,21 +69,6 @@ describe('neoPin — render', { tags: ['jsdom'] }, () => {
     expect(container.querySelector('.neo-pin-group-wrapper.neo-vertical')).not.toBeNull();
   });
 
-  // TODO: dynamic resize of `groups`/`count` is an explicit non-goal — the
-  // matrices snapshot at mount because they hold writable per-cell bindings
-  // (bind:value, bind:this). Skipped: the assertion describes the desired
-  // future contract once a resize-preserving implementation exists. Until
-  // then, prop changes are silently ignored at the matrix level. See plan
-  // file `build-svelte-check-sparkling-teacup.md`.
-  it.skip('changing groups after mount resizes the rendered grid', async () => {
-    const { container, rerender } = render(Harness, { props: { groups: 1, count: 4 } as never });
-    await tick();
-    expect(getCells(container)).toHaveLength(4);
-    await rerender({ groups: 2, count: 4 } as never);
-    await tick();
-    expect(getCells(container)).toHaveLength(8);
-  });
-
   it('renders a hidden combined input that mirrors the value', async () => {
     const { container } = render(Harness, { props: { value: '12' } as never });
     await tick();
