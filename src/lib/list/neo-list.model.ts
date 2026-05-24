@@ -172,6 +172,18 @@ export interface NeoListRenderContext<Value = unknown, Item = NeoListItemOrSecti
 export type NeoListRender<Value = unknown> = Snippet<[NeoListRenderContext<Value>]>;
 
 export type NeoListSectionRender<Value = unknown> = Snippet<[NeoListRender<Value>, NeoListRenderContext<Value>]>;
+/**
+ * Section semantics in virtual mode (`NeoList` with `virtual: true`):
+ * - Sectioned input is flattened with `disabled`/`readonly` cascaded onto
+ *   children; `sectionIndex`/`section` are stamped on each child so
+ *   selection events still match the non-virtual sectioned payload shape.
+ * - Section-only props are dropped: `sticky`, `render`, `empty`,
+ *   `sectionProps`. A one-time warning calls this out at runtime.
+ * - The section's own `divider` is propagated as `{ top: true }` onto the
+ *   first flattened child of every section after the first; child's own
+ *   `divider` wins. The first section is skipped to mirror the
+ *   non-virtual path.
+ */
 export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul'> = {
   /**
    * Array of child list items to display.
@@ -179,20 +191,28 @@ export type NeoListSection<Value = unknown, Tag extends keyof HTMLElementTagName
   items: NeoListItem<Value>[];
   /**
    * Whether the section is sticky (stays on top while scrolling the content).
+   *
+   * @note Ignored under `virtual` (the section header is dropped entirely).
    */
   sticky?: boolean;
   /**
    * Optional snippet to display in place of the list section.
    * @param list - The list snippet that render items.
    * @param context - The list section context.
+   *
+   * @note Ignored under `virtual` (the section header is dropped entirely).
    */
   render?: NeoListSectionRender<Value>;
   /**
    * Optional snippet to display when the section is empty.
+   *
+   * @note Ignored under `virtual` (the section header is dropped entirely).
    */
   empty?: Snippet<[NeoListContext]>;
   /**
    * Optional props to pass to the section container.
+   *
+   * @note Ignored under `virtual` (the section header is dropped entirely).
    */
   sectionProps?: HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>;
 } & NeoListItemCommon<Tag>;
@@ -387,6 +407,10 @@ export interface NeoListState<Item = NeoListItemOrSection> {
   /**
    * Inverts the flow of the list (flex-direction: column-reverse).
    *
+   * @note Ignored under `virtual` (column-reverse layout, edge events,
+   * scroll direction, and keyboard direction all fall back to non-flipped).
+   * A one-time warning is emitted when both are set.
+   *
    * @default false
    */
   flip?: boolean;
@@ -396,6 +420,10 @@ export interface NeoListState<Item = NeoListItemOrSection> {
   loading?: boolean;
   /**
    * If the list is currently being scrolled.
+   *
+   * @note Bindable. Driven in both modes — virtual mode delegates to
+   * `NeoVirtualList`; non-virtual mode runs the same idle-window logic
+   * directly (150ms, 300ms on touch).
    */
   scrolling?: boolean;
   /**
@@ -466,16 +494,30 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Transition function to apply when removing items from the list.
    * Note: unique `id` is required for entering/leaving transitions.
+   *
+   * @note Non-virtual only — virtual rows do not run FLIP animations
+   * (cursor mounts/unmounts rows on scroll, FLIP would reflow per scroll).
    */
   animate?: HTMAnimationProps['animate'];
   /**
    * Transition function to apply when adding items to the list.
    * Note: unique `id` is required for entering/leaving transitions.
+   *
+   * @note Virtual mode gates intros per-key against two snapshots of
+   * `flatItems` keys: the directive only fires when the row's key was
+   * absent before the mutation. This suppresses first-paint intros and
+   * cursor remount intros (rows scrolling back into the window) while
+   * still firing on genuine additions.
    */
   in?: HTMLTransitionProps['in'];
   /**
    * Transition function to apply when removing items from the list.
    * Note: unique `id` is required for entering/leaving transitions.
+   *
+   * @note Virtual mode gates outros per-key against two snapshots of
+   * `flatItems` keys: the directive only fires when the row's key is
+   * absent after the mutation. This suppresses cursor evict outros (rows
+   * scrolling out of the window) while still firing on genuine removals.
    */
   out?: HTMLTransitionProps['out'];
 
@@ -533,7 +575,14 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
   /**
    * Opt into virtual scrolling.
    *
-   * Auto-disabled (with `Logger.warn`) when sections are present or `flip` is set.
+   * Virtual mode is authoritative when both modes' inputs collide:
+   * - `flip` is ignored and a one-time warning is emitted.
+   * - Sectioned input is flattened with `disabled`/`readonly` cascade;
+   *   section-only props (`sticky`, `render`, `empty`, `sectionProps`)
+   *   are dropped with a one-time warning. See `NeoListSection`.
+   * - Numeric `itemHeight` is ignored when `divider` is also set
+   *   (dividers vary row height); falls back to dynamic measurement
+   *   with a one-time warning.
    *
    * @default false
    */
@@ -542,33 +591,46 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Item height in pixels.
    *
    * Provide a number for fixed-size rows (fastest path), a function for caller-known
-   * per-item heights, or omit to measure dynamically. Only used when `virtual` is true.
+   * per-item heights, or omit to measure dynamically.
+   *
+   * @note Only used when `virtual` is true. Numeric values are ignored
+   * (with a warning) when `divider` is also set, since dividers vary row
+   * height — measurement falls back to dynamic.
    */
   itemHeight?: NeoVirtualItemHeight<NeoListItemOrSection<Value>>;
   /**
    * Initial estimate (px) used for unmeasured rows in dynamic measurement mode.
-   * Refines automatically as rows are measured. Only used when `virtual` is true.
+   * Refines automatically as rows are measured.
+   *
+   * @note Only used when `virtual` is true.
    *
    * @default 40
    */
   estimatedItemHeight?: number;
   /**
    * Number of rows to render outside the visible window (above and below).
-   * Only used when `virtual` is true.
+   * Larger values trade memory for fewer mount/unmount events on fast
+   * scroll; smaller values keep the DOM tighter at the cost of more
+   * cursor churn.
    *
-   * @default 3
+   * @note Only used when `virtual` is true.
+   *
+   * @default 10
    */
   buffer?: number;
   /**
    * Stable key function. Heights are cached by this key so reorders preserve
-   * measurements. Only used when `virtual` is true.
+   * measurements; the per-key transition gate also reads from this.
+   *
+   * @note Only used when `virtual` is true.
    *
    * @default (item, i) => item.id ?? i
    */
   key?: NeoVirtualKey<NeoListItemOrSection<Value>>;
   /**
    * Optional props to forward to the inner `NeoVirtualList` (advanced).
-   * Only used when `virtual` is true.
+   *
+   * @note Only used when `virtual` is true.
    */
   virtualProps?: Partial<Omit<NeoVirtualListProps<NeoListItemOrSection<Value>>, 'items' | 'children' | 'before' | 'after' | 'itemHeight' | 'buffer' | 'estimatedItemHeight' | 'key'>>;
 
