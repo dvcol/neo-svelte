@@ -20,7 +20,7 @@
   import { useIntersection } from '@dvcol/svelte-utils/intersection';
   import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze, toAnimation, toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { watch } from '@dvcol/svelte-utils/watch';
-  import { tick } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -407,20 +407,32 @@
   // re-render storm.
   const skipOffscreen = (node: Element) => !intersection.visible.has(node);
 
-  // Transitions: in virtual mode, suppress per-row mount/unmount transitions while
-  // the user is actively scrolling — the cursor advance would otherwise fire
-  // transitions on every row that crosses the buffer boundary.
+  /*
+   * Transitions in virtual mode are double-gated: the initial mount runs
+   * `cursor` rows past the in: directive, but those rows weren't user-driven
+   * mutations — playing transitions there would animate the whole window on
+   * first paint. `initialMounted` flips true after the first paint via
+   * onMount + tick(), enabling subsequent filter/add/remove transitions.
+   * `scrolling` keeps suppressing transitions while cursor advances stream.
+   */
+  let initialMounted = $state(false);
+  onMount(() => {
+    tick().then(() => {
+      initialMounted = true;
+    });
+  });
+
   const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
   const animateProps = $derived(toTransitionProps(animate));
   const inFn = $derived.by(() => {
     if (missing) return emptyTransition;
-    if (virtual && scrolling) return emptyTransition;
+    if (virtual && (scrolling || !initialMounted)) return emptyTransition;
     return toTransition(inAction);
   });
   const inProps = $derived(toTransitionProps(inAction));
   const outFn = $derived.by(() => {
     if (missing) return emptyTransition;
-    if (virtual && scrolling) return emptyTransition;
+    if (virtual && (scrolling || !initialMounted)) return emptyTransition;
     return toTransition(outAction);
   });
   const outProps = $derived(toTransitionProps(outAction));
@@ -575,6 +587,8 @@
     class:neo-list-item-select={select}
     style:--neo-list-item-color={getColorVariable(item.color)}
     {...item.containerProps}
+    in:inFn={inProps}
+    out:outFn={outProps}
     {@attach register}
   >
     {#if renderFlatDivider(v.index, visibleItems, 'top')}

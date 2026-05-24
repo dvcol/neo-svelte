@@ -586,25 +586,21 @@ describe('neoList — dividers in virtual', { tags: ['jsdom'] }, () => {
 });
 
 /*
- * Phase 1.6: row transitions in virtual mode.
+ * Phase 1.6 / 3.5: row transitions in virtual mode.
  *
- * Today: NeoList.svelte:362-372 collapses in/out to emptyTransition when
- * `virtualEnabled && scrolling`, but virtualRow at :500 doesn't pass
- * in:/out: at all — so virtual rows never transition. Phase 3.5 wires the
- * transitions in, gated by `!scrolling` and an `initialMounted` flag.
+ * Virtual rows now wire `in:` / `out:` directives. Two gates suppress them:
+ *   - `initialMounted` flag (false during first paint) → no opening flash
+ *     when the cursor first paints its initial window.
+ *   - `scrolling` flag → no transition while cursor advances stream rows.
+ * Live transition timing is verified in browser tests; jsdom only validates
+ * the suppression gates leave rows clean.
  */
 describe('neoList — row transitions in virtual', { tags: ['jsdom'] }, () => {
-  it('virtual (today): rows mount/unmount without transition wiring', async () => {
+  it('virtual rows do NOT animate on initial mount (initialMounted gate)', async () => {
     const { container } = render(NeoList, {
       props: { items: bigItems, virtual: true, itemHeight: 30 } as never,
     });
     await flushVirtual();
-    /*
-     * Pin via the absence of a Svelte-managed transition class hook on
-     * virtual rows. We can't observe the in: / out: directives directly,
-     * but the row markup at NeoList.svelte:500 simply has no in:/out:
-     * attribute, so neither incoming nor leaving rows ever animate.
-     */
     const rows = container.querySelectorAll<HTMLElement>('.neo-virtual-list .neo-list-item');
     expect(rows.length).toBeGreaterThan(0);
     for (const row of rows) {
@@ -612,12 +608,6 @@ describe('neoList — row transitions in virtual', { tags: ['jsdom'] }, () => {
       expect(row.style.transform).toBe('');
     }
   });
-
-  it.skip('virtual rows run in:/out: on filter change when !scrolling — TODO Phase 3.5 (NeoList.svelte:500)', () => {});
-
-  it.skip('virtual rows do NOT run in:/out: on initial mount — TODO Phase 3.5 (NeoList.svelte initialMounted flag)', () => {});
-
-  it.skip('virtual rows do NOT run in:/out: while scrolling — TODO Phase 3.5 (NeoList.svelte:362-372 already covers gating)', () => {});
 });
 
 /*
@@ -672,8 +662,15 @@ describe('neoList — runtime prop toggling', { tags: ['jsdom'] }, () => {
   });
 
   it('virtual=true: sort or filter reference change re-derives visibleItems', async () => {
+    /*
+     * Phase 3.5 wired `out:` transitions on virtual rows. Outros don't
+     * complete in jsdom (no rAF advance), so leaving rows would linger
+     * forever. Disable transitions here — the test pins `visibleItems`
+     * re-derivation, not animation timing.
+     */
+    const noop = { use: () => () => ({ duration: 0 }) };
     const { container, rerender } = render(NeoList, {
-      props: { items: bigItems, virtual: true, itemHeight: 30 } as never,
+      props: { items: bigItems, virtual: true, itemHeight: 30, in: noop, out: noop } as never,
     });
     await flushVirtual();
     const before = Array.from(container.querySelectorAll<HTMLElement>('.neo-list-item'))
@@ -685,11 +682,14 @@ describe('neoList — runtime prop toggling', { tags: ['jsdom'] }, () => {
       items: bigItems,
       virtual: true,
       itemHeight: 30,
+      in: noop,
+      out: noop,
       filter: (item: { id: number }) => item.id % 2 === 0,
     } as never);
     await flushVirtual();
-    const after = Array.from(container.querySelectorAll<HTMLElement>('.neo-list-item'))
+    const after = Array.from(container.querySelectorAll<HTMLElement>('.neo-virtual-list .neo-list-item'))
       .map(li => Number(li.dataset.id));
+    expect(after.length).toBeGreaterThan(0);
     expect(after.every(id => id % 2 === 0)).toBe(true);
   });
 
