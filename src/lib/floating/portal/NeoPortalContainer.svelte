@@ -24,6 +24,8 @@
     ...rest
   }: NeoPortalContainerProps = $props();
 
+  /** Portal context identity is intentionally bound to the initial `id`; consumers cache the reference and a re-init would orphan them. */
+  // svelte-ignore state_referenced_locally
   const context = setNeoPortalContext(id);
 
   const open = $derived(context.open);

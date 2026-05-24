@@ -20,6 +20,8 @@
     ...rest
   }: NeoThemeProviderProps = $props();
 
+  /** Theme context is seeded with the initial props for the first paint; reactive prop changes flow through `context.update()` in the `$effect.pre` below, which is the live path consumers depend on. */
+  // svelte-ignore state_referenced_locally
   const context = setNeoThemeContext({ reset, theme, source, remember, root: target === 'self' ? ref : target });
   $effect.pre(() => {
     context.update({ reset, theme, source, remember, root: target === 'self' ? ref : target });

@@ -21,8 +21,14 @@
   }: Props = $props();
 
   let element = $state<HTMLDivElement | undefined>(undefined);
+  /** Harness seeds local state from `initialOffset` once; tests don't drive re-seeding (they mutate via the get/set bridge below). */
+  // svelte-ignore state_referenced_locally
   let offset = $state<NeoMoved>({ ...initialOffset });
   let outside = $state<NeoMovableOutside>(false);
+
+  /** Harness passes `close` once at hook init; tests don't swap it. */
+  // svelte-ignore state_referenced_locally
+  const onClose = close;
 
   const result = useMovable<HTMLDivElement, HTMLDivElement>({
     get offset() {
@@ -46,7 +52,7 @@
     get element() {
       return element;
     },
-    close,
+    close: onClose,
   });
 
   $effect(() => {

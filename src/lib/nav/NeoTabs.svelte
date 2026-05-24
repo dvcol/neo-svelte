@@ -67,6 +67,8 @@
     onchange?.(_tabId, _new, _old);
   };
 
+  /** Tab context callbacks are intentionally bound at mount; consumers (NeoTab) call the live `onclose` prop directly when reactive dispatch is needed, and the context is the stable fallback for indirect callers. */
+  // svelte-ignore state_referenced_locally
   export const context = setTabContext<Id, Value>({ onChange, onClose: onclose });
   const transition = $derived(rest.vertical ? height : width);
 
