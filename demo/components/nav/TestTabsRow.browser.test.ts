@@ -32,7 +32,7 @@ function getTabButtons(scope: ParentNode = document): HTMLButtonElement[] {
 describe('neoTabsRow — autoSize threshold (real layout)', { tags: ['browser'] }, () => {
   it('collapses trailing tabs into a menu trigger when the row overflows its container', async () => {
     const { container } = render(NeoTabsRowHarness, {
-      props: { tabs: overflowingTabs, wrapperStyle: 'width: 200px;' } as never,
+      props: { tabs: overflowingTabs, wrapperStyle: 'width: 360px;' } as never,
     });
     await tick();
     await vi.waitFor(() => {
@@ -60,10 +60,7 @@ describe('neoTabsRow — visual contract (themed)', { tags: ['browser', 'visual'
     quietForVisual();
   });
 
-  // TODO src/lib/nav/NeoTabsRow.svelte:164 strips `label` and `icon` from item
-  // props before forwarding to NeoTab, leaving each tab rendered as an empty
-  // button. Re-enable once items propagate label/icon to the inner NeoButton.
-  it.skip('horizontal — fully visible row (desktop) [bug: empty tab labels]', async () => {
+  it('horizontal — fully visible row (desktop)', async () => {
     await setViewport('desktop');
     render(VisualHarness, {
       props: { tabs: sampleTabs, active: 't2', wrapperStyle: 'width: 600px;' } as never,
@@ -82,10 +79,10 @@ describe('neoTabsRow — visual contract (themed)', { tags: ['browser', 'visual'
     );
   });
 
-  it.skip('horizontal — overflow with collapse menu (desktop) [bug: empty tab labels]', async () => {
+  it('horizontal — overflow with collapse menu (desktop)', async () => {
     await setViewport('desktop');
     render(VisualHarness, {
-      props: { tabs: overflowingTabs, active: 't1', wrapperStyle: 'width: 200px;' } as never,
+      props: { tabs: overflowingTabs, active: 't1', wrapperStyle: 'width: 600px;' } as never,
     });
     await vi.waitFor(() => {
       const collapse = document.querySelector('.neo-tabs-row-collapse');
@@ -98,7 +95,7 @@ describe('neoTabsRow — visual contract (themed)', { tags: ['browser', 'visual'
     );
   });
 
-  it.skip('vertical — fully visible column (desktop) [bug: empty tab labels]', async () => {
+  it('vertical — fully visible column (desktop)', async () => {
     await setViewport('desktop');
     render(VisualHarness, {
       props: { tabs: sampleTabs, active: 't2', vertical: true, wrapperStyle: 'height: 240px;' } as never,

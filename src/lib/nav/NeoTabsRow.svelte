@@ -161,7 +161,7 @@
       {#if (isTabRowDivider(_props))}
         <NeoTabDivider vertical={!vertical} {..._props} />
       {:else}
-        {@const { menuProps: _, label: __, icon: ___, ...tabItemProps } = _props}
+        {@const { menuProps: _, ...tabItemProps } = _props}
         <NeoTab
           register="force"
           {...tabProps}
