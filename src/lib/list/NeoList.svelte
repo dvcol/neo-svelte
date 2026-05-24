@@ -31,6 +31,7 @@
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
   import NeoVirtualList from '~/list/NeoVirtualList.svelte';
+  import { useScrollingTracker } from '~/list/use-scrolling-tracker.js';
   import { getColorVariable } from '~/utils/colors.utils.js';
   import { NeoErrorListSelectDisabled } from '~/utils/error.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
@@ -370,22 +371,15 @@
   });
 
   /*
-   * Non-virtual `scrolling` parity with virtual mode (NeoVirtualList drives
-   * the same flag via `markScrolling`). Toggles `scrolling` synchronously on
-   * the first scroll event, then resets after an idle window. Idle window
-   * matches NeoVirtualList: 300ms on touch, 150ms otherwise.
+   * Non-virtual `scrolling` parity with virtual mode — NeoVirtualList runs
+   * the same tracker, so the bound flag has identical semantics in both
+   * modes.
    */
-  const isTouch = typeof window !== 'undefined' && 'ontouchstart' in window;
-  const scrollIdleMs = isTouch ? 300 : 150;
-  let stopScrollingTimer: ReturnType<typeof setTimeout> | 0 = 0;
-  function markScrolling() {
-    if (!scrolling) scrolling = true;
-    if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
-    stopScrollingTimer = setTimeout(() => {
-      scrolling = false;
-      stopScrollingTimer = 0;
-    }, scrollIdleMs);
-  }
+  const scrollingTracker = useScrollingTracker({
+    set: (v) => {
+      if (scrolling !== v) scrolling = v;
+    },
+  });
 
   const debouncedScroll: NonNullable<NeoListProps['onscroll']> = debounce((e) => {
     rest?.onscroll?.(e);
@@ -393,13 +387,9 @@
   }, 25);
 
   const onscroll: NeoListProps['onscroll'] = (e) => {
-    markScrolling();
+    scrollingTracker.mark();
     debouncedScroll(e);
   };
-
-  $effect(() => () => {
-    if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
-  });
 
   const renderDivider = (index: number, array: { item: NeoListItemOrSection }[], position: 'top' | 'bottom') => {
     if (position === 'top') return index && (showDivider(array[index]?.item.divider, 'top') ?? showDivider(divider, 'top'));
@@ -722,14 +712,6 @@
 {/snippet}
 
 {#snippet virtualLoader()}
-  <!--
-    Render unconditionally so NeoListBaseLoader's per-skeleton in/out can
-    play on `loading` flips, matching non-virtual semantics. Wrapping in
-    `{#if loading}` would cut the `<li>` (and skeletons) out instantly on
-    `true → false` — no outro. The after slot itself is still gated by
-    cursor.end === items.length inside NeoVirtualList, so the loader only
-    appears when the user is near the bottom.
-  -->
   {@render loader(loading)}
 {/snippet}
 

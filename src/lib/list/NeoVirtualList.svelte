@@ -12,6 +12,7 @@
 
   import { defaultVirtualKey } from '~/list/neo-virtual-list.model.js';
   import { buildOffsets, computeCursor } from '~/list/neo-virtual-list.utils.js';
+  import { useScrollingTracker } from '~/list/use-scrolling-tracker.js';
 
   let {
     // Snippets
@@ -134,17 +135,11 @@
    * throttling via rAF would only re-introduce the off-by-one-frame white gap.
    */
 
-  const isTouch = typeof window !== 'undefined' && 'ontouchstart' in window;
-  const scrollIdleMs = isTouch ? 300 : 150;
-  let stopScrollingTimer: ReturnType<typeof setTimeout> | 0 = 0;
-  function markScrolling() {
-    if (!scrolling) scrolling = true;
-    if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
-    stopScrollingTimer = setTimeout(() => {
-      scrolling = false;
-      stopScrollingTimer = 0;
-    }, scrollIdleMs);
-  }
+  const scrollingTracker = useScrollingTracker({
+    set: (v) => {
+      if (scrolling !== v) scrolling = v;
+    },
+  });
 
   function fireEdgeEvents(e: Event) {
     if (!ref) return;
@@ -156,7 +151,7 @@
   }
 
   function handleScroll(e: Event) {
-    markScrolling();
+    scrollingTracker.mark();
     recomputeCursor();
     fireEdgeEvents(e);
     onscroll?.(e as never);
@@ -330,7 +325,6 @@
   onDestroy(() => {
     observer?.disconnect();
     if (measureFrame) cancelAnimationFrame(measureFrame);
-    if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
   });
 
   /* ----------------------------- Public methods -------------------------- */
