@@ -123,39 +123,37 @@
    * ignorant of the precedence rule.
    */
 
+  /*
+   * Warning is folded into the derived: a side effect in a derived is
+   * normally a smell, but for a one-line log it's the simplest option and
+   * the message is naturally co-located with the collision rule.
+   */
   const sections = $derived(hasSections(items));
-  const flipActive = $derived(flip && !virtual);
-  const sectionsActive = $derived(sections && !virtual);
+  const flipActive = $derived.by(() => {
+    if (virtual && flip) {
+      const message = 'NeoList: `flip` is fully disabled when `virtual` is enabled (column-reverse layout, edge events, scroll direction, and keyboard direction are all reverted to non-flipped).';
+      Logger.warn(message);
+      if (import.meta.env.DEV) console.warn(new Error(message));
+    }
+    return flip && !virtual;
+  });
+  const sectionsActive = $derived.by(() => {
+    if (virtual && sections) {
+      const message = 'NeoList: section headers are dropped and items flattened when `virtual` is enabled (`disabled`/`readonly` cascade to children; `sticky`/`render`/`empty`/`sectionProps` are lost).';
+      Logger.warn(message);
+      if (import.meta.env.DEV) console.warn(new Error(message));
+    }
+    return sections && !virtual;
+  });
   const flatItems = $derived.by<NeoListItem[]>(() => {
     if (virtual && sections) return flattenSectionsWithCascade(items);
     if (isFlatItems(items)) return items;
     return [];
   });
 
-  /*
-   * Each warning fires on the truthy edge of its derived collision predicate.
-   * `$effect` already only re-runs when tracked deps change, so a manual
-   * fire-once flag is redundant. Toggling `virtual` off → on with the
-   * collision still present re-arms the warning.
-   */
-  const flipCollision = $derived(virtual && flip);
-  $effect(() => {
-    if (!flipCollision) return;
-    const message = 'NeoList: `flip` is fully disabled when `virtual` is enabled (column-reverse layout, edge events, scroll direction, and keyboard direction are all reverted to non-flipped).';
-    Logger.warn(message);
-    if (import.meta.env.DEV) console.warn(new Error(message));
-  });
-
-  const sectionsCollision = $derived(virtual && sections);
-  $effect(() => {
-    if (!sectionsCollision) return;
-    const message = 'NeoList: section headers are dropped and items flattened when `virtual` is enabled (`disabled`/`readonly` cascade to children; `sticky`/`render`/`empty`/`sectionProps` are lost).';
-    Logger.warn(message);
-    if (import.meta.env.DEV) console.warn(new Error(message));
-  });
-
-  const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
-    multiple && (Array.isArray(list) || list === undefined);
+  function isMultiple(list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined {
+    return multiple && (Array.isArray(list) || list === undefined);
+  }
 
   const isNullable = $derived(multiple ? nullable || (isMultiple(selected) && (selected?.length ?? 0) > 1) : nullable);
 
