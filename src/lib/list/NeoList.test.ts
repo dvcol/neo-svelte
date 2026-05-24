@@ -546,27 +546,6 @@ describe('neoList — keyboard ArrowUp/Down', { tags: ['jsdom'] }, () => {
     expect(document.activeElement).toBe(btns[1]);
   });
 
-  it.skip('virtual at cursor edge: ArrowDown beyond window scrolls and focuses next via context.scrollToIndex — TODO Phase 3.6 (NeoListBaseItem.svelte:71-86)', async () => {
-    const user = userEvent.setup();
-    const { container } = render(NeoList, {
-      props: { items: bigItems, virtual: true, select: true, itemHeight: 30, buffer: 0 } as never,
-    });
-    await flushVirtual();
-    const btns = getButtons(container);
-    const lastInWindow = btns.at(-1)!;
-    const dataIndex = lastInWindow.closest('li')!.dataset.index!;
-    lastInWindow.focus();
-    await user.keyboard('{ArrowDown}');
-    await flushVirtual();
-    /*
-     * Post-rework: context.scrollToIndex advances the cursor past the edge,
-     * then focus lands on the next row by aria-posinset.
-     */
-    const expectedNextIndex = String(Number(dataIndex) + 1);
-    const focused = document.activeElement?.closest('li');
-    expect(focused?.dataset.index).toBe(expectedNextIndex);
-  });
-
   it('virtual + flip prop: keyboard direction NOT swapped (flip fully dropped)', async () => {
     const user = userEvent.setup();
     const { container } = render(NeoList, {
