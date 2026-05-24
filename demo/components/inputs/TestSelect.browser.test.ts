@@ -260,7 +260,7 @@ describe('neoSelect — visual contract (themed)', { tags: ['browser', 'visual']
       return el;
     });
     await vi.waitFor(() => {
-      const triggers = stage.querySelectorAll<HTMLElement>('button.neo-input-group');
+      const triggers = stage.querySelectorAll<HTMLElement>('.neo-input-group');
       expect(triggers.length).toBe(12);
       for (const t of triggers) expect(t.getBoundingClientRect().width).toBeGreaterThan(0);
     });
