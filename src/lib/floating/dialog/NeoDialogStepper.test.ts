@@ -82,17 +82,7 @@ describe('neoDialogStepper — navigation', { tags: ['jsdom'] }, () => {
     expect(getDialog()?.getAttribute('data-open')).toBe('false');
   });
 
-  // TODO(NeoDialogStepper + NeoStepper): clicking Next on the last step when starting at
-  // `active=steps.length-1` (or after navigating through multiple steps) closes the dialog
-  // but crashes the Svelte 5 runtime in jsdom with `[TypeError: get_fn(...) is not a function]`
-  // — the host effect tears down (via NeoDialog.unmountOnClose / open=false) while the
-  // outgoing step's transition + the in-flight `goTo` are still resolving, and a
-  // `$derived` belonging to the destroyed effect is read (the PopStepper analog only logs
-  // `derived_inert` but here the worker exits). The single-step stepper variant
-  // (steps.length===1, active=0) does NOT crash and exercises the same onConfirm path,
-  // so the contract is pinned via that variant above. Expected behavior of the multi-step
-  // case: onConfirm fires once, dialog data-open flips to "false", no Svelte runtime crash.
-  it.skip('clicking Next on the last step fires onConfirm and closes the dialog (multi-step)', async () => {
+  it('clicking Next on the last step fires onConfirm and closes the dialog (multi-step)', async () => {
     const onConfirm = vi.fn();
     const user = userEvent.setup();
     renderWithPortalTarget(Harness, {

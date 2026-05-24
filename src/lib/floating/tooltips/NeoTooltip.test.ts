@@ -272,15 +272,8 @@ describe('neoTooltip — openOnHover', { tags: ['jsdom'] }, () => {
   });
 });
 
-/**
- * Focus-driven open relies on `:focus-visible` which jsdom doesn't simulate
- * — skeleton's `useFocus` checks `event.target.matches(':focus-visible')`.
- * The keyboard-tab path is covered in NeoTooltip.browser.test.ts under
- * "neoTooltip — keyboard focus opens (real :focus-visible)". jsdom only
- * verifies the `openOnFocus=false` negative path here.
- */
 describe('neoTooltip — openOnFocus', { tags: ['jsdom'] }, () => {
-  it.skip('opens via focus when openOnFocus=true and other interactions disabled', async () => {
+  it('opens via focus when openOnFocus=true and other interactions disabled', async () => {
     const onChange = vi.fn();
     const { container } = renderWithPortalTarget(Harness, {
       openOnHover: false,

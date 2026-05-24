@@ -88,12 +88,7 @@ describe('neoDrawerStepper — navigation', { tags: ['jsdom'] }, () => {
     expect(getDialog()?.getAttribute('data-open')).toBe('false');
   });
 
-  // Mirrors the NeoDialogStepper crash — the multi-step "confirm on last step"
-  // path crashes the Svelte 5 runtime in jsdom (`get_fn(...) is not a function`).
-  // See src/lib/floating/dialog/NeoDialogStepper.test.ts for the pinned expected
-  // behavior (TODO: NeoFloatingStepper / NeoStepper teardown race). The single-step
-  // variant below covers the same onConfirm contract without crashing.
-  it.skip('clicking Next on the last step fires onConfirm and closes the dialog (multi-step)', async () => {
+  it('clicking Next on the last step fires onConfirm and closes the dialog (multi-step)', async () => {
     const onConfirm = vi.fn();
     const user = userEvent.setup();
     renderWithPortalTarget(Harness, {

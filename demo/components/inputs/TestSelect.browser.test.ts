@@ -171,17 +171,7 @@ describe('neoSelect — interaction regressions (post-popover-migration)', { tag
     await waitHidden();
   });
 
-  // TODO: pending fix for Issue 1 (`get_fn(...) is not a function` during
-  // teardown of pill content snippet when three NeoSelects share the same
-  // `bind:value`). Root cause: a `$derived` somewhere in the
-  // NeoSelect/NeoInput/NeoPill teardown path is read after its parent effect
-  // is INERT (Svelte's `derived_inert` warning fires), so `get_fn()` returns
-  // UNINITIALIZED and the transition machinery calls a non-function. The
-  // surface fix attempted earlier (eagerly capturing transitions in NeoPill)
-  // hid the symptom in this case but the same crash reproduces when toggling
-  // `glass` on the live DemoInputs page — so the real culprit is upstream.
-  // Expected once fixed: no runtime errors.
-  it.skip('deselecting a pill with three NeoSelects sharing the same value state does not crash', async () => {
+  it('deselecting a pill with three NeoSelects sharing the same value state does not crash', async () => {
     // DemoInputs binds the same `selectCustomMultipleState.value` to three
     // NeoSelect instances (default display, function display, content snippet).
     // Deselecting a pill in any of them re-renders all three; this is the

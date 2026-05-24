@@ -324,17 +324,7 @@ describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () =>
     expect(level2InsideX || overlapsRoot).toBe(true);
   });
 
-  // TODO: re-evaluate after Phase 2. Skeleton's NeoMenu wiring does not pass
-  // a `shift()` middleware for nested submenus, so when the parent menu is
-  // pushed against a viewport edge (e.g. trigger at left:0 on a 390px screen)
-  // the submenu has nowhere to go on the cross axis and *overlaps* the
-  // parent menu instead of remaining offset and shifted within the viewport.
-  // The visible nested-submenu screenshot at mobile shows the submenu
-  // rendered *on top of* the parent rather than beside-and-shifted. Migrating
-  // to @floating-ui/dom with `shift({ padding })` on the submenu chain
-  // should keep the side offset and slide the floating box along the
-  // cross axis until it fits — without overlapping the parent.
-  it.skip('submenu stays offset from parent (shifted, not overlapping) when viewport is constrained', async () => {
+  it('submenu stays offset from parent (shifted, not overlapping) when viewport is constrained', async () => {
     await setViewport('mobile');
     document.body.style.margin = '0';
     document.body.style.padding = '0';
