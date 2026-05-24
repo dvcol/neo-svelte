@@ -969,10 +969,7 @@ describe('neoList — virtual mode (selection)', { tags: ['jsdom'] }, () => {
 });
 
 describe('neoList — virtual mode (transitions gating)', { tags: ['jsdom'] }, () => {
-  it.skip('tODO: while `scrolling=true`, in/out transitions resolve to emptyTransition. NeoList.svelte:~330. Verified in browser tests where transitions actually run.', () => {
-    // Expected: assert that during a scroll-induced cursor advance, mounting/unmounting
-    // rows do not run the configured `in`/`out` transitions.
-  });
+  it.skip('while scrolling=true, virtual rows resolve to emptyTransition — harness limitation: jsdom does not run Svelte transitions, so the gate cannot be observed here. Real coverage: demo/components/list/TestListAnimation.browser.test.ts:49 (virtual row transitions, counting wrappers) and :153 (loader transitions).', () => {});
 });
 
 describe('neoList — imperative methods (virtual delegation)', { tags: ['jsdom'] }, () => {

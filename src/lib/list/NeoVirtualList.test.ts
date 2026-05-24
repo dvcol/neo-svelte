@@ -291,10 +291,7 @@ describe('neoVirtualList — scroll behavior', { tags: ['jsdom'] }, () => {
     expect(onScrollBottom).toHaveBeenCalled();
   });
 
-  it.skip('tODO: toggles `scrolling` $bindable true on scroll and false after idle debounce — covered in browser tests; @testing-library/svelte does not expose Svelte 5 bindables on the returned component.', () => {
-    // Expected: scrolling=false on mount; scrolling=true synchronously on scroll;
-    // scrolling=false after 150ms (desktop) / 300ms (touch) of idle.
-  });
+  it.skip('scrolling $bindable toggles on scroll then resets after idle debounce — harness limitation: @testing-library/svelte does not expose Svelte 5 bindables on the returned component. Real coverage: demo/components/list/TestListScrolling.browser.test.ts:39 (toggles on/off) and :63 (idle window extension).', () => {});
 });
 
 describe('neoVirtualList — sizing modes', { tags: ['jsdom'] }, () => {
@@ -425,10 +422,7 @@ describe('neoVirtualList — measurement lifecycle', { tags: ['jsdom'] }, () => 
     expect(rows[0].dataset.virtualKeyType).toBe('s');
   });
 
-  it.skip('tODO: register attachment unobserves on row unmount (no leaked observers). Covered in browser test where ResizeObserver is real.', () => {
-    // Expected: when items shrink, ResizeObserver entries for unmounted rows are removed
-    // (verified by counting observed elements before/after items mutation).
-  });
+  it.skip('register attachment unobserves on row unmount — harness limitation: jsdom mocks ResizeObserver, so observed-element counts cannot be verified here. Real coverage: demo/components/list/TestVirtualList.browser.test.ts:81 (rows scrolling out are unobserved).', () => {});
 });
 
 /*
