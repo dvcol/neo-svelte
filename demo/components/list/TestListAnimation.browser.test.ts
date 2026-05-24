@@ -150,6 +150,84 @@ describe('neoList virtual — row transitions (browser)', { tags: ['browser'] },
   });
 });
 
+describe('neoList virtual — loader transitions (browser)', { tags: ['browser'] }, () => {
+  /*
+   * The loader sits in NeoVirtualList's `after` slot (NeoList.svelte
+   * `virtualLoader` snippet). It used to be wrapped in `{#if loading}`,
+   * which cut the `<li>` and skeletons out instantly on `loading: true →
+   * false`, suppressing the outro. The fix renders the wrapper
+   * unconditionally and lets `NeoListBaseLoader` drive per-skeleton in/out
+   * on its own `loading` flag, matching non-virtual behavior.
+   *
+   * `NeoListBaseLoader` defaults to 3 skeletons, each with its own
+   * `in:`/`out:` directive — so each `loading` flip translates to ≥1
+   * counted call per direction.
+   */
+
+  it('loader skeletons play intro when loading flips false → true', async () => {
+    const inSpy = counting();
+    const outSpy = counting();
+    const { rerender } = render(AnimationHarness, {
+      props: {
+        items: makeItems(5),
+        virtual: true,
+        itemHeight: ROW,
+        loading: false,
+        loaderInAction: inSpy.wrapper,
+        loaderOutAction: outSpy.wrapper,
+      } as never,
+    });
+    await settle();
+    expect(inSpy.calls).toBe(0);
+    expect(outSpy.calls).toBe(0);
+    await rerender({
+      items: makeItems(5),
+      virtual: true,
+      itemHeight: ROW,
+      loading: true,
+      loaderInAction: inSpy.wrapper,
+      loaderOutAction: outSpy.wrapper,
+    } as never);
+    await settle();
+    await new Promise(r => setTimeout(r, 50));
+    expect(inSpy.calls).toBeGreaterThanOrEqual(1);
+    expect(outSpy.calls).toBe(0);
+  });
+
+  it('loader skeletons play outro when loading flips true → false', async () => {
+    const inSpy = counting();
+    const outSpy = counting();
+    const { rerender } = render(AnimationHarness, {
+      props: {
+        items: makeItems(5),
+        virtual: true,
+        itemHeight: ROW,
+        loading: true,
+        loaderInAction: inSpy.wrapper,
+        loaderOutAction: outSpy.wrapper,
+      } as never,
+    });
+    await settle();
+    /*
+     * Svelte skips top-level intros on root mount, so initial loading=true
+     * paints zero in: calls — same baseline as non-virtual.
+     */
+    const introBefore = inSpy.calls;
+    await rerender({
+      items: makeItems(5),
+      virtual: true,
+      itemHeight: ROW,
+      loading: false,
+      loaderInAction: inSpy.wrapper,
+      loaderOutAction: outSpy.wrapper,
+    } as never);
+    await settle();
+    await new Promise(r => setTimeout(r, 50));
+    expect(outSpy.calls).toBeGreaterThanOrEqual(1);
+    expect(inSpy.calls).toBe(introBefore);
+  });
+});
+
 describe('neoList non-virtual — row transitions (browser)', { tags: ['browser'] }, () => {
   /*
    * Non-virtual rows have no per-key gate — every #each mount/unmount

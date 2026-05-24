@@ -695,9 +695,15 @@
 {/snippet}
 
 {#snippet virtualLoader()}
-  {#if loading}
-    {@render loader(true)}
-  {/if}
+  <!--
+    Render unconditionally so NeoListBaseLoader's per-skeleton in/out can
+    play on `loading` flips, matching non-virtual semantics. Wrapping in
+    `{#if loading}` would cut the `<li>` (and skeletons) out instantly on
+    `true → false` — no outro. The after slot itself is still gated by
+    cursor.end === items.length inside NeoVirtualList, so the loader only
+    appears when the user is near the bottom.
+  -->
+  {@render loader(loading)}
 {/snippet}
 
 <svelte:element
