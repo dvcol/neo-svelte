@@ -98,10 +98,16 @@
 
   const labelId = $derived(label ? `neo-pin-label-${getUUID()}` : undefined);
 
+  /** `groups` / `count` define the layout snapshot at mount. These matrices hold writable per-cell bindings; recreating them on prop change would drop user input. Dynamic resize is an explicit non-goal. */
+  // svelte-ignore state_referenced_locally
   const refs = $state<HTMLInputElement[][]>(Array.from<HTMLInputElement[]>({ length: Number(groups) }).fill([]));
+  // svelte-ignore state_referenced_locally
   const instances = $state<NeoInputInstance[][]>(Array.from<NeoInputInstance[]>({ length: Number(groups) }).fill([]));
+  // svelte-ignore state_referenced_locally
   const values = $state<string[][]>(Array.from<string[]>({ length: Number(groups) }).fill(Array.from<string>({ length: Number(count) }).fill('')));
+  // svelte-ignore state_referenced_locally
   const touches = $state<boolean[][]>(Array.from<boolean[]>({ length: Number(groups) }).fill(Array.from<boolean>({ length: Number(count) }).fill(false)));
+  // svelte-ignore state_referenced_locally
   const dirtiness = $state<boolean[][]>(Array.from<boolean[]>({ length: Number(groups) }).fill(Array.from<boolean>({ length: Number(count) }).fill(false)));
 
   const initial = $state(value);
