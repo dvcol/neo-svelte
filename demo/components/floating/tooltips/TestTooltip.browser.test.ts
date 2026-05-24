@@ -175,12 +175,8 @@ describe('neoTooltip — keyboard focus opens (real :focus-visible)', { tags: ['
   });
 });
 
-describe('neoTooltip — openOnClick (currently broken, see NeoTooltip.svelte:150)', { tags: ['browser'] }, () => {
-  // Pinned bug: NeoTooltip.svelte's onOpenChange unconditionally drops `_reason === 'click'`
-  // updates, so even in a real browser the popover never opens on click. Phase 2 migration
-  // to @floating-ui/dom should fix this; until then this test is skipped to surface the
-  // expected behavior alongside the jsdom skip.
-  it.skip('opens via real pointer click when openOnClick=true and other flags disabled', async () => {
+describe('neoTooltip — openOnClick', { tags: ['browser'] }, () => {
+  it('opens via real pointer click when openOnClick=true and other flags disabled', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(Harness, {
@@ -195,7 +191,7 @@ describe('neoTooltip — openOnClick (currently broken, see NeoTooltip.svelte:15
         onChange,
       } as never,
     });
-    const trigger = getTrigger()!;
+    const trigger = await waitForTrigger();
     await user.click(trigger);
     await vi.waitFor(() => {
       expect(getTooltip()).not.toBeNull();
