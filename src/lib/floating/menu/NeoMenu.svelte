@@ -51,7 +51,7 @@
   }: NeoMenuProps = $props();
 
   let tooltipInstance = $state<ReturnType<typeof NeoTooltip>>();
-  let tooltipOpen = $state(false);
+  let tooltipOpen = $state(open);
   const context = setMenuContext({
     get open() {
       return open;
@@ -71,7 +71,7 @@
   const toggleListener = async (e: KeyboardEvent) => {
     // if tab && open, focus next element
     if (e.key === 'Tab' && open) {
-      if (e.shiftKey !== position?.includes('top')) return;
+      if (e.shiftKey) return;
       e.preventDefault();
       e.stopPropagation();
       return getFocusableElement(ref)?.focus();

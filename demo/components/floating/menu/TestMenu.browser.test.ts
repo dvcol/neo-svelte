@@ -53,16 +53,7 @@ async function openMenu(extra: Record<string, unknown> = {}) {
 }
 
 describe('neoMenu — controlled open prop', { tags: ['browser'] }, () => {
-  // TODO: re-evaluate after Phase 2. NeoMenu.svelte:53,66-68 maintains a
-  // parallel internal `tooltipOpen` state that is never seeded from the
-  // inbound `open` prop. The mount-time effect runs as
-  // `open = tooltipOpen || context.children` and immediately writes the
-  // bindable parent prop back to `false`, defeating any parent that mounts
-  // the menu with `open: true`. Skeleton's `useFloating` exposes `open` as
-  // a single bindable getter, which collapses this parallel-state class —
-  // the migration target should make this assertion pass without code
-  // changes here.
-  it.skip('renders the menu list visible when mounted with open=true', async () => {
+  it('renders the menu list visible when mounted with open=true', async () => {
     const { list } = await openMenu({
       triggerProps: {
         style: 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);',
@@ -118,15 +109,7 @@ describe('neoMenu — keyboard interaction (real focus)', { tags: ['browser'] },
     });
   });
 
-  // TODO: re-evaluate after Phase 2. NeoMenu.svelte:70-77 only redirects focus
-  // into the menu when `e.shiftKey !== position?.includes('top')`. With the
-  // default `bottom` placement, plain Tab matches the early-return branch
-  // (`false !== false` → return), so focus follows the document tab order
-  // (trigger → next focusable) rather than entering the menu. This matches
-  // the source code's intent (menu rendered _after_ the trigger in DOM order
-  // would be the next tab stop) but not the assertion below. Pinned until the
-  // floating-ui/dom migration unifies trigger / portal tab order.
-  it.skip('tab from the trigger keeps focus inside the menu when open', async () => {
+  it('tab from the trigger keeps focus inside the menu when open', async () => {
     const user = userEvent.setup();
     await openMenu({
       triggerProps: {
