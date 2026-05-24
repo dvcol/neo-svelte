@@ -2,6 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { buildOffsets, computeCursor, indexAtOffset, resolveVirtualId } from './neo-virtual-list.utils.js';
 import NeoVirtualListHarness from './NeoVirtualList.test.svelte';
 
 const ROW = 20;
@@ -427,5 +428,206 @@ describe('neoVirtualList — measurement lifecycle', { tags: ['jsdom'] }, () => 
   it.skip('tODO: register attachment unobserves on row unmount (no leaked observers). Covered in browser test where ResizeObserver is real.', () => {
     // Expected: when items shrink, ResizeObserver entries for unmounted rows are removed
     // (verified by counting observed elements before/after items mutation).
+  });
+});
+
+/*
+ * Phase 1.9: pure helper unit tests. These pin the contract that the offset
+ * builder, the binary-search index lookup, and the cursor resolver use today
+ * — independent of layout / ResizeObserver fakes — so a refactor of the
+ * NeoVirtualList component cannot silently regress the math.
+ */
+describe('neoVirtualList — utils.resolveVirtualId', () => {
+  it('returns the value produced by `key` when non-nullish', () => {
+    expect(resolveVirtualId({ id: 'x' }, 7, item => item.id)).toBe('x');
+  });
+
+  it('falls back to `index` when `key` returns nullish', () => {
+    expect(resolveVirtualId<{ id: undefined }>({ id: undefined }, 3, item => item.id)).toBe(3);
+    expect(resolveVirtualId<object>({}, 5, () => null as unknown as string)).toBe(5);
+  });
+
+  it('falls back to `index` when `key` is undefined', () => {
+    expect(resolveVirtualId({}, 9, undefined)).toBe(9);
+  });
+});
+
+describe('neoVirtualList — utils.buildOffsets', () => {
+  const items = Array.from({ length: 5 }, (_, i) => ({ id: i + 1 }));
+  const key = (item: { id: number }) => item.id;
+
+  it('produces a fixed-mode prefix sum (offsets[i] = i * h, total = length * h)', () => {
+    const { offsets, total } = buildOffsets({
+      items,
+      length: items.length,
+      key,
+      fixedHeight: 20,
+      heightFn: null,
+      heights: new Map(),
+      estimate: 0,
+    });
+    expect(Array.from(offsets)).toEqual([0, 20, 40, 60, 80, 100]);
+    expect(total).toBe(100);
+  });
+
+  it('uses the per-item height function when provided', () => {
+    const heightFn = vi.fn((_item: { id: number }, i: number) => (i % 2 === 0 ? 30 : 50));
+    const { offsets, total } = buildOffsets({
+      items,
+      length: items.length,
+      key,
+      fixedHeight: null,
+      heightFn,
+      heights: new Map(),
+      estimate: 999,
+    });
+    expect(Array.from(offsets)).toEqual([0, 30, 80, 110, 160, 190]);
+    expect(total).toBe(190);
+    expect(heightFn).toHaveBeenCalledTimes(items.length);
+  });
+
+  it('reads measured heights from the map and falls back to estimate for misses', () => {
+    const heights = new Map<string | number, number>([
+      [1, 10],
+      [3, 30],
+    ]);
+    const { offsets, total } = buildOffsets({
+      items,
+      length: items.length,
+      key,
+      fixedHeight: null,
+      heightFn: null,
+      heights,
+      estimate: 100,
+    });
+    // 1→10, 2→100 (miss), 3→30, 4→100 (miss), 5→100 (miss)
+    expect(Array.from(offsets)).toEqual([0, 10, 110, 140, 240, 340]);
+    expect(total).toBe(340);
+  });
+
+  it('returns offsets=[0] and total=0 for length=0', () => {
+    const { offsets, total } = buildOffsets({
+      items: [],
+      length: 0,
+      key,
+      fixedHeight: 20,
+      heightFn: null,
+      heights: new Map(),
+      estimate: 100,
+    });
+    expect(Array.from(offsets)).toEqual([0]);
+    expect(total).toBe(0);
+  });
+});
+
+describe('neoVirtualList — utils.indexAtOffset', () => {
+  it('fixed mode: O(1) division clamped to [0, length-1]', () => {
+    const offsets = new Float64Array([0, 20, 40, 60, 80, 100]);
+    expect(indexAtOffset({ y: 0, fixedHeight: 20, offsets, length: 5 })).toBe(0);
+    expect(indexAtOffset({ y: 19, fixedHeight: 20, offsets, length: 5 })).toBe(0);
+    expect(indexAtOffset({ y: 20, fixedHeight: 20, offsets, length: 5 })).toBe(1);
+    expect(indexAtOffset({ y: 99, fixedHeight: 20, offsets, length: 5 })).toBe(4);
+    expect(indexAtOffset({ y: 9999, fixedHeight: 20, offsets, length: 5 })).toBe(4);
+    expect(indexAtOffset({ y: -50, fixedHeight: 20, offsets, length: 5 })).toBe(0);
+  });
+
+  it('dynamic mode: returns the largest i with offsets[i] <= y', () => {
+    // heights: [10, 100, 30, 100, 100] → offsets [0, 10, 110, 140, 240, 340]
+    const offsets = new Float64Array([0, 10, 110, 140, 240, 340]);
+    expect(indexAtOffset({ y: 0, fixedHeight: null, offsets, length: 5 })).toBe(0);
+    expect(indexAtOffset({ y: 9, fixedHeight: null, offsets, length: 5 })).toBe(0);
+    expect(indexAtOffset({ y: 10, fixedHeight: null, offsets, length: 5 })).toBe(1);
+    expect(indexAtOffset({ y: 109, fixedHeight: null, offsets, length: 5 })).toBe(1);
+    expect(indexAtOffset({ y: 110, fixedHeight: null, offsets, length: 5 })).toBe(2);
+    expect(indexAtOffset({ y: 240, fixedHeight: null, offsets, length: 5 })).toBe(4);
+    expect(indexAtOffset({ y: 9999, fixedHeight: null, offsets, length: 5 })).toBe(4);
+  });
+
+  it('returns 0 for length=0', () => {
+    expect(indexAtOffset({ y: 100, fixedHeight: 20, offsets: new Float64Array([0]), length: 0 })).toBe(0);
+    expect(indexAtOffset({ y: 100, fixedHeight: null, offsets: new Float64Array([0]), length: 0 })).toBe(0);
+  });
+});
+
+describe('neoVirtualList — utils.computeCursor', () => {
+  it('collapses to {start:0,end:0} when length=0', () => {
+    expect(computeCursor({
+      scrollTop: 0,
+      viewportHeight: 200,
+      length: 0,
+      buffer: 5,
+      fixedHeight: 20,
+      offsets: new Float64Array([0]),
+    })).toEqual({ start: 0, end: 0 });
+  });
+
+  it('fixed mode: window covers viewport rows at scrollTop=0', () => {
+    const offsets = new Float64Array(Array.from({ length: 1001 }, (_, i) => i * 20));
+    // viewport=200, row=20 → 10 rows, +1 endIdx pad
+    expect(computeCursor({
+      scrollTop: 0,
+      viewportHeight: 200,
+      length: 1000,
+      buffer: 0,
+      fixedHeight: 20,
+      offsets,
+    })).toEqual({ start: 0, end: 11 });
+  });
+
+  it('fixed mode: window slides with scrollTop', () => {
+    const offsets = new Float64Array(Array.from({ length: 1001 }, (_, i) => i * 20));
+    expect(computeCursor({
+      scrollTop: 1000,
+      viewportHeight: 200,
+      length: 1000,
+      buffer: 0,
+      fixedHeight: 20,
+      offsets,
+    })).toEqual({ start: 50, end: 61 });
+  });
+
+  it('buffer expands the window on both sides and clamps to bounds', () => {
+    const offsets = new Float64Array(Array.from({ length: 1001 }, (_, i) => i * 20));
+    expect(computeCursor({
+      scrollTop: 0,
+      viewportHeight: 200,
+      length: 1000,
+      buffer: 5,
+      fixedHeight: 20,
+      offsets,
+    })).toEqual({ start: 0, end: 16 });
+    expect(computeCursor({
+      scrollTop: 19_800,
+      viewportHeight: 200,
+      length: 1000,
+      buffer: 5,
+      fixedHeight: 20,
+      offsets,
+    })).toEqual({ start: 985, end: 1000 });
+  });
+
+  it('renders all rows when total content fits the viewport', () => {
+    const offsets = new Float64Array([0, 20, 40, 60]);
+    expect(computeCursor({
+      scrollTop: 0,
+      viewportHeight: 200,
+      length: 3,
+      buffer: 0,
+      fixedHeight: 20,
+      offsets,
+    })).toEqual({ start: 0, end: 3 });
+  });
+
+  it('dynamic mode: respects per-item offsets', () => {
+    const offsets = new Float64Array([0, 100, 200, 300, 400, 500]);
+    // viewport=150, scrollTop=120 → start at index 1 (offsets[1]=100<=120), end at index 2+1=3
+    expect(computeCursor({
+      scrollTop: 120,
+      viewportHeight: 150,
+      length: 5,
+      buffer: 0,
+      fixedHeight: null,
+      offsets,
+    })).toEqual({ start: 1, end: 3 });
   });
 });

@@ -283,40 +283,524 @@ async function flushVirtual() {
   await tick();
 }
 
-describe('neoList — virtual mode (gating)', { tags: ['jsdom'] }, () => {
-  it('virtual=true on flat items renders the NeoVirtualList primitive', async () => {
-    const { container } = render(NeoList, { props: { items: bigItems, virtual: true, itemHeight: 30 } as never });
-    await flushVirtual();
-    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
-    // Only a window of rows should be rendered (not all 200).
-    expect(container.querySelectorAll('.neo-list-item').length).toBeLessThan(bigItems.length);
+/*
+ * Behavior matrix: every combination of (virtual, sections, flip).
+ *
+ * Today's behavior is pinned with `it`; post-rework expectations are written
+ * as `it.skip` siblings with TODO markers so flipping a behavior in a later
+ * phase is a one-line diff.
+ *
+ * Plan reference: Phase 1.1 in
+ *   /Users/dinh-van.colomban/.claude/plans/neolist-feature-change-when-optimized-star.md
+ */
+describe('neoList — virtual/sections/flip matrix', { tags: ['jsdom'] }, () => {
+  let warnSpy: ReturnType<typeof vi.spyOn<Console, 'warn'>>;
+  beforeEach(() => {
+    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warnSpy.mockRestore();
   });
 
-  it('virtual=false renders the legacy non-virtual path (all items in DOM)', async () => {
-    const { container } = render(NeoList, { props: { items: bigItems, virtual: false } as never });
+  function flatBigItems() {
+    return bigItems;
+  }
+
+  it('off/off/off → non-virtual flat, no warn', async () => {
+    const { container } = render(NeoList, { props: { items: flatBigItems(), virtual: false } as never });
     await tick();
     expect(container.querySelector('.neo-virtual-list')).toBeNull();
     expect(container.querySelectorAll('.neo-list-item')).toHaveLength(bigItems.length);
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  it('virtual+sections falls back to the non-virtual path and warns', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  it('off/off/on → non-virtual flipped, no warn', async () => {
+    const { container } = render(NeoList, { props: { items: flatBigItems(), virtual: false, flip: true } as never });
+    await tick();
+    expect(container.querySelector('.neo-virtual-list')).toBeNull();
+    expect(container.querySelector('.neo-list.neo-flip')).not.toBeNull();
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it('off/on/off → non-virtual sectioned, no warn', async () => {
+    const { container } = render(NeoList, { props: { items: sectionedItems, virtual: false } as never });
+    await tick();
+    expect(container.querySelector('.neo-virtual-list')).toBeNull();
+    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(2);
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it('off/on/on → non-virtual sectioned + flipped, no warn', async () => {
+    const { container } = render(NeoList, { props: { items: sectionedItems, virtual: false, flip: true } as never });
+    await tick();
+    expect(container.querySelector('.neo-virtual-list')).toBeNull();
+    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(2);
+    expect(container.querySelector('.neo-list.neo-flip')).not.toBeNull();
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it('on/off/off → virtual, no warn', async () => {
+    const { container } = render(NeoList, { props: { items: flatBigItems(), virtual: true, itemHeight: 30 } as never });
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    expect(container.querySelectorAll('.neo-list-item').length).toBeLessThan(bigItems.length);
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  /* ---- on/off/on (virtual + flip): silent fallback today, virtual-wins post-rework ---- */
+
+  it('on/off/on (today): silently falls back to non-virtual flipped + warns', async () => {
+    const { container } = render(NeoList, { props: { items: flatBigItems(), virtual: true, flip: true } as never });
+    await tick();
+    expect(container.querySelector('.neo-virtual-list')).toBeNull();
+    expect(container.querySelector('.neo-list.neo-flip')).not.toBeNull();
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  it.skip('on/off/on (post-rework): virtual wins, flip fully dropped, warns — TODO Phase 2 (NeoList.svelte:121)', async () => {
+    const { container } = render(NeoList, { props: { items: flatBigItems(), virtual: true, flip: true } as never });
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    expect(container.querySelector('.neo-list.neo-flip')).toBeNull();
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  /* ---- on/on/off (virtual + sections): silent fallback today, virtual-wins post-rework ---- */
+
+  it('on/on/off (today): silently falls back to non-virtual sectioned + warns', async () => {
     const { container } = render(NeoList, { props: { items: sectionedItems, virtual: true } as never });
     await tick();
     expect(container.querySelector('.neo-virtual-list')).toBeNull();
-    expect(warn).toHaveBeenCalled();
-    warn.mockRestore();
+    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(2);
+    expect(warnSpy).toHaveBeenCalled();
   });
 
-  it('virtual+flip falls back to the non-virtual path and warns', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const { container } = render(NeoList, { props: { items: bigItems, virtual: true, flip: true } as never });
+  it.skip('on/on/off (post-rework): virtual flat with cascade, no section headers, warns — TODO Phase 2 (NeoList.svelte:121, neo-list.model.ts flattenSectionsWithCascade)', async () => {
+    const { container } = render(NeoList, {
+      props: { items: sectionedItems, virtual: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(0);
+    /*
+     * sectionedItems has 2 sections × 1 item each → flattened to 2 items
+     * with disabled/readonly cascaded from each parent section (truthy-only).
+     */
+    expect(container.querySelectorAll('.neo-list-item')).toHaveLength(2);
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  /* ---- on/on/on (virtual + sections + flip): silent fallback today, virtual-wins post-rework ---- */
+
+  it('on/on/on (today): silently falls back to non-virtual sectioned + warns', async () => {
+    const { container } = render(NeoList, { props: { items: sectionedItems, virtual: true, flip: true } as never });
     await tick();
     expect(container.querySelector('.neo-virtual-list')).toBeNull();
-    expect(warn).toHaveBeenCalled();
-    warn.mockRestore();
+    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(2);
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  it.skip('on/on/on (post-rework): virtual flat with cascade, flip fully dropped, warns — TODO Phase 2 (NeoList.svelte:121)', async () => {
+    const { container } = render(NeoList, {
+      props: { items: sectionedItems, virtual: true, flip: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    expect(container.querySelector('.neo-list.neo-flip')).toBeNull();
+    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(0);
+    expect(container.querySelectorAll('.neo-list-item')).toHaveLength(2);
+    expect(warnSpy).toHaveBeenCalled();
   });
 });
+
+/*
+ * Phase 1.2: pin the shape of the `current` selection record emitted via
+ * `onSelect` in each render mode. Non-virtual flat / sectioned go through
+ * NeoList.svelte:485 (full shape); virtual goes through :532 (lean shape).
+ */
+describe('neoList — selection payload shape', { tags: ['jsdom'] }, () => {
+  it('non-virtual flat: emits { index, item, sectionIndex: undefined, section: undefined }', async () => {
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(NeoList, { props: { items, select: true, onSelect } as never });
+    await tick();
+    await user.click(getButtons(container)[1]);
+    await tick();
+    const evt = onSelect.mock.calls[0][0] as { current: NeoListSelectedShape };
+    expect(evt.current).toMatchObject({ index: 1, item: items[1] });
+    expect(evt.current.sectionIndex).toBeUndefined();
+    expect(evt.current.section).toBeUndefined();
+  });
+
+  it('non-virtual sectioned: emits { index, item, sectionIndex, section }', async () => {
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    const sectioned = [
+      { id: 's1', label: 'A', items: [{ id: 1, value: 'a', label: 'Alpha' }] },
+      { id: 's2', label: 'B', items: [{ id: 2, value: 'b', label: 'Bravo' }] },
+    ];
+    const { container } = render(NeoList, { props: { items: sectioned, select: true, onSelect } as never });
+    await tick();
+    await user.click(getButtons(container)[1]);
+    await tick();
+    const evt = onSelect.mock.calls[0][0] as { current: NeoListSelectedShape };
+    expect(evt.current).toMatchObject({ index: 0, sectionIndex: 1 });
+    expect(evt.current.item).toMatchObject({ id: 2 });
+    expect(evt.current.section).toBeDefined();
+  });
+
+  it('virtual (today): emits { index, item } only — sectionIndex / section are absent', async () => {
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, select: true, itemHeight: 30, onSelect } as never,
+    });
+    await flushVirtual();
+    await user.click(getButtons(container)[0]);
+    await flushVirtual();
+    const evt = onSelect.mock.calls[0][0] as { current: NeoListSelectedShape };
+    expect(evt.current).toMatchObject({ index: 0, item: bigItems[0] });
+    /*
+     * Today the virtual click handler at NeoList.svelte:532 omits these keys
+     * entirely. Phase 3.2 makes them explicit `undefined`.
+     */
+    expect('sectionIndex' in evt.current).toBe(false);
+    expect('section' in evt.current).toBe(false);
+  });
+
+  it.skip('virtual (post-rework): emits { index, item, sectionIndex: undefined, section: undefined } — TODO Phase 3.2 (NeoList.svelte:532)', async () => {
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, select: true, itemHeight: 30, onSelect } as never,
+    });
+    await flushVirtual();
+    await user.click(getButtons(container)[0]);
+    await flushVirtual();
+    const evt = onSelect.mock.calls[0][0] as { current: NeoListSelectedShape };
+    expect(evt.current).toMatchObject({ index: 0, item: bigItems[0] });
+    expect('sectionIndex' in evt.current).toBe(true);
+    expect('section' in evt.current).toBe(true);
+    expect(evt.current.sectionIndex).toBeUndefined();
+    expect(evt.current.section).toBeUndefined();
+  });
+});
+
+/*
+ * Phase 1.3: ARIA posinset/setsize parity between modes.
+ *
+ * Today's behavior diverges:
+ *   - non-virtual (NeoList.svelte:446) uses the ORIGINAL item index for
+ *     aria-posinset (the `index` from the pre-filter `.map`).
+ *   - virtual (NeoList.svelte:506) uses the FILTERED position
+ *     (`v.index + 1` against `visibleItems`).
+ * After Phase 3.1 hoists `visibleItems` for both modes the values become
+ * equivalent (filtered position in both). The `it.skip` below flips active
+ * once the hoist lands.
+ */
+describe('neoList — ARIA posinset/setsize parity', { tags: ['jsdom'] }, () => {
+  const fiveItems = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, value: i + 1, label: `Item ${i + 1}` }));
+  // Keep items 2, 3, 4 → 3 items in the visible window, originals at indices 1, 2, 3.
+  const filterToMiddleThree = (item: { id: number }) => item.id >= 2 && item.id <= 4;
+
+  it('non-virtual (today): posinset uses ORIGINAL index; setsize uses filtered count; data-index = original', async () => {
+    const { container } = render(NeoList, { props: { items: fiveItems, filter: filterToMiddleThree } as never });
+    await tick();
+    const lis = Array.from(container.querySelectorAll<HTMLElement>('li.neo-list-item'));
+    expect(lis).toHaveLength(3);
+    // Original indices 1, 2, 3 → posinset 2, 3, 4.
+    expect(lis.map(li => li.getAttribute('aria-posinset'))).toEqual(['2', '3', '4']);
+    expect(new Set(lis.map(li => li.getAttribute('aria-setsize')))).toEqual(new Set(['3']));
+    expect(lis.map(li => li.dataset.index)).toEqual(['1', '2', '3']);
+  });
+
+  it('virtual: posinset 1..N matches filtered position in visibleItems; data-index keeps original index', async () => {
+    const { container } = render(NeoList, {
+      props: { items: fiveItems, virtual: true, itemHeight: 30, filter: filterToMiddleThree } as never,
+    });
+    await flushVirtual();
+    const lis = Array.from(container.querySelectorAll<HTMLElement>('li.neo-list-item'));
+    expect(lis).toHaveLength(3);
+    expect(lis.map(li => li.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
+    expect(new Set(lis.map(li => li.getAttribute('aria-setsize')))).toEqual(new Set(['3']));
+    expect(lis.map(li => li.dataset.index)).toEqual(['1', '2', '3']);
+  });
+
+  it.skip('non-virtual (post-rework): posinset 1..N matches filtered position — TODO Phase 3.1 (NeoList.svelte:446)', async () => {
+    const { container } = render(NeoList, { props: { items: fiveItems, filter: filterToMiddleThree } as never });
+    await tick();
+    const lis = Array.from(container.querySelectorAll<HTMLElement>('li.neo-list-item'));
+    expect(lis).toHaveLength(3);
+    expect(lis.map(li => li.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
+    expect(lis.map(li => li.dataset.index)).toEqual(['1', '2', '3']);
+  });
+});
+
+/*
+ * Phase 1.4: keyboard ArrowUp/Down navigation.
+ * - Non-virtual flat: ArrowDown moves focus to the next sibling.
+ * - Non-virtual + flip: ArrowDown reverses to the PREVIOUS sibling
+ *   (NeoListBaseItem.svelte:246 swaps the action when flip is set).
+ * - Virtual within window: ArrowDown moves focus to the next sibling.
+ * - Virtual at cursor edge: today, focus is lost; post-rework (Phase 3.6)
+ *   the item calls `context.scrollToIndex` and then refocuses.
+ * - Virtual + flip prop: today, the prop reaches the item via context.flip
+ *   and reverses keyboard direction; post-rework (Phase 2) flip is fully
+ *   dropped so direction stays non-flipped.
+ */
+describe('neoList — keyboard ArrowUp/Down', { tags: ['jsdom'] }, () => {
+  const fiveItems = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, value: i + 1, label: `Item ${i + 1}` }));
+
+  it('non-virtual flat: ArrowDown from row 0 focuses row 1', async () => {
+    const user = userEvent.setup();
+    const { container } = render(NeoList, { props: { items: fiveItems, select: true } as never });
+    await tick();
+    const btns = getButtons(container);
+    btns[0].focus();
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement).toBe(btns[1]);
+  });
+
+  it('non-virtual + flip: ArrowDown reverses to PREVIOUS sibling', async () => {
+    const user = userEvent.setup();
+    const { container } = render(NeoList, { props: { items: fiveItems, select: true, flip: true } as never });
+    await tick();
+    const btns = getButtons(container);
+    btns[2].focus();
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement).toBe(btns[1]);
+  });
+
+  it('virtual within window: ArrowDown from row 0 focuses row 1', async () => {
+    const user = userEvent.setup();
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, select: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    const btns = getButtons(container);
+    btns[0].focus();
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement).toBe(btns[1]);
+  });
+
+  it.skip('virtual at cursor edge: ArrowDown beyond window scrolls and focuses next via context.scrollToIndex — TODO Phase 3.6 (NeoListBaseItem.svelte:71-86)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, select: true, itemHeight: 30, buffer: 0 } as never,
+    });
+    await flushVirtual();
+    const btns = getButtons(container);
+    const lastInWindow = btns.at(-1)!;
+    const dataIndex = lastInWindow.closest('li')!.dataset.index!;
+    lastInWindow.focus();
+    await user.keyboard('{ArrowDown}');
+    await flushVirtual();
+    /*
+     * Post-rework: context.scrollToIndex advances the cursor past the edge,
+     * then focus lands on the next row by aria-posinset.
+     */
+    const expectedNextIndex = String(Number(dataIndex) + 1);
+    const focused = document.activeElement?.closest('li');
+    expect(focused?.dataset.index).toBe(expectedNextIndex);
+  });
+
+  it.skip('virtual + flip prop: keyboard direction NOT swapped (flip fully dropped) — TODO Phase 2 (NeoList.svelte:121, NeoListBaseItem.svelte:246)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, flip: true, select: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    const btns = getButtons(container);
+    btns[1].focus();
+    await user.keyboard('{ArrowDown}');
+    // Post-rework: flip is dropped under virtual; ArrowDown still moves to the next sibling.
+    expect(document.activeElement).toBe(btns[2]);
+  });
+});
+
+/*
+ * Phase 1.5: dividers in virtual mode.
+ *
+ * Today: virtualRow snippet (NeoList.svelte:496-536) does not call
+ * `renderDivider` so no NeoDivider is mounted between virtual rows.
+ * Phase 3.4 hooks dividers in and (when itemHeight is numeric) auto-falls
+ * to dynamic measurement plus a warning.
+ */
+describe('neoList — dividers in virtual', { tags: ['jsdom'] }, () => {
+  it('virtual (today): no NeoDivider rendered between rows even when divider=true', async () => {
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, divider: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    expect(container.querySelector('.neo-list-item-divider')).toBeNull();
+  });
+
+  it.skip('virtual rows render NeoDivider when divider=true — TODO Phase 3.4 (NeoList.svelte:496-536 has no renderDivider)', async () => {
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, divider: true } as never,
+    });
+    await flushVirtual();
+    expect(container.querySelectorAll('.neo-list-item-divider').length).toBeGreaterThan(0);
+  });
+
+  it.skip('virtual + numeric itemHeight + divider auto-falls to dynamic measurement and warns — TODO Phase 3.4 (NeoList.svelte effectiveItemHeight)', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    render(NeoList, { props: { items: bigItems, virtual: true, divider: true, itemHeight: 30 } as never });
+    await flushVirtual();
+    /*
+     * Post-rework: passing both divider and a numeric itemHeight overrides
+     * the height to undefined (dynamic) and warns once.
+     */
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('divider'));
+    warnSpy.mockRestore();
+  });
+});
+
+/*
+ * Phase 1.6: row transitions in virtual mode.
+ *
+ * Today: NeoList.svelte:362-372 collapses in/out to emptyTransition when
+ * `virtualEnabled && scrolling`, but virtualRow at :500 doesn't pass
+ * in:/out: at all — so virtual rows never transition. Phase 3.5 wires the
+ * transitions in, gated by `!scrolling` and an `initialMounted` flag.
+ */
+describe('neoList — row transitions in virtual', { tags: ['jsdom'] }, () => {
+  it('virtual (today): rows mount/unmount without transition wiring', async () => {
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    /*
+     * Pin via the absence of a Svelte-managed transition class hook on
+     * virtual rows. We can't observe the in: / out: directives directly,
+     * but the row markup at NeoList.svelte:500 simply has no in:/out:
+     * attribute, so neither incoming nor leaving rows ever animate.
+     */
+    const rows = container.querySelectorAll<HTMLElement>('.neo-virtual-list .neo-list-item');
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      expect(row.style.opacity).toBe('');
+      expect(row.style.transform).toBe('');
+    }
+  });
+
+  it.skip('virtual rows run in:/out: on filter change when !scrolling — TODO Phase 3.5 (NeoList.svelte:500)', () => {});
+
+  it.skip('virtual rows do NOT run in:/out: on initial mount — TODO Phase 3.5 (NeoList.svelte initialMounted flag)', () => {});
+
+  it.skip('virtual rows do NOT run in:/out: while scrolling — TODO Phase 3.5 (NeoList.svelte:362-372 already covers gating)', () => {});
+});
+
+/*
+ * Phase 1.7: imperative methods are no-ops in non-virtual mode.
+ * Pinned by NeoList.svelte:174-181 — `scrollToIndex` returns false and
+ * `refresh` early-returns when `virtualEnabled` is false.
+ */
+describe('neoList — imperative methods (non-virtual no-ops)', { tags: ['jsdom'] }, () => {
+  it('refresh and scrollToIndex are no-ops in non-virtual mode', async () => {
+    let instance: { refresh: () => void; scrollToIndex: (i: number) => unknown } | undefined;
+    render(NeoListHarness, {
+      props: {
+        items: bigItems,
+        virtual: false,
+        onInstance: (i: unknown) => {
+          instance = i as never;
+        },
+      } as never,
+    });
+    await tick();
+    expect(typeof instance!.refresh).toBe('function');
+    expect(() => instance!.refresh()).not.toThrow();
+    expect(instance!.scrollToIndex(0)).toBe(false);
+    expect(instance!.scrollToIndex(50)).toBe(false);
+  });
+});
+
+/*
+ * Phase 1.8: runtime prop toggling.
+ *
+ * - `virtual` false ↔ true: the rendered primitive (.neo-virtual-list)
+ *   appears or disappears with no orphan listeners on the previous host.
+ * - `flip` while `virtual=true`: today the gate downgrades to non-virtual;
+ *   post-rework virtual stays and flip is dropped + warned.
+ * - Items sectioned ↔ flat with `virtual=true`: today downgrades; post-
+ *   rework flattens with cascade + warns.
+ * - sort/filter ref change re-derives `visibleItems` in virtual mode (the
+ *   non-virtual side already re-derives via the inline pipeline at :429).
+ *   After Phase 3.1 hoists `visibleItems`, this is shared.
+ */
+describe('neoList — runtime prop toggling', { tags: ['jsdom'] }, () => {
+  it('virtual false ↔ true: primitive swaps cleanly', async () => {
+    const { container, rerender } = render(NeoList, { props: { items: bigItems, virtual: false } as never });
+    await tick();
+    expect(container.querySelector('.neo-virtual-list')).toBeNull();
+    await rerender({ items: bigItems, virtual: true, itemHeight: 30 } as never);
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    await rerender({ items: bigItems, virtual: false } as never);
+    await tick();
+    expect(container.querySelector('.neo-virtual-list')).toBeNull();
+  });
+
+  it('virtual=true: sort or filter reference change re-derives visibleItems', async () => {
+    const { container, rerender } = render(NeoList, {
+      props: { items: bigItems, virtual: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    const before = Array.from(container.querySelectorAll<HTMLElement>('.neo-list-item'))
+      .map(li => li.dataset.id);
+    expect(before.length).toBeGreaterThan(0);
+    // Filter to even ids only — visibleItems shrinks; the rendered window
+    // must reflect the filtered slice.
+    await rerender({
+      items: bigItems,
+      virtual: true,
+      itemHeight: 30,
+      filter: (item: { id: number }) => item.id % 2 === 0,
+    } as never);
+    await flushVirtual();
+    const after = Array.from(container.querySelectorAll<HTMLElement>('.neo-list-item'))
+      .map(li => Number(li.dataset.id));
+    expect(after.every(id => id % 2 === 0)).toBe(true);
+  });
+
+  it.skip('virtual=true + flip prop toggled on at runtime: virtual stays, flip dropped + warns — TODO Phase 2 (NeoList.svelte:121)', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const { container, rerender } = render(NeoList, {
+      props: { items: bigItems, virtual: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    await rerender({ items: bigItems, virtual: true, itemHeight: 30, flip: true } as never);
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    expect(container.querySelector('.neo-list.neo-flip')).toBeNull();
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  it.skip('virtual=true: items toggling sectioned ↔ flat keeps virtual + flattens with cascade + warns — TODO Phase 2 (NeoList.svelte:121, flattenSectionsWithCascade)', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const { container, rerender } = render(NeoList, {
+      props: { items: bigItems, virtual: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    await rerender({ items: sectionedItems, virtual: true, itemHeight: 30 } as never);
+    await flushVirtual();
+    expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
+    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(0);
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+});
+
+interface NeoListSelectedShape {
+  index: number;
+  item: { id: number | string };
+  sectionIndex?: number;
+  section?: unknown;
+}
 
 describe('neoList — virtual mode (selection)', { tags: ['jsdom'] }, () => {
   it('selects items inside the virtual window via click', async () => {
