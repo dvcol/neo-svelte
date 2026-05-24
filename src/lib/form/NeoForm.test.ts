@@ -146,6 +146,24 @@ describe('neoForm — component-instance API', { tags: ['jsdom'] }, () => {
     expect(state.initial).toBeDefined();
   });
 
+  it('instance.context identity is captured at mount and survives id prop changes', async () => {
+    let instance: { context: unknown } | undefined;
+    const onInstance = (i: unknown) => {
+      if (i) instance = i as never;
+    };
+    const { rerender } = render(NeoFormHarness, {
+      props: { id: 'first', childrenText: 'x', onInstance } as never,
+    });
+    await tick();
+    const initialContext = instance!.context;
+    expect(initialContext).toBeDefined();
+    await rerender({ id: 'second', childrenText: 'x', onInstance } as never);
+    await tick();
+    // setNeoFormContext is called once at mount with the initial id.
+    // A re-init on id change would orphan every getNeoFormContext consumer.
+    expect(instance!.context).toBe(initialContext);
+  });
+
   it('instance.validate() invokes registered fields validate hooks (via context.register)', async () => {
     let instance: { validate: () => unknown; context: { register: (f: unknown) => void } } | undefined;
     render(NeoFormHarness, {

@@ -34,6 +34,8 @@
     ...rest
   }: NeoFormProps = $props();
 
+  /** Form context identity is intentionally bound to the initial `id`; consumers cache the reference and a re-init would orphan them. */
+  // svelte-ignore state_referenced_locally
   export const context = setNeoFormContext(id);
 
   export const validate = () => context.validate();
