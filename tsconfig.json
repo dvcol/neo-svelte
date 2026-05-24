@@ -1,8 +1,31 @@
 {
+  /*
+   * Aggregate config used by the IDE / eslint type-aware project service.
+   * Build artifacts come from the dedicated tsconfig.{build,demo,test}.json
+   * referenced below. tsconfig.build.json's `exclude` (test/demo files)
+   * makes them invisible to the default project, so we override here to
+   * widen the project to every file in the workspace.
+   */
   "extends": ["./.svelte-kit/tsconfig.json", "./tsconfig.build.json"],
   "references": [
     { "path": "./tsconfig.vite.json" },
     { "path": "./tsconfig.demo.json" },
     { "path": "./tsconfig.test.json" }
-  ]
+  ],
+  "include": [
+    "ambient.d.ts",
+    "non-ambient.d.ts",
+    ".svelte-kit/ambient.d.ts",
+    ".svelte-kit/non-ambient.d.ts",
+    ".svelte-kit/types/**/$types.d.ts",
+    "vite.config.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte",
+    "test/**/*.ts",
+    "test/**/*.svelte",
+    "demo/**/*.ts",
+    "demo/**/*.svelte"
+  ],
+  "exclude": []
 }
