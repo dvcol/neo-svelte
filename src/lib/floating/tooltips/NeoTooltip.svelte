@@ -17,6 +17,7 @@
     offset,
     Popover,
     role as roleInteraction,
+    shift,
     size,
   } from '~/floating/common/popover/index.js';
   import NeoPortal from '~/floating/portal/NeoPortal.svelte';
@@ -149,6 +150,7 @@
       ];
       if (placement === 'auto') middleware.push(autoPlacement());
       else middleware.push(flip({ fallbackAxisSideDirection: 'end' }));
+      middleware.push(shift({ padding: 8 }));
       return middleware;
     },
     get placement() {

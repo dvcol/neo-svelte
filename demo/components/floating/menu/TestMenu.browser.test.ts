@@ -332,12 +332,7 @@ describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () =>
     expect(level2Rect.left).toBeGreaterThanOrEqual(-1);
   });
 
-  // TODO: skeleton's flip middleware does not cascade-flip nested menus on the
-  // X axis at small viewports — level-2/level-3 submenus open rightward even
-  // when there's no room. The migration to @floating-ui/dom should evaluate
-  // whether `flip({ crossAxis: true })` or `shift()` middleware fixes this.
-  // For now, pin the regression-floor: at most one cascading level overflows.
-  it.skip('every cascading submenu fits inside the viewport at mobile size', async () => {
+  it('every cascading submenu fits inside the viewport at mobile size', async () => {
     await setViewport('mobile');
     document.body.style.margin = '0';
     document.body.style.padding = '0';
