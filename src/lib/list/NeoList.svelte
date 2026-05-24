@@ -369,10 +369,37 @@
     reSelect,
   });
 
-  const onscroll: NeoListProps['onscroll'] = debounce((e) => {
+  /*
+   * Non-virtual `scrolling` parity with virtual mode (NeoVirtualList drives
+   * the same flag via `markScrolling`). Toggles `scrolling` synchronously on
+   * the first scroll event, then resets after an idle window. Idle window
+   * matches NeoVirtualList: 300ms on touch, 150ms otherwise.
+   */
+  const isTouch = typeof window !== 'undefined' && 'ontouchstart' in window;
+  const scrollIdleMs = isTouch ? 300 : 150;
+  let stopScrollingTimer: ReturnType<typeof setTimeout> | 0 = 0;
+  function markScrolling() {
+    if (!scrolling) scrolling = true;
+    if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
+    stopScrollingTimer = setTimeout(() => {
+      scrolling = false;
+      stopScrollingTimer = 0;
+    }, scrollIdleMs);
+  }
+
+  const debouncedScroll: NonNullable<NeoListProps['onscroll']> = debounce((e) => {
     rest?.onscroll?.(e);
     onScrollEvent(e);
   }, 25);
+
+  const onscroll: NeoListProps['onscroll'] = (e) => {
+    markScrolling();
+    debouncedScroll(e);
+  };
+
+  $effect(() => () => {
+    if (stopScrollingTimer) clearTimeout(stopScrollingTimer);
+  });
 
   const renderDivider = (index: number, array: { item: NeoListItemOrSection }[], position: 'top' | 'bottom') => {
     if (position === 'top') return index && (showDivider(array[index]?.item.divider, 'top') ?? showDivider(divider, 'top'));
