@@ -69,9 +69,9 @@
 
   let active = $state(false);
 
-  const debounceActive = debounce((value: boolean) => {
+  const debounceActive = $derived(debounce((value: boolean) => {
     active = value;
-  }, delay);
+  }, delay));
 
   function setActive(value: boolean): void {
     if (value) {
@@ -187,12 +187,12 @@
     queue?.clear();
   }
 
-  const resume = debounce(() => queue?.forEach((item) => {
+  const resume = $derived(debounce(() => queue?.forEach((item) => {
     if (!item.paused || !item.duration) return;
     // restart the item with a duration base on item.added and item.paused
     item.restart({ duration: item.duration - (item.paused - item.added), unshift: false });
     delete item.paused;
-  }), delay);
+  }), delay));
 
   export function pause(_paused: boolean = true): void | Promise<void> {
     paused = _paused;

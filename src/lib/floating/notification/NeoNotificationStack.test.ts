@@ -33,6 +33,26 @@ function mountStack(props: Record<string, unknown> = {}): { instance: StackInsta
   return { instance };
 }
 
+function mountStackWithRerender(props: Record<string, unknown> = {}): { instance: StackInstance; rerender: (p: Record<string, unknown>) => Promise<void> } {
+  let instance!: StackInstance;
+  const { rerender } = renderWithPortalTarget(Harness, {
+    ...props,
+    onInstance: (i: StackInstance | undefined) => {
+      if (i) instance = i;
+    },
+  } as never);
+  if (!instance) throw new Error('Stack instance not captured');
+  return {
+    instance,
+    rerender: async (p: Record<string, unknown>) => rerender({
+      ...p,
+      onInstance: (i: StackInstance | undefined) => {
+        if (i) instance = i;
+      },
+    } as never),
+  };
+}
+
 function getStack(): HTMLElement | null {
   return document.querySelector<HTMLElement>('.neo-notification-stack');
 }
@@ -225,6 +245,43 @@ describe('neoNotificationStack — pause / resume', { tags: ['jsdom'] }, () => {
     vi.advanceTimersByTime(700);
     await tick();
     expect(instance.get('p2')).toBeUndefined();
+  });
+
+  it('resume waits the configured delay before restarting paused items (delay > 0)', async () => {
+    const { instance } = mountStack({ pauseOnHover: true, delay: 50 });
+    instance.add({ id: 'p-delay', duration: 1000 });
+    await tick();
+    vi.advanceTimersByTime(400);
+    instance.pause(true);
+    instance.pause(false);
+    // Within the resume debounce window — item should NOT have been restarted.
+    vi.advanceTimersByTime(40);
+    await tick();
+    expect(instance.get('p-delay')).not.toBeUndefined();
+    expect(instance.get('p-delay')?.paused).toBeTypeOf('number');
+    // After the window, resume runs and re-arms the timeout for 600ms.
+    vi.advanceTimersByTime(20);
+    await tick();
+    expect(instance.get('p-delay')?.paused).toBeUndefined();
+    vi.advanceTimersByTime(700);
+    await tick();
+    expect(instance.get('p-delay')).toBeUndefined();
+  });
+
+  it('changing the delay prop after mount rebuilds the resume debounce window', async () => {
+    const { instance, rerender } = mountStackWithRerender({ pauseOnHover: true, delay: 500 });
+    instance.add({ id: 'p-rebuild', duration: 1000 });
+    await tick();
+    vi.advanceTimersByTime(400);
+    instance.pause(true);
+    await rerender({ pauseOnHover: true, delay: 10 });
+    await tick();
+    instance.pause(false);
+    // Old delay was 500; if the debounce wasn't rebuilt, advancing 20ms wouldn't
+    // be enough. New delay=10 means the resume should fire within that window.
+    vi.advanceTimersByTime(20);
+    await tick();
+    expect(instance.get('p-rebuild')?.paused).toBeUndefined();
   });
 
   it('items with pauseOnHover=false are NOT halted by stack-level pause', async () => {
