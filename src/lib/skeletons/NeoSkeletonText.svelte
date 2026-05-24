@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { NeoSkeletonTextProps } from '~/skeletons/neo-skeleton-text.model.js';
 
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { fade } from 'svelte/transition';
 
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
-  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { toSize } from '~/utils/style.utils.js';
   import { quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';
 

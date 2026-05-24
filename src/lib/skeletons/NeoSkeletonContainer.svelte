@@ -3,11 +3,11 @@
 
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { useResize } from '@dvcol/svelte-utils/resize';
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { untrack } from 'svelte';
   import { fade } from 'svelte/transition';
 
   import NeoTransitionContainer from '~/containers/NeoTransitionContainer.svelte';
-  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { quickScaleDelayProps, quickScaleProps } from '~/utils/transition.utils.js';
 
   let {
@@ -61,7 +61,7 @@
   const resize = useResize();
   $effect.pre(() => {
     if (!ref || loading) return;
-    resize.current;
+    if (resize.current === undefined) return;
     updateSize();
   });
 </script>

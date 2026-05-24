@@ -1,4 +1,4 @@
-minimumReleaseAge: 10080 # 7 days; 7 × 24 × 60 = 10080
+minimumReleaseAge: 4020 # 3 days; 3 × 24 × 60 = 4320
 
 minimumReleaseAgeExclude:
   - '@dvcol/*'
@@ -12,6 +12,8 @@ allowBuilds:
   svelte-preprocess: true
 
 overrides:
+  chokidar: 5.0.0 # 4.0.3 dropped provenance; remove override once a later 4.x publishes with attestation
+  semver: 7.8.0 # standard-version pulls semver@6 without provenance; force 7.x which has attestation
   yaml: 2.8.4 # remove when 2.9.0 is past minimumReleaseAge
 
 onlyBuiltDependencies:

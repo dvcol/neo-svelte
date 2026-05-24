@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { NeoSkeletonMediaProps } from '~/skeletons/neo-skeleton-media.model.js';
 
+  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { fade } from 'svelte/transition';
 
   import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
@@ -9,7 +10,6 @@
   import NeoIconVideo from '~/icons/NeoIconVideo.svelte';
   import { NeoSkeletonMediaType } from '~/skeletons/neo-skeleton-media.model.js';
   import NeoSkeletonContainer from '~/skeletons/NeoSkeletonContainer.svelte';
-  import { toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { computeBorderRadius } from '~/utils/border.utils.js';
   import { toSize } from '~/utils/style.utils.js';
   import { quickDelayProps, quickDurationProps } from '~/utils/transition.utils.js';

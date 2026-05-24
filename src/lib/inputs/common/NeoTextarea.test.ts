@@ -6,6 +6,7 @@ import { tick } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import NeoTextarea from '~/inputs/common/NeoTextarea.svelte';
+
 import Harness from './NeoTextarea.test.svelte';
 
 afterEach(() => {
