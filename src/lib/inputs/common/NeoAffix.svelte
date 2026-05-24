@@ -40,7 +40,10 @@
     ...rest
   }: NeoAffixProps = $props();
 
-  const clear = $derived.by(debounced(() => close && !disabled && !readonly, 100));
+  const clear = debounced({
+    value: () => close && !disabled && !readonly,
+    delay: 100,
+  });
 
   const inFn = $derived(toTransition(inAction ?? transitionAction));
   const inProps = $derived(toTransitionProps(inAction ?? transitionAction));
@@ -66,7 +69,7 @@
         <NeoIconCircleLoading />
       {/if}
     </span>
-  {:else if clear}
+  {:else if clear.current}
     <button type="button" {disabled} class:neo-affix-clear={true} aria-label="clear" transition:fade={quickDurationProps} {...closeProps}>
       {#if reset}
         {@render reset({ size })}
