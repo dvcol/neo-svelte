@@ -26,7 +26,7 @@
     key = defaultVirtualKey as never,
     itemHeight,
     estimatedItemHeight = 40,
-    buffer = 8,
+    buffer = 10,
     scrolling = $bindable(false),
 
     // Events

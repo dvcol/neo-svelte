@@ -74,7 +74,7 @@
     virtual = false,
     itemHeight,
     estimatedItemHeight = 40,
-    buffer = 3,
+    buffer = 10,
     key,
     virtualProps,
 

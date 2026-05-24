@@ -192,6 +192,30 @@
 
   const virtual = $derived(isEmpty ? [] : generated);
 
+  /*
+   * Sectioned dataset — five buckets of 100 items each — used by the
+   * virtual + sections demo. Non-virtual renders headers + nested lists;
+   * virtual flattens with `disabled`/`readonly` cascade and stamps
+   * `sectionIndex` / `section` on each row (see NeoListVirtualItem).
+   */
+  const generatedSections = $state<NeoListSection[]>(
+    Array.from({ length: 5 }).map((_, s) => ({
+      id: getUUID(),
+      label: `Group ${s + 1}`,
+      divider: true,
+      sticky: true,
+      readonly: s === 3,
+      items: Array.from({ length: 100 }).map((__, i) => ({
+        label: `Group ${s + 1} — item ${i + 1}`,
+        description: randomDescription(),
+        value: `${s + 1}-${i + 1}`,
+        id: getUUID(),
+      })),
+    })),
+  );
+
+  const virtualSections = $derived<NeoListProps['items']>(isEmpty ? [] : generatedSections);
+
   let hovered = $state(false);
   let focused = $state(false);
   const elevation = $state(0);
@@ -303,6 +327,24 @@
           </li>
         {/snippet}
       </NeoVirtualList>
+    </div>
+  </div>
+
+  <!--
+    Sections × virtualization. Non-virtual keeps headers + nested lists;
+    virtual flattens with disabled/readonly cascade and stamps section
+    metadata onto each row (see NeoListVirtualItem). The fourth section
+    is `readonly` to make the cascade observable in the virtual column.
+  -->
+  <div class="row">
+    <div class="column content">
+      <span class="label">NeoList sections (non-virtual)</span>
+      <NeoList aria-label="Non-virtual sectioned list" select multiple {...options} items={virtualSections} />
+    </div>
+
+    <div class="column content">
+      <span class="label">NeoList sections (virtual, flattened)</span>
+      <NeoList aria-label="Virtual sectioned list" virtual select multiple {...options} items={virtualSections} buffer={10} />
     </div>
   </div>
 </section>
