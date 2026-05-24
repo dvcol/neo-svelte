@@ -10,6 +10,7 @@
     NeoListSelectedItem,
     NeoListSelectEvent,
     NeoListSelectMethods,
+    NeoListVirtualItem,
   } from '~/list/neo-list.model.js';
   import type { NeoVirtualContext, NeoVirtualItem, NeoVirtualListMethods, NeoVirtualRegister } from '~/list/neo-virtual-list.model.js';
   import type { SvelteEvent } from '~/utils/html-element.utils.js';
@@ -20,7 +21,7 @@
   import { useIntersection } from '@dvcol/svelte-utils/intersection';
   import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze, toAnimation, toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { watch } from '@dvcol/svelte-utils/watch';
-  import { onMount, tick } from 'svelte';
+  import { tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -145,7 +146,14 @@
     }
     return sections && !virtual;
   });
-  const flatItems = $derived.by<NeoListItem[]>(() => {
+  /*
+   * Virtual + sections: items are flattened with `disabled`/`readonly`
+   * cascade. Each flattened child also carries `sectionIndex` / `section`
+   * metadata (see `NeoListVirtualItem`) so selection events match the
+   * non-virtual sectioned payload shape — preserving section provenance
+   * the flatten would otherwise drop.
+   */
+  const flatItems = $derived.by<NeoListVirtualItem[]>(() => {
     if (virtual && sections) return flattenSectionsWithCascade(items);
     if (isFlatItems(items)) return items;
     return [];
@@ -408,34 +416,44 @@
   const skipOffscreen = (node: Element) => !intersection.visible.has(node);
 
   /*
-   * Transitions in virtual mode are double-gated: the initial mount runs
-   * `cursor` rows past the in: directive, but those rows weren't user-driven
-   * mutations — playing transitions there would animate the whole window on
-   * first paint. `initialMounted` flips true after the first paint via
-   * onMount + tick(), enabling subsequent filter/add/remove transitions.
-   * `scrolling` keeps suppressing transitions while cursor advances stream.
+   * Virtual transitions are gated per-key: a row animates iff its key is
+   * a genuine data addition (filter/sort/add), not a cursor remount. The
+   * `seenKeys` set holds every key currently in `flatItems`; an effect
+   * prunes keys that leave `flatItems` so a future re-add re-animates.
+   * Each virtualRow wraps the in/out directives in a closure that:
+   *   - in:  if seenKeys has the key → cursor remount, suppress.
+   *          Otherwise, mark seen and play the real intro.
+   *   - out: if seenKeys still has the key → row leaving via cursor,
+   *          suppress. Otherwise the key was removed from `flatItems` →
+   *          play the real outro (and drop from seenKeys via the prune
+   *          effect).
    */
-  let initialMounted = $state(false);
-  onMount(() => {
-    tick().then(() => {
-      initialMounted = true;
-    });
-  });
+  const seenKeys = new Set<string | number>();
 
   const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
   const animateProps = $derived(toTransitionProps(animate));
-  const inFn = $derived.by(() => {
-    if (missing) return emptyTransition;
-    if (virtual && (scrolling || !initialMounted)) return emptyTransition;
-    return toTransition(inAction);
-  });
+  const inFn = $derived(missing ? emptyTransition : toTransition(inAction));
   const inProps = $derived(toTransitionProps(inAction));
-  const outFn = $derived.by(() => {
-    if (missing) return emptyTransition;
-    if (virtual && (scrolling || !initialMounted)) return emptyTransition;
-    return toTransition(outAction);
-  });
+  const outFn = $derived(missing ? emptyTransition : toTransition(outAction));
   const outProps = $derived(toTransitionProps(outAction));
+
+  /*
+   * Per-row gates for virtual mode. Captured by closure so each virtualRow
+   * sees its own `key` without leaking through the DOM.
+   */
+  function virtualIn(key: string | number): typeof inFn {
+    return (node, params, options) => {
+      if (seenKeys.has(key)) return { duration: 0 };
+      seenKeys.add(key);
+      return inFn(node, params, options);
+    };
+  }
+  function virtualOut(key: string | number): typeof outFn {
+    return (node, params, options) => {
+      if (seenKeys.has(key)) return { duration: 0 };
+      return outFn(node, params, options);
+    };
+  }
 
   /* ------------------- Filtered/sorted slice (flat items) ---------------- */
   /*
@@ -458,6 +476,19 @@
   // eslint-disable-next-line style/operator-linebreak
   const virtualKey = $derived(key ??
     ((item: NeoListItemOrSection, index: number) => (item.id as string | number | undefined) ?? index));
+
+  /*
+   * Prune `seenKeys` of any key no longer in `flatItems` so a removed-then-
+   * re-added item plays the intro again. Runs whenever `flatItems` mutates.
+   */
+  $effect(() => {
+    const next = new Set<string | number>();
+    for (let i = 0; i < flatItems.length; i++) {
+      const k = virtualKey(flatItems[i]!, i);
+      if (k !== undefined) next.add(k);
+    }
+    for (const k of seenKeys) if (!next.has(k)) seenKeys.delete(k);
+  });
 
   // Resolve original (unfiltered) index for selection lookup so toggleItem
   // matches `findByIdInList` semantics in non-virtual mode.
@@ -570,10 +601,14 @@
   {/if}
 {/snippet}
 
-{#snippet virtualRow(v: NeoVirtualItem<NeoListItem>, _ctx: NeoVirtualContext<NeoListItem>, register: NeoVirtualRegister)}
+{#snippet virtualRow(v: NeoVirtualItem<NeoListVirtualItem>, _ctx: NeoVirtualContext<NeoListVirtualItem>, register: NeoVirtualRegister)}
   {@const item = v.item}
   {@const originalIndex = itemOriginalIndex(item)}
-  {@const checked = isChecked({ index: originalIndex, item, sectionIndex: undefined, section: undefined })}
+  {@const sectionIndex = item.sectionIndex}
+  {@const section = item.section}
+  {@const checked = isChecked({ index: originalIndex, item, sectionIndex, section })}
+  {@const rowIn = virtualIn(v.id)}
+  {@const rowOut = virtualOut(v.id)}
   <svelte:element
     this={item.tag ?? 'li'}
     role={select ? 'option' : 'listitem'}
@@ -587,8 +622,8 @@
     class:neo-list-item-select={select}
     style:--neo-list-item-color={getColorVariable(item.color)}
     {...item.containerProps}
-    in:inFn={inProps}
-    out:outFn={outProps}
+    in:rowIn={inProps}
+    out:rowOut={outProps}
     {@attach register}
   >
     {#if renderFlatDivider(v.index, visibleItems, 'top')}
@@ -611,7 +646,7 @@
         disabled={item.disabled || disabled}
         readonly={item.readonly || readonly || (!isNullable && checked)}
         {...itemProps}
-        onclick={select ? () => toggleItem({ index: originalIndex, item, sectionIndex: undefined, section: undefined }, checked) : undefined}
+        onclick={select ? () => toggleItem({ index: originalIndex, item, sectionIndex, section }, checked) : undefined}
       />
     {/if}
     {#if renderFlatDivider(v.index, visibleItems, 'bottom')}

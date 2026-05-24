@@ -425,7 +425,7 @@ describe('neoList — selection payload shape', { tags: ['jsdom'] }, () => {
     expect(evt.current.section).toBeDefined();
   });
 
-  it('virtual: emits { index, item, sectionIndex: undefined, section: undefined }', async () => {
+  it('virtual flat: emits { index, item, sectionIndex: undefined, section: undefined }', async () => {
     const onSelect = vi.fn();
     const user = userEvent.setup();
     const { container } = render(NeoList, {
@@ -440,6 +440,26 @@ describe('neoList — selection payload shape', { tags: ['jsdom'] }, () => {
     expect('section' in evt.current).toBe(true);
     expect(evt.current.sectionIndex).toBeUndefined();
     expect(evt.current.section).toBeUndefined();
+  });
+
+  it('virtual sectioned: flatten preserves sectionIndex / section in payload', async () => {
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    const sectioned = [
+      { id: 'sa', label: 'Group A', items: [{ id: 1, value: 'a1', label: 'A1' }] },
+      { id: 'sb', label: 'Group B', items: [{ id: 2, value: 'b1', label: 'B1' }] },
+    ];
+    const { container } = render(NeoList, {
+      props: { items: sectioned, virtual: true, select: true, onSelect } as never,
+    });
+    await flushVirtual();
+    // Second flattened row → second section's first child.
+    await user.click(getButtons(container)[1]);
+    await flushVirtual();
+    const evt = onSelect.mock.calls[0][0] as { current: NeoListSelectedShape };
+    expect(evt.current.sectionIndex).toBe(1);
+    expect(evt.current.section).toMatchObject({ id: 'sb', label: 'Group B' });
+    expect(evt.current.item).toMatchObject({ id: 2 });
   });
 });
 

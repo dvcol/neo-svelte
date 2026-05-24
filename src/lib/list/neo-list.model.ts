@@ -204,21 +204,45 @@ export const hasSections = <Value = unknown>(items: NeoListItemOrSection<Value>[
 export const isFlatItems = <Value = unknown>(items: NeoListItemOrSection<Value>[]): items is NeoListItem<Value>[] => !items.some(isSection);
 
 /**
+ * A flattened virtual item. Carries the original `NeoListItem` payload plus
+ * the source `section` / `sectionIndex` it came from (when flattened from a
+ * sectioned input) so selection events in virtual mode can match the shape
+ * of non-virtual sectioned mode.
+ *
+ * The metadata fields are optional: a flat input passes through unchanged.
+ */
+export interface NeoListVirtualItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> extends NeoListItem<Value, Tag> {
+  /**
+   * The index of the source section in the original `items` array.
+   * Only set when this item was flattened from a section.
+   */
+  sectionIndex?: number;
+  /**
+   * The source section this item was flattened from.
+   * Only set when this item was flattened from a section.
+   */
+  section?: NeoListSection<Value>;
+}
+
+/**
  * Flatten sectioned items for virtual mode. `disabled`/`readonly` cascade from
  * section to children (truthy-only, matching the `||` semantics used downstream).
  * Section-only props (`sticky`, `render`, `empty`, `sectionProps`) are dropped —
  * the warning emitted when virtual + sections collide calls them out explicitly.
+ * `sectionIndex` and `section` are stamped on each flattened child so virtual
+ * selection events still carry section provenance.
  */
-export function flattenSectionsWithCascade<Value = unknown>(items: NeoListItemOrSection<Value>[] = []): NeoListItem<Value>[] {
-  return items.flatMap((entry) => {
+export function flattenSectionsWithCascade<Value = unknown>(items: NeoListItemOrSection<Value>[] = []): NeoListVirtualItem<Value>[] {
+  return items.flatMap<NeoListVirtualItem<Value>>((entry, sectionIndex) => {
     if (!isSection(entry)) return [entry];
     return entry.items.map(child => ({
       ...child,
       disabled: child.disabled || entry.disabled,
       readonly: child.readonly || entry.readonly,
+      sectionIndex,
+      section: entry,
     }));
-  },
-  );
+  });
 }
 
 export interface NeoListSelectedItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> {
