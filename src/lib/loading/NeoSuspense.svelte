@@ -8,6 +8,11 @@
 
   const { promise, delay = 500, loading, result, error, children, matrixProps }: NeoSuspenseProps = $props();
 
+  /**
+   * `showLoading` is a seeded state, not a derived value: it starts at `!delay` and is later flipped by the `onMount` timer below.
+   * Using `$derived(!delay)` would override the post-timer flip on each render.
+   */
+  // svelte-ignore state_referenced_locally
   let showLoading = $state(!delay);
 
   onMount(async () => {

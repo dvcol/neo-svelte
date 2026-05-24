@@ -1,6 +1,6 @@
 import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import NeoSuspenseHarness from './NeoSuspense.test.svelte';
 
@@ -29,6 +29,29 @@ describe('neoSuspense — loading state', { tags: ['jsdom'] }, () => {
     });
     await tick();
     expect(container.querySelector('.neo-loading-matrix')).toBeNull();
+  });
+
+  it('delay>0 reveals the loader after the onMount timer fires', async () => {
+    /*
+     * Pins the seeded-state contract documented in NeoSuspense.svelte: the
+     * initial false comes from the prop, and the onMount timer flips it to
+     * true. A `$derived(!delay)` regression would leave the loader hidden
+     * forever for any non-zero delay.
+     */
+    vi.useFakeTimers();
+    try {
+      const promise = new Promise<string>(() => {});
+      const { container } = render(NeoSuspenseHarness, {
+        props: { promise, delay: 500 } as never,
+      });
+      await tick();
+      expect(container.querySelector('.neo-loading-matrix')).toBeNull();
+      await vi.advanceTimersByTimeAsync(500);
+      await tick();
+      expect(container.querySelector('.neo-loading-matrix')).not.toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('loading=false suppresses the loader while pending', async () => {
