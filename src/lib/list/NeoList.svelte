@@ -394,13 +394,15 @@
   const width = $derived(toSize(_width));
   const height = $derived(toSize(_height));
 
-  // Viewport tracking for non-virtual mode: a single IntersectionObserver on the
-  // scroll container marks rows as visible / hidden. FLIP and mount/unmount
-  // transitions are then skipped for rows outside the viewport — animating an
-  // off-screen translate is invisible work anyway, and FLIP's per-row
-  // getBoundingClientRect cost is what makes 1000-row mutations stutter.
-  // 50% rootMargin keeps a buffer above/below so a row scrolling toward the
-  // viewport is already marked visible by the time it animates in.
+  /**
+   * Viewport tracking for non-virtual mode: a single IntersectionObserver on the
+   * scroll container marks rows as visible / hidden. FLIP and mount/unmount
+   * transitions are then skipped for rows outside the viewport — animating an
+   * off-screen translate is invisible work anyway, and FLIP's per-row
+   * getBoundingClientRect cost is what makes 1000-row mutations stutter.
+   * 50% rootMargin keeps a buffer above/below so a row scrolling toward the
+   * viewport is already marked visible by the time it animates in.
+   */
   const intersection = useIntersection({
     get root() {
       return ref;
@@ -408,27 +410,41 @@
     rootMargin: '50%',
   });
 
-  // Skip FLIP for rows outside the viewport. Falls back to `true` (skip) when
-  // the IntersectionObserver hasn't run yet for a row — FLIP wouldn't be
-  // visually meaningful for an unmeasured row anyway, and skipping avoids the
-  // synchronous getBoundingClientRect cost on freshly-mounted rows during a
-  // re-render storm.
+  /**
+   * Skip FLIP for rows outside the viewport. Falls back to `true` (skip) when
+   * the IntersectionObserver hasn't run yet for a row — FLIP wouldn't be
+   * visually meaningful for an unmeasured row anyway, and skipping avoids the
+   * synchronous getBoundingClientRect cost on freshly-mounted rows during a
+   * re-render storm.
+   */
   const skipOffscreen = (node: Element) => !intersection.visible.has(node);
 
-  /*
-   * Virtual transitions are gated per-key: a row animates iff its key is
-   * a genuine data addition (filter/sort/add), not a cursor remount. The
-   * `seenKeys` set holds every key currently in `flatItems`; an effect
-   * prunes keys that leave `flatItems` so a future re-add re-animates.
-   * Each virtualRow wraps the in/out directives in a closure that:
-   *   - in:  if seenKeys has the key → cursor remount, suppress.
-   *          Otherwise, mark seen and play the real intro.
-   *   - out: if seenKeys still has the key → row leaving via cursor,
-   *          suppress. Otherwise the key was removed from `flatItems` →
-   *          play the real outro (and drop from seenKeys via the prune
-   *          effect).
+  /**
+   * Virtual transitions are gated per-key by diffing two snapshots of
+   * `flatItems` keys:
+   * - `prevKeys` — keys present in `flatItems` *before* the current data
+   *   mutation (used by `in:` to decide if a mounting row is a genuine
+   *   new addition or a cursor remount).
+   * - `currentKeys` — keys present in `flatItems` *now* (used by `out:`
+   *   to decide if an unmounting row is a genuine removal or a cursor
+   *   evict / scroll-out).
+   *
+   * Both snapshots are refreshed in `$effect.pre` so they update *before*
+   * DOM mutations fire, otherwise an outro on removal would still see
+   * the removed key as "currently present" and suppress incorrectly.
+   *
+   * On first run the two sets are equal, suppressing intros for the
+   * initial paint. The flag also defers seeding until `flatItems` is
+   * non-empty so async data loads still suppress intros for the first
+   * batch.
+   *
+   * Plain `Set`, not `SvelteSet`: the only readers are the transition
+   * closures (imperative, one-shot at mount/unmount) — a reactive set
+   * would self-trigger via the `$effect.pre` writes.
    */
-  const seenKeys = new Set<string | number>();
+  let prevKeys: Set<string | number> = new Set();
+  let currentKeys: Set<string | number> = new Set();
+  let keysInitialized = false;
 
   const animateFn = $derived(missing ? emptyAnimation : toAnimation(animate));
   const animateProps = $derived(toTransitionProps(animate));
@@ -437,20 +453,23 @@
   const outFn = $derived(missing ? emptyTransition : toTransition(outAction));
   const outProps = $derived(toTransitionProps(outAction));
 
-  /*
+  /**
    * Per-row gates for virtual mode. Captured by closure so each virtualRow
    * sees its own `key` without leaking through the DOM.
+   *
+   * Intro plays only for keys absent from `prevKeys` (the snapshot taken
+   * *before* the mutation that mounted this row). Outro plays only for
+   * keys absent from `currentKeys` (the snapshot taken after).
    */
   function virtualIn(key: string | number): typeof inFn {
     return (node, params, options) => {
-      if (seenKeys.has(key)) return { duration: 0 };
-      seenKeys.add(key);
+      if (prevKeys.has(key)) return { duration: 0 };
       return inFn(node, params, options);
     };
   }
   function virtualOut(key: string | number): typeof outFn {
     return (node, params, options) => {
-      if (seenKeys.has(key)) return { duration: 0 };
+      if (currentKeys.has(key)) return { duration: 0 };
       return outFn(node, params, options);
     };
   }
@@ -477,26 +496,40 @@
   const virtualKey = $derived(key ??
     ((item: NeoListItemOrSection, index: number) => (item.id as string | number | undefined) ?? index));
 
-  /*
-   * Prune `seenKeys` of any key no longer in `flatItems` so a removed-then-
-   * re-added item plays the intro again. Runs whenever `flatItems` mutates.
+  /**
+   * Refresh `prevKeys` / `currentKeys` snapshots *before* DOM mutations
+   * fire — `$effect.pre` runs before reactive DOM updates, so the in/out
+   * closures see the correct before/after state when transitions kick
+   * off. On the first non-empty run, seed both sets equal so first-paint
+   * rows are treated as pre-existing.
    */
-  $effect(() => {
+  $effect.pre(() => {
     const next = new Set<string | number>();
     for (let i = 0; i < flatItems.length; i++) {
       const k = virtualKey(flatItems[i]!, i);
       if (k !== undefined) next.add(k);
     }
-    for (const k of seenKeys) if (!next.has(k)) seenKeys.delete(k);
+    if (!keysInitialized) {
+      prevKeys = next;
+      currentKeys = next;
+      if (next.size > 0) keysInitialized = true;
+      return;
+    }
+    prevKeys = currentKeys;
+    currentKeys = next;
   });
 
-  // Resolve original (unfiltered) index for selection lookup so toggleItem
-  // matches `findByIdInList` semantics in non-virtual mode.
+  /**
+   * Resolve original (unfiltered) index for selection lookup so toggleItem
+   * matches `findByIdInList` semantics in non-virtual mode.
+   */
   const itemOriginalIndex = (item: NeoListItem) => flatItems.indexOf(item);
 
-  // Inline filter+sort pipeline used by sectioned non-virtual rendering. Each
-  // section runs its own pipeline so per-section visibility is preserved.
-  // Top-level flat rendering uses the hoisted `visibleItems` instead.
+  /**
+   * Inline filter+sort pipeline used by sectioned non-virtual rendering. Each
+   * section runs its own pipeline so per-section visibility is preserved.
+   * Top-level flat rendering uses the hoisted `visibleItems` instead.
+   */
   function inlineVisible(array: NeoListItemOrSection[] = []) {
     return array
       .map((item, index) => ({ item, index }))

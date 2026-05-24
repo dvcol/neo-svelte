@@ -608,25 +608,134 @@ describe('neoList — dividers in virtual', { tags: ['jsdom'] }, () => {
 /*
  * Phase 1.6 / 3.5: row transitions in virtual mode.
  *
- * Virtual rows now wire `in:` / `out:` directives. Two gates suppress them:
- *   - `initialMounted` flag (false during first paint) → no opening flash
- *     when the cursor first paints its initial window.
- *   - `scrolling` flag → no transition while cursor advances stream rows.
- * Live transition timing is verified in browser tests; jsdom only validates
- * the suppression gates leave rows clean.
+ * Virtual rows wire `in:` / `out:` directives behind a per-key `seenKeys`
+ * gate (NeoList.svelte). The gate is seeded from `flatItems` on first run
+ * so first-paint and scroll-into-view never play intros, then prunes keys
+ * that leave so a removed-then-re-added item plays its intro again.
+ *
+ * Tests use a counting `{ use }` wrapper: the gate's suppression path
+ * returns a zero-duration TransitionConfig WITHOUT invoking the user's
+ * transition fn, so `use` calls equal "real" intros/outros — perfect for
+ * pinning gate decisions independently of jsdom timing. Live transition
+ * timing is verified in browser tests.
  */
 describe('neoList — row transitions in virtual', { tags: ['jsdom'] }, () => {
-  it('virtual rows do NOT animate on initial mount (initialMounted gate)', async () => {
+  function counting() {
+    let calls = 0;
+    const use = () => {
+      calls += 1;
+      return { duration: 0 };
+    };
+    return { use, get calls() {
+      return calls;
+    } };
+  }
+
+  it('virtual rows do NOT animate on initial mount (seenKeys seeded from flatItems)', async () => {
+    const inSpy = counting();
+    const outSpy = counting();
     const { container } = render(NeoList, {
-      props: { items: bigItems, virtual: true, itemHeight: 30 } as never,
+      props: {
+        items: bigItems,
+        virtual: true,
+        itemHeight: 30,
+        in: { use: inSpy.use },
+        out: { use: outSpy.use },
+      } as never,
     });
     await flushVirtual();
     const rows = container.querySelectorAll<HTMLElement>('.neo-virtual-list .neo-list-item');
     expect(rows.length).toBeGreaterThan(0);
-    for (const row of rows) {
-      expect(row.style.opacity).toBe('');
-      expect(row.style.transform).toBe('');
-    }
+    expect(inSpy.calls).toBe(0);
+    expect(outSpy.calls).toBe(0);
+  });
+
+  it('virtual rows DO animate intro for a key added to flatItems after mount', async () => {
+    const inSpy = counting();
+    const outSpy = counting();
+    const { rerender } = render(NeoList, {
+      props: {
+        items: bigItems,
+        virtual: true,
+        itemHeight: 30,
+        in: { use: inSpy.use },
+        out: { use: outSpy.use },
+      } as never,
+    });
+    await flushVirtual();
+    expect(inSpy.calls).toBe(0);
+    // Prepend a new key so the cursor's initial window includes it.
+    const next = [{ id: 9999, value: 9999, label: 'new' }, ...bigItems];
+    await rerender({
+      items: next,
+      virtual: true,
+      itemHeight: 30,
+      in: { use: inSpy.use },
+      out: { use: outSpy.use },
+    } as never);
+    await flushVirtual();
+    expect(inSpy.calls).toBe(1);
+    expect(outSpy.calls).toBe(0);
+  });
+
+  it('virtual rows DO animate outro when a visible key is removed from flatItems', async () => {
+    const inSpy = counting();
+    const outSpy = counting();
+    const { rerender } = render(NeoList, {
+      props: {
+        items: bigItems,
+        virtual: true,
+        itemHeight: 30,
+        in: { use: inSpy.use },
+        out: { use: outSpy.use },
+      } as never,
+    });
+    await flushVirtual();
+    // Drop the first item — it is in the initial cursor window, so out: fires.
+    const next = bigItems.slice(1);
+    await rerender({
+      items: next,
+      virtual: true,
+      itemHeight: 30,
+      in: { use: inSpy.use },
+      out: { use: outSpy.use },
+    } as never);
+    await flushVirtual();
+    expect(outSpy.calls).toBeGreaterThanOrEqual(1);
+  });
+
+  it('virtual rows re-animate intro when a removed key is re-added (prune path)', async () => {
+    const inSpy = counting();
+    const outSpy = counting();
+    const { rerender } = render(NeoList, {
+      props: {
+        items: bigItems,
+        virtual: true,
+        itemHeight: 30,
+        in: { use: inSpy.use },
+        out: { use: outSpy.use },
+      } as never,
+    });
+    await flushVirtual();
+    // Remove first, then re-add at front; key=1 should be pruned then unseen.
+    await rerender({
+      items: bigItems.slice(1),
+      virtual: true,
+      itemHeight: 30,
+      in: { use: inSpy.use },
+      out: { use: outSpy.use },
+    } as never);
+    await flushVirtual();
+    const introsAfterRemove = inSpy.calls;
+    await rerender({
+      items: bigItems,
+      virtual: true,
+      itemHeight: 30,
+      in: { use: inSpy.use },
+      out: { use: outSpy.use },
+    } as never);
+    await flushVirtual();
+    expect(inSpy.calls).toBeGreaterThan(introsAfterRemove);
   });
 });
 
