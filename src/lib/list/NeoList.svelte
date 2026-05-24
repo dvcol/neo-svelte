@@ -535,7 +535,7 @@
 {#snippet virtualRow(v: NeoVirtualItem<NeoListItem>, _ctx: NeoVirtualContext<NeoListItem>, register: NeoVirtualRegister)}
   {@const item = v.item}
   {@const originalIndex = itemOriginalIndex(item)}
-  {@const checked = isChecked({ index: originalIndex, item })}
+  {@const checked = isChecked({ index: originalIndex, item, sectionIndex: undefined, section: undefined })}
   <svelte:element
     this={item.tag ?? 'li'}
     role={select ? 'option' : 'listitem'}
@@ -568,7 +568,7 @@
         disabled={item.disabled || disabled}
         readonly={item.readonly || readonly || (!isNullable && checked)}
         {...itemProps}
-        onclick={select ? () => toggleItem({ index: originalIndex, item }, checked) : undefined}
+        onclick={select ? () => toggleItem({ index: originalIndex, item, sectionIndex: undefined, section: undefined }, checked) : undefined}
       />
     {/if}
   </svelte:element>

@@ -425,26 +425,7 @@ describe('neoList — selection payload shape', { tags: ['jsdom'] }, () => {
     expect(evt.current.section).toBeDefined();
   });
 
-  it('virtual (today): emits { index, item } only — sectionIndex / section are absent', async () => {
-    const onSelect = vi.fn();
-    const user = userEvent.setup();
-    const { container } = render(NeoList, {
-      props: { items: bigItems, virtual: true, select: true, itemHeight: 30, onSelect } as never,
-    });
-    await flushVirtual();
-    await user.click(getButtons(container)[0]);
-    await flushVirtual();
-    const evt = onSelect.mock.calls[0][0] as { current: NeoListSelectedShape };
-    expect(evt.current).toMatchObject({ index: 0, item: bigItems[0] });
-    /*
-     * Today the virtual click handler at NeoList.svelte:532 omits these keys
-     * entirely. Phase 3.2 makes them explicit `undefined`.
-     */
-    expect('sectionIndex' in evt.current).toBe(false);
-    expect('section' in evt.current).toBe(false);
-  });
-
-  it.skip('virtual (post-rework): emits { index, item, sectionIndex: undefined, section: undefined } — TODO Phase 3.2 (NeoList.svelte:532)', async () => {
+  it('virtual: emits { index, item, sectionIndex: undefined, section: undefined }', async () => {
     const onSelect = vi.fn();
     const user = userEvent.setup();
     const { container } = render(NeoList, {
