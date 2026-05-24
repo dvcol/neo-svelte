@@ -117,6 +117,10 @@ const config: ViteUserConfig = {
           include: ['demo/**/*.browser.{test,spec}.{js,ts}'],
           exclude: ['**/node_modules/**', '**/dist/**', '**/.svelte-kit/**'],
           setupFiles: ['./test/setup.browser.ts'],
+          benchmark: {
+            include: ['demo/**/*.browser.bench.{js,ts}'],
+            exclude: ['**/node_modules/**', '**/dist/**', '**/.svelte-kit/**'],
+          },
           browser: {
             enabled: true,
             provider: playwright(),

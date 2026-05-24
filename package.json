@@ -214,7 +214,7 @@
     "test:coverage": "vitest --project unit --run --coverage",
     "test:watch": "vitest",
     "test:bench:unit": "vitest bench --project unit --run",
-    "test:bench:browser": "vitest bench --project browser --tag performance --run",
+    "test:bench:browser": "vitest bench --project browser --tagsFilter performance --run",
     "test:bench": "run-s test:bench:unit test:bench:browser",
     "release": "standard-version",
     "release:changelog": "extract-changelog-release > RELEASE.md"
