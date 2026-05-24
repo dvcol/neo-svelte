@@ -71,6 +71,7 @@ const config: ViteUserConfig = {
       { name: 'jsdom', description: 'Unit / contract tests under src/lib/** (jsdom env).' },
       { name: 'browser', description: 'Real-browser tests under demo/** (Playwright + chromium).' },
       { name: 'visual', description: 'Screenshot / TNR contracts; subset of browser. Filter with --tag visual to regen.' },
+      { name: 'performance', description: 'Bench / perf regression gates; subset of browser. Run via test:bench:browser.' },
     ],
     projects: [
       {
@@ -94,6 +95,16 @@ const config: ViteUserConfig = {
           ],
           environment: 'jsdom',
           setupFiles: ['./test/setup.unit.ts'],
+          benchmark: {
+            include: ['src/**/*.bench.{js,ts}'],
+            exclude: [
+              '**/node_modules/**',
+              '**/dist/**',
+              '**/.svelte-kit/**',
+              'demo/**',
+              'src/**/*.browser.bench.{js,ts}',
+            ],
+          },
         },
       },
       {
