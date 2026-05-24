@@ -267,7 +267,8 @@
     {offset}
     {tooltip}
     openOnFocus={false}
-    flipOptions={{ crossAxis: false, ...tooltipProps?.flipOptions, ...item.tooltipProps?.flipOptions }}
+    flipOptions={{ fallbackAxisSideDirection: 'none', ...tooltipProps?.flipOptions, ...item.tooltipProps?.flipOptions }}
+    shiftOptions={{ crossAxis: true, ...tooltipProps?.shiftOptions, ...item.tooltipProps?.shiftOptions }}
   />
 {/if}
 

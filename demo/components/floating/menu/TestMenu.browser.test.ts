@@ -360,7 +360,7 @@ describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () =>
     }
   });
 
-  it('cascading submenus stay horizontally offset from their parent (no vertical stacking)', async () => {
+  it('cascading submenus stay sideways (right/left), never flip to top/bottom of their parent', async () => {
     await setViewport('mobile');
     document.body.style.margin = '0';
     document.body.style.padding = '0';
@@ -374,12 +374,19 @@ describe('neoMenu — small-screen forced overlap', { tags: ['browser'] }, () =>
     });
     await expandToLeaf(user);
 
+    // Skip tooltips[0] (the root menu, which legitimately opens bottom-* from
+    // the trigger). Every nested cascade must resolve to a side placement.
     const tooltips = getOpenTooltips();
     for (let i = 1; i < tooltips.length; i++) {
-      const parent = tooltips[i - 1].getBoundingClientRect();
-      const child = tooltips[i].getBoundingClientRect();
-      const horizontallyDisjoint = child.right <= parent.left + 1 || child.left >= parent.right - 1;
-      expect(horizontallyDisjoint, `level-${i} submenu must sit beside its parent, not stack on it`).toBe(true);
+      const position = tooltips[i].getAttribute('data-position') ?? '';
+      const sideways = position.startsWith('left') || position.startsWith('right');
+      expect(sideways, `level-${i} submenu placement must be a side (got "${position}")`).toBe(true);
+      // …and stay inside the viewport. shift({ crossAxis: true }) on nested
+      // tooltips should keep the floating element within bounds even when the
+      // chosen side has no room.
+      const r = tooltips[i].getBoundingClientRect();
+      expect(r.left, `level-${i} submenu must not overflow the left edge`).toBeGreaterThanOrEqual(-1);
+      expect(r.right, `level-${i} submenu must not overflow the right edge`).toBeLessThanOrEqual(window.innerWidth + 1);
     }
   });
 });
