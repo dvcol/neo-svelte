@@ -1,0 +1,124 @@
+{
+  "files": [
+    {
+      "filepath": "/Users/dinh-van.colomban/Workspace/private/neo-svelte/demo/components/list/NeoList.performance.browser.bench.ts",
+      "groups": [
+        {
+          "fullName": "demo/components/list/NeoList.performance.browser.bench.ts > neoList — mount cost (1k items)",
+          "benchmarks": [
+            {
+              "id": "-1750299040_0_0",
+              "name": "virtual=off mount",
+              "rank": 2,
+              "rme": 5.776149793869931,
+              "samples": [],
+              "totalTime": 1019.9000000059605,
+              "min": 86.20000000298023,
+              "max": 118.5,
+              "hz": 9.804882831592861,
+              "period": 101.99000000059604,
+              "mean": 101.99000000059604,
+              "variance": 67.82766664747396,
+              "sd": 8.235755378073948,
+              "sem": 2.604374524669483,
+              "df": 9,
+              "critical": 2.262,
+              "moe": 5.891095174802371,
+              "p75": 104.40000000596046,
+              "p99": 118.5,
+              "p995": 118.5,
+              "p999": 118.5,
+              "sampleCount": 10,
+              "median": 100.60000000149012
+            },
+            {
+              "id": "-1750299040_0_1",
+              "name": "virtual=on mount",
+              "rank": 1,
+              "rme": 2.584222055778747,
+              "samples": [],
+              "totalTime": 501.7000000178814,
+              "min": 5.5999999940395355,
+              "max": 9.799999997019768,
+              "hz": 123.57982857841384,
+              "period": 8.091935484159377,
+              "mean": 8.091935484159377,
+              "variance": 0.6781306175622026,
+              "sd": 0.8234868654460753,
+              "sem": 0.10458293649464034,
+              "df": 61,
+              "critical": 1.9995,
+              "moe": 0.20911358152103338,
+              "p75": 8.700000002980232,
+              "p99": 9.799999997019768,
+              "p995": 9.799999997019768,
+              "p999": 9.799999997019768,
+              "sampleCount": 62,
+              "median": 8.100000001490116
+            }
+          ]
+        },
+        {
+          "fullName": "demo/components/list/NeoList.performance.browser.bench.ts > neoList — scroll loop (virtual, 1k items)",
+          "benchmarks": [
+            {
+              "id": "-1750299040_1_0",
+              "name": "1000 programmatic scrolls",
+              "rank": 1,
+              "rme": 6.2621068652322975,
+              "samples": [],
+              "totalTime": 513.9000000059605,
+              "min": 12.100000008940697,
+              "max": 27.100000008940697,
+              "hz": 62.268923914436364,
+              "period": 16.059375000186265,
+              "mean": 16.059375000186265,
+              "variance": 7.777328634162342,
+              "sd": 2.78878622955621,
+              "sem": 0.49299241354971496,
+              "df": 31,
+              "critical": 2.0399,
+              "moe": 1.0056552244000634,
+              "p75": 17.200000002980232,
+              "p99": 27.100000008940697,
+              "p995": 27.100000008940697,
+              "p999": 27.100000008940697,
+              "sampleCount": 32,
+              "median": 15.699999995529652
+            }
+          ]
+        },
+        {
+          "fullName": "demo/components/list/NeoList.performance.browser.bench.ts > neoList — filter/mutation cycle (virtual, 1k items)",
+          "benchmarks": [
+            {
+              "id": "-1750299040_2_0",
+              "name": "add + remove burst (×10 each)",
+              "rank": 1,
+              "rme": 2.0953542214332717,
+              "samples": [],
+              "totalTime": 1661.199999973178,
+              "min": 158.1000000089407,
+              "max": 175.29999999701977,
+              "hz": 6.019744762919252,
+              "period": 166.1199999973178,
+              "mean": 166.1199999973178,
+              "variance": 23.679555534283324,
+              "sd": 4.866164355453207,
+              "sem": 1.5388162831957335,
+              "df": 9,
+              "critical": 2.262,
+              "moe": 3.480802432588749,
+              "p75": 168.70000000298023,
+              "p99": 175.29999999701977,
+              "p995": 175.29999999701977,
+              "p999": 175.29999999701977,
+              "sampleCount": 10,
+              "median": 166
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

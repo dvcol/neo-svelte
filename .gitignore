@@ -131,5 +131,8 @@ vite.config.ts.timestamp-*
 # Reference screenshots under __screenshots__/ are committed as the visual
 # contract baseline; auto-failure attachments live in .vitest-attachments/.
 
+# Bench reports — only baselines are committed under __benchmarks__/.
+src/lib/list/__benchmarks__/report.*.json
+
 # Agentic
 .claude/
