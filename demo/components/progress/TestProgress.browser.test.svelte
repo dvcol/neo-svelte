@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { NeoProgressDirection } from '~/progress/neo-progress.model.js';
   import NeoProgressBar from '~/progress/NeoProgressBar.svelte';
   import NeoThemeProvider from '~/providers/NeoThemeProvider.svelte';
 
@@ -30,6 +31,9 @@
     after?: string;
   };
 
+  type Props = { variant?: 'horizontal' | 'vertical' };
+  const { variant = 'horizontal' }: Props = $props();
+
   const cells: Cell[] = [
     { label: '0%', value: 0 },
     { label: '25%', value: 25 },
@@ -59,7 +63,7 @@
 </script>
 
 <NeoThemeProvider>
-  <div class="visual-stage" data-testid="visual-stage">
+  <div class="visual-stage" class:vertical={variant === 'vertical'} data-testid="visual-stage">
     {#each cells as cell, i (i)}
       <div class="cell">
         <span class="label">{cell.label}</span>
@@ -77,8 +81,9 @@
           color={cell.color}
           before={cell.before}
           after={cell.after}
-          width="100%"
-          height="0.75rem"
+          direction={variant === 'vertical' ? NeoProgressDirection.Top : NeoProgressDirection.Right}
+          width={variant === 'vertical' ? '0.75rem' : '100%'}
+          height={variant === 'vertical' ? '100%' : '0.75rem'}
         />
       </div>
     {/each}
@@ -104,6 +109,11 @@
     width: 100vw;
     min-height: 100vh;
     padding: 2rem;
+
+    &.vertical {
+      grid-auto-rows: 14rem;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
   }
 
   .cell {
@@ -114,6 +124,10 @@
     background: var(--neo-background-color);
     border: 1px solid var(--neo-border-color);
     border-radius: var(--neo-border-radius);
+
+    .vertical & {
+      align-items: center;
+    }
   }
 
   .label {

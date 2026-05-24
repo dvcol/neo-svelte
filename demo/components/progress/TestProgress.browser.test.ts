@@ -42,13 +42,28 @@ describe('neoProgressBar — visual contract (themed)', { tags: ['browser', 'vis
     );
   });
 
-  // TODO: src/lib/progress/NeoProgressBar.svelte:231-253 — top/bottom directions
-  // declare width: 0.5rem but rely on flex: 1 1 100% for height, so vertical
-  // bars collapse when the parent does not constrain height. Expected: top/bottom
-  // directions should default to a reasonable height analogous to the right/left
-  // height: 0.5rem rule, or the container should set height. Currently vertical
-  // bars render as 0px tall in unconstrained layouts, producing useless snapshots.
-  it.skip('vertical orientation matrix (desktop)', async () => {
-    expect(true).toBe(true);
+  it('vertical orientation matrix (desktop)', { timeout: 30000 }, async () => {
+    await setViewport('desktop');
+    render(VisualHarness, { props: { variant: 'vertical' } as never });
+    const stage = await vi.waitFor(() => {
+      const el = getStage();
+      if (!el) throw new Error('stage not mounted');
+      return el;
+    });
+    await vi.waitFor(() => {
+      const bars = stage.querySelectorAll<HTMLElement>('.neo-progress');
+      expect(bars.length).toBe(24);
+      for (const b of bars) {
+        const rect = b.getBoundingClientRect();
+        expect(rect.height).toBeGreaterThan(0);
+        expect(rect.width).toBeGreaterThan(0);
+      }
+    });
+    await new Promise(r => setTimeout(r, 400));
+    freezeSvgAnimations(stage);
+    await waitForVisualStability(stage);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoProgressBar', 'matrix-vertical', 'desktop'),
+    );
   });
 });
