@@ -201,6 +201,24 @@ export const isSection = <Value = unknown>(item: NeoListItem<Value> | NeoListSec
 
 export const hasSections = <Value = unknown>(items: NeoListItemOrSection<Value>[] = []): boolean => items.some(isSection);
 
+/**
+ * Flatten sectioned items for virtual mode. `disabled`/`readonly` cascade from
+ * section to children (truthy-only, matching the `||` semantics used downstream).
+ * Section-only props (`sticky`, `render`, `empty`, `sectionProps`) are dropped —
+ * the warning emitted when virtual + sections collide calls them out explicitly.
+ */
+export function flattenSectionsWithCascade<Value = unknown>(items: NeoListItemOrSection<Value>[] = []): NeoListItem<Value>[] {
+  return items.flatMap((entry) => {
+    if (!isSection(entry)) return [entry];
+    return entry.items.map(child => ({
+      ...child,
+      disabled: child.disabled || entry.disabled,
+      readonly: child.readonly || entry.readonly,
+    }));
+  },
+  );
+}
+
 export interface NeoListSelectedItem<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'li'> {
   index: number;
   item: NeoListItem<Value, Tag>;
@@ -367,7 +385,17 @@ export interface NeoListState<Item = NeoListItemOrSection> {
   divider?: boolean;
 }
 
-export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[], Value = unknown> = NeoListState & NeoListSelectState<Selected> & NeoListMethods & NeoListSelectMethods<Value>;
+export interface NeoListResolvedState {
+  /**
+   * Whether the virtual rendering path is currently active.
+   *
+   * Reserved as a forward-compatible signal — today it tracks the `virtual`
+   * prop directly. Read this (not the raw prop) from custom items / sections.
+   */
+  virtualActive?: boolean;
+}
+
+export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[], Value = unknown> = NeoListState & NeoListResolvedState & NeoListSelectState<Selected> & NeoListMethods & NeoListSelectMethods<Value>;
 
 export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul', Selected = NeoListSelectedItem | NeoListSelectedItem[], Context = NeoListContext<Selected>> = {
   // Snippets

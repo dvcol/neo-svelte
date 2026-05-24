@@ -347,35 +347,19 @@ describe('neoList — virtual/sections/flip matrix', { tags: ['jsdom'] }, () => 
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  /* ---- on/off/on (virtual + flip): silent fallback today, virtual-wins post-rework ---- */
+  /* ---- on/off/on (virtual + flip): virtual wins, flip fully dropped ---- */
 
-  it('on/off/on (today): silently falls back to non-virtual flipped + warns', async () => {
-    const { container } = render(NeoList, { props: { items: flatBigItems(), virtual: true, flip: true } as never });
-    await tick();
-    expect(container.querySelector('.neo-virtual-list')).toBeNull();
-    expect(container.querySelector('.neo-list.neo-flip')).not.toBeNull();
-    expect(warnSpy).toHaveBeenCalled();
-  });
-
-  it.skip('on/off/on (post-rework): virtual wins, flip fully dropped, warns — TODO Phase 2 (NeoList.svelte:121)', async () => {
-    const { container } = render(NeoList, { props: { items: flatBigItems(), virtual: true, flip: true } as never });
+  it('on/off/on: virtual wins, flip fully dropped, warns', async () => {
+    const { container } = render(NeoList, { props: { items: flatBigItems(), virtual: true, flip: true, itemHeight: 30 } as never });
     await flushVirtual();
     expect(container.querySelector('.neo-virtual-list')).not.toBeNull();
     expect(container.querySelector('.neo-list.neo-flip')).toBeNull();
     expect(warnSpy).toHaveBeenCalled();
   });
 
-  /* ---- on/on/off (virtual + sections): silent fallback today, virtual-wins post-rework ---- */
+  /* ---- on/on/off (virtual + sections): virtual wins, items flattened with cascade ---- */
 
-  it('on/on/off (today): silently falls back to non-virtual sectioned + warns', async () => {
-    const { container } = render(NeoList, { props: { items: sectionedItems, virtual: true } as never });
-    await tick();
-    expect(container.querySelector('.neo-virtual-list')).toBeNull();
-    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(2);
-    expect(warnSpy).toHaveBeenCalled();
-  });
-
-  it.skip('on/on/off (post-rework): virtual flat with cascade, no section headers, warns — TODO Phase 2 (NeoList.svelte:121, neo-list.model.ts flattenSectionsWithCascade)', async () => {
+  it('on/on/off: virtual flat with cascade, no section headers, warns', async () => {
     const { container } = render(NeoList, {
       props: { items: sectionedItems, virtual: true, itemHeight: 30 } as never,
     });
@@ -390,17 +374,9 @@ describe('neoList — virtual/sections/flip matrix', { tags: ['jsdom'] }, () => 
     expect(warnSpy).toHaveBeenCalled();
   });
 
-  /* ---- on/on/on (virtual + sections + flip): silent fallback today, virtual-wins post-rework ---- */
+  /* ---- on/on/on (virtual + sections + flip): virtual wins, items flattened, flip dropped ---- */
 
-  it('on/on/on (today): silently falls back to non-virtual sectioned + warns', async () => {
-    const { container } = render(NeoList, { props: { items: sectionedItems, virtual: true, flip: true } as never });
-    await tick();
-    expect(container.querySelector('.neo-virtual-list')).toBeNull();
-    expect(container.querySelectorAll('.neo-list-section-list')).toHaveLength(2);
-    expect(warnSpy).toHaveBeenCalled();
-  });
-
-  it.skip('on/on/on (post-rework): virtual flat with cascade, flip fully dropped, warns — TODO Phase 2 (NeoList.svelte:121)', async () => {
+  it('on/on/on: virtual flat with cascade, flip fully dropped, warns', async () => {
     const { container } = render(NeoList, {
       props: { items: sectionedItems, virtual: true, flip: true, itemHeight: 30 } as never,
     });
@@ -604,7 +580,7 @@ describe('neoList — keyboard ArrowUp/Down', { tags: ['jsdom'] }, () => {
     expect(focused?.dataset.index).toBe(expectedNextIndex);
   });
 
-  it.skip('virtual + flip prop: keyboard direction NOT swapped (flip fully dropped) — TODO Phase 2 (NeoList.svelte:121, NeoListBaseItem.svelte:246)', async () => {
+  it('virtual + flip prop: keyboard direction NOT swapped (flip fully dropped)', async () => {
     const user = userEvent.setup();
     const { container } = render(NeoList, {
       props: { items: bigItems, virtual: true, flip: true, select: true, itemHeight: 30 } as never,
@@ -764,7 +740,7 @@ describe('neoList — runtime prop toggling', { tags: ['jsdom'] }, () => {
     expect(after.every(id => id % 2 === 0)).toBe(true);
   });
 
-  it.skip('virtual=true + flip prop toggled on at runtime: virtual stays, flip dropped + warns — TODO Phase 2 (NeoList.svelte:121)', async () => {
+  it('virtual=true + flip prop toggled on at runtime: virtual stays, flip dropped + warns', async () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const { container, rerender } = render(NeoList, {
       props: { items: bigItems, virtual: true, itemHeight: 30 } as never,
@@ -779,7 +755,7 @@ describe('neoList — runtime prop toggling', { tags: ['jsdom'] }, () => {
     warnSpy.mockRestore();
   });
 
-  it.skip('virtual=true: items toggling sectioned ↔ flat keeps virtual + flattens with cascade + warns — TODO Phase 2 (NeoList.svelte:121, flattenSectionsWithCascade)', async () => {
+  it('virtual=true: items toggling sectioned ↔ flat keeps virtual + flattens with cascade + warns', async () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const { container, rerender } = render(NeoList, {
       props: { items: bigItems, virtual: true, itemHeight: 30 } as never,

@@ -25,7 +25,7 @@
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import NeoIconList from '~/icons/NeoIconList.svelte';
-  import { findByIdInList, hasSections, isSection, showDivider } from '~/list/neo-list.model.js';
+  import { findByIdInList, flattenSectionsWithCascade, hasSections, isSection, showDivider } from '~/list/neo-list.model.js';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
@@ -116,20 +116,40 @@
   const missing = $derived(items?.some(item => item.id === undefined || item.id === null));
 
   // ------------------------------------------------------ Virtual gating ----
+  // Resolved state surface — virtual is authoritative. `flip` and `sections`
+  // become warnings, not silent fallbacks. Downstream code reads these
+  // resolved values, never the raw props, so the rest of the component is
+  // ignorant of the precedence rule.
 
   const sections = $derived(hasSections(items));
-  const virtualEnabled = $derived(virtual && !sections && !flip);
+  const virtualActive = $derived(virtual);
+  const flipActive = $derived(flip && !virtualActive);
+  const virtualItems = $derived<NeoListItem[]>(virtualActive && sections ? flattenSectionsWithCascade(items) : (items as NeoListItem[]));
 
-  let virtualWarned = false;
+  let flipWarned = false;
   $effect(() => {
-    if (!virtual) {
-      virtualWarned = false;
+    if (!virtualActive) {
+      flipWarned = false;
       return;
     }
-    if (virtualEnabled || virtualWarned) return;
-    virtualWarned = true;
-    if (sections) Logger.warn('NeoList: `virtual` is disabled when items contain sections — falling back to non-virtual rendering.');
-    else if (flip) Logger.warn('NeoList: `virtual` is disabled when `flip` is set — falling back to non-virtual rendering.');
+    if (!flip || flipWarned) return;
+    flipWarned = true;
+    const message = 'NeoList: `flip` is fully disabled when `virtual` is enabled (column-reverse layout, edge events, scroll direction, and keyboard direction are all reverted to non-flipped).';
+    Logger.warn(message);
+    if (import.meta.env.DEV) console.warn(new Error(message));
+  });
+
+  let sectionsWarned = false;
+  $effect(() => {
+    if (!virtualActive) {
+      sectionsWarned = false;
+      return;
+    }
+    if (!sections || sectionsWarned) return;
+    sectionsWarned = true;
+    const message = 'NeoList: section headers are dropped and items flattened when `virtual` is enabled (`disabled`/`readonly` cascade to children; `sticky`/`render`/`empty`/`sectionProps` are lost).';
+    Logger.warn(message);
+    if (import.meta.env.DEV) console.warn(new Error(message));
   });
 
   const isMultiple = (list?: NeoListSelectedItem | NeoListSelectedItem[]): list is NeoListSelectedItem[] | undefined =>
@@ -140,11 +160,11 @@
   const onScrollEvent = (e?: SvelteEvent) => {
     if (!ref) return;
     if (ref.scrollTop === 0) {
-      if (flip) return onScrollBottom?.(e);
+      if (flipActive) return onScrollBottom?.(e);
       else return onScrollTop?.(e);
     }
     if (Math.abs(Math.abs(ref.scrollTop) + ref.clientHeight - ref.scrollHeight) <= scrollTolerance) {
-      if (flip) return onScrollTop?.(e);
+      if (flipActive) return onScrollTop?.(e);
       else return onScrollBottom?.(e);
     }
   };
@@ -156,28 +176,28 @@
   let virtualList = $state<NeoVirtualListMethods | undefined>();
 
   export const scrollToTop: NeoListMethods['scrollToTop'] = (options) => {
-    if (virtualEnabled && virtualList) return virtualList.scrollToTop(options);
+    if (virtualActive && virtualList) return virtualList.scrollToTop(options);
     if (!ref) return false;
-    ref.scrollTo({ top: flip ? -ref.scrollHeight : 0, behavior: 'smooth', ...options });
+    ref.scrollTo({ top: flipActive ? -ref.scrollHeight : 0, behavior: 'smooth', ...options });
     onScrollEvent();
     return ref;
   };
 
   export const scrollToBottom: NeoListMethods['scrollToBottom'] = (options) => {
-    if (virtualEnabled && virtualList) return virtualList.scrollToBottom(options);
+    if (virtualActive && virtualList) return virtualList.scrollToBottom(options);
     if (!ref?.scrollHeight) return false;
-    ref.scrollTo({ top: flip ? 0 : ref.scrollHeight, behavior: 'smooth', ...options });
+    ref.scrollTo({ top: flipActive ? 0 : ref.scrollHeight, behavior: 'smooth', ...options });
     onScrollEvent();
     return ref;
   };
 
   export const scrollToIndex: NeoListMethods['scrollToIndex'] = (index, options) => {
-    if (virtualEnabled && virtualList) return virtualList.scrollToIndex(index, options);
+    if (virtualActive && virtualList) return virtualList.scrollToIndex(index, options);
     return false;
   };
 
   export const refresh: NeoListMethods['refresh'] = () => {
-    if (virtualEnabled && virtualList) virtualList.refresh();
+    if (virtualActive && virtualList) virtualList.refresh();
   };
 
   $effect(() => {
@@ -192,7 +212,7 @@
   };
 
   $effect(() => {
-    if (!flip || !ref || virtualEnabled) return;
+    if (!flipActive || !ref) return;
     scrollReverse();
   });
 
@@ -280,7 +300,8 @@
     disabled,
     readonly,
     reverse,
-    flip,
+    flip: flipActive,
+    virtualActive,
     scrolling,
 
     // Selection
@@ -361,13 +382,13 @@
   const animateProps = $derived(toTransitionProps(animate));
   const inFn = $derived.by(() => {
     if (missing) return emptyTransition;
-    if (virtualEnabled && scrolling) return emptyTransition;
+    if (virtualActive && scrolling) return emptyTransition;
     return toTransition(inAction);
   });
   const inProps = $derived(toTransitionProps(inAction));
   const outFn = $derived.by(() => {
     if (missing) return emptyTransition;
-    if (virtualEnabled && scrolling) return emptyTransition;
+    if (virtualActive && scrolling) return emptyTransition;
     return toTransition(outAction);
   });
   const outProps = $derived(toTransitionProps(outAction));
@@ -377,8 +398,8 @@
   // operate on a flat array.
 
   const visibleItems = $derived.by<NeoListItem[]>(() => {
-    if (!virtualEnabled) return [];
-    const flat = items as NeoListItem[];
+    if (!virtualActive) return [];
+    const flat = virtualItems;
     const filtered: NeoListItem[] = [];
     for (let i = 0; i < flat.length; i++) {
       const it = flat[i]!;
@@ -453,9 +474,9 @@
         animate:animateFn={{ ...animateProps, skip: section ? true : skipOffscreen }}
         out:inFn={inProps}
         in:outFn={outProps}
-        {@attach virtualEnabled ? () => {} : intersection.observe}
+        {@attach virtualActive ? () => {} : intersection.observe}
       >
-        {#if renderDivider(i, visible, flip && !isSafari() ? 'bottom' : 'top')}
+        {#if renderDivider(i, visible, flipActive && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
         {#if isSection(item)}
@@ -463,7 +484,7 @@
           {#if customSection && !item.render}
             {@render customSection(list, sectionContext)}
           {:else}
-            <NeoListBaseSection section={item} {index} {context} {select} {list} {reverse} {flip} {...sectionProps} />
+            <NeoListBaseSection section={item} {index} {context} {select} {list} {reverse} flip={flipActive} {...sectionProps} />
           {/if}
         {:else if customItem && !item.render}
           {@render customItem({ item, index, checked, context })}
@@ -478,14 +499,14 @@
             {buttonProps}
             {reverse}
             {rounded}
-            flip={flip && !isSafari()}
+            flip={flipActive && !isSafari()}
             disabled={item.disabled || disabled || section?.disabled}
             readonly={item.readonly || readonly || section?.readonly || (!isNullable && checked)}
             {...itemProps}
             onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
           />
         {/if}
-        {#if renderDivider(i, visible, flip && !isSafari() ? 'top' : 'bottom')}
+        {#if renderDivider(i, visible, flipActive && !isSafari() ? 'top' : 'bottom')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
         {/if}
       </svelte:element>
@@ -545,7 +566,7 @@
   this={containerTag}
   class:neo-list={true}
   class:neo-empty={empty}
-  class:neo-flip={flip}
+  class:neo-flip={flipActive}
   style:flex
   style:width={width?.absolute}
   style:min-width={width?.min}
@@ -556,7 +577,7 @@
   {...containerRest}
 >
   {@render before?.(context)}
-  {#if virtualEnabled && (!empty || loading)}
+  {#if virtualActive && (!empty || loading)}
     <NeoVirtualList
       bind:this={virtualList}
       bind:ref
