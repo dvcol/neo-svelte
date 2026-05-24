@@ -11,6 +11,7 @@
   import { onDestroy, onMount, untrack } from 'svelte';
 
   import { defaultVirtualKey } from '~/list/neo-virtual-list.model.js';
+  import { buildOffsets, computeCursor } from '~/list/neo-virtual-list.utils.js';
 
   let {
     // Snippets
@@ -92,30 +93,17 @@
   let total = $state(0);
 
   function rebuildOffsets() {
-    const len = items.length;
-    const next = new Float64Array(len + 1);
-    let acc = 0;
-    if (fixedHeight != null) {
-      const h = fixedHeight;
-      for (let i = 0; i < len; i++) {
-        next[i] = acc;
-        acc += h;
-      }
-    } else if (heightFn) {
-      for (let i = 0; i < len; i++) {
-        next[i] = acc;
-        acc += heightFn(items[i]!, i);
-      }
-    } else {
-      const est = effectiveEstimate();
-      for (let i = 0; i < len; i++) {
-        next[i] = acc;
-        acc += heights.get(resolveId(items[i]!, i)) ?? est;
-      }
-    }
-    next[len] = acc;
-    offsets = next;
-    total = acc;
+    const built = buildOffsets({
+      items,
+      length: items.length,
+      key,
+      fixedHeight,
+      heightFn,
+      heights,
+      estimate: effectiveEstimate(),
+    });
+    offsets = built.offsets;
+    total = built.total;
   }
 
   /* ------------------------------- Cursor -------------------------------- */
@@ -123,44 +111,18 @@
   const cursor = $state({ start: 0, end: 0 });
   let viewportHeight = $state(0);
 
-  /**
-   * Largest i such that offsets[i] <= y. Binary search in dynamic mode;
-   * direct division in fixed mode.
-   */
-  function indexAtOffset(y: number): number {
-    const len = items.length;
-    if (!len) return 0;
-    if (fixedHeight != null) {
-      return Math.max(0, Math.min(len - 1, Math.floor(y / fixedHeight)));
-    }
-    let lo = 0;
-    let hi = offsets.length - 1;
-    while (lo < hi) {
-      const mid = (lo + hi + 1) >>> 1;
-      if (offsets[mid]! <= y) lo = mid;
-      else hi = mid - 1;
-    }
-    return Math.max(0, Math.min(len - 1, lo));
-  }
-
   function recomputeCursor() {
     if (!ref) return;
-    const len = items.length;
-    if (!len) {
-      if (cursor.start !== 0 || cursor.end !== 0) {
-        cursor.start = 0;
-        cursor.end = 0;
-      }
-      return;
-    }
-    const top = ref.scrollTop;
-    const bottom = top + viewportHeight;
-    const startIdx = indexAtOffset(top);
-    const endIdx = indexAtOffset(bottom) + 1;
-    const start = Math.max(0, startIdx - buffer);
-    const end = Math.min(len, endIdx + buffer);
-    if (cursor.start !== start) cursor.start = start;
-    if (cursor.end !== end) cursor.end = end;
+    const next = computeCursor({
+      scrollTop: ref.scrollTop,
+      viewportHeight,
+      length: items.length,
+      buffer,
+      fixedHeight,
+      offsets,
+    });
+    if (cursor.start !== next.start) cursor.start = next.start;
+    if (cursor.end !== next.end) cursor.end = next.end;
   }
 
   /* --------------------------- Scroll handling --------------------------- */
