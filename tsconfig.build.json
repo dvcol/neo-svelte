@@ -9,5 +9,21 @@
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".svelte-kit",
+    "demo",
+    "test",
+    "src/**/*.test.ts",
+    "src/**/*.test.js",
+    "src/**/*.test.svelte",
+    "src/**/*.test.svelte.ts",
+    "src/**/*.test.svelte.js",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.js",
+    "src/**/*.spec.svelte",
+    "src/**/__screenshots__"
+  ]
 }

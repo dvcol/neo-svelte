@@ -196,7 +196,7 @@
     "build": "run-s check package",
     "build:web": "VITE_MODE=WEB run-s vite:build",
     "serve:web": "VITE_MODE=WEB run-p vite:watch vite:preview",
-    "package": "svelte-kit sync && svelte-package && publint",
+    "package": "svelte-kit sync && svelte-package --tsconfig tsconfig.build.json && publint",
     "prepublishOnly": "run-s package",
     "check:type": "tsc -p tsconfig.build.json",
     "check:type:watch": "tsc -p tsconfig.build.json --watch",

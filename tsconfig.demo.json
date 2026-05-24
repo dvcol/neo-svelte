@@ -1,4 +1,15 @@
 {
   "extends": "./tsconfig.build.json",
-  "include": ["demo/**/*.ts", "demo/**/*.svelte"]
+  "include": ["demo/**/*.ts", "demo/**/*.svelte"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".svelte-kit",
+    "demo/**/*.test.ts",
+    "demo/**/*.test.svelte",
+    "demo/**/*.test.svelte.ts",
+    "demo/**/*.spec.ts",
+    "demo/**/*.spec.svelte",
+    "demo/**/__screenshots__"
+  ]
 }

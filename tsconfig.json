@@ -2,6 +2,7 @@
   "extends": ["./.svelte-kit/tsconfig.json", "./tsconfig.build.json"],
   "references": [
     { "path": "./tsconfig.vite.json" },
-    { "path": "./tsconfig.demo.json" }
+    { "path": "./tsconfig.demo.json" },
+    { "path": "./tsconfig.test.json" }
   ]
 }
