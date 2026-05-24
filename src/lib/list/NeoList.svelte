@@ -25,7 +25,7 @@
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
   import NeoIconList from '~/icons/NeoIconList.svelte';
-  import { findByIdInList, flattenSectionsWithCascade, hasSections, isSection, showDivider } from '~/list/neo-list.model.js';
+  import { findByIdInList, flattenSectionsWithCascade, hasSections, isFlatItems, isSection, showDivider } from '~/list/neo-list.model.js';
   import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
   import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
@@ -122,13 +122,17 @@
   // ignorant of the precedence rule.
 
   const sections = $derived(hasSections(items));
-  const virtualActive = $derived(virtual);
-  const flipActive = $derived(flip && !virtualActive);
-  const virtualItems = $derived<NeoListItem[]>(virtualActive && sections ? flattenSectionsWithCascade(items) : (items as NeoListItem[]));
+  const flipActive = $derived(flip && !virtual);
+  const sectionsActive = $derived(sections && !virtual);
+  const flatItems = $derived.by<NeoListItem[]>(() => {
+    if (virtual && sections) return flattenSectionsWithCascade(items);
+    if (isFlatItems(items)) return items;
+    return [];
+  });
 
   let flipWarned = false;
   $effect(() => {
-    if (!virtualActive) {
+    if (!virtual) {
       flipWarned = false;
       return;
     }
@@ -141,7 +145,7 @@
 
   let sectionsWarned = false;
   $effect(() => {
-    if (!virtualActive) {
+    if (!virtual) {
       sectionsWarned = false;
       return;
     }
@@ -176,7 +180,7 @@
   let virtualList = $state<NeoVirtualListMethods | undefined>();
 
   export const scrollToTop: NeoListMethods['scrollToTop'] = (options) => {
-    if (virtualActive && virtualList) return virtualList.scrollToTop(options);
+    if (virtual && virtualList) return virtualList.scrollToTop(options);
     if (!ref) return false;
     ref.scrollTo({ top: flipActive ? -ref.scrollHeight : 0, behavior: 'smooth', ...options });
     onScrollEvent();
@@ -184,7 +188,7 @@
   };
 
   export const scrollToBottom: NeoListMethods['scrollToBottom'] = (options) => {
-    if (virtualActive && virtualList) return virtualList.scrollToBottom(options);
+    if (virtual && virtualList) return virtualList.scrollToBottom(options);
     if (!ref?.scrollHeight) return false;
     ref.scrollTo({ top: flipActive ? 0 : ref.scrollHeight, behavior: 'smooth', ...options });
     onScrollEvent();
@@ -192,12 +196,12 @@
   };
 
   export const scrollToIndex: NeoListMethods['scrollToIndex'] = (index, options) => {
-    if (virtualActive && virtualList) return virtualList.scrollToIndex(index, options);
+    if (virtual && virtualList) return virtualList.scrollToIndex(index, options);
     return false;
   };
 
   export const refresh: NeoListMethods['refresh'] = () => {
-    if (virtualActive && virtualList) virtualList.refresh();
+    if (virtual && virtualList) virtualList.refresh();
   };
 
   $effect(() => {
@@ -301,7 +305,7 @@
     readonly,
     reverse,
     flip: flipActive,
-    virtualActive,
+    virtual,
     scrolling,
 
     // Selection
@@ -382,27 +386,27 @@
   const animateProps = $derived(toTransitionProps(animate));
   const inFn = $derived.by(() => {
     if (missing) return emptyTransition;
-    if (virtualActive && scrolling) return emptyTransition;
+    if (virtual && scrolling) return emptyTransition;
     return toTransition(inAction);
   });
   const inProps = $derived(toTransitionProps(inAction));
   const outFn = $derived.by(() => {
     if (missing) return emptyTransition;
-    if (virtualActive && scrolling) return emptyTransition;
+    if (virtual && scrolling) return emptyTransition;
     return toTransition(outAction);
   });
   const outProps = $derived(toTransitionProps(outAction));
 
-  // ---------------------- Virtual mode: filtered/sorted slice ---------------
-  // Sections are guaranteed absent in virtual mode (gated above), so we can
-  // operate on a flat array.
+  // ----------------------------- Filtered/sorted slice (flat items) --------
+  // Shared by both virtual and non-virtual flat paths so filter/sort behavior
+  // is identical across modes. Sectioned non-virtual keeps its inline
+  // pipeline at the `list` snippet — sections need per-section visibility.
 
   const visibleItems = $derived.by<NeoListItem[]>(() => {
-    if (!virtualActive) return [];
-    const flat = virtualItems;
+    if (sectionsActive) return [];
     const filtered: NeoListItem[] = [];
-    for (let i = 0; i < flat.length; i++) {
-      const it = flat[i]!;
+    for (let i = 0; i < flatItems.length; i++) {
+      const it = flatItems[i]!;
       if (filter(it)) filtered.push(it);
     }
     return filtered.sort(sort);
@@ -414,7 +418,19 @@
 
   // Resolve original (unfiltered) index for selection lookup so toggleItem
   // matches `findByIdInList` semantics in non-virtual mode.
-  const itemOriginalIndex = (item: NeoListItem) => (items as NeoListItem[]).indexOf(item);
+  const itemOriginalIndex = (item: NeoListItem) => flatItems.indexOf(item);
+
+  // Inline filter+sort pipeline used by sectioned non-virtual rendering. Each
+  // section runs its own pipeline so per-section visibility is preserved.
+  // Top-level flat rendering uses the hoisted `visibleItems` instead.
+  function inlineVisible(array: NeoListItemOrSection[] = []) {
+    return array
+      .map((item, index) => ({ item, index }))
+      .filter(({ item }) => filter(item))
+      .sort((a, b) => sort(a.item, b.item));
+  }
+
+  const visibleFlat = $derived(visibleItems.map(item => ({ item, index: flatItems.indexOf(item) })));
 </script>
 
 {#snippet loader(show = loading)}
@@ -447,10 +463,7 @@
 {/snippet}
 
 {#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
-  {@const visible = array
-    ?.map((item, index) => ({ item, index }))
-    .filter(({ item }) => filter(item))
-    .sort((a, b) => sort(a.item, b.item))}
+  {@const visible = section || sectionsActive ? inlineVisible(array) : visibleFlat}
   {#if !visible?.length && !loading}
     {@render emptyItem(section?.empty)}
   {:else}
@@ -474,7 +487,7 @@
         animate:animateFn={{ ...animateProps, skip: section ? true : skipOffscreen }}
         out:inFn={inProps}
         in:outFn={outProps}
-        {@attach virtualActive ? () => {} : intersection.observe}
+        {@attach virtual ? () => {} : intersection.observe}
       >
         {#if renderDivider(i, visible, flipActive && !isSafari() ? 'bottom' : 'top')}
           <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
@@ -577,7 +590,7 @@
   {...containerRest}
 >
   {@render before?.(context)}
-  {#if virtualActive && (!empty || loading)}
+  {#if virtual && (!empty || loading)}
     <NeoVirtualList
       bind:this={virtualList}
       bind:ref

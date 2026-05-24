@@ -201,6 +201,8 @@ export const isSection = <Value = unknown>(item: NeoListItem<Value> | NeoListSec
 
 export const hasSections = <Value = unknown>(items: NeoListItemOrSection<Value>[] = []): boolean => items.some(isSection);
 
+export const isFlatItems = <Value = unknown>(items: NeoListItemOrSection<Value>[]): items is NeoListItem<Value>[] => !items.some(isSection);
+
 /**
  * Flatten sectioned items for virtual mode. `disabled`/`readonly` cascade from
  * section to children (truthy-only, matching the `||` semantics used downstream).
@@ -383,19 +385,17 @@ export interface NeoListState<Item = NeoListItemOrSection> {
    * @default false
    */
   divider?: boolean;
-}
-
-export interface NeoListResolvedState {
   /**
-   * Whether the virtual rendering path is currently active.
+   * Whether the virtual rendering path is enabled. Reflects the `virtual`
+   * prop on the parent `NeoList`. Read this (not raw props) from custom
+   * items / sections that need to branch on virtual vs non-virtual.
    *
-   * Reserved as a forward-compatible signal — today it tracks the `virtual`
-   * prop directly. Read this (not the raw prop) from custom items / sections.
+   * @default false
    */
-  virtualActive?: boolean;
+  virtual?: boolean;
 }
 
-export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[], Value = unknown> = NeoListState & NeoListResolvedState & NeoListSelectState<Selected> & NeoListMethods & NeoListSelectMethods<Value>;
+export type NeoListContext<Selected = NeoListSelectedItem | NeoListSelectedItem[], Value = unknown> = NeoListState & NeoListSelectState<Selected> & NeoListMethods & NeoListSelectMethods<Value>;
 
 export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'ul', Selected = NeoListSelectedItem | NeoListSelectedItem[], Context = NeoListContext<Selected>> = {
   // Snippets
