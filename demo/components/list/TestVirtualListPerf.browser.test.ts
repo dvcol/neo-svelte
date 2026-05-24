@@ -44,7 +44,7 @@ async function withResizeObserverTracking<T>(fn: (count: () => number) => Promis
   }
 }
 
-describe('neoVirtualList — perf contract (browser)', { tags: ['browser'] }, () => {
+describe('neoVirtualList — perf contract (browser)', { tags: ['browser', 'performance'] }, () => {
   it('uses a small constant number of ResizeObservers regardless of total item count', async () => {
     await withResizeObserverTracking(async (count) => {
       render(VirtualHarness, { props: { items: makeItems(2000), itemHeight: ROW, buffer: 5 } as never });

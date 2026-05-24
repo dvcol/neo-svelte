@@ -67,7 +67,7 @@ async function withObserverTracking<T>(fn: (count: () => number) => Promise<T>):
   }
 }
 
-describe('neoList — perf contract (browser)', { tags: ['browser'] }, () => {
+describe('neoList — perf contract (browser)', { tags: ['browser', 'performance'] }, () => {
   it('uses a small constant number of IntersectionObservers regardless of row count', async () => {
     await withObserverTracking(async (count) => {
       renderPerf(makeItems(500));

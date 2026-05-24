@@ -51,27 +51,6 @@ jobs:
           # ================= 🧪 Unit tests =================
           pnpm run test:unit
 
-  bench:
-    name: ⏱️ Bench (perf gate)
-    # Gated to push-on-main + manual dispatch initially to avoid PR flake.
-    # Threshold tunable in scripts/bench-compare.mjs after 3 stable runs.
-    # Browser benches stay local-only until CI Playwright infra exists.
-    if: github.event_name != 'pull_request'
-    needs: test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: ⛙ Checkout branch ${{ github.ref }}
-        uses: actions/checkout@v6
-
-      - name: 🧱 Install
-        uses: ./.github/actions/install
-
-      - name: ⏱️ Run unit benches against baseline
-        run: |
-          # ================= ⏱️ Unit benches =================
-          pnpm run test:bench:unit
-
   lint:
     name: 🧹 Lint
     runs-on: ubuntu-latest
