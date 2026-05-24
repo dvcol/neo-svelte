@@ -444,29 +444,23 @@ describe('neoList — selection payload shape', { tags: ['jsdom'] }, () => {
 });
 
 /*
- * Phase 1.3: ARIA posinset/setsize parity between modes.
+ * Phase 1.3 / 3.3: ARIA posinset/setsize parity between modes.
  *
- * Today's behavior diverges:
- *   - non-virtual (NeoList.svelte:446) uses the ORIGINAL item index for
- *     aria-posinset (the `index` from the pre-filter `.map`).
- *   - virtual (NeoList.svelte:506) uses the FILTERED position
- *     (`v.index + 1` against `visibleItems`).
- * After Phase 3.1 hoists `visibleItems` for both modes the values become
- * equivalent (filtered position in both). The `it.skip` below flips active
- * once the hoist lands.
+ * Both modes use the FILTERED position for `aria-posinset` (1..N over the
+ * visible slice) while `data-index` keeps the ORIGINAL item index from
+ * `flatItems`. Selection lookups continue to use the original index.
  */
 describe('neoList — ARIA posinset/setsize parity', { tags: ['jsdom'] }, () => {
   const fiveItems = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, value: i + 1, label: `Item ${i + 1}` }));
   // Keep items 2, 3, 4 → 3 items in the visible window, originals at indices 1, 2, 3.
   const filterToMiddleThree = (item: { id: number }) => item.id >= 2 && item.id <= 4;
 
-  it('non-virtual (today): posinset uses ORIGINAL index; setsize uses filtered count; data-index = original', async () => {
+  it('non-virtual: posinset 1..N matches filtered position; setsize is filtered count; data-index = original', async () => {
     const { container } = render(NeoList, { props: { items: fiveItems, filter: filterToMiddleThree } as never });
     await tick();
     const lis = Array.from(container.querySelectorAll<HTMLElement>('li.neo-list-item'));
     expect(lis).toHaveLength(3);
-    // Original indices 1, 2, 3 → posinset 2, 3, 4.
-    expect(lis.map(li => li.getAttribute('aria-posinset'))).toEqual(['2', '3', '4']);
+    expect(lis.map(li => li.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
     expect(new Set(lis.map(li => li.getAttribute('aria-setsize')))).toEqual(new Set(['3']));
     expect(lis.map(li => li.dataset.index)).toEqual(['1', '2', '3']);
   });
@@ -480,15 +474,6 @@ describe('neoList — ARIA posinset/setsize parity', { tags: ['jsdom'] }, () => 
     expect(lis).toHaveLength(3);
     expect(lis.map(li => li.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
     expect(new Set(lis.map(li => li.getAttribute('aria-setsize')))).toEqual(new Set(['3']));
-    expect(lis.map(li => li.dataset.index)).toEqual(['1', '2', '3']);
-  });
-
-  it.skip('non-virtual (post-rework): posinset 1..N matches filtered position — TODO Phase 3.1 (NeoList.svelte:446)', async () => {
-    const { container } = render(NeoList, { props: { items: fiveItems, filter: filterToMiddleThree } as never });
-    await tick();
-    const lis = Array.from(container.querySelectorAll<HTMLElement>('li.neo-list-item'));
-    expect(lis).toHaveLength(3);
-    expect(lis.map(li => li.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
     expect(lis.map(li => li.dataset.index)).toEqual(['1', '2', '3']);
   });
 });

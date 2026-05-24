@@ -482,7 +482,7 @@
         data-index={index}
         data-section={sectionIndex}
         aria-selected={checked}
-        aria-posinset={index + 1}
+        aria-posinset={i + 1}
         aria-setsize={visible.length}
         class:neo-list-item={true}
         class:neo-checked={checked}
