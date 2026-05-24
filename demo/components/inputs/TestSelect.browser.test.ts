@@ -2,8 +2,8 @@ import { expectSide, waitForFloatingPosition } from 'test/helpers/floating.js';
 import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
-import { page, userEvent } from '@vitest/browser/context';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 
 import NeoSelect from '~/inputs/NeoSelect.svelte';
 

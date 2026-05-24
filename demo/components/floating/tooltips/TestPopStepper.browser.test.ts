@@ -4,8 +4,8 @@ import { quietForVisual, screenshotName, setViewport } from 'test/helpers/visual
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
-import { page } from '@vitest/browser/context';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { page } from 'vitest/browser';
 
 import Harness from './TestPopStepper.browser.test.svelte';
 

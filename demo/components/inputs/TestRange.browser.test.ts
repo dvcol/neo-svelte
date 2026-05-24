@@ -3,8 +3,8 @@ import { expectSide, waitForFloatingPosition } from 'test/helpers/floating.js';
 import { quietForVisual, screenshotName, setViewport } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
-import { page } from '@vitest/browser/context';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { page } from 'vitest/browser';
 
 import NeoRange from '~/inputs/NeoRange.svelte';
 

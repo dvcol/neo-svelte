@@ -1,9 +1,9 @@
 import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
-import { page } from '@vitest/browser/context';
 import { tick } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { page } from 'vitest/browser';
 
 import NeoTabsRowHarness from '~/nav/NeoTabsRow.test.svelte';
 

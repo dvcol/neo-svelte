@@ -1,8 +1,8 @@
 import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
-import { page } from '@vitest/browser/context';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { page } from 'vitest/browser';
 
 import VisualHarness from './TestCheckbox.browser.test.svelte';
 

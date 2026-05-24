@@ -1,4 +1,4 @@
-import { page } from '@vitest/browser/context';
+import { page } from 'vitest/browser';
 
 export type ViewportName = 'mobile' | 'desktop' | 'uhd';
 
