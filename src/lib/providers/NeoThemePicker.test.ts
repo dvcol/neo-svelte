@@ -133,3 +133,102 @@ describe('neoThemePicker — reset clears vars', { tags: ['jsdom'] }, () => {
     expect(host(container).style.getPropertyValue('--neo-text-color')).toBe('');
   });
 });
+
+describe('neoThemePicker — per-theme overrides are isolated', { tags: ['jsdom'] }, () => {
+  async function toggleTheme(container: ParentNode, user: ReturnType<typeof userEvent.setup>) {
+    await user.click(container.querySelector<HTMLButtonElement>('[data-testid="toggle-theme"]')!);
+    await fireStylesheetLoad();
+  }
+
+  it('a light override is removed (not bled into dark) when switching to dark, and restored on switch back', async () => {
+    const user = userEvent.setup();
+    const { container } = render(Harness, { props: { theme: NeoTheme.Light } as never });
+    await fireStylesheetLoad();
+    const [bgInput] = colorInputs(container);
+    bgInput.value = '#abcdef';
+    await fireEvent.input(bgInput);
+    await tick();
+    expect(host(container).style.getPropertyValue('--neo-background-color')).toBe('#abcdef');
+
+    await toggleTheme(container, user);
+    expect(host(container).style.getPropertyValue('--neo-background-color')).toBe('');
+    expect(host(container).style.getPropertyValue('--neo-dark-background-color')).toBe('');
+
+    await toggleTheme(container, user);
+    expect(host(container).style.getPropertyValue('--neo-background-color')).toBe('#abcdef');
+    expect(host(container).style.getPropertyValue('--neo-dark-background-color')).toBe('');
+  });
+
+  it('overrides set under each theme are stored separately and re-applied on toggle', async () => {
+    const user = userEvent.setup();
+    const { container } = render(Harness, { props: { theme: NeoTheme.Light } as never });
+    await fireStylesheetLoad();
+    const [bgInput] = colorInputs(container);
+    bgInput.value = '#aaaaaa';
+    await fireEvent.input(bgInput);
+    await tick();
+
+    await toggleTheme(container, user);
+    const [bgInputDark] = colorInputs(container);
+    bgInputDark.value = '#222222';
+    await fireEvent.input(bgInputDark);
+    await tick();
+    expect(host(container).style.getPropertyValue('--neo-dark-background-color')).toBe('#222222');
+    expect(host(container).style.getPropertyValue('--neo-background-color')).toBe('');
+
+    await toggleTheme(container, user);
+    expect(host(container).style.getPropertyValue('--neo-background-color')).toBe('#aaaaaa');
+    expect(host(container).style.getPropertyValue('--neo-dark-background-color')).toBe('');
+
+    await toggleTheme(container, user);
+    expect(host(container).style.getPropertyValue('--neo-dark-background-color')).toBe('#222222');
+    expect(host(container).style.getPropertyValue('--neo-background-color')).toBe('');
+  });
+
+  it('reset only clears the active theme, leaving the inactive theme override intact', async () => {
+    const user = userEvent.setup();
+    const { container } = render(Harness, { props: { theme: NeoTheme.Light } as never });
+    await fireStylesheetLoad();
+    const [bgInput] = colorInputs(container);
+    bgInput.value = '#aaaaaa';
+    await fireEvent.input(bgInput);
+    await tick();
+
+    await toggleTheme(container, user);
+    const [bgInputDark] = colorInputs(container);
+    bgInputDark.value = '#222222';
+    await fireEvent.input(bgInputDark);
+    await tick();
+
+    await user.click(container.querySelector<HTMLButtonElement>('button[aria-label="Reset theme background color to default"]')!);
+    await tick();
+    expect(host(container).style.getPropertyValue('--neo-dark-background-color')).toBe('');
+    expect(host(container).style.getPropertyValue('--neo-background-color')).toBe('');
+
+    await toggleTheme(container, user);
+    expect(host(container).style.getPropertyValue('--neo-background-color')).toBe('#aaaaaa');
+  });
+
+  it('the picker swatch reflects the per-theme stored value when toggling', async () => {
+    const user = userEvent.setup();
+    const { container } = render(Harness, { props: { theme: NeoTheme.Light } as never });
+    await fireStylesheetLoad();
+    const [bgInput] = colorInputs(container);
+    bgInput.value = '#abcdef';
+    await fireEvent.input(bgInput);
+    await tick();
+    expect(colorInputs(container)[0].value).toBe('#abcdef');
+
+    await toggleTheme(container, user);
+    expect(colorInputs(container)[0].value).toBe('#000000');
+
+    const [bgInputDark] = colorInputs(container);
+    bgInputDark.value = '#112233';
+    await fireEvent.input(bgInputDark);
+    await tick();
+    expect(colorInputs(container)[0].value).toBe('#112233');
+
+    await toggleTheme(container, user);
+    expect(colorInputs(container)[0].value).toBe('#abcdef');
+  });
+});

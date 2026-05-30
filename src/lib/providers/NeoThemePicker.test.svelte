@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { NeoThemes } from '~/providers/neo-theme-provider.model.js';
 
+  import { useNeoThemeContext } from '~/providers/neo-theme-provider-context.svelte.js';
+  import { NeoTheme } from '~/providers/neo-theme-provider.model.js';
   import NeoThemePicker from '~/providers/NeoThemePicker.svelte';
   import NeoThemeProvider from '~/providers/NeoThemeProvider.svelte';
 
@@ -19,10 +21,20 @@
   }: Props = $props();
 </script>
 
+{#snippet inner()}
+  {@const context = useNeoThemeContext()}
+  <button
+    data-testid="toggle-theme"
+    onclick={() => context.update({ theme: context.theme === NeoTheme.Light ? NeoTheme.Dark : NeoTheme.Light })}
+    type="button"
+  >toggle</button>
+  <NeoThemePicker {labelBackground} {labelText} {rounded} />
+{/snippet}
+
 <NeoThemeProvider
   target="self"
   {theme}
   data-testid="theme-picker-host"
 >
-  <NeoThemePicker {labelBackground} {labelText} {rounded} />
+  {@render inner()}
 </NeoThemeProvider>

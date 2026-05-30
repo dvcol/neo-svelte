@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { NeoThemePickerProps } from '~/providers/neo-theme-picker.model.js';
+  import type { NeoThemes } from '~/providers/neo-theme-provider.model.js';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
@@ -26,42 +27,37 @@
   const theme = $derived(context.theme);
   const target = $derived(context.root);
 
-  let background = $state('');
-  let text = $state('');
+  const backgrounds = $state<Record<NeoThemes, string>>({ [NeoTheme.Light]: '', [NeoTheme.Dark]: '' });
+  const texts = $state<Record<NeoThemes, string>>({ [NeoTheme.Light]: '', [NeoTheme.Dark]: '' });
 
   const clearBackground = () => {
-    background = '';
-    if (!target || !('style' in target)) return;
-    target.style.removeProperty('--neo-background-color');
-    target.style.removeProperty('--neo-dark-background-color');
+    backgrounds[theme] = '';
   };
 
   const clearText = () => {
-    text = '';
-    if (!target || !('style' in target)) return;
-    target.style.removeProperty('--neo-text-color');
-    target.style.removeProperty('--neo-dark-text-color');
+    texts[theme] = '';
   };
 
   $effect(() => {
-    if (!background) clearBackground();
-    if (!text) clearText();
-
     if (!target || !('style' in target)) return;
 
-    if (theme === NeoTheme.Light) {
-      if (background) target.style.setProperty('--neo-background-color', background);
-      target.style.removeProperty('--neo-dark-background-color');
+    const isLight = theme === NeoTheme.Light;
+    const bgVar = isLight ? '--neo-background-color' : '--neo-dark-background-color';
+    const bgOther = isLight ? '--neo-dark-background-color' : '--neo-background-color';
+    const txtVar = isLight ? '--neo-text-color' : '--neo-dark-text-color';
+    const txtOther = isLight ? '--neo-dark-text-color' : '--neo-text-color';
 
-      if (text) target.style.setProperty('--neo-text-color', text);
-      target.style.removeProperty('--neo-dark-text-color');
-    } else {
-      if (background) target.style.setProperty('--neo-dark-background-color', background);
-      target.style.removeProperty('--neo-background-color');
+    const bg = backgrounds[theme];
+    const txt = texts[theme];
 
-      if (text) target.style.setProperty('--neo-dark-text-color', text);
-      target.style.removeProperty('--neo-text-color');
-    }
+    if (bg) target.style.setProperty(bgVar, bg);
+    else target.style.removeProperty(bgVar);
+
+    if (txt) target.style.setProperty(txtVar, txt);
+    else target.style.removeProperty(txtVar);
+
+    target.style.removeProperty(bgOther);
+    target.style.removeProperty(txtOther);
   });
 </script>
 
@@ -73,11 +69,21 @@
     onclick={clearBackground}
   />
   <span class="neo-theme-picker">
-    <NeoColorPickerSelector aria-label="Select theme background color" title="Select theme background color" bind:value={background} {rounded} />
+    <NeoColorPickerSelector
+      aria-label="Select theme background color"
+      title="Select theme background color"
+      bind:value={() => backgrounds[theme], v => (backgrounds[theme] = v ?? '')}
+      {rounded}
+    />
   </span>
   <NeoButton aria-label="Reset theme text color to default" title="Reset theme text color to default" label={labelText} onclick={clearText} />
   <span class="neo-theme-picker">
-    <NeoColorPickerSelector aria-label="Select theme text color" title="Select theme text color" bind:value={text} {rounded} />
+    <NeoColorPickerSelector
+      aria-label="Select theme text color"
+      title="Select theme text color"
+      bind:value={() => texts[theme], v => (texts[theme] = v ?? '')}
+      {rounded}
+    />
   </span>
   {@render children?.(context.state)}
 </NeoButtonGroup>

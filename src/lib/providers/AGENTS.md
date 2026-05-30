@@ -16,7 +16,7 @@ import {
 ## Components
 
 - `NeoThemeProvider` — **mandatory app-root wrapper.** Registers CSS custom properties on a target element and exposes theme context.
-- `NeoThemePicker` — drop-in panel exposing every theme control at once.
+- `NeoThemePicker` — drop-in panel exposing every theme control at once. Background/text color overrides are scoped per theme: each theme remembers its own override and the picker swatch + applied CSS var swap automatically when the active theme changes.
 - `NeoThemeSelector`, `NeoSourceSelector`, `NeoResetSelector`, `NeoRememberSelector`, `NeoTransitionSelector` — individual switches you can compose.
 - `NeoThemeSelectors` — convenience grouping of the most common switches.
 
