@@ -245,46 +245,52 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-switch {
-    &-container {
-      --neo-label-margin: 0 0 0 0.75rem;
-      --neo-label-padding: 0;
+  @include layers.neo-components {
+    .neo-switch {
+      &-container {
+        --neo-label-margin: 0 0 0 0.75rem;
+        --neo-label-padding: 0;
 
-      display: inline-flex;
-      align-items: center;
-      width: fit-content;
-      margin: 0;
-      padding: calc(0.375rem + var(--neo-switch-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        margin: 0;
+        padding: calc(0.375rem + var(--neo-switch-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
 
-      &.neo-flat {
-        --neo-label-margin: 0 0 0 0.625rem;
+        &.neo-flat {
+          --neo-label-margin: 0 0 0 0.625rem;
+        }
+
+        &:hover {
+          :global(> .neo-switch-button) {
+            color: var(--neo-switch-color-hover, oklch(from var(--neo-switch-color, currentcolor) calc(l - 0.1) c h));
+          }
+
+          :global(> .neo-switch-button.neo-flat) {
+            border-color: var(--neo-switch-border-color-hover, var(--neo-border-color-highlight));
+          }
+
+          // keep: order
+          :global(> .neo-switch-button.neo-valid:not(.neo-disabled, .neo-flat)) {
+            --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 50%);
+          }
+
+          // keep: order
+          :global(> .neo-switch-button.neo-invalid:not(.neo-disabled, .neo-flat)) {
+            --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 50%);
+          }
+        }
       }
 
-      &:hover {
-        :global(> .neo-switch-button) {
-          color: var(--neo-switch-color-hover, oklch(from var(--neo-switch-color, currentcolor) calc(l - 0.1) c h));
-        }
-
-        :global(> .neo-switch-button.neo-flat) {
-          border-color: var(--neo-switch-border-color-hover, var(--neo-border-color-highlight));
-        }
-
-        :global(> .neo-switch-button.neo-valid:not(.neo-disabled, .neo-flat)) {
-          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-valid-color, var(--neo-color-success)) 50%);
-        }
-
-        :global(> .neo-switch-button.neo-invalid:not(.neo-disabled, .neo-flat)) {
-          --neo-switch-checked-background: color-mix(in srgb, transparent, var(--neo-switch-invalid-color, var(--neo-color-error)) 50%);
-        }
+      &-suffix {
+        width: 1rem;
+        height: 1rem;
+        margin-bottom: 0.125rem;
+        margin-left: 0.5rem;
       }
     }
 
-    &-suffix {
-      width: 1rem;
-      height: 1rem;
-      margin-bottom: 0.125rem;
-      margin-left: 0.5rem;
-    }
   }
 </style>

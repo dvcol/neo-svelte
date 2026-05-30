@@ -90,125 +90,133 @@
 {/if}
 
 <style lang="scss">
-  .neo-cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: var(--neo-z-index-layer-max, 2147483647);
-    width: var(--neo-cursor-width, 1.125rem);
-    height: var(--neo-cursor-height, 1.125rem);
-    background-color: var(--neo-cursor-bg-color, var(--neo-text-highlight-color, oklch(from currentcolor calc(l + 0.3) c h / 20%)));
-    border-radius: 50%;
-    outline: var(--neo-outline-width, var(--neo-border-width-md)) var(--neo-cursor-outline-color, transparent) solid;
-    transform-origin: center;
-    transition:
-      outline-offset 200ms ease,
-      outline-color 200ms ease,
-      rotate 200ms ease,
-      scale 200ms ease,
-      width 200ms ease,
-      height 200ms ease,
-      border-radius 200ms ease,
-      background-color 200ms ease,
-      opacity 200ms ease,
-      translate 0ms;
-    pointer-events: none;
-    will-change: width, height, border-radius, translate, opacity;
-    translate: calc(var(--neo-cursor-x) - 50%) calc(var(--neo-cursor-y) - 50%);
-    scale: calc(var(--neo-cursor-scale-x, 1)) calc(var(--neo-cursor-scale-y, 1));
-    rotate: var(--neo-cursor-rotate, 0);
+  @use 'src/lib/styles/layers' as layers;
 
-    &::before {
-      position: absolute;
-      border-radius: inherit;
-      outline: var(--neo-outline-width, var(--neo-border-width)) transparent dashed;
+  @include layers.neo-components {
+    .neo-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: var(--neo-z-index-layer-max, 2147483647);
+      width: var(--neo-cursor-width, 1.125rem);
+      height: var(--neo-cursor-height, 1.125rem);
+      background-color: var(--neo-cursor-bg-color, var(--neo-text-highlight-color, oklch(from currentcolor calc(l + 0.3) c h / 20%)));
+      border-radius: 50%;
+      outline: var(--neo-outline-width, var(--neo-border-width-md)) var(--neo-cursor-outline-color, transparent) solid;
+      transform-origin: center;
       transition:
         outline-offset 200ms ease,
-        outline-color 200ms ease;
-      content: '';
-      inset: 0;
-      pointer-events: none;
-    }
-
-    &::after {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 2px;
-      height: 100%;
-      background-color: transparent;
-      transition:
+        outline-color 200ms ease,
+        rotate 200ms ease,
+        scale 200ms ease,
+        width 200ms ease,
         height 200ms ease,
-        background-color 200ms ease;
-      content: '';
+        border-radius 200ms ease,
+        background-color 200ms ease,
+        opacity 200ms ease,
+        translate 0ms;
       pointer-events: none;
-      translate: -50% -50%;
-    }
-
-    &.neo-pressure {
-      outline-color: var(--neo-cursor-pressure-color, oklch(from currentcolor l c h / 50%));
-      outline-offset: var(--neo-cursor-offset, 0);
-    }
-
-    &.neo-tilt::before {
-      outline-color: var(--neo-cursor-tilt-color, oklch(from currentcolor l c h / 60%));
-      outline-offset: calc(var(--neo-cursor-offset, 0) + var(--neo-cursor-tilt-radius, 0));
-    }
-
-    &.neo-tilt::after {
-      height: calc(100% + (var(--neo-cursor-offset, 0) + var(--neo-cursor-tilt-radius, 0)) * 2);
-      rotate: var(--neo-cursor-tilt-angle, 0);
-      background-color: var(--neo-cursor-tilt-color, oklch(from currentcolor l c h / 60%));
-    }
-
-    &[data-cursor='text'] {
-      width: 0.1875rem;
-      height: 1.375rem;
-      border-radius: 0.25rem;
-      scale: 1;
-      outline-color: transparent;
+      will-change: width, height, border-radius, translate, opacity;
+      translate: calc(var(--neo-cursor-x) - 50%) calc(var(--neo-cursor-y) - 50%);
+      scale: calc(var(--neo-cursor-scale-x, 1)) calc(var(--neo-cursor-scale-y, 1));
+      rotate: var(--neo-cursor-rotate, 0);
 
       &::before {
+        position: absolute;
+        border-radius: inherit;
+        outline: var(--neo-outline-width, var(--neo-border-width)) transparent dashed;
+        transition:
+          outline-offset 200ms ease,
+          outline-color 200ms ease;
+        content: '';
+        inset: 0;
+        pointer-events: none;
+      }
+
+      &::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 2px;
+        height: 100%;
+        background-color: transparent;
+        transition:
+          height 200ms ease,
+          background-color 200ms ease;
+        content: '';
+        pointer-events: none;
+        translate: -50% -50%;
+      }
+
+      &.neo-pressure {
+        outline-color: var(--neo-cursor-pressure-color, oklch(from currentcolor l c h / 50%));
+        outline-offset: var(--neo-cursor-offset, 0);
+      }
+
+      &.neo-tilt::before {
+        outline-color: var(--neo-cursor-tilt-color, oklch(from currentcolor l c h / 60%));
+        outline-offset: calc(var(--neo-cursor-offset, 0) + var(--neo-cursor-tilt-radius, 0));
+      }
+
+      &.neo-tilt::after {
+        height: calc(100% + (var(--neo-cursor-offset, 0) + var(--neo-cursor-tilt-radius, 0)) * 2);
+        rotate: var(--neo-cursor-tilt-angle, 0);
+        background-color: var(--neo-cursor-tilt-color, oklch(from currentcolor l c h / 60%));
+      }
+
+      &[data-cursor='text'] {
+        width: 0.1875rem;
+        height: 1.375rem;
+        border-radius: 0.25rem;
+        scale: 1;
         outline-color: transparent;
+
+        &::before {
+          outline-color: transparent;
+        }
+      }
+
+      &[data-cursor='not-allowed'],
+      &[data-cursor='disabled'] {
+        background-color: var(
+          --neo-cursor-bg-color-disabled,
+          color-mix(in srgb, var(--neo-text-highlight-color, oklch(from currentcolor calc(l + 0.3) c h / 20%)), var(--neo-color-error, red) 5%)
+        );
+      }
+
+      // keep: order
+      &[data-snapping='true']:not([data-cursor='text']) {
+        border-radius: var(--neo-cursor-radius);
+        translate: calc(var(--neo-cursor-x)) calc(var(--neo-cursor-y));
+        scale: 1;
+      }
+
+      // keep: order
+      &[data-transition='in']:not([data-cursor='text']) {
+        transition:
+          outline-color 300ms ease,
+          rotate 300ms ease,
+          scale 300ms ease,
+          width 300ms ease,
+          height 300ms ease,
+          border-radius 300ms ease,
+          opacity 50ms ease,
+          translate 300ms ease;
+      }
+
+      // keep: order
+      &[data-transition='out']:not([data-cursor='text']) {
+        transition:
+          outline-color 100ms ease,
+          rotate 100ms ease-out,
+          scale 100ms ease-out,
+          width 100ms ease-out,
+          height 100ms ease-out,
+          border-radius 100ms ease-out,
+          opacity 50ms ease 100ms,
+          translate 100ms ease-out;
       }
     }
 
-    &[data-cursor='not-allowed'],
-    &[data-cursor='disabled'] {
-      background-color: var(
-        --neo-cursor-bg-color-disabled,
-        color-mix(in srgb, var(--neo-text-highlight-color, oklch(from currentcolor calc(l + 0.3) c h / 20%)), var(--neo-color-error, red) 5%)
-      );
-    }
-
-    &[data-snapping='true']:not([data-cursor='text']) {
-      border-radius: var(--neo-cursor-radius);
-      translate: calc(var(--neo-cursor-x)) calc(var(--neo-cursor-y));
-      scale: 1;
-    }
-
-    &[data-transition='in']:not([data-cursor='text']) {
-      transition:
-        outline-color 300ms ease,
-        rotate 300ms ease,
-        scale 300ms ease,
-        width 300ms ease,
-        height 300ms ease,
-        border-radius 300ms ease,
-        opacity 50ms ease,
-        translate 300ms ease;
-    }
-
-    &[data-transition='out']:not([data-cursor='text']) {
-      transition:
-        outline-color 100ms ease,
-        rotate 100ms ease-out,
-        scale 100ms ease-out,
-        width 100ms ease-out,
-        height 100ms ease-out,
-        border-radius 100ms ease-out,
-        opacity 50ms ease 100ms,
-        translate 100ms ease-out;
-    }
   }
 </style>

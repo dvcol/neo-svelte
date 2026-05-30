@@ -282,331 +282,357 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  $full-spacing: var(--neo-card-spacing, 1.5rem);
-  $half-spacing: calc(var(--neo-card-spacing, 1.5rem) / 2);
+  @include layers.neo-components {
+    $full-spacing: var(--neo-card-spacing, 1.5rem);
+    $half-spacing: calc(var(--neo-card-spacing, 1.5rem) / 2);
 
-  .neo-card {
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    width: fit-content;
-    margin: var(--neo-card-margin, var(--neo-shadow-margin, 0.625rem));
-    padding: var(--neo-card-padding, $full-spacing);
-    color: var(--neo-card-text-color, inherit);
-    background-color: var(--neo-card-bg-color, transparent);
-    background-clip: padding-box;
-    border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
-    border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
-    box-shadow: var(--neo-card-box-shadow, var(--neo-box-shadow-flat));
-    transition:
-      margin 0.3s ease,
-      background-color 0.3s ease,
-      border-color 0.3s ease,
-      border-radius 0.3s ease,
-      backdrop-filter 0.3s ease,
-      box-shadow 0.3s ease-out;
-
-    .neo-card-close {
+    .neo-card {
       display: flex;
-      flex: 0 0 auto;
-      align-self: flex-start;
-      justify-content: flex-end;
-      margin-left: auto;
-      opacity: 0;
-      transition: opacity 0.3s ease-out 0.15s;
-
-      --neo-btn-margin: 0.25rem;
-    }
-
-    &-content {
-      flex: 1 1 auto;
-      overflow: auto;
-
-      .neo-card-close {
-        margin: calc(0% - var(--neo-card-spacing, 1.5rem) / 2);
-
-        --neo-btn-margin: 0.5rem;
-      }
-    }
-
-    &.neo-borderless {
-      border-color: transparent !important;
-    }
-
-    &.neo-disabled {
-      box-shadow: var(--neo-box-shadow-flat) !important;
-      opacity: var(--neo-card-opacity-disabled, var(--neo-opacity-disabled));
-
-      &:not(.neo-borderless) {
-        border-color: var(--neo-card-border-color-disabled, var(--neo-border-color-disabled)) !important;
-      }
-    }
-
-    &.neo-deep.neo-pressed,
-    &.neo-raised:not(.neo-convex) {
-      margin: var(--neo-shadow-margin-lg, 1.125rem);
-    }
-
-    &.neo-hover.neo-flat-hover.neo-hovered,
-    &.neo-hover.neo-flat-hover:hover,
-    &.neo-hover.neo-flat-hover:focus-within,
-    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
-      border-color: var(--neo-card-border-color, var(--neo-border-color));
-
-      &:focus-within,
-      &:hover {
-        border-color: var(--neo-card-border-color-hover, var(--neo-border-color-highlight));
-      }
-    }
-
-    &:focus-within,
-    &.neo-hover:hover,
-    &.neo-hover.neo-hovered {
-      box-shadow: var(--neo-card-box-shadow-hover, var(--neo-card-box-shadow));
-    }
-
-    .neo-card-divider {
-      margin: 0.5rem calc(#{$full-spacing} - 0.25rem);
-    }
-
-    .neo-card-segment {
-      &:only-child {
-        border-radius: inherit;
-      }
-
-      &:not(.neo-card-media, :only-child) {
-        padding: $half-spacing $full-spacing;
-
-        &:first-child {
-          padding: $full-spacing $full-spacing $half-spacing;
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
-        }
-
-        &:last-child {
-          padding: $half-spacing $full-spacing $full-spacing;
-          border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius));
-        }
-      }
-
-      &:only-child:not(.neo-card-media) {
-        padding: $full-spacing;
-      }
-    }
-
-    .neo-card-media {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      flex-direction: column;
+      box-sizing: border-box;
+      width: fit-content;
+      margin: var(--neo-card-margin, var(--neo-shadow-margin, 0.625rem));
+      padding: var(--neo-card-padding, $full-spacing);
+      color: var(--neo-card-text-color, inherit);
+      background-color: var(--neo-card-bg-color, transparent);
+      background-clip: padding-box;
+      border: var(--neo-card-border-width, var(--neo-border-width, 1px)) var(--neo-card-border-color, transparent) solid;
       border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
-      scrollbar-gutter: auto;
+      box-shadow: var(--neo-card-box-shadow, var(--neo-box-shadow-flat));
+      transition:
+        margin 0.3s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        border-radius 0.3s ease,
+        backdrop-filter 0.3s ease,
+        box-shadow 0.3s ease-out;
 
-      &:not(:only-child) {
-        margin: $full-spacing $full-spacing $half-spacing;
-      }
-
-      &.neo-cover:not(.neo-inset) {
-        padding: 0;
-
-        &:not(:only-child) {
-          margin: 0 0 $half-spacing;
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
-        }
-
-        :global(.neo-skeleton-media) {
-          border-radius: 0;
-        }
-      }
-    }
-
-    .neo-card-action,
-    .neo-card-header {
-      display: flex;
-      align-items: center;
-    }
-
-    &:focus-within,
-    &:focus,
-    &:hover {
       .neo-card-close {
-        opacity: 1;
-        transition: opacity 0.3s ease;
-      }
-    }
+        display: flex;
+        flex: 0 0 auto;
+        align-self: flex-start;
+        justify-content: flex-end;
+        margin-left: auto;
+        opacity: 0;
+        transition: opacity 0.3s ease-out 0.15s;
 
-    &.neo-scroll,
-    &.neo-segments {
-      padding: 0;
-    }
-
-    &.neo-segmented {
-      .neo-card-segment:not(.neo-card-media) {
-        padding: $full-spacing;
+        --neo-btn-margin: 0.25rem;
       }
 
-      .neo-card-media.neo-cover {
-        &:not(.neo-inset, :only-child) {
-          margin: 0;
-        }
+      &-content {
+        flex: 1 1 auto;
+        overflow: auto;
 
-        &.neo-inset:not(:only-child) {
-          margin: $full-spacing $full-spacing 0;
+        .neo-card-close {
+          margin: calc(0% - var(--neo-card-spacing, 1.5rem) / 2);
+
+          --neo-btn-margin: 0.5rem;
         }
       }
 
-      .neo-card-segment:not(.neo-card-media, :last-child, :only-child) {
-        border-bottom: var(--neo-border-width, 1px) solid var(--neo-card-border-color, var(--neo-border-color));
-      }
-    }
-
-    &.neo-glass {
-      --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
-      --neo-skeleton-color: var(--neo-glass-skeleton-color);
-      --neo-border-color: var(--neo-glass-border-color);
-
-      background-color: var(--neo-card-bg-color, var(--neo-glass-background-color));
-      backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
-
-      &.neo-convex,
-      &.neo-inset,
-      &.neo-inset-hover:hover {
-        border-color: var(--neo-card-border-color, transparent);
+      &.neo-borderless {
+        border-color: transparent !important;
       }
 
-      &:not(
-          .neo-inset,
-          .neo-inset-hover:hover,
-          .neo-convex,
-          .neo-borderless,
-          .neo-hover-flat:hover,
-          .neo-hover-flat.neo-hovered,
-          .neo-hover-flat:focus-within
-        ) {
-        border-color: var(
-          --neo-card-border-color,
-          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-            var(--neo-glass-left-border-color)
-        );
+      &.neo-disabled {
+        box-shadow: var(--neo-box-shadow-flat) !important;
+        opacity: var(--neo-card-opacity-disabled, var(--neo-opacity-disabled));
+
+        // keep: order
+        &:not(.neo-borderless) {
+          border-color: var(--neo-card-border-color-disabled, var(--neo-border-color-disabled)) !important;
+        }
+      }
+
+      &.neo-deep.neo-pressed,
+      // keep: order
+      &.neo-raised:not(.neo-convex) {
+        margin: var(--neo-shadow-margin-lg, 1.125rem);
       }
 
       &.neo-hover.neo-flat-hover.neo-hovered,
       &.neo-hover.neo-flat-hover:hover,
       &.neo-hover.neo-flat-hover:focus-within,
+      // keep: order
       &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
-        border-color: var(--neo-card-border-color, var(--neo-glass-border-color-flat));
+        border-color: var(--neo-card-border-color, var(--neo-border-color));
 
         &:focus-within,
         &:hover {
-          border-color: var(--neo-card-border-color-hover, var(--neo-glass-border-color-flat-highlight));
+          border-color: var(--neo-card-border-color-hover, var(--neo-border-color-highlight));
         }
       }
-    }
 
-    &.neo-start {
-      @starting-style {
-        box-shadow: var(--neo-box-shadow-flat);
-      }
-    }
-
-    &.neo-tinted {
-      background-color: var(--neo-card-bg-color, var(--neo-background-color-tinted));
-    }
-
-    &.neo-horizontal {
-      flex-direction: row;
-
-      .neo-card-content,
-      .neo-card-header,
-      .neo-card-action {
-        flex-direction: column;
+      &:focus-within,
+      &.neo-hover:hover,
+      &.neo-hover.neo-hovered {
+        box-shadow: var(--neo-card-box-shadow-hover, var(--neo-card-box-shadow));
       }
 
       .neo-card-divider {
-        margin: calc(#{$full-spacing} - 0.25rem) 0.5rem;
+        margin: 0.5rem calc(#{$full-spacing} - 0.25rem);
       }
 
-      .neo-card-close {
-        align-self: flex-end;
-        margin-bottom: auto;
-      }
-
-      .neo-card-segment.neo-card-media:not(:only-child) {
-        margin: $full-spacing $half-spacing $full-spacing $full-spacing;
-      }
-
-      .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
-        margin: 0 $half-spacing 0 0;
-        border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
-      }
-
-      .neo-card-segment:not(.neo-card-media, :only-child) {
-        padding: $full-spacing $half-spacing;
-
-        &:first-child {
-          padding: $full-spacing $half-spacing $full-spacing $full-spacing;
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
+      .neo-card-segment {
+        &:only-child {
+          border-radius: inherit;
         }
 
-        &:last-child {
-          padding: $full-spacing $full-spacing $full-spacing $half-spacing;
-          border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0;
-        }
-      }
-    }
+        // keep: structural
+        &:not(.neo-card-media, :only-child) {
+          padding: $half-spacing $full-spacing;
 
-    &.neo-rounded {
-      border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl));
-
-      .neo-card-media {
-        border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
-
-        &.neo-cover:not(.neo-inset) {
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl));
-
-          &:not(:only-child) {
-            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0;
-          }
-        }
-      }
-
-      .neo-card-segment:not(.neo-card-media, :only-child) {
-        &:first-child {
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0;
-        }
-
-        &:last-child {
-          border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl));
-        }
-      }
-
-      &.neo-horizontal {
-        .neo-card-segment:not(.neo-card-media, :only-child) {
           &:first-child {
-            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl));
+            padding: $full-spacing $full-spacing $half-spacing;
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
           }
 
           &:last-child {
-            border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0;
+            padding: $half-spacing $full-spacing $full-spacing;
+            border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius));
           }
         }
 
-        .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
-          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl));
+        // keep: structural
+        &:only-child:not(.neo-card-media) {
+          padding: $full-spacing;
         }
+      }
+
+      .neo-card-media {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: var(--neo-card-border-radius, var(--neo-border-radius));
+        scrollbar-gutter: auto;
+
+        // keep: structural
+        &:not(:only-child) {
+          margin: $full-spacing $full-spacing $half-spacing;
+        }
+
+        // keep: order
+        &.neo-cover:not(.neo-inset) {
+          padding: 0;
+
+          // keep: structural
+          &:not(:only-child) {
+            margin: 0 0 $half-spacing;
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0 0;
+          }
+
+          :global(.neo-skeleton-media) {
+            border-radius: 0;
+          }
+        }
+      }
+
+      .neo-card-action,
+      .neo-card-header {
+        display: flex;
+        align-items: center;
+      }
+
+      &:focus-within,
+      &:focus,
+      &:hover {
+        .neo-card-close {
+          opacity: 1;
+          transition: opacity 0.3s ease;
+        }
+      }
+
+      &.neo-scroll,
+      &.neo-segments {
+        padding: 0;
+      }
+
+      &.neo-segmented {
+        // keep: structural
+        .neo-card-segment:not(.neo-card-media) {
+          padding: $full-spacing;
+        }
+
+        .neo-card-media.neo-cover {
+          // keep: structural
+          &:not(.neo-inset, :only-child) {
+            margin: 0;
+          }
+
+          // keep: structural
+          &.neo-inset:not(:only-child) {
+            margin: $full-spacing $full-spacing 0;
+          }
+        }
+
+        // keep: structural
+        .neo-card-segment:not(.neo-card-media, :last-child, :only-child) {
+          border-bottom: var(--neo-border-width, 1px) solid var(--neo-card-border-color, var(--neo-border-color));
+        }
+      }
+
+      &.neo-glass {
+        --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
+        --neo-skeleton-color: var(--neo-glass-skeleton-color);
+        --neo-border-color: var(--neo-glass-border-color);
+
+        background-color: var(--neo-card-bg-color, var(--neo-glass-background-color));
+        backdrop-filter: var(--neo-card-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+
+        &.neo-convex,
+        &.neo-inset,
+        &.neo-inset-hover:hover {
+          border-color: var(--neo-card-border-color, transparent);
+        }
+
+        // keep: order
+        &:not(
+            .neo-inset,
+            .neo-inset-hover:hover,
+            .neo-convex,
+            .neo-borderless,
+            .neo-hover-flat:hover,
+            .neo-hover-flat.neo-hovered,
+            .neo-hover-flat:focus-within
+          ) {
+          border-color: var(
+            --neo-card-border-color,
+            var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+              var(--neo-glass-left-border-color)
+          );
+        }
+
+        &.neo-hover.neo-flat-hover.neo-hovered,
+        &.neo-hover.neo-flat-hover:hover,
+        &.neo-hover.neo-flat-hover:focus-within,
+        // keep: order
+        &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+          border-color: var(--neo-card-border-color, var(--neo-glass-border-color-flat));
+
+          &:focus-within,
+          &:hover {
+            border-color: var(--neo-card-border-color-hover, var(--neo-glass-border-color-flat-highlight));
+          }
+        }
+      }
+
+      &.neo-start {
+        @starting-style {
+          box-shadow: var(--neo-box-shadow-flat);
+        }
+      }
+
+      &.neo-tinted {
+        background-color: var(--neo-card-bg-color, var(--neo-background-color-tinted));
+      }
+
+      &.neo-horizontal {
+        flex-direction: row;
+
+        .neo-card-content,
+        .neo-card-header,
+        .neo-card-action {
+          flex-direction: column;
+        }
+
+        .neo-card-divider {
+          margin: calc(#{$full-spacing} - 0.25rem) 0.5rem;
+        }
+
+        .neo-card-close {
+          align-self: flex-end;
+          margin-bottom: auto;
+        }
+
+        // keep: structural
+        .neo-card-segment.neo-card-media:not(:only-child) {
+          margin: $full-spacing $half-spacing $full-spacing $full-spacing;
+        }
+
+        // keep: structural
+        .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
+          margin: 0 $half-spacing 0 0;
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
+        }
+
+        // keep: structural
+        .neo-card-segment:not(.neo-card-media, :only-child) {
+          padding: $full-spacing $half-spacing;
+
+          &:first-child {
+            padding: $full-spacing $half-spacing $full-spacing $full-spacing;
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius));
+          }
+
+          &:last-child {
+            padding: $full-spacing $full-spacing $full-spacing $half-spacing;
+            border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius)) var(--neo-card-border-radius, var(--neo-border-radius)) 0;
+          }
+        }
+      }
+
+      &.neo-rounded {
+        border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl));
+
+        .neo-card-media {
+          border-radius: var(--neo-card-border-radius, var(--neo-border-radius-lg));
+
+          // keep: order
+          &.neo-cover:not(.neo-inset) {
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl));
+
+            // keep: structural
+            &:not(:only-child) {
+              border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0;
+            }
+          }
+        }
+
+        // keep: structural
+        .neo-card-segment:not(.neo-card-media, :only-child) {
+          &:first-child {
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0;
+          }
+
+          &:last-child {
+            border-radius: 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl));
+          }
+        }
+
+        &.neo-horizontal {
+          // keep: structural
+          .neo-card-segment:not(.neo-card-media, :only-child) {
+            &:first-child {
+              border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl));
+            }
+
+            &:last-child {
+              border-radius: 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl)) var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0;
+            }
+          }
+
+          // keep: structural
+          .neo-card-media.neo-cover:not(.neo-inset, :only-child) {
+            border-radius: var(--neo-card-border-radius, var(--neo-border-radius-xxl)) 0 0 var(--neo-card-border-radius, var(--neo-border-radius-xxl));
+          }
+        }
+      }
+
+      &.neo-skeleton {
+        box-shadow: var(--neo-box-shadow-flat);
+        pointer-events: none;
+
+        @include mixin.skeleton;
       }
     }
 
-    &.neo-skeleton {
-      box-shadow: var(--neo-box-shadow-flat);
-      pointer-events: none;
-
-      @include mixin.skeleton;
+    .neo-card-content.neo-scroll {
+      @include mixin.fade-scroll;
+      @include mixin.scrollbar($gutter: auto, $padding: none, $transition: border-radius 0.3s ease);
     }
-  }
 
-  .neo-card-content.neo-scroll {
-    @include mixin.fade-scroll;
-    @include mixin.scrollbar($gutter: auto, $padding: none, $transition: border-radius 0.3s ease);
   }
 </style>

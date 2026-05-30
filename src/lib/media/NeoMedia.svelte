@@ -148,91 +148,99 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-media {
-    display: flex;
-    flex: var(--neo-media-flex, 1 1 auto);
-    flex-direction: column;
-    gap: var(--neo-media-gap, var(--neo-gap-xs, 0.625rem));
-    margin: var(--neo-media-margin, var(--neo-shadow-margin, 0.625rem));
-    padding: var(--neo-media-padding, var(--neo-gap, 1rem));
-    color: var(--neo-media-color, inherit);
-    background-clip: padding-box;
-    border: var(--neo-media-border-width, var(--neo-border-width, 1px)) var(--neo-media-border-color, transparent) solid;
-    border-radius: var(--neo-media-border-radius, var(--neo-border-radius-lg));
-    box-shadow: var(--neo-media-box-shadow, var(--neo-box-shadow-flat));
-    transition:
-            color 0.15s ease,
-            padding 0.3s ease,
-            margin 0.3s ease,
-            border-color 0.3s ease,
-            border-radius 0.3s ease,
-            backdrop-filter 0.3s ease,
-            background-color 0.3s ease,
-            box-shadow 0.3s ease-out;
+  @use 'src/lib/styles/layers' as layers;
 
-    .neo-media-caption {
-      transition: margin 0.3s ease;
-    }
-
-    &.neo-start {
-      @starting-style {
-        box-shadow: var(--neo-box-shadow-flat);
-      }
-    }
-
-    &.neo-flat:not(.neo-borderless) {
-      border-color: var(--neo-media-border-color, var(--neo-border-color));
-    }
-
-    &.neo-borderless {
-      border-color: transparent;
-    }
-
-    &.neo-rounded {
-      border-radius: var(--neo-media-border-radius, var(--neo-border-radius-3xl));
+  @include layers.neo-components {
+    .neo-media {
+      display: flex;
+      flex: var(--neo-media-flex, 1 1 auto);
+      flex-direction: column;
+      gap: var(--neo-media-gap, var(--neo-gap-xs, 0.625rem));
+      margin: var(--neo-media-margin, var(--neo-shadow-margin, 0.625rem));
+      padding: var(--neo-media-padding, var(--neo-gap, 1rem));
+      color: var(--neo-media-color, inherit);
+      background-clip: padding-box;
+      border: var(--neo-media-border-width, var(--neo-border-width, 1px)) var(--neo-media-border-color, transparent) solid;
+      border-radius: var(--neo-media-border-radius, var(--neo-border-radius-lg));
+      box-shadow: var(--neo-media-box-shadow, var(--neo-box-shadow-flat));
+      transition:
+              color 0.15s ease,
+              padding 0.3s ease,
+              margin 0.3s ease,
+              border-color 0.3s ease,
+              border-radius 0.3s ease,
+              backdrop-filter 0.3s ease,
+              background-color 0.3s ease,
+              box-shadow 0.3s ease-out;
 
       .neo-media-caption {
-        margin-inline: 0.75rem;
-      }
-    }
-
-    &.neo-glass {
-      --neo-skeleton-color: var(--neo-glass-skeleton-color);
-      --neo-border-color: var(--neo-glass-border-color);
-      --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
-
-      background-color: var(--neo-media-bg-color, var(--neo-glass-background-color));
-      backdrop-filter: var(--neo-media-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
-
-      &:not(.neo-borderless,.neo-inset, .neo-flat .neo-filled) {
-        border-color: var(
-                        --neo-media-border-color,
-                        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-                        var(--neo-glass-left-border-color)
-        );
+        transition: margin 0.3s ease;
       }
 
+      &.neo-start {
+        @starting-style {
+          box-shadow: var(--neo-box-shadow-flat);
+        }
+      }
+
+      // keep: order
       &.neo-flat:not(.neo-borderless) {
-        border-color: var(--neo-media-border-color, var(--neo-glass-border-color-flat));
+        border-color: var(--neo-media-border-color, var(--neo-border-color));
       }
-    }
 
-    &.neo-tinted {
-      background-color: var(--neo-media-bg-color, var(--neo-background-color-tinted));
-    }
+      &.neo-borderless {
+        border-color: transparent;
+      }
 
-    &.neo-filled {
-      background-color: var(--neo-media-bg-color, var(--neo-background-color));
+      &.neo-rounded {
+        border-radius: var(--neo-media-border-radius, var(--neo-border-radius-3xl));
+
+        .neo-media-caption {
+          margin-inline: 0.75rem;
+        }
+      }
 
       &.neo-glass {
-        border-color: var(
-                        --neo-media-border-color,
-                        var(--neo-filled-top-border-color)
-                        var(--neo-filled-right-border-color)
-                        var(--neo-filled-bottom-border-color)
-                        var(--neo-filled-left-border-color)
-        );
+        --neo-skeleton-color: var(--neo-glass-skeleton-color);
+        --neo-border-color: var(--neo-glass-border-color);
+        --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
+
+        background-color: var(--neo-media-bg-color, var(--neo-glass-background-color));
+        backdrop-filter: var(--neo-media-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+
+        // keep: order
+        &:not(.neo-borderless,.neo-inset, .neo-flat .neo-filled) {
+          border-color: var(
+                          --neo-media-border-color,
+                          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+                          var(--neo-glass-left-border-color)
+          );
+        }
+
+        // keep: order
+        &.neo-flat:not(.neo-borderless) {
+          border-color: var(--neo-media-border-color, var(--neo-glass-border-color-flat));
+        }
+      }
+
+      &.neo-tinted {
+        background-color: var(--neo-media-bg-color, var(--neo-background-color-tinted));
+      }
+
+      &.neo-filled {
+        background-color: var(--neo-media-bg-color, var(--neo-background-color));
+
+        &.neo-glass {
+          border-color: var(
+                          --neo-media-border-color,
+                          var(--neo-filled-top-border-color)
+                          var(--neo-filled-right-border-color)
+                          var(--neo-filled-bottom-border-color)
+                          var(--neo-filled-left-border-color)
+          );
+        }
       }
     }
+
   }
 </style>

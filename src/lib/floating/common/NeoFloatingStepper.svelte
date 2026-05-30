@@ -123,57 +123,63 @@
 </div>
 
 <style lang="scss">
-  .neo-floating-stepper {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
 
-    --neo-stepper-mark-bg-color: var(--neo-background-color-backdrop-filled);
+  @include layers.neo-components {
+    .neo-floating-stepper {
+      display: contents;
 
-    &-close {
-      --neo-btn-padding-empty: var(--neo-gap-3xs);
-      --neo-btn-margin: 0;
+      --neo-stepper-mark-bg-color: var(--neo-background-color-backdrop-filled);
 
-      opacity: 0.8;
-      transition: opacity 0.3s ease;
+      &-close {
+        --neo-btn-padding-empty: var(--neo-gap-3xs);
+        --neo-btn-margin: 0;
 
-      &.neo-inside {
-        align-self: flex-end;
-        margin-bottom: -1.5rem;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
 
-        &:not(.neo-rounded) {
-          margin-top: 0.25rem;
+        &.neo-inside {
+          align-self: flex-end;
+          margin-bottom: -1.5rem;
+
+          // keep: order
+          &:not(.neo-rounded) {
+            margin-top: 0.25rem;
+          }
+        }
+      }
+
+      &-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-inline: var(--neo-floating-stepper-margin-inline, var(--neo-shadow-margin, 0.625rem));
+        margin-block: var(--neo-gap-xxs);
+
+        .neo-floating-stepper-title {
+          flex: 1 1 auto;
+          margin: 0;
+        }
+
+        .neo-floating-stepper-close {
+          margin-right: -0.375rem;
+        }
+      }
+
+      :global(.neo-stepper-controls) {
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+
+      &:focus-within,
+      &:focus,
+      &:hover {
+        :global(.neo-stepper-controls),
+        .neo-floating-stepper-close {
+          opacity: 1;
         }
       }
     }
 
-    &-header {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-inline: var(--neo-floating-stepper-margin-inline, var(--neo-shadow-margin, 0.625rem));
-      margin-block: var(--neo-gap-xxs);
-
-      .neo-floating-stepper-title {
-        flex: 1 1 auto;
-        margin: 0;
-      }
-
-      .neo-floating-stepper-close {
-        margin-right: -0.375rem;
-      }
-    }
-
-    :global(.neo-stepper-controls) {
-      opacity: 0.8;
-      transition: opacity 0.3s ease;
-    }
-
-    &:focus-within,
-    &:focus,
-    &:hover {
-      :global(.neo-stepper-controls),
-      .neo-floating-stepper-close {
-        opacity: 1;
-      }
-    }
   }
 </style>

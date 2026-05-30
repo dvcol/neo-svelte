@@ -436,25 +436,30 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-virtual-list {
-    position: relative;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+  @use 'src/lib/styles/layers' as layers;
 
-    &-contents {
+  @include layers.neo-components {
+    .neo-virtual-list {
+      position: relative;
       display: flex;
-      flex: 0 0 auto;
+      flex: 1 1 auto;
       flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+
+      &-contents {
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+      }
+
+      &-before,
+      &-after {
+        display: flex;
+        flex-direction: column;
+      }
     }
 
-    &-before,
-    &-after {
-      display: flex;
-      flex-direction: column;
-    }
   }
 </style>

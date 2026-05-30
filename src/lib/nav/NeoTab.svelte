@@ -130,75 +130,80 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-tab {
-    --neo-btn-text-color-hover: var(--neo-tab-text-color-hover, var(--neo-text-color-highlight));
-    --neo-btn-text-color-active: var(--neo-tab-text-color-active, var(--neo-text-color-highlight));
+  @use 'src/lib/styles/layers' as layers;
 
-    display: flex;
-    transition: opacity 0.2s linear;
-    transition-delay: 0s;
+  @include layers.neo-components {
+    .neo-tab {
+      --neo-btn-text-color-hover: var(--neo-tab-text-color-hover, var(--neo-text-color-highlight));
+      --neo-btn-text-color-active: var(--neo-tab-text-color-active, var(--neo-text-color-highlight));
 
-    &.neo-active,
-    &:hover,
-    &:focus-within {
-      .neo-tab-close :global(> .neo-icon-close) {
-        opacity: 1;
-        pointer-events: auto;
+      display: flex;
+      transition: opacity 0.2s linear;
+      transition-delay: 0s;
+
+      &.neo-active,
+      &:hover,
+      &:focus-within {
+        .neo-tab-close :global(> .neo-icon-close) {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
+
+      :global(.neo-tab-button .neo-icon-close:focus-visible) {
+        transition: none;
+      }
+
+      &.neo-close :global(> .neo-tab-button) {
+        padding-right: 0.25rem;
       }
     }
 
-    :global(.neo-tab-button .neo-icon-close:focus-visible) {
-      transition: none;
+    .neo-tab-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      margin-right: 0.5rem;
+      padding: 0;
+      color: inherit;
+      font: inherit;
+      background: none;
+      border: none;
+      outline: inherit;
+      cursor: pointer;
+
+      &.neo-disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      :global(> .neo-icon-close) {
+        margin-bottom: 0.0625rem;
+        padding: 0.1rem;
+        border-radius: 50%;
+        opacity: 0;
+        transition:
+          opacity 0.2s ease-in,
+          color 0.3s ease,
+          background-color 0.3s ease;
+        pointer-events: none;
+      }
+
+      &:focus-visible :global(> .neo-icon-close) {
+        color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
+        background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+        opacity: 1;
+        transition: none;
+      }
+
+      &:hover :global(> .neo-icon-close) {
+        color: var(--neo-close-color, rgb(255 0 0));
+        background-color: var(--neo-close-bg-color-hover, rgb(255 0 0 / 10%));
+        opacity: 1;
+      }
     }
 
-    &.neo-close :global(> .neo-tab-button) {
-      padding-right: 0.25rem;
-    }
-  }
-
-  .neo-tab-close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.25rem;
-    margin-right: 0.5rem;
-    padding: 0;
-    color: inherit;
-    font: inherit;
-    background: none;
-    border: none;
-    outline: inherit;
-    cursor: pointer;
-
-    &.neo-disabled {
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    :global(> .neo-icon-close) {
-      margin-bottom: 0.0625rem;
-      padding: 0.1rem;
-      border-radius: 50%;
-      opacity: 0;
-      transition:
-        opacity 0.2s ease-in,
-        color 0.3s ease,
-        background-color 0.3s ease;
-      pointer-events: none;
-    }
-
-    &:focus-visible :global(> .neo-icon-close) {
-      color: var(--neo-close-color-focused, rgb(255 0 0 / 75%));
-      background-color: var(--neo-close-bg-color-focused, rgb(255 0 0 / 5%));
-      outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-      opacity: 1;
-      transition: none;
-    }
-
-    &:hover :global(> .neo-icon-close) {
-      color: var(--neo-close-color, rgb(255 0 0));
-      background-color: var(--neo-close-bg-color-hover, rgb(255 0 0 / 10%));
-      opacity: 1;
-    }
   }
 </style>

@@ -193,136 +193,140 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-expanded {
-    &-placeholder,
-    &-button {
-      align-self: center;
-      width: fit-content;
-    }
-
-    &-placeholder {
-      text-align: center;
-    }
-
-    &-empty,
-    &-scroll {
-      min-width: var(--neo-file-picker-card-min-width);
-    }
-
-    &-empty {
-      position: relative;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      padding: 1rem;
-      cursor: pointer;
-      transition: color 0.3s ease;
-
-      &::before {
-        position: absolute;
-        margin: -0.5rem;
-        border: var(--neo-border-width) dashed var(--neo-text-color-secondary);
-        border-radius: var(--neo-border-radius);
-        transition: margin 0.3s ease;
-        content: '';
-        inset: 0;
+  @include layers.neo-components {
+    .neo-expanded {
+      &-placeholder,
+      &-button {
+        align-self: center;
+        width: fit-content;
       }
 
-      &.neo-rounded::before {
-        border-radius: var(--neo-border-radius-lg);
+      &-placeholder {
+        text-align: center;
       }
 
-      &.neo-disabled {
-        cursor: no-drop;
+      &-empty,
+      &-scroll {
+        min-width: var(--neo-file-picker-card-min-width);
       }
 
-      &.neo-dragging::before {
-        margin: -0.25rem;
-      }
+      &-empty {
+        position: relative;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        padding: 1rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
 
-      &.neo-label {
-        margin-top: 0.25rem;
-      }
-    }
+        &::before {
+          position: absolute;
+          margin: -0.5rem;
+          border: var(--neo-border-width) dashed var(--neo-text-color-secondary);
+          border-radius: var(--neo-border-radius);
+          transition: margin 0.3s ease;
+          content: '';
+          inset: 0;
+        }
 
-    &-edit,
-    &-count {
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+        &.neo-rounded::before {
+          border-radius: var(--neo-border-radius-lg);
+        }
 
-    &-edit {
-      margin-top: 0.25rem;
-    }
+        &.neo-disabled {
+          cursor: no-drop;
+        }
 
-    &-count {
-      --neo-label-margin: 0;
-      --neo-label-padding: 0;
+        &.neo-dragging::before {
+          margin: -0.25rem;
+        }
 
-      &.neo-label {
-        margin-top: 0.25rem;
-        margin-bottom: 0.5rem;
-
-        .neo-expanded-detail {
-          color: var(--neo-text-color-secondary);
-          font-size: var(--neo-font-size-sm);
-          line-height: var(--neo-line-height-sm);
+        &.neo-label {
+          margin-top: 0.25rem;
         }
       }
-    }
 
-    &-list {
-      display: inline-flex;
-      flex: 1 1 auto;
-      margin: 0 var(--neo-shadow-margin, 0.625rem);
-      padding: 0 0.5rem;
-      border-radius: var(--neo-border-radius);
-      box-shadow: var(--neo-box-shadow-inset-1);
-
-      &.neo-rounded {
-        border-radius: var(--neo-border-radius-lg);
-      }
-
-      .neo-file {
+      &-edit,
+      &-count {
         display: inline-flex;
         align-items: center;
         justify-content: space-between;
-        transition: color 0.1s ease;
+      }
 
-        &-name {
-          @include mixin.ellipsis($line: 2);
+      &-edit {
+        margin-top: 0.25rem;
+      }
+
+      &-count {
+        --neo-label-margin: 0;
+        --neo-label-padding: 0;
+
+        &.neo-label {
+          margin-top: 0.25rem;
+          margin-bottom: 0.5rem;
+
+          .neo-expanded-detail {
+            color: var(--neo-text-color-secondary);
+            font-size: var(--neo-font-size-sm);
+            line-height: var(--neo-line-height-sm);
+          }
+        }
+      }
+
+      &-list {
+        display: inline-flex;
+        flex: 1 1 auto;
+        margin: 0 var(--neo-shadow-margin, 0.625rem);
+        padding: 0 0.5rem;
+        border-radius: var(--neo-border-radius);
+        box-shadow: var(--neo-box-shadow-inset-1);
+
+        &.neo-rounded {
+          border-radius: var(--neo-border-radius-lg);
         }
 
-        &-remove {
-          flex: 0 0 auto;
-        }
+        .neo-file {
+          display: inline-flex;
+          align-items: center;
+          justify-content: space-between;
+          transition: color 0.1s ease;
 
-        &:hover {
-          color: var(--neo-text-color-highlight);
+          &-name {
+            @include mixin.ellipsis($line: 2);
+          }
+
+          &-remove {
+            flex: 0 0 auto;
+          }
+
+          &:hover {
+            color: var(--neo-text-color-highlight);
+          }
+        }
+      }
+
+      &-scroll {
+        position: relative;
+        display: inline-flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        gap: var(--neo-gap-xxs);
+        max-height: var(--neo-file-picker-card-max-height);
+        padding: 0.625rem 0.25rem;
+        overflow: auto;
+
+        &.neo-scroll {
+          @include mixin.fade-scroll(1rem);
+          @include mixin.scrollbar($button-height: 0.375rem);
         }
       }
     }
 
-    &-scroll {
-      position: relative;
-      display: inline-flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      gap: var(--neo-gap-xxs);
-      max-height: var(--neo-file-picker-card-max-height);
-      padding: 0.625rem 0.25rem;
-      overflow: auto;
-
-      &.neo-scroll {
-        @include mixin.fade-scroll(1rem);
-        @include mixin.scrollbar($button-height: 0.375rem);
-      }
-    }
   }
 </style>

@@ -111,32 +111,36 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-validation-group-wrapper {
-    display: flex;
-    flex-direction: column;
+  @include layers.neo-components {
+    .neo-validation-group-wrapper {
+      display: flex;
+      flex-direction: column;
 
-    .neo-validation-message {
-      z-index: var(--neo-validation-z-index, var(--neo-z-index-behind, -1));
-      min-height: var(--neo-line-height-sm, 1.25rem);
-      margin: var(--neo-validation-margin, 0.25rem var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem));
-      font-size: var(--neo-font-size-sm, 0.875rem);
-      line-height: var(--neo-line-height-xs, 1rem);
-      transition:
-        color 0.15s ease,
-        padding 0.3s ease,
-        margin 0.3s ease;
+      .neo-validation-message {
+        z-index: var(--neo-validation-z-index, var(--neo-z-index-behind, -1));
+        min-height: var(--neo-line-height-sm, 1.25rem);
+        margin: var(--neo-validation-margin, 0.25rem var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem));
+        font-size: var(--neo-font-size-sm, 0.875rem);
+        line-height: var(--neo-line-height-xs, 1rem);
+        transition:
+          color 0.15s ease,
+          padding 0.3s ease,
+          margin 0.3s ease;
 
-      .neo-validation-error {
-        color: var(--neo-validation-error-color, var(--neo-color-error));
+        .neo-validation-error {
+          color: var(--neo-validation-error-color, var(--neo-color-error));
+        }
+
+        .neo-validation-error,
+        .neo-validation-description {
+          padding: var(--neo-validation-padding, 0 0.75rem);
+        }
+
+        @include mixin.transition-container;
       }
-
-      .neo-validation-error,
-      .neo-validation-description {
-        padding: var(--neo-validation-padding, 0 0.75rem);
-      }
-
-      @include mixin.transition-container;
     }
+
   }
 </style>

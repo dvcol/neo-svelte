@@ -172,192 +172,206 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-button-group {
-    display: inline-flex;
-    flex: 0 1 auto;
-    flex-flow: row wrap;
-    gap: var(--neo-btn-group-gap, 0.375rem);
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: fit-content;
-    margin: var(--neo-shadow-margin, 0.625rem);
-    padding: 0.25rem;
-    color: var(--neo-btn-group-text-color, inherit);
-    background-color: var(--neo-btn-group-bg-color, transparent);
-    background-clip: padding-box;
-    border: var(--neo-border-width, 1px) var(--neo-btn-group-border-color, transparent) solid;
-    border-radius: calc(var(--neo-btn-group-border-radius, var(--neo-border-radius)) + 0.25rem);
-    box-shadow: var(--neo-btn-group-box-shadow, var(--neo-box-shadow-flat));
-    transition:
-      color 0.15s ease,
-      border-color 0.3s linear,
-      background-color 0.3s ease,
-      border-radius 0.3s ease,
-      box-shadow 0.3s ease-out;
+  @include layers.neo-components {
+    .neo-button-group {
+      display: inline-flex;
+      flex: 0 1 auto;
+      flex-flow: row wrap;
+      gap: var(--neo-btn-group-gap, 0.375rem);
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: fit-content;
+      margin: var(--neo-shadow-margin, 0.625rem);
+      padding: 0.25rem;
+      color: var(--neo-btn-group-text-color, inherit);
+      background-color: var(--neo-btn-group-bg-color, transparent);
+      background-clip: padding-box;
+      border: var(--neo-border-width, 1px) var(--neo-btn-group-border-color, transparent) solid;
+      border-radius: calc(var(--neo-btn-group-border-radius, var(--neo-border-radius)) + 0.25rem);
+      box-shadow: var(--neo-btn-group-box-shadow, var(--neo-box-shadow-flat));
+      transition:
+        color 0.15s ease,
+        border-color 0.3s linear,
+        background-color 0.3s ease,
+        border-radius 0.3s ease,
+        box-shadow 0.3s ease-out;
 
-    &.neo-nowrap {
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      overflow: auto;
-      white-space: nowrap;
-    }
-
-    &.neo-borderless {
-      border-color: transparent !important;
-    }
-
-    &.neo-convex:not(.neo-inset),
-    &.neo-inset:not(.neo-borderless) {
-      padding: 0.375rem;
-    }
-
-    &.neo-hover.neo-flat-hover:hover,
-    &.neo-hover.neo-flat-hover:global(:has(> *:focus-visible)),
-    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:global(:has(> *:focus-visible))) {
-      border-color: var(--neo-btn-group-border-color, var(--neo-border-color));
-
-      &:global(:has(> *:focus-visible)),
-      &:hover {
-        border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-highlight));
-      }
-    }
-
-    &:global(:has(> *:focus-visible)),
-    &.neo-hover:hover {
-      box-shadow: var(--neo-btn-group-box-shadow-hover, var(--neo-btn-group-box-shadow));
-    }
-
-    &.neo-start {
-      @starting-style {
-        box-shadow: var(--neo-box-shadow-flat);
-      }
-    }
-
-    &.neo-glass {
-      --neo-box-shadow-flat: var(--neo-glass-box-shadow-flat);
-      --neo-box-shadow-inset-1: var(--neo-glass-box-shadow-inset-1);
-      --neo-box-shadow-inset-2: var(--neo-glass-box-shadow-inset-2);
-      --neo-box-shadow-inset-3: var(--neo-glass-box-shadow-inset-3);
-      --neo-box-shadow-raised-3: var(--neo-glass-box-shadow-raised-3);
-      --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
-
-      background-color: var(--neo-btn-groupbg-color, var(--neo-glass-background-color));
-      border-color: var(
-        --neo-btn-group-border-color,
-        var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
-      );
-      backdrop-filter: var(--neo-btn-group-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
-
-      :global(.neo-button) {
-        background-color: transparent;
-        backdrop-filter: none;
+      &.neo-nowrap {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow: auto;
+        white-space: nowrap;
       }
 
-      &.neo-convex,
-      &.neo-inset,
-      &.neo-inset-hover:hover {
-        border-color: var(--neo-btn-group-border-color, transparent);
+      &.neo-borderless {
+        border-color: transparent !important;
+      }
+
+      // keep: order
+      &.neo-convex:not(.neo-inset),
+      // keep: order
+      &.neo-inset:not(.neo-borderless) {
+        padding: 0.375rem;
       }
 
       &.neo-hover.neo-flat-hover:hover,
       &.neo-hover.neo-flat-hover:global(:has(> *:focus-visible)),
-      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:global(:has(> *:focus-visible))) {
-        border-color: var(--neo-btn-group-border-color, var(--neo-glass-border-color-flat));
+      // keep: structural
+      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:global(:has(> *:focus-visible))) {
+        border-color: var(--neo-btn-group-border-color, var(--neo-border-color));
 
         &:global(:has(> *:focus-visible)),
         &:hover {
-          border-color: var(--neo-btn-group-border-color-hover, var(--neo-glass-border-color-flat-highlight));
+          border-color: var(--neo-btn-group-border-color-hover, var(--neo-border-color-highlight));
+        }
+      }
+
+      &:global(:has(> *:focus-visible)),
+      &.neo-hover:hover {
+        box-shadow: var(--neo-btn-group-box-shadow-hover, var(--neo-btn-group-box-shadow));
+      }
+
+      &.neo-start {
+        @starting-style {
+          box-shadow: var(--neo-box-shadow-flat);
+        }
+      }
+
+      &.neo-glass {
+        --neo-box-shadow-flat: var(--neo-glass-box-shadow-flat);
+        --neo-box-shadow-inset-1: var(--neo-glass-box-shadow-inset-1);
+        --neo-box-shadow-inset-2: var(--neo-glass-box-shadow-inset-2);
+        --neo-box-shadow-inset-3: var(--neo-glass-box-shadow-inset-3);
+        --neo-box-shadow-raised-3: var(--neo-glass-box-shadow-raised-3);
+        --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
+
+        background-color: var(--neo-btn-groupbg-color, var(--neo-glass-background-color));
+        border-color: var(
+          --neo-btn-group-border-color,
+          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color) var(--neo-glass-left-border-color)
+        );
+        backdrop-filter: var(--neo-btn-group-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+
+        :global(.neo-button) {
+          background-color: transparent;
+          backdrop-filter: none;
+        }
+
+        &.neo-convex,
+        &.neo-inset,
+        &.neo-inset-hover:hover {
+          border-color: var(--neo-btn-group-border-color, transparent);
+        }
+
+        &.neo-hover.neo-flat-hover:hover,
+        &.neo-hover.neo-flat-hover:global(:has(> *:focus-visible)),
+        // keep: structural
+        &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat:global(:has(> *:focus-visible))) {
+          border-color: var(--neo-btn-group-border-color, var(--neo-glass-border-color-flat));
+
+          &:global(:has(> *:focus-visible)),
+          &:hover {
+            border-color: var(--neo-btn-group-border-color-hover, var(--neo-glass-border-color-flat-highlight));
+          }
+        }
+      }
+
+      :global(.neo-button) {
+        margin: 0;
+        border-color: transparent !important;
+      }
+
+      // keep: order
+      :global(.neo-button:disabled:not(.neo-pressed)),
+      // keep: a11y
+      :global(.neo-button[disabled]:not([disabled='false'], .neo-pressed)) {
+        box-shadow: var(--neo-box-shadow-flat) !important;
+      }
+
+      // keep: structural
+      :global(.neo-button:not(:active:not(.neo-loading, :has(.neo-button.neo-propagation:active)), .neo-pressed)) {
+        box-shadow: var(--neo-box-shadow-flat);
+      }
+
+      // keep: structural
+      :global(.neo-button:not(.neo-flat, :active:not(.neo-loading, :has(.neo-button.neo-propagation:active)), .neo-pressed):hover) {
+        box-shadow: var(--neo-btn-group-box-shadow-btn-hover);
+      }
+
+      :global(.neo-button.neo-pressed),
+      // keep: structural
+      :global(.neo-button:active:not(.neo-loading, :has(.neo-button.neo-propagation:active))) {
+        box-shadow: var(--neo-btn-group-box-shadow-btn-active);
+      }
+
+      &.neo-pulse {
+        @include mixin.pulse(
+          $scaleX: var(--neo-btn-group-scale-x, 1.2),
+          $scaleY: var(--neo-btn-group-scale-y, 2),
+          $box-shadow: var(--neo-btn-group-box-shadow),
+          $box-shadow-reverse: var(--neo-btn-group-box-shadow)
+        );
+      }
+
+      &.neo-coalesce {
+        @include mixin.coalesce(
+          $scaleX: var(--neo-btn-group-scale-x, 1.2),
+          $scaleY: var(--neo-btn-group-scale-y, 2),
+          $box-shadow: var(--neo-btn-group-box-shadow),
+          $box-shadow-reverse: var(--neo-btn-group-box-shadow)
+        );
+      }
+
+      &.neo-rounded {
+        padding: 0.25rem 0.3125rem;
+        border-radius: var(--neo-btn-groupborder-radius-rounded, var(--neo-border-radius-xxl));
+
+        :global(.neo-button) {
+          border-radius: var(--neo-btn-groupborder-radius-rounded, var(--neo-border-radius-xxl));
+        }
+      }
+
+      &.neo-skeleton {
+        box-shadow: var(--neo-box-shadow-flat);
+        pointer-events: none;
+
+        @include mixin.skeleton;
+      }
+
+      // keep: order
+      &:not(.neo-vertical) :global(.neo-divider) {
+        --neo-divider-margin: 0.125rem;
+
+        max-height: calc(var(--neo-line-height) + 0.125rem * 2);
+      }
+
+      &.neo-tinted {
+        background-color: var(--neo-btn-group-bg-color, var(--neo-background-color-tinted));
+      }
+
+      &.neo-vertical {
+        flex-direction: column;
+        min-width: max-content;
+
+        :global(.neo-divider) {
+          max-width: calc(100% - 0.5rem);
+        }
+
+        --neo-btn-group-scale-x: 1.75;
+        --neo-btn-group-scale-y: 1.5;
+
+        :global(.neo-button) {
+          width: 100%;
+        }
+
+        &.neo-rounded {
+          padding: 0.5rem;
         }
       }
     }
 
-    :global(.neo-button) {
-      margin: 0;
-      border-color: transparent !important;
-    }
-
-    :global(.neo-button:disabled:not(.neo-pressed)),
-    :global(.neo-button[disabled]:not([disabled='false'], .neo-pressed)) {
-      box-shadow: var(--neo-box-shadow-flat) !important;
-    }
-
-    :global(.neo-button:not(:active:not(.neo-loading, :has(.neo-button.neo-propagation:active)), .neo-pressed)) {
-      box-shadow: var(--neo-box-shadow-flat);
-    }
-
-    :global(.neo-button:not(.neo-flat, :active:not(.neo-loading, :has(.neo-button.neo-propagation:active)), .neo-pressed):hover) {
-      box-shadow: var(--neo-btn-group-box-shadow-btn-hover);
-    }
-
-    :global(.neo-button.neo-pressed),
-    :global(.neo-button:active:not(.neo-loading, :has(.neo-button.neo-propagation:active))) {
-      box-shadow: var(--neo-btn-group-box-shadow-btn-active);
-    }
-
-    &.neo-pulse {
-      @include mixin.pulse(
-        $scaleX: var(--neo-btn-group-scale-x, 1.2),
-        $scaleY: var(--neo-btn-group-scale-y, 2),
-        $box-shadow: var(--neo-btn-group-box-shadow),
-        $box-shadow-reverse: var(--neo-btn-group-box-shadow)
-      );
-    }
-
-    &.neo-coalesce {
-      @include mixin.coalesce(
-        $scaleX: var(--neo-btn-group-scale-x, 1.2),
-        $scaleY: var(--neo-btn-group-scale-y, 2),
-        $box-shadow: var(--neo-btn-group-box-shadow),
-        $box-shadow-reverse: var(--neo-btn-group-box-shadow)
-      );
-    }
-
-    &.neo-rounded {
-      padding: 0.25rem 0.3125rem;
-      border-radius: var(--neo-btn-groupborder-radius-rounded, var(--neo-border-radius-xxl));
-
-      :global(.neo-button) {
-        border-radius: var(--neo-btn-groupborder-radius-rounded, var(--neo-border-radius-xxl));
-      }
-    }
-
-    &.neo-skeleton {
-      box-shadow: var(--neo-box-shadow-flat);
-      pointer-events: none;
-
-      @include mixin.skeleton;
-    }
-
-    &:not(.neo-vertical) :global(.neo-divider) {
-      --neo-divider-margin: 0.125rem;
-
-      max-height: calc(var(--neo-line-height) + 0.125rem * 2);
-    }
-
-    &.neo-tinted {
-      background-color: var(--neo-btn-group-bg-color, var(--neo-background-color-tinted));
-    }
-
-    &.neo-vertical {
-      flex-direction: column;
-      min-width: max-content;
-
-      :global(.neo-divider) {
-        max-width: calc(100% - 0.5rem);
-      }
-
-      --neo-btn-group-scale-x: 1.75;
-      --neo-btn-group-scale-y: 1.5;
-
-      :global(.neo-button) {
-        width: 100%;
-      }
-
-      &.neo-rounded {
-        padding: 0.5rem;
-      }
-    }
   }
 </style>

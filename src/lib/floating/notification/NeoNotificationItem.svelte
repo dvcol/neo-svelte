@@ -383,98 +383,102 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-notification-stack-item {
-    @include mixin.floating(
-      $padding: false,
-      $color: --neo-notification-color,
-      $background-color: --neo-notification-bg-color,
-      $border-color: --neo-notification-border-color,
-      $border-radius: --neo-notification-border-radius,
-      $border-radius-rounded: --neo-notification-border-radius-rounded,
-      $box-shadow: --neo-notification-box-shadow,
-      $backdrop-filter: --neo-notification-content-filter,
-      $z-index: --neo-notification-z-index,
-      $base-z-index: --neo-z-index-layer-top,
-      $elevation: --neo-notification-elevation,
-      $transition: false,
-      $borderless: true,
-      $tinted: true,
-      $filled: true
-    );
+  @include layers.neo-components {
+    .neo-notification-stack-item {
+      @include mixin.floating(
+        $padding: false,
+        $color: --neo-notification-color,
+        $background-color: --neo-notification-bg-color,
+        $border-color: --neo-notification-border-color,
+        $border-radius: --neo-notification-border-radius,
+        $border-radius-rounded: --neo-notification-border-radius-rounded,
+        $box-shadow: --neo-notification-box-shadow,
+        $backdrop-filter: --neo-notification-content-filter,
+        $z-index: --neo-notification-z-index,
+        $base-z-index: --neo-z-index-layer-top,
+        $elevation: --neo-notification-elevation,
+        $transition: false,
+        $borderless: true,
+        $tinted: true,
+        $filled: true
+      );
 
-    position: absolute;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    box-sizing: border-box;
-    margin: var(--neo-notification-margin, var(--neo-gap-4xs));
-    transition:
-      transform 0.6s ease,
-      translate 0.6s ease,
-      width 0.3s ease,
-      height 0.3s ease,
-      scale 0.3s ease,
-      box-shadow 0.3s ease-out,
-      backdrop-filter 0.3s ease,
-      border-radius 0.3s ease,
-      border-color 0.3s ease;
-    pointer-events: auto;
-    will-change: transform, opacity, scale, translate, backdrop-filter;
-
-    &[inert] {
-      z-index: var(--neo-z-index-layer-top, 2000000000);
-    }
-
-    &.neo-draggable {
-      cursor: grab;
-      touch-action: none;
-    }
-
-    &.neo-dragging {
-      transition: none;
-    }
-  }
-
-  .neo-notification {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 100%;
-
-    :global(.neo-notification-close-button) {
-      opacity: 0.5;
-      transition: opacity 0.3s ease;
-    }
-
-    &:hover,
-    &:active,
-    &:focus,
-    &:focus-within,
-    &:focus-visible {
-      :global(.neo-notification-close-button) {
-        opacity: 1;
-      }
-    }
-
-    &-content {
+      position: absolute;
       display: flex;
       flex: 1 1 auto;
       flex-direction: column;
-      width: max-content;
-      min-width: min(10rem, 80vw);
-      max-width: calc(100vw - 2rem);
-      padding: var(--neo-notification-padding, 0.5rem 1rem);
+      box-sizing: border-box;
+      margin: var(--neo-notification-margin, var(--neo-gap-4xs));
+      transition:
+        transform 0.6s ease,
+        translate 0.6s ease,
+        width 0.3s ease,
+        height 0.3s ease,
+        scale 0.3s ease,
+        box-shadow 0.3s ease-out,
+        backdrop-filter 0.3s ease,
+        border-radius 0.3s ease,
+        border-color 0.3s ease;
+      pointer-events: auto;
+      will-change: transform, opacity, scale, translate, backdrop-filter;
+
+      &[inert] {
+        z-index: var(--neo-z-index-layer-top, 2000000000);
+      }
+
+      &.neo-draggable {
+        cursor: grab;
+        touch-action: none;
+      }
+
+      &.neo-dragging {
+        transition: none;
+      }
     }
 
-    &-actions {
+    .neo-notification {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-around;
-      height: stretch;
-      height: -webkit-fill-available;     /* Chrome/Safari */
-      height: -moz-available;            /* Firefox */
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+
+      :global(.neo-notification-close-button) {
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover,
+      &:active,
+      &:focus,
+      &:focus-within,
+      &:focus-visible {
+        :global(.neo-notification-close-button) {
+          opacity: 1;
+        }
+      }
+
+      &-content {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        width: max-content;
+        min-width: min(10rem, 80vw);
+        max-width: calc(100vw - 2rem);
+        padding: var(--neo-notification-padding, 0.5rem 1rem);
+      }
+
+      &-actions {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-around;
+        height: stretch;
+        height: -webkit-fill-available;     /* Chrome/Safari */
+        height: -moz-available;            /* Firefox */
+      }
     }
+
   }
 </style>

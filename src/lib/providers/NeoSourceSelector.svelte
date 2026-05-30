@@ -51,16 +51,21 @@
 </NeoButton>
 
 <style lang="scss">
-  .neo-source-icon {
-    overflow: hidden;
-    border-radius: var(--neo-theme-selector-border-radius, var(--neo-border-radius-xxl));
-    rotate: var(--neo-source-rotate, 0);
-    transition: rotate 0.5s ease;
+  @use 'src/lib/styles/layers' as layers;
 
-    :global(> svg) {
-      width: 1.25rem;
-      height: 1.25rem;
-      translate: -30% -30%;
+  @include layers.neo-components {
+    .neo-source-icon {
+      overflow: hidden;
+      border-radius: var(--neo-theme-selector-border-radius, var(--neo-border-radius-xxl));
+      rotate: var(--neo-source-rotate, 0);
+      transition: rotate 0.5s ease;
+
+      :global(> svg) {
+        width: 1.25rem;
+        height: 1.25rem;
+        translate: -30% -30%;
+      }
     }
+
   }
 </style>

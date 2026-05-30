@@ -45,11 +45,15 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-mark {
-    :global(mark) {
-      color: var(--neo-mark-color, var(--neo-text-color-highlight));
-      font-weight: var(--neo-mark-font-weight, bold);
-      background-color: inherit;
+  @use 'src/lib/styles/layers' as layers;
+
+  @include layers.neo-components {
+    .neo-mark {
+      :global(mark) {
+        color: var(--neo-mark-color, var(--neo-text-color-highlight));
+        font-weight: var(--neo-mark-font-weight, bold);
+        background-color: inherit;
+      }
     }
   }
 </style>

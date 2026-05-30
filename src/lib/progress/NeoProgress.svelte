@@ -309,7 +309,19 @@
 
 <style lang="scss">
   @use 'src/lib/styles/animation' as animation;
+  @use 'src/lib/styles/layers' as layers;
 
+  /* Keyframes stay outside the cascade — see src/lib/styles/AGENTS.md. */
+  @include animation.indeterminate-fast(right, X);
+  @include animation.indeterminate-slow(right, X);
+  @include animation.indeterminate-fast(left, X, negative);
+  @include animation.indeterminate-slow(left, X, negative);
+  @include animation.indeterminate-fast(top, Y, negative);
+  @include animation.indeterminate-slow(top, Y, negative);
+  @include animation.indeterminate-fast(bottom, Y);
+  @include animation.indeterminate-slow(bottom, Y);
+
+  @include layers.neo-components {
   .neo-progress {
     position: relative;
     box-sizing: border-box;
@@ -479,58 +491,43 @@
       &[data-direction='right'] {
         .neo-progress-buffer {
           animation-name: indeterminate-fast-right;
-
-          @include animation.indeterminate-fast(right, X);
         }
 
         .neo-progress-value {
           animation-name: indeterminate-slow-right;
-
-          @include animation.indeterminate-slow(right, X);
         }
       }
 
       &[data-direction='left'] {
         .neo-progress-buffer {
           animation-name: indeterminate-fast-left;
-
-          @include animation.indeterminate-fast(left, X, negative);
         }
 
         .neo-progress-value {
           animation-name: indeterminate-slow-left;
-
-          @include animation.indeterminate-slow(left, X, negative);
         }
       }
 
       &[data-direction='top'] {
         .neo-progress-buffer {
           animation-name: indeterminate-fast-top;
-
-          @include animation.indeterminate-fast(top, Y, negative);
         }
 
         .neo-progress-value {
           animation-name: indeterminate-slow-top;
-
-          @include animation.indeterminate-slow(top, Y, negative);
         }
       }
 
       &[data-direction='bottom'] {
         .neo-progress-buffer {
           animation-name: indeterminate-fast-bottom;
-
-          @include animation.indeterminate-fast(bottom, Y);
         }
 
         .neo-progress-value {
           animation-name: indeterminate-slow-bottom;
-
-          @include animation.indeterminate-slow(bottom, Y);
         }
       }
     }
+  }
   }
 </style>

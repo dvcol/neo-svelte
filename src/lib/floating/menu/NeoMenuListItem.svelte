@@ -273,74 +273,79 @@
 {/if}
 
 <style lang="scss">
-  .neo-menu-item {
-    --neo-btn-bg-color-hover: var(--neo-menu-bg-color-hover, transparent);
+  @use 'src/lib/styles/layers' as layers;
 
-    padding: 0 var(--neo-menu-padding, var(--neo-gap-4xs, 0.25rem));
-    color: var(--neo-list-item-color, inherit);
-    list-style-type: none;
+  @include layers.neo-components {
+    .neo-menu-item {
+      --neo-btn-bg-color-hover: var(--neo-menu-bg-color-hover, transparent);
 
-    :global(> .neo-list-item-button) {
-      width: 100%;
+      padding: 0 var(--neo-menu-padding, var(--neo-gap-4xs, 0.25rem));
+      color: var(--neo-list-item-color, inherit);
+      list-style-type: none;
 
-      --neo-btn-text-color-active: currentcolor;
-    }
-
-    :global(> .neo-list-item-button.neo-rounded) {
-      border-radius: var(--neo-btn-border-radius, var(--neo-border-radius-lg));
-    }
-
-    &:hover,
-    &:focus,
-    &:focus-within {
-      :global(> .neo-list-item-button .neo-list-item-content) {
-        color: var(--neo-text-color-highlight);
-      }
-
-      :global(> .neo-list-item-button .neo-list-item-description),
-      :global(> .neo-list-item-button .neo-list-item-tags){
-        color: var(--neo-text-color-secondary-highlight);
-      }
-    }
-
-    &.neo-section {
-      padding: 0;
-    }
-
-    &-section {
-      display: flex;
-      flex-direction: column;
-
-      &-label {
-        display: inline-flex;
+      :global(> .neo-list-item-button) {
         width: 100%;
-        padding: 0.25rem 0.6125rem;
-        transition: color 0.3s ease;
-        margin-block-end: 0.125rem;
 
-        &.neo-sticky {
-          position: sticky;
-          top: -0.5rem;
-          z-index: var(--neo-z-index-in-front, 1);
-          background: var(
-                          --neo-list-section-bg-color,
-                          linear-gradient(to top, transparent 5%, oklch(from var(--neo-background-color) l c h / 50%) 20%, var(--neo-background-color))
-          );
+        --neo-btn-text-color-active: currentcolor;
+      }
+
+      :global(> .neo-list-item-button.neo-rounded) {
+        border-radius: var(--neo-btn-border-radius, var(--neo-border-radius-lg));
+      }
+
+      &:hover,
+      &:focus,
+      &:focus-within {
+        :global(> .neo-list-item-button .neo-list-item-content) {
+          color: var(--neo-text-color-highlight);
         }
 
-        &.neo-reverse {
-          justify-content: flex-end;
-          text-align: end;
+        :global(> .neo-list-item-button .neo-list-item-description),
+        :global(> .neo-list-item-button .neo-list-item-tags){
+          color: var(--neo-text-color-secondary-highlight);
         }
       }
 
-      &.neo-flip {
-        // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
-        @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
-          flex-direction: column-reverse;
-          justify-content: end;
+      &.neo-section {
+        padding: 0;
+      }
+
+      &-section {
+        display: flex;
+        flex-direction: column;
+
+        &-label {
+          display: inline-flex;
+          width: 100%;
+          padding: 0.25rem 0.6125rem;
+          transition: color 0.3s ease;
+          margin-block-end: 0.125rem;
+
+          &.neo-sticky {
+            position: sticky;
+            top: -0.5rem;
+            z-index: var(--neo-z-index-in-front, 1);
+            background: var(
+                            --neo-list-section-bg-color,
+                            linear-gradient(to top, transparent 5%, oklch(from var(--neo-background-color) l c h / 50%) 20%, var(--neo-background-color))
+            );
+          }
+
+          &.neo-reverse {
+            justify-content: flex-end;
+            text-align: end;
+          }
+        }
+
+        &.neo-flip {
+          // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
+          @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
+            flex-direction: column-reverse;
+            justify-content: end;
+          }
         }
       }
     }
+
   }
 </style>

@@ -445,164 +445,175 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-dialog {
-    @include mixin.floating(
-      $padding: false,
-      $color: --neo-dialog-color,
-      $background-color: --neo-dialog-bg-color,
-      $border-color: --neo-dialog-border-color,
-      $border-radius: --neo-dialog-border-radius,
-      $border-radius-rounded: --neo-dialog-border-radius-rounded,
-      $box-shadow: --neo-dialog-box-shadow,
-      $backdrop-filter: --neo-dialog-content-filter,
-      $z-index: --neo-dialog-z-index,
-      $elevation: --neo-dialog-elevation,
-      $borderless: true,
-      $tinted: true,
-      $filled: true
-    );
+  @include layers.neo-components {
+    .neo-dialog {
+      @include mixin.floating(
+        $padding: false,
+        $color: --neo-dialog-color,
+        $background-color: --neo-dialog-bg-color,
+        $border-color: --neo-dialog-border-color,
+        $border-radius: --neo-dialog-border-radius,
+        $border-radius-rounded: --neo-dialog-border-radius-rounded,
+        $box-shadow: --neo-dialog-box-shadow,
+        $backdrop-filter: --neo-dialog-content-filter,
+        $z-index: --neo-dialog-z-index,
+        $elevation: --neo-dialog-elevation,
+        $borderless: true,
+        $tinted: true,
+        $filled: true
+      );
 
-    display: flex;
-    box-sizing: border-box;
-    width: fit-content;
-    max-width: 100%;
-    height: fit-content;
-    max-height: 100%;
-    margin: var(--neo-dialog-margin, 0);
-    padding: var(--neo-dialog-padding, var(--neo-gap-xs) var(--neo-gap));
-    overflow: auto;
-    outline: none;
+      display: flex;
+      box-sizing: border-box;
+      width: fit-content;
+      max-width: 100%;
+      height: fit-content;
+      max-height: 100%;
+      margin: var(--neo-dialog-margin, 0);
+      padding: var(--neo-dialog-padding, var(--neo-gap-xs) var(--neo-gap));
+      overflow: auto;
+      outline: none;
 
-    &.neo-movable {
-      will-change: translate;
+      &.neo-movable {
+        will-change: translate;
 
-      &.neo-handle {
-        cursor: grab;
-        touch-action: none;
+        &.neo-handle {
+          cursor: grab;
+          touch-action: none;
 
-        &:active,
-        &[data-moving='true'] {
-          cursor: grabbing;
+          &:active,
+          &[data-moving='true'] {
+            cursor: grabbing;
 
-          &[data-axis='x'] {
-            cursor: ew-resize;
-          }
+            &[data-axis='x'] {
+              cursor: ew-resize;
+            }
 
-          &[data-axis='y'] {
-            cursor: ns-resize;
+            &[data-axis='y'] {
+              cursor: ns-resize;
+            }
           }
         }
       }
-    }
 
-    &:not(:is(dialog)) {
-      z-index: var(--neo-dialog-z-index, var(--neo-z-index-layer-top));
-    }
-
-    &:not([data-open='true']) {
-      display: none;
-    }
-
-    &.neo-backdrop:not([data-elevation], [data-modal='false']) {
-      background: transparent;
-      border: none;
-      backdrop-filter: none;
-    }
-
-    &:global(:has(> .neo-handle-group)) {
-      padding: var(--neo-dialog-padding, 0);
-      overflow: unset;
-    }
-
-    :global(> .neo-handle-group .neo-handle) {
-      opacity: 0.6;
-
-      &:focus-visible,
-      &:hover,
-      &:active {
-        opacity: 1;
+      // keep: structural
+      &:not(:is(dialog)) {
+        z-index: var(--neo-dialog-z-index, var(--neo-z-index-layer-top));
       }
-    }
 
-    &:focus-within,
-    &:focus,
-    &:hover {
-      :global(.neo-handle:not(:focus-visible, :hover, :active)) {
-        opacity: 0.8;
-      }
-    }
-
-    &-backdrop {
-      position: fixed;
-      z-index: calc(var(--neo-dialog-z-index, var(--neo-z-index-layer-top)) - 1);
-      inset-block: 0;
-      inset-inline: 0;
-    }
-
-    &-backdrop:not(.neo-hidden),
-    &::backdrop {
-      background: var(--neo-dialog-backdrop-color, var(--neo-background-color-backdrop));
-      backdrop-filter: var(--neo-dialog-backdrop-filter, var(--neo-blur-1));
-      will-change: backdrop-filter, background, opacity, display;
-    }
-
-    &:not(.neo-backdrop) {
-      &::backdrop {
+      // keep: order
+      &:not([data-open='true']) {
         display: none;
       }
-    }
 
-    &:not(:is(dialog), [data-modal='true']) {
-      position: absolute;
-    }
-
-    &.neo-full-size {
-      &[data-placement='center'],
-      &[data-placement^='bottom'],
-      &[data-placement^='top'] {
-        width: calc(100% - var(--neo-dialog-safe-margin, var(--neo-gap)) * 2);
+      // keep: order
+      &.neo-backdrop:not([data-elevation], [data-modal='false']) {
+        background: transparent;
+        border: none;
+        backdrop-filter: none;
       }
 
-      &[data-placement='center'],
-      &[data-placement^='left'],
-      &[data-placement^='right'] {
-        height: calc(100% - var(--neo-dialog-safe-margin, var(--neo-gap)) * 2);
+      &:global(:has(> .neo-handle-group)) {
+        padding: var(--neo-dialog-padding, 0);
+        overflow: unset;
       }
-    }
 
-    &[data-modal='true'] {
-      @include mixin.fixed(
-        $margin: --neo-dialog-margin,
-        $margin-top: --neo-dialog-margin-top,
-        $margin-bottom: --neo-dialog-margin-bottom,
-        $margin-left: --neo-dialog-margin-left,
-        $margin-right: --neo-dialog-margin-right,
-      );
+      :global(> .neo-handle-group .neo-handle) {
+        opacity: 0.6;
 
-      &.neo-slide {
-        @include mixin.slide-in;
+        &:focus-visible,
+        &:hover,
+        &:active {
+          opacity: 1;
+        }
+      }
+
+      &:focus-within,
+      &:focus,
+      &:hover {
+        // keep: order
+        :global(.neo-handle:not(:focus-visible, :hover, :active)) {
+          opacity: 0.8;
+        }
+      }
+
+      &-backdrop {
+        position: fixed;
+        z-index: calc(var(--neo-dialog-z-index, var(--neo-z-index-layer-top)) - 1);
+        inset-block: 0;
+        inset-inline: 0;
+      }
+
+      // keep: order
+      &-backdrop:not(.neo-hidden),
+      &::backdrop {
+        background: var(--neo-dialog-backdrop-color, var(--neo-background-color-backdrop));
+        backdrop-filter: var(--neo-dialog-backdrop-filter, var(--neo-blur-1));
+        will-change: backdrop-filter, background, opacity, display;
+      }
+
+      // keep: order
+      &:not(.neo-backdrop) {
+        &::backdrop {
+          display: none;
+        }
+      }
+
+      // keep: structural
+      &:not(:is(dialog), [data-modal='true']) {
+        position: absolute;
+      }
+
+      &.neo-full-size {
+        &[data-placement='center'],
+        &[data-placement^='bottom'],
+        &[data-placement^='top'] {
+          width: calc(100% - var(--neo-dialog-safe-margin, var(--neo-gap)) * 2);
+        }
+
+        &[data-placement='center'],
+        &[data-placement^='left'],
+        &[data-placement^='right'] {
+          height: calc(100% - var(--neo-dialog-safe-margin, var(--neo-gap)) * 2);
+        }
+      }
+
+      &[data-modal='true'] {
+        @include mixin.fixed(
+          $margin: --neo-dialog-margin,
+          $margin-top: --neo-dialog-margin-top,
+          $margin-bottom: --neo-dialog-margin-bottom,
+          $margin-left: --neo-dialog-margin-left,
+          $margin-right: --neo-dialog-margin-right,
+        );
+
+        &.neo-slide {
+          @include mixin.slide-in;
+          @include mixin.fade-backdrop($filter-end: --neo-dialog-backdrop-filter, $color-end: --neo-dialog-backdrop-color);
+        }
+      }
+
+      &.neo-fade {
+        --neo-fade-scale-start: 1.05;
+
+        @include mixin.fade-in;
         @include mixin.fade-backdrop($filter-end: --neo-dialog-backdrop-filter, $color-end: --neo-dialog-backdrop-color);
       }
     }
 
-    &.neo-fade {
-      --neo-fade-scale-start: 1.05;
-
-      @include mixin.fade-in;
-      @include mixin.fade-backdrop($filter-end: --neo-dialog-backdrop-filter, $color-end: --neo-dialog-backdrop-color);
+    :global(html:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])),
+    :global(body:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])) {
+      overflow: hidden !important;
+      overscroll-behavior: contain;
     }
-  }
 
-  :global(html:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])),
-  :global(body:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])) {
-    overflow: hidden !important;
-    overscroll-behavior: contain;
-  }
+    :global(body.neo-scroll-lock:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])) {
+      position: fixed;
+      top: var(--neo-dialog-scroll-offset-y, 0);
+      left: var(--neo-dialog-scroll-offset-x, 0);
+    }
 
-  :global(body.neo-scroll-lock:has(.neo-dialog.neo-body-scroll-disabled[data-open='true'])) {
-    position: fixed;
-    top: var(--neo-dialog-scroll-offset-y, 0);
-    left: var(--neo-dialog-scroll-offset-x, 0);
   }
 </style>

@@ -554,440 +554,457 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-textarea-group,
-  .neo-textarea,
-  .neo-textarea-after {
-    display: inline-flex;
-    box-sizing: border-box;
-    font: inherit;
-    text-decoration: none;
-    outline: none;
-  }
-
-  .neo-textarea-group,
-  .neo-textarea-after {
-    transition:
-      color 0.3s ease,
-      margin 0.3s ease,
-      padding 0.3s ease,
-      background-color 0.3s ease,
-      backdrop-filter 0.3s ease,
-      border-color 0.3s ease,
-      border-radius 0.3s ease,
-      box-shadow 0.3s ease-out;
-  }
-
-  .neo-textarea {
-    flex: 1 1 auto;
-    align-self: center;
-    width: 100%;
-    min-width: fit-content;
-    max-width: 100%;
-    min-height: fit-content;
-    padding: 0.75rem 0.95rem;
-    overflow: auto;
-    color: var(--neo-textarea-text-color, inherit);
-    text-overflow: ellipsis;
-    background-color: transparent;
-    border: none;
-    border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
-    outline: none;
-
-    &.neo-fit-content {
-      field-sizing: content;
+  @include layers.neo-components {
+    .neo-textarea-group,
+    .neo-textarea,
+    .neo-textarea-after {
+      display: inline-flex;
+      box-sizing: border-box;
+      font: inherit;
+      text-decoration: none;
+      outline: none;
     }
 
-    &.neo-affix {
-      padding: 0.75rem 2.25rem 0.75rem 0.95rem;
+    .neo-textarea-group,
+    .neo-textarea-after {
+      transition:
+        color 0.3s ease,
+        margin 0.3s ease,
+        padding 0.3s ease,
+        background-color 0.3s ease,
+        backdrop-filter 0.3s ease,
+        border-color 0.3s ease,
+        border-radius 0.3s ease,
+        box-shadow 0.3s ease-out;
     }
 
-    &-after {
-      position: absolute;
-      right: 0.125rem;
-      bottom: 0.125rem;
-      align-items: center;
-      margin: 0.25rem;
-      padding: 0.5rem;
-      color: var(--neo-textarea-after-color, inherit);
-      background-color: var(--neo-textarea-after-bg-color, transparent);
-      border: none;
-      border-radius: var(--neo-textarea-after-border-radius, var(--neo-border-radius));
-
-      &:is(button, a) {
-        cursor: pointer;
-
-        &:focus-visible {
-          outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-        }
-
-        &:hover {
-          color: var(--neo-textarea-hover-color, var(--neo-text-color-hover));
-        }
-
-        &:active {
-          color: var(--neo-textarea-active-color, var(--neo-text-color-hover-active));
-          scale: 0.9;
-        }
-
-        &:disabled {
-          color: var(--neo-text-color-disabled);
-          cursor: not-allowed;
-          scale: 1;
-        }
-      }
-
-      &:has(:global(.neo-button:only-child)) {
-        padding: 0;
-      }
-
-      :global(.neo-button) {
-        --neo-btn-padding-empty: 0.4375rem;
-        --neo-btn-margin: auto;
-        --neo-btn-bg-color: transparent;
-        --neo-btn-backdrop-filter: none;
-      }
-    }
-
-    &::placeholder {
-      color: var(--neo-textarea-placeholder-color, var(--neo-text-color-disabled));
-      transition: opacity 0.3s ease;
-    }
-
-    &:read-only {
-      cursor: initial;
-    }
-
-    &:disabled {
-      color: var(--neo-text-color-disabled);
-      cursor: not-allowed;
-      resize: none;
-    }
-
-    &:-webkit-autofill,
-    &:-webkit-autofill:hover,
-    &:-webkit-autofill:focus,
-    &:-webkit-autofill:active {
-      @include mixin.autofill(--neo-textarea-text-color);
-
-      &::selection {
-        background-color: oklch(from var(--neo-textarea-text-color, var(--neo-text-color, inherit)) calc(l + 0.3) c h / 20%);
-      }
-    }
-
-    &:-webkit-autofill::first-line {
-      @include mixin.autofill(--neo-textarea-text-color);
-    }
-  }
-
-  .neo-textarea-group {
-    position: relative;
-    min-width: min-content;
-    margin: var(--neo-shadow-margin, 0.625rem);
-    color: var(--neo-textarea-text-color, inherit);
-    background-color: var(--neo-textarea-bg-color, inherit);
-    background-clip: padding-box;
-    border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;
-    border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
-    box-shadow: var(--neo-textarea-box-shadow, var(--neo-box-shadow-flat));
-    cursor: text;
-
-    &.neo-readonly {
-      cursor: initial;
-    }
-
-    &.neo-borderless {
-      border-color: transparent !important;
-    }
-
-    &.neo-deep.neo-pressed,
-    &.neo-raised {
-      margin: var(--neo-shadow-margin-lg, 1.125rem);
-    }
-
-    &.neo-deep {
-      padding: 0.25rem;
-    }
-
-    &.neo-hover.neo-flat-hover.neo-hovered,
-    &.neo-hover.neo-flat-hover:hover,
-    &.neo-hover.neo-flat-hover:focus-within,
-    &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered .neo-hover-flat:focus-within) {
-      border-color: var(--neo-textarea-border-color, var(--neo-border-color));
-
-      &:focus-visible,
-      &:hover {
-        border-color: var(--neo-textarea-border-color-hover, var(--neo-border-color-highlight));
-      }
-    }
-
-    &:focus-within,
-    &.neo-hover:hover,
-    &.neo-hover.neo-hovered {
-      box-shadow: var(--neo-textarea-box-shadow-hover, var(--neo-box-shadow-flat));
-    }
-
-    &:focus-visible,
-    &:has(.neo-textarea:-webkit-autofill:focus),
-    &:has(.neo-textarea:-webkit-autofill:active) {
-      outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-    }
-
-    &.neo-disabled {
-      box-shadow: var(--neo-box-shadow-flat) !important;
-      opacity: var(--neo-textarea-opacity-disabled, var(--neo-opacity-disabled));
-
-      &:not(.neo-borderless) {
-        border-color: var(--neo-input-border-color-disabled, var(--neo-border-color-disabled)) !important;
-      }
-    }
-
-    :global(.neo-affix-container) {
-      position: absolute;
-      top: 0.125rem;
-      right: 0.125rem;
-      margin: 0.25rem;
-      padding: 0.5rem;
-      border: none;
-      border-radius: var(--neo-textarea-affix-border-radius, var(--neo-border-radius));
-    }
-
-    :global(.neo-label-container) {
+    .neo-textarea {
+      flex: 1 1 auto;
+      align-self: center;
       width: 100%;
+      min-width: fit-content;
+      max-width: 100%;
+      min-height: fit-content;
+      padding: 0.75rem 0.95rem;
+      overflow: auto;
+      color: var(--neo-textarea-text-color, inherit);
+      text-overflow: ellipsis;
+      background-color: transparent;
+      border: none;
+      border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
+      outline: none;
 
-      :global(.neo-label) {
-        --neo-label-padding: 0 1rem;
-        --neo-label-margin: 0;
-        --neo-label-color: var(--neo-textarea-label-color, inherit);
-        --neo-label-color-hover: var(--neo-textarea-label-color-hover, var(--neo-textarea-label-color, inherit));
-
-        min-height: var(--neo-textarea-label-height);
-        transition:
-          padding 0.3s ease,
-          color 0.3s ease,
-          font-size 0.3s ease,
-          line-height 0.3s ease,
-          top 0.3s ease,
-          left 0.3s ease,
-          right 0.3s ease,
-          translate 0.3s ease;
-      }
-    }
-
-    :global(.neo-label-container.neo-first .neo-label) {
-      transition: none;
-    }
-
-    :global(.neo-label-container.neo-affix .neo-label) {
-      padding-right: 3.25rem; // 2.5rem + 0.75rem
-    }
-
-    :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill))) {
-      :global(.neo-label) {
-        --neo-label-color: var(--neo-input-floating-label-color, var(--neo-text-color-secondary));
-        --neo-label-color-hover: var(--neo-input-floating-label-color, var(--neo-text-color-secondary-hover));
-        --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
-
-        translate: 0 calc(50% + 0.75rem - var(--neo-textarea-label-height) / 2);
+      &.neo-fit-content {
+        field-sizing: content;
       }
 
-      :global(.neo-input) {
-        color: var(--neo-input-floating-text-color, transparent);
+      &.neo-affix {
+        padding: 0.75rem 2.25rem 0.75rem 0.95rem;
       }
 
-      :global(::placeholder) {
-        opacity: 0;
-      }
-    }
+      &-after {
+        position: absolute;
+        right: 0.125rem;
+        bottom: 0.125rem;
+        align-items: center;
+        margin: 0.25rem;
+        padding: 0.5rem;
+        color: var(--neo-textarea-after-color, inherit);
+        background-color: var(--neo-textarea-after-bg-color, transparent);
+        border: none;
+        border-radius: var(--neo-textarea-after-border-radius, var(--neo-border-radius));
 
-    &.neo-rounded {
-      border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-xxl));
+        &:is(button, a) {
+          cursor: pointer;
 
-      :global(.neo-affix-container) {
-        right: 0.365rem;
-      }
+          &:focus-visible {
+            outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+          }
 
-      .neo-textarea {
-        --neo-scrollbar-button-height: 0.75rem;
+          &:hover {
+            color: var(--neo-textarea-hover-color, var(--neo-text-color-hover));
+          }
 
-        padding: 0.75rem 1rem;
-        border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-xxl));
+          &:active {
+            color: var(--neo-textarea-active-color, var(--neo-text-color-hover-active));
+            scale: 0.9;
+          }
 
-        &.neo-affix {
-          padding: 0.75rem 2.75rem 0.75rem 1.25rem;
+          &:disabled {
+            color: var(--neo-text-color-disabled);
+            cursor: not-allowed;
+            scale: 1;
+          }
         }
 
-        &-after {
-          right: 0.365rem;
+        &:has(:global(.neo-button:only-child)) {
+          padding: 0;
+        }
+
+        :global(.neo-button) {
+          --neo-btn-padding-empty: 0.4375rem;
+          --neo-btn-margin: auto;
+          --neo-btn-bg-color: transparent;
+          --neo-btn-backdrop-filter: none;
         }
       }
 
-      :global(.neo-label-container .neo-label) {
-        padding: 0 1.25rem;
+      &::placeholder {
+        color: var(--neo-textarea-placeholder-color, var(--neo-text-color-disabled));
+        transition: opacity 0.3s ease;
       }
 
-      :global(.neo-label-container.neo-affix .neo-label) {
-        padding-right: 3.5rem; // 2.5rem + 1rem
-      }
-    }
-
-    &[data-placement='left'] {
-      --neo-textarea-margin-left: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
-
-      margin-left: var(--neo-textarea-margin-left);
-
-      :global(.neo-label-container .neo-label) {
-        position: absolute;
-        top: 0.75rem;
-        left: calc(0% - var(--neo-textarea-margin-left));
+      &:read-only {
+        cursor: initial;
       }
 
-      :global(.neo-label-container.neo-affix:not(.neo-floating) .neo-label) {
-        left: calc(2.5rem - var(--neo-textarea-margin-left));
+      &:disabled {
+        color: var(--neo-text-color-disabled);
+        cursor: not-allowed;
+        resize: none;
       }
 
-      :global(.neo-label-container.neo-affix:not(.neo-floating).neo-rounded .neo-label) {
-        left: calc(2.25rem - var(--neo-textarea-margin-left));
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:active {
+        @include mixin.autofill(--neo-textarea-text-color);
+
+        &::selection {
+          background-color: oklch(from var(--neo-textarea-text-color, var(--neo-text-color, inherit)) calc(l + 0.3) c h / 20%);
+        }
       }
 
-      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
-        left: 0;
+      &:-webkit-autofill::first-line {
+        @include mixin.autofill(--neo-textarea-text-color);
       }
     }
 
-    &[data-placement='right'] {
-      --neo-textarea-margin-right: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
+    .neo-textarea-group {
+      position: relative;
+      min-width: min-content;
+      margin: var(--neo-shadow-margin, 0.625rem);
+      color: var(--neo-textarea-text-color, inherit);
+      background-color: var(--neo-textarea-bg-color, inherit);
+      background-clip: padding-box;
+      border: var(--neo-border-width, 1px) var(--neo-textarea-border-color, transparent) solid;
+      border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius));
+      box-shadow: var(--neo-textarea-box-shadow, var(--neo-box-shadow-flat));
+      cursor: text;
 
-      margin-right: var(--neo-textarea-margin-right);
-
-      :global(.neo-label-container .neo-label) {
-        position: absolute;
-        top: 0.75rem;
-        right: calc(0.25rem - var(--neo-textarea-margin-right));
+      &.neo-readonly {
+        cursor: initial;
       }
 
-      :global(.neo-label-container:not(.neo-floating).neo-rounded .neo-label) {
-        right: calc(0% - var(--neo-textarea-margin-right));
+      &.neo-borderless {
+        border-color: transparent !important;
       }
 
-      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
-        right: calc(100% - var(--neo-textarea-label-width));
+      &.neo-deep.neo-pressed,
+      &.neo-raised {
+        margin: var(--neo-shadow-margin-lg, 1.125rem);
       }
 
-      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)).neo-rounded .neo-label) {
-        right: calc(100% - 0.5rem - var(--neo-textarea-label-width));
-      }
-    }
-
-    &[data-placement='inside'] {
-      :global(.neo-label-container .neo-textarea) {
-        padding-top: 0.25rem;
-      }
-
-      :global(.neo-label-container .neo-label) {
-        padding: 0.75rem 1rem 0.1875rem;
-        line-height: var(--neo-line-height-xs, 1rem);
-      }
-
-      :global(.neo-label-container.neo-rounded .neo-label) {
-        padding: 0.75rem 1rem 0.1875rem 1.25rem;
-      }
-
-      :global(.neo-label-container:has(.neo-textarea:-webkit-autofill) .neo-label),
-      :global(.neo-label-container:not(.neo-floating) .neo-label) {
-        font-size: var(--neo-font-size-sm, 0.875rem);
-      }
-    }
-
-    &[data-placement='top'][data-placement='top'] {
-      --neo-textarea-margin-top: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-height, var(--neo-line-height)));
-
-      margin-top: var(--neo-textarea-margin-top);
-
-      :global(.neo-label-container .neo-label) {
-        position: absolute;
-        top: calc(0% - var(--neo-textarea-margin-top));
-      }
-    }
-
-    &[data-placement='top'],
-    &[data-placement='left'],
-    &[data-placement='right'] {
-      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
-        top: 0;
-      }
-    }
-
-    &.neo-glass {
-      --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
-      --neo-skeleton-color: var(--neo-glass-skeleton-color);
-      --neo-border-color: var(--neo-glass-border-color);
-
-      background-color: var(--neo-textarea-bg-color, var(--neo-glass-background-color));
-      backdrop-filter: var(--neo-textarea-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
-
-      &.neo-inset-hover:hover,
-      &.neo-inset {
-        border-color: var(--neo-textarea-border-color, transparent);
-      }
-
-      &:not(.neo-inset, .neo-inset-hover:hover, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
-        border-color: var(
-          --neo-textarea-border-color,
-          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-            var(--neo-glass-left-border-color)
-        );
+      &.neo-deep {
+        padding: 0.25rem;
       }
 
       &.neo-hover.neo-flat-hover.neo-hovered,
       &.neo-hover.neo-flat-hover:hover,
       &.neo-hover.neo-flat-hover:focus-within,
+      // keep: order
       &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered .neo-hover-flat:focus-within) {
-        border-color: var(--neo-textarea-border-color, var(--neo-glass-border-color-flat));
+        border-color: var(--neo-textarea-border-color, var(--neo-border-color));
 
         &:focus-visible,
         &:hover {
-          border-color: var(--neo-textarea-color-hover, var(--neo-glass-border-color-flat-highlight));
+          border-color: var(--neo-textarea-border-color-hover, var(--neo-border-color-highlight));
         }
       }
-    }
 
-    &.neo-validation {
-      &[data-valid='false'] {
-        --neo-textarea-label-color: var(--neo-textarea-label-color-error, var(--neo-color-error));
-        --neo-textarea-label-color-hover: var(--neo-textarea-label-color-error, var(--neo-color-error-highlight));
-        --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-error, var(--neo-color-error-50));
-        --neo-label-disabled-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
+      &:focus-within,
+      &.neo-hover:hover,
+      &.neo-hover.neo-hovered {
+        box-shadow: var(--neo-textarea-box-shadow-hover, var(--neo-box-shadow-flat));
       }
 
-      &[data-valid='true'] {
-        --neo-textarea-label-color: var(--neo-textarea-label-color-success, var(--neo-color-success));
-        --neo-textarea-label-color-hover: var(--neo-textarea-label-color-success, var(--neo-color-success-highlight));
-        --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-success, var(--neo-color-success-50));
-        --neo-label-disabled-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
+      &:focus-visible,
+      &:has(.neo-textarea:-webkit-autofill:focus),
+      &:has(.neo-textarea:-webkit-autofill:active) {
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
       }
-    }
 
-    &.neo-start {
-      @starting-style {
+      &.neo-disabled {
+        box-shadow: var(--neo-box-shadow-flat) !important;
+        opacity: var(--neo-textarea-opacity-disabled, var(--neo-opacity-disabled));
+
+        // keep: order
+        &:not(.neo-borderless) {
+          border-color: var(--neo-input-border-color-disabled, var(--neo-border-color-disabled)) !important;
+        }
+      }
+
+      :global(.neo-affix-container) {
+        position: absolute;
+        top: 0.125rem;
+        right: 0.125rem;
+        margin: 0.25rem;
+        padding: 0.5rem;
+        border: none;
+        border-radius: var(--neo-textarea-affix-border-radius, var(--neo-border-radius));
+      }
+
+      :global(.neo-label-container) {
+        width: 100%;
+
+        :global(.neo-label) {
+          --neo-label-padding: 0 1rem;
+          --neo-label-margin: 0;
+          --neo-label-color: var(--neo-textarea-label-color, inherit);
+          --neo-label-color-hover: var(--neo-textarea-label-color-hover, var(--neo-textarea-label-color, inherit));
+
+          min-height: var(--neo-textarea-label-height);
+          transition:
+            padding 0.3s ease,
+            color 0.3s ease,
+            font-size 0.3s ease,
+            line-height 0.3s ease,
+            top 0.3s ease,
+            left 0.3s ease,
+            right 0.3s ease,
+            translate 0.3s ease;
+        }
+      }
+
+      :global(.neo-label-container.neo-first .neo-label) {
+        transition: none;
+      }
+
+      :global(.neo-label-container.neo-affix .neo-label) {
+        padding-right: 3.25rem; // 2.5rem + 0.75rem
+      }
+
+      // keep: structural
+      :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill))) {
+        :global(.neo-label) {
+          --neo-label-color: var(--neo-input-floating-label-color, var(--neo-text-color-secondary));
+          --neo-label-color-hover: var(--neo-input-floating-label-color, var(--neo-text-color-secondary-hover));
+          --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
+
+          translate: 0 calc(50% + 0.75rem - var(--neo-textarea-label-height) / 2);
+        }
+
+        :global(.neo-input) {
+          color: var(--neo-input-floating-text-color, transparent);
+        }
+
+        :global(::placeholder) {
+          opacity: 0;
+        }
+      }
+
+      &.neo-rounded {
+        border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-xxl));
+
+        :global(.neo-affix-container) {
+          right: 0.365rem;
+        }
+
+        .neo-textarea {
+          --neo-scrollbar-button-height: 0.75rem;
+
+          padding: 0.75rem 1rem;
+          border-radius: var(--neo-textarea-border-radius, var(--neo-border-radius-xxl));
+
+          &.neo-affix {
+            padding: 0.75rem 2.75rem 0.75rem 1.25rem;
+          }
+
+          &-after {
+            right: 0.365rem;
+          }
+        }
+
+        :global(.neo-label-container .neo-label) {
+          padding: 0 1.25rem;
+        }
+
+        :global(.neo-label-container.neo-affix .neo-label) {
+          padding-right: 3.5rem; // 2.5rem + 1rem
+        }
+      }
+
+      &[data-placement='left'] {
+        --neo-textarea-margin-left: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
+
+        margin-left: var(--neo-textarea-margin-left);
+
+        :global(.neo-label-container .neo-label) {
+          position: absolute;
+          top: 0.75rem;
+          left: calc(0% - var(--neo-textarea-margin-left));
+        }
+
+        // keep: order
+        :global(.neo-label-container.neo-affix:not(.neo-floating) .neo-label) {
+          left: calc(2.5rem - var(--neo-textarea-margin-left));
+        }
+
+        // keep: order
+        :global(.neo-label-container.neo-affix:not(.neo-floating).neo-rounded .neo-label) {
+          left: calc(2.25rem - var(--neo-textarea-margin-left));
+        }
+
+        // keep: structural
+        :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
+          left: 0;
+        }
+      }
+
+      &[data-placement='right'] {
+        --neo-textarea-margin-right: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-width, auto));
+
+        margin-right: var(--neo-textarea-margin-right);
+
+        :global(.neo-label-container .neo-label) {
+          position: absolute;
+          top: 0.75rem;
+          right: calc(0.25rem - var(--neo-textarea-margin-right));
+        }
+
+        // keep: order
+        :global(.neo-label-container:not(.neo-floating).neo-rounded .neo-label) {
+          right: calc(0% - var(--neo-textarea-margin-right));
+        }
+
+        // keep: structural
+        :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
+          right: calc(100% - var(--neo-textarea-label-width));
+        }
+
+        // keep: structural
+        :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)).neo-rounded .neo-label) {
+          right: calc(100% - 0.5rem - var(--neo-textarea-label-width));
+        }
+      }
+
+      &[data-placement='inside'] {
+        :global(.neo-label-container .neo-textarea) {
+          padding-top: 0.25rem;
+        }
+
+        :global(.neo-label-container .neo-label) {
+          padding: 0.75rem 1rem 0.1875rem;
+          line-height: var(--neo-line-height-xs, 1rem);
+        }
+
+        :global(.neo-label-container.neo-rounded .neo-label) {
+          padding: 0.75rem 1rem 0.1875rem 1.25rem;
+        }
+
+        :global(.neo-label-container:has(.neo-textarea:-webkit-autofill) .neo-label),
+        // keep: order
+        :global(.neo-label-container:not(.neo-floating) .neo-label) {
+          font-size: var(--neo-font-size-sm, 0.875rem);
+        }
+      }
+
+      &[data-placement='top'][data-placement='top'] {
+        --neo-textarea-margin-top: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-textarea-label-height, var(--neo-line-height)));
+
+        margin-top: var(--neo-textarea-margin-top);
+
+        :global(.neo-label-container .neo-label) {
+          position: absolute;
+          top: calc(0% - var(--neo-textarea-margin-top));
+        }
+      }
+
+      &[data-placement='top'],
+      &[data-placement='left'],
+      &[data-placement='right'] {
+        // keep: structural
+        :global(.neo-label-container.neo-floating:not(:has(.neo-textarea:-webkit-autofill)) .neo-label) {
+          top: 0;
+        }
+      }
+
+      &.neo-glass {
+        --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
+        --neo-skeleton-color: var(--neo-glass-skeleton-color);
+        --neo-border-color: var(--neo-glass-border-color);
+
+        background-color: var(--neo-textarea-bg-color, var(--neo-glass-background-color));
+        backdrop-filter: var(--neo-textarea-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+
+        &.neo-inset-hover:hover,
+        &.neo-inset {
+          border-color: var(--neo-textarea-border-color, transparent);
+        }
+
+        // keep: order
+        &:not(.neo-inset, .neo-inset-hover:hover, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+          border-color: var(
+            --neo-textarea-border-color,
+            var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+              var(--neo-glass-left-border-color)
+          );
+        }
+
+        &.neo-hover.neo-flat-hover.neo-hovered,
+        &.neo-hover.neo-flat-hover:hover,
+        &.neo-hover.neo-flat-hover:focus-within,
+        // keep: order
+        &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered .neo-hover-flat:focus-within) {
+          border-color: var(--neo-textarea-border-color, var(--neo-glass-border-color-flat));
+
+          &:focus-visible,
+          &:hover {
+            border-color: var(--neo-textarea-color-hover, var(--neo-glass-border-color-flat-highlight));
+          }
+        }
+      }
+
+      &.neo-validation {
+        &[data-valid='false'] {
+          --neo-textarea-label-color: var(--neo-textarea-label-color-error, var(--neo-color-error));
+          --neo-textarea-label-color-hover: var(--neo-textarea-label-color-error, var(--neo-color-error-highlight));
+          --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-error, var(--neo-color-error-50));
+          --neo-label-disabled-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
+        }
+
+        &[data-valid='true'] {
+          --neo-textarea-label-color: var(--neo-textarea-label-color-success, var(--neo-color-success));
+          --neo-textarea-label-color-hover: var(--neo-textarea-label-color-success, var(--neo-color-success-highlight));
+          --neo-textarea-floating-label-color: var(--neo-textarea-floating-label-color-success, var(--neo-color-success-50));
+          --neo-label-disabled-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
+        }
+      }
+
+      &.neo-start {
+        @starting-style {
+          box-shadow: var(--neo-box-shadow-flat);
+        }
+      }
+
+      &.neo-tinted {
+        background-color: var(--neo-textarea-bg-color, var(--neo-background-color-tinted));
+      }
+
+      &.neo-skeleton {
         box-shadow: var(--neo-box-shadow-flat);
+        pointer-events: none;
+
+        @include mixin.skeleton;
+      }
+
+      .neo-textarea.neo-scroll {
+        @include mixin.fade-scroll($fade-height: 0.5rem);
+        @include mixin.scrollbar($gutter: stable, $padding: none);
       }
     }
 
-    &.neo-tinted {
-      background-color: var(--neo-textarea-bg-color, var(--neo-background-color-tinted));
-    }
-
-    &.neo-skeleton {
-      box-shadow: var(--neo-box-shadow-flat);
-      pointer-events: none;
-
-      @include mixin.skeleton;
-    }
-
-    .neo-textarea.neo-scroll {
-      @include mixin.fade-scroll($fade-height: 0.5rem);
-      @include mixin.scrollbar($gutter: stable, $padding: none);
-    }
   }
 </style>

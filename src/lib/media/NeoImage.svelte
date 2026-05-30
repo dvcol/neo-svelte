@@ -125,84 +125,89 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-image,
-  .neo-image-img {
-    width: 100%;
-    height: 100%;
-    border-radius: var(--neo-image-border-radius, var(--neo-border-radius, 0.5rem));
-    transition:
-            border-radius 0.3s ease,
-            color  0.3s ease,
-            background-color  0.5s ease,
-            border-color 0.5s ease,
-            opacity  0.5s ease;
+  @include layers.neo-components {
+    .neo-image,
+    .neo-image-img {
+      width: 100%;
+      height: 100%;
+      border-radius: var(--neo-image-border-radius, var(--neo-border-radius, 0.5rem));
+      transition:
+              border-radius 0.3s ease,
+              color  0.3s ease,
+              background-color  0.5s ease,
+              border-color 0.5s ease,
+              opacity  0.5s ease;
 
-    &.neo-rounded {
-      border-radius: var(--neo-image-border-radius, var(--neo-border-radius-xxl));
-    }
-  }
-
-  .neo-image {
-    position: relative;
-    background-color: transparent;
-    visibility: visible;
-
-    &-icon {
-      position: absolute;
-      top: calc(50% - var(--neo-image-icon-size, 20%) / 2);
-      left: calc(50% - var(--neo-image-icon-size, 20%) / 2);
-      display: flex;
-      flex-direction: column;
-      gap: var(--neo-gap-xxs, 0.5rem);
-      align-items: center;
-      justify-content: center;
-      width: var(--neo-image-icon-size, 20%);
-      height: var(--neo-image-icon-size, 20%);
-      color: var(--neo-text-color-inverse);
-      visibility: hidden;
-      opacity: 0.75;
-      transition: visibility 0.3s ease, opacity 0.3s ease;
-
-      :global(> svg) {
-        width: 100%;
-        height: 100%;
+      &.neo-rounded {
+        border-radius: var(--neo-image-border-radius, var(--neo-border-radius-xxl));
       }
     }
 
-    &.neo-skeleton {
-      @include mixin.skeleton($content: false);
+    .neo-image {
+      position: relative;
+      background-color: transparent;
+      visibility: visible;
 
-      .neo-image-img {
-        opacity: 0;
-      }
+      &-icon {
+        position: absolute;
+        top: calc(50% - var(--neo-image-icon-size, 20%) / 2);
+        left: calc(50% - var(--neo-image-icon-size, 20%) / 2);
+        display: flex;
+        flex-direction: column;
+        gap: var(--neo-gap-xxs, 0.5rem);
+        align-items: center;
+        justify-content: center;
+        width: var(--neo-image-icon-size, 20%);
+        height: var(--neo-image-icon-size, 20%);
+        color: var(--neo-text-color-inverse);
+        visibility: hidden;
+        opacity: 0.75;
+        transition: visibility 0.3s ease, opacity 0.3s ease;
 
-      .neo-image-icon {
-        visibility: visible;
-      }
-    }
-
-    &.neo-error {
-      background-color: var(--neo-image-error-bg, color-mix(in srgb, var(--neo-skeleton-color) 75%, var(--neo-dark-color-error-75)));
-
-      .neo-image-img:not(.neo-alt-text) {
-        opacity: 0;
-
-        &[alt] {
-          align-content: flex-end;
-          overflow: hidden;
-          white-space: pre-line;
-          overflow-wrap: anywhere;
+        :global(> svg) {
+          width: 100%;
+          height: 100%;
         }
       }
 
-      .neo-image-icon {
-        visibility: visible;
+      &.neo-skeleton {
+        @include mixin.skeleton($content: false);
+
+        .neo-image-img {
+          opacity: 0;
+        }
+
+        .neo-image-icon {
+          visibility: visible;
+        }
+      }
+
+      &.neo-error {
+        background-color: var(--neo-image-error-bg, color-mix(in srgb, var(--neo-skeleton-color) 75%, var(--neo-dark-color-error-75)));
+
+        // keep: order
+        .neo-image-img:not(.neo-alt-text) {
+          opacity: 0;
+
+          &[alt] {
+            align-content: flex-end;
+            overflow: hidden;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+          }
+        }
+
+        .neo-image-icon {
+          visibility: visible;
+        }
+      }
+
+      &.neo-glass {
+        --neo-skeleton-color: var(--neo-glass-skeleton-color);
       }
     }
 
-    &.neo-glass {
-      --neo-skeleton-color: var(--neo-glass-skeleton-color);
-    }
   }
 </style>

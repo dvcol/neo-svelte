@@ -62,13 +62,17 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-transition-container {
-    @include mixin.transition-container;
+  @include layers.neo-components {
+    .neo-transition-container {
+      @include mixin.transition-container;
 
-    &.neo-reverse {
-      justify-content: flex-end;
-      text-align: end;
+      &.neo-reverse {
+        justify-content: flex-end;
+        text-align: end;
+      }
     }
+
   }
 </style>

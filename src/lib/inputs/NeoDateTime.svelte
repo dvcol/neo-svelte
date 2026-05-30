@@ -90,27 +90,32 @@
 </div>
 
 <style lang="scss">
-  .neo-date-time {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
 
-    &.neo-picker {
-      :global(.neo-input.neo-input-date-time::-webkit-calendar-picker-indicator) {
-        display: none; /* Hide the default date icon in WebKit browsers */
-        appearance: none; /* Hide the default date icon in Firefox */
+  @include layers.neo-components {
+    .neo-date-time {
+      display: contents;
+
+      &.neo-picker {
+        :global(.neo-input.neo-input-date-time::-webkit-calendar-picker-indicator) {
+          display: none; /* Hide the default date icon in WebKit browsers */
+          appearance: none; /* Hide the default date icon in Firefox */
+        }
+      }
+
+      :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-text:focus),
+      :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-fields-wrapper:focus),
+      :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-hour-field:focus),
+      :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-minute-field:focus),
+      :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-day-field:focus),
+      :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-week-field:focus),
+      :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-month-field:focus),
+      :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-year-field:focus) {
+        color: var(--neo-date-time-text-color, var(--neo-text-color));
+        background-color: var(--neo-date-time-text-highlight-color, var(--neo-text-highlight-color));
+        outline: none;
       }
     }
 
-    :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-text:focus),
-    :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-fields-wrapper:focus),
-    :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-hour-field:focus),
-    :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-minute-field:focus),
-    :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-day-field:focus),
-    :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-week-field:focus),
-    :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-month-field:focus),
-    :global(.neo-input.neo-input-date-time::-webkit-datetime-edit-year-field:focus) {
-      color: var(--neo-date-time-text-color, var(--neo-text-color));
-      background-color: var(--neo-date-time-text-highlight-color, var(--neo-text-highlight-color));
-      outline: none;
-    }
   }
 </style>

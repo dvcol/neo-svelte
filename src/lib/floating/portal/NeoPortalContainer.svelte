@@ -56,54 +56,60 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-portal-container {
-    &:not(.neo-scale) {
-      display: contents;
+  @use 'src/lib/styles/layers' as layers;
+
+  @include layers.neo-components {
+    .neo-portal-container {
+      // keep: order
+      &:not(.neo-scale) {
+        display: contents;
+      }
+
+      &.neo-scale {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        transition-timing-function: var(--neo-portail-container-exit-timing, ease);
+        transition-duration: var(--neo-portail-container-exit-duration, 0.4s);
+        transition-property: scale, translate;
+
+        &[data-placement^='center'] {
+          transform-origin: center;
+          transition-duration: var(--neo-portail-container-enter-duration, 0.3s);
+        }
+
+        &[data-placement^='top'] {
+          transform-origin: center bottom;
+
+          --neo-portail-container-enter-translate: 0 calc(0% - env(safe-area-inset-bottom) - 1rem);
+        }
+
+        &[data-placement^='bottom'] {
+          transform-origin: center top;
+
+          --neo-portail-container-enter-translate: 0 calc(env(safe-area-inset-top) + 1rem);
+        }
+
+        &[data-placement^='left'] {
+          transform-origin: center right;
+
+          --neo-portail-container-enter-translate: calc(0% - env(safe-area-inset-right) - 1rem);
+        }
+
+        &[data-placement^='right'] {
+          transform-origin: center left;
+
+          --neo-portail-container-enter-translate: calc(env(safe-area-inset-left) + 1rem);
+        }
+
+        &.neo-open {
+          transition-timing-function: var(--neo-portail-container-enter-timing, ease);
+          transition-duration: var(--neo-portail-container-enter-duration, 0.4s);
+          scale: var(--neo-portail-container-enter-scale, 0.98);
+          translate: var(--neo-portail-container-enter-translate, 0);
+        }
+      }
     }
 
-    &.neo-scale {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      transition-timing-function: var(--neo-portail-container-exit-timing, ease);
-      transition-duration: var(--neo-portail-container-exit-duration, 0.4s);
-      transition-property: scale, translate;
-
-      &[data-placement^='center'] {
-        transform-origin: center;
-        transition-duration: var(--neo-portail-container-enter-duration, 0.3s);
-      }
-
-      &[data-placement^='top'] {
-        transform-origin: center bottom;
-
-        --neo-portail-container-enter-translate: 0 calc(0% - env(safe-area-inset-bottom) - 1rem);
-      }
-
-      &[data-placement^='bottom'] {
-        transform-origin: center top;
-
-        --neo-portail-container-enter-translate: 0 calc(env(safe-area-inset-top) + 1rem);
-      }
-
-      &[data-placement^='left'] {
-        transform-origin: center right;
-
-        --neo-portail-container-enter-translate: calc(0% - env(safe-area-inset-right) - 1rem);
-      }
-
-      &[data-placement^='right'] {
-        transform-origin: center left;
-
-        --neo-portail-container-enter-translate: calc(env(safe-area-inset-left) + 1rem);
-      }
-
-      &.neo-open {
-        transition-timing-function: var(--neo-portail-container-enter-timing, ease);
-        transition-duration: var(--neo-portail-container-enter-duration, 0.4s);
-        scale: var(--neo-portail-container-enter-scale, 0.98);
-        translate: var(--neo-portail-container-enter-translate, 0);
-      }
-    }
   }
 </style>

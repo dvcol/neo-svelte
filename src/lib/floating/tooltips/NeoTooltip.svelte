@@ -378,63 +378,68 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-tooltip {
-    @include mixin.floating(
-      $padding: --neo-tooltip-padding,
-      $color: --neo-tooltip-color,
-      $background-color: --neo-tooltip-bg-color,
-      $border-color: --neo-tooltip-border-color,
-      $border-radius: --neo-tooltip-border-radius,
-      $border-radius-rounded: --neo-tooltip-border-radius-rounded,
-      $box-shadow: --neo-tooltip-box-shadow,
-      $backdrop-filter: --neo-tooltip-backdrop-filter,
-      $z-index: --neo-tooltip-z-index,
-      $elevation: --neo-tooltip-elevation,
-      $borderless: true,
-      $tinted: true,
-      $filled: true
-    );
+  @include layers.neo-components {
+    .neo-tooltip {
+      @include mixin.floating(
+        $padding: --neo-tooltip-padding,
+        $color: --neo-tooltip-color,
+        $background-color: --neo-tooltip-bg-color,
+        $border-color: --neo-tooltip-border-color,
+        $border-radius: --neo-tooltip-border-radius,
+        $border-radius-rounded: --neo-tooltip-border-radius-rounded,
+        $box-shadow: --neo-tooltip-box-shadow,
+        $backdrop-filter: --neo-tooltip-backdrop-filter,
+        $z-index: --neo-tooltip-z-index,
+        $elevation: --neo-tooltip-elevation,
+        $borderless: true,
+        $tinted: true,
+        $filled: true
+      );
 
-    display: flex;
-    flex: 1 0 fit-content;
-    flex-direction: column;
-    overflow: hidden;
+      display: flex;
+      flex: 1 0 fit-content;
+      flex-direction: column;
+      overflow: hidden;
 
-    :global(> .neo-list:only-child) {
-      width: inherit;
-      min-width: inherit;
-      max-width: inherit;
-      height: inherit;
-      min-height: inherit;
-      max-height: inherit;
-    }
-
-    &.neo-rounded {
       :global(> .neo-list:only-child) {
-        --neo-list-scrollbar-padding: 0.75rem;
+        width: inherit;
+        min-width: inherit;
+        max-width: inherit;
+        height: inherit;
+        min-height: inherit;
+        max-height: inherit;
+      }
 
-        clip-path: inset(0 round var(--neo-tooltip-border-radius, var(--neo-border-radius)));
+      &.neo-rounded {
+        :global(> .neo-list:only-child) {
+          --neo-list-scrollbar-padding: 0.75rem;
+
+          clip-path: inset(0 round var(--neo-tooltip-border-radius, var(--neo-border-radius)));
+        }
+      }
+
+      &[hidden] {
+        display: none;
+      }
+
+      &.neo-fade {
+        --neo-tooltip-fade-enter-duration: 0.2s;
+        --neo-tooltip-fade-exit-duration: 0.15s;
+        --neo-tooltip-fade-enter-timing: ease-out;
+
+        @include mixin.fade-in(
+          // keep: a11y
+          $toggle: ':not([hidden])',
+
+          $enter-duration: --neo-tooltip-fade-enter-duration,
+          $exit-duration: --neo-tooltip-fade-exit-duration,
+          $enter-timing: --neo-tooltip-fade-enter-timing,
+          $exit-timing: --neo-tooltip-fade-exit-timing
+        );
       }
     }
 
-    &[hidden] {
-      display: none;
-    }
-
-    &.neo-fade {
-      --neo-tooltip-fade-enter-duration: 0.2s;
-      --neo-tooltip-fade-exit-duration: 0.15s;
-      --neo-tooltip-fade-enter-timing: ease-out;
-
-      @include mixin.fade-in(
-        $toggle: ':not([hidden])',
-
-        $enter-duration: --neo-tooltip-fade-enter-duration,
-        $exit-duration: --neo-tooltip-fade-exit-duration,
-        $enter-timing: --neo-tooltip-fade-enter-timing,
-        $exit-timing: --neo-tooltip-fade-exit-timing
-      );
-    }
   }
 </style>

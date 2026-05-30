@@ -151,118 +151,133 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-collapse {
-    box-sizing: border-box;
-    border: var(--neo-border-width, 1px) solid var(--neo-collapse-border-color, transparent);
-    transition: border-color 0.3s ease;
+  @use 'src/lib/styles/layers' as layers;
 
-    &-trigger,
-    &-content {
-      transition: padding 0.3s ease;
-    }
+  @include layers.neo-components {
+    .neo-collapse {
+      box-sizing: border-box;
+      border: var(--neo-border-width, 1px) solid var(--neo-collapse-border-color, transparent);
+      transition: border-color 0.3s ease;
 
-    &-trigger {
-      margin: 0;
-      padding: 0;
-      color: inherit;
-      font: inherit;
-      text-align: start;
-      text-decoration: none;
-      background: none;
-      border: none;
-      appearance: none;
-
-      &:not(.neo-readonly) {
-        cursor: pointer;
+      &-trigger,
+      &-content {
+        transition: padding 0.3s ease;
       }
 
-      &:disabled,
-      &[disabled]:not([disabled='false']) {
-        color: var(--neo-text-color-disabled);
-        cursor: not-allowed;
-      }
-    }
+      &-trigger {
+        margin: 0;
+        padding: 0;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+        text-decoration: none;
+        background: none;
+        border: none;
+        appearance: none;
 
-    &-content:not([data-unmount-on-close='true']) {
-      overflow: hidden;
-      transition-timing-function: ease-out;
-      transition-duration: 0.3s;
+        // keep: order
+        &:not(.neo-readonly) {
+          cursor: pointer;
+        }
 
-      &[aria-hidden='true'].neo-fade {
-        visibility: hidden;
-        opacity: var(--neo-collapse-fade-opacity, 0);
-      }
-    }
-
-    &-label {
-      transition: color 0.15s ease;
-
-      &-description {
-        color: var(--neo-collapse-description-color, var(--neo-text-color-secondary));
-        font-size: var(--neo-font-size-sm);
-        line-height: var(--neo-line-height-sm);
+        &:disabled,
+        // keep: a11y
+        &[disabled]:not([disabled='false']) {
+          color: var(--neo-text-color-disabled);
+          cursor: not-allowed;
+        }
       }
 
-      &:focus,
-      &:hover {
-        color: var(--neo-collapse-trigger-color-hover, var(--neo-text-color-highlight));
-      }
-    }
+      // keep: order
+      &-content:not([data-unmount-on-close='true']) {
+        overflow: hidden;
+        transition-timing-function: ease-out;
+        transition-duration: 0.3s;
 
-    &:not(.neo-horizontal) {
-      .neo-collapse-trigger {
-        width: 100%;
-        padding-block: var(--neo-collapse-trigger-gap, var(--neo-gap-xs, 0.625rem));
-      }
-
-      .neo-collapse-content:not([aria-hidden='true']) {
-        padding-block-end: var(--neo-collapse-content-gap, var(--neo-gap-xs, 0.625rem));
+        &[aria-hidden='true'].neo-fade {
+          visibility: hidden;
+          opacity: var(--neo-collapse-fade-opacity, 0);
+        }
       }
 
-      .neo-collapse-content:not([data-unmount-on-close='true']) {
-        transition-property: height, opacity, visibility, padding-block, margin-block;
-        will-change: height, opacity, visibility, padding-block, margin-block;
+      &-label {
+        transition: color 0.15s ease;
 
-        &[aria-hidden='true'] {
-          height: 0;
-          padding-block: 0;
-          margin-block: 0;
+        &-description {
+          color: var(--neo-collapse-description-color, var(--neo-text-color-secondary));
+          font-size: var(--neo-font-size-sm);
+          line-height: var(--neo-line-height-sm);
+        }
+
+        &:focus,
+        &:hover {
+          color: var(--neo-collapse-trigger-color-hover, var(--neo-text-color-highlight));
+        }
+      }
+
+      // keep: order
+      &:not(.neo-horizontal) {
+        .neo-collapse-trigger {
+          width: 100%;
+          padding-block: var(--neo-collapse-trigger-gap, var(--neo-gap-xs, 0.625rem));
+        }
+
+        // keep: order
+        .neo-collapse-content:not([aria-hidden='true']) {
+          padding-block-end: var(--neo-collapse-content-gap, var(--neo-gap-xs, 0.625rem));
+        }
+
+        // keep: order
+        .neo-collapse-content:not([data-unmount-on-close='true']) {
+          transition-property: height, opacity, visibility, padding-block, margin-block;
+          will-change: height, opacity, visibility, padding-block, margin-block;
+
+          &[aria-hidden='true'] {
+            height: 0;
+            padding-block: 0;
+            margin-block: 0;
+          }
+        }
+      }
+
+      &.neo-horizontal {
+        display: inline-flex;
+
+        .neo-collapse-trigger {
+          min-width: max-content;
+          padding-inline: var(--neo-collapse-trigger-gap, var(--neo-gap, 1rem));
+        }
+
+        // keep: order
+        .neo-collapse-content:not([aria-hidden='true']) {
+          padding-inline-end: var(--neo-collapse-content-gap, var(--neo-gap, 1rem));
+        }
+
+        // keep: order
+        .neo-collapse-content:not([data-unmount-on-close='true']) {
+          transition-property: width, opacity, visibility, padding-inline, margin-inline;
+          will-change: width, opacity, visibility, padding-inline, margin-inline;
+
+          &[aria-hidden='true'] {
+            width: 0;
+            padding-inline: 0;
+            margin-inline: 0;
+          }
+        }
+      }
+
+      &:only-child {
+        // keep: order
+        &:not(.neo-horizontal) .neo-collapse-content:not([aria-hidden='true']) {
+          padding-block-start: var(--neo-collapse-content-gap, var(--neo-gap-xs, 0.625rem));
+        }
+
+        // keep: order
+        &.neo-horizontal .neo-collapse-content:not([aria-hidden='true']) {
+          padding-inline-start: var(--neo-collapse-content-gap, var(--neo-gap, 1rem));
         }
       }
     }
 
-    &.neo-horizontal {
-      display: inline-flex;
-
-      .neo-collapse-trigger {
-        min-width: max-content;
-        padding-inline: var(--neo-collapse-trigger-gap, var(--neo-gap, 1rem));
-      }
-
-      .neo-collapse-content:not([aria-hidden='true']) {
-        padding-inline-end: var(--neo-collapse-content-gap, var(--neo-gap, 1rem));
-      }
-
-      .neo-collapse-content:not([data-unmount-on-close='true']) {
-        transition-property: width, opacity, visibility, padding-inline, margin-inline;
-        will-change: width, opacity, visibility, padding-inline, margin-inline;
-
-        &[aria-hidden='true'] {
-          width: 0;
-          padding-inline: 0;
-          margin-inline: 0;
-        }
-      }
-    }
-
-    &:only-child {
-      &:not(.neo-horizontal) .neo-collapse-content:not([aria-hidden='true']) {
-        padding-block-start: var(--neo-collapse-content-gap, var(--neo-gap-xs, 0.625rem));
-      }
-
-      &.neo-horizontal .neo-collapse-content:not([aria-hidden='true']) {
-        padding-inline-start: var(--neo-collapse-content-gap, var(--neo-gap, 1rem));
-      }
-    }
   }
 </style>

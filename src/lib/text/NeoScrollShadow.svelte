@@ -53,23 +53,26 @@
 </svelte:element>
 
 <style lang="scss">
+  @use 'src/lib/styles/layers' as layers;
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-scroll-shadow {
-    &.neo-vertical {
-      padding-block: calc(var(--neo-scroll-shadow-size, 1rem) / 2);
-    }
+  @include layers.neo-components {
+    .neo-scroll-shadow {
+      &.neo-vertical {
+        padding-block: calc(var(--neo-scroll-shadow-size, 1rem) / 2);
+      }
 
-    &.neo-horizontal {
-      padding-inline: calc(var(--neo-scroll-shadow-size, 1rem) / 2);
-    }
+      &.neo-horizontal {
+        padding-inline: calc(var(--neo-scroll-shadow-size, 1rem) / 2);
+      }
 
-    &.neo-shadow {
-      @include mixin.fade-scroll;
-    }
+      &.neo-shadow {
+        @include mixin.fade-scroll;
+      }
 
-    &.neo-scroll {
-      @include mixin.scrollbar($button-height: var(--neo-scrollbar-button-height, calc(var(--neo-scroll-shadow-size, 1rem) / 2.5)));
+      &.neo-scroll {
+        @include mixin.scrollbar($button-height: var(--neo-scrollbar-button-height, calc(var(--neo-scroll-shadow-size, 1rem) / 2.5)));
+      }
     }
   }
 </style>

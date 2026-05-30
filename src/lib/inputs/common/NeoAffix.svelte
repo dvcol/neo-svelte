@@ -94,93 +94,97 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-affix-validation,
-  .neo-affix-loading,
-  .neo-affix-clear {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: var(--neo-affix-size, 1.25rem);
-    height: var(--neo-affix-size, 1.25rem);
-    font: inherit;
-    text-decoration: none;
-    outline: none;
-
-    :global(> svg) {
-      width: 100%;
-      height: 100%;
-      margin: -0.05rem;
-      padding: 0.05rem;
-    }
-  }
-
-  .neo-affix-container {
-    display: inline-grid;
-    grid-template-areas: 'affix';
-    align-items: center;
-    box-sizing: border-box;
-    min-height: max-content;
-    padding: var(--neo-affix-padding, 0.75rem);
-    border: none;
-
-    > * {
-      grid-area: affix;
-    }
-
-    .neo-affix-validation {
+  @include layers.neo-components {
+    .neo-affix-validation,
+    .neo-affix-loading,
+    .neo-affix-clear {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: var(--neo-affix-size, 1.25rem);
+      height: var(--neo-affix-size, 1.25rem);
+      font: inherit;
+      text-decoration: none;
+      outline: none;
 
-      &[data-valid='true'] {
-        color: var(--neo-affix-validation-color-success, var(--neo-color-success));
-      }
-
-      &[data-valid='false'] {
-        color: var(--neo-affix-validation-color-error, var(--neo-color-error));
+      :global(> svg) {
+        width: 100%;
+        height: 100%;
+        margin: -0.05rem;
+        padding: 0.05rem;
       }
     }
 
-    .neo-affix-clear {
-      margin: 0;
-      padding: 0;
-      color: var(--neo-affix-clear-color, inherit);
-      background-color: var(--neo-affix-clear-bg-color, var(--neo-background-color-secondary));
+    .neo-affix-container {
+      display: inline-grid;
+      grid-template-areas: 'affix';
+      align-items: center;
+      box-sizing: border-box;
+      min-height: max-content;
+      padding: var(--neo-affix-padding, 0.75rem);
       border: none;
-      border-radius: 50%;
-      aspect-ratio: 1;
-      cursor: pointer;
-      transition:
-        opacity 0.2s ease-in,
-        color 0.3s ease,
-        background-color 0.3s ease;
 
-      &:focus-visible {
-        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+      > * {
+        grid-area: affix;
       }
 
-      &:hover {
-        color: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
-        background-color: var(--neo-close-bg-color-hover, rgb(255 0 0 / 7%));
+      .neo-affix-validation {
+        display: inline-flex;
+        align-items: center;
+
+        &[data-valid='true'] {
+          color: var(--neo-affix-validation-color-success, var(--neo-color-success));
+        }
+
+        &[data-valid='false'] {
+          color: var(--neo-affix-validation-color-error, var(--neo-color-error));
+        }
       }
 
-      &:active {
-        color: var(--neo-affix-active-color, var(--neo-text-color-hover-active));
-        scale: 0.9;
+      .neo-affix-clear {
+        margin: 0;
+        padding: 0;
+        color: var(--neo-affix-clear-color, inherit);
+        background-color: var(--neo-affix-clear-bg-color, var(--neo-background-color-secondary));
+        border: none;
+        border-radius: 50%;
+        aspect-ratio: 1;
+        cursor: pointer;
+        transition:
+          opacity 0.2s ease-in,
+          color 0.3s ease,
+          background-color 0.3s ease;
+
+        &:focus-visible {
+          outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+        }
+
+        &:hover {
+          color: var(--neo-close-color-hover, rgb(255 0 0 / 75%));
+          background-color: var(--neo-close-bg-color-hover, rgb(255 0 0 / 7%));
+        }
+
+        &:active {
+          color: var(--neo-affix-active-color, var(--neo-text-color-hover-active));
+          scale: 0.9;
+        }
+
+        &:disabled {
+          color: var(--neo-text-color-disabled);
+          cursor: not-allowed;
+          scale: 1;
+        }
       }
 
-      &:disabled {
-        color: var(--neo-text-color-disabled);
-        cursor: not-allowed;
-        scale: 1;
+      &.neo-skeleton > * {
+        border-radius: 50%;
+
+        @include mixin.skeleton;
       }
     }
 
-    &.neo-skeleton > * {
-      border-radius: 50%;
-
-      @include mixin.skeleton;
-    }
   }
 </style>

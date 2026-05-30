@@ -115,9 +115,11 @@
 </NeoSkeletonContainer>
 
 <style lang="scss">
+  @use 'src/lib/styles/layers' as layers;
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-skeleton-media {
+  @include layers.neo-components {
+    .neo-skeleton-media {
     position: relative;
     display: flex;
     flex: 1 1 auto;
@@ -157,5 +159,6 @@
         height: 100%;
       }
     }
+  }
   }
 </style>

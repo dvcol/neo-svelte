@@ -64,51 +64,54 @@
 </div>
 
 <style lang="scss">
+  @use 'src/lib/styles/layers' as layers;
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-divider {
-    align-self: center;
-    box-sizing: border-box;
-    width: calc(var(--neo-divider-width, 100%) - var(--neo-divider-margin-inline, var(--neo-divider-margin, 0px)) * 2);
-    height: calc(
-      max(var(--neo-divider-minimum), var(--neo-divider-height, 1px) - var(--neo-divider-margin-block, var(--neo-divider-margin, 0px)) * 2)
-    );
-    margin: var(--neo-divider-margin, 0);
-    padding: 0;
-    border: none;
-    border-radius: var(--neo-divider-border-radius, var(--neo-border-radius));
-    box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
-    transition:
-      border-radius 0.3s ease,
-      box-shadow 0.3s ease-out,
-      background-color 0.3s ease;
-    user-select: none;
+  @include layers.neo-components {
+    .neo-divider {
+      align-self: center;
+      box-sizing: border-box;
+      width: calc(var(--neo-divider-width, 100%) - var(--neo-divider-margin-inline, var(--neo-divider-margin, 0px)) * 2);
+      height: calc(
+        max(var(--neo-divider-minimum), var(--neo-divider-height, 1px) - var(--neo-divider-margin-block, var(--neo-divider-margin, 0px)) * 2)
+      );
+      margin: var(--neo-divider-margin, 0);
+      padding: 0;
+      border: none;
+      border-radius: var(--neo-divider-border-radius, var(--neo-border-radius));
+      box-shadow: var(--neo-divider-box-shadow, var(--neo-box-shadow-raised-2));
+      transition:
+        border-radius 0.3s ease,
+        box-shadow 0.3s ease-out,
+        background-color 0.3s ease;
+      user-select: none;
 
-    &.neo-rounded {
-      border-radius: var(--neo-divider-border-radius, var(--neo-border-radius-xxl));
-    }
+      &.neo-rounded {
+        border-radius: var(--neo-divider-border-radius, var(--neo-border-radius-xxl));
+      }
 
-    &.neo-vertical {
-      width: max(var(--neo-divider-minimum), var(--neo-divider-width, 1px) - var(--neo-divider-margin-inline, var(--neo-divider-margin, 0px)) * 2);
-      height: calc(var(--neo-divider-height, 100%) - var(--neo-divider-margin-block, var(--neo-divider-margin, 0px)) * 2);
-    }
+      &.neo-vertical {
+        width: max(var(--neo-divider-minimum), var(--neo-divider-width, 1px) - var(--neo-divider-margin-inline, var(--neo-divider-margin, 0px)) * 2);
+        height: calc(var(--neo-divider-height, 100%) - var(--neo-divider-margin-block, var(--neo-divider-margin, 0px)) * 2);
+      }
 
-    &.neo-flat {
-      background-color: var(--neo-divider-color, var(--neo-border-color));
-      box-shadow: none;
-    }
+      &.neo-flat {
+        background-color: var(--neo-divider-color, var(--neo-border-color));
+        box-shadow: none;
+      }
 
-    &.neo-skeleton {
-      box-shadow: var(--neo-box-shadow-flat);
-      pointer-events: none;
+      &.neo-skeleton {
+        box-shadow: var(--neo-box-shadow-flat);
+        pointer-events: none;
 
-      @include mixin.skeleton;
-    }
+        @include mixin.skeleton;
+      }
 
-    &.neo-glass {
-      --neo-skeleton-color: var(--neo-glass-skeleton-color);
+      &.neo-glass {
+        --neo-skeleton-color: var(--neo-glass-skeleton-color);
 
-      backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+        backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+      }
     }
   }
 </style>

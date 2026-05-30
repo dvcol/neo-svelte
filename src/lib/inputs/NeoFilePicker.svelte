@@ -518,100 +518,106 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-file-picker {
-    --neo-input-cursor: pointer;
+  @include layers.neo-components {
+    .neo-file-picker {
+      --neo-input-cursor: pointer;
 
-    :global(.neo-input.neo-input-file-picker::file-selector-button) {
-      align-items: center;
-      align-self: center;
-      width: 0;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      border: none;
-      visibility: hidden;
-    }
-
-    &.neo-expanded {
-      display: inline-flex;
-      flex: 1 1 auto;
-    }
-
-    .neo-drop-container {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      min-width: var(--neo-file-picker-expanded-min-width, 0);
-      min-height: var(--neo-file-picker-expanded-min-height, 0);
-      padding: 0.75rem;
-      transition:
-        min-width 0.3s ease,
-        min-height 0.3s ease;
-
-      .neo-drop-overlay {
-        position: absolute;
-        z-index: var(--neo-z-index-in-front, 1);
-        display: inline-flex;
+      :global(.neo-input.neo-input-file-picker::file-selector-button) {
         align-items: center;
-        box-sizing: border-box;
-        padding: 0.75rem 1rem;
-        border-radius: var(--neo-border-radius);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-        inset: 0;
+        align-self: center;
+        width: 0;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        border: none;
+        visibility: hidden;
       }
 
       &.neo-expanded {
-        width: 100%;
+        display: inline-flex;
+        flex: 1 1 auto;
       }
 
-      :global(> .neo-file-picker-card) {
-        gap: var(--neo-gap);
-        width: 100%;
-        height: calc(
-          100% - var(--neo-file-picker-drag-margin-top, var(--neo-shadow-margin, 0.625rem)) - var(
-              --neo-file-picker-drag-margin-bottom,
-              var(--neo-shadow-margin, 0.625rem)
-            )
-        );
-        padding: var(--neo-file-picker-card-padding, 1rem 1.5rem 1.5rem);
-      }
+      .neo-drop-container {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-width: var(--neo-file-picker-expanded-min-width, 0);
+        min-height: var(--neo-file-picker-expanded-min-height, 0);
+        padding: 0.75rem;
+        transition:
+          min-width 0.3s ease,
+          min-height 0.3s ease;
 
-      &.neo-dragging:not(.neo-skeleton) {
         .neo-drop-overlay {
-          opacity: 1;
-        }
-
-        :global(> .neo-file-picker-card),
-        :global(.neo-file-picker-input-group) {
-          --neo-box-shadow-raised-1: var(--neo-box-shadow-pressed-1);
-          --neo-box-shadow-raised-2: var(--neo-box-shadow-pressed-2);
-          --neo-box-shadow-raised-3: var(--neo-box-shadow-pressed-3);
-          --neo-box-shadow-raised-4: var(--neo-box-shadow-pressed-4);
-          --neo-box-shadow-raised-5: var(--neo-box-shadow-pressed-4);
-          --neo-glass-box-shadow-raised-1: var(--neo-glass-box-shadow-pressed-1);
-          --neo-glass-box-shadow-raised-2: var(--neo-glass-box-shadow-pressed-2);
-          --neo-glass-box-shadow-raised-3: var(--neo-glass-box-shadow-pressed-3);
-          --neo-glass-box-shadow-raised-4: var(--neo-glass-box-shadow-pressed-4);
-          --neo-glass-box-shadow-raised-5: var(--neo-glass-box-shadow-pressed-4);
-        }
-
-        :global(> *) {
-          pointer-events: none;
-        }
-
-        :global(*.neo-file-picker-input-group > *:not(.neo-input-after, .neo-drop-overlay)) {
+          position: absolute;
+          z-index: var(--neo-z-index-in-front, 1);
+          display: inline-flex;
+          align-items: center;
+          box-sizing: border-box;
+          padding: 0.75rem 1rem;
+          border-radius: var(--neo-border-radius);
           opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+          inset: 0;
         }
+
+        &.neo-expanded {
+          width: 100%;
+        }
+
+        :global(> .neo-file-picker-card) {
+          gap: var(--neo-gap);
+          width: 100%;
+          height: calc(
+            100% - var(--neo-file-picker-drag-margin-top, var(--neo-shadow-margin, 0.625rem)) - var(
+                --neo-file-picker-drag-margin-bottom,
+                var(--neo-shadow-margin, 0.625rem)
+              )
+          );
+          padding: var(--neo-file-picker-card-padding, 1rem 1.5rem 1.5rem);
+        }
+
+        // keep: order
+        &.neo-dragging:not(.neo-skeleton) {
+          .neo-drop-overlay {
+            opacity: 1;
+          }
+
+          :global(> .neo-file-picker-card),
+          :global(.neo-file-picker-input-group) {
+            --neo-box-shadow-raised-1: var(--neo-box-shadow-pressed-1);
+            --neo-box-shadow-raised-2: var(--neo-box-shadow-pressed-2);
+            --neo-box-shadow-raised-3: var(--neo-box-shadow-pressed-3);
+            --neo-box-shadow-raised-4: var(--neo-box-shadow-pressed-4);
+            --neo-box-shadow-raised-5: var(--neo-box-shadow-pressed-4);
+            --neo-glass-box-shadow-raised-1: var(--neo-glass-box-shadow-pressed-1);
+            --neo-glass-box-shadow-raised-2: var(--neo-glass-box-shadow-pressed-2);
+            --neo-glass-box-shadow-raised-3: var(--neo-glass-box-shadow-pressed-3);
+            --neo-glass-box-shadow-raised-4: var(--neo-glass-box-shadow-pressed-4);
+            --neo-glass-box-shadow-raised-5: var(--neo-glass-box-shadow-pressed-4);
+          }
+
+          :global(> *) {
+            pointer-events: none;
+          }
+
+          // keep: order
+          :global(*.neo-file-picker-input-group > *:not(.neo-input-after, .neo-drop-overlay)) {
+            opacity: 0;
+          }
+        }
+      }
+
+      :global(> .neo-file-picker-validation) {
+        width: 100%;
       }
     }
 
-    :global(> .neo-file-picker-validation) {
-      width: 100%;
-    }
   }
 </style>

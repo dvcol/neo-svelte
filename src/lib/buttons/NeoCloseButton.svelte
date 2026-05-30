@@ -50,35 +50,40 @@
 </div>
 
 <style lang="scss">
-  .neo-close-button {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
 
-    --neo-btn-text-color-hover: oklch(from var(--neo-close-color) l c h / 75%);
-    --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
+  @include layers.neo-components {
+    .neo-close-button {
+      display: contents;
 
-   &.neo-inline :global(.neo-button) {
-      margin-block: auto;
-    }
+      --neo-btn-text-color-hover: oklch(from var(--neo-close-color) l c h / 75%);
+      --neo-btn-text-color-active: var(--neo-close-color, rgb(255 0 0));
 
-    &[data-size='md'],
-    &[data-size='sm'] {
-      --neo-btn-padding-empty: var(--neo-btn-close-padding, var(--neo-gap-3xs, 0.3125rem));
-      --neo-btn-padding: var(--neo-btn-close-padding, var(--neo-gap-3xs, 0.3125rem));
-      --neo-btn-margin: var(--neo-btn-close-margin, var(--neo-gap-3xs, 0.3125rem));
-    }
-
-    > :global(.neo-button) {
-      :global(.neo-icon) {
-        transition: rotate 0.3s ease-out;
+     &.neo-inline :global(.neo-button) {
+        margin-block: auto;
       }
 
-      &:focus,
-      &:hover {
+      &[data-size='md'],
+      &[data-size='sm'] {
+        --neo-btn-padding-empty: var(--neo-btn-close-padding, var(--neo-gap-3xs, 0.3125rem));
+        --neo-btn-padding: var(--neo-btn-close-padding, var(--neo-gap-3xs, 0.3125rem));
+        --neo-btn-margin: var(--neo-btn-close-margin, var(--neo-gap-3xs, 0.3125rem));
+      }
+
+      > :global(.neo-button) {
         :global(.neo-icon) {
-          transition: rotate 0.4s ease;
-          rotate: 90deg;
+          transition: rotate 0.3s ease-out;
+        }
+
+        &:focus,
+        &:hover {
+          :global(.neo-icon) {
+            transition: rotate 0.4s ease;
+            rotate: 90deg;
+          }
         }
       }
     }
+
   }
 </style>

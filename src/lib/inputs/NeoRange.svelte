@@ -557,295 +557,302 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-range {
-    &-container {
-      --neo-range-min-width: calc(var(--neo-range-height) / 2);
-      --neo-range-height: var(--neo-line-height-sm, 1.25rem);
-      --neo-range-spacing: 0.125rem;
-      --neo-label-padding: 0;
-      --neo-label-margin: var(--neo-shadow-margin) 0.25rem;
-      --neo-label-container-flex: 1 1 auto;
+  @include layers.neo-components {
+    .neo-range {
+      &-container {
+        --neo-range-min-width: calc(var(--neo-range-height) / 2);
+        --neo-range-height: var(--neo-line-height-sm, 1.25rem);
+        --neo-range-spacing: 0.125rem;
+        --neo-label-padding: 0;
+        --neo-label-margin: var(--neo-shadow-margin) 0.25rem;
+        --neo-label-container-flex: 1 1 auto;
 
-      display: inline-flex;
-      align-items: center;
-      min-width: min(calc(var(--neo-range-height) * 12), 20rem);
-      margin: 0;
-      padding: calc(0.375rem + var(--neo-range-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
-    }
-
-    &-rail {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      margin-right: calc(var(--neo-range-min-width) - var(--neo-range-spacing));
-      margin-left: var(--neo-range-min-width);
-      color: var(--neo-range-color, inherit);
-      background-color: var(--neo-range-rail-background, transparent);
-      border-radius: var(--neo-range-border-radius, var(--neo-border-radius-sm));
-      transition: background-color 0.3s ease;
-    }
-
-    &-tick {
-      position: absolute;
-      translate: -50%;
-      left: calc((var(--neo-range-tick-index) * 100% / var(--neo-range-tick-count)));
-
-      &-mark {
-        display: block;
-        width: 0.25rem;
-        height: 0.25rem;
-        background-color: var(--neo-range-mark-background, color-mix(in srgb, transparent, currentcolor 15%));
-        border-radius: 50%;
-
-        &.neo-filled {
-          background-color: var(--neo-range-mark-background, currentcolor);
-        }
-      }
-    }
-
-    &-handle {
-      z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
-      display: inline-flex;
-      align-self: center;
-      box-sizing: border-box;
-      height: 100%;
-      margin: 0 calc(0% - var(--neo-range-height) / 2);
-      padding: 0;
-      color: inherit;
-      background: var(--neo-range-handle-background, var(--neo-background-color));
-      border: 1px solid var(--neo-range-handle-border-color, transparent);
-      border-radius: var(--neo-range-border-radius, var(--neo-border-radius-sm));
-      outline: none;
-      box-shadow: var(--neo-range-handle-box-shadow, var(--neo-box-shadow-convex-2));
-      backface-visibility: hidden;
-      cursor: grab;
-      scale: 0.9;
-      transition: scale 0.3s ease;
-      appearance: none;
-      touch-action: none;
-      aspect-ratio: 1 / 1;
-
-      &-before,
-      &-after {
         display: inline-flex;
+        align-items: center;
+        min-width: min(calc(var(--neo-range-height) * 12), 20rem);
+        margin: 0;
+        padding: calc(0.375rem + var(--neo-range-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
+      }
+
+      &-rail {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
         box-sizing: border-box;
-        height: calc(100% - var(--neo-range-spacing) * 2);
-        margin: var(--neo-range-spacing);
-        border-radius: var(--neo-range-border-radius, var(--neo-border-radius-xs));
+        width: 100%;
+        height: 100%;
+        margin-right: calc(var(--neo-range-min-width) - var(--neo-range-spacing));
+        margin-left: var(--neo-range-min-width);
+        color: var(--neo-range-color, inherit);
+        background-color: var(--neo-range-rail-background, transparent);
+        border-radius: var(--neo-range-border-radius, var(--neo-border-radius-sm));
+        transition: background-color 0.3s ease;
       }
 
-      &-before {
-        width: calc(var(--neo-range-min-width) - var(--neo-range-spacing) + var(--neo-range-progress, 0%));
+      &-tick {
+        position: absolute;
+        translate: -50%;
+        left: calc((var(--neo-range-tick-index) * 100% / var(--neo-range-tick-count)));
 
-        &.neo-range {
-          width: calc(var(--neo-range-min-width) - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%));
-          min-width: calc((var(--neo-range-spacing) / 2 + var(--neo-range-min-width)));
-          margin-inline: calc((var(--neo-range-spacing) - var(--neo-range-min-width)) / 2);
-        }
-      }
-
-      &-after {
-        flex: 1 1 auto;
-        margin-right: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
-        margin-left: 0;
-        background-color: var(--neo-range-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
-        border-top-left-radius: 0 !important;
-        border-bottom-left-radius: 0 !important;
-      }
-
-      &:focus-visible,
-      &:active {
-        cursor: grabbing;
-        scale: 0.85;
-      }
-
-      &:focus-visible {
-        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-      }
-
-      &-before:not(.neo-range) {
-        margin-right: 0;
-        margin-left: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
-      }
-
-      &-before:not(.neo-array) {
-        background-color: var(--neo-range-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
-      }
-    }
-
-    &-slider {
-      display: inline-flex;
-      align-items: center;
-      box-sizing: border-box;
-      width: 100%;
-      min-width: calc(var(--neo-range-height) * 1.8);
-      height: var(--neo-range-height);
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      color: inherit;
-      text-decoration: none;
-      background: transparent;
-      background-clip: padding-box;
-      border: var(--neo-range-border-width, var(--neo-border-width, 1px)) var(--neo-range-border-color, transparent) solid;
-      border-radius: var(--neo-range-border-radius, var(--neo-border-radius));
-      outline: none;
-      box-shadow: var(--neo-range-box-shadow, var(--neo-box-shadow-pressed-2));
-      cursor: pointer;
-      transition:
-        color 0.3s ease,
-        box-shadow 0.3s ease-out,
-        border-radius 0.3s ease,
-        border-color 0.3s ease,
-        background-color 0.3s ease;
-
-      &:hover {
-        color: var(--neo-range-color-hover, var(--neo-text-color-highlight));
-      }
-
-      &.neo-rounded {
-        border-radius: calc(var(--neo-range-height) / 2);
-
-        .neo-range-handle {
+        &-mark {
+          display: block;
+          width: 0.25rem;
+          height: 0.25rem;
+          background-color: var(--neo-range-mark-background, color-mix(in srgb, transparent, currentcolor 15%));
           border-radius: 50%;
 
-          &-before,
-          &-after {
-            border-radius: calc(var(--neo-range-height) / 2);
+          &.neo-filled {
+            background-color: var(--neo-range-mark-background, currentcolor);
           }
         }
       }
 
-      &.neo-valid {
-        --neo-range-checked-background: color-mix(in srgb, transparent, var(--neo-range-valid-color, var(--neo-color-success)) 30%);
-      }
+      &-handle {
+        z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
+        display: inline-flex;
+        align-self: center;
+        box-sizing: border-box;
+        height: 100%;
+        margin: 0 calc(0% - var(--neo-range-height) / 2);
+        padding: 0;
+        color: inherit;
+        background: var(--neo-range-handle-background, var(--neo-background-color));
+        border: 1px solid var(--neo-range-handle-border-color, transparent);
+        border-radius: var(--neo-range-border-radius, var(--neo-border-radius-sm));
+        outline: none;
+        box-shadow: var(--neo-range-handle-box-shadow, var(--neo-box-shadow-convex-2));
+        backface-visibility: hidden;
+        cursor: grab;
+        scale: 0.9;
+        transition: scale 0.3s ease;
+        appearance: none;
+        touch-action: none;
+        aspect-ratio: 1 / 1;
 
-      &.neo-invalid {
-        --neo-range-checked-background: color-mix(in srgb, transparent, var(--neo-range-invalid-color, var(--neo-color-error)) 30%);
-      }
-
-      &.neo-disabled {
-        color: var(--neo-text-color-disabled);
-        box-shadow: var(--neo-box-shadow-flat);
-        cursor: not-allowed;
-        opacity: var(--neo-range-opacity-disabled, var(--neo-opacity-disabled));
-      }
-
-      &.neo-disabled,
-      &.neo-flat {
-        --neo-range-min-width: calc(var(--neo-range-height) / 2 - 2px);
-
-        border-color: var(--neo-range-border-color, var(--neo-border-color));
-
-        .neo-range-rail {
-          margin-right: calc(var(--neo-range-min-width) + var(--neo-range-spacing));
-          margin-left: var(--neo-range-min-width);
+        &-before,
+        &-after {
+          display: inline-flex;
+          box-sizing: border-box;
+          height: calc(100% - var(--neo-range-spacing) * 2);
+          margin: var(--neo-range-spacing);
+          border-radius: var(--neo-range-border-radius, var(--neo-border-radius-xs));
         }
 
-        .neo-range-handle {
-          background-color: var(--neo-range-border-color, currentcolor);
+        &-before {
+          width: calc(var(--neo-range-min-width) - var(--neo-range-spacing) + var(--neo-range-progress, 0%));
+
+          &.neo-range {
+            width: calc(var(--neo-range-min-width) - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%));
+            min-width: calc((var(--neo-range-spacing) / 2 + var(--neo-range-min-width)));
+            margin-inline: calc((var(--neo-range-spacing) - var(--neo-range-min-width)) / 2);
+          }
+        }
+
+        &-after {
+          flex: 1 1 auto;
+          margin-right: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
+          margin-left: 0;
+          background-color: var(--neo-range-rail-background, color-mix(in srgb, transparent, currentcolor 1%));
+          border-top-left-radius: 0 !important;
+          border-bottom-left-radius: 0 !important;
+        }
+
+        &:focus-visible,
+        &:active {
+          cursor: grabbing;
+          scale: 0.85;
+        }
+
+        &:focus-visible {
+          outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+        }
+
+        // keep: order
+        &-before:not(.neo-range) {
+          margin-right: 0;
+          margin-left: calc(var(--neo-range-spacing) - var(--neo-range-min-width));
+        }
+
+        // keep: order
+        &-before:not(.neo-array) {
+          background-color: var(--neo-range-checked-background, color-mix(in srgb, transparent, currentcolor 30%));
+        }
+      }
+
+      &-slider {
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: calc(var(--neo-range-height) * 1.8);
+        height: var(--neo-range-height);
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        color: inherit;
+        text-decoration: none;
+        background: transparent;
+        background-clip: padding-box;
+        border: var(--neo-range-border-width, var(--neo-border-width, 1px)) var(--neo-range-border-color, transparent) solid;
+        border-radius: var(--neo-range-border-radius, var(--neo-border-radius));
+        outline: none;
+        box-shadow: var(--neo-range-box-shadow, var(--neo-box-shadow-pressed-2));
+        cursor: pointer;
+        transition:
+          color 0.3s ease,
+          box-shadow 0.3s ease-out,
+          border-radius 0.3s ease,
+          border-color 0.3s ease,
+          background-color 0.3s ease;
+
+        &:hover {
+          color: var(--neo-range-color-hover, var(--neo-text-color-highlight));
+        }
+
+        &.neo-rounded {
+          border-radius: calc(var(--neo-range-height) / 2);
+
+          .neo-range-handle {
+            border-radius: 50%;
+
+            &-before,
+            &-after {
+              border-radius: calc(var(--neo-range-height) / 2);
+            }
+          }
+        }
+
+        &.neo-valid {
+          --neo-range-checked-background: color-mix(in srgb, transparent, var(--neo-range-valid-color, var(--neo-color-success)) 30%);
+        }
+
+        &.neo-invalid {
+          --neo-range-checked-background: color-mix(in srgb, transparent, var(--neo-range-invalid-color, var(--neo-color-error)) 30%);
+        }
+
+        &.neo-disabled {
+          color: var(--neo-text-color-disabled);
           box-shadow: var(--neo-box-shadow-flat);
-          scale: 1;
-
-          &-after,
-          &-before {
-            height: 100%;
-            border-radius: inherit;
-          }
-
-          &-before {
-            width: calc(var(--neo-range-min-width) + var(--neo-range-spacing) + var(--neo-range-progress, 0%));
-
-            &.neo-array {
-              margin-inline: calc((0% - var(--neo-range-min-width)) / 2);
-            }
-
-            &:not(.neo-array) {
-              margin-left: calc(0% - var(--neo-range-min-width));
-            }
-
-            &.neo-range {
-              width: calc(
-                var(--neo-range-min-width) * 2 - var(--neo-range-spacing) * 1.5 - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%)
-              );
-            }
-          }
+          cursor: not-allowed;
+          opacity: var(--neo-range-opacity-disabled, var(--neo-opacity-disabled));
         }
-      }
 
-      &.neo-flat:hover {
-        border-color: var(--neo-range-border-color-hover, var(--neo-border-color-highlight));
-      }
-
-      &:focus-visible {
-        border-color: var(--neo-range-border-color-focused, var(--neo-border-color-focused));
-      }
-
-      &.neo-glass {
-        background-color: var(--neo-range-bg-color, var(--neo-glass-background-color));
-        border-color: var(--neo-range-border-color, transparent);
-        backdrop-filter: var(--neo-range-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
-
+        &.neo-disabled,
         &.neo-flat {
-          border-color: var(--neo-range-border-color, var(--neo-glass-border-color-flat));
-        }
-      }
+          --neo-range-min-width: calc(var(--neo-range-height) / 2 - 2px);
 
-      &.neo-start {
-        @starting-style {
+          border-color: var(--neo-range-border-color, var(--neo-border-color));
+
+          .neo-range-rail {
+            margin-right: calc(var(--neo-range-min-width) + var(--neo-range-spacing));
+            margin-left: var(--neo-range-min-width);
+          }
+
+          .neo-range-handle {
+            background-color: var(--neo-range-border-color, currentcolor);
+            box-shadow: var(--neo-box-shadow-flat);
+            scale: 1;
+
+            &-after,
+            &-before {
+              height: 100%;
+              border-radius: inherit;
+            }
+
+            &-before {
+              width: calc(var(--neo-range-min-width) + var(--neo-range-spacing) + var(--neo-range-progress, 0%));
+
+              &.neo-array {
+                margin-inline: calc((0% - var(--neo-range-min-width)) / 2);
+              }
+
+              // keep: order
+              &:not(.neo-array) {
+                margin-left: calc(0% - var(--neo-range-min-width));
+              }
+
+              &.neo-range {
+                width: calc(
+                  var(--neo-range-min-width) * 2 - var(--neo-range-spacing) * 1.5 - var(--neo-range-progress, 0%) + var(--neo-range-array-progress, 0%)
+                );
+              }
+            }
+          }
+        }
+
+        &.neo-flat:hover {
+          border-color: var(--neo-range-border-color-hover, var(--neo-border-color-highlight));
+        }
+
+        &:focus-visible {
+          border-color: var(--neo-range-border-color-focused, var(--neo-border-color-focused));
+        }
+
+        &.neo-glass {
+          background-color: var(--neo-range-bg-color, var(--neo-glass-background-color));
+          border-color: var(--neo-range-border-color, transparent);
+          backdrop-filter: var(--neo-range-glass-blur, var(--neo-blur-2) var(--neo-saturate-2));
+
+          &.neo-flat {
+            border-color: var(--neo-range-border-color, var(--neo-glass-border-color-flat));
+          }
+        }
+
+        &.neo-start {
+          @starting-style {
+            box-shadow: var(--neo-box-shadow-flat);
+          }
+        }
+
+        &.neo-tinted {
+          background-color: var(--neo-range-bg-color, var(--neo-background-color-tinted));
+        }
+
+        &.neo-skeleton {
           box-shadow: var(--neo-box-shadow-flat);
+          pointer-events: none;
+
+          @include mixin.skeleton;
         }
       }
 
-      &.neo-tinted {
-        background-color: var(--neo-range-bg-color, var(--neo-background-color-tinted));
+      &-label-container {
+        display: inline-flex;
+        gap: 0.5rem;
+        align-items: center;
       }
 
-      &.neo-skeleton {
-        box-shadow: var(--neo-box-shadow-flat);
-        pointer-events: none;
+      &-prefix {
+        display: inline-flex;
+        align-items: center;
+      }
 
-        @include mixin.skeleton;
+      &-suffix {
+        display: inline-flex;
+        align-items: center;
+        min-width: 1rem;
+        min-height: 1rem;
+      }
+
+      &-loading {
+        display: inline-flex;
+        width: 1rem;
+        height: 1rem;
+      }
+
+      &-value {
+        --neo-floating-z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
+        --neo-floating-padding: 0.125rem 0.375rem;
+
+        @include mixin.floating;
+
+        &.neo-rounded {
+          --neo-floating-border-radius: var(--neo-floating-border-radius-lg, var(--neo-border-radius-xxl));
+        }
       }
     }
 
-    &-label-container {
-      display: inline-flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    &-prefix {
-      display: inline-flex;
-      align-items: center;
-    }
-
-    &-suffix {
-      display: inline-flex;
-      align-items: center;
-      min-width: 1rem;
-      min-height: 1rem;
-    }
-
-    &-loading {
-      display: inline-flex;
-      width: 1rem;
-      height: 1rem;
-    }
-
-    &-value {
-      --neo-floating-z-index: calc(var(--neo-z-index-in-front, 1) + var(--neo-range-handler-z-index, 0));
-      --neo-floating-padding: 0.125rem 0.375rem;
-
-      @include mixin.floating;
-
-      &.neo-rounded {
-        --neo-floating-border-radius: var(--neo-floating-border-radius-lg, var(--neo-border-radius-xxl));
-      }
-    }
   }
 </style>

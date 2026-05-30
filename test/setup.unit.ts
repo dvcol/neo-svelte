@@ -93,6 +93,38 @@ if (typeof Element !== 'undefined' && !Element.prototype.animate) {
   };
 }
 
+/**
+ * jsdom does not implement Constructable Stylesheets / `adoptedStyleSheets`.
+ * Provide a minimal stub so consumers that adopt sheets onto Document or
+ * ShadowRoot can run under unit tests.
+ */
+if (typeof globalThis.CSSStyleSheet !== 'undefined' && !('replaceSync' in CSSStyleSheet.prototype)) {
+  class StubCSSStyleSheet {
+    cssRules: CSSRule[] = [];
+    replaceSync(_text: string): void {}
+    async replace(_text: string): Promise<this> {
+      return this;
+    }
+  }
+  globalThis.CSSStyleSheet = StubCSSStyleSheet as unknown as typeof CSSStyleSheet;
+}
+function installAdoptedStyleSheets(target: object | undefined): void {
+  if (!target) return;
+  if ('adoptedStyleSheets' in target) return;
+  const store = new WeakMap<object, CSSStyleSheet[]>();
+  Object.defineProperty(target, 'adoptedStyleSheets', {
+    configurable: true,
+    get(this: object) {
+      return store.get(this) ?? [];
+    },
+    set(this: object, value: CSSStyleSheet[]) {
+      store.set(this, [...value]);
+    },
+  });
+}
+installAdoptedStyleSheets((globalThis as { Document?: { prototype: object } }).Document?.prototype);
+installAdoptedStyleSheets((globalThis as { ShadowRoot?: { prototype: object } }).ShadowRoot?.prototype);
+
 if (typeof window !== 'undefined' && !window.matchMedia) {
   window.matchMedia = (query: string): MediaQueryList => ({
     matches: false,

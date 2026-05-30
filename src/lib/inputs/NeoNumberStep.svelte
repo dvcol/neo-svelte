@@ -174,31 +174,36 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-number-step {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
 
-    :global(.neo-input-number-step.neo-input[type='number']) {
-      /* Hide arrows -Firefox */
-      appearance: textfield;
+  @include layers.neo-components {
+    .neo-number-step {
+      display: contents;
 
-      /* Hide arrows - Chrome, Safari, Edge, Opera */
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        margin: 0;
-        appearance: none;
-      }
-    }
+      :global(.neo-input-number-step.neo-input[type='number']) {
+        /* Hide arrows -Firefox */
+        appearance: textfield;
 
-    &.neo-center {
-      :global(.neo-input-number-step.neo-input) {
-        text-align: center;
+        /* Hide arrows - Chrome, Safari, Edge, Opera */
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          margin: 0;
+          appearance: none;
+        }
       }
 
-      &.neo-affix {
-        :global(.neo-input-before) {
-          margin-right: 1.75rem;
+      &.neo-center {
+        :global(.neo-input-number-step.neo-input) {
+          text-align: center;
+        }
+
+        &.neo-affix {
+          :global(.neo-input-before) {
+            margin-right: 1.75rem;
+          }
         }
       }
     }
+
   }
 </style>

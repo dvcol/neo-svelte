@@ -97,49 +97,55 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-menu-list {
-    display: flex;
-    flex-direction: column;
-    padding: var(--neo-menu-padding, var(--neo-gap-4xs, 0.25rem)) 0;
-    overflow: auto;
+  @include layers.neo-components {
+    .neo-menu-list {
+      display: flex;
+      flex-direction: column;
+      padding: var(--neo-menu-padding, var(--neo-gap-4xs, 0.25rem)) 0;
+      overflow: auto;
 
-    :global(.neo-menu-item-divider[data-elevation='0']) {
-      margin: var(--neo-menu-margin, var(--neo-gap-3xs, 0.3125rem)) 0;
-    }
-
-    :global(.neo-menu-item-divider:not([data-elevation='0'])) {
-      --neo-divider-margin: var(--neo-menu-margin, var(--neo-gap-3xs, 0.3125rem));
-    }
-
-    &.neo-scroll,
-    &.neo-rounded {
-      padding-block: var(--neo-menu-scroll-padding, 0.5rem);
-      gap: var(--neo-menu-scroll-gap, 0.125rem);
-
-      &:not(.neo-scroll) :global(> .neo-menu-item) {
-        padding: 0 var(--neo-menu-padding, var(--neo-gap-xxs, 0.5rem));
+      :global(.neo-menu-item-divider[data-elevation='0']) {
+        margin: var(--neo-menu-margin, var(--neo-gap-3xs, 0.3125rem)) 0;
       }
 
-      :global(.neo-menu-item-section-label) {
-        top: -0.75rem;
+      // keep: order
+      :global(.neo-menu-item-divider:not([data-elevation='0'])) {
+        --neo-divider-margin: var(--neo-menu-margin, var(--neo-gap-3xs, 0.3125rem));
+      }
+
+      &.neo-scroll,
+      &.neo-rounded {
+        padding-block: var(--neo-menu-scroll-padding, 0.5rem);
+        gap: var(--neo-menu-scroll-gap, 0.125rem);
+
+        // keep: order
+        &:not(.neo-scroll) :global(> .neo-menu-item) {
+          padding: 0 var(--neo-menu-padding, var(--neo-gap-xxs, 0.5rem));
+        }
+
+        :global(.neo-menu-item-section-label) {
+          top: -0.75rem;
+        }
+      }
+
+      &.neo-scroll {
+        &.neo-shadow {
+          @include mixin.fade-scroll(1rem);
+        }
+
+        @include mixin.scrollbar($button-height: var(--neo-menu-scrollbar-padding, 0.5rem));
+      }
+
+      &.neo-flip {
+        // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
+        @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
+          flex-direction: column-reverse;
+          justify-content: end;
+        }
       }
     }
 
-    &.neo-scroll {
-      &.neo-shadow {
-        @include mixin.fade-scroll(1rem);
-      }
-
-      @include mixin.scrollbar($button-height: var(--neo-menu-scrollbar-padding, 0.5rem));
-    }
-
-    &.neo-flip {
-      // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
-      @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
-        flex-direction: column-reverse;
-        justify-content: end;
-      }
-    }
   }
 </style>

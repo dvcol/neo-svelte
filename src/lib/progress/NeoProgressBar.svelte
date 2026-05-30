@@ -200,113 +200,122 @@
 {/if}
 
 <style lang="scss">
-  .neo-progress-bar {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    margin-block: var(--neo-progress-margin-block, var(--neo-progress-mark-margin-block, 0));
-    margin-inline: var(--neo-progress-margin-inline, var(--neo-progress-mark-margin-inline, 0));
-    padding: 0;
-    color: var(--neo-progress-bar-text-color, inherit);
-    border: var(--neo-progress-bar-border-width, var(--neo-border-width, 1px)) var(--neo-progress-bar-border-color, transparent) solid;
-    border-radius: var(--neo-progress-bar-border-radius, var(--neo-border-radius));
-    transition:
-      color 0.3s ease,
-      padding 0.3s ease,
-      border-color 0.3s ease,
-      border-radius 0.3s ease,
-      backdrop-filter 0.3s ease,
-      box-shadow 0.3s ease-out;
+  @use 'src/lib/styles/layers' as layers;
 
-    &.neo-track {
-      box-shadow: var(--neo-progress-bar-box-shadow, var(--neo-box-shadow-flat));
-    }
+  @include layers.neo-components {
+    .neo-progress-bar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      margin-block: var(--neo-progress-margin-block, var(--neo-progress-mark-margin-block, 0));
+      margin-inline: var(--neo-progress-margin-inline, var(--neo-progress-mark-margin-inline, 0));
+      padding: 0;
+      color: var(--neo-progress-bar-text-color, inherit);
+      border: var(--neo-progress-bar-border-width, var(--neo-border-width, 1px)) var(--neo-progress-bar-border-color, transparent) solid;
+      border-radius: var(--neo-progress-bar-border-radius, var(--neo-border-radius));
+      transition:
+        color 0.3s ease,
+        padding 0.3s ease,
+        border-color 0.3s ease,
+        border-radius 0.3s ease,
+        backdrop-filter 0.3s ease,
+        box-shadow 0.3s ease-out;
 
-    &-mark {
-      position: absolute;
-    }
-
-    &[data-direction='right'],
-    &[data-direction='left'] {
-      flex: 1 1 auto;
-      width: calc(100% - (var(--neo-progress-margin-inline, var(--neo-progress-mark-margin-inline, 0px)) * 2));
-      height: 0.5rem;
-    }
-
-    &[data-direction='right'] .neo-progress-bar-mark {
-      left: var(--neo-progress-bar-mark-position, 0%);
-      translate: -50%;
-    }
-
-    &[data-direction='left'] .neo-progress-bar-mark {
-      right: var(--neo-progress-bar-mark-position, 0%);
-      translate: 50%;
-    }
-
-    &[data-direction='top'],
-    &[data-direction='bottom'] {
-      flex: 1 1 100%;
-      width: 0.5rem;
-      height: calc(100% - (var(--neo-progress-margin-block, var(--neo-progress-mark-margin-block, 0px)) * 2));
-    }
-
-    &[data-direction='top'] .neo-progress-bar-mark {
-      bottom: var(--neo-progress-bar-mark-position, 0%);
-      translate: 0 50%;
-    }
-
-    &[data-direction='bottom'] .neo-progress-bar-mark {
-      top: var(--neo-progress-bar-mark-position, 0%);
-      translate: 0 -50%;
-    }
-
-    &:not(.neo-flat.neo-borderless) :global(> .neo-progress) {
-      background: var(--neo-progress-track-background, transparent);
-    }
-
-    &.neo-flat:not(.neo-borderless) {
-      border-color: var(--neo-progress-bar-border-color, var(--neo-border-color));
-
-      &:focus-within,
-      &:hover {
-        color: var(--neo-progress-bar-text-color-hover, var(--neo-text-color-highlight));
-        border-color: var(--neo-progress-bar-border-color-hover, var(--neo-border-color-highlight));
-      }
-    }
-
-    &.neo-rounded {
-      border-radius: var(--neo-progress-bar-border-radius, var(--neo-border-radius-xxl));
-    }
-
-    &.neo-glass {
-      --neo-border-color: var(--neo-glass-border-color);
-
-      backdrop-filter: var(--neo-progress-bar-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
-
-      &:not(.neo-inset, .neo-borderless, .neo-flat) {
-        border-color: var(
-          --neo-pill-border-color,
-          var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-            var(--neo-glass-left-border-color)
-        );
+      &.neo-track {
+        box-shadow: var(--neo-progress-bar-box-shadow, var(--neo-box-shadow-flat));
       }
 
+      &-mark {
+        position: absolute;
+      }
+
+      &[data-direction='right'],
+      &[data-direction='left'] {
+        flex: 1 1 auto;
+        width: calc(100% - (var(--neo-progress-margin-inline, var(--neo-progress-mark-margin-inline, 0px)) * 2));
+        height: 0.5rem;
+      }
+
+      &[data-direction='right'] .neo-progress-bar-mark {
+        left: var(--neo-progress-bar-mark-position, 0%);
+        translate: -50%;
+      }
+
+      &[data-direction='left'] .neo-progress-bar-mark {
+        right: var(--neo-progress-bar-mark-position, 0%);
+        translate: 50%;
+      }
+
+      &[data-direction='top'],
+      &[data-direction='bottom'] {
+        flex: 1 1 100%;
+        width: 0.5rem;
+        height: calc(100% - (var(--neo-progress-margin-block, var(--neo-progress-mark-margin-block, 0px)) * 2));
+      }
+
+      &[data-direction='top'] .neo-progress-bar-mark {
+        bottom: var(--neo-progress-bar-mark-position, 0%);
+        translate: 0 50%;
+      }
+
+      &[data-direction='bottom'] .neo-progress-bar-mark {
+        top: var(--neo-progress-bar-mark-position, 0%);
+        translate: 0 -50%;
+      }
+
+      // keep: order
+      &:not(.neo-flat.neo-borderless) :global(> .neo-progress) {
+        background: var(--neo-progress-track-background, transparent);
+      }
+
+      // keep: order
       &.neo-flat:not(.neo-borderless) {
-        border-color: var(--neo-pill-border-color, var(--neo-glass-border-color-flat));
+        border-color: var(--neo-progress-bar-border-color, var(--neo-border-color));
 
         &:focus-within,
         &:hover {
-          border-color: var(--neo-pill-border-color-hover, var(--neo-glass-border-color-flat-highlight));
+          color: var(--neo-progress-bar-text-color-hover, var(--neo-text-color-highlight));
+          border-color: var(--neo-progress-bar-border-color-hover, var(--neo-border-color-highlight));
+        }
+      }
+
+      &.neo-rounded {
+        border-radius: var(--neo-progress-bar-border-radius, var(--neo-border-radius-xxl));
+      }
+
+      &.neo-glass {
+        --neo-border-color: var(--neo-glass-border-color);
+
+        backdrop-filter: var(--neo-progress-bar-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+
+        // keep: order
+        &:not(.neo-inset, .neo-borderless, .neo-flat) {
+          border-color: var(
+            --neo-pill-border-color,
+            var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+              var(--neo-glass-left-border-color)
+          );
+        }
+
+        // keep: order
+        &.neo-flat:not(.neo-borderless) {
+          border-color: var(--neo-pill-border-color, var(--neo-glass-border-color-flat));
+
+          &:focus-within,
+          &:hover {
+            border-color: var(--neo-pill-border-color-hover, var(--neo-glass-border-color-flat-highlight));
+          }
+        }
+      }
+
+      &.neo-start {
+        @starting-style {
+          box-shadow: var(--neo-box-shadow-flat);
         }
       }
     }
 
-    &.neo-start {
-      @starting-style {
-        box-shadow: var(--neo-box-shadow-flat);
-      }
-    }
   }
 </style>

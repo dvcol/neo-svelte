@@ -490,298 +490,234 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-input-group,
-  .neo-input-before,
-  .neo-input-after {
-    display: inline-flex;
-    align-items: center;
-    box-sizing: border-box;
-    min-width: min-content;
-    font: inherit;
-    text-align: start;
-    text-decoration: none;
-    outline: none;
-    transition:
-      opacity 0.3s ease,
-      color 0.3s ease,
-      margin 0.3s ease,
-      padding 0.3s ease,
-      background-color 0.3s ease,
-      backdrop-filter 0.3s ease,
-      border-color 0.3s ease,
-      border-radius 0.3s ease,
-      box-shadow 0.3s ease-out;
-    appearance: none;
-  }
-
-  .neo-input {
-    &-before {
-      padding: var(--neo-input-before-padding, 0.75rem);
-      color: var(--neo-input-before-color, inherit);
-      background-color: var(--neo-input-before-bg-color, transparent);
-      border: none;
-      border-right: var(--neo-border-width, 1px) var(--neo-input-before-border-color, transparent) solid;
-      border-radius: var(--neo-input-border-radius, var(--neo-border-radius)) 0 0 var(--neo-input-border-radius, var(--neo-border-radius));
-    }
-
-    &-after {
-      padding: var(--neo-input-after-padding, 0.75rem);
-      color: var(--neo-input-after-color, inherit);
-      background-color: var(--neo-input-after-bg-color, transparent);
-      border: none;
-      border-left: var(--neo-border-width, 1px) var(--neo-input-after-border-color, transparent) solid;
-      border-radius: 0 var(--neo-input-border-radius, var(--neo-border-radius)) var(--neo-input-border-radius, var(--neo-border-radius)) 0;
-    }
-
-    &-before,
-    &-after {
+  @include layers.neo-components {
+    .neo-input-group,
+    .neo-input-before,
+    .neo-input-after {
+      display: inline-flex;
       align-items: center;
-      min-width: max-content;
+      box-sizing: border-box;
+      min-width: min-content;
+      font: inherit;
+      text-align: start;
+      text-decoration: none;
+      outline: none;
+      transition:
+        opacity 0.3s ease,
+        color 0.3s ease,
+        margin 0.3s ease,
+        padding 0.3s ease,
+        background-color 0.3s ease,
+        backdrop-filter 0.3s ease,
+        border-color 0.3s ease,
+        border-radius 0.3s ease,
+        box-shadow 0.3s ease-out;
+      appearance: none;
+    }
 
-      &:is(button, a) {
-        cursor: pointer;
+    .neo-input {
+      &-before {
+        padding: var(--neo-input-before-padding, 0.75rem);
+        color: var(--neo-input-before-color, inherit);
+        background-color: var(--neo-input-before-bg-color, transparent);
+        border: none;
+        border-right: var(--neo-border-width, 1px) var(--neo-input-before-border-color, transparent) solid;
+        border-radius: var(--neo-input-border-radius, var(--neo-border-radius)) 0 0 var(--neo-input-border-radius, var(--neo-border-radius));
+      }
 
-        &:focus-visible {
+      &-after {
+        padding: var(--neo-input-after-padding, 0.75rem);
+        color: var(--neo-input-after-color, inherit);
+        background-color: var(--neo-input-after-bg-color, transparent);
+        border: none;
+        border-left: var(--neo-border-width, 1px) var(--neo-input-after-border-color, transparent) solid;
+        border-radius: 0 var(--neo-input-border-radius, var(--neo-border-radius)) var(--neo-input-border-radius, var(--neo-border-radius)) 0;
+      }
+
+      &-before,
+      &-after {
+        align-items: center;
+        min-width: max-content;
+
+        &:is(button, a) {
+          cursor: pointer;
+
+          &:focus-visible {
+            outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+          }
+
+          &:hover {
+            color: var(--neo-input-hover-color, var(--neo-text-color-hover));
+          }
+
+          &:active {
+            color: var(--neo-input-active-color, var(--neo-text-color-hover-active));
+            scale: 0.9;
+          }
+
+          &:disabled {
+            color: var(--neo-input-disabled-color, var(--neo-text-color-disabled));
+            cursor: not-allowed;
+            scale: 1;
+          }
+        }
+
+        // keep: order
+        &:has(:global(.neo-button:only-child)):not(.neo-inside) {
+          padding: 0 0.25rem;
+        }
+
+        :global(.neo-button) {
+          --neo-btn-padding: 0.5rem 0.75rem;
+          --neo-btn-margin: auto;
+          --neo-btn-min-width: 2.375rem;
+          --neo-btn-bg-color: transparent;
+          --neo-btn-backdrop-filter: none;
+        }
+
+        &.neo-inset :global(.neo-button) {
+          --neo-btn-margin: auto 0;
+          --neo-btn-padding-empty: 0.375rem;
+        }
+
+        &.neo-inset.neo-pressed :global(.neo-button) {
+          --neo-input-icon-scale: 1;
+        }
+
+        &.neo-deep :global(.neo-button) {
+          --neo-btn-margin: auto 0.25rem;
+        }
+      }
+
+      &-group {
+        position: relative;
+        margin: var(--neo-shadow-margin, 0.625rem);
+        padding: 0 0.1875rem;
+        color: var(--neo-input-text-color, inherit);
+        background-color: var(--neo-input-bg-color, inherit);
+        background-clip: padding-box;
+        border: var(--neo-input-border-width, var(--neo-border-width, 1px)) var(--neo-input-border-color, transparent) solid;
+        border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
+        box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
+        cursor: var(--neo-input-cursor, text);
+
+        &.neo-readonly {
+          cursor: inherit;
+        }
+
+        &.neo-pointer {
+          cursor: var(--neo-input-cursor, pointer);
+        }
+
+        &.neo-borderless {
+          border-color: transparent !important;
+        }
+
+        &.neo-deep.neo-pressed,
+        &.neo-raised {
+          margin: var(--neo-shadow-margin-lg, 1.125rem);
+        }
+
+        &.neo-deep {
+          padding: 0.25rem;
+        }
+
+        &.neo-hover.neo-flat-hover.neo-hovered,
+        &.neo-hover.neo-flat-hover:hover,
+        &.neo-hover.neo-flat-hover:focus-within,
+        // keep: order
+        &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+          border-color: var(--neo-input-border-color, var(--neo-border-color));
+
+          &:focus-visible,
+          &:hover {
+            border-color: var(--neo-input-border-color-hover, var(--neo-border-color-highlight));
+          }
+        }
+
+        &:focus-within,
+        &.neo-hover:hover,
+        &.neo-hover.neo-hovered {
+          box-shadow: var(--neo-input-box-shadow-hover, var(--neo-box-shadow-flat));
+        }
+
+        &:focus-visible,
+        &:has(:global(.neo-input:-webkit-autofill:focus)),
+        &:has(:global(.neo-input:-webkit-autofill:active)) {
           outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
         }
 
-        &:hover {
+        :global(.neo-input:is(select) option) {
+          padding: 0.375rem 0.5rem;
+          color: var(--neo-input-text-color, inherit);
+          background-color: transparent;
+          background-clip: text;
+          border-radius: var(--neo-input-option-border-radius, var(--neo-border-radius-sm));
+          backface-visibility: hidden;
+          cursor: pointer;
+          transition:
+            -webkit-text-fill-color 0.15s ease,
+            color 0.15s ease,
+            box-shadow 0.3s ease-out,
+            scale 0.3s ease-out;
+          will-change: scale, color;
+          -webkit-text-fill-color: var(--neo-input-text-color, var(--neo-text-color));
+          margin-inline: -0.5rem;
+          margin-block: 0.375rem;
+          scale: 1;
+        }
+
+        :global(.neo-input:is(select) option:disabled) {
+          color: var(--neo-input-disabled-color, var(--neo-text-color-disabled));
+          cursor: not-allowed;
+        }
+
+        :global(.neo-input:is(select) option:hover) {
           color: var(--neo-input-hover-color, var(--neo-text-color-hover));
         }
 
-        &:active {
-          color: var(--neo-input-active-color, var(--neo-text-color-hover-active));
-          scale: 0.9;
+        :global(.neo-input:is(select) option:checked),
+        :global(.neo-input:is(select) option:active) {
+          -webkit-text-fill-color: var(--neo-input-active-color, var(--neo-input-text-color, var(--neo-text-color)));
+          color: var(--neo-input-active-color, var(--neo-input-text-color, var(--neo-text-color)));
+          box-shadow: var(--neo-box-shadow-inset-1);
+          scale: var(--neo-input-scale-pressed, 0.98);
         }
 
-        &:disabled {
-          color: var(--neo-input-disabled-color, var(--neo-text-color-disabled));
-          cursor: not-allowed;
-          scale: 1;
-        }
-      }
-
-      &:has(:global(.neo-button:only-child)):not(.neo-inside) {
-        padding: 0 0.25rem;
-      }
-
-      :global(.neo-button) {
-        --neo-btn-padding: 0.5rem 0.75rem;
-        --neo-btn-margin: auto;
-        --neo-btn-min-width: 2.375rem;
-        --neo-btn-bg-color: transparent;
-        --neo-btn-backdrop-filter: none;
-      }
-
-      &.neo-inset :global(.neo-button) {
-        --neo-btn-margin: auto 0;
-        --neo-btn-padding-empty: 0.375rem;
-      }
-
-      &.neo-inset.neo-pressed :global(.neo-button) {
-        --neo-input-icon-scale: 1;
-      }
-
-      &.neo-deep :global(.neo-button) {
-        --neo-btn-margin: auto 0.25rem;
-      }
-    }
-
-    &-group {
-      position: relative;
-      margin: var(--neo-shadow-margin, 0.625rem);
-      padding: 0 0.1875rem;
-      color: var(--neo-input-text-color, inherit);
-      background-color: var(--neo-input-bg-color, inherit);
-      background-clip: padding-box;
-      border: var(--neo-input-border-width, var(--neo-border-width, 1px)) var(--neo-input-border-color, transparent) solid;
-      border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
-      box-shadow: var(--neo-input-box-shadow, var(--neo-box-shadow-flat));
-      cursor: var(--neo-input-cursor, text);
-
-      &.neo-readonly {
-        cursor: inherit;
-      }
-
-      &.neo-pointer {
-        cursor: var(--neo-input-cursor, pointer);
-      }
-
-      &.neo-borderless {
-        border-color: transparent !important;
-      }
-
-      &.neo-deep.neo-pressed,
-      &.neo-raised {
-        margin: var(--neo-shadow-margin-lg, 1.125rem);
-      }
-
-      &.neo-deep {
-        padding: 0.25rem;
-      }
-
-      &.neo-hover.neo-flat-hover.neo-hovered,
-      &.neo-hover.neo-flat-hover:hover,
-      &.neo-hover.neo-flat-hover:focus-within,
-      &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
-        border-color: var(--neo-input-border-color, var(--neo-border-color));
-
-        &:focus-visible,
-        &:hover {
-          border-color: var(--neo-input-border-color-hover, var(--neo-border-color-highlight));
-        }
-      }
-
-      &:focus-within,
-      &.neo-hover:hover,
-      &.neo-hover.neo-hovered {
-        box-shadow: var(--neo-input-box-shadow-hover, var(--neo-box-shadow-flat));
-      }
-
-      &:focus-visible,
-      &:has(:global(.neo-input:-webkit-autofill:focus)),
-      &:has(:global(.neo-input:-webkit-autofill:active)) {
-        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-      }
-
-      :global(.neo-input:is(select) option) {
-        padding: 0.375rem 0.5rem;
-        color: var(--neo-input-text-color, inherit);
-        background-color: transparent;
-        background-clip: text;
-        border-radius: var(--neo-input-option-border-radius, var(--neo-border-radius-sm));
-        backface-visibility: hidden;
-        cursor: pointer;
-        transition:
-          -webkit-text-fill-color 0.15s ease,
-          color 0.15s ease,
-          box-shadow 0.3s ease-out,
-          scale 0.3s ease-out;
-        will-change: scale, color;
-        -webkit-text-fill-color: var(--neo-input-text-color, var(--neo-text-color));
-        margin-inline: -0.5rem;
-        margin-block: 0.375rem;
-        scale: 1;
-      }
-
-      :global(.neo-input:is(select) option:disabled) {
-        color: var(--neo-input-disabled-color, var(--neo-text-color-disabled));
-        cursor: not-allowed;
-      }
-
-      :global(.neo-input:is(select) option:hover) {
-        color: var(--neo-input-hover-color, var(--neo-text-color-hover));
-      }
-
-      :global(.neo-input:is(select) option:checked),
-      :global(.neo-input:is(select) option:active) {
-        -webkit-text-fill-color: var(--neo-input-active-color, var(--neo-input-text-color, var(--neo-text-color)));
-        color: var(--neo-input-active-color, var(--neo-input-text-color, var(--neo-text-color)));
-        box-shadow: var(--neo-box-shadow-inset-1);
-        scale: var(--neo-input-scale-pressed, 0.98);
-      }
-
-      :global(.neo-label-container) {
-        width: 100%;
-        transition:
-          opacity 0.3s ease,
-          padding 0.3s ease,
-          margin 0.3s ease;
-
-        :global(.neo-label) {
-          --neo-label-padding: 0 0.75rem;
-          --neo-label-margin: 0;
-          --neo-label-color: var(--neo-input-label-color, inherit);
-
+        :global(.neo-label-container) {
+          width: 100%;
           transition:
             opacity 0.3s ease,
             padding 0.3s ease,
-            color 0.3s ease,
-            font-size 0.3s ease,
-            line-height 0.3s ease,
-            top 0.3s ease,
-            left 0.3s ease,
-            right 0.3s ease,
-            translate 0.3s ease;
-        }
-      }
+            margin 0.3s ease;
 
-      :global(.neo-label-container.neo-rounded:not(.neo-before)) {
-        padding-left: 0.25rem;
-      }
+          :global(.neo-label) {
+            --neo-label-padding: 0 0.75rem;
+            --neo-label-margin: 0;
+            --neo-label-color: var(--neo-input-label-color, inherit);
 
-      :global(.neo-label-container.neo-first .neo-label) {
-        transition: none;
-      }
-
-      :global(.neo-label-container.neo-before .neo-label) {
-        padding-left: 0;
-      }
-
-      :global(.neo-label-container.neo-after .neo-label) {
-        padding-right: 0;
-      }
-
-      :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill))) {
-        :global(.neo-label) {
-          --neo-label-color: var(--neo-input-floating-label-color, var(--neo-text-color-secondary));
-          --neo-label-color-hover: var(--neo-input-floating-label-color, var(--neo-text-color-secondary-hover));
-          --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
+            transition:
+              opacity 0.3s ease,
+              padding 0.3s ease,
+              color 0.3s ease,
+              font-size 0.3s ease,
+              line-height 0.3s ease,
+              top 0.3s ease,
+              left 0.3s ease,
+              right 0.3s ease,
+              translate 0.3s ease;
+          }
         }
 
-        :global(.neo-input) {
-          color: var(--neo-input-floating-text-color, transparent);
-          transition-timing-function: ease-in;
+        // keep: order
+        :global(.neo-label-container.neo-rounded:not(.neo-before)) {
+          padding-left: 0.25rem;
         }
 
-        :global(::placeholder) {
-          opacity: 0;
-          transition-timing-function: ease-in;
-        }
-      }
-
-      &.neo-disabled {
-        box-shadow: var(--neo-box-shadow-flat) !important;
-        cursor: not-allowed;
-        opacity: var(--neo-input-opacity-disabled, var(--neo-opacity-disabled));
-
-        &:not(.neo-borderless) {
-          border-color: var(--neo-input-border-color-disabled, var(--neo-border-color-disabled)) !important;
-        }
-      }
-
-      :global(.neo-affix-container.neo-after) {
-        min-width: 1.75rem;
-        padding-right: 0;
-        padding-left: 0.5rem;
-      }
-
-      :global(.neo-affix-container.neo-select:not(.neo-multiple)) {
-        margin-left: 0.5rem;
-      }
-
-      :global(.neo-affix-container.neo-select.neo-multiple) {
-        margin-left: -0.5rem;
-      }
-
-      :global(.neo-affix-container.neo-select.neo-after) {
-        margin-right: -0.375rem;
-      }
-
-      &.neo-rounded {
-        border-radius: var(--neo-input-border-radius, var(--neo-border-radius-xxl));
-
-        :global(.neo-input:is(select) option) {
-          border-radius: var(--neo-input-option-border-radius, var(--neo-border-radius-md));
-        }
-
-        :global(.neo-affix-container:not(.neo-after)) {
-          margin-right: 0.25rem;
-        }
-
-        :global(.neo-label-container .neo-label) {
-          padding: 0 1rem;
+        :global(.neo-label-container.neo-first .neo-label) {
+          transition: none;
         }
 
         :global(.neo-label-container.neo-before .neo-label) {
@@ -791,179 +727,263 @@
         :global(.neo-label-container.neo-after .neo-label) {
           padding-right: 0;
         }
-      }
 
-      &[data-placement='left'] {
-        --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.625rem) * 2 + var(--neo-input-label-width, auto));
+        // keep: structural
+        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill))) {
+          :global(.neo-label) {
+            --neo-label-color: var(--neo-input-floating-label-color, var(--neo-text-color-secondary));
+            --neo-label-color-hover: var(--neo-input-floating-label-color, var(--neo-text-color-secondary-hover));
+            --neo-label-required-color: var(--neo-input-required-color, var(--neo-color-error-50));
+          }
 
-        margin-left: var(--neo-input-margin-left);
+          :global(.neo-input) {
+            color: var(--neo-input-floating-text-color, transparent);
+            transition-timing-function: ease-in;
+          }
 
-        :global(.neo-label-container .neo-label) {
-          position: absolute;
-          top: calc(50% - var(--neo-input-label-height) / 2);
-          left: calc(0% - var(--neo-input-margin-left));
-        }
-
-        :global(.neo-label-container.neo-before .neo-label) {
-          left: calc(0% - var(--neo-input-margin-left));
-        }
-
-        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
-          left: calc(0.25rem + var(--neo-input-before-width));
-        }
-      }
-
-      &[data-placement='right'] {
-        --neo-input-margin-right: calc(var(--neo-shadow-margin, 0.625rem) * 2 + var(--neo-input-label-width, auto));
-
-        margin-right: var(--neo-input-margin-right);
-
-        :global(.neo-label-container .neo-label) {
-          position: absolute;
-          top: calc(50% - var(--neo-input-label-height) / 2);
-          right: calc(0% - var(--neo-input-margin-right));
-        }
-
-        :global(.neo-label-container.neo-before .neo-label) {
-          right: calc(0% - var(--neo-input-margin-right));
-        }
-
-        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
-          right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-before-width));
-        }
-
-        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)).neo-rounded:not(.neo-before) .neo-label) {
-          right: calc(100% - var(--neo-input-label-width) - 0.75rem - var(--neo-input-before-width));
-        }
-      }
-
-      &[data-placement='inside'] {
-        :global(.neo-label-container .neo-input) {
-          padding: 0 1rem 0.5rem;
-        }
-
-        :global(.neo-label-container.neo-before .neo-input) {
-          padding-left: 0;
-        }
-
-        :global(.neo-label-container.neo-after .neo-input) {
-          padding-right: 0;
-        }
-
-        :global(.neo-label-container .neo-label) {
-          min-width: var(--neo-input-label-width);
-          padding: 0.75rem 1rem 0.25rem;
-          line-height: var(--neo-line-height-xs, 1rem);
-          pointer-events: none;
-        }
-
-        :global(.neo-label-container.neo-before .neo-label) {
-          padding-left: 0;
-        }
-
-        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
-          translate: 0 calc((var(--neo-input-label-container-height) / 2) - 50% - 0.25rem);
-        }
-
-        :global(.neo-label-container:has(.neo-input:-webkit-autofill) .neo-label),
-        :global(.neo-label-container:not(.neo-floating) .neo-label) {
-          font-size: var(--neo-font-size-sm, 0.875rem);
-        }
-      }
-
-      &[data-placement='top'][data-placement='top'] {
-        --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-input-label-height, var(--neo-line-height)));
-
-        margin-top: var(--neo-input-margin-top);
-
-        :global(.neo-label-container .neo-label) {
-          position: absolute;
-          top: calc(0% - var(--neo-input-margin-top));
-        }
-
-        &:not(.neo-floating) :global(.neo-label-container .neo-label) {
-          left: 0;
-          padding: var(--neo-label-padding, 0 1rem);
-        }
-      }
-
-      &[data-placement='top'],
-      &[data-placement='left'],
-      &[data-placement='right'] {
-        :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
-          top: calc(50% - var(--neo-input-label-height) / 2);
-        }
-
-        &.neo-floating {
-          --neo-input-min-width: var(--neo-input-label-width);
-          --neo-input-min-height: var(--neo-input-label-height);
-          --neo-label-max-width: calc(100% - var(--neo-input-after-width) - var(--neo-input-before-width) - var(--neo-input-affix-width));
-        }
-      }
-
-      &.neo-glass {
-        --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
-        --neo-skeleton-color: var(--neo-glass-skeleton-color);
-        --neo-border-color: var(--neo-glass-border-color);
-
-        background-color: var(--neo-input-bg-color, var(--neo-glass-background-color));
-        backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
-
-        &:not(.neo-inset, .neo-inset-hover:hover, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
-          border-color: var(
-            --neo-input-border-color,
-            var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
-              var(--neo-glass-left-border-color)
-          );
-        }
-
-        &.neo-hover.neo-flat-hover.neo-hovered,
-        &.neo-hover.neo-flat-hover:hover,
-        &.neo-hover.neo-flat-hover:focus-within,
-        &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
-          border-color: var(--neo-input-border-color, var(--neo-glass-border-color-flat));
-
-          &:focus-visible,
-          &:hover {
-            border-color: var(--neo-input-border-color-hover, var(--neo-glass-border-color-flat-highlight));
+          :global(::placeholder) {
+            opacity: 0;
+            transition-timing-function: ease-in;
           }
         }
-      }
 
-      &.neo-validation {
-        &[data-valid='false'] {
-          --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
-          --neo-label-color-hover: var(--neo-input-label-color-error-hover, var(--neo-color-error-highlight));
-          --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
-          --neo-label-disabled-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
-          --neo-border-color: var(--neo-input-border-color-error, var(--neo-color-error));
+        &.neo-disabled {
+          box-shadow: var(--neo-box-shadow-flat) !important;
+          cursor: not-allowed;
+          opacity: var(--neo-input-opacity-disabled, var(--neo-opacity-disabled));
+
+          // keep: order
+          &:not(.neo-borderless) {
+            border-color: var(--neo-input-border-color-disabled, var(--neo-border-color-disabled)) !important;
+          }
         }
 
-        &[data-valid='true'] {
-          --neo-input-label-color: var(--neo-input-label-color-success, var(--neo-color-success));
-          --neo-label-color-hover: var(--neo-input-label-color-success-hover, var(--neo-color-success-highlight));
-          --neo-input-floating-label-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
-          --neo-label-disabled-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
-          --neo-border-color: var(--neo-input-border-color-success, var(--neo-color-success));
+        :global(.neo-affix-container.neo-after) {
+          min-width: 1.75rem;
+          padding-right: 0;
+          padding-left: 0.5rem;
         }
-      }
 
-      &.neo-start {
-        @starting-style {
+        // keep: order
+        :global(.neo-affix-container.neo-select:not(.neo-multiple)) {
+          margin-left: 0.5rem;
+        }
+
+        :global(.neo-affix-container.neo-select.neo-multiple) {
+          margin-left: -0.5rem;
+        }
+
+        :global(.neo-affix-container.neo-select.neo-after) {
+          margin-right: -0.375rem;
+        }
+
+        &.neo-rounded {
+          border-radius: var(--neo-input-border-radius, var(--neo-border-radius-xxl));
+
+          :global(.neo-input:is(select) option) {
+            border-radius: var(--neo-input-option-border-radius, var(--neo-border-radius-md));
+          }
+
+          // keep: order
+          :global(.neo-affix-container:not(.neo-after)) {
+            margin-right: 0.25rem;
+          }
+
+          :global(.neo-label-container .neo-label) {
+            padding: 0 1rem;
+          }
+
+          :global(.neo-label-container.neo-before .neo-label) {
+            padding-left: 0;
+          }
+
+          :global(.neo-label-container.neo-after .neo-label) {
+            padding-right: 0;
+          }
+        }
+
+        &[data-placement='left'] {
+          --neo-input-margin-left: calc(var(--neo-shadow-margin, 0.625rem) * 2 + var(--neo-input-label-width, auto));
+
+          margin-left: var(--neo-input-margin-left);
+
+          :global(.neo-label-container .neo-label) {
+            position: absolute;
+            top: calc(50% - var(--neo-input-label-height) / 2);
+            left: calc(0% - var(--neo-input-margin-left));
+          }
+
+          :global(.neo-label-container.neo-before .neo-label) {
+            left: calc(0% - var(--neo-input-margin-left));
+          }
+
+          // keep: structural
+          :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
+            left: calc(0.25rem + var(--neo-input-before-width));
+          }
+        }
+
+        &[data-placement='right'] {
+          --neo-input-margin-right: calc(var(--neo-shadow-margin, 0.625rem) * 2 + var(--neo-input-label-width, auto));
+
+          margin-right: var(--neo-input-margin-right);
+
+          :global(.neo-label-container .neo-label) {
+            position: absolute;
+            top: calc(50% - var(--neo-input-label-height) / 2);
+            right: calc(0% - var(--neo-input-margin-right));
+          }
+
+          :global(.neo-label-container.neo-before .neo-label) {
+            right: calc(0% - var(--neo-input-margin-right));
+          }
+
+          // keep: structural
+          :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
+            right: calc(100% - var(--neo-input-label-width) - 0.25rem - var(--neo-input-before-width));
+          }
+
+          // keep: structural
+          :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)).neo-rounded:not(.neo-before) .neo-label) {
+            right: calc(100% - var(--neo-input-label-width) - 0.75rem - var(--neo-input-before-width));
+          }
+        }
+
+        &[data-placement='inside'] {
+          :global(.neo-label-container .neo-input) {
+            padding: 0 1rem 0.5rem;
+          }
+
+          :global(.neo-label-container.neo-before .neo-input) {
+            padding-left: 0;
+          }
+
+          :global(.neo-label-container.neo-after .neo-input) {
+            padding-right: 0;
+          }
+
+          :global(.neo-label-container .neo-label) {
+            min-width: var(--neo-input-label-width);
+            padding: 0.75rem 1rem 0.25rem;
+            line-height: var(--neo-line-height-xs, 1rem);
+            pointer-events: none;
+          }
+
+          :global(.neo-label-container.neo-before .neo-label) {
+            padding-left: 0;
+          }
+
+          // keep: structural
+          :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
+            translate: 0 calc((var(--neo-input-label-container-height) / 2) - 50% - 0.25rem);
+          }
+
+          :global(.neo-label-container:has(.neo-input:-webkit-autofill) .neo-label),
+          // keep: order
+          :global(.neo-label-container:not(.neo-floating) .neo-label) {
+            font-size: var(--neo-font-size-sm, 0.875rem);
+          }
+        }
+
+        &[data-placement='top'][data-placement='top'] {
+          --neo-input-margin-top: calc(var(--neo-shadow-margin, 0.625rem) + var(--neo-input-label-height, var(--neo-line-height)));
+
+          margin-top: var(--neo-input-margin-top);
+
+          :global(.neo-label-container .neo-label) {
+            position: absolute;
+            top: calc(0% - var(--neo-input-margin-top));
+          }
+
+          // keep: order
+          &:not(.neo-floating) :global(.neo-label-container .neo-label) {
+            left: 0;
+            padding: var(--neo-label-padding, 0 1rem);
+          }
+        }
+
+        &[data-placement='top'],
+        &[data-placement='left'],
+        &[data-placement='right'] {
+          // keep: structural
+          :global(.neo-label-container.neo-floating:not(:has(.neo-input:-webkit-autofill)) .neo-label) {
+            top: calc(50% - var(--neo-input-label-height) / 2);
+          }
+
+          &.neo-floating {
+            --neo-input-min-width: var(--neo-input-label-width);
+            --neo-input-min-height: var(--neo-input-label-height);
+            --neo-label-max-width: calc(100% - var(--neo-input-after-width) - var(--neo-input-before-width) - var(--neo-input-affix-width));
+          }
+        }
+
+        &.neo-glass {
+          --neo-background-color-tinted: var(--neo-glass-background-color-tinted);
+          --neo-skeleton-color: var(--neo-glass-skeleton-color);
+          --neo-border-color: var(--neo-glass-border-color);
+
+          background-color: var(--neo-input-bg-color, var(--neo-glass-background-color));
+          backdrop-filter: var(--neo-input-glass-blur, var(--neo-blur-3) var(--neo-saturate-2));
+
+          // keep: order
+          &:not(.neo-inset, .neo-inset-hover:hover, .neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+            border-color: var(
+              --neo-input-border-color,
+              var(--neo-glass-top-border-color) var(--neo-glass-right-border-color) var(--neo-glass-bottom-border-color)
+                var(--neo-glass-left-border-color)
+            );
+          }
+
+          &.neo-hover.neo-flat-hover.neo-hovered,
+          &.neo-hover.neo-flat-hover:hover,
+          &.neo-hover.neo-flat-hover:focus-within,
+          // keep: order
+          &.neo-flat:not(.neo-borderless, .neo-hover-flat:hover, .neo-hover-flat.neo-hovered, .neo-hover-flat:focus-within) {
+            border-color: var(--neo-input-border-color, var(--neo-glass-border-color-flat));
+
+            &:focus-visible,
+            &:hover {
+              border-color: var(--neo-input-border-color-hover, var(--neo-glass-border-color-flat-highlight));
+            }
+          }
+        }
+
+        &.neo-validation {
+          &[data-valid='false'] {
+            --neo-input-label-color: var(--neo-input-label-color-error, var(--neo-color-error));
+            --neo-label-color-hover: var(--neo-input-label-color-error-hover, var(--neo-color-error-highlight));
+            --neo-input-floating-label-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
+            --neo-label-disabled-color: var(--neo-input-floating-label-color-error, var(--neo-color-error-50));
+            --neo-border-color: var(--neo-input-border-color-error, var(--neo-color-error));
+          }
+
+          &[data-valid='true'] {
+            --neo-input-label-color: var(--neo-input-label-color-success, var(--neo-color-success));
+            --neo-label-color-hover: var(--neo-input-label-color-success-hover, var(--neo-color-success-highlight));
+            --neo-input-floating-label-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
+            --neo-label-disabled-color: var(--neo-input-floating-label-color-success, var(--neo-color-success-50));
+            --neo-border-color: var(--neo-input-border-color-success, var(--neo-color-success));
+          }
+        }
+
+        &.neo-start {
+          @starting-style {
+            box-shadow: var(--neo-box-shadow-flat);
+          }
+        }
+
+        &.neo-tinted {
+          background-color: var(--neo-input-bg-color, var(--neo-background-color-tinted));
+        }
+
+        &.neo-skeleton {
           box-shadow: var(--neo-box-shadow-flat);
+          pointer-events: none;
+
+          @include mixin.skeleton;
         }
-      }
-
-      &.neo-tinted {
-        background-color: var(--neo-input-bg-color, var(--neo-background-color-tinted));
-      }
-
-      &.neo-skeleton {
-        box-shadow: var(--neo-box-shadow-flat);
-        pointer-events: none;
-
-        @include mixin.skeleton;
       }
     }
+
   }
 </style>

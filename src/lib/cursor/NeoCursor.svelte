@@ -204,9 +204,13 @@
 {/if}
 
 <style lang="scss">
-  .neo-cursor {
-    &-container {
-      display: contents;
+  @use 'src/lib/styles/layers' as layers;
+
+  @include layers.neo-components {
+    .neo-cursor {
+      &-container {
+        display: contents;
+      }
     }
   }
 </style>

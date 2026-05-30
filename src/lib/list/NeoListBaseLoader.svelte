@@ -85,67 +85,71 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-list-base-loader {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-
-    &-text{
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      gap: var(--neo-list-loader-text-gap, 0);
-    }
-
-    &-content {
+  @include layers.neo-components {
+    .neo-list-base-loader {
       display: inline-flex;
-      flex: 1 1 auto;
-      gap: var(--neo-gap-xxs, 0.5rem);
       align-items: center;
-      padding: 0.125rem 0.5rem;
+      justify-content: space-between;
 
-      :global(> .neo-list-base-loader-media) {
-        --neo-media-margin: var(--neo-list-loader-media-margin, var(--neo-gap-4xs));
-        --neo-media-padding:var(--neo-list-loader-media-padding, var(--neo-gap-4xs));
-        --neo-media-flex: var(--neo-list-loader-media-flex, 0 0 30%);
+      &-text{
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        gap: var(--neo-list-loader-text-gap, 0);
       }
 
-      :global(.neo-list-loader-skeleton .neo-skeleton-text-line) {
-        --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
-      }
+      &-content {
+        display: inline-flex;
+        flex: 1 1 auto;
+        gap: var(--neo-gap-xxs, 0.5rem);
+        align-items: center;
+        padding: 0.125rem 0.5rem;
 
-      &.neo-description {
-        gap: var(--neo-gap-xs, 0.625rem);
+        :global(> .neo-list-base-loader-media) {
+          --neo-media-margin: var(--neo-list-loader-media-margin, var(--neo-gap-4xs));
+          --neo-media-padding:var(--neo-list-loader-media-padding, var(--neo-gap-4xs));
+          --neo-media-flex: var(--neo-list-loader-media-flex, 0 0 30%);
+        }
 
-        :global(.neo-list-loader-skeleton .neo-skeleton-text-line:nth-child(n + 2)) {
-          --neo-skeleton-text-font-size: var(--neo-font-size-sm, 0.875rem);
+        :global(.neo-list-loader-skeleton .neo-skeleton-text-line) {
           --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
         }
+
+        &.neo-description {
+          gap: var(--neo-gap-xs, 0.625rem);
+
+          :global(.neo-list-loader-skeleton .neo-skeleton-text-line:nth-child(n + 2)) {
+            --neo-skeleton-text-font-size: var(--neo-font-size-sm, 0.875rem);
+            --neo-skeleton-text-line-height: var(--neo-line-height-sm, 1.25rem);
+          }
+        }
+      }
+
+      &-after-skeleton,
+      &-before-skeleton,
+      &-checkmark-skeleton {
+        flex: 0 0 auto;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+
+        @include mixin.skeleton;
+      }
+
+      &-after-skeleton {
+        margin-left: auto;
+      }
+
+      &-checkmark-skeleton {
+        margin-inline-end: 0.4375rem;
+      }
+
+      &.neo-select {
+        padding-inline: 0.125rem;
       }
     }
 
-    &-after-skeleton,
-    &-before-skeleton,
-    &-checkmark-skeleton {
-      flex: 0 0 auto;
-      width: 1.25rem;
-      height: 1.25rem;
-      border-radius: 50%;
-
-      @include mixin.skeleton;
-    }
-
-    &-after-skeleton {
-      margin-left: auto;
-    }
-
-    &-checkmark-skeleton {
-      margin-inline-end: 0.4375rem;
-    }
-
-    &.neo-select {
-      padding-inline: 0.125rem;
-    }
   }
 </style>

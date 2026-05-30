@@ -40,9 +40,14 @@
 {/if}
 
 <style lang="scss">
-  .neo-theme-provider {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
+  @use 'src/lib/styles/layers' as layers;
+
+  @include layers.neo-components {
+    .neo-theme-provider {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+    }
+
   }
 </style>

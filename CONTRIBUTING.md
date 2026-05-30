@@ -131,3 +131,12 @@ These three rules apply to every `*.test.ts` / `*.browser.test.ts` in the repo, 
 1. **Qualitative, exhaustive, relevant (TNR) coverage.** Tests must pin observable behavior — state transitions, ARIA wiring, callback args/order, derived values, transforms, edge inputs. No tautologies (`expect(Enum.Foo).toBe('foo')`, asserting defaults TS already enforces, asserting an object literal equals itself). When extending an existing file, prune cases that fail this bar.
 2. **Exhaustive option matrix — on, off, AND combinations.** For every boolean/enum prop that gates behavior (`openOn{Hover,Focus,Click}`, `modal`, `closable`, `multiple`, `clearable`, `disabled`, `readonly`, `keepOpen*`, `placement`, etc.) cover the on path, the off path, and at least one composition with another related flag. Use `it.each` for table-driven cases. Only enumerate combinations where flags genuinely interact.
 3. **Known bugs → `it.skip` with a TODO + expected behavior.** When implementation behavior is illogical or broken, do NOT pin the broken state. Instead write the **expected** behavior as `it.skip(...)` with an inline comment containing the bug summary, file:line reference, and a grep-able `TODO:` marker. The skipped test is the contract for the fix; unskipping it = the bug is resolved. Surface the bug in the PR description so it gets triaged.
+
+## Component `<style>` rules — cascade layers
+
+Every component scoped style block must opt its rules into a cascade layer via the `layers.*` mixins from `src/lib/styles/layers.scss`. See [`src/lib/styles/AGENTS.md`](./src/lib/styles/AGENTS.md) for the full contract; the short version:
+
+- `@use 'src/lib/styles/layers' as layers;` at the top of every `<style lang="scss">` block.
+- Wrap rules in `@include layers.neo-components { ... }` / `@include layers.neo-variants { ... }` / `@include layers.neo-states { ... }`. No raw `@layer` literals.
+- Annotate every `:not()` survivor with `// keep: a11y` / `// keep: structural` / `// keep: order`. Pure specificity guards must be removed and re-expressed via layer ordering. CI fails if an unannotated `:not()` slips into a `<style>` block (`pnpm lint:not-annotations`).
+- `@keyframes` and any mixin emitting them stay outside the layer wrappers, alongside imports.

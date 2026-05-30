@@ -109,123 +109,129 @@
 {/if}
 
 <style lang="scss">
-  .neo-handle {
-    --neo-divider-height: 0.25rem;
-    --neo-divider-width: clamp(2rem, 10%, 50%);
+  @use 'src/lib/styles/layers' as layers;
 
-    position: absolute;
-    display: flex;
-    width: var(--neo-handle-width, 100%);
-    height: var(--neo-handle-height, fit-content);
-    margin: 0;
-    padding: var(--neo-handle-padding, var(--neo-gap-sm));
-    color: inherit;
-    background: none;
-    border: none;
-    outline: none;
-    cursor: grab;
-    transition: opacity 0.3s ease-in;
-    appearance: none;
-    touch-action: none;
+  @include layers.neo-components {
+    .neo-handle {
+      --neo-divider-height: 0.25rem;
+      --neo-divider-width: clamp(2rem, 10%, 50%);
 
-    &:active {
-      cursor: grabbing;
-
-      &[data-axis='x'] {
-        cursor: ew-resize;
-      }
-
-      &[data-axis='y'] {
-        cursor: ns-resize;
-      }
-    }
-
-    &-group {
-      position: relative;
+      position: absolute;
       display: flex;
-      flex: 1 1 auto;
-      width: 100%;
-      padding: var(--neo-handle-group-margin-top, var(--neo-handle-group-computed-padding-top, 0))
-        var(--neo-handle-group-margin-right, var(--neo-handle-group-computed-padding-right, 0))
-        var(--neo-handle-group-margin-bottom, var(--neo-handle-group-computed-padding-bottom, 0))
-        var(--neo-handle-group-margin-left, var(--neo-handle-group-computed-padding-left, 0));
-    }
+      width: var(--neo-handle-width, 100%);
+      height: var(--neo-handle-height, fit-content);
+      margin: 0;
+      padding: var(--neo-handle-padding, var(--neo-gap-sm));
+      color: inherit;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: grab;
+      transition: opacity 0.3s ease-in;
+      appearance: none;
+      touch-action: none;
 
-    :global(> .neo-divider) {
-      margin-inline: auto;
-    }
+      &:active {
+        cursor: grabbing;
 
-    &:focus-visible :global(> .neo-divider) {
-      outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
-      outline-offset: 1px;
-    }
+        &[data-axis='x'] {
+          cursor: ew-resize;
+        }
 
-    &[data-placement^='right'],
-    &[data-placement^='left'] {
-      --neo-divider-height: clamp(2rem, 10%, 50%);
-      --neo-divider-width: 0.25rem;
-
-      align-items: center;
-      justify-content: center;
-      width: var(--neo-handle-width, fit-content);
-      height: var(--neo-handle-height, 100%);
-    }
-
-    &:not([data-position='outside']) {
-      &[data-placement^='top'] {
-        top: 0;
-        bottom: auto;
-        left: 0;
-        padding-bottom: var(--neo-handle-padding, var(--neo-gap-xxs));
+        &[data-axis='y'] {
+          cursor: ns-resize;
+        }
       }
 
-      &[data-placement^='bottom'] {
-        top: auto;
-        bottom: 0;
-        left: 0;
-        padding-top: var(--neo-handle-padding, var(--neo-gap-xxs));
+      &-group {
+        position: relative;
+        display: flex;
+        flex: 1 1 auto;
+        width: 100%;
+        padding: var(--neo-handle-group-margin-top, var(--neo-handle-group-computed-padding-top, 0))
+          var(--neo-handle-group-margin-right, var(--neo-handle-group-computed-padding-right, 0))
+          var(--neo-handle-group-margin-bottom, var(--neo-handle-group-computed-padding-bottom, 0))
+          var(--neo-handle-group-margin-left, var(--neo-handle-group-computed-padding-left, 0));
       }
 
-      &[data-placement^='right'] {
-        top: 0;
-        right: 0;
-        left: auto;
+      :global(> .neo-divider) {
+        margin-inline: auto;
       }
 
+      &:focus-visible :global(> .neo-divider) {
+        outline: var(--neo-border-width, 1px) solid var(--neo-border-color-focused);
+        outline-offset: 1px;
+      }
+
+      &[data-placement^='right'],
       &[data-placement^='left'] {
-        top: 0;
-        right: auto;
-        left: 0;
+        --neo-divider-height: clamp(2rem, 10%, 50%);
+        --neo-divider-width: 0.25rem;
+
+        align-items: center;
+        justify-content: center;
+        width: var(--neo-handle-width, fit-content);
+        height: var(--neo-handle-height, 100%);
+      }
+
+      // keep: order
+      &:not([data-position='outside']) {
+        &[data-placement^='top'] {
+          top: 0;
+          bottom: auto;
+          left: 0;
+          padding-bottom: var(--neo-handle-padding, var(--neo-gap-xxs));
+        }
+
+        &[data-placement^='bottom'] {
+          top: auto;
+          bottom: 0;
+          left: 0;
+          padding-top: var(--neo-handle-padding, var(--neo-gap-xxs));
+        }
+
+        &[data-placement^='right'] {
+          top: 0;
+          right: 0;
+          left: auto;
+        }
+
+        &[data-placement^='left'] {
+          top: 0;
+          right: auto;
+          left: 0;
+        }
+      }
+
+      &[data-position='outside'] {
+        $height: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-height, 1rem) - var(--neo-handle-offset-elevation, 0px));
+        $width: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-width, 1rem) - var(--neo-handle-offset-elevation, 0px));
+
+        &[data-placement^='top'] {
+          top: var(--neo-handle-height, $height);
+          bottom: auto;
+          left: 0;
+        }
+
+        &[data-placement^='bottom'] {
+          top: auto;
+          bottom: var(--neo-handle-height, $height);
+          left: 0;
+        }
+
+        &[data-placement^='right'] {
+          top: 0;
+          right: var(--neo-handle-width, $width);
+          left: auto;
+        }
+
+        &[data-placement^='left'] {
+          top: 0;
+          right: auto;
+          left: var(--neo-handle-width, $width);
+        }
       }
     }
 
-    &[data-position='outside'] {
-      $height: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-height, 1rem) - var(--neo-handle-offset-elevation, 0px));
-      $width: calc(0% - var(--neo-border-width, 1px) - var(--neo-handle-offset-width, 1rem) - var(--neo-handle-offset-elevation, 0px));
-
-      &[data-placement^='top'] {
-        top: var(--neo-handle-height, $height);
-        bottom: auto;
-        left: 0;
-      }
-
-      &[data-placement^='bottom'] {
-        top: auto;
-        bottom: var(--neo-handle-height, $height);
-        left: 0;
-      }
-
-      &[data-placement^='right'] {
-        top: 0;
-        right: var(--neo-handle-width, $width);
-        left: auto;
-      }
-
-      &[data-placement^='left'] {
-        top: 0;
-        right: auto;
-        left: var(--neo-handle-width, $width);
-      }
-    }
   }
 </style>

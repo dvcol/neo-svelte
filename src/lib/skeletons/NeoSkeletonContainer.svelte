@@ -100,14 +100,18 @@
 {/if}
 
 <style lang="scss">
-  .neo-skeleton-container {
-    display: flex;
-    width: var(--neo-skeleton-content-width);
-    min-height: var(--neo-skeleton-content-height);
-  }
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-skeleton-content-container {
-    width: fit-content;
-    height: fit-content;
+  @include layers.neo-components {
+    .neo-skeleton-container {
+      display: flex;
+      width: var(--neo-skeleton-content-width);
+      min-height: var(--neo-skeleton-content-height);
+    }
+
+    .neo-skeleton-content-container {
+      width: fit-content;
+      height: fit-content;
+    }
   }
 </style>

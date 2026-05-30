@@ -298,21 +298,25 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-notification-stack {
-    z-index: var(--neo-z-index-layer-top, 2000000000);
-    width: 0;
-    height: 0;
-    list-style: none;
-    pointer-events: none;
+  @include layers.neo-components {
+    .neo-notification-stack {
+      z-index: var(--neo-z-index-layer-top, 2000000000);
+      width: 0;
+      height: 0;
+      list-style: none;
+      pointer-events: none;
 
-    @include mixin.fixed(
-      $margin: --neo-notification-margin,
-      $margin-top: --neo-notification-margin-top,
-      $margin-bottom: --neo-notification-margin-bottom,
-      $margin-left: --neo-notification-margin-left,
-      $margin-right: --neo-notification-margin-right,
-      $align-items: true,
-    );
+      @include mixin.fixed(
+        $margin: --neo-notification-margin,
+        $margin-top: --neo-notification-margin-top,
+        $margin-bottom: --neo-notification-margin-bottom,
+        $margin-left: --neo-notification-margin-left,
+        $margin-right: --neo-notification-margin-right,
+        $align-items: true,
+      );
+    }
+
   }
 </style>

@@ -413,81 +413,89 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-stepper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  @use 'src/lib/styles/layers' as layers;
 
-    &-progress {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      :global(> .neo-progress-bar > .neo-progress-bar-mark) {
-        --neo-btn-bg-color: var(--neo-stepper-mark-bg-color);
-
-        white-space: nowrap;
-      }
-    }
-
-    &-content {
+  @include layers.neo-components {
+    .neo-stepper {
       display: flex;
-      flex: 1 1 auto;
       flex-direction: column;
+      width: 100%;
 
-      &-step {
-        display: flex;
-        flex-direction: column;
-        padding: var(--neo-shadow-margin, 0.625rem);
-      }
-    }
-
-    &-controls {
-      display: flex;
-      justify-content: space-between;
-
-      &-lr {
+      &-progress {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
+
+        :global(> .neo-progress-bar > .neo-progress-bar-mark) {
+          --neo-btn-bg-color: var(--neo-stepper-mark-bg-color);
+
+          white-space: nowrap;
+        }
+      }
+
+      &-content {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+
+        &-step {
+          display: flex;
+          flex-direction: column;
+          padding: var(--neo-shadow-margin, 0.625rem);
+        }
+      }
+
+      &-controls {
+        display: flex;
         justify-content: space-between;
+
+        &-lr {
+          display: inline-flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+
+      // keep: order
+      &:not(.neo-vertical) {
+        &[data-placement='end'],
+        &[data-placement='end'] .neo-stepper-content {
+          flex-direction: column-reverse;
+        }
+
+        .neo-stepper-progress {
+          :global(> .neo-progress-bar) {
+            min-width: calc(4rem * var(--neo-stepper-steps, 1));
+
+            --neo-progress-margin-inline: var(--neo-stepper-mark-margin-start) var(--neo-stepper-mark-margin-end);
+          }
+
+          // keep: order
+          &:not(.neo-marks) :global(> .neo-progress-bar) {
+            --neo-progress-margin-inline: var(--neo-shadow-margin, 0.625rem);
+          }
+        }
+      }
+
+      &.neo-vertical {
+        flex-direction: row;
+
+        &[data-placement='end'] {
+          flex-direction: row-reverse;
+        }
+
+        .neo-stepper-progress {
+          :global(> .neo-progress-bar) {
+            min-height: calc(4rem * var(--neo-stepper-steps, 1));
+          }
+
+          // keep: order
+          &:not(.neo-marks) :global(> .neo-progress-bar) {
+            --neo-progress-margin-block: var(--neo-shadow-margin, 0.625rem);
+          }
+        }
       }
     }
 
-    &:not(.neo-vertical) {
-      &[data-placement='end'],
-      &[data-placement='end'] .neo-stepper-content {
-        flex-direction: column-reverse;
-      }
-
-      .neo-stepper-progress {
-        :global(> .neo-progress-bar) {
-          min-width: calc(4rem * var(--neo-stepper-steps, 1));
-
-          --neo-progress-margin-inline: var(--neo-stepper-mark-margin-start) var(--neo-stepper-mark-margin-end);
-        }
-
-        &:not(.neo-marks) :global(> .neo-progress-bar) {
-          --neo-progress-margin-inline: var(--neo-shadow-margin, 0.625rem);
-        }
-      }
-    }
-
-    &.neo-vertical {
-      flex-direction: row;
-
-      &[data-placement='end'] {
-        flex-direction: row-reverse;
-      }
-
-      .neo-stepper-progress {
-        :global(> .neo-progress-bar) {
-          min-height: calc(4rem * var(--neo-stepper-steps, 1));
-        }
-
-        &:not(.neo-marks) :global(> .neo-progress-bar) {
-          --neo-progress-margin-block: var(--neo-shadow-margin, 0.625rem);
-        }
-      }
-    }
   }
 </style>

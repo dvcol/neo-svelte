@@ -812,127 +812,133 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-list {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-
-    &-loader,
-    &-item {
+  @include layers.neo-components {
+    .neo-list {
       display: flex;
       flex-direction: column;
       width: 100%;
-      max-width: 100%;
-      color: var(--neo-list-item-color, inherit);
-      list-style-type: none;
-      transition: opacity 0.2s linear;
-      transition-delay: 0s;
-    }
-
-    &-empty {
-      position: relative;
-      display: flex;
-      flex-direction: column;
       height: 100%;
-      max-height: 100%;
-      margin: 0;
-      padding: 0;
-      border-radius: var(--neo-list-border-radius, var(--neo-border-radius));
-    }
 
-    :global {
-      .neo-list-items {
+      &-loader,
+      &-item {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        color: var(--neo-list-item-color, inherit);
+        list-style-type: none;
+        transition: opacity 0.2s linear;
+        transition-delay: 0s;
+      }
+
+      &-empty {
         position: relative;
         display: flex;
         flex-direction: column;
         height: 100%;
         max-height: 100%;
         margin: 0;
-        padding-inline: var(--neo-list-padding, 0.375rem);
-        padding-block: var(--neo-list-padding, 0.375rem);
-        overflow: auto;
+        padding: 0;
         border-radius: var(--neo-list-border-radius, var(--neo-border-radius));
+      }
 
-        &.neo-scroll {
-          padding-block: var(--neo-list-scroll-padding, 0.625rem);
+      :global {
+        .neo-list-items {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          max-height: 100%;
+          margin: 0;
+          padding-inline: var(--neo-list-padding, 0.375rem);
+          padding-block: var(--neo-list-padding, 0.375rem);
+          overflow: auto;
+          border-radius: var(--neo-list-border-radius, var(--neo-border-radius));
 
-          &.neo-shadow {
-            @include mixin.fade-scroll(1rem);
+          &.neo-scroll {
+            padding-block: var(--neo-list-scroll-padding, 0.625rem);
+
+            &.neo-shadow {
+              @include mixin.fade-scroll(1rem);
+            }
+
+            @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
           }
 
-          @include mixin.scrollbar($button-height: var(--neo-list-scrollbar-padding, 0.625rem));
+          &.neo-dim {
+            // keep: structural
+            &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
+            // keep: structural
+            &:has(.neo-list-item *:focus-visible) > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)) {
+              opacity: 0.6;
+              transition-timing-function: linear;
+              transition-duration: 0.6s;
+            }
+          }
+        }
+      }
+
+      &-loader.neo-select {
+        gap: var(--neo-gap-xs, 0.625rem);
+      }
+
+      &-item {
+        :global(> .neo-list-item-button) {
+          width: 100%;
         }
 
-        &.neo-dim {
-          &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
-          &:has(.neo-list-item *:focus-visible) > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)) {
-            opacity: 0.6;
-            transition-timing-function: linear;
-            transition-duration: 0.6s;
+        &-select {
+          :global(> .neo-list-base-loader:first-child) {
+            margin-top: 0.25rem;
+          }
+        }
+
+        :global(> .neo-list-item-divider) {
+          color: var(--neo-list-divider-color, var(--neo-text-color));
+          margin-block: 0.5rem;
+        }
+
+        &:hover,
+        &:focus,
+        &:focus-within {
+          :global(> .neo-list-section-title),
+          :global(> .neo-list-item-button .neo-list-item-content){
+            color: var(--neo-text-color-highlight);
+          }
+
+          :global(> .neo-list-item-button .neo-list-item-description),
+          :global(> .neo-list-item-button .neo-list-item-tags){
+            color: var(--neo-text-color-secondary-highlight);
+          }
+        }
+      }
+
+      &-empty-content {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        gap: var(--neo-gap-xxs, 0.5rem);
+        align-items: center;
+        justify-content: center;
+        min-width: var(--neo-list-min-width, 8rem);
+        min-height: var(--neo-list-min-height);
+      }
+
+      &.neo-flip {
+        flex-direction: column-reverse;
+        justify-content: end;
+
+        :global(.neo-list-items) {
+          // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
+          @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
+            flex-direction: column-reverse;
+            justify-content: end;
           }
         }
       }
     }
 
-    &-loader.neo-select {
-      gap: var(--neo-gap-xs, 0.625rem);
-    }
-
-    &-item {
-      :global(> .neo-list-item-button) {
-        width: 100%;
-      }
-
-      &-select {
-        :global(> .neo-list-base-loader:first-child) {
-          margin-top: 0.25rem;
-        }
-      }
-
-      :global(> .neo-list-item-divider) {
-        color: var(--neo-list-divider-color, var(--neo-text-color));
-        margin-block: 0.5rem;
-      }
-
-      &:hover,
-      &:focus,
-      &:focus-within {
-        :global(> .neo-list-section-title),
-        :global(> .neo-list-item-button .neo-list-item-content){
-          color: var(--neo-text-color-highlight);
-        }
-
-        :global(> .neo-list-item-button .neo-list-item-description),
-        :global(> .neo-list-item-button .neo-list-item-tags){
-          color: var(--neo-text-color-secondary-highlight);
-        }
-      }
-    }
-
-    &-empty-content {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      gap: var(--neo-gap-xxs, 0.5rem);
-      align-items: center;
-      justify-content: center;
-      min-width: var(--neo-list-min-width, 8rem);
-      min-height: var(--neo-list-min-height);
-    }
-
-    &.neo-flip {
-      flex-direction: column-reverse;
-      justify-content: end;
-
-      :global(.neo-list-items) {
-        // TODO: remove when Safari supports `flex-direction: column-reverse;` with correct padding
-        @supports not ((hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none)) {
-          flex-direction: column-reverse;
-          justify-content: end;
-        }
-      }
-    }
   }
 </style>

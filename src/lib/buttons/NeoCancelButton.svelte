@@ -27,21 +27,26 @@
 </div>
 
 <style lang="scss">
-  .neo-cancel-button {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
 
-    > :global(.neo-button) {
-      :global(.neo-icon) {
-        transition: rotate 0.3s ease;
-      }
+  @include layers.neo-components {
+    .neo-cancel-button {
+      display: contents;
 
-      &:focus,
-      &:hover {
+      > :global(.neo-button) {
         :global(.neo-icon) {
-          transition: rotate 0.3s ease-in-out;
-          rotate: -90deg;
+          transition: rotate 0.3s ease;
+        }
+
+        &:focus,
+        &:hover {
+          :global(.neo-icon) {
+            transition: rotate 0.3s ease-in-out;
+            rotate: -90deg;
+          }
         }
       }
     }
+
   }
 </style>

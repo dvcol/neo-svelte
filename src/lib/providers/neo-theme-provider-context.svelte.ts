@@ -6,7 +6,7 @@ import { getContext, setContext, untrack } from 'svelte';
 import { getRemember, getReset, getSource, getTheme, getTransition, NeoThemeRoot, NeoThemeStorageKey } from '~/providers/neo-theme-provider.model.js';
 import { NeoErrorThemeContextNotFound, NeoErrorThemeInvalidTarget, NeoErrorThemeTargetNotFound } from '~/utils/error.utils.js';
 
-import styles from '~/providers/neo-theme-provider.scss?url';
+import styles from '~/providers/neo-theme-provider.scss?inline';
 
 type NeoThemeProviderRoot = INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root']);
 
@@ -24,6 +24,28 @@ function resolveHost(root: INeoThemeProviderContext['root']): HTMLElement | null
     return root.host instanceof HTMLElement ? root.host : null;
   }
   return isRootElement(root) ? root : null;
+}
+
+/**
+ * Resolves the scope onto which a `CSSStyleSheet` should be adopted.
+ * Only `Document` and `ShadowRoot` expose `adoptedStyleSheets`; for plain
+ * elements we fall back to their owning document so theme styles still reach them.
+ */
+function resolveAdoptTarget(root: INeoThemeProviderContext['root']): Document | ShadowRoot | null {
+  if (!root) return null;
+  if (typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot) return root;
+  if (root instanceof Document) return root;
+  if (root instanceof HTMLElement) return root.ownerDocument ?? document;
+  return null;
+}
+
+let sheet: CSSStyleSheet | undefined;
+function getStyleSheet(): CSSStyleSheet {
+  if (!sheet) {
+    sheet = new CSSStyleSheet();
+    sheet.replaceSync(styles);
+  }
+  return sheet;
 }
 
 export function computeCircleStart(element?: HTMLElement, { viewportWidth = window.innerWidth, viewportHeight = window.innerHeight } = {}): { x?: number; y?: number } {
@@ -184,18 +206,14 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     if (!target) throw new NeoErrorThemeTargetNotFound();
     const host = resolveHost(target);
     if (!host) throw new NeoErrorThemeInvalidTarget();
-    if (host.parentElement?.querySelector('#neo-theme-provider')) return;
+    const adoptTarget = resolveAdoptTarget(target);
+    if (!adoptTarget) throw new NeoErrorThemeInvalidTarget();
 
-    const link = document.createElement('link');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('id', 'neo-theme-provider');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('href', new URL(styles, import.meta.url).href);
-    link.addEventListener('load', () => {
-      this.#ready = true;
-    });
-    if (host === document?.documentElement) document.head.appendChild(link);
-    else host.after(link);
+    const styleSheet = getStyleSheet();
+    if (!adoptTarget.adoptedStyleSheets.includes(styleSheet)) {
+      adoptTarget.adoptedStyleSheets = [...adoptTarget.adoptedStyleSheets, styleSheet];
+    }
+    this.#ready = true;
   }
 
   sync(trigger?: HTMLElement) {

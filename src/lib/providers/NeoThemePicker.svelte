@@ -89,15 +89,20 @@
 </NeoButtonGroup>
 
 <style lang="scss">
-  .neo-theme-picker {
-    --neo-color-picker-border-width: var(--neo-border-width-md);
-    --neo-color-picker-border-color: var(--neo-border-color);
+  @use 'src/lib/styles/layers' as layers;
 
-    display: inline-flex;
-    align-items: center;
+  @include layers.neo-components {
+    .neo-theme-picker {
+      --neo-color-picker-border-width: var(--neo-border-width-md);
+      --neo-color-picker-border-color: var(--neo-border-color);
 
-    &:last-child {
-      margin-right: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+
+      &:last-child {
+        margin-right: 0.5rem;
+      }
     }
+
   }
 </style>

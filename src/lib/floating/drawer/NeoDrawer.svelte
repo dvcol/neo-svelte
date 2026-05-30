@@ -86,33 +86,38 @@
 </div>
 
 <style lang="scss">
-  .neo-drawer {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
 
-    --neo-dialog-margin: none;
+  @include layers.neo-components {
+    .neo-drawer {
+      display: contents;
 
-    :global(> .neo-dialog[data-placement^='top']) {
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
+      --neo-dialog-margin: none;
+
+      :global(> .neo-dialog[data-placement^='top']) {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+
+      :global(> .neo-dialog[data-placement^='bottom']) {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      :global(> .neo-dialog[data-placement^='left']) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      :global(> .neo-dialog[data-placement^='right']) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      :global(> .neo-dialog.neo-full-size) {
+        border-radius: 0;
+      }
     }
 
-    :global(> .neo-dialog[data-placement^='bottom']) {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    :global(> .neo-dialog[data-placement^='left']) {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    :global(> .neo-dialog[data-placement^='right']) {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    :global(> .neo-dialog.neo-full-size) {
-      border-radius: 0;
-    }
   }
 </style>

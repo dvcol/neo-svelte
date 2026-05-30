@@ -436,113 +436,118 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  %input {
-    color: inherit;
-    font: inherit;
-    text-decoration: none;
-    text-overflow: ellipsis;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    transition:
-      opacity 0.1s ease-out,
-      color 0.1s ease-out;
-    appearance: none;
-
-    &::placeholder {
-      color: var(--neo-input-color-placeholder, var(--neo-text-color-disabled));
+  @include layers.neo-components {
+    %input {
+      color: inherit;
+      font: inherit;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      background-color: transparent;
+      border: none;
+      outline: none;
       transition:
         opacity 0.1s ease-out,
         color 0.1s ease-out;
+      appearance: none;
+
+      &::placeholder {
+        color: var(--neo-input-color-placeholder, var(--neo-text-color-disabled));
+        transition:
+          opacity 0.1s ease-out,
+          color 0.1s ease-out;
+      }
+
+      &:read-only {
+        cursor: inherit;
+      }
+
+      &:disabled {
+        color: var(--neo-input-color-disabled, var(--neo-text-color-disabled));
+        cursor: not-allowed;
+      }
     }
 
-    &:read-only {
-      cursor: inherit;
-    }
-
-    &:disabled {
-      color: var(--neo-input-color-disabled, var(--neo-text-color-disabled));
-      cursor: not-allowed;
-    }
-  }
-
-  .neo-input {
-    @extend %input;
-
-    display: inline-flex;
-    flex: 1 1 auto;
-    align-self: center;
-    box-sizing: border-box;
-    width: 100%;
-    min-width: var(--neo-input-min-width, 1ch);
-    max-width: 100%;
-    min-height: var(--neo-input-min-height, fit-content);
-    padding: var(--neo-input-padding, 0.75rem);
-    border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
-
-    &-display-content {
+    .neo-input {
       @extend %input;
 
-      margin: 0;
-      padding: 0;
-    }
+      display: inline-flex;
+      flex: 1 1 auto;
+      align-self: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: var(--neo-input-min-width, 1ch);
+      max-width: 100%;
+      min-height: var(--neo-input-min-height, fit-content);
+      padding: var(--neo-input-padding, 0.75rem);
+      border-radius: var(--neo-input-border-radius, var(--neo-border-radius));
 
-    &.neo-hide {
-      display: none;
-    }
+      &-display-content {
+        @extend %input;
 
-    &.neo-fit-content {
-      field-sizing: content;
-    }
+        margin: 0;
+        padding: 0;
+      }
 
-    &.neo-before {
-      padding-left: 0;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
+      &.neo-hide {
+        display: none;
+      }
 
-    &.neo-after {
-      padding-right: 0;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
+      &.neo-fit-content {
+        field-sizing: content;
+      }
 
-    &:is(select) {
-      overflow: auto;
-    }
+      &.neo-before {
+        padding-left: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
 
-    &[type='password']:not(:placeholder-shown, :-webkit-autofill:focus, :-webkit-autofill:active) {
-      letter-spacing: 0.2em;
-      -webkit-text-stroke-width: 0.15em;
+      &.neo-after {
+        padding-right: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
 
-      @supports (-webkit-touch-callout: none) or (hanging-punctuation: first) or (-moz-appearance: none) {
-        font: small-caption;
-        font-size: var(--neo-font-size-xs, 0.75rem);
-        line-height: var(--neo-line-height, 1.5rem);
+      &:is(select) {
+        overflow: auto;
+      }
+
+      // keep: a11y
+      &[type='password']:not(:placeholder-shown, :-webkit-autofill:focus, :-webkit-autofill:active) {
+        letter-spacing: 0.2em;
+        -webkit-text-stroke-width: 0.15em;
+
+        @supports (-webkit-touch-callout: none) or (hanging-punctuation: first) or (-moz-appearance: none) {
+          font: small-caption;
+          font-size: var(--neo-font-size-xs, 0.75rem);
+          line-height: var(--neo-line-height, 1.5rem);
+        }
+      }
+
+      &[type='search']::-webkit-search-decoration,
+      &[type='search']::-webkit-search-cancel-button,
+      &[type='search']::-webkit-search-results-button,
+      &[type='search']::-webkit-search-results-decoration {
+        appearance: none;
+      }
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:active {
+        @include mixin.autofill(--neo-input-text-color, $stroke: true);
+
+        &::selection {
+          background-color: oklch(from var(--neo-input-text-color, var(--neo-text-color, inherit)) calc(l + 0.3) c h / 20%);
+        }
+      }
+
+      &:-webkit-autofill::first-line {
+        @include mixin.autofill(--neo-input-text-color, $stroke: true);
       }
     }
 
-    &[type='search']::-webkit-search-decoration,
-    &[type='search']::-webkit-search-cancel-button,
-    &[type='search']::-webkit-search-results-button,
-    &[type='search']::-webkit-search-results-decoration {
-      appearance: none;
-    }
-
-    &:-webkit-autofill,
-    &:-webkit-autofill:hover,
-    &:-webkit-autofill:focus,
-    &:-webkit-autofill:active {
-      @include mixin.autofill(--neo-input-text-color, $stroke: true);
-
-      &::selection {
-        background-color: oklch(from var(--neo-input-text-color, var(--neo-text-color, inherit)) calc(l + 0.3) c h / 20%);
-      }
-    }
-
-    &:-webkit-autofill::first-line {
-      @include mixin.autofill(--neo-input-text-color, $stroke: true);
-    }
   }
 </style>

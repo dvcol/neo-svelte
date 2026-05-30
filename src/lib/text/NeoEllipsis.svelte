@@ -20,9 +20,12 @@
 </span>
 
 <style lang="scss">
+  @use 'src/lib/styles/layers' as layers;
   @use 'src/lib/styles/mixin' as mixin;
 
-  .neo-ellipsis {
-    @include mixin.ellipsis;
+  @include layers.neo-components {
+    .neo-ellipsis {
+      @include mixin.ellipsis;
+    }
   }
 </style>

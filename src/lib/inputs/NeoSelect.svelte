@@ -257,14 +257,19 @@
 />
 
 <style lang="scss">
-  .neo-select-autocomplete-hidden {
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    white-space: nowrap;
-    background: none;
-    border: none;
-    inset: 0;
+  @use 'src/lib/styles/layers' as layers;
+
+  @include layers.neo-components {
+    .neo-select-autocomplete-hidden {
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      white-space: nowrap;
+      background: none;
+      border: none;
+      inset: 0;
+    }
+
   }
 </style>

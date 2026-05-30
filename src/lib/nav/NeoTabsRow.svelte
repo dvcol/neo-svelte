@@ -211,20 +211,25 @@
 </NeoTabs>
 
 <style lang="scss">
-  .neo-tabs-row-collapse {
-    display: inline-flex;
+  @use 'src/lib/styles/layers' as layers;
 
-    &.neo-vertical {
-      width: 100%;
-    }
+  @include layers.neo-components {
+    .neo-tabs-row-collapse {
+      display: inline-flex;
 
-    :global(> .neo-tooltip-trigger) {
-      width: 100%;
-      height: 100%;
-
-      :global(svg) {
-        margin-inline: 0.25rem;
+      &.neo-vertical {
+        width: 100%;
       }
+
+      :global(> .neo-tooltip-trigger) {
+        width: 100%;
+        height: 100%;
+
+        :global(svg) {
+          margin-inline: 0.25rem;
+        }
+      }
+
     }
 
   }

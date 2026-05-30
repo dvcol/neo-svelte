@@ -123,25 +123,9 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-typewriter {
-    display: inline-block;
-    min-height: 1lh;
-    white-space: pre;
+  @use 'src/lib/styles/layers' as layers;
 
-    &.neo-caret::after {
-      display: inline-block;
-      width: 0.05ch;
-      height: 1.1em;
-      vertical-align: text-bottom;
-      background: currentcolor;
-      content: '';
-    }
-
-    &.neo-blink::after {
-      animation: blink 1s step-end infinite;
-    }
-  }
-
+  /* Keyframes stay outside the cascade — see src/lib/styles/AGENTS.md. */
   @keyframes blink {
     0%,
     100% {
@@ -150,6 +134,27 @@
 
     50% {
       opacity: 0;
+    }
+  }
+
+  @include layers.neo-components {
+    .neo-typewriter {
+      display: inline-block;
+      min-height: 1lh;
+      white-space: pre;
+
+      &.neo-caret::after {
+        display: inline-block;
+        width: 0.05ch;
+        height: 1.1em;
+        vertical-align: text-bottom;
+        background: currentcolor;
+        content: '';
+      }
+
+      &.neo-blink::after {
+        animation: blink 1s step-end infinite;
+      }
     }
   }
 </style>

@@ -104,6 +104,42 @@ To override a token in your app, set the variable on `[neo-theme-root]` (or any 
 }
 ```
 
+### Cascade layers
+
+`<NeoThemeProvider>` declares a single library-wide cascade-layer order in its adopted stylesheet:
+
+```css
+@layer neo-reset, neo-theme, neo-components, neo-variants, neo-states;
+```
+
+Every component scoped style block is layered into one of `neo-components`, `neo-variants`, or `neo-states` (low → high precedence within the library). The headline guarantee:
+
+> **Anything you write unlayered beats every neo-\* layer regardless of selector specificity.**
+
+So a one-off override is just:
+
+```css
+.neo-button {
+  border-radius: 0;
+}
+```
+
+— no `:where()` tricks, no `html .neo-button` hacks. As long as the rule lives in _your_ CSS (not inside a `@layer ...;`), it wins.
+
+If you want your overrides to participate in the cascade as a named layer, declare your own order including the `neo-*` layers and pin your layer between two of them. The recommended interleave gives consumer overrides the precedence the library used to grant via specificity:
+
+```css
+@layer neo-reset, app-base, neo-theme, neo-components, app-overrides, neo-variants, neo-states;
+
+@layer app-overrides {
+  .neo-button { border-radius: 0; } /* beats neo-components, loses to neo-variants/neo-states */
+}
+```
+
+`<NeoThemeProvider>` is required for both `--neo-*` tokens _and_ deterministic cascade ordering. Components rendered without the provider lose both — they will neither pick up theme variables nor a stable layer order. For shadow-DOM consumers, mount the provider inside the shadow root; for portal'd content rendered to `document.body`, mount a separate provider around the portal target (or use `NeoPortalTarget` / `NeoPortalContainer` to keep portals inside your shadow tree).
+
+> ⚠️ **Breaking change in this release.** Pre-cascade-layers, scoped library rules with Svelte's hashed selectors outranked most consumer CSS through specificity. Now, every library rule lives in a layer. Audit any selector targeting `.neo-*` in your app: stale dead overrides that previously failed silently will now apply. Either remove them or wrap intentional overrides in `@layer app-overrides { ... }` with the recommended order declaration above.
+
 ## Context-based state, not stores
 
 Two contexts cover most consumer needs:

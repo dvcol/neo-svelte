@@ -81,6 +81,8 @@
   </g>
 
   <style lang="scss">
+    @use 'src/lib/styles/layers' as layers;
+
     @mixin offset($x: 25%, $custom: --neo-arrow-offset) {
       &[data-direction='right'] {
         translate: calc(0% - var($custom, $x));
@@ -99,50 +101,52 @@
       }
     }
 
-    .neo-icon-arrow-chevron {
-      @include offset(25%, --neo-arrow-offset-start);
+    @include layers.neo-components {
+      .neo-icon-arrow-chevron {
+        @include offset(25%, --neo-arrow-offset-start);
 
-      transition: translate 0.2s linear;
-      transition-delay: var(--neo-arrow-delay, 0.15s);
+        transition: translate 0.2s linear;
+        transition-delay: var(--neo-arrow-delay, 0.15s);
 
-      &.neo-expanded {
-        translate: 0;
-        transition-delay: 0s;
-        stroke-dashoffset: 0;
+        &.neo-expanded {
+          translate: 0;
+          transition-delay: 0s;
+          stroke-dashoffset: 0;
+
+          &.neo-chevron {
+            @include offset(15%, --neo-arrow-offset-end);
+          }
+        }
+      }
+
+      .neo-icon-arrow-line {
+        transition: stroke-dashoffset 0.2s ease-out;
+        stroke-dashoffset: -20;
 
         &.neo-chevron {
+          display: none;
+        }
+
+        &.neo-expanded {
+          transition-delay: 0.06s;
+          transition-timing-function: ease-in;
+          stroke-dashoffset: 0;
+
+          &[data-direction='right'],
+          &[data-direction='left'] {
+            transition-duration: 0.25s;
+          }
+        }
+      }
+
+      @media (hover: none) and (pointer: coarse) {
+        .neo-icon-arrow-line {
+          display: none;
+        }
+
+        .neo-icon-arrow-chevron.neo-expanded {
           @include offset(15%, --neo-arrow-offset-end);
         }
-      }
-    }
-
-    .neo-icon-arrow-line {
-      transition: stroke-dashoffset 0.2s ease-out;
-      stroke-dashoffset: -20;
-
-      &.neo-chevron {
-        display: none;
-      }
-
-      &.neo-expanded {
-        transition-delay: 0.06s;
-        transition-timing-function: ease-in;
-        stroke-dashoffset: 0;
-
-        &[data-direction='right'],
-        &[data-direction='left'] {
-          transition-duration: 0.25s;
-        }
-      }
-    }
-
-    @media (hover: none) and (pointer: coarse) {
-      .neo-icon-arrow-line {
-        display: none;
-      }
-
-      .neo-icon-arrow-chevron.neo-expanded {
-        @include offset(15%, --neo-arrow-offset-end);
       }
     }
   </style>

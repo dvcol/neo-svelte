@@ -36,7 +36,11 @@
 </svg>
 
 <style lang="scss">
-  .neo-icon-double-chevron {
-    transition: translate 0.5s var(--neo-easing-overshoot-smooth, ease);
+  @use 'src/lib/styles/layers' as layers;
+
+  @include layers.neo-components {
+    .neo-icon-double-chevron {
+      transition: translate 0.5s var(--neo-easing-overshoot-smooth, ease);
+    }
   }
 </style>

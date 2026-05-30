@@ -58,33 +58,39 @@
 </fieldset>
 
 <style lang="scss">
-  .neo-fieldset {
-    box-sizing: border-box;
-    margin-inline: 0;
-    padding-block: var(--neo-gap-sm, 0.75rem);
-    padding-inline: var(--neo-gap, 1rem);
-    color: var(--neo-fieldset-color, inherit);
-    border: var(--neo-border-width, 1px) solid var(--neo-fieldset-border-color, transparent);
-    min-inline-size: min-content;
-    border-radius: var(--neo-border-radius);
-    transition: border-color 0.3s ease;
+  @use 'src/lib/styles/layers' as layers;
 
-    &-legend {
-      float: inline-start;
-      transition: color 0.3s ease;
-    }
+  @include layers.neo-components {
+    .neo-fieldset {
+      box-sizing: border-box;
+      margin-inline: 0;
+      padding-block: var(--neo-gap-sm, 0.75rem);
+      padding-inline: var(--neo-gap, 1rem);
+      color: var(--neo-fieldset-color, inherit);
+      border: var(--neo-border-width, 1px) solid var(--neo-fieldset-border-color, transparent);
+      min-inline-size: min-content;
+      border-radius: var(--neo-border-radius);
+      transition: border-color 0.3s ease;
 
-    &:not(.neo-borderless) {
-      border-color: var(--neo-fieldset-border-color, var(--neo-border-color));
-    }
+      &-legend {
+        float: inline-start;
+        transition: color 0.3s ease;
+      }
 
-    &:hover,
-    &:focus-within {
-      border-color: var(--neo-fieldset-border-color-hover, var(--neo-border-color-highlight));
+      // keep: order
+      &:not(.neo-borderless) {
+        border-color: var(--neo-fieldset-border-color, var(--neo-border-color));
+      }
 
-      .neo-fieldset-legend {
-        color: var(--neo-fieldset-legend-color-hover, var(--neo-text-color-highlight));
+      &:hover,
+      &:focus-within {
+        border-color: var(--neo-fieldset-border-color-hover, var(--neo-border-color-highlight));
+
+        .neo-fieldset-legend {
+          color: var(--neo-fieldset-legend-color-hover, var(--neo-text-color-highlight));
+        }
       }
     }
+
   }
 </style>

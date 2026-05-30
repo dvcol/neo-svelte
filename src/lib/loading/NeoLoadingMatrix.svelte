@@ -42,26 +42,30 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-loading-matrix {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-    justify-content: center;
-    opacity: 1;
-    transition: opacity 1s ease-in 0.2s;
+  @use 'src/lib/styles/layers' as layers;
 
-    :global(> .neo-loader) {
-      width: var(--neo-loader-width, 3rem);
-      min-width: var(--neo-loader-min-width, 3rem);
-      max-width: var(--neo-loader-max-width, 8dvh);
-      height: var(--neo-loader-height, 3rem);
-      min-height: var(--neo-loader-min-height, 3rem);
-      max-height: var(--neo-loader-max-height, 8dvh);
-      margin: var(--neo-loader-margin, 2rem);
+  @include layers.neo-components {
+    .neo-loading-matrix {
+      display: flex;
+      flex: 1 1 auto;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 1s ease-in 0.2s;
 
-      /* Adds 0.2s delay and 1s transition to loading indicator to prevent flashing */
-      @starting-style {
-        opacity: 0;
+      :global(> .neo-loader) {
+        width: var(--neo-loader-width, 3rem);
+        min-width: var(--neo-loader-min-width, 3rem);
+        max-width: var(--neo-loader-max-width, 8dvh);
+        height: var(--neo-loader-height, 3rem);
+        min-height: var(--neo-loader-min-height, 3rem);
+        max-height: var(--neo-loader-max-height, 8dvh);
+        margin: var(--neo-loader-margin, 2rem);
+
+        /* Adds 0.2s delay and 1s transition to loading indicator to prevent flashing */
+        @starting-style {
+          opacity: 0;
+        }
       }
     }
   }

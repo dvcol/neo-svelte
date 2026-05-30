@@ -246,50 +246,55 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-checkbox {
-    &-container {
-      --neo-label-margin: 0 0 0 0.75rem;
-      --neo-label-padding: 0;
+  @include layers.neo-components {
+    .neo-checkbox {
+      &-container {
+        --neo-label-margin: 0 0 0 0.75rem;
+        --neo-label-padding: 0;
 
-      display: inline-flex;
-      align-items: center;
-      width: fit-content;
-      margin: 0;
-      padding: calc(0.375rem + var(--neo-checkbox-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
-      border-radius: var(--neo-checkbox-border-radius, var(--neo-border-radius));
-      transition:
-        box-shadow 0.3s ease-out,
-        border-radius 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        margin: 0;
+        padding: calc(0.375rem + var(--neo-checkbox-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
+        border-radius: var(--neo-checkbox-border-radius, var(--neo-border-radius));
+        transition:
+          box-shadow 0.3s ease-out,
+          border-radius 0.3s ease;
 
-      &.neo-rounded {
-        border-radius: var(--neo-checkbox-border-radius, var(--neo-border-radius-xxl));
+        &.neo-rounded {
+          border-radius: var(--neo-checkbox-border-radius, var(--neo-border-radius-xxl));
+        }
+
+        &.neo-flat {
+          --neo-label-margin: 0 0 0 0.625rem;
+        }
+
+        &:hover {
+          :global(> .neo-checkbox-button) {
+            color: var(--neo-checkbox-color-hover, oklch(from var(--neo-checkbox-color, currentcolor) calc(l - 0.1) c h));
+          }
+
+          :global(> .neo-checkbox-button.neo-flat) {
+            border-color: var(--neo-checkbox-border-color-hover, var(--neo-border-color-highlight));
+          }
+
+          // keep: order
+          :global(> .neo-checkbox-button:not(.neo-disabled, .neo-flat)) {
+            box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
+          }
+        }
       }
 
-      &.neo-flat {
-        --neo-label-margin: 0 0 0 0.625rem;
-      }
-
-      &:hover {
-        :global(> .neo-checkbox-button) {
-          color: var(--neo-checkbox-color-hover, oklch(from var(--neo-checkbox-color, currentcolor) calc(l - 0.1) c h));
-        }
-
-        :global(> .neo-checkbox-button.neo-flat) {
-          border-color: var(--neo-checkbox-border-color-hover, var(--neo-border-color-highlight));
-        }
-
-        :global(> .neo-checkbox-button:not(.neo-disabled, .neo-flat)) {
-          box-shadow: var(--neo-checkbox-checked-shadow, var(--neo-box-shadow-pressed-2));
-        }
+      &-suffix {
+        width: 1rem;
+        height: 1rem;
+        margin-bottom: 0.125rem;
+        margin-left: 0.5rem;
       }
     }
 
-    &-suffix {
-      width: 1rem;
-      height: 1rem;
-      margin-bottom: 0.125rem;
-      margin-left: 0.5rem;
-    }
   }
 </style>

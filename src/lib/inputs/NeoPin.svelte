@@ -539,129 +539,137 @@
 {/if}
 
 <style lang="scss">
-  .neo-pin-container,
-  .neo-pin-group-wrapper,
-  .neo-pin-group,
-  .neo-pin-separator,
-  .neo-pin-before,
-  .neo-pin-after {
-    display: inline-flex;
-    align-items: center;
-  }
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-pin-group-wrapper,
-  .neo-pin-group {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .neo-pin-group-wrapper {
-    position: relative;
-  }
-
-  .neo-pin-autocomplete {
-    position: absolute;
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    white-space: nowrap;
-    background: none;
-    border: none;
-    inset: 0;
-  }
-
-  .neo-pin-hidden {
-    display: none;
-  }
-
-  .neo-pin-separator {
-    justify-content: center;
-    min-width: 2rem;
-  }
-
-  .neo-pin-spacer {
-    flex: 1 1 auto;
-  }
-
-  .neo-pin-before,
-  .neo-pin-after {
-    align-self: stretch;
-    justify-content: space-between;
-    margin: var(--neo-shadow-margin);
-  }
-
-  .neo-vertical {
-    flex-direction: column;
-  }
-
-  .neo-pin-container {
-    margin: var(--neo-shadow-margin, 0.625rem);
-
-    :global(.neo-input-pin.neo-input) {
-      width: 2.125rem;
-      padding: 0.5rem;
-      text-align: center;
-    }
-
-    :global(.neo-input-pin.neo-input[type='number']) {
-      /* Hide arrows -Firefox */
-      appearance: textfield;
-
-      /* Hide arrows - Chrome, Safari, Edge, Opera */
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        margin: 0;
-        appearance: none;
-      }
-    }
-
-    :global(.neo-input-group.neo-rounded .neo-input-pin.neo-input) {
-      width: 2.25rem;
-      padding: 0.5rem;
-    }
-
-    :global(.neo-input-pin.neo-input[type='password']:not(:placeholder-shown)) {
-      -webkit-text-stroke-width: 0.1em;
-      letter-spacing: 0;
-
-      @supports (-webkit-touch-callout: none) {
-        font: small-caption;
-        font-size: var(--neo-font-size, 1rem);
-      }
-    }
-
+  @include layers.neo-components {
+    .neo-pin-container,
+    .neo-pin-group-wrapper,
+    .neo-pin-group,
+    .neo-pin-separator,
+    .neo-pin-before,
     .neo-pin-after {
-      --neo-affix-padding: 0.75rem 0;
+      display: inline-flex;
+      align-items: center;
+    }
 
-      :global(.neo-password-toggle) {
-        min-width: 2.25rem;
-        min-height: 2.25rem;
-        margin: 0.125rem 0;
+    .neo-pin-group-wrapper,
+    .neo-pin-group {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .neo-pin-group-wrapper {
+      position: relative;
+    }
+
+    .neo-pin-autocomplete {
+      position: absolute;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      white-space: nowrap;
+      background: none;
+      border: none;
+      inset: 0;
+    }
+
+    .neo-pin-hidden {
+      display: none;
+    }
+
+    .neo-pin-separator {
+      justify-content: center;
+      min-width: 2rem;
+    }
+
+    .neo-pin-spacer {
+      flex: 1 1 auto;
+    }
+
+    .neo-pin-before,
+    .neo-pin-after {
+      align-self: stretch;
+      justify-content: space-between;
+      margin: var(--neo-shadow-margin);
+    }
+
+    .neo-vertical {
+      flex-direction: column;
+    }
+
+    .neo-pin-container {
+      margin: var(--neo-shadow-margin, 0.625rem);
+
+      :global(.neo-input-pin.neo-input) {
+        width: 2.125rem;
+        padding: 0.5rem;
+        text-align: center;
+      }
+
+      :global(.neo-input-pin.neo-input[type='number']) {
+        /* Hide arrows -Firefox */
+        appearance: textfield;
+
+        /* Hide arrows - Chrome, Safari, Edge, Opera */
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          margin: 0;
+          appearance: none;
+        }
+      }
+
+      :global(.neo-input-group.neo-rounded .neo-input-pin.neo-input) {
+        width: 2.25rem;
+        padding: 0.5rem;
+      }
+
+      // keep: a11y
+      :global(.neo-input-pin.neo-input[type='password']:not(:placeholder-shown)) {
+        -webkit-text-stroke-width: 0.1em;
+        letter-spacing: 0;
+
+        @supports (-webkit-touch-callout: none) {
+          font: small-caption;
+          font-size: var(--neo-font-size, 1rem);
+        }
+      }
+
+      .neo-pin-after {
+        --neo-affix-padding: 0.75rem 0;
+
+        :global(.neo-password-toggle) {
+          min-width: 2.25rem;
+          min-height: 2.25rem;
+          margin: 0.125rem 0;
+        }
+      }
+
+      &.neo-raised .neo-pin-after,
+      &.neo-deep.neo-pressed .neo-pin-after {
+        --neo-affix-padding: var(--neo-shadow-margin-lg, 1.125rem) 0;
+
+        :global(.neo-password-toggle) {
+          margin: 0.625rem 0;
+        }
+      }
+
+      &.neo-deep {
+        :global(.neo-input) {
+          aspect-ratio: 1;
+        }
+      }
+
+      // keep: order
+      &.neo-after:not(.neo-vertical) .neo-pin-after {
+        gap: 1.125rem;
+      }
+
+      // keep: order
+      &.neo-raised.neo-after:not(.neo-vertical) .neo-pin-after {
+        gap: 1.5rem;
       }
     }
 
-    &.neo-raised .neo-pin-after,
-    &.neo-deep.neo-pressed .neo-pin-after {
-      --neo-affix-padding: var(--neo-shadow-margin-lg, 1.125rem) 0;
-
-      :global(.neo-password-toggle) {
-        margin: 0.625rem 0;
-      }
-    }
-
-    &.neo-deep {
-      :global(.neo-input) {
-        aspect-ratio: 1;
-      }
-    }
-
-    &.neo-after:not(.neo-vertical) .neo-pin-after {
-      gap: 1.125rem;
-    }
-
-    &.neo-raised.neo-after:not(.neo-vertical) .neo-pin-after {
-      gap: 1.5rem;
-    }
   }
 </style>

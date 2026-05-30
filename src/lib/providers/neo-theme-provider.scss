@@ -1,18 +1,19 @@
-@use '../styles/reset' as reset;
-@use '../styles/theme' as theme;
+@use 'src/lib/styles/layers' as layers;
+@use 'src/lib/styles/reset' as reset;
+@use 'src/lib/styles/theme' as theme;
 
 /*
-  Declare layer order up-front so consumers can interleave their own layers
-  (e.g. `@layer neo-reset, app-base, neo-theme, app-components;`).
-  Unlayered rules — including Svelte's scoped `<style>` blocks inside a shadow
-  tree — always beat layered rules, so adoption no longer trumps component CSS.
+  Layer order is declared exactly once, here, by the mandatory provider mount.
+  Component scoped styles use `layers.neo-components / neo-variants / neo-states`
+  to opt their rules into the cascade. Unlayered consumer rules beat every
+  neo-* layer regardless of specificity. See `src/lib/styles/layers.scss`.
 */
-@layer neo-reset, neo-theme;
+@include layers.order;
 
-@layer neo-reset {
+@include layers.neo-reset {
   @include reset.nested;
 }
 
-@layer neo-theme {
+@include layers.neo-theme {
   @include theme.theme;
 }

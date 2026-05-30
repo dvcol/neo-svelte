@@ -1,0 +1,50 @@
+/*
+  Single owner of every `@layer` literal in the library. The `@layer order;`
+  declaration is provider-only — components must use only the wrap mixins
+  (`neo-components`, `neo-variants`, `neo-states`). See `src/lib/styles/AGENTS.md`.
+
+  Hierarchy (low → high precedence within the library; later wins):
+    neo-reset → neo-theme → neo-components → neo-variants → neo-states
+
+  Anything a consumer writes unlayered beats every neo-* layer regardless of
+  specificity. Layered consumers can interleave their own layers between any
+  pair, e.g.:
+    @layer neo-reset, app-base, neo-theme, neo-components, app-overrides,
+           neo-variants, neo-states;
+*/
+
+@mixin order {
+  @layer neo-reset, neo-theme, neo-components, neo-variants, neo-states;
+}
+
+@mixin neo-reset {
+  @layer neo-reset {
+    @content;
+  }
+}
+
+@mixin neo-theme {
+  @layer neo-theme {
+    @content;
+  }
+}
+
+@mixin neo-components {
+  @layer neo-reset, neo-theme, neo-components, neo-variants, neo-states;
+
+  @layer neo-components {
+    @content;
+  }
+}
+
+@mixin neo-variants {
+  @layer neo-variants {
+    @content;
+  }
+}
+
+@mixin neo-states {
+  @layer neo-states {
+    @content;
+  }
+}

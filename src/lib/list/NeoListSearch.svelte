@@ -166,16 +166,22 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-list-search {
-    display: inline-flex;
-    flex-direction: column;
+  @use 'src/lib/styles/layers' as layers;
 
-    &:not(.neo-flip) :global(> .neo-list-search-input) {
-      margin-bottom: 0;
+  @include layers.neo-components {
+    .neo-list-search {
+      display: inline-flex;
+      flex-direction: column;
+
+      // keep: order
+      &:not(.neo-flip) :global(> .neo-list-search-input) {
+        margin-bottom: 0;
+      }
+
+      &.neo-flip :global(.neo-list-search-input) {
+        margin-top: 0;
+      }
     }
 
-    &.neo-flip :global(.neo-list-search-input) {
-      margin-top: 0;
-    }
   }
 </style>

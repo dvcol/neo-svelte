@@ -269,150 +269,156 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-list-item {
-    &-label {
-      @include mixin.ellipsis($line: var(--neo-list-item-label-lines, 1));
+  @include layers.neo-components {
+    .neo-list-item {
+      &-label {
+        @include mixin.ellipsis($line: var(--neo-list-item-label-lines, 1));
 
-      line-height: var(--neo-line-height-sm, 1.25rem);
+        line-height: var(--neo-line-height-sm, 1.25rem);
 
-      &.neo-header {
-        font-weight: var(--neo-font-weight-md, 500);
-      }
-    }
-
-    &-description {
-      @include mixin.ellipsis($line: var(--neo-list-item-description-lines, 2));
-
-      color: var(--neo-text-color-secondary);
-      font-size: var(--neo-font-size-sm, 0.875rem);
-      line-height: var(--neo-line-height-sm, 1.25rem);
-      transition: color 0.15s ease;
-    }
-
-    &-text {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-
-      &:has(> .neo-list-item-label.neo-header) {
-        gap: var(--neo-list-item-text-gap, var(--neo-gap-5xs, 0.125rem));
-      }
-    }
-
-    &-tags {
-      --neo-btn-padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-3xs, 0.3125rem);
-      --neo-btn-margin: 0;
-      --neo-pill-padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-3xs, 0.3125rem);
-      --neo-pill-margin: 0;
-
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 0 var(--neo-gap-xxs, 0.5rem);
-      align-items: center;
-      color: var(--neo-text-color-secondary);
-      font-weight: var(--neo-font-weight-sm, 300);
-      font-size: var(--neo-font-size-sm, 0.875rem);
-      line-height: var(--neo-line-height-sm, 1.25rem);
-      transition: color 0.15s ease;
-
-      :global(.neo-list-item-tag.neo-pill.neo-borderless.neo-flat) {
-        --neo-pill-margin: 0 calc(0% - var(--neo-gap-3xs, 0.312 ));
-      }
-
-      :global(.neo-list-item-tag.neo-button.neo-borderless.neo-flat) {
-        --neo-btn-margin: 0 calc(0% - var(--neo-gap-3xs, 0.3125rem ));
-      }
-
-      :global(.neo-list-item-tag.neo-pill.neo-borderless.neo-flat:first-child) {
-        margin-inline-start: calc(-0.0625rem - var(--neo-gap-3xs, 0.3125rem ));
-
-      }
-
-      :global(.neo-list-item-tag.neo-button.neo-borderless.neo-flat:first-child) {
-        margin-inline-start: calc(-0.0625rem - var(--neo-gap-3xs, 0.3125rem ));
-      }
-    }
-
-    &-content {
-      display: inline-flex;
-      flex: 1 1 auto;
-      gap: var(--neo-gap-xxs, 0.5rem);
-      align-items: center;
-      padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-xxs, 0.5rem);
-      transition: color 0.15s ease, gap 0.3s ease;
-
-      :global(> .neo-list-item-media) {
-        --neo-media-margin: var(--neo-list-item-media-margin, var(--neo-gap-4xs));
-        --neo-media-padding:var(--neo-list-item-media-padding, var(--neo-gap-4xs));
-        --neo-media-flex: var(--neo-list-item-media-flex, 0 0 30%);
-      }
-
-      &.neo-disabled {
-        color: var(--neo-text-color-disabled);
-      }
-
-      &.neo-button {
-        padding: var(--neo-list-item-button-padding, 0.4375rem 0.625rem);
-
-        &.neo-rounded {
-          padding: var(--neo-list-item-button-padding, 0.5rem 0.75rem);
+        &.neo-header {
+          font-weight: var(--neo-font-weight-md, 500);
         }
       }
 
-      &.neo-reverse {
-        justify-content: flex-end;
-        text-align: end;
+      &-description {
+        @include mixin.ellipsis($line: var(--neo-list-item-description-lines, 2));
 
-        .neo-list-item-tags {
+        color: var(--neo-text-color-secondary);
+        font-size: var(--neo-font-size-sm, 0.875rem);
+        line-height: var(--neo-line-height-sm, 1.25rem);
+        transition: color 0.15s ease;
+      }
+
+      &-text {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+
+        &:has(> .neo-list-item-label.neo-header) {
+          gap: var(--neo-list-item-text-gap, var(--neo-gap-5xs, 0.125rem));
+        }
+      }
+
+      &-tags {
+        --neo-btn-padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-3xs, 0.3125rem);
+        --neo-btn-margin: 0;
+        --neo-pill-padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-3xs, 0.3125rem);
+        --neo-pill-margin: 0;
+
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0 var(--neo-gap-xxs, 0.5rem);
+        align-items: center;
+        color: var(--neo-text-color-secondary);
+        font-weight: var(--neo-font-weight-sm, 300);
+        font-size: var(--neo-font-size-sm, 0.875rem);
+        line-height: var(--neo-line-height-sm, 1.25rem);
+        transition: color 0.15s ease;
+
+        :global(.neo-list-item-tag.neo-pill.neo-borderless.neo-flat) {
+          --neo-pill-margin: 0 calc(0% - var(--neo-gap-3xs, 0.312 ));
+        }
+
+        :global(.neo-list-item-tag.neo-button.neo-borderless.neo-flat) {
+          --neo-btn-margin: 0 calc(0% - var(--neo-gap-3xs, 0.3125rem ));
+        }
+
+        :global(.neo-list-item-tag.neo-pill.neo-borderless.neo-flat:first-child) {
+          margin-inline-start: calc(-0.0625rem - var(--neo-gap-3xs, 0.3125rem ));
+
+        }
+
+        :global(.neo-list-item-tag.neo-button.neo-borderless.neo-flat:first-child) {
+          margin-inline-start: calc(-0.0625rem - var(--neo-gap-3xs, 0.3125rem ));
+        }
+      }
+
+      &-content {
+        display: inline-flex;
+        flex: 1 1 auto;
+        gap: var(--neo-gap-xxs, 0.5rem);
+        align-items: center;
+        padding: var(--neo-gap-5xs, 0.125rem) var(--neo-gap-xxs, 0.5rem);
+        transition: color 0.15s ease, gap 0.3s ease;
+
+        :global(> .neo-list-item-media) {
+          --neo-media-margin: var(--neo-list-item-media-margin, var(--neo-gap-4xs));
+          --neo-media-padding:var(--neo-list-item-media-padding, var(--neo-gap-4xs));
+          --neo-media-flex: var(--neo-list-item-media-flex, 0 0 30%);
+        }
+
+        &.neo-disabled {
+          color: var(--neo-text-color-disabled);
+        }
+
+        &.neo-button {
+          padding: var(--neo-list-item-button-padding, 0.4375rem 0.625rem);
+
+          &.neo-rounded {
+            padding: var(--neo-list-item-button-padding, 0.5rem 0.75rem);
+          }
+        }
+
+        &.neo-reverse {
           justify-content: flex-end;
           text-align: end;
+
+          .neo-list-item-tags {
+            justify-content: flex-end;
+            text-align: end;
+          }
+        }
+
+        // keep: order
+        &:hover:not(.neo-disabled, .neo-button) {
+          color: var(--neo-text-color-highlight);
+        }
+
+        &.neo-description {
+          gap: var(--neo-gap-xs, 0.625rem);
         }
       }
 
-      &:hover:not(.neo-disabled, .neo-button) {
-        color: var(--neo-text-color-highlight);
+      &-checkmark,
+      &-arrow {
+        aspect-ratio: 1 / 1;
       }
 
-      &.neo-description {
-        gap: var(--neo-gap-xs, 0.625rem);
+      &-arrow {
+        --neo-arrow-offset-start: 50%;
+        --neo-arrow-offset-end: 40%;
+        --neo-arrow-delay: 0s;
+      }
+
+      &-before,
+      &-after,
+      &-arrow,
+      &-checkmark {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.25rem;
+        min-height: 1.25rem;
+        text-align: center;
+        border-radius: 50%;
+        transition: background-color 0.3s ease-out;
+      }
+
+      &-checkmark {
+        // keep: order
+        &:not(.neo-reverse) {
+          margin-inline-end: 0.4375rem;
+        }
+
+        &.neo-reverse {
+          margin-inline-start: 0.4375rem;
+        }
       }
     }
 
-    &-checkmark,
-    &-arrow {
-      aspect-ratio: 1 / 1;
-    }
-
-    &-arrow {
-      --neo-arrow-offset-start: 50%;
-      --neo-arrow-offset-end: 40%;
-      --neo-arrow-delay: 0s;
-    }
-
-    &-before,
-    &-after,
-    &-arrow,
-    &-checkmark {
-      display: inline-flex;
-      flex: 0 0 auto;
-      align-items: center;
-      justify-content: center;
-      min-width: 1.25rem;
-      min-height: 1.25rem;
-      text-align: center;
-      border-radius: 50%;
-      transition: background-color 0.3s ease-out;
-    }
-
-    &-checkmark {
-      &:not(.neo-reverse) {
-        margin-inline-end: 0.4375rem;
-      }
-
-      &.neo-reverse {
-        margin-inline-start: 0.4375rem;
-      }
-    }
   }
 </style>

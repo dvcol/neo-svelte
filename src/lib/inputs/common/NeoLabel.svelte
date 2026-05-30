@@ -52,59 +52,64 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-label-container {
-    display: inline-flex;
-    flex: var(--neo-label-container-flex, 0 1 auto);
-    flex-direction: column;
+  @use 'src/lib/styles/layers' as layers;
 
-    .neo-label {
+  @include layers.neo-components {
+    .neo-label-container {
       display: inline-flex;
-      align-items: center;
-      box-sizing: border-box;
-      max-width: var(--neo-label-max-width);
-      margin: var(--neo-label-margin, var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem) 0);
-      padding: var(--neo-label-padding, 0 0.75rem);
-      overflow: hidden;
-      color: var(--neo-label-color, inherit);
-      text-wrap: stable;
-      text-overflow: ellipsis;
-      cursor: inherit;
-      transition: color 0.15s ease;
+      flex: var(--neo-label-container-flex, 0 1 auto);
+      flex-direction: column;
 
-      &:hover {
-        color: var(--neo-label-color-hover, var(--neo-text-color-highlight));
-      }
+      .neo-label {
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+        max-width: var(--neo-label-max-width);
+        margin: var(--neo-label-margin, var(--neo-shadow-margin, 0.625rem) var(--neo-shadow-margin, 0.625rem) 0);
+        padding: var(--neo-label-padding, 0 0.75rem);
+        overflow: hidden;
+        color: var(--neo-label-color, inherit);
+        text-wrap: stable;
+        text-overflow: ellipsis;
+        cursor: inherit;
+        transition: color 0.15s ease;
 
-      &.neo-required::after {
-        margin-left: 0.1rem;
-        color: var(--neo-label-required-color, var(--neo-color-error-75));
-        font-size: var(--neo-label-font-size, var(--neo-font-size, inherit));
-        content: '*';
-      }
+        &:hover {
+          color: var(--neo-label-color-hover, var(--neo-text-color-highlight));
+        }
 
-      &.neo-invalid {
-        color: var(--neo-label-color-error, var(--neo-color-error));
-      }
-
-      &.neo-valid {
-        color: var(--neo-label-color-success, var(--neo-color-success));
-      }
-
-      &.neo-disabled {
-        color: var(--neo-label-disabled-color, var(--neo-color-disabled));
+        &.neo-required::after {
+          margin-left: 0.1rem;
+          color: var(--neo-label-required-color, var(--neo-color-error-75));
+          font-size: var(--neo-label-font-size, var(--neo-font-size, inherit));
+          content: '*';
+        }
 
         &.neo-invalid {
-          color: var(--neo-input-color-error-disabled, var(--neo-color-error-50));
+          color: var(--neo-label-color-error, var(--neo-color-error));
         }
 
         &.neo-valid {
-          color: var(--neo-label-color-success-disabled, var(--neo-color-success-50));
+          color: var(--neo-label-color-success, var(--neo-color-success));
         }
 
-        &::after {
-          color: var(--neo-label-disabled-color, var(--neo-color-error-50));
+        &.neo-disabled {
+          color: var(--neo-label-disabled-color, var(--neo-color-disabled));
+
+          &.neo-invalid {
+            color: var(--neo-input-color-error-disabled, var(--neo-color-error-50));
+          }
+
+          &.neo-valid {
+            color: var(--neo-label-color-success-disabled, var(--neo-color-success-50));
+          }
+
+          &::after {
+            color: var(--neo-label-disabled-color, var(--neo-color-error-50));
+          }
         }
       }
     }
+
   }
 </style>

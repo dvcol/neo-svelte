@@ -55,8 +55,11 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-badge {
-    &-container {
+  @use 'src/lib/styles/layers' as layers;
+
+  @include layers.neo-components {
+    .neo-badge {
+      &-container {
       position: relative;
 
       :global(> .neo-badge-pill) {
@@ -124,5 +127,6 @@
         }
       }
     }
+  }
   }
 </style>

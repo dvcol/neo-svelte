@@ -172,50 +172,55 @@
 
 <style lang="scss">
   @use 'src/lib/styles/mixin' as mixin;
+  @use 'src/lib/styles/layers' as layers;
 
-  .neo-radio {
-    &-container {
-      --neo-label-margin: 0 0 0 0.75rem;
-      --neo-label-padding: 0;
+  @include layers.neo-components {
+    .neo-radio {
+      &-container {
+        --neo-label-margin: 0 0 0 0.75rem;
+        --neo-label-padding: 0;
 
-      display: inline-flex;
-      align-items: center;
-      width: fit-content;
-      margin: 0;
-      padding: calc(0.375rem + var(--neo-radio-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
-      border-radius: var(--neo-border-radius);
-      transition:
-        box-shadow 0.3s ease-out,
-        border-radius 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        margin: 0;
+        padding: calc(0.375rem + var(--neo-radio-border-width, var(--neo-border-width, 1px))) 0.5rem 0.375rem;
+        border-radius: var(--neo-border-radius);
+        transition:
+          box-shadow 0.3s ease-out,
+          border-radius 0.3s ease;
 
-      &.neo-rounded {
-        border-radius: var(--neo-border-radius-xxl);
+        &.neo-rounded {
+          border-radius: var(--neo-border-radius-xxl);
+        }
+
+        &.neo-flat {
+          --neo-label-margin: 0 0 0 0.625rem;
+        }
+
+        &:hover {
+          :global(> .neo-radio-button) {
+            color: var(--neo-radio-color-hover, oklch(from var(--neo-radio-color, currentcolor) calc(l - 0.1) c h));
+          }
+
+          :global(> .neo-radio-button.neo-flat) {
+            border-color: var(--neo-radio-border-color-hover, var(--neo-border-color-highlight));
+          }
+
+          // keep: order
+          :global(> .neo-radio-button:not(.neo-disabled, .neo-flat)) {
+            box-shadow: var(--neo-radio-checked-shadow, var(--neo-box-shadow-pressed-2));
+          }
+        }
       }
 
-      &.neo-flat {
-        --neo-label-margin: 0 0 0 0.625rem;
-      }
-
-      &:hover {
-        :global(> .neo-radio-button) {
-          color: var(--neo-radio-color-hover, oklch(from var(--neo-radio-color, currentcolor) calc(l - 0.1) c h));
-        }
-
-        :global(> .neo-radio-button.neo-flat) {
-          border-color: var(--neo-radio-border-color-hover, var(--neo-border-color-highlight));
-        }
-
-        :global(> .neo-radio-button:not(.neo-disabled, .neo-flat)) {
-          box-shadow: var(--neo-radio-checked-shadow, var(--neo-box-shadow-pressed-2));
-        }
+      &-suffix {
+        width: 1rem;
+        height: 1rem;
+        margin-bottom: 0.125rem;
+        margin-left: 0.5rem;
       }
     }
 
-    &-suffix {
-      width: 1rem;
-      height: 1rem;
-      margin-bottom: 0.125rem;
-      margin-left: 0.5rem;
-    }
   }
 </style>

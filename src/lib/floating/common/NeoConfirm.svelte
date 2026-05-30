@@ -144,83 +144,88 @@
 </svelte:element>
 
 <style lang="scss">
-  .neo-confirm {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    margin: var(--neo-confirm-margin, var(--neo-gap-xxs));
-    padding: var(--neo-confirm-padding, 0);
+  @use 'src/lib/styles/layers' as layers;
 
-    &-content {
+  @include layers.neo-components {
+    .neo-confirm {
       display: flex;
       flex: 1 1 auto;
       flex-direction: column;
+      margin: var(--neo-confirm-margin, var(--neo-gap-xxs));
+      padding: var(--neo-confirm-padding, 0);
 
-      &:has(> .neo-confirm-content-close) {
-        margin-top: 0.75rem;
-      }
-
-      &-close :global(> .neo-confirm-close .neo-confirm-control-close-button) {
-        float: right;
-        margin-top: -0.75rem;
-      }
-    }
-
-    &-header {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-
-      .neo-confirm-title {
+      &-content {
+        display: flex;
         flex: 1 1 auto;
-        margin-top: var(--neo-gap-3xs);
-        margin-bottom: 1rem;
+        flex-direction: column;
+
+        &:has(> .neo-confirm-content-close) {
+          margin-top: 0.75rem;
+        }
+
+        &-close :global(> .neo-confirm-close .neo-confirm-control-close-button) {
+          float: right;
+          margin-top: -0.75rem;
+        }
       }
-    }
 
-    &-close {
-      --neo-btn-padding-empty: var(--neo-gap-3xs);
-      --neo-btn-margin: 0;
+      &-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
 
-      align-self: flex-start;
-      opacity: 0.8;
-      transition: opacity 0.3s ease;
+        .neo-confirm-title {
+          flex: 1 1 auto;
+          margin-top: var(--neo-gap-3xs);
+          margin-bottom: 1rem;
+        }
+      }
 
-      :global(> .neo-confirm-control-close-button) {
+      &-close {
+        --neo-btn-padding-empty: var(--neo-gap-3xs);
+        --neo-btn-margin: 0;
+
         align-self: flex-start;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+
+        :global(> .neo-confirm-control-close-button) {
+          align-self: flex-start;
+        }
+      }
+
+      &-control {
+        display: flex;
+        gap: var(--neo-gap-sm);
+        justify-content: flex-end;
+        margin-top: var(--neo-gap-sm);
+        margin-bottom: var(--neo-gap-4xs);
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+        padding-inline: var(--neo-gap-3xs);
+
+        --neo-btn-margin: 0;
+      }
+
+      &:focus-within,
+      &:focus,
+      &:hover {
+        .neo-confirm-control,
+        .neo-confirm-close {
+          opacity: 1;
+        }
+      }
+
+      &.neo-rounded {
+        .neo-confirm-content-close {
+          margin-right: -0.25rem;
+        }
+
+        .neo-confirm-control {
+          margin-bottom: 0;
+        }
       }
     }
 
-    &-control {
-      display: flex;
-      gap: var(--neo-gap-sm);
-      justify-content: flex-end;
-      margin-top: var(--neo-gap-sm);
-      margin-bottom: var(--neo-gap-4xs);
-      opacity: 0.8;
-      transition: opacity 0.3s ease;
-      padding-inline: var(--neo-gap-3xs);
-
-      --neo-btn-margin: 0;
-    }
-
-    &:focus-within,
-    &:focus,
-    &:hover {
-      .neo-confirm-control,
-      .neo-confirm-close {
-        opacity: 1;
-      }
-    }
-
-    &.neo-rounded {
-      .neo-confirm-content-close {
-        margin-right: -0.25rem;
-      }
-
-      .neo-confirm-control {
-        margin-bottom: 0;
-      }
-    }
   }
 </style>

@@ -126,16 +126,21 @@
 </NeoButtonGroup>
 
 <style lang="scss">
-  .neo-button-row-collapse {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
 
-    :global(> .neo-tooltip-trigger) {
-      width: 100%;
-      height: 100%;
+  @include layers.neo-components {
+    .neo-button-row-collapse {
+      display: contents;
 
-      :global(svg) {
-        margin-inline: 0.25rem;
+      :global(> .neo-tooltip-trigger) {
+        width: 100%;
+        height: 100%;
+
+        :global(svg) {
+          margin-inline: 0.25rem;
+        }
       }
     }
+
   }
 </style>

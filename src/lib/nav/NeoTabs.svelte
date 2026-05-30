@@ -171,182 +171,192 @@
 {/if}
 
 <style lang="scss">
-  .neo-tabs {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
 
-    :global(> .neo-tabs-group .neo-tabs-add) {
-      min-width: 1rem;
-    }
+  @include layers.neo-components {
+    .neo-tabs {
+      display: contents;
 
-    &.neo-dim {
-      :global(> .neo-tabs-group:has(> .neo-tab *:focus-visible) > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))),
-      &:hover :global(> .neo-tabs-group > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))) {
-        opacity: 0.6;
-        transition-delay: 0.1s;
-        transition-timing-function: linear;
-        transition-duration: 0.4s;
-      }
-    }
-
-    &.neo-vertical {
-      :global(> .neo-tabs-group .neo-tab) {
-        position: relative;
-        width: 100%;
-        min-width: max-content;
+      :global(> .neo-tabs-group .neo-tabs-add) {
+        min-width: 1rem;
       }
 
-      :global(> .neo-tabs-group .neo-tab .neo-tab-button) {
-        justify-content: flex-start;
+      &.neo-dim {
+        // keep: structural
+        :global(> .neo-tabs-group:has(> .neo-tab *:focus-visible) > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))),
+        // keep: structural
+        &:hover :global(> .neo-tabs-group > .neo-tab:not(:hover, .neo-active, :has(*:focus-visible))) {
+          opacity: 0.6;
+          transition-delay: 0.1s;
+          transition-timing-function: linear;
+          transition-duration: 0.4s;
+        }
       }
 
-      &.neo-add :global(> .neo-tabs-group) {
-        padding-bottom: 0.5rem;
+      &.neo-vertical {
+        :global(> .neo-tabs-group .neo-tab) {
+          position: relative;
+          width: 100%;
+          min-width: max-content;
+        }
+
+        :global(> .neo-tabs-group .neo-tab .neo-tab-button) {
+          justify-content: flex-start;
+        }
+
+        &.neo-add :global(> .neo-tabs-group) {
+          padding-bottom: 0.5rem;
+        }
+
+        &.neo-line {
+          :global(> .neo-tabs-group .neo-tab::before) {
+            --neo-tab-width: 2px;
+            --neo-tab-old-width: 2px;
+            --neo-tab-old-max-height: calc(var(--neo-tab-old-height, 100%) - 1rem);
+            --neo-tab-max-height: calc(var(--neo-tab-height, 100%) - 1rem);
+
+            top: 0;
+            bottom: unset;
+            box-sizing: border-box;
+            width: 2px;
+            height: 0;
+            max-height: var(--neo-tab-max-height);
+            margin-left: 0.3rem;
+            transition: height 0.3s var(--neo-transition-bezier);
+            margin-block: 0.5rem;
+          }
+
+          :global(> .neo-tabs-group .neo-tab.neo-active::before) {
+            height: var(--neo-tab-height, 100%);
+          }
+        }
       }
 
-      &.neo-line {
+      // keep: order
+      &.neo-add:not(.neo-vertical) :global(> .neo-tabs-group) {
+        padding-right: 0.5rem;
+      }
+
+      &.neo-slide {
+        --neo-tab-width: 100%;
+        --neo-tab-height: 100%;
+
+        :global(> .neo-tabs-group .neo-tab .neo-tab-button) {
+          box-shadow: var(--neo-box-shadow-flat) !important;
+        }
+
+        :global(> .neo-tabs-group .neo-tab .neo-tab-button > .neo-content) {
+          scale: 1 !important;
+        }
+
+        :global(> .neo-tabs-group .neo-tab) {
+          position: relative;
+        }
+
         :global(> .neo-tabs-group .neo-tab::before) {
-          --neo-tab-width: 2px;
-          --neo-tab-old-width: 2px;
-          --neo-tab-old-max-height: calc(var(--neo-tab-old-height, 100%) - 1rem);
-          --neo-tab-max-height: calc(var(--neo-tab-height, 100%) - 1rem);
-
-          top: 0;
-          bottom: unset;
+          position: absolute;
+          z-index: var(--neo-z-index-in-front, 1);
           box-sizing: border-box;
-          width: 2px;
-          height: 0;
-          max-height: var(--neo-tab-max-height);
-          margin-left: 0.3rem;
-          transition: height 0.3s var(--neo-transition-bezier);
-          margin-block: 0.5rem;
+          background-color: var(--neo-tab-bg-color, transparent);
+          border: var(--neo-border-width, 1px) var(--neo-tab-border-color, transparent) solid;
+          border-radius: var(--neo-tab-border-radius, var(--neo-border-radius));
+          box-shadow: var(--neo-box-shadow-flat);
+          backface-visibility: hidden;
+          content: '';
+          pointer-events: none;
+          inset: 0;
         }
 
-        :global(> .neo-tabs-group .neo-tab.neo-active::before) {
-          height: var(--neo-tab-height, 100%);
-        }
-      }
-    }
-
-    &.neo-add:not(.neo-vertical) :global(> .neo-tabs-group) {
-      padding-right: 0.5rem;
-    }
-
-    &.neo-slide {
-      --neo-tab-width: 100%;
-      --neo-tab-height: 100%;
-
-      :global(> .neo-tabs-group .neo-tab .neo-tab-button) {
-        box-shadow: var(--neo-box-shadow-flat) !important;
-      }
-
-      :global(> .neo-tabs-group .neo-tab .neo-tab-button > .neo-content) {
-        scale: 1 !important;
-      }
-
-      :global(> .neo-tabs-group .neo-tab) {
-        position: relative;
-      }
-
-      :global(> .neo-tabs-group .neo-tab::before) {
-        position: absolute;
-        z-index: var(--neo-z-index-in-front, 1);
-        box-sizing: border-box;
-        background-color: var(--neo-tab-bg-color, transparent);
-        border: var(--neo-border-width, 1px) var(--neo-tab-border-color, transparent) solid;
-        border-radius: var(--neo-tab-border-radius, var(--neo-border-radius));
-        box-shadow: var(--neo-box-shadow-flat);
-        backface-visibility: hidden;
-        content: '';
-        pointer-events: none;
-        inset: 0;
-      }
-
-      &.neo-line :global(> .neo-tabs-group .neo-tab.neo-active::before) {
-        top: unset;
-        bottom: 0;
-        background-color: var(--neo-color-primary, var(--neo-text-color));
-        box-shadow: var(--neo-box-shadow-flat);
-      }
-
-      &.neo-line:not(.neo-vertical) {
-        :global(> .neo-tabs-group .neo-tab::before) {
-          --neo-tab-height: 2px;
-          --neo-tab-old-height: 2px;
-          --neo-tab-old-max-width: calc(var(--neo-tab-old-width, 100%) - 1.5rem);
-          --neo-tab-max-width: calc(var(--neo-tab-width, 100%) - 1.5rem);
-
+        &.neo-line :global(> .neo-tabs-group .neo-tab.neo-active::before) {
           top: unset;
           bottom: 0;
-          width: 0;
-          max-width: var(--neo-tab-max-width);
-          height: 2px;
-          margin-bottom: 0.125rem;
-          transition: height 0.3s var(--neo-transition-bezier);
-          margin-inline: 0.75rem;
-        }
-
-        :global(> .neo-tabs-group .neo-tab.neo-active::before) {
-          width: var(--neo-tab-width, 100%);
-        }
-      }
-
-      &.neo-pill:not(.neo-line) {
-        :global(> .neo-tabs-group .neo-tab::before) {
-          --neo-tabs-slide-box-shadow: var(--neo-box-shadow-flat);
-
-          z-index: var(--neo-z-index-behind, -1) !important;
-        }
-
-        :global(> .neo-tabs-group .neo-tab.neo-active::before) {
-          background-color: var(--neo-tab-bg-color, var(--neo-background-color-secondary));
-        }
-
-        &:hover :global(> .neo-tabs-group .neo-tab.neo-active::before) {
-          background-color: var(--neo-tab-bg-color-hover, var(--neo-background-color-secondary-hover));
-        }
-      }
-
-      :global(> .neo-tabs-group .neo-tab.neo-active::before) {
-        box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
-      }
-
-      &.neo-translate :global(.neo-tab.neo-active::before) {
-        animation: slide 0.6s var(--neo-transition-bezier) forwards;
-      }
-
-      @keyframes slide {
-        0% {
-          width: var(--neo-tab-old-width, var(--neo-tab-width, 100%));
-          max-width: var(--neo-tab-old-max-width);
-          height: var(--neo-tab-old-height, var(--neo-tab-height, 100%));
-          max-height: var(--neo-tab-old-max-height);
-          box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
-          transform: var(--neo-tabs-transform);
-        }
-
-        100% {
-          width: var(--neo-tab-width, 100%);
-          max-width: var(--neo-tab-max-width);
-          height: var(--neo-tab-height, 100%);
-          max-height: var(--neo-tab-max-height);
-          box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
-          transform: translate(0, 0);
-        }
-      }
-
-      @keyframes fade {
-        0% {
+          background-color: var(--neo-color-primary, var(--neo-text-color));
           box-shadow: var(--neo-box-shadow-flat);
         }
 
-        100% {
-          box-shadow: var(--neo-box-shadow-inset-3);
+        // keep: order
+        &.neo-line:not(.neo-vertical) {
+          :global(> .neo-tabs-group .neo-tab::before) {
+            --neo-tab-height: 2px;
+            --neo-tab-old-height: 2px;
+            --neo-tab-old-max-width: calc(var(--neo-tab-old-width, 100%) - 1.5rem);
+            --neo-tab-max-width: calc(var(--neo-tab-width, 100%) - 1.5rem);
+
+            top: unset;
+            bottom: 0;
+            width: 0;
+            max-width: var(--neo-tab-max-width);
+            height: 2px;
+            margin-bottom: 0.125rem;
+            transition: height 0.3s var(--neo-transition-bezier);
+            margin-inline: 0.75rem;
+          }
+
+          :global(> .neo-tabs-group .neo-tab.neo-active::before) {
+            width: var(--neo-tab-width, 100%);
+          }
+        }
+
+        // keep: order
+        &.neo-pill:not(.neo-line) {
+          :global(> .neo-tabs-group .neo-tab::before) {
+            --neo-tabs-slide-box-shadow: var(--neo-box-shadow-flat);
+
+            z-index: var(--neo-z-index-behind, -1) !important;
+          }
+
+          :global(> .neo-tabs-group .neo-tab.neo-active::before) {
+            background-color: var(--neo-tab-bg-color, var(--neo-background-color-secondary));
+          }
+
+          &:hover :global(> .neo-tabs-group .neo-tab.neo-active::before) {
+            background-color: var(--neo-tab-bg-color-hover, var(--neo-background-color-secondary-hover));
+          }
+        }
+
+        :global(> .neo-tabs-group .neo-tab.neo-active::before) {
+          box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
+        }
+
+        &.neo-translate :global(.neo-tab.neo-active::before) {
+          animation: slide 0.6s var(--neo-transition-bezier) forwards;
+        }
+
+        @keyframes slide {
+          0% {
+            width: var(--neo-tab-old-width, var(--neo-tab-width, 100%));
+            max-width: var(--neo-tab-old-max-width);
+            height: var(--neo-tab-old-height, var(--neo-tab-height, 100%));
+            max-height: var(--neo-tab-old-max-height);
+            box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
+            transform: var(--neo-tabs-transform);
+          }
+
+          100% {
+            width: var(--neo-tab-width, 100%);
+            max-width: var(--neo-tab-max-width);
+            height: var(--neo-tab-height, 100%);
+            max-height: var(--neo-tab-max-height);
+            box-shadow: var(--neo-tabs-slide-box-shadow, var(--neo-box-shadow-inset-2));
+            transform: translate(0, 0);
+          }
+        }
+
+        @keyframes fade {
+          0% {
+            box-shadow: var(--neo-box-shadow-flat);
+          }
+
+          100% {
+            box-shadow: var(--neo-box-shadow-inset-3);
+          }
+        }
+
+        &.neo-rounded :global(> .neo-tabs-group .neo-tab::before) {
+          border-radius: var(--neo-tab-border-radius, var(--neo-border-radius-xxl));
         }
       }
-
-      &.neo-rounded :global(> .neo-tabs-group .neo-tab::before) {
-        border-radius: var(--neo-tab-border-radius, var(--neo-border-radius-xxl));
-      }
     }
+
   }
 </style>

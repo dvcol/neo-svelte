@@ -66,7 +66,12 @@
 </form>
 
 <style lang="scss">
-  .neo-form {
-    display: contents;
+  @use 'src/lib/styles/layers' as layers;
+
+  @include layers.neo-components {
+    .neo-form {
+      display: contents;
+    }
+
   }
 </style>
