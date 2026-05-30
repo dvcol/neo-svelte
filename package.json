@@ -170,6 +170,18 @@
       "types": "./dist/utils/index.d.ts",
       "import": "./dist/utils/index.js",
       "svelte": "./dist/utils/index.js"
+    },
+    "./styles/*": {
+      "sass": "./dist/styles/*",
+      "style": "./dist/styles/*",
+      "import": "./dist/styles/*",
+      "default": "./dist/styles/*"
+    },
+    "./styles/*.scss": {
+      "sass": "./dist/styles/*.scss",
+      "style": "./dist/styles/*.scss",
+      "import": "./dist/styles/*.scss",
+      "default": "./dist/styles/*.scss"
     }
   },
   "types": "./dist/index.d.ts",
