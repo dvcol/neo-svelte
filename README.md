@@ -2,8 +2,8 @@
 <h3 align="center">A neo-morphic ui library for svelte 5</h3>
 
 <p>
-  <img src="https://img.shields.io/badge/pnpm-%3E%3D8.0.0-blue.svg" />
-  <img src="https://img.shields.io/badge/node-%3E%3D20.0.0-blue.svg" />
+  <img alt="pnpm version" src="https://img.shields.io/badge/pnpm-%3E%3D8.0.0-blue.svg" />
+  <img alt="node version" src="https://img.shields.io/badge/node-%3E%3D20.0.0-blue.svg" />
   <a href="https://github.com/dvcol/neo-svelte#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
@@ -74,7 +74,7 @@ See the full surface in the [`exports` map of `package.json`](./package.json).
 
 ```svelte
 <script lang="ts">
-  import { NeoThemeProvider, NeoThemePicker } from '@dvcol/neo-svelte';
+  import { NeoThemePicker, NeoThemeProvider } from '@dvcol/neo-svelte';
 </script>
 
 <NeoThemeProvider>

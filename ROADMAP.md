@@ -45,12 +45,10 @@ Tracks the component surface for Neo Svelte. See [README.md](./README.md) for en
   - [x] native
   - [x] custom
 - [x] form
-
   - [x] validation
   - [x] fieldset
 
 - [x] list
-
   - [x] select
     - [x] multiple
     - [x] disabled
@@ -69,7 +67,6 @@ Tracks the component surface for Neo Svelte. See [README.md](./README.md) for en
   - [ ] tree
 
 - [x] progress
-
   - [x] vertical
   - [ ] circular
   - [ ] meter (progress group)
@@ -81,14 +78,12 @@ Tracks the component surface for Neo Svelte. See [README.md](./README.md) for en
   - [x] start/stop/cancel/finish/reset
 
 - [x] collapse
-
   - [x] description
   - [x] vertical
   - [x] accordion
   - [x] controlled (min, max, toggle)
 
 - [x] stepper
-
   - [x] vertical
   - [ ] collapse
   - [x] progress/dots
@@ -96,13 +91,11 @@ Tracks the component surface for Neo Svelte. See [README.md](./README.md) for en
   - [x] touch swipe
 
 - [x] tooltip
-
   - [x] popconfirm
   - [x] popselect
   - [x] popstepper
 
 - [x] Modal/dialog
-
   - [x] HTML Dialog
     - [x] animation (slide/fade)
     - [x] stepper
@@ -119,7 +112,6 @@ Tracks the component surface for Neo Svelte. See [README.md](./README.md) for en
     - [ ] persistant
 
 - [ ] Command Palette
-
   - [ ] list
   - [ ] header
   - [ ] footer
@@ -128,7 +120,6 @@ Tracks the component surface for Neo Svelte. See [README.md](./README.md) for en
   - [ ] expanded buttons
 
 - [x] menu
-
   - [x] nested menus
   - [ ] collapsable (expand below)
   - [ ] menu pane (multi column, expand right/left)
@@ -161,7 +152,6 @@ Tracks the component surface for Neo Svelte. See [README.md](./README.md) for en
 - [ ] pagination
 
 - [ ] auto-complete
-
   - [ ] @ / # tags
   - [ ] select
   - [ ] multiple
@@ -173,22 +163,20 @@ Tracks the component surface for Neo Svelte. See [README.md](./README.md) for en
   - [ ] carousel
   - [ ] parallax
 - [ ] avatar
-
   - [x] badge
 
 - [x] PointerTracker (Pointer Events)
-
   - [x] track cursor
   - [x] grow to tabindex targets
   - [x] twist, tilt & pressure support (for supported pencils)
 
 - [ ] loader
   - [ ] spinner
-  - [X] matrix
+  - [x] matrix
   - [ ] pull to refresh (top, bottom, left, right)
   - [x] skeleton
   - [x] lazy load
-  - [X] suspense
+  - [x] suspense
 
 - [ ] text
   - [ ] elevation

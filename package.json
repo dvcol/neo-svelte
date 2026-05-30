@@ -176,9 +176,12 @@
   "files": [
     "!dist/**/*.spec.*",
     "!dist/**/*.test.*",
+    "AGENTS.md",
     "CHANGELOG.md",
+    "CLAUDE.md",
     "LICENSE",
     "README.md",
+    "USAGE.md",
     "dist"
   ],
   "engines": {

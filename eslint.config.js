@@ -4,9 +4,6 @@ export default defineSvelteConfig(
   {
     ignores: [
       '.github/copilot-instructions.md',
-      'README.md',
-      'AGENTS.md',
-      'ROADMAP.md',
       'CHANGELOG.md',
     ],
   },
