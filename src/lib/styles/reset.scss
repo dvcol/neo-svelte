@@ -81,7 +81,13 @@
 }
 
 @mixin nested($root: neo-reset) {
-  [#{$root}] {
+  /*
+    Dual heads — `[neo-reset]` matches the marked element wherever it sits in
+    the (light or shadow) DOM, `:host([neo-reset])` matches the shadow host
+    itself when the sheet is adopted onto a `ShadowRoot`.
+  */
+  [#{$root}],
+  :host([#{$root}]) {
     @include reset;
   }
 }

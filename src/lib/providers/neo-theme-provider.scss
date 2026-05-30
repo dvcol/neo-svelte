@@ -1,8 +1,18 @@
 @use '../styles/reset' as reset;
 @use '../styles/theme' as theme;
 
-// Inject reset styles
-@include reset.nested;
+/*
+  Declare layer order up-front so consumers can interleave their own layers
+  (e.g. `@layer neo-reset, app-base, neo-theme, app-components;`).
+  Unlayered rules — including Svelte's scoped `<style>` blocks inside a shadow
+  tree — always beat layered rules, so adoption no longer trumps component CSS.
+*/
+@layer neo-reset, neo-theme;
 
-// Inject theme styles
-@include theme.theme;
+@layer neo-reset {
+  @include reset.nested;
+}
+
+@layer neo-theme {
+  @include theme.theme;
+}
