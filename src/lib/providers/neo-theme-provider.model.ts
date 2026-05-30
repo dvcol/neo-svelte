@@ -62,6 +62,14 @@ export interface INeoThemeProviderContext {
    * The target to which scope the theme variables
    */
   readonly root?: HTMLElement | ShadowRoot;
+  /**
+   * The element used for attribute/style mutations.
+   *
+   * Resolves to `root.host` when `root` is a `ShadowRoot`, otherwise the
+   * `HTMLElement` itself. Use this when reading/writing attributes or
+   * inline styles intended to scope theme tokens.
+   */
+  readonly host?: HTMLElement | null;
 }
 
 export interface NeoThemeProviderProps<Tag extends keyof HTMLElementTagNameMap = 'div'> extends Omit<HTMLNeoBaseElement<HTMLElementTagNameMap[Tag]>, 'children'> {

@@ -2,6 +2,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { NeoThemeProviderContext } from '~/providers/neo-theme-provider-context.svelte.js';
 import {
   NeoSource,
   NeoTheme,
@@ -174,5 +175,60 @@ describe('neoThemeProvider — remember persists to localStorage', { tags: ['jsd
     expect(localStorage.getItem(NeoThemeStorageKey.Theme)).toBeNull();
     expect(localStorage.getItem(NeoThemeStorageKey.Source)).toBeNull();
     expect(localStorage.getItem(NeoThemeStorageKey.Reset)).toBeNull();
+  });
+});
+
+describe('neoThemeProvider — ShadowRoot target resolves to host', { tags: ['jsdom'] }, () => {
+  let hostEl: HTMLElement;
+  let shadow: ShadowRoot;
+
+  beforeEach(() => {
+    hostEl = document.createElement('div');
+    document.body.appendChild(hostEl);
+    shadow = hostEl.attachShadow({ mode: 'open' });
+  });
+
+  afterEach(() => {
+    hostEl.remove();
+  });
+
+  it('exposes `host` getter returning the ShadowRoot host', () => {
+    expect.assertions(2);
+    const ctx = new NeoThemeProviderContext({ root: shadow });
+    expect(ctx.root).toBe(shadow);
+    expect(ctx.host).toBe(hostEl);
+  });
+
+  it('exposes `host` via `state`', () => {
+    expect.assertions(1);
+    const ctx = new NeoThemeProviderContext({ root: shadow });
+    expect(ctx.state.host).toBe(hostEl);
+  });
+
+  it('sync() writes theme attributes onto the shadow host, not the ShadowRoot', () => {
+    expect.assertions(3);
+    const ctx = new NeoThemeProviderContext({ root: shadow, theme: NeoTheme.Dark, source: NeoSource.BottomRight });
+    ctx.sync();
+    expect(hostEl.hasAttribute(NeoThemeRoot)).toBe(true);
+    expect(hostEl.getAttribute(NeoThemeStorageKey.Theme)).toBe(NeoTheme.Dark);
+    expect(hostEl.getAttribute(NeoThemeStorageKey.Source)).toBe(NeoSource.BottomRight);
+  });
+
+  it('import() appends the stylesheet link as a sibling of the shadow host', () => {
+    expect.assertions(2);
+    const ctx = new NeoThemeProviderContext({ root: shadow });
+    ctx.import();
+    const link = hostEl.parentElement?.querySelector<HTMLLinkElement>('#neo-theme-provider');
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute('rel')).toBe('stylesheet');
+  });
+
+  it('destroy() removes theme attributes from the shadow host', () => {
+    expect.assertions(2);
+    const ctx = new NeoThemeProviderContext({ root: shadow, theme: NeoTheme.Dark });
+    ctx.sync();
+    expect(hostEl.hasAttribute(NeoThemeRoot)).toBe(true);
+    ctx.destroy();
+    expect(hostEl.hasAttribute(NeoThemeRoot)).toBe(false);
   });
 });

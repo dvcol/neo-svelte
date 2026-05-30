@@ -14,6 +14,18 @@ function isRootElement(root: INeoThemeProviderContext['root']): root is HTMLElem
   return !!root && root instanceof HTMLElement;
 }
 
+/**
+ * Resolves the element to use for attribute/style operations.
+ * `ShadowRoot` does not implement `setAttribute`, so we target its `host` instead.
+ */
+function resolveHost(root: INeoThemeProviderContext['root']): HTMLElement | null {
+  if (!root) return null;
+  if (typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot) {
+    return root.host instanceof HTMLElement ? root.host : null;
+  }
+  return isRootElement(root) ? root : null;
+}
+
 export function computeCircleStart(element?: HTMLElement, { viewportWidth = window.innerWidth, viewportHeight = window.innerHeight } = {}): { x?: number; y?: number } {
   if (!element) return {};
   // Get button's position relative to the viewport
@@ -34,25 +46,26 @@ export function computeCircleStart(element?: HTMLElement, { viewportWidth = wind
 }
 
 async function transitionViewTheme(root: INeoThemeProviderContext['root'], theme: INeoThemeProviderContext['theme'], trigger?: HTMLElement) {
-  if (trigger && isRootElement(root)) {
+  const host = resolveHost(root);
+  if (trigger && host) {
     const { x, y } = computeCircleStart(trigger);
-    if (x) root.style.setProperty('--neo-transition-trigger-x', `${x}%`);
-    if (y) root.style.setProperty('--neo-transition-trigger-y', `${y}%`);
+    if (x) host.style.setProperty('--neo-transition-trigger-x', `${x}%`);
+    if (y) host.style.setProperty('--neo-transition-trigger-y', `${y}%`);
   }
 
   const transition = document.startViewTransition(() => {
     if (!root) throw new NeoErrorThemeTargetNotFound();
-    if (!('setAttribute' in root)) throw new NeoErrorThemeInvalidTarget();
-    root.setAttribute(NeoThemeStorageKey.InFlight, 'true');
-    root.setAttribute(NeoThemeStorageKey.Theme, theme);
+    if (!host) throw new NeoErrorThemeInvalidTarget();
+    host.setAttribute(NeoThemeStorageKey.InFlight, 'true');
+    host.setAttribute(NeoThemeStorageKey.Theme, theme);
   });
 
   await transition.finished;
 
-  if (!isRootElement(root)) return;
-  root.removeAttribute(NeoThemeStorageKey.InFlight);
-  root.style.removeProperty('--neo-transition-trigger-x');
-  root.style.removeProperty('--neo-transition-trigger-y');
+  if (!host) return;
+  host.removeAttribute(NeoThemeStorageKey.InFlight);
+  host.style.removeProperty('--neo-transition-trigger-x');
+  host.style.removeProperty('--neo-transition-trigger-y');
 }
 
 export type NeoThemeProviderContextState = Partial<Omit<INeoThemeProviderContext, 'root'>> & { root?: NeoThemeProviderRoot };
@@ -62,7 +75,9 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
   #source = $state<INeoThemeProviderContext['source']>(getSource());
   #remember = $state<INeoThemeProviderContext['remember']>(getRemember());
   #transition = $state<INeoThemeProviderContext['transition']>(getTransition());
-  #root = $state<INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root'])>(document?.documentElement);
+  #resolver = $state<INeoThemeProviderContext['root'] | (() => INeoThemeProviderContext['root'])>(document?.documentElement);
+  #root = $derived<INeoThemeProviderContext['root']>(typeof this.#resolver === 'function' ? this.#resolver() : this.#resolver);
+  #host = $derived<HTMLElement | null>(resolveHost(this.#root));
   #ready = $state<INeoThemeProviderContext['ready']>(false);
 
   get reset() {
@@ -86,7 +101,18 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
   }
 
   get root() {
-    return typeof this.#root === 'function' ? this.#root() : this.#root;
+    return this.#root;
+  }
+
+  /**
+   * Element used for attribute/style mutations.
+   *
+   * When {@link root} is a `ShadowRoot` (which does not implement `setAttribute`),
+   * this resolves to its `host`. Consumers that need to read/write attributes or
+   * inline styles should target `host` instead of `root`.
+   */
+  get host(): HTMLElement | null {
+    return this.#host;
   }
 
   get ready() {
@@ -101,6 +127,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
       remember: this.remember,
       transition: this.transition,
       root: this.root,
+      host: this.host,
     };
   }
 
@@ -110,7 +137,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     this.#source = source ?? this.source;
     this.#remember = remember ?? this.remember;
     this.#transition = transition ?? this.transition;
-    this.#root = root ?? this.root;
+    this.#resolver = root ?? this.root;
   }
 
   update(partial: Partial<NeoThemeProviderContextState>, trigger?: HTMLElement) {
@@ -120,7 +147,7 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
       if (partial.source !== undefined) this.#source = partial.source;
       if (partial.remember !== undefined) this.#remember = partial.remember;
       if (partial.transition !== undefined) this.#transition = partial.transition;
-      if (partial.root !== undefined) this.#root = partial.root;
+      if (partial.root !== undefined) this.#resolver = partial.root;
 
       this.sync(trigger);
     });
@@ -128,33 +155,36 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
 
   private async setTheme(theme: INeoThemeProviderContext['theme'], trigger?: HTMLElement) {
     if (!this.root) throw new NeoErrorThemeTargetNotFound();
-    if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
-    if (this.theme === this.root.getAttribute(NeoThemeStorageKey.Theme)) {
-      return this.root.setAttribute(NeoThemeStorageKey.Transition, this.transition);
+    const host = this.host;
+    if (!host) throw new NeoErrorThemeInvalidTarget();
+    if (this.theme === host.getAttribute(NeoThemeStorageKey.Theme)) {
+      return host.setAttribute(NeoThemeStorageKey.Transition, this.transition);
     }
 
-    if ('startViewTransition' in document && this.root.getAttribute(NeoThemeStorageKey.Transition)?.startsWith('neo')) {
+    if ('startViewTransition' in document && host.getAttribute(NeoThemeStorageKey.Transition)?.startsWith('neo')) {
       return transitionViewTheme(this.root, theme, trigger);
     }
 
-    this.root.setAttribute(NeoThemeStorageKey.Transition, 'false');
-    this.root.setAttribute(NeoThemeStorageKey.Theme, theme);
+    host.setAttribute(NeoThemeStorageKey.Transition, 'false');
+    host.setAttribute(NeoThemeStorageKey.Theme, theme);
     await wait();
-    this.root.setAttribute(NeoThemeStorageKey.Transition, this.transition);
+    host.setAttribute(NeoThemeStorageKey.Transition, this.transition);
   }
 
   private setSource(source: INeoThemeProviderContext['source']) {
     if (!this.root) throw new NeoErrorThemeTargetNotFound();
-    if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
-    if (this.source === this.root.getAttribute(NeoThemeStorageKey.Source)) return;
+    const host = this.host;
+    if (!host) throw new NeoErrorThemeInvalidTarget();
+    if (this.source === host.getAttribute(NeoThemeStorageKey.Source)) return;
 
-    this.root.setAttribute(NeoThemeStorageKey.Source, source);
+    host.setAttribute(NeoThemeStorageKey.Source, source);
   }
 
   import(target = this.root) {
     if (!target) throw new NeoErrorThemeTargetNotFound();
-    if (!('setAttribute' in target)) throw new NeoErrorThemeInvalidTarget();
-    if (target.parentElement?.querySelector('#neo-theme-provider')) return;
+    const host = resolveHost(target);
+    if (!host) throw new NeoErrorThemeInvalidTarget();
+    if (host.parentElement?.querySelector('#neo-theme-provider')) return;
 
     const link = document.createElement('link');
     link.setAttribute('type', 'text/css');
@@ -164,21 +194,22 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
     link.addEventListener('load', () => {
       this.#ready = true;
     });
-    if (target === document?.documentElement) document.head.appendChild(link);
-    else target.after(link);
+    if (host === document?.documentElement) document.head.appendChild(link);
+    else host.after(link);
   }
 
   sync(trigger?: HTMLElement) {
     if (!this.root) throw new NeoErrorThemeTargetNotFound();
-    if (!('setAttribute' in this.root)) throw new NeoErrorThemeInvalidTarget();
+    const host = this.host;
+    if (!host) throw new NeoErrorThemeInvalidTarget();
 
     this.import(this.root);
-    this.root.setAttribute(NeoThemeRoot, '');
+    host.setAttribute(NeoThemeRoot, '');
     void this.setTheme(this.theme, trigger);
     this.setSource(this.source);
 
-    if (this.reset) this.root.setAttribute(NeoThemeStorageKey.Reset, '');
-    else this.root.removeAttribute(NeoThemeStorageKey.Reset);
+    if (this.reset) host.setAttribute(NeoThemeStorageKey.Reset, '');
+    else host.removeAttribute(NeoThemeStorageKey.Reset);
 
     if (!localStorage) return;
 
@@ -199,13 +230,14 @@ export class NeoThemeProviderContext implements INeoThemeProviderContext {
 
   destroy() {
     if (!this.root) return;
-    if (!('removeAttribute' in this.root)) return;
+    const host = this.host;
+    if (!host) return;
 
-    this.root.removeAttribute(NeoThemeRoot);
-    this.root.removeAttribute(NeoThemeStorageKey.Reset);
-    this.root.removeAttribute(NeoThemeStorageKey.Theme);
-    this.root.removeAttribute(NeoThemeStorageKey.Source);
-    this.root.removeAttribute(NeoThemeStorageKey.Transition);
+    host.removeAttribute(NeoThemeRoot);
+    host.removeAttribute(NeoThemeStorageKey.Reset);
+    host.removeAttribute(NeoThemeStorageKey.Theme);
+    host.removeAttribute(NeoThemeStorageKey.Source);
+    host.removeAttribute(NeoThemeStorageKey.Transition);
     this.#ready = false;
   }
 }

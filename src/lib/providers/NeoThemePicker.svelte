@@ -25,7 +25,7 @@
   const context = useNeoThemeContext();
 
   const theme = $derived(context.theme);
-  const target = $derived(context.root);
+  const target = $derived(context.host);
 
   const backgrounds = $state<Record<NeoThemes, string>>({ [NeoTheme.Light]: '', [NeoTheme.Dark]: '' });
   const texts = $state<Record<NeoThemes, string>>({ [NeoTheme.Light]: '', [NeoTheme.Dark]: '' });
@@ -39,7 +39,7 @@
   };
 
   $effect(() => {
-    if (!target || !('style' in target)) return;
+    if (!target) return;
 
     const isLight = theme === NeoTheme.Light;
     const bgVar = isLight ? '--neo-background-color' : '--neo-dark-background-color';
