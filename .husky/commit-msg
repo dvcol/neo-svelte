@@ -1,1 +1,89 @@
-npx -s commitlint --edit "$1"
+if [ "$CI" = "true" ] || [ "$GITHUB_ACTIONS" = "true" ] || [ "$SKIP_COMMIT_MSG_HOOK" = "true" ]; then
+  exit 0
+fi
+
+commit_msg_file=$1
+commit_msg=$(cat "$commit_msg_file")
+
+# -----------------------------------------------------------------------------
+# Expand short type prefixes to full conventional commit types.
+# Preserves any explicit scope written by the user.
+# -----------------------------------------------------------------------------
+commit_msg=$(echo "$commit_msg" | sed -E \
+  -e 's/^(c)(\(.+\))?:/chore\2:/' \
+  -e 's/^(f)(\(.+\))?:/feat\2:/' \
+  -e 's/^(x)(\(.+\))?:/fix\2:/' \
+  -e 's/^(d)(\(.+\))?:/docs\2:/' \
+  -e 's/^(r)(\(.+\))?:/refactor\2:/' \
+  -e 's/^(s)(\(.+\))?:/style\2:/' \
+  -e 's/^(t)(\(.+\))?:/test\2:/' \
+  -e 's/^(p)(\(.+\))?:/perf\2:/' \
+  -e 's/^(b)(\(.+\))?:/build\2:/')
+
+# If the user already wrote a scope, accept it as-is and run commitlint.
+if echo "$commit_msg" | grep -qE '^[a-z]+\(.*\):'; then
+  echo "$commit_msg" > "$commit_msg_file"
+  npx -s commitlint --edit "$commit_msg_file"
+  exit 0
+fi
+
+# -----------------------------------------------------------------------------
+# Derive a scope from staged files.
+#   src/<folder>/...     -> <folder>
+#   .<dotdir>/...        -> ci
+#   <root file>          -> ci
+#   <other top dir>/...  -> <other top dir>
+# Multiple distinct scopes -> drop the scope entirely.
+# -----------------------------------------------------------------------------
+staged_files=$(git diff --cached --name-only)
+dirs=()
+
+while IFS= read -r file; do
+  [ -z "$file" ] && continue
+
+  # Root-level file (no slash) -> ci
+  if ! echo "$file" | grep -q '/'; then
+    dirs+=("ci")
+    continue
+  fi
+
+  top_dir=$(echo "$file" | cut -d/ -f1)
+
+  # Dot-prefixed dir (.github, .husky, .idea, ...) -> ci
+  case "$top_dir" in
+    .*)
+      dirs+=("ci")
+      continue
+      ;;
+  esac
+
+  # src/<folder>/... -> <folder>; src/<file> -> src
+  if [ "$top_dir" = "src" ]; then
+    if echo "$file" | cut -d/ -f3- | grep -q .; then
+      dirs+=("$(echo "$file" | cut -d/ -f2)")
+    else
+      dirs+=("src")
+    fi
+    continue
+  fi
+
+  # Any other top-level folder -> use its name verbatim
+  dirs+=("$top_dir")
+done <<EOF
+$staged_files
+EOF
+
+scope=""
+if [ "${#dirs[@]}" -gt 0 ]; then
+  unique_dirs=$(printf "%s\n" "${dirs[@]}" | sort -u)
+  if [ "$(echo "$unique_dirs" | wc -l | tr -d ' ')" -eq 1 ]; then
+    scope="$unique_dirs"
+  fi
+fi
+
+if [ -n "$scope" ]; then
+  commit_msg=$(echo "$commit_msg" | sed -E "s/^([a-z]+):/\1($scope):/")
+fi
+
+echo "$commit_msg" > "$commit_msg_file"
+npx -s commitlint --edit "$commit_msg_file"
