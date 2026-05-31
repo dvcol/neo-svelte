@@ -21,7 +21,7 @@
   import { useIntersection } from '@dvcol/svelte-utils/intersection';
   import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze, toAnimation, toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
   import { watch } from '@dvcol/svelte-utils/watch';
-  import { tick } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
   import NeoDivider from '~/divider/NeoDivider.svelte';
@@ -379,10 +379,13 @@
     if (scrolling !== v) scrolling = v;
   });
 
-  const debouncedScroll: NonNullable<NeoListProps['onscroll']> = debounce((e) => {
+  const debouncedScroll = debounce((e: SvelteEvent<UIEvent, HTMLUListElement>) => {
     rest?.onscroll?.(e);
     onScrollEvent(e);
   }, 25);
+  // Cancel the pending trailing scroll callback so a navigate-away mid-debounce
+  // doesn't fire after the component is gone.
+  onDestroy(() => debouncedScroll.cancel());
 
   const onscroll: NeoListProps['onscroll'] = (e) => {
     scrollingTracker.mark();
