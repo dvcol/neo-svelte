@@ -190,7 +190,24 @@
     id: getUUID(),
   })));
 
+  /*
+   * Smaller dataset for the *non-virtual* NeoList demos. Mounting 1000
+   * non-virtual rows triggers a multi-second style-recalc storm during the
+   * route fade-in (see .claude/plans/lists-page-stutter.md). The stress
+   * toggle below opts back into the heavy dataset for benchmarking.
+   */
+  const generatedSmall = $state(Array.from({ length: 50 }).fill(0).map((_, i) => ({
+    label: `Virtual item ${i + 1}`,
+    description: randomDescription(),
+    tags: ['virtual', 'list', 'item', 'demo'],
+    value: i + 1,
+    id: getUUID(),
+  })));
+
+  let stress = $state(false);
+
   const virtual = $derived(isEmpty ? [] : generated);
+  const nonVirtual = $derived<NeoListProps['items']>(isEmpty ? [] : (stress ? generated : generatedSmall));
 
   /*
    * Sectioned dataset — five buckets of 100 items each — used by the
@@ -214,7 +231,24 @@
     })),
   );
 
+  const generatedSectionsSmall = $state<NeoListSection[]>(
+    Array.from({ length: 5 }).map((_, s) => ({
+      id: getUUID(),
+      label: `Group ${s + 1}`,
+      divider: true,
+      sticky: true,
+      readonly: s === 3,
+      items: Array.from({ length: 10 }).map((__, i) => ({
+        label: `Group ${s + 1} — item ${i + 1}`,
+        description: randomDescription(),
+        value: `${s + 1}-${i + 1}`,
+        id: getUUID(),
+      })),
+    })),
+  );
+
   const virtualSections = $derived<NeoListProps['items']>(isEmpty ? [] : generatedSections);
+  const nonVirtualSections = $derived<NeoListProps['items']>(isEmpty ? [] : (stress ? generatedSections : generatedSectionsSmall));
 
   let hovered = $state(false);
   let focused = $state(false);
@@ -264,6 +298,7 @@
     <NeoButton toggle bind:checked={options.reverse}>Reverse</NeoButton>
     <NeoButton toggle bind:checked={options.flip}>Flip</NeoButton>
     <NeoButton toggle bind:checked={options.dim}>Dim</NeoButton>
+    <NeoButton toggle bind:checked={stress} title="Mount the 1000-row dataset for the non-virtual demos">Stress test</NeoButton>
   </NeoButtonGroup>
 
   <NeoButtonGroup text rounded>
@@ -308,7 +343,7 @@
     <!-- NeoList non-virtual (1k items, baseline) -->
     <div class="column content">
       <span class="label">NeoList (non-virtual)</span>
-      <NeoList aria-label="Non-virtual list" {...options} items={virtual} />
+      <NeoList aria-label="Non-virtual list" {...options} items={nonVirtual} />
     </div>
 
     <!-- NeoList virtual (sugar over NeoVirtualList) -->
@@ -339,7 +374,7 @@
   <div class="row">
     <div class="column content">
       <span class="label">NeoList sections (non-virtual)</span>
-      <NeoList aria-label="Non-virtual sectioned list" select multiple {...options} items={virtualSections} />
+      <NeoList aria-label="Non-virtual sectioned list" select multiple {...options} items={nonVirtualSections} />
     </div>
 
     <div class="column content">
