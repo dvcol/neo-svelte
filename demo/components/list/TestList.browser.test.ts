@@ -1,4 +1,6 @@
-import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -19,8 +21,8 @@ describe('neoList — visual contract (themed)', { tags: ['browser', 'visual'] }
     quietForVisual();
   });
 
-  it('sectioned / multi-select / tinted / glass / disabled / empty matrix (desktop)', { timeout: 30000 }, async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('sectioned / multi-select / tinted / glass / disabled / empty matrix (%s)', { timeout: 30000 }, async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: {} as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -38,7 +40,7 @@ describe('neoList — visual contract (themed)', { tags: ['browser', 'visual'] }
     if (loaders.length) await Promise.all(loaders.map(async l => waitForVisualStability(l)));
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoList', 'matrix', 'desktop'),
+      screenshotName('NeoList', 'matrix', viewport),
     );
   });
 });

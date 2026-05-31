@@ -1,4 +1,6 @@
-import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -19,8 +21,8 @@ describe('neoCursor — visual contract (themed)', { tags: ['browser', 'visual']
     quietForVisual();
   });
 
-  it('cursor-pointer state matrix (default / snapping / text / touching)', async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('cursor-pointer state matrix (%s)', async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: {} as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -34,7 +36,7 @@ describe('neoCursor — visual contract (themed)', { tags: ['browser', 'visual']
     });
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoCursor', 'matrix', 'desktop'),
+      screenshotName('NeoCursor', 'matrix', viewport),
     );
   });
 });

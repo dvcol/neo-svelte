@@ -1,4 +1,6 @@
-import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -8,6 +10,8 @@ import { page } from 'vitest/browser';
 import GroupHarness from '~/collapse/NeoCollapseGroup.test.svelte';
 
 import VisualHarness from './TestAccordion.browser.test.svelte';
+import VisualHarnessGuarded from './TestAccordion.guarded.browser.test.svelte';
+import VisualHarnessStates from './TestAccordion.states.browser.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -97,8 +101,8 @@ describe('neoAccordion — visual contract (themed)', { tags: ['browser', 'visua
     quietForVisual();
   });
 
-  it('three sections, second one expanded (desktop)', async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('three sections, second open (%s)', async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, {
       props: {
         sections: [
@@ -123,7 +127,43 @@ describe('neoAccordion — visual contract (themed)', { tags: ['browser', 'visua
     await waitForVisualStability(openContent);
     await waitForVisualStability(accordion);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoAccordion', 'three-sections-second-open', 'desktop'),
+      screenshotName('NeoAccordion', 'three-sections-second-open', viewport),
+    );
+  });
+
+  it('states grid — idle / expanded / focused / disabled (desktop)', async () => {
+    await setViewport('desktop');
+    render(VisualHarnessStates, { props: {} as never });
+    const stage = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLElement>('[data-testid="visual-stage"]');
+      if (!el) throw new Error('stage not mounted');
+      return el;
+    });
+    await vi.waitFor(() => {
+      const accordions = stage.querySelectorAll<HTMLElement>('.neo-accordion');
+      expect(accordions.length).toBe(4);
+    });
+    await waitForVisualStability(stage);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoAccordion', 'states', 'desktop'),
+    );
+  });
+
+  it('guarded pairs — flat+borderless / segmented vertical / segmented horizontal (desktop)', async () => {
+    await setViewport('desktop');
+    render(VisualHarnessGuarded, { props: {} as never });
+    const stage = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLElement>('[data-testid="visual-stage"]');
+      if (!el) throw new Error('stage not mounted');
+      return el;
+    });
+    await vi.waitFor(() => {
+      const accordions = stage.querySelectorAll<HTMLElement>('.neo-accordion');
+      expect(accordions.length).toBe(3);
+    });
+    await waitForVisualStability(stage);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoAccordion', 'guarded-pairs', 'desktop'),
     );
   });
 });

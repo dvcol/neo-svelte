@@ -1,4 +1,6 @@
-import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -19,8 +21,8 @@ describe('neoSkeletonContainer — visual contract (themed)', { tags: ['browser'
     quietForVisual();
   });
 
-  it('all states (text-loading | media-loading | content-loaded) — desktop', async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('all states (text-loading | media-loading | content-loaded) — %s', async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: { composite: true } as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -38,7 +40,7 @@ describe('neoSkeletonContainer — visual contract (themed)', { tags: ['browser'
     });
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoSkeletonContainer', 'all-states', 'desktop'),
+      screenshotName('NeoSkeletonContainer', 'all-states', viewport),
     );
   });
 });

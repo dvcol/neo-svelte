@@ -1,4 +1,6 @@
-import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { tick } from 'svelte';
@@ -60,8 +62,8 @@ describe('neoTabsRow — visual contract (themed)', { tags: ['browser', 'visual'
     quietForVisual();
   });
 
-  it('horizontal — fully visible row (desktop)', async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('horizontal — fully visible row (%s)', async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, {
       props: { tabs: sampleTabs, active: 't2', wrapperStyle: 'width: 600px;' } as never,
     });
@@ -75,12 +77,12 @@ describe('neoTabsRow — visual contract (themed)', { tags: ['browser', 'visual'
     expect(firstButton?.textContent?.trim()).toBe('One');
     await waitForVisualStability(row);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoTabsRow', 'matrix-horizontal', 'desktop'),
+      screenshotName('NeoTabsRow', 'matrix-horizontal', viewport),
     );
   });
 
-  it('horizontal — overflow with collapse menu (desktop)', async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('horizontal — overflow with collapse menu (%s)', async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, {
       props: { tabs: overflowingTabs, active: 't1', wrapperStyle: 'width: 600px;' } as never,
     });
@@ -91,12 +93,12 @@ describe('neoTabsRow — visual contract (themed)', { tags: ['browser', 'visual'
     const row = document.querySelector<HTMLElement>('.neo-tabs')!;
     await waitForVisualStability(row);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoTabsRow', 'matrix-overflow', 'desktop'),
+      screenshotName('NeoTabsRow', 'matrix-overflow', viewport),
     );
   });
 
-  it('vertical — fully visible column (desktop)', async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('vertical — fully visible column (%s)', async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, {
       props: { tabs: sampleTabs, active: 't2', vertical: true, wrapperStyle: 'height: 240px;' } as never,
     });
@@ -107,7 +109,7 @@ describe('neoTabsRow — visual contract (themed)', { tags: ['browser', 'visual'
     });
     await waitForVisualStability(row);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoTabsRow', 'matrix-vertical', 'desktop'),
+      screenshotName('NeoTabsRow', 'matrix-vertical', viewport),
     );
   });
 });

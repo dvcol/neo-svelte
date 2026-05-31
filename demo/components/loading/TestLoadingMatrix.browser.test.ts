@@ -1,4 +1,6 @@
-import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -19,8 +21,8 @@ describe('neoLoadingMatrix — visual contract (themed)', { tags: ['browser', 'v
     quietForVisual();
   });
 
-  it('size × color matrix (desktop)', { timeout: 60000 }, async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('size × color matrix (%s)', { timeout: 60000 }, async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: {} as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -39,7 +41,7 @@ describe('neoLoadingMatrix — visual contract (themed)', { tags: ['browser', 'v
     freezeSvgAnimations(stage);
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoLoadingMatrix', 'matrix', 'desktop'),
+      screenshotName('NeoLoadingMatrix', 'matrix', viewport),
     );
   });
 });

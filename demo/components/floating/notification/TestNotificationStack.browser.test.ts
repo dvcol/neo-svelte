@@ -1,7 +1,9 @@
+import type { ViewportName } from 'test/helpers/visual.js';
+
 import type { NeoNotificationStackService } from '~/floating/notification/neo-notification-provider.model.js';
 import type { NeoNotification, NeoNotificationDeQueued, NeoNotificationQueued, NeoNotificationStatuses } from '~/floating/notification/neo-notification.model.js';
 
-import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -171,9 +173,10 @@ describe('neoNotificationStack — visual contract (themed)', { tags: ['browser'
     quietForVisual();
   });
 
-  for (const placement of ['top-end', 'bottom-end'] as const) {
-    it(`stack of three notifications at ${placement} (desktop)`, async () => {
-      await setViewport('desktop');
+  it.each(VIEWPORT_NAMES.flatMap(v => (['top-end', 'bottom-end'] as const).map(p => [v, p] as const)))(
+    'stack (%s, %s)',
+    async (viewport: ViewportName, placement: 'top-end' | 'bottom-end') => {
+      await setViewport(viewport);
       const { instance } = await mountStack({ placement, expand: true, rounded: true }, 'visual');
       // Richer content matrix mirrors DemoNotification.svelte: severity icon
       // + title + subtitle + content + action + progress + close states.
@@ -229,8 +232,8 @@ describe('neoNotificationStack — visual contract (themed)', { tags: ['browser'
       if (stack) freezeSvgAnimations(stack);
       if (stack) await waitForVisualStability(stack);
       await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-        screenshotName('NeoNotificationStack', `stack-${placement}`, 'desktop'),
+        screenshotName('NeoNotificationStack', `stack-${placement}`, viewport),
       );
-    });
-  }
+    },
+  );
 });

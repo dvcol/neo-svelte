@@ -73,9 +73,15 @@
 
   .row {
     display: grid;
-    grid-template-columns: 5rem 14rem 5rem 14rem 5rem 14rem;
+    grid-template-columns: 5rem minmax(10rem, 1fr) 5rem minmax(10rem, 1fr) 5rem minmax(10rem, 1fr);
     gap: 0.75rem 1rem;
     align-items: start;
+  }
+
+  @media (width <= 480px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 
   .cell-label {

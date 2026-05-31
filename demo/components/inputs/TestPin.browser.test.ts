@@ -1,4 +1,6 @@
-import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -82,31 +84,25 @@ describe('neoPin — visual contract (themed)', { tags: ['browser', 'visual'] },
     quietForVisual();
   });
 
-  it('empty 4-cell pin (desktop)', async () => {
-    await setViewport('desktop');
-    render(VisualHarness, { props: { count: 4, type: 'text' } as never });
-    const wrapper = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLElement>('.neo-pin-group-wrapper');
-      if (!el) throw new Error('pin not mounted');
-      return el;
-    });
-    await waitForVisualStability(wrapper);
-    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoPin', 'empty-4', 'desktop'),
-    );
-  });
+  const SCENARIOS = [
+    { name: 'empty-4', props: { count: 4, type: 'text' } },
+    { name: 'grouped-2x3', props: { count: 3, groups: 2, type: 'text' } },
+  ] as const;
 
-  it('grouped 2×3 pin (desktop)', async () => {
-    await setViewport('desktop');
-    render(VisualHarness, { props: { count: 3, groups: 2, type: 'text' } as never });
-    const wrapper = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLElement>('.neo-pin-group-wrapper');
-      if (!el) throw new Error('pin not mounted');
-      return el;
-    });
-    await waitForVisualStability(wrapper);
-    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoPin', 'grouped-2x3', 'desktop'),
-    );
-  });
+  it.each(VIEWPORT_NAMES.flatMap(v => SCENARIOS.map(s => [v, s] as const)))(
+    '%s (%s)',
+    async (viewport: ViewportName, scenario: typeof SCENARIOS[number]) => {
+      await setViewport(viewport);
+      render(VisualHarness, { props: scenario.props as never });
+      const wrapper = await vi.waitFor(() => {
+        const el = document.querySelector<HTMLElement>('.neo-pin-group-wrapper');
+        if (!el) throw new Error('pin not mounted');
+        return el;
+      });
+      await waitForVisualStability(wrapper);
+      await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+        screenshotName('NeoPin', scenario.name, viewport),
+      );
+    },
+  );
 });

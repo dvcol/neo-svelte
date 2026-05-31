@@ -1,4 +1,6 @@
-import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -123,8 +125,8 @@ describe('neoFilePicker — visual contract (themed)', { tags: ['browser', 'visu
     quietForVisual();
   });
 
-  it('idle / multiple / disabled × with-files × tinted / glass × required matrix (desktop)', { timeout: 30000 }, async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('idle / multiple / disabled × with-files × tinted / glass × required matrix (%s)', { timeout: 30000 }, async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: { variant: 'matrix' } as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -140,7 +142,7 @@ describe('neoFilePicker — visual contract (themed)', { tags: ['browser', 'visu
     freezeSvgAnimations(stage);
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoFilePicker', 'matrix', 'desktop'),
+      screenshotName('NeoFilePicker', 'matrix', viewport),
     );
   });
 });

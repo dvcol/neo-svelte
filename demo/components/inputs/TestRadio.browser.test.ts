@@ -1,4 +1,6 @@
-import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -65,8 +67,8 @@ describe('neoRadio — visual contract (themed)', { tags: ['browser', 'visual'] 
     quietForVisual();
   });
 
-  it('checked / disabled × glass / tinted / sharp / required / loading matrix (desktop)', { timeout: 30000 }, async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('checked / disabled × glass / tinted / sharp / required / loading matrix (%s)', { timeout: 30000 }, async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: {} as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -84,7 +86,7 @@ describe('neoRadio — visual contract (themed)', { tags: ['browser', 'visual'] 
     freezeSvgAnimations(stage);
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoRadio', 'matrix', 'desktop'),
+      screenshotName('NeoRadio', 'matrix', viewport),
     );
   });
 });

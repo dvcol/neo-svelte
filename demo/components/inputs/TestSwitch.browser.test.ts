@@ -1,4 +1,6 @@
-import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -76,9 +78,10 @@ describe('neoSwitch — visual contract (themed)', { tags: ['browser', 'visual']
     quietForVisual();
   });
 
-  for (const state of ['off', 'on'] as const) {
-    it(`${state} (desktop)`, async () => {
-      await setViewport('desktop');
+  it.each(VIEWPORT_NAMES.flatMap(v => (['off', 'on'] as const).map(s => [v, s] as const)))(
+    '%s (%s)',
+    async (viewport: ViewportName, state: 'off' | 'on') => {
+      await setViewport(viewport);
       render(VisualHarness, { props: { checked: state === 'on', label: `switch-${state}`, rounded: true } as never });
       const button = await vi.waitFor(() => {
         const el = getButton();
@@ -87,8 +90,8 @@ describe('neoSwitch — visual contract (themed)', { tags: ['browser', 'visual']
       });
       await waitForVisualStability(button);
       await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-        screenshotName('NeoSwitch', state, 'desktop'),
+        screenshotName('NeoSwitch', state, viewport),
       );
-    });
-  }
+    },
+  );
 });

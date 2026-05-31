@@ -1,4 +1,6 @@
-import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -8,6 +10,8 @@ import { page } from 'vitest/browser';
 import NeoButton from '~/buttons/NeoButton.svelte';
 
 import VisualHarness from './TestButton.browser.test.svelte';
+import VisualHarnessGuarded from './TestButton.guarded.browser.test.svelte';
+import VisualHarnessStates from './TestButton.states.browser.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -54,29 +58,48 @@ describe('neoButton — keyboard activation (real focus)', { tags: ['browser'] }
   });
 });
 
+async function mountAndWaitForButtons(harness: typeof VisualHarness, props: Record<string, unknown>, expectedButtons: number): Promise<HTMLElement> {
+  render(harness, { props: props as never });
+  const stage = await vi.waitFor(() => {
+    const el = getStage();
+    if (!el) throw new Error('stage not mounted');
+    return el;
+  });
+  await vi.waitFor(() => {
+    const buttons = stage.querySelectorAll<HTMLElement>('.neo-button');
+    expect(buttons.length).toBeGreaterThanOrEqual(expectedButtons);
+    for (const b of buttons) expect(b.getBoundingClientRect().width).toBeGreaterThan(0);
+  });
+  await waitForVisualStability(stage);
+  return stage;
+}
+
 describe('neoButton — visual contract (themed)', { tags: ['browser', 'visual'] }, () => {
   beforeEach(() => {
     quietForVisual();
   });
 
-  it('button family matrix (standard + iconic + layout wrappers)', async () => {
-    await setViewport('desktop');
-    render(VisualHarness, { props: { composite: true } as never });
-    const stage = await vi.waitFor(() => {
-      const el = getStage();
-      if (!el) throw new Error('stage not mounted');
-      return el;
-    });
-    await vi.waitFor(() => {
-      const blocks = stage.querySelectorAll<HTMLElement>('[data-block]');
-      expect(blocks.length).toBe(3);
-      for (const b of blocks) expect(b.getBoundingClientRect().width).toBeGreaterThan(0);
-      const buttons = stage.querySelectorAll<HTMLElement>('.neo-button');
-      expect(buttons.length).toBeGreaterThanOrEqual(15);
-    });
-    await waitForVisualStability(stage);
+  it.each(VIEWPORT_NAMES)('matrix (%s)', async (viewport: ViewportName) => {
+    await setViewport(viewport);
+    await mountAndWaitForButtons(VisualHarness, { composite: true }, 15);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoButton', 'matrix', 'desktop'),
+      screenshotName('NeoButton', 'matrix', viewport),
+    );
+  });
+
+  it('states grid — idle / hovered / focused / pressed / loading / disabled (desktop)', async () => {
+    await setViewport('desktop');
+    await mountAndWaitForButtons(VisualHarnessStates, {}, 6);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoButton', 'states', 'desktop'),
+    );
+  });
+
+  it('guarded pairs — flat+pressed / glass+disabled / loading+pressed (desktop)', async () => {
+    await setViewport('desktop');
+    await mountAndWaitForButtons(VisualHarnessGuarded, {}, 3);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoButton', 'guarded-pairs', 'desktop'),
     );
   });
 });

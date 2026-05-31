@@ -1,1 +1,8 @@
 npx -s lint-staged
+
+# Run svelte-check once when .svelte files are staged. svelte-check is
+# whole-project (it ignores per-file args), so running it inside lint-staged in
+# parallel with eslint/stylelint OOM-kills the hook. Run it serially here.
+if git diff --cached --name-only --diff-filter=ACM | grep -q '\.svelte$'; then
+  pnpm run check:svelte
+fi

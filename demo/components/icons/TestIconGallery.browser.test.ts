@@ -1,4 +1,6 @@
-import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -19,8 +21,8 @@ describe('neoIcon — gallery visual contract (themed)', { tags: ['browser', 'vi
     quietForVisual();
   });
 
-  it('full icon set grid (desktop)', { timeout: 45000 }, async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('full icon set grid (%s)', { timeout: 45000 }, async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: {} as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -40,7 +42,7 @@ describe('neoIcon — gallery visual contract (themed)', { tags: ['browser', 'vi
     freezeSvgAnimations(stage);
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoIconGallery', 'matrix', 'desktop'),
+      screenshotName('NeoIconGallery', 'matrix', viewport),
     );
   });
 });

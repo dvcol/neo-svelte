@@ -94,9 +94,20 @@
 
   .row {
     display: grid;
-    grid-template-columns: 5rem 14rem 5rem 14rem 5rem 14rem;
+    grid-template-columns: 5rem minmax(10rem, 1fr) 5rem minmax(10rem, 1fr) 5rem minmax(10rem, 1fr);
     gap: 0.75rem 1rem;
     align-items: center;
+  }
+
+  /* Mobile (390px): one input per row. */
+  @media (width <= 480px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cell-label {
+      text-align: left;
+    }
   }
 
   .cell-label {

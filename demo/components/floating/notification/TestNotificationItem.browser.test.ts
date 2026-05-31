@@ -1,4 +1,6 @@
-import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -19,8 +21,8 @@ describe('neoSimpleNotification — visual contract (themed)', { tags: ['browser
     quietForVisual();
   });
 
-  it('severity × close × action matrix (desktop)', { timeout: 30000 }, async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('severity × close × action matrix (%s)', { timeout: 30000 }, async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: {} as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -38,7 +40,7 @@ describe('neoSimpleNotification — visual contract (themed)', { tags: ['browser
     freezeSvgAnimations(stage);
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoSimpleNotification', 'matrix', 'desktop'),
+      screenshotName('NeoSimpleNotification', 'matrix', viewport),
     );
   });
 });

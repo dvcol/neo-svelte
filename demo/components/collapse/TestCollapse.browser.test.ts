@@ -1,4 +1,6 @@
-import { quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import type { ViewportName } from 'test/helpers/visual.js';
+
+import { quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { userEvent } from '@testing-library/user-event';
@@ -8,6 +10,8 @@ import { page } from 'vitest/browser';
 import Harness from '~/collapse/NeoCollapse.test.svelte';
 
 import VisualHarness from './TestCollapse.browser.test.svelte';
+import VisualHarnessGuarded from './TestCollapse.guarded.browser.test.svelte';
+import VisualHarnessStates from './TestCollapse.states.browser.test.svelte';
 
 afterEach(() => {
   cleanup();
@@ -115,9 +119,10 @@ describe('neoCollapse — visual contract (themed)', { tags: ['browser', 'visual
     quietForVisual();
   });
 
-  for (const state of ['closed', 'open'] as const) {
-    it(`${state} (desktop)`, async () => {
-      await setViewport('desktop');
+  it.each(VIEWPORT_NAMES.flatMap(v => (['closed', 'open'] as const).map(s => [v, s] as const)))(
+    '%s (%s)',
+    async (viewport: ViewportName, state: 'closed' | 'open') => {
+      await setViewport(viewport);
       render(VisualHarness, {
         props: {
           open: state === 'open',
@@ -133,8 +138,44 @@ describe('neoCollapse — visual contract (themed)', { tags: ['browser', 'visual
       });
       await waitForVisualStability(collapse);
       await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-        screenshotName('NeoCollapse', state, 'desktop'),
+        screenshotName('NeoCollapse', state, viewport),
       );
+    },
+  );
+
+  it('states grid — closed / open / focused / disabled (desktop)', async () => {
+    await setViewport('desktop');
+    render(VisualHarnessStates, { props: {} as never });
+    const stage = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLElement>('[data-testid="visual-stage"]');
+      if (!el) throw new Error('stage not mounted');
+      return el;
     });
-  }
+    await vi.waitFor(() => {
+      const collapses = stage.querySelectorAll<HTMLElement>('.neo-collapse');
+      expect(collapses.length).toBe(4);
+    });
+    await waitForVisualStability(stage);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoCollapse', 'states', 'desktop'),
+    );
+  });
+
+  it('guarded pairs — readonly closed / horizontal / disabled (desktop)', async () => {
+    await setViewport('desktop');
+    render(VisualHarnessGuarded, { props: {} as never });
+    const stage = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLElement>('[data-testid="visual-stage"]');
+      if (!el) throw new Error('stage not mounted');
+      return el;
+    });
+    await vi.waitFor(() => {
+      const collapses = stage.querySelectorAll<HTMLElement>('.neo-collapse');
+      expect(collapses.length).toBe(3);
+    });
+    await waitForVisualStability(stage);
+    await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
+      screenshotName('NeoCollapse', 'guarded-pairs', 'desktop'),
+    );
+  });
 });

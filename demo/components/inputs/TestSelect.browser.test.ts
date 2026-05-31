@@ -1,5 +1,7 @@
+import type { ViewportName } from 'test/helpers/visual.js';
+
 import { expectSide, waitForFloatingPosition } from 'test/helpers/floating.js';
-import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, waitForVisualStability } from 'test/helpers/visual.js';
+import { freezeSvgAnimations, quietForVisual, screenshotName, setViewport, VIEWPORT_NAMES, waitForVisualStability } from 'test/helpers/visual.js';
 
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -241,8 +243,8 @@ describe('neoSelect — visual contract (themed)', { tags: ['browser', 'visual']
     quietForVisual();
   });
 
-  it('placeholder / value × multiple / clearable / disabled × rounded / tinted / glass × required / readonly / skeleton matrix (desktop)', { timeout: 30000 }, async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('placeholder / value × multiple / clearable / disabled × rounded / tinted / glass × required / readonly / skeleton matrix (%s)', { timeout: 30000 }, async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: { variant: 'matrix' } as never });
     const stage = await vi.waitFor(() => {
       const el = getStage();
@@ -258,12 +260,12 @@ describe('neoSelect — visual contract (themed)', { tags: ['browser', 'visual']
     freezeSvgAnimations(stage);
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoSelect', 'matrix-closed', 'desktop'),
+      screenshotName('NeoSelect', 'matrix-closed', viewport),
     );
   });
 
-  it('open state — portalled dropdown', async () => {
-    await setViewport('desktop');
+  it.each(VIEWPORT_NAMES)('open state — portalled dropdown (%s)', async (viewport: ViewportName) => {
+    await setViewport(viewport);
     render(VisualHarness, { props: { open: true, openOnFocus: false, openOnHover: false } as never });
     const dropdown = await vi.waitFor(() => {
       const all = Array.from(document.querySelectorAll<HTMLElement>('.neo-tooltip'));
@@ -274,7 +276,7 @@ describe('neoSelect — visual contract (themed)', { tags: ['browser', 'visual']
     await waitForFloatingPosition(dropdown);
     await waitForVisualStability(dropdown);
     await expect.element(page.elementLocator(document.body)).toMatchScreenshot(
-      screenshotName('NeoSelect', 'matrix-open', 'desktop'),
+      screenshotName('NeoSelect', 'matrix-open', viewport),
     );
   });
 });
