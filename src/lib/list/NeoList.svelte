@@ -548,8 +548,27 @@
   /**
    * Resolve original (unfiltered) index for selection lookup so toggleItem
    * matches `findByIdInList` semantics in non-virtual mode.
+   *
+   * `flattenSectionsWithCascade` (see neo-list.model.ts) returns fresh
+   * object references each derive, so a `Map<NeoListItem, number>` would
+   * silently miss after a `flatItems` update. Key by `item.id ?? index`
+   * — the same identity Svelte uses for `{#each}` keys here — so the
+   * lookup stays stable across re-flattens. Falls back to `indexOf` for
+   * items the resolver has never seen (defensive, should not happen).
    */
-  const itemOriginalIndex = (item: NeoListItem) => flatItems.indexOf(item);
+  const flatItemsIndex = $derived.by<Map<unknown, number>>(() => {
+    const map = new Map<unknown, number>();
+    for (let i = 0; i < flatItems.length; i++) {
+      const it = flatItems[i]!;
+      map.set(it.id ?? i, i);
+    }
+    return map;
+  });
+  const itemOriginalIndex = (item: NeoListItem) => {
+    const i = flatItemsIndex.get(item.id);
+    if (i !== undefined) return i;
+    return flatItems.indexOf(item);
+  };
 
   /**
    * Inline filter+sort pipeline used by sectioned non-virtual rendering. Each
@@ -563,7 +582,7 @@
       .sort((a, b) => sort(a.item, b.item));
   }
 
-  const visibleFlat = $derived(visibleItems.map(item => ({ item, index: flatItems.indexOf(item) })));
+  const visibleFlat = $derived(visibleItems.map(item => ({ item, index: itemOriginalIndex(item) })));
 </script>
 
 {#snippet loader(show = loading)}
