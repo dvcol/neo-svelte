@@ -89,8 +89,7 @@ export function describePseudoGrid({
             ?? document.querySelector<HTMLElement>(focusSelector);
           expect(focusable, `focus selector ${focusSelector} resolved nothing`).toBeTruthy();
           focusable!.focus({ preventScroll: true });
-        }
-        else {
+        } else {
           target.setAttribute('tabindex', '0');
           target.focus({ preventScroll: true });
         }
@@ -116,4 +115,3 @@ export function describePseudoGrid({
     }
   });
 }
-
