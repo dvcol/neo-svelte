@@ -14,7 +14,25 @@
 </NeoThemeProvider>
 
 <style lang="scss">
-  :global(html), :global(body) { height: 100%; margin: 0; padding: 0; }
-  .visual-stage { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100vw; min-height: 100vh; padding: 2rem; }
-  .row { display: flex; gap: 2rem; align-items: center; }
+  :global(html), :global(body) {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .visual-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100vw;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .row {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
 </style>
