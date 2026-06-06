@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { HTMLLabelAttributes } from 'svelte/elements';
 
   import type { NeoFormContextField } from '~/form/neo-form-context.svelte.js';
   import type { NeoInputContext, NeoInputMethods, NeoInputProps } from '~/inputs/common/neo-input.model.js';
@@ -168,9 +167,10 @@
     ref?.focus();
   };
 
-  const onLabelClick: HTMLLabelAttributes['onclick'] = (e) => {
+  const onLabelClick = (e: Event) => {
     e.preventDefault();
     if (disabled || readonly || rest?.hidden || rest.type !== 'select') return;
+    onFocus();
     ref?.showPicker?.();
   };
 
@@ -442,15 +442,12 @@
             after ? 'neo-after' : undefined,
             rounded ? 'neo-rounded' : undefined,
             isFloating ? 'neo-floating' : undefined,
-          ]
-            .filter(Boolean)
-            .join(' '),
-          onclick: onFocus,
+          ].filter(Boolean).join(' '),
+          onclick: onLabelClick,
         }}
         label={labelGroup}
         required={rest.required}
         {disabled}
-        onclick={onLabelClick}
         {...labelProps}
       >
         {@render input()}

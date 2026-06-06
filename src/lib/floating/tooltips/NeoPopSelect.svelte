@@ -121,7 +121,7 @@
     {items}
     onSelect={onSelected}
     {...rest}
-    buttonProps={{ rounded, ...rest.buttonProps }}
+    buttonProps={{ rounded, glass: !filled, ...rest.buttonProps }}
     class={['neo-pop-select-list', rest.class]}
   />
 {/snippet}
