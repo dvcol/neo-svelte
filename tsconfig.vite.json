@@ -14,7 +14,8 @@
     "*.config.mjs",
     "*.config.cjs",
     "env.d.ts",
-    ".eslintrc.cjs"
+    ".eslintrc.cjs",
+    "scripts/**/*"
   ],
   "exclude": [
     "node_modules",

@@ -81,6 +81,7 @@ const config: ViteUserConfig = {
           include: [
             'src/**/*.{test,spec}.{js,ts}',
             'test/**/*.{test,spec}.{js,ts}',
+            'scripts/**/*.{test,spec}.{js,ts}',
           ],
           exclude: [
             '**/node_modules/**',

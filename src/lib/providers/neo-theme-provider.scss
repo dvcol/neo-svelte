@@ -1,6 +1,6 @@
-@use 'src/lib/styles/layers' as layers;
-@use 'src/lib/styles/reset' as reset;
-@use 'src/lib/styles/theme' as theme;
+@use '../styles/layers' as layers;
+@use '../styles/reset' as reset;
+@use '../styles/theme' as theme;
 
 /*
   Layer order is declared exactly once, here, by the mandatory provider mount.

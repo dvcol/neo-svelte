@@ -221,7 +221,6 @@
     "check:watch": "run-p check:type:watch check:svelte:watch",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
-    "lint:not-annotations": "node scripts/lint-not-annotations.mjs",
     "style": "stylelint '**/*.{svelte,css,scss,less,html}' --go '{\"gitignore\":true}'",
     "style:fix": "pnpm run style --fix",
     "test": "vitest --run",
