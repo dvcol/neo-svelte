@@ -218,6 +218,7 @@
     bind:hovered
     bind:focused
     data-select={checked}
+    data-test="true"
     aria-labelledby={labelId}
     container
     elevation="0"
@@ -418,6 +419,10 @@
           margin-inline-start: 0.4375rem;
         }
       }
+    }
+
+    :global(.neo-list-item-button.neo-button.neo-glass) {
+      background-color: var(--neo-btn-bg-color, transparent);
     }
 
   }
