@@ -59,20 +59,32 @@ export type NeoTabsContext<Id extends TabId, Value = unknown> = NeoTabContextOpt
   value?: NeoTabContextValue<Value>;
 };
 
-interface NeoTabContextCallbacks<Id extends TabId, Value = unknown> {
+interface NeoTabContextInputs<Id extends TabId, Value = unknown> {
+  groupRef?: HTMLElement;
   onChange?: OnChange<Id, Value>;
   onClose?: OnClose<Id, Value>;
 }
 
 export class NeoTabContext<Id extends TabId, Value = unknown> {
+  readonly #inputs: NeoTabContextInputs<Id, Value>;
   readonly #tabs: Map<Id, NeoTabContextValue<Value>> = new SvelteMap();
   readonly #panes: Map<Id, Id> = new SvelteMap();
-  readonly #onChange?: OnChange<Id, Value>;
-  readonly #onClose?: OnClose<Id, Value>;
   #active?: Id = $state();
   #previous?: Id = $state();
   #position: NeoTabContextPositions<Id> = $state({});
   #options: NeoTabContextOptions = $state({});
+
+  get #groupRef() {
+    return this.#inputs.groupRef;
+  }
+
+  get #onChange() {
+    return this.#inputs.onChange;
+  }
+
+  get #onClose() {
+    return this.#inputs.onClose;
+  }
 
   get active() {
     return this.#active;
@@ -98,9 +110,8 @@ export class NeoTabContext<Id extends TabId, Value = unknown> {
     };
   }
 
-  constructor({ onChange, onClose }: NeoTabContextCallbacks<Id, Value> = {}) {
-    this.#onChange = onChange;
-    this.#onClose = onClose;
+  constructor(inputs: NeoTabContextInputs<Id, Value> = {}) {
+    this.#inputs = inputs;
   }
 
   getValue(tabId?: Id) {
@@ -121,7 +132,7 @@ export class NeoTabContext<Id extends TabId, Value = unknown> {
   #getPosition(tabId?: Id) {
     if (!tabId) return;
     const _ref = this.getValue(tabId)?.ref;
-    const parent = _ref?.parentElement?.getBoundingClientRect();
+    const parent = this.#groupRef?.getBoundingClientRect();
     const rect = _ref?.getBoundingClientRect();
     if (!parent || !rect) return;
     return {
@@ -206,6 +217,6 @@ export function getTabContext<Id extends TabId, Value = unknown>(): NeoTabContex
   return getContext<NeoTabContext<Id, Value>>(NeoTabsContextSymbol);
 }
 
-export function setTabContext<Id extends TabId, Value = unknown>(callback?: NeoTabContextCallbacks<Id, Value>) {
-  return setContext(NeoTabsContextSymbol, new NeoTabContext<Id, Value>(callback));
+export function setTabContext<Id extends TabId, Value = unknown>(inputs?: NeoTabContextInputs<Id, Value>) {
+  return setContext(NeoTabsContextSymbol, new NeoTabContext<Id, Value>(inputs));
 }

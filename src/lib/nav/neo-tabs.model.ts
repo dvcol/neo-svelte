@@ -20,6 +20,12 @@ export type OnClose<Id extends TabId, Value = unknown> = (tabId?: Id, value?: Ne
 export type NeoTabsSlideElevation = ShadowElevation | ShadowElevationString;
 export type NeoTabsContainerProps = HTMLNeoBaseElement & HTMLActionProps;
 export type NeoTabsProps<Id extends TabId, Value = unknown, Tag extends keyof HTMLElementTagNameMap = 'div'> = {
+  // regs
+  /**
+   * The ref to the inner button group
+   */
+  groupRef?: NeoButtonGroupProps<Tag>['ref'];
+
   // Snippets
 
   /**

@@ -520,16 +520,6 @@
         overflow: unset;
       }
 
-      :global(> .neo-handle-group .neo-handle) {
-        opacity: 0.6;
-
-        &:focus-visible,
-        &:hover,
-        &:active {
-          opacity: 1;
-        }
-      }
-
       &:focus-within,
       &:focus,
       &:hover {

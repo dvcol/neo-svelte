@@ -22,6 +22,7 @@
 
     // States
     ref = $bindable(),
+    groupRef = $bindable(),
     active = $bindable(),
     value = $bindable(),
     disabled,
@@ -67,9 +68,17 @@
     onchange?.(_tabId, _new, _old);
   };
 
-  /** Tab context callbacks are intentionally bound at mount; consumers (NeoTab) call the live `onclose` prop directly when reactive dispatch is needed, and the context is the stable fallback for indirect callers. */
-  // svelte-ignore state_referenced_locally
-  export const context = setTabContext<Id, Value>({ onChange, onClose: onclose });
+  export const context = setTabContext<Id, Value>({
+    get groupRef() {
+      return groupRef;
+    },
+    get onChange() {
+      return onChange;
+    },
+    get onClose() {
+      return onclose;
+    },
+  });
   const transition = $derived(rest.vertical ? height : width);
 
   // Function to compute the transform
@@ -156,7 +165,7 @@
   in:inFn={inProps}
   {style}
 >
-  <NeoButtonGroup bind:offsetWidth bind:offsetHeight role="tablist" {pressed} {elevation} {...rest} class={['neo-tabs-group', rest.class]}>
+  <NeoButtonGroup bind:ref={groupRef} bind:offsetWidth bind:offsetHeight role="tablist" {pressed} {elevation} {...rest} class={['neo-tabs-group', rest.class]}>
     {@render children?.(context.state, context)}
     {#if add}
       <div transition:transition={shortFreezeTransition}>

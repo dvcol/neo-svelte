@@ -42,6 +42,12 @@ if (isTest) {
 
 const config: ViteUserConfig = {
   plugins,
+  // Pre-bundle the dnd-kit runtime (incl. the `/sortable` subpaths) so Vite
+  // doesn't discover it mid-test-run and trigger a reload that aborts the
+  // browser suite ("Vite unexpectedly reloaded a test").
+  optimizeDeps: {
+    include: ['@dnd-kit/svelte', '@dnd-kit/svelte/sortable', '@dnd-kit/dom', '@dnd-kit/abstract'],
+  },
   resolve: {
     alias: {
       '~': fileURLToPath(new URL('./src/lib', import.meta.url)),

@@ -38,7 +38,7 @@ import { NeoInput } from '@dvcol/neo-svelte/inputs';
 import { NeoThemePicker, NeoThemeProvider } from '@dvcol/neo-svelte/providers';
 ```
 
-Available scopes (one per `dist/<scope>/`): `badge`, `buttons`, `cards`, `collapse`, `containers`, `cursor`, `divider`, `floating` (+ nested `dialog`, `drawer`, `menu`, `notification`, `portal`, `tooltips`), `form`, `icons`, `inputs`, `list`, `loading`, `media`, `nav`, `pill`, `progress`, `providers`, `skeletons`, `stepper`, `text`, `utils`. The barrel `import { ... } from '@dvcol/neo-svelte'` re-exports everything, but is not recommended.
+Available scopes (one per `dist/<scope>/`): `badge`, `buttons`, `cards`, `collapse`, `containers`, `cursor`, `divider`, `floating` (+ nested `dialog`, `drawer`, `menu`, `notification`, `portal`, `tooltips`), `form`, `icons`, `inputs`, `list`, `loading`, `media`, `nav`, `pill`, `progress`, `providers`, `skeletons`, `sortable`, `stepper`, `text`, `utils`. The barrel `import { ... } from '@dvcol/neo-svelte'` re-exports everything, but is not recommended.
 
 ## Svelte 5 idioms used everywhere
 
@@ -132,7 +132,9 @@ If you want your overrides to participate in the cascade as a named layer, decla
 @layer neo-reset, app-base, neo-theme, neo-components, app-overrides, neo-variants, neo-states;
 
 @layer app-overrides {
-  .neo-button { border-radius: 0; } /* beats neo-components, loses to neo-variants/neo-states */
+  .neo-button {
+    border-radius: 0;
+  } /* beats neo-components, loses to neo-variants/neo-states */
 }
 ```
 
@@ -203,6 +205,7 @@ Each scope under `src/lib/<scope>/` has its own `AGENTS.md` (published as `dist/
 | `progress`              | `@dvcol/neo-svelte/progress`              | Progress bars                                                                                                                                                           |
 | `providers`             | `@dvcol/neo-svelte/providers`             | `NeoThemeProvider`, `NeoThemePicker`, theme selectors                                                                                                                   |
 | `skeletons`             | `@dvcol/neo-svelte/skeletons`             | Skeleton loaders                                                                                                                                                        |
+| `sortable`              | `@dvcol/neo-svelte/sortable`              | `NeoSortableProvider`, `NeoSortableItem`, `NeoDroppableZone`, `NoDraggable`, `NeoSortableContext`                                                                       |
 | `stepper`               | `@dvcol/neo-svelte/stepper`               | `NeoStepper`                                                                                                                                                            |
 | `text`                  | `@dvcol/neo-svelte/text`                  | `NeoEllipsis`, `NeoHtml`, `NeoMark`, `NeoTypewriter`, `NeoScrollShadow`                                                                                                 |
 | `utils`                 | `@dvcol/neo-svelte/utils`                 | Color / shadow / border-radius helpers                                                                                                                                  |

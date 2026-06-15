@@ -44,6 +44,10 @@ export type NeoHandleProps = {
    */
   visible?: boolean;
   /**
+   * Whether to show the handle as active state regardless of button state.
+   */
+  active?: boolean;
+  /**
    * The allowed axis for dragging the element.
    */
   axis?: 'x' | 'y';

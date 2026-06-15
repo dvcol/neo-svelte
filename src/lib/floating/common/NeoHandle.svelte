@@ -16,6 +16,7 @@
     refs = $bindable({}),
     enabled = true,
     visible = true,
+    active = false,
     placement = 'top',
     position = 'inside',
     elevation = 0,
@@ -56,12 +57,6 @@
       left: width.left || minSize,
     };
   });
-
-  $effect(() => {
-    const _refs = Object.values(refs).filter(Boolean);
-    if (!_refs.length) return;
-    _refs?.at(0)?.focus();
-  });
 </script>
 
 {#snippet handleButton(_placement: NeoHandlePlacements)}
@@ -70,6 +65,7 @@
     bind:offsetWidth={width[_placement]}
     bind:offsetHeight={height[_placement]}
     class:neo-handle={true}
+    class:active
     data-placement={_placement}
     data-position={position}
     data-axis={axis}
@@ -127,12 +123,28 @@
       border: none;
       outline: none;
       cursor: grab;
-      transition: opacity 0.3s ease-in;
+      opacity: 0.6;
+      transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out, scale 0.3s ease-in-out;
       appearance: none;
       touch-action: none;
 
+      &.active,
+      &:focus-visible,
+      &:hover,
+      &:active {
+        color: var(--neo-handler-higlight-color, var(--neo-text-color-highlight-strong));
+        opacity: 1;
+      }
+
+      &:focus-visible,
+      &:hover {
+        scale: 1.1
+      }
+
+      &.active,
       &:active {
         cursor: grabbing;
+        scale: 0.9;
 
         &[data-axis='x'] {
           cursor: ew-resize;

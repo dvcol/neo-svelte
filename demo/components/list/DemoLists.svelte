@@ -353,7 +353,7 @@
     </div>
 
     <!-- NeoVirtualList primitive (consumer owns row markup) -->
-    <div class="column content">
+    <div class="column content virtual">
       <span class="label">NeoVirtualList (primitive)</span>
       <NeoVirtualList items={virtual} buffer={10}>
         {#snippet children({ item }, _ctx, register)}
@@ -464,7 +464,7 @@
       <NeoList aria-label="Custom item render list" items={withCustom} {...options} />
     </div>
 
-    <!--  custom item -->
+    <!--  custom item snippet -->
     <div class="column content">
       <span class="label">Custom snippet</span>
       <NeoList aria-label="Custom item snippet list" items={withCustom} {item} {...options} />
@@ -544,6 +544,7 @@
 
 <style lang="scss">
   @use 'src/lib/styles/common/flex' as flex;
+  @use 'src/lib/styles/mixin' as mixin;
 
   section {
     flex: 1 1 100%;
@@ -555,6 +556,37 @@
     white-space: pre-line;
     text-align: center;
     word-break: break-all;
+  }
+
+  .raw-sortable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 16rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :global(.raw-sortable-item) {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.625rem 0.875rem;
+    border: var(--neo-border-width, 1px) solid var(--neo-border-color);
+    border-radius: var(--neo-border-radius);
+  }
+
+  .raw-sortable-grip {
+    color: var(--neo-text-color-secondary);
+    background: none;
+    border: none;
+    cursor: grab;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
   }
 
   .custom-list-loader {
@@ -618,6 +650,10 @@
 
     min-width: 80vw;
     margin: 2rem 0;
+  }
+
+  .virtual :global(.neo-virtual-list) {
+    @include mixin.scrollbar;
   }
 
   @media (width < 1550px) {

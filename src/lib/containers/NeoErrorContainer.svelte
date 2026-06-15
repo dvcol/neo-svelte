@@ -14,7 +14,7 @@
 </script>
 
 <svelte:boundary onerror={handler} {pending}>
-  {@render children()}
+  {@render children?.()}
 
   {#snippet failed(error, reset)}
     {#if _failed}

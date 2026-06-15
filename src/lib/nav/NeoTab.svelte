@@ -65,10 +65,21 @@
     waitForTick();
   });
 
+  // We need external consumer to get ref, but not be able to remove it, or it breaks registration
+  let innerRef = $state<NeoTabProps<Id, Value>['ref']>();
+
+  // We reflect inner ref to outer scope
   watch(
     () => {
-      if (!ref || !register) return;
-      context?.register(tabId, { ref, value }, register === 'force');
+      ref = innerRef;
+    },
+    () => [ref, innerRef],
+  );
+
+  watch(
+    () => {
+      if (!innerRef || !register) return;
+      context?.register(tabId, { ref: innerRef, value }, register === 'force');
       return () => register && context?.remove(tabId);
     },
     () => [ref, register],
@@ -91,7 +102,7 @@
 
 <svelte:element
   this={tag}
-  bind:this={ref}
+  bind:this={innerRef}
   data-tab-id={tabId}
   data-active={active}
   class:neo-tab={true}

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { NeoTabProps, TabId } from '~/nav/neo-tab.model.js';
-  import type { NeoTabRowItem } from '~/nav/neo-tabs-row.model';
+  import type { NeoTabRowItem } from '~/nav/neo-tabs-row.model.js';
   import type { NeoTabContextValue, NeoTabsProps } from '~/nav/neo-tabs.model.js';
 
   import { randomHex } from '@dvcol/common-utils/common/crypto';
