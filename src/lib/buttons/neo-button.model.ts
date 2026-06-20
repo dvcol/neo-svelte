@@ -122,6 +122,20 @@ export type NeoButtonProps<Tag extends keyof HTMLElementTagNameMap = 'button'> =
    */
   text?: boolean;
   /**
+   * Shorthand for a flat borderless inset button.
+   * {@link text} take precedent if truthy
+   *
+   * @defaults`{ elevation: 0, hover: -1, active: -2, pressed: false, borderless: false }`
+   */
+  flat?: boolean;
+  /**
+   * Shorthand for a flat borderless inset button.
+   * {@link text, flat} take precedent if truthy
+   *
+   * @defaults`{ elevation: 0, hover: 1, active: -1, pressed: true, borderless: true }`
+   */
+  raised?: boolean;
+  /**
    * If true, button specific styles will be removed (padding, text align & justification).
    * And the button will act as a flex container.
    *

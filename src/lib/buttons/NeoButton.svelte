@@ -6,7 +6,7 @@
   import { useHovering } from '@dvcol/svelte-utils/hovering';
   import { toTransition, toTransitionProps, width } from '@dvcol/svelte-utils/transition';
 
-  import { NeoTextButton } from '~/buttons/neo-button.model.js';
+  import { NeoFlatButton, NeoRaisedButton, NeoTextButton } from '~/buttons/neo-button.model.js';
   import NeoIconCircleLoading from '~/icons/NeoIconCircleLoading.svelte';
   import NeoImage from '~/media/NeoImage.svelte';
   import { toAction, toActionProps } from '~/utils/action.utils.js';
@@ -50,12 +50,14 @@
     start,
     color,
     text,
+    flat,
+    raised,
     glass,
     filled,
     tinted,
     rounded,
     container,
-    borderless = text || container,
+    borderless = text || raised || container,
     reverse,
     coalesce,
     pulse,
@@ -97,6 +99,8 @@
     ...rest
   } = $derived.by(() => {
     if (text || container) return { ...NeoTextButton, ..._rest };
+    if (flat) return { ...NeoFlatButton, ..._rest };
+    if (raised) return { ...NeoRaisedButton, ..._rest };
     return { ..._rest, elevation: _rest.elevation ?? getDefaultElevation(_rest.pressed) };
   });
 
