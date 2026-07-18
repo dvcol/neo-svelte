@@ -109,6 +109,59 @@ The context object passed to the `children` snippet exposes:
 </NeoSortableProvider>
 ```
 
+### NeoList (minimal)
+
+Use NeoList's `row` snippet and lift the sortable attachment to NeoList's keyed outer row. No custom `item` snippet or drag handle is required:
+
+```svelte
+<script lang="ts">
+  import { NeoList } from '@dvcol/neo-svelte/list';
+  import { NeoSortableItem, NeoSortableProvider } from '@dvcol/neo-svelte/sortable';
+  import { attachToParent } from '@dvcol/neo-svelte/utils';
+
+  let items = $state([
+    { id: 'alpha', data: { id: 'alpha', value: 'alpha', label: 'Alpha' } },
+    { id: 'bravo', data: { id: 'bravo', value: 'bravo', label: 'Bravo' } },
+  ]);
+</script>
+
+<NeoSortableProvider bind:items axis="y">
+  {#snippet children(ctx)}
+    <NeoList items={ctx.items.map(({ data }) => data)}>
+      {#snippet row({ item, index, content })}
+        <NeoSortableItem id={String(item.id ?? index)} {index} data={item}>
+          {#snippet children({ instance })}
+            <div {...attachToParent(instance.attach)}>
+              {@render content()}
+            </div>
+          {/snippet}
+        </NeoSortableItem>
+      {/snippet}
+    </NeoList>
+  {/snippet}
+</NeoSortableProvider>
+```
+
+The whole row is draggable in this form. To use a handle, add it inside the wrapper and apply `{@attach instance.attachHandle}` to the handle while keeping `attachToParent(instance.attach)` on the wrapper.
+
+For a record-shaped multi-list, disable NeoList row intros/outros while a drag is in flight:
+
+```svelte
+<script lang="ts">
+  import { emptyTransition } from '@dvcol/svelte-utils/transition';
+</script>
+
+<NeoList
+  items={list.map(({ data }) => data)}
+  in={ctx.isDragging ? emptyTransition : undefined}
+  out={ctx.isDragging ? emptyTransition : undefined}
+>
+  ...
+</NeoList>
+```
+
+Cross-list sorting removes the keyed source row from one NeoList while `@dnd-kit` retains that same DOM element as native drag feedback. A regular outro can therefore leave the retained feedback at its final visual frame (for example, `opacity: 0`). `emptyTransition` is a true no-op; `{ duration: 0 }` is not equivalent because it may still apply the transition's final frame. Outside an active drag, `undefined` preserves NeoList's normal enter/outro behavior.
+
 ### Multi-list
 
 Pass a `Record` to `items`, iterate over `Object.entries(ctx.items as Record<…>)`, and add a `NeoDroppableZone` per list so empty containers remain droppable:
@@ -149,6 +202,8 @@ Pass a `Record` to `items`, iterate over `Object.entries(ctx.items as Record<…
 - **`NoDraggable` ≠ `NeoSortableItem`** — `NoDraggable` creates a free-floating drag source not part of any sortable list. Use `NeoSortableItem` for reorderable lists.
 - **Empty containers need `NeoDroppableZone`** — an empty list has no droppable items for collision detection. Add a `NeoDroppableZone` with the list's id as the fallback target so items can be dropped into an empty list.
 - **Drag handle** — to restrict drag activation to a sub-element, apply `{@attach instance.attachHandle}` on the handle and `{@attach instance.attach}` on the outer item. Use `NeoHandle` (from `@dvcol/neo-svelte/floating`) as the handle for consistent styling.
+- **NeoList integration** — compose through NeoList's high-level `row` snippet. Spread `attachToParent(instance.attach)` from `@dvcol/neo-svelte/utils` onto the row snippet's direct child wrapper, attach the handle inside it, and call `content()` to preserve any custom `item`/`section` renderer. The utility registers NeoList's keyed outer row, not the nested wrapper, so collision feedback stays in the correct coordinate space.
+- **NeoList cross-list transitions** — for record-shaped multi-lists, pass `in={ctx.isDragging ? emptyTransition : undefined}` and `out={ctx.isDragging ? emptyTransition : undefined}` to each NeoList. This preserves native feedback and its hidden placeholder while rows move between lists; normal transitions resume after the drag.
 - **CDP-based drag in tests** — `@dnd-kit` uses `setPointerCapture`; synthetic `PointerEvent` dispatches throw on capture. Use `cdpDragBy` from `test/helpers/pointer.ts` (real `Input.dispatchMouseEvent`) for drag test automation.
 
-See also: [floating](../floating/AGENTS.md) (`NeoHandle`), [list](../list/AGENTS.md) (`NeoList`'s built-in `sortable` prop).
+See also: [floating](../floating/AGENTS.md) (`NeoHandle`), [list](../list/AGENTS.md) (`NeoList` row and content composition).

@@ -1,10 +1,15 @@
 <script lang="ts">
+  import type { NeoListItem, NeoListItemContext, NeoListRowContext } from '~/list/neo-list.model.js';
   import type { NeoSortableContextItems } from '~/sortable/neo-sortable-context.svelte.js';
 
+  import { emptyTransition } from '@dvcol/svelte-utils/transition';
+
+  import NeoList from '~/list/NeoList.svelte';
   import NeoThemeProvider from '~/providers/NeoThemeProvider.svelte';
   import NeoDroppableZone from '~/sortable/NeoDroppableZone.svelte';
   import NeoSortableItem from '~/sortable/NeoSortableItem.svelte';
   import NeoSortableProvider from '~/sortable/NeoSortableProvider.svelte';
+  import { attachToParent } from '~/utils/attach.utils.js';
 
   type ItemData = { label: string };
   type Item = { id: string; data: ItemData };
@@ -13,9 +18,23 @@
     axis?: 'x' | 'y';
     disabledId?: string;
     multiList?: boolean;
+    multiNeoList?: boolean;
+    neoList?: boolean;
+    neoListCustomItem?: boolean;
+    neoListRow?: boolean;
+    neoListSelect?: boolean;
   }
 
-  const { axis = 'y', disabledId, multiList = false }: Props = $props();
+  const {
+    axis = 'y',
+    disabledId,
+    multiList = false,
+    multiNeoList = false,
+    neoList = false,
+    neoListCustomItem = true,
+    neoListRow: withNeoListRow = true,
+    neoListSelect = false,
+  }: Props = $props();
 
   let items = $state<NeoSortableContextItems<ItemData>>([
     { id: 'item-1', data: { label: 'Item 1' } },
@@ -33,11 +52,48 @@
       { id: 'lb-2', data: { label: 'B2' } },
     ],
   });
+
+  const neoListItems = $derived((items as Item[]).map(({ id, data }) => ({ id, value: id, ...data })) satisfies NeoListItem[]);
 </script>
+
+{#snippet neoListItem({ item }: NeoListItemContext)}
+  <div
+    class="list-item"
+    data-testid="sortable-item"
+    data-id={item.id}
+  >
+    {item.label}
+  </div>
+{/snippet}
+
+{#snippet neoListRow({ item, index, content }: NeoListRowContext)}
+  <NeoSortableItem
+    id={typeof item.id === 'string' || typeof item.id === 'number' ? item.id : index}
+    {index}
+    data={item}
+    disabled={item.id === disabledId}
+  >
+    {#snippet children({ instance })}
+      <div {...attachToParent(instance.attach)} class="row-attachment">
+        {@render content()}
+      </div>
+    {/snippet}
+  </NeoSortableItem>
+{/snippet}
 
 <NeoThemeProvider>
   <div class="visual-stage" data-testid="visual-stage">
-    {#if !multiList}
+    {#if neoList}
+      <NeoSortableProvider bind:items {axis}>
+        <NeoList
+          row={withNeoListRow ? neoListRow : undefined}
+          items={neoListItems}
+          item={neoListCustomItem ? neoListItem : undefined}
+          select={neoListSelect}
+          data-testid="sortable-list"
+        />
+      </NeoSortableProvider>
+    {:else if !multiList}
       <NeoSortableProvider bind:items {axis}>
         {#snippet children(ctx)}
           <ol class="list" data-testid="sortable-list">
@@ -67,38 +123,69 @@
         {#snippet children(ctx)}
           <div class="multi-container" data-testid="multi-container">
             {#each Object.entries(ctx.items as Record<string, Item[]>) as [listId, list] (listId)}
-              <ol class="list" data-testid="sortable-list" data-list-id={listId}>
-                {#each list as item, index (item.id)}
-                  <NeoSortableItem {...item} {index}>
+              {#if multiNeoList}
+                {#snippet itemContent({ item }: NeoListItemContext)}
+                  <div class="list-item" data-testid="sortable-item" data-id={item.id} data-list={listId}>
+                    {item.label}
+                  </div>
+                {/snippet}
+                {#snippet row({ item, index, content }: NeoListRowContext)}
+                  <NeoSortableItem
+                    id={typeof item.id === 'string' || typeof item.id === 'number' ? item.id : index}
+                    {index}
+                    group={listId}
+                    data={item}
+                  >
                     {#snippet children({ instance })}
-                      <li
-                        {@attach instance.attach}
-                        class="list-item"
-                        data-testid="sortable-item"
-                        data-id={item.id}
-                        data-list={listId}
-                      >
-                        {item.data.label}
-                      </li>
+                      <div {...attachToParent(instance.attach)} class="row-attachment">
+                        {@render content()}
+                      </div>
                     {/snippet}
                   </NeoSortableItem>
-                {/each}
+                {/snippet}
+                <NeoList
+                  {row}
+                  item={itemContent}
+                  items={list.map(({ id, data }) => ({ id, value: id, ...data }))}
+                  in={ctx.isDragging ? emptyTransition : undefined}
+                  out={ctx.isDragging ? emptyTransition : undefined}
+                  data-testid="sortable-list"
+                  data-list-id={listId}
+                />
+              {:else}
+                <ol class="list" data-testid="sortable-list" data-list-id={listId}>
+                  {#each list as item, index (item.id)}
+                    <NeoSortableItem {...item} {index}>
+                      {#snippet children({ instance })}
+                        <li
+                          {@attach instance.attach}
+                          class="list-item"
+                          data-testid="sortable-item"
+                          data-id={item.id}
+                          data-list={listId}
+                        >
+                          {item.data.label}
+                        </li>
+                      {/snippet}
+                    </NeoSortableItem>
+                  {/each}
 
-                <NeoDroppableZone id={listId}>
-                  {#snippet children(zone)}
-                    {#if !list.length}
-                      <li
-                        {@attach zone.attach}
-                        class="drop-zone"
-                        data-testid="drop-zone"
-                        data-list={listId}
-                      >
-                        Drop here
-                      </li>
-                    {/if}
-                  {/snippet}
-                </NeoDroppableZone>
-              </ol>
+                  <NeoDroppableZone id={listId}>
+                    {#snippet children(zone)}
+                      {#if !list.length}
+                        <li
+                          {@attach zone.attach}
+                          class="drop-zone"
+                          data-testid="drop-zone"
+                          data-list={listId}
+                        >
+                          Drop here
+                        </li>
+                      {/if}
+                    {/snippet}
+                  </NeoDroppableZone>
+                </ol>
+              {/if}
             {/each}
           </div>
         {/snippet}
@@ -137,6 +224,10 @@
     border: 1px solid;
     cursor: grab;
     touch-action: none;
+  }
+
+  .row-attachment {
+    display: contents;
   }
 
   .multi-container {

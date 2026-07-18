@@ -1,19 +1,22 @@
 <script lang="ts">
-  import type { NeoListItem, NeoListItemContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
+  import type { NeoListItem, NeoListRowContext, NeoListSelectedItem } from '~/list/neo-list.model.js';
   import type { NeoTabRowItem } from '~/nav/neo-tabs-row.model.js';
-  import type { NeoSortableContext, NeoSortableContextItems, NeoSortableItem as NeoSortableItemData } from '~/sortable/neo-sortable-context.svelte.js';
+  import type { NeoSortableContextItems, NeoSortableItem as NeoSortableItemData } from '~/sortable/neo-sortable-context.svelte.js';
+
+  import { emptyTransition } from '@dvcol/svelte-utils/transition';
 
   import NeoButton from '~/buttons/NeoButton.svelte';
   import NeoButtonGroup from '~/buttons/NeoButtonGroup.svelte';
   import NeoHandle from '~/floating/common/NeoHandle.svelte';
   import NeoIconAccount from '~/icons/NeoIconAccount.svelte';
+  import { isSection } from '~/list/neo-list.model.js';
   import NeoList from '~/list/NeoList.svelte';
-  import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
   import NeoTab from '~/nav/NeoTab.svelte';
   import NeoTabs from '~/nav/NeoTabs.svelte';
   import NeoDroppableZone from '~/sortable/NeoDroppableZone.svelte';
   import NeoSortableItem from '~/sortable/NeoSortableItem.svelte';
   import NeoSortableProvider from '~/sortable/NeoSortableProvider.svelte';
+  import { attachToParent } from '~/utils/attach.utils.js';
   import { Colors } from '~/utils/colors.utils';
 
   const options = $state({
@@ -156,6 +159,9 @@
     progress: multiProgressSeed.map(i => ({ ...i })),
   };
   let multiSortContainer = $state<HTMLElement>();
+
+  const sortableId = (item: NeoListRowContext['item'], index: number) =>
+    typeof item.id === 'string' || typeof item.id === 'number' ? item.id : index;
 </script>
 
 <div class="row">
@@ -231,36 +237,29 @@
 <div class="neo-list-sortable-showcase">
   <h1>NeoList + Sortable (Custom Snippets)</h1>
 
-  {#snippet sortableListItem({ item, index, checked, context }: NeoListItemContext)}
-    <NeoSortableItem id={item.id} {index} data={item}>
+  {#snippet sortableRow({ item, index, content }: NeoListRowContext)}
+    <NeoSortableItem id={sortableId(item, index)} {index} data={item} disabled={item.disabled}>
       {#snippet children({ instance })}
-        <div {@attach instance.attach} data-grabbed={instance.isDragging}>
-          <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle}>
-            <NeoListBaseItem {item} {index} {checked} {context} select={false} />
-          </NeoHandle>
+        <div {...attachToParent(instance.attach)} class="sortable-row-inner" data-grabbed={instance.isDragging}>
+          <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle} />
+          {@render content()}
         </div>
       {/snippet}
     </NeoSortableItem>
   {/snippet}
 
-  {#snippet selectableListItem({ item, index, checked, context }: NeoListItemContext, sortableCtx: NeoSortableContext)}
-    {@const sItem = (sortableCtx.items as RichSortItem[])[index]}
-    {#if sItem}
-      <NeoSortableItem id={sItem.id} {index} data={item}>
+  {#snippet sortableSectionRow({ item, index, content }: NeoListRowContext)}
+    {#if isSection(item)}
+      <NeoSortableItem id={sortableId(item, index)} {index} data={item} disabled={item.disabled}>
         {#snippet children({ instance })}
-          <div {@attach instance.attach} class="sortable-row-inner" data-grabbed={instance.isDragging}>
+          <div {...attachToParent(instance.attach)} class="section-sortable-block" data-grabbed={instance.isDragging}>
             <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle} />
-            <NeoListBaseItem
-              {item} {index} {checked} {context}
-              select
-              onclick={() => {
-                if (checked) context.clearItem({ index, item });
-                else context.selectItem({ index, item });
-              }}
-            />
+            {@render content()}
           </div>
         {/snippet}
       </NeoSortableItem>
+    {:else}
+      {@render content()}
     {/if}
   {/snippet}
 
@@ -279,7 +278,7 @@
       <div class="showcase-list" bind:this={flatSortContainer}>
         <NeoSortableProvider bind:items={flatSortItems} axis="y" container={flatSortContainer}>
           {#snippet children(ctx)}
-            <NeoList items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem" item={sortableListItem} />
+            <NeoList row={sortableRow} items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem" />
           {/snippet}
         </NeoSortableProvider>
       </div>
@@ -300,11 +299,7 @@
       <div class="showcase-list" bind:this={selectSortContainer}>
         <NeoSortableProvider bind:items={selectSortItems} axis="y" container={selectSortContainer}>
           {#snippet children(ctx)}
-            <NeoList select nullable bind:selected={selectSortSelected} items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem">
-              {#snippet item(itemCtx)}
-                {@render selectableListItem(itemCtx, ctx)}
-              {/snippet}
-            </NeoList>
+            <NeoList row={sortableRow} select nullable bind:selected={selectSortSelected} items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem" />
           {/snippet}
         </NeoSortableProvider>
       </div>
@@ -325,28 +320,18 @@
       <div class="showcase-list" bind:this={sectionSortContainer}>
         <NeoSortableProvider bind:items={sectionSortItems} axis="y" container={sectionSortContainer}>
           {#snippet children(ctx)}
-            <NeoList items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem">
+            <NeoList row={sortableSectionRow} items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem">
               {#snippet section(listRender, { index, section, context })}
-                {@const sItem = (ctx.items as RichSortItem[])[index]}
-                {#if sItem}
-                  <NeoSortableItem id={sItem.id} {index} data={sItem.data}>
-                    {#snippet children({ instance })}
-                      <div {@attach instance.attach} class="section-sortable-block" data-grabbed={instance.isDragging}>
-                        <div class="section-sortable-header">
-                          <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle} />
-                          <div class="section-sortable-meta">
-                            <span class="section-sortable-label">{section?.label}</span>
-                            <span class="section-sortable-subtitle">{(section as any)?.subtitle} — {section?.items?.length} items</span>
-                          </div>
-                        </div>
-                        {#if section}
-                          <ul class="section-sortable-items">
-                            {@render listRender({ items: section.items, index, section, context })}
-                          </ul>
-                        {/if}
-                      </div>
-                    {/snippet}
-                  </NeoSortableItem>
+                {#if section}
+                  <div class="section-sortable-content">
+                    <div class="section-sortable-meta">
+                      <span class="section-sortable-label">{section.label}</span>
+                      <span class="section-sortable-subtitle">{(section as any).subtitle} — {section.items.length} items</span>
+                    </div>
+                    <ul class="section-sortable-items">
+                      {@render listRender({ items: section.items, index, section, context })}
+                    </ul>
+                  </div>
                 {/if}
               {/snippet}
             </NeoList>
@@ -375,21 +360,24 @@
             {#each Object.entries(ctx.items as MultiRecord) as [colId, colItems] (colId)}
               <div class="showcase-multi-col">
                 <span class="showcase-col-label">{colId === 'backlog' ? 'Backlog' : 'In Progress'}</span>
-                <NeoList items={colItems.map(i => i.data)} height="18rem">
-                  {#snippet item(itemCtx)}
-                    {@const sItem = colItems[itemCtx.index]}
-                    {#if sItem}
-                      <NeoSortableItem id={sItem.id} index={itemCtx.index} data={itemCtx.item}>
-                        {#snippet children({ instance })}
-                          <div {@attach instance.attach} class="sortable-row-inner" data-grabbed={instance.isDragging}>
-                            <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle} />
-                            <NeoListBaseItem {...itemCtx} select={false} />
-                          </div>
-                        {/snippet}
-                      </NeoSortableItem>
-                    {/if}
-                  {/snippet}
-                </NeoList>
+                {#snippet row({ item, index, content }: NeoListRowContext)}
+                  <NeoSortableItem id={sortableId(item, index)} {index} group={colId} data={item} disabled={item.disabled}>
+                    {#snippet children({ instance })}
+                      <div {...attachToParent(instance.attach)} class="sortable-row-inner" data-grabbed={instance.isDragging}>
+                        <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle} />
+                        {@render content()}
+                      </div>
+                    {/snippet}
+                  </NeoSortableItem>
+                {/snippet}
+                <!-- Keep dnd-kit's retained source row out of NeoList's transition lifecycle during cross-list moves. -->
+                <NeoList
+                  {row}
+                  items={colItems.map(i => i.data)}
+                  height="18rem"
+                  in={ctx.isDragging ? emptyTransition : undefined}
+                  out={ctx.isDragging ? emptyTransition : undefined}
+                />
                 <NeoDroppableZone {colId}>
                   {#snippet children(zone)}
                     {#if !colItems.length}
@@ -689,23 +677,14 @@
 
   .section-sortable-block {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: flex-start;
     width: 100%;
     transition: opacity 0.2s ease;
 
     &[data-grabbed='true'] {
       opacity: 0.3;
     }
-  }
-
-  .section-sortable-header {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    align-items: center;
-    padding: 0.375rem 0.5rem;
-    background: var(--neo-surface-color, var(--neo-background-color));
-    border-block-end: 1px solid var(--neo-border-color);
 
     :global(> .neo-handle-group) {
       flex: 0 0 auto;
@@ -713,11 +692,21 @@
     }
   }
 
+  .section-sortable-content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+  }
+
   .section-sortable-meta {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
     gap: 0.125rem;
+    padding: 0.375rem 0.5rem;
+    background: var(--neo-surface-color, var(--neo-background-color));
+    border-block-end: 1px solid var(--neo-border-color);
   }
 
   .section-sortable-label {

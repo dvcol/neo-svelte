@@ -46,7 +46,12 @@ export async function dragBy(
 export async function cdpDragBy(
   el: HTMLElement,
   delta: { x?: number; y?: number },
-  opts: { steps?: number; stepDelay?: number; settle?: number } = {},
+  opts: {
+    steps?: number;
+    stepDelay?: number;
+    settle?: number;
+    onStep?: (state: { step: number; steps: number; x: number; y: number }) => Promise<void> | void;
+  } = {},
 ): Promise<void> {
   const steps = opts.steps ?? 12;
   const stepDelay = opts.stepDelay ?? 20;
@@ -64,8 +69,11 @@ export async function cdpDragBy(
   await session.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: sx, y: sy, button: 'left', buttons: 1, clickCount: 1 });
   for (let i = 1; i <= steps; i += 1) {
     const t = i / steps;
-    await session.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: sx + dx * t, y: sy + dy * t, button: 'left', buttons: 1 });
+    const x = sx + dx * t;
+    const y = sy + dy * t;
+    await session.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y, button: 'left', buttons: 1 });
     await wait(stepDelay);
+    await opts.onStep?.({ step: i, steps, x, y });
   }
   await session.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: sx + dx, y: sy + dy, button: 'left', buttons: 0, clickCount: 1 });
   await wait(settle);

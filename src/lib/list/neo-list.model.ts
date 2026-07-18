@@ -340,6 +340,24 @@ export interface NeoListMethods {
 
 export type NeoListItemOrSection<Value = unknown> = NeoListItem<Value> | NeoListSection<Value>;
 
+/**
+ * Context passed to the high-level `row` snippet.
+ *
+ * It includes the regular item context fields, parent section metadata, and
+ * a pre-bound renderer for configured content.
+ */
+export interface NeoListRowContext<Value = unknown, Context = NeoListContext> {
+  item: NeoListItemOrSection<Value>;
+  index: number;
+  checked?: boolean;
+  context: Context;
+  section?: NeoListSection<Value>;
+  sectionIndex?: number;
+  content: Snippet;
+}
+
+export type NeoListRowRender<Value = unknown, Context = NeoListContext> = Snippet<[NeoListRowContext<Value, Context>]>;
+
 export interface NeoListSelectState<Selected = NeoListSelectedItem | NeoListSelectedItem[]> {
   /**
    * The currently selected item(s).
@@ -465,6 +483,14 @@ export type NeoListProps<Value = unknown, Tag extends keyof HTMLElementTagNameMa
    * Optional snippet to display in place of each list item.
    */
   item?: NeoListItemRender<Value, 'li', Context>;
+  /**
+   * Optional high-level row renderer. It composes with `item` and `section`:
+   * call `content()` to render whichever content NeoList would normally use.
+   * The keyed outer row remains owned by NeoList.
+   *
+   * @note Non-virtual only.
+   */
+  row?: NeoListRowRender<Value, Context>;
   /**
    * Optional snippet to display in place of each list section.
    */

@@ -1,5 +1,6 @@
 import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 import AnimationHarness from './TestListAnimation.browser.test.svelte';
 
@@ -47,6 +48,45 @@ function getScroller(): HTMLElement {
  * "real" intro/outro the gate let through.
  */
 describe('neoList virtual — row transitions (browser)', { tags: ['browser'] }, () => {
+  it('dims non-hovered virtual rows', async () => {
+    render(AnimationHarness, {
+      props: {
+        items: makeItems(5),
+        virtual: true,
+        itemHeight: ROW,
+        dim: true,
+      } as never,
+    });
+    await settle();
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('.neo-virtual-list .neo-list-item'));
+
+    await userEvent.hover(rows[0]);
+    await new Promise(resolve => setTimeout(resolve, 700));
+
+    expect(getComputedStyle(rows[0]).opacity).toBe('1');
+    expect(getComputedStyle(rows[1]).opacity).toBe('0.6');
+  });
+
+  it('retains row layout styles and consumer wrapper reachability', async () => {
+    render(AnimationHarness, {
+      props: {
+        items: makeItems(5),
+        virtual: true,
+        itemHeight: ROW,
+      } as never,
+    });
+    await settle();
+    const row = document.querySelector<HTMLElement>('.neo-virtual-list .neo-list-item')!;
+    const style = getComputedStyle(row);
+
+    expect(style.display).toBe('flex');
+    expect(style.flexDirection).toBe('column');
+    expect(Number.parseFloat(style.width)).toBeGreaterThan(0);
+    expect(style.maxWidth).toBe('100%');
+    expect(style.listStyleType).toBe('none');
+    expect(style.getPropertyValue('--test-list-row-wrapper').trim()).toBe('reachable');
+  });
+
   it('no intro/outro on first paint', async () => {
     const inSpy = counting();
     const outSpy = counting();
@@ -163,6 +203,22 @@ describe('neoList virtual — loader transitions (browser)', { tags: ['browser']
    * `in:`/`out:` directive — so each `loading` flip translates to ≥1
    * counted call per direction.
    */
+
+  it('retains selectable loader spacing', async () => {
+    render(AnimationHarness, {
+      props: {
+        items: makeItems(5),
+        virtual: true,
+        itemHeight: ROW,
+        loading: true,
+        select: true,
+      } as never,
+    });
+    await settle();
+    const loader = document.querySelector<HTMLElement>('.neo-list-loader > .neo-list-base-loader:first-child')!;
+
+    expect(getComputedStyle(loader).marginTop).toBe('4px');
+  });
 
   it('loader skeletons play intro when loading flips false → true', async () => {
     const inSpy = counting();

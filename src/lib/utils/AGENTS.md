@@ -13,6 +13,7 @@ Shared helpers the components use internally. Reach for these before writing you
 - **Border-radius** — radius scale helpers.
 - **HTML element typing** — `HTMLNeoBaseElement<Tag>` and friends used to type wrapper component props.
 - **Actions / hooks** — small Svelte 5 actions (e.g. scroll trackers) used by list/floating components.
+- **Attachments** — `attachToParent` returns spreadable attachment props that apply a child wrapper's behavior to its immediate parent.
 
 ## Concepts
 

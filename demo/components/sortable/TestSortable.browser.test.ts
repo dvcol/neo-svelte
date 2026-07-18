@@ -92,6 +92,153 @@ describe('neoSortableProvider — drag reorder', { tags: ['browser'] }, () => {
     await waitForOrder(['item-2', 'item-1', 'item-3']);
   });
 
+  it('keeps NeoList drag feedback stable during a collision', async () => {
+    await mountAndWaitForItems({ axis: 'y', neoList: true });
+
+    const items = getSortableItems();
+    const item1Rect = items[0].getBoundingClientRect();
+    const item2Rect = items[1].getBoundingClientRect();
+    const item1Centre = item1Rect.top + item1Rect.height / 2;
+    const item2Centre = item2Rect.top + item2Rect.height / 2;
+    const dy = Math.ceil(item2Centre - item1Centre + item2Rect.height * 0.3);
+    let observedFeedback = false;
+    let feedbackStayedVisible = true;
+    let containerStayedStable = true;
+    let maxStepError = 0;
+    let previousFeedbackY: number | undefined;
+    let previousPointerY: number | undefined;
+    const list = document.querySelector<HTMLElement>('[data-testid="sortable-list"]')!;
+    const initialListRect = list.getBoundingClientRect();
+
+    await cdpDragBy(items[0], { y: dy }, {
+      steps: 16,
+      stepDelay: 20,
+      settle: 500,
+      onStep: ({ y }) => {
+        const feedback = document.querySelector<HTMLElement>('[data-dnd-dragging]');
+        if (!feedback) return;
+        observedFeedback = true;
+        const rect = feedback.getBoundingClientRect();
+        const styles = getComputedStyle(feedback);
+        const listRect = list.getBoundingClientRect();
+        const feedbackY = rect.top + rect.height / 2;
+        feedbackStayedVisible &&= rect.width > 0 && rect.height > 0 && styles.opacity !== '0' && styles.visibility !== 'hidden';
+        containerStayedStable &&= Math.abs(listRect.width - initialListRect.width) < 1 && Math.abs(listRect.height - initialListRect.height) < 1;
+        if (previousFeedbackY !== undefined && previousPointerY !== undefined) {
+          maxStepError = Math.max(maxStepError, Math.abs((feedbackY - previousFeedbackY) - (y - previousPointerY)));
+        }
+        previousFeedbackY = feedbackY;
+        previousPointerY = y;
+      },
+    });
+
+    expect(observedFeedback).toBe(true);
+    expect(feedbackStayedVisible).toBe(true);
+    expect(containerStayedStable).toBe(true);
+    expect(maxStepError).toBeLessThan(20);
+    expect(getItemOrder()).not.toEqual(['item-1', 'item-2', 'item-3']);
+  });
+
+  it('leaves NeoList rows inert when the row wrapper is omitted', async () => {
+    await mountAndWaitForItems({ axis: 'y', neoList: true, neoListRow: false });
+
+    const items = getSortableItems();
+    const item1Rect = items[0].getBoundingClientRect();
+    const item2Rect = items[1].getBoundingClientRect();
+    const dy = Math.ceil(item2Rect.bottom - item1Rect.top);
+
+    await cdpDragBy(items[0], { y: dy }, { steps: 12, stepDelay: 20, settle: 300 });
+
+    expect(document.querySelector('[data-dnd-dragging]')).toBeNull();
+    expect(getItemOrder()).toEqual(['item-1', 'item-2', 'item-3']);
+  });
+
+  it('does not update untouched selection content with a composed row', async () => {
+    render(Harness as never, {
+      props: {
+        axis: 'y',
+        neoList: true,
+        neoListCustomItem: false,
+        neoListSelect: true,
+      } as never,
+    });
+
+    const row = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLElement>('.neo-list-item[data-id="item-1"]');
+      if (!el) throw new Error('selectable row not mounted');
+      return el;
+    });
+    const sibling = document.querySelector<HTMLElement>('.neo-list-item[data-id="item-2"]')!;
+    const checkmark = row.querySelector('.neo-list-item-checkmark');
+    const siblingCheckmark = sibling.querySelector('.neo-list-item-checkmark');
+    const checkbox = checkmark?.querySelector('svg');
+    const siblingCheckbox = siblingCheckmark?.querySelector('svg');
+    const siblingCheckPath = siblingCheckbox?.querySelector('path');
+    const siblingCheckAnimation = siblingCheckPath?.querySelector('animate');
+    const button = row.querySelector<HTMLButtonElement>('button');
+    expect(checkmark).not.toBeNull();
+    expect(siblingCheckmark).not.toBeNull();
+    expect(checkbox).not.toBeNull();
+    expect(siblingCheckbox).not.toBeNull();
+    expect(siblingCheckPath).not.toBeNull();
+    expect(siblingCheckAnimation).not.toBeNull();
+    expect(button).not.toBeNull();
+
+    button!.click();
+    await vi.waitFor(() => expect(row.getAttribute('aria-selected')).toBe('true'));
+
+    expect(row.querySelector('.neo-list-item-checkmark')).toBe(checkmark);
+    expect(row.querySelector('.neo-list-item-checkmark svg')).not.toBe(checkbox);
+    expect(document.querySelector('.neo-list-item[data-id="item-2"]')).toBe(sibling);
+    expect(sibling.querySelector('.neo-list-item-checkmark')).toBe(siblingCheckmark);
+    expect(sibling.querySelector('.neo-list-item-checkmark svg')).toBe(siblingCheckbox);
+    expect(sibling.querySelector('.neo-list-item-checkmark path')).toBe(siblingCheckPath);
+    expect(sibling.querySelector('.neo-list-item-checkmark animate')).toBe(siblingCheckAnimation);
+  });
+
+  it('does not update untouched selection content without a custom row', async () => {
+    render(Harness as never, {
+      props: {
+        neoList: true,
+        neoListCustomItem: false,
+        neoListRow: false,
+        neoListSelect: true,
+      } as never,
+    });
+
+    const row = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLElement>('.neo-list-item[data-id="item-1"]');
+      if (!el) throw new Error('selectable row not mounted');
+      return el;
+    });
+    const sibling = document.querySelector<HTMLElement>('.neo-list-item[data-id="item-2"]')!;
+    const checkmark = row.querySelector('.neo-list-item-checkmark');
+    const siblingCheckmark = sibling.querySelector('.neo-list-item-checkmark');
+    const checkbox = checkmark?.querySelector('svg');
+    const siblingCheckbox = siblingCheckmark?.querySelector('svg');
+    const siblingCheckPath = siblingCheckbox?.querySelector('path');
+    const siblingCheckAnimation = siblingCheckPath?.querySelector('animate');
+    const button = row.querySelector<HTMLButtonElement>('button');
+    expect(checkmark).not.toBeNull();
+    expect(siblingCheckmark).not.toBeNull();
+    expect(checkbox).not.toBeNull();
+    expect(siblingCheckbox).not.toBeNull();
+    expect(siblingCheckPath).not.toBeNull();
+    expect(siblingCheckAnimation).not.toBeNull();
+    expect(button).not.toBeNull();
+
+    button!.click();
+    await vi.waitFor(() => expect(row.getAttribute('aria-selected')).toBe('true'));
+
+    expect(row.querySelector('.neo-list-item-checkmark')).toBe(checkmark);
+    expect(row.querySelector('.neo-list-item-checkmark svg')).not.toBe(checkbox);
+    expect(document.querySelector('.neo-list-item[data-id="item-2"]')).toBe(sibling);
+    expect(sibling.querySelector('.neo-list-item-checkmark')).toBe(siblingCheckmark);
+    expect(sibling.querySelector('.neo-list-item-checkmark svg')).toBe(siblingCheckbox);
+    expect(sibling.querySelector('.neo-list-item-checkmark path')).toBe(siblingCheckPath);
+    expect(sibling.querySelector('.neo-list-item-checkmark animate')).toBe(siblingCheckAnimation);
+  });
+
   it('axis=y: a purely horizontal drag does NOT reorder', async () => {
     await mountAndWaitForItems({ axis: 'y' });
 
@@ -146,22 +293,56 @@ describe('neoSortableProvider — multi-list render', { tags: ['browser'] }, () 
     expect(listBItems).toHaveLength(2);
   });
 
-  it.skip('cross-list drag (TODO): dragging an item from list-a into list-b transfers it', async () => {
-    // TODO: cross-list drag requires moving the pointer from list-a's bounding rect into
-    // list-b's bounding rect. The delta depends on the gap between the two lists in the
-    // harness layout. Implement once the visual layout is stable enough for pixel-level
-    // offsets.
-    await mountAndWaitForItems({ multiList: true });
+  it('keeps drag feedback visible while transferring an item across lists', async () => {
+    await mountAndWaitForItems({ multiList: true, multiNeoList: true });
     const la1 = document.querySelector<HTMLElement>('[data-id="la-1"]')!;
     const lb = document.querySelector<HTMLElement>('[data-list-id="list-b"]')!;
     const lbRect = lb.getBoundingClientRect();
     const la1Rect = la1.getBoundingClientRect();
     const dx = lbRect.left + lbRect.width / 2 - (la1Rect.left + la1Rect.width / 2);
     const dy = lbRect.top + lbRect.height / 2 - (la1Rect.top + la1Rect.height / 2);
-    await cdpDragBy(la1, { x: dx, y: dy }, { steps: 20, stepDelay: 25, settle: 500 });
-    // After transfer: list-a should have 1 item, list-b should have 3
+    let observedFeedback = false;
+    let crossedIntoTarget = false;
+    let feedbackStayedMounted = true;
+    let feedbackStayedSized = true;
+    let feedbackStayedPopulated = true;
+    let feedbackStayedVisible = true;
+    let observedHiddenPlaceholder = false;
+    let observedOverlay = false;
+    await cdpDragBy(la1, { x: dx, y: dy }, {
+      steps: 20,
+      stepDelay: 25,
+      settle: 500,
+      onStep: ({ x }) => {
+        if (x >= lbRect.left) crossedIntoTarget = true;
+        observedHiddenPlaceholder ||= !!document.querySelector('[data-dnd-placeholder="hidden"]');
+        observedOverlay ||= !!document.querySelector('[data-dnd-overlay]');
+        const feedback = document.querySelector<HTMLElement>('[data-dnd-dragging]');
+        if (!feedback) {
+          if (crossedIntoTarget) feedbackStayedMounted = false;
+          return;
+        }
+        observedFeedback = true;
+        const rect = feedback.getBoundingClientRect();
+        const style = getComputedStyle(feedback);
+        if (crossedIntoTarget) {
+          feedbackStayedSized &&= rect.width > 0 && rect.height > 0;
+          feedbackStayedPopulated &&= feedback.textContent?.includes('A1') === true;
+          feedbackStayedVisible &&= style.visibility !== 'hidden' && style.opacity !== '0';
+        }
+      },
+    });
+
     const listAItems = document.querySelectorAll('[data-list="list-a"]');
     const listBItems = document.querySelectorAll('[data-list="list-b"]');
+    expect(observedFeedback).toBe(true);
+    expect(crossedIntoTarget).toBe(true);
+    expect(feedbackStayedMounted).toBe(true);
+    expect(feedbackStayedSized).toBe(true);
+    expect(feedbackStayedPopulated).toBe(true);
+    expect(feedbackStayedVisible).toBe(true);
+    expect(observedHiddenPlaceholder).toBe(true);
+    expect(observedOverlay).toBe(false);
     expect(listAItems).toHaveLength(1);
     expect(listBItems).toHaveLength(3);
   });

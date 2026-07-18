@@ -81,6 +81,22 @@ describe('neoList — render', { tags: ['jsdom'] }, () => {
 });
 
 describe('neoList — selection (single)', { tags: ['jsdom'] }, () => {
+  it('keeps context identity stable while selected remains reactive', async () => {
+    const user = userEvent.setup();
+    const { container } = render(NeoListHarness, {
+      props: { items, select: true, contextProbe: true } as never,
+    });
+    await tick();
+    const probe = container.querySelector('[data-testid="list-context-selection"]');
+    expect(probe?.textContent?.trim()).toBe('none');
+
+    await user.click(getButtons(container)[1]);
+    await tick();
+
+    expect(container.querySelector('[data-testid="list-context-selection"]')).toBe(probe);
+    expect(probe?.textContent?.trim()).toBe('1');
+  });
+
   it('clicking an item selects it and fires onSelect', async () => {
     const onSelect = vi.fn();
     const user = userEvent.setup();
@@ -909,6 +925,32 @@ interface NeoListSelectedShape {
 }
 
 describe('neoList — virtual mode (selection)', { tags: ['jsdom'] }, () => {
+  it('does not update untouched virtual row content on selection', async () => {
+    const user = userEvent.setup();
+    const { container } = render(NeoList, {
+      props: { items: bigItems, virtual: true, select: true, itemHeight: 30 } as never,
+    });
+    await flushVirtual();
+    const sibling = container.querySelector<HTMLElement>('.neo-list-item[data-id="2"]')!;
+    const checkmark = sibling.querySelector('.neo-list-item-checkmark');
+    const checkbox = checkmark?.querySelector('svg');
+    const path = checkbox?.querySelector('path');
+    const animation = path?.querySelector('animate');
+    expect(checkmark).not.toBeNull();
+    expect(checkbox).not.toBeNull();
+    expect(path).not.toBeNull();
+    expect(animation).not.toBeNull();
+
+    await user.click(getButtons(container)[0]);
+    await flushVirtual();
+
+    expect(container.querySelector('.neo-list-item[data-id="2"]')).toBe(sibling);
+    expect(sibling.querySelector('.neo-list-item-checkmark')).toBe(checkmark);
+    expect(sibling.querySelector('.neo-list-item-checkmark svg')).toBe(checkbox);
+    expect(sibling.querySelector('.neo-list-item-checkmark path')).toBe(path);
+    expect(sibling.querySelector('.neo-list-item-checkmark animate')).toBe(animation);
+  });
+
   it('selects items inside the virtual window via click', async () => {
     const user = userEvent.setup();
     const { container } = render(NeoList, { props: { items: bigItems, virtual: true, select: true, itemHeight: 30 } as never });

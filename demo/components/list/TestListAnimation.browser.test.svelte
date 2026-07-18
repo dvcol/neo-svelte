@@ -10,6 +10,8 @@
     virtual?: boolean;
     itemHeight?: number;
     loading?: boolean;
+    select?: boolean;
+    dim?: boolean;
     inAction?: NeoListProps<Item>['in'];
     outAction?: NeoListProps<Item>['out'];
     loaderInAction?: NeoListProps<Item>['in'];
@@ -21,6 +23,8 @@
     virtual = false,
     itemHeight,
     loading = false,
+    select = false,
+    dim = false,
     inAction,
     outAction,
     loaderInAction,
@@ -34,6 +38,8 @@
     {virtual}
     {itemHeight}
     {loading}
+    {select}
+    {dim}
     in={inAction}
     out={outAction}
     loaderProps={{ in: loaderInAction, out: loaderOutAction }}
@@ -52,5 +58,9 @@
   .frame {
     width: 20rem;
     height: 15rem;
+
+    :global(.neo-list-item) {
+      --test-list-row-wrapper: reachable;
+    }
   }
 </style>

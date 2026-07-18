@@ -5,7 +5,6 @@
     NeoListItemOrSection,
     NeoListMethods,
     NeoListProps,
-    NeoListRenderContext,
     NeoListSection,
     NeoListSelectedItem,
     NeoListSelectEvent,
@@ -19,20 +18,26 @@
   import { debounce } from '@dvcol/common-utils/common/debounce';
   import { shallowClone } from '@dvcol/common-utils/common/object';
   import { useIntersection } from '@dvcol/svelte-utils/intersection';
-  import { emptyAnimation, emptyTransition, flipToggle, scaleFreeze, toAnimation, toTransition, toTransitionProps } from '@dvcol/svelte-utils/transition';
+  import {
+    emptyAnimation,
+    emptyTransition,
+    flipToggle,
+    scaleFreeze,
+    toAnimation,
+    toTransition,
+    toTransitionProps,
+  } from '@dvcol/svelte-utils/transition';
   import { watch } from '@dvcol/svelte-utils/watch';
   import { onDestroy, tick } from 'svelte';
   import { fade, scale } from 'svelte/transition';
 
-  import NeoDivider from '~/divider/NeoDivider.svelte';
   import NeoIconList from '~/icons/NeoIconList.svelte';
-  import { findByIdInList, flattenSectionsWithCascade, hasSections, isFlatItems, isSection, showDivider } from '~/list/neo-list.model.js';
-  import NeoListBaseItem from '~/list/NeoListBaseItem.svelte';
+  import { findByIdInList, flattenSectionsWithCascade, hasSections, isFlatItems, showDivider } from '~/list/neo-list.model.js';
   import NeoListBaseLoader from '~/list/NeoListBaseLoader.svelte';
-  import NeoListBaseSection from '~/list/NeoListBaseSection.svelte';
+  import NeoListRows from '~/list/NeoListRows.svelte';
+  import NeoListVirtualRow from '~/list/NeoListVirtualRow.svelte';
   import NeoVirtualList from '~/list/NeoVirtualList.svelte';
   import { useScrollingTracker } from '~/list/use-scrolling-tracker.js';
-  import { getColorVariable } from '~/utils/colors.utils.js';
   import { NeoErrorListSelectDisabled } from '~/utils/error.utils.js';
   import { Logger } from '~/utils/logger.utils.js';
   import { toSize } from '~/utils/style.utils.js';
@@ -41,6 +46,7 @@
   let {
     // Snippets
     item: customItem,
+    row: customRow,
     empty: customEmpty,
     loader: customLoader,
     section: customSection,
@@ -109,6 +115,13 @@
     ...rest
   }: NeoListProps = $props();
 
+  let warnedRowVirtual = false;
+  $effect(() => {
+    if (!customRow || !virtual || warnedRowVirtual) return;
+    warnedRowVirtual = true;
+    Logger.warn('NeoList: `row` is ignored when `virtual` is enabled — virtual rows are mounted and evicted by the viewport cursor.');
+  });
+
   // TODO - pull to refresh (in mixin or component)
   // TODO - floating button (back to top)
 
@@ -133,17 +146,13 @@
   const sections = $derived(hasSections(items));
   const flipActive = $derived.by(() => {
     if (virtual && flip) {
-      const message = 'NeoList: `flip` is fully disabled when `virtual` is enabled (column-reverse layout, edge events, scroll direction, and keyboard direction are all reverted to non-flipped).';
-      Logger.warn(message);
-      if (import.meta.env.DEV) console.warn(new Error(message));
+      Logger.warn('NeoList: `flip` is fully disabled when `virtual` is enabled (column-reverse layout, edge events, scroll direction, and keyboard direction are all reverted to non-flipped).');
     }
     return flip && !virtual;
   });
   const sectionsActive = $derived.by(() => {
     if (virtual && sections) {
-      const message = 'NeoList: section headers are dropped and items flattened when `virtual` is enabled (`disabled`/`readonly` cascade to children; `sticky`/`render`/`empty`/`sectionProps` are lost).';
-      Logger.warn(message);
-      if (import.meta.env.DEV) console.warn(new Error(message));
+      Logger.warn('NeoList: section headers are dropped and items flattened when `virtual` is enabled (`disabled`/`readonly` cascade to children; `sticky`/`render`/`empty`/`sectionProps` are lost).');
     }
     return sections && !virtual;
   });
@@ -321,24 +330,49 @@
     () => items,
   );
 
-  const context = $derived<NeoListContext>({
+  const context: NeoListContext = {
     // States
-    items,
-
-    divider,
-    loading,
-    disabled,
-    readonly,
-    reverse,
-    flip: flipActive,
-    virtual,
-    scrolling,
+    get items() {
+      return items;
+    },
+    get divider() {
+      return divider;
+    },
+    get loading() {
+      return loading;
+    },
+    get disabled() {
+      return disabled;
+    },
+    get readonly() {
+      return readonly;
+    },
+    get reverse() {
+      return reverse;
+    },
+    get flip() {
+      return flipActive;
+    },
+    get virtual() {
+      return virtual;
+    },
+    get scrolling() {
+      return scrolling;
+    },
 
     // Selection
-    select,
-    multiple,
-    nullable,
-    selected,
+    get select() {
+      return select;
+    },
+    get multiple() {
+      return multiple;
+    },
+    get nullable() {
+      return nullable;
+    },
+    get selected() {
+      return selected;
+    },
 
     // Filter
     get highlight() {
@@ -368,7 +402,7 @@
     selectItem,
     clearItem,
     reSelect,
-  });
+  };
 
   /*
    * Non-virtual `scrolling` parity with virtual mode — NeoVirtualList runs
@@ -390,12 +424,6 @@
   const onscroll: NeoListProps['onscroll'] = (e) => {
     scrollingTracker.mark();
     debouncedScroll(e);
-  };
-
-  const renderDivider = (index: number, array: { item: NeoListItemOrSection }[], position: 'top' | 'bottom') => {
-    if (position === 'top') return index && (showDivider(array[index]?.item.divider, 'top') ?? showDivider(divider, 'top'));
-    if (index >= array.length - 1) return false;
-    return showDivider(array[index].item.divider, 'bottom') && !showDivider(array[index + 1]?.item.divider, 'top');
   };
 
   /*
@@ -570,18 +598,6 @@
     return flatItems.indexOf(item);
   };
 
-  /**
-   * Inline filter+sort pipeline used by sectioned non-virtual rendering. Each
-   * section runs its own pipeline so per-section visibility is preserved.
-   * Top-level flat rendering uses the hoisted `visibleItems` instead.
-   */
-  function inlineVisible(array: NeoListItemOrSection[] = []) {
-    return array
-      .map((item, index) => ({ item, index }))
-      .filter(({ item }) => filter(item))
-      .sort((a, b) => sort(a.item, b.item));
-  }
-
   const visibleFlat = $derived(visibleItems.map(item => ({ item, index: itemOriginalIndex(item) })));
 </script>
 
@@ -614,121 +630,37 @@
   {/if}
 {/snippet}
 
-{#snippet list({ items: array, section, index: sectionIndex }: NeoListRenderContext)}
-  {@const visible = section || sectionsActive ? inlineVisible(array) : visibleFlat}
-  {#if !visible?.length && !loading}
-    {@render emptyItem(section?.empty)}
-  {:else}
-    <!-- Items -->
-    {#each visible as { item, index }, i (item.id ?? index)}
-      {@const checked = !isSection(item) && isChecked({ index, item, sectionIndex, section })}
-      <svelte:element
-        this={item.tag ?? 'li'}
-        role={select ? 'option' : 'listitem'}
-        data-id={item?.id}
-        data-index={index}
-        data-section={sectionIndex}
-        aria-selected={checked}
-        aria-posinset={i + 1}
-        aria-setsize={visible.length}
-        class:neo-list-item={true}
-        class:neo-checked={checked}
-        class:neo-list-item-select={select}
-        style:--neo-list-item-color={getColorVariable(item.color)}
-        {...item.containerProps}
-        animate:animateFn={{ ...animateProps, skip: section ? true : skipOffscreen }}
-        in:inFn={inProps}
-        out:outFn={outProps}
-        {@attach virtual ? () => {} : intersection.observe}
-      >
-        {#if renderDivider(i, visible, flipActive && !isSafari() ? 'bottom' : 'top')}
-          <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
-        {/if}
-        {#if isSection(item)}
-          {@const sectionContext = { items: item.items, section: item, index, context }}
-          {#if customSection && !item.render}
-            {@render customSection(list, sectionContext)}
-          {:else}
-            <NeoListBaseSection section={item} {index} {context} {select} {list} {reverse} flip={flipActive} {...sectionProps} />
-          {/if}
-        {:else if customItem && !item.render}
-          {@render customItem({ item, index, checked, context })}
-        {:else}
-          <NeoListBaseItem
-            {item}
-            {index}
-            {context}
-            {checked}
-            {select}
-            {highlight}
-            {buttonProps}
-            {reverse}
-            {rounded}
-            flip={flipActive && !isSafari()}
-            disabled={item.disabled || disabled || section?.disabled}
-            readonly={item.readonly || readonly || section?.readonly || (!isNullable && checked)}
-            {...itemProps}
-            onclick={select ? () => toggleItem({ index, item, sectionIndex, section }, checked) : undefined}
-          />
-        {/if}
-        {#if renderDivider(i, visible, flipActive && !isSafari() ? 'top' : 'bottom')}
-          <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
-        {/if}
-      </svelte:element>
-    {/each}
-  {/if}
-{/snippet}
-
 {#snippet virtualRow(v: NeoVirtualItem<NeoListVirtualItem>, _ctx: NeoVirtualContext<NeoListVirtualItem>, register: NeoVirtualRegister)}
   {@const item = v.item}
   {@const originalIndex = itemOriginalIndex(item)}
   {@const sectionIndex = item.sectionIndex}
   {@const section = item.section}
   {@const checked = isChecked({ index: originalIndex, item, sectionIndex, section })}
-  <svelte:element
-    this={item.tag ?? 'li'}
-    role={select ? 'option' : 'listitem'}
-    data-id={item?.id}
-    data-index={originalIndex}
-    aria-selected={checked}
-    aria-posinset={v.index + 1}
-    aria-setsize={visibleItems.length}
-    class:neo-list-item={true}
-    class:neo-checked={checked}
-    class:neo-list-item-select={select}
-    style:--neo-list-item-color={getColorVariable(item.color)}
-    {...item.containerProps}
-    in:rowIn={v.id}
-    out:rowOut={v.id}
-    {@attach register}
-  >
-    {#if renderFlatDivider(v.index, visibleItems, 'top')}
-      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
-    {/if}
-    {#if customItem && !item.render}
-      {@render customItem({ item, index: originalIndex, checked, context })}
-    {:else}
-      <NeoListBaseItem
-        {item}
-        index={originalIndex}
-        {context}
-        {checked}
-        {select}
-        {highlight}
-        {buttonProps}
-        {reverse}
-        {rounded}
-        flip={false}
-        disabled={item.disabled || disabled}
-        readonly={item.readonly || readonly || (!isNullable && checked)}
-        {...itemProps}
-        onclick={select ? () => toggleItem({ index: originalIndex, item, sectionIndex, section }, checked) : undefined}
-      />
-    {/if}
-    {#if renderFlatDivider(v.index, visibleItems, 'bottom')}
-      <NeoDivider aria-hidden="true" {...dividerProps} {...item.dividerProps} class={['neo-list-item-divider', item.dividerProps?.class]} />
-    {/if}
-  </svelte:element>
+  <NeoListVirtualRow
+    id={v.id}
+    virtualIndex={v.index}
+    setSize={visibleItems.length}
+    index={originalIndex}
+    {item}
+    {checked}
+    {context}
+    itemRender={customItem}
+    {select}
+    {highlight}
+    {buttonProps}
+    {reverse}
+    {rounded}
+    disabled={item.disabled || disabled}
+    readonly={item.readonly || readonly || (!isNullable && checked)}
+    dividerTop={!!renderFlatDivider(v.index, visibleItems, 'top')}
+    dividerBottom={!!renderFlatDivider(v.index, visibleItems, 'bottom')}
+    transitionIn={rowIn}
+    transitionOut={rowOut}
+    {register}
+    {itemProps}
+    {dividerProps}
+    ontoggle={toggleItem}
+  />
 {/snippet}
 
 {#snippet virtualLoader()}
@@ -790,7 +722,42 @@
       {...rest}
     >
       {@render children?.(context)}
-      {@render list({ items, context })}
+      <NeoListRows
+        {items}
+        visible={visibleFlat}
+        {context}
+        sections={sectionsActive}
+        {loading}
+        {select}
+        {highlight}
+        {reverse}
+        flip={flipActive && !isSafari()}
+        {disabled}
+        {readonly}
+        nullable={isNullable}
+        {divider}
+        {rounded}
+        itemRender={customItem}
+        row={customRow}
+        sectionRender={customSection}
+        emptyRender={customEmpty}
+        {animateFn}
+        {animateProps}
+        {inFn}
+        {inProps}
+        {outFn}
+        {outProps}
+        {skipOffscreen}
+        observe={intersection.observe}
+        {isChecked}
+        {filter}
+        {sort}
+        {buttonProps}
+        {dividerProps}
+        {itemProps}
+        {sectionProps}
+        ontoggle={toggleItem}
+      />
       {@render loader(loading || empty)}
     </svelte:element>
   {:else}
@@ -821,8 +788,7 @@
       width: 100%;
       height: 100%;
 
-      &-loader,
-      &-item {
+      &-loader {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -871,7 +837,11 @@
             // keep: structural
             &:hover > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
             // keep: structural
-            &:has(.neo-list-item *:focus-visible) > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)) {
+            &:has(.neo-list-item *:focus-visible) > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
+            // keep: structural
+            &:hover > .neo-virtual-list-contents > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)),
+            // keep: structural
+            &:has(.neo-list-item *:focus-visible) > .neo-virtual-list-contents > .neo-list-item:not(:hover, .neo-checked, :has(*:focus-visible)) {
               opacity: 0.6;
               transition-timing-function: linear;
               transition-duration: 0.6s;
@@ -884,34 +854,9 @@
         gap: var(--neo-gap-xs, 0.625rem);
       }
 
-      &-item {
-        :global(> .neo-list-item-button) {
-          width: 100%;
-        }
-
-        &-select {
-          :global(> .neo-list-base-loader:first-child) {
-            margin-top: 0.25rem;
-          }
-        }
-
-        :global(> .neo-list-item-divider) {
-          color: var(--neo-list-divider-color, var(--neo-text-color));
-          margin-block: 0.5rem;
-        }
-
-        &:hover,
-        &:focus,
-        &:focus-within {
-          :global(> .neo-list-section-title),
-          :global(> .neo-list-item-button .neo-list-item-content){
-            color: var(--neo-text-color-highlight);
-          }
-
-          :global(> .neo-list-item-button .neo-list-item-description),
-          :global(> .neo-list-item-button .neo-list-item-tags){
-            color: var(--neo-text-color-secondary-highlight);
-          }
+      &-item-select {
+        :global(> .neo-list-base-loader:first-child) {
+          margin-top: 0.25rem;
         }
       }
 
