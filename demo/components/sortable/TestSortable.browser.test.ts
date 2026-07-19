@@ -347,6 +347,26 @@ describe('neoSortableProvider — multi-list render', { tags: ['browser'] }, () 
     expect(listAItems).toHaveLength(1);
     expect(listBItems).toHaveLength(3);
   });
+
+  it('drops an item into an empty NeoList column', async () => {
+    render(Harness as never, { props: { multiList: true, multiNeoList: true, emptyList: true } as never });
+    const { source, zone } = await vi.waitFor(() => {
+      const source = document.querySelector<HTMLElement>('[data-id="la-1"]');
+      const zone = document.querySelector<HTMLElement>('[data-testid="drop-zone"][data-list="list-b"]');
+      if (!source || !zone || !source.offsetHeight || !zone.offsetHeight) throw new Error('empty-list drag targets not ready');
+      return { source, zone };
+    });
+    const sourceRect = source.getBoundingClientRect();
+    const zoneRect = zone.getBoundingClientRect();
+    const dx = zoneRect.left + zoneRect.width / 2 - (sourceRect.left + sourceRect.width / 2);
+    const dy = zoneRect.top + zoneRect.height / 2 - (sourceRect.top + sourceRect.height / 2);
+
+    await cdpDragBy(source, { x: dx, y: dy }, { steps: 20, stepDelay: 25, settle: 500 });
+
+    expect(document.querySelectorAll('[data-list="list-a"]')).toHaveLength(1);
+    expect(document.querySelectorAll('[data-list="list-b"]')).toHaveLength(1);
+    expect(document.querySelector('[data-testid="drop-zone"][data-list="list-b"]')).toBeNull();
+  });
 });
 
 // ---------------------------------------------------------------------------

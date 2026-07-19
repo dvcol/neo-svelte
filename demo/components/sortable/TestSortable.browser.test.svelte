@@ -17,6 +17,7 @@
   interface Props {
     axis?: 'x' | 'y';
     disabledId?: string;
+    emptyList?: boolean;
     multiList?: boolean;
     multiNeoList?: boolean;
     neoList?: boolean;
@@ -28,6 +29,7 @@
   const {
     axis = 'y',
     disabledId,
+    emptyList = false,
     multiList = false,
     multiNeoList = false,
     neoList = false,
@@ -51,6 +53,13 @@
       { id: 'lb-1', data: { label: 'B1' } },
       { id: 'lb-2', data: { label: 'B2' } },
     ],
+  });
+
+  let emptyListInitialized = false;
+  $effect.pre(() => {
+    if (emptyListInitialized) return;
+    emptyListInitialized = true;
+    if (emptyList) multiItems = { ...multiItems, 'list-b': [] };
   });
 
   const neoListItems = $derived((items as Item[]).map(({ id, data }) => ({ id, value: id, ...data })) satisfies NeoListItem[]);
@@ -152,6 +161,20 @@
                   data-testid="sortable-list"
                   data-list-id={listId}
                 />
+                <NeoDroppableZone id={listId}>
+                  {#snippet children(zone)}
+                    {#if !list.length}
+                      <div
+                        {@attach zone.attach}
+                        class="drop-zone"
+                        data-testid="drop-zone"
+                        data-list={listId}
+                      >
+                        Drop here
+                      </div>
+                    {/if}
+                  {/snippet}
+                </NeoDroppableZone>
               {:else}
                 <ol class="list" data-testid="sortable-list" data-list-id={listId}>
                   {#each list as item, index (item.id)}

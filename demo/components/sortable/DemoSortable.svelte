@@ -380,7 +380,7 @@
                   in={ctx.isDragging ? emptyTransition : undefined}
                   out={ctx.isDragging ? emptyTransition : undefined}
                 />
-                <NeoDroppableZone {colId}>
+                <NeoDroppableZone id={colId}>
                   {#snippet children(zone)}
                     {#if !colItems.length}
                       <div class="drop-zone" {@attach zone.attach}>Drop here</div>
