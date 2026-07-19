@@ -241,8 +241,9 @@
     <NeoSortableItem id={sortableId(item, index)} {index} data={item} disabled={item.disabled}>
       {#snippet children({ instance })}
         <div {...attachToParent(instance.attach)} class="sortable-row-inner" data-grabbed={instance.isDragging}>
-          <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle} />
-          {@render content()}
+          <NeoHandle placement="left" minSize={0} active={instance.isDragging} {@attach instance.attachHandle}>
+            {@render content()}
+          </NeoHandle>
         </div>
       {/snippet}
     </NeoSortableItem>
@@ -253,8 +254,9 @@
       <NeoSortableItem id={sortableId(item, index)} {index} data={item} disabled={item.disabled}>
         {#snippet children({ instance })}
           <div {...attachToParent(instance.attach)} class="section-sortable-block" data-grabbed={instance.isDragging}>
-            <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle} />
-            {@render content()}
+            <NeoHandle placement="left" minSize={0} active={instance.isDragging} {@attach instance.attachHandle}>
+              {@render content()}
+            </NeoHandle>
           </div>
         {/snippet}
       </NeoSortableItem>
@@ -278,7 +280,7 @@
       <div class="showcase-list" bind:this={flatSortContainer}>
         <NeoSortableProvider bind:items={flatSortItems} axis="y" container={flatSortContainer}>
           {#snippet children(ctx)}
-            <NeoList row={sortableRow} items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem" />
+            <NeoList row={sortableRow} items={(ctx.items as RichSortItem[]).map(i => i.data)} />
           {/snippet}
         </NeoSortableProvider>
       </div>
@@ -299,7 +301,7 @@
       <div class="showcase-list" bind:this={selectSortContainer}>
         <NeoSortableProvider bind:items={selectSortItems} axis="y" container={selectSortContainer}>
           {#snippet children(ctx)}
-            <NeoList row={sortableRow} select nullable bind:selected={selectSortSelected} items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem" />
+            <NeoList row={sortableRow} select nullable bind:selected={selectSortSelected} items={(ctx.items as RichSortItem[]).map(i => i.data)} />
           {/snippet}
         </NeoSortableProvider>
       </div>
@@ -317,10 +319,10 @@
         >Reset</NeoButton>
       </div>
       <p class="showcase-hint">Drag section header to reorder entire blocks.</p>
-      <div class="showcase-list" bind:this={sectionSortContainer}>
+      <div class="showcase-list showcase-list-section" bind:this={sectionSortContainer}>
         <NeoSortableProvider bind:items={sectionSortItems} axis="y" container={sectionSortContainer}>
           {#snippet children(ctx)}
-            <NeoList row={sortableSectionRow} items={(ctx.items as RichSortItem[]).map(i => i.data)} height="18rem">
+            <NeoList row={sortableSectionRow} items={(ctx.items as RichSortItem[]).map(i => i.data)}>
               {#snippet section(listRender, { index, section, context })}
                 {#if section}
                   <div class="section-sortable-content">
@@ -364,8 +366,9 @@
                   <NeoSortableItem id={sortableId(item, index)} {index} group={colId} data={item} disabled={item.disabled}>
                     {#snippet children({ instance })}
                       <div {...attachToParent(instance.attach)} class="sortable-row-inner" data-grabbed={instance.isDragging}>
-                        <NeoHandle placement="left" active={instance.isDragging} {@attach instance.attachHandle} />
-                        {@render content()}
+                        <NeoHandle placement="left" minSize={0} active={instance.isDragging} {@attach instance.attachHandle}>
+                          {@render content()}
+                        </NeoHandle>
                       </div>
                     {/snippet}
                   </NeoSortableItem>
@@ -374,7 +377,6 @@
                 <NeoList
                   {row}
                   items={colItems.map(i => i.data)}
-                  height="18rem"
                   in={ctx.isDragging ? emptyTransition : undefined}
                   out={ctx.isDragging ? emptyTransition : undefined}
                 />
@@ -558,7 +560,6 @@
 
   /* ---- NeoList + Sortable showcase ---- */
   .neo-list-sortable-showcase {
-    width: 100%;
     max-width: 80vw;
     margin: 2rem auto;
 
@@ -573,6 +574,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
+    width: fit-content;
 
     @media (width < 900px) {
       grid-template-columns: 1fr;
@@ -583,7 +585,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    width: fit-content;
     min-width: 0;
+    margin: auto;
   }
 
   .showcase-header {
@@ -611,30 +615,43 @@
   }
 
   .showcase-list {
-    min-height: 18rem;
-    max-height: 18rem;
+    align-self: center;
+    box-sizing: border-box;
+    width: min(100%, 20rem);
+    height: 18rem;
+    min-height: 0;
+    overflow: hidden;
     border: 1px solid var(--neo-border-color);
     border-radius: var(--neo-border-radius);
 
     :global(.neo-list) {
-      max-height: 18rem;
+      min-height: 0;
+      max-height: none;
     }
   }
 
+  .showcase-list-section {
+    height: 28rem;
+  }
+
   .showcase-multi-list {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
-    justify-content: center;
-    min-height: 18rem;
-    max-height: 18rem;
+    align-self: center;
+    box-sizing: border-box;
+    width: max(fit-content, 20rem);
+    height: 28rem;
+    min-height: 0;
     padding: 0.5rem;
+    overflow: hidden;
     border: 1px solid var(--neo-border-color);
     border-radius: var(--neo-border-radius);
 
     @media (width < 900px) {
-      flex-direction: column;
-      max-height: none;
+      grid-template-columns: minmax(0, 1fr);
+      height: auto;
+      overflow: visible;
     }
   }
 
@@ -646,9 +663,17 @@
     gap: 0.25rem;
     align-items: stretch;
     min-width: 0;
+    min-height: 0;
 
     :global(.neo-list) {
-      max-height: 18rem;
+      flex: 1 1 0;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+    }
+
+    @media (width < 900px) {
+      height: 18rem;
     }
   }
 
@@ -663,15 +688,17 @@
     flex-direction: row;
     align-items: center;
     width: 100%;
+    border: 2px var(--neo-border-color) solid;
+    border-radius: 0.5rem;
     transition: opacity 0.2s ease;
+    margin-block: 0.25rem;
 
     &[data-grabbed='true'] {
       opacity: 0.3;
     }
 
     :global(> .neo-handle-group) {
-      flex: 0 0 auto;
-      width: 1.5rem;
+      min-width: 0;
     }
   }
 
@@ -680,15 +707,18 @@
     flex-direction: row;
     align-items: flex-start;
     width: 100%;
+    padding: 0.5rem 0.25rem;
+    border: 2px var(--neo-border-color) solid;
+    border-radius: 0.5rem;
     transition: opacity 0.2s ease;
+    margin-block: 0.25rem;
 
     &[data-grabbed='true'] {
       opacity: 0.3;
     }
 
     :global(> .neo-handle-group) {
-      flex: 0 0 auto;
-      width: 1.5rem;
+      min-width: 0;
     }
   }
 

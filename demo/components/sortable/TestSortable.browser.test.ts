@@ -5,6 +5,7 @@ import { cleanup, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
 
+import DemoSortable from './DemoSortable.svelte';
 import Harness from './TestSortable.browser.test.svelte';
 
 afterEach(() => {
@@ -371,5 +372,47 @@ describe('neoSortableProvider — visual contract', { tags: ['browser', 'visual'
     const stage = document.querySelector<HTMLElement>('[data-testid="visual-stage"]')!;
     await waitForVisualStability(stage);
     await expect.element(page.elementLocator(stage)).toMatchScreenshot(screenshotName('NeoSortableProvider', 'idle-multi-list', 'desktop'));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Demo layout contract
+// ---------------------------------------------------------------------------
+
+describe('demoSortable — NeoList showcase layout', { tags: ['browser'] }, () => {
+  it.each(['desktop', 'mobile'] as const)('contains section and multi-list sizing at %s width', async (viewport) => {
+    await setViewport(viewport);
+    quietForVisual();
+    render(DemoSortable);
+
+    const showcase = await vi.waitFor(() => {
+      const element = document.querySelector<HTMLElement>('.neo-list-sortable-showcase');
+      if (!element || element.querySelectorAll('.showcase-col').length !== 4) throw new Error('showcase not mounted');
+      return element;
+    });
+    await waitForVisualStability(showcase);
+
+    const containers = [
+      showcase,
+      ...showcase.querySelectorAll<HTMLElement>('.showcase-col'),
+      ...showcase.querySelectorAll<HTMLElement>('.showcase-list'),
+      ...showcase.querySelectorAll<HTMLElement>('.showcase-multi-list'),
+      ...showcase.querySelectorAll<HTMLElement>('.showcase-multi-col'),
+    ];
+    for (const container of containers) {
+      expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth + 1);
+      expect(container.scrollHeight).toBeLessThanOrEqual(container.clientHeight + 1);
+    }
+
+    const handleGroup = showcase.querySelector<HTMLElement>('.neo-handle-group')!;
+    const handle = handleGroup.querySelector<HTMLElement>('.neo-handle')!;
+    const content = Array.from(handleGroup.children).find(child => child !== handle) as HTMLElement;
+    const groupRect = handleGroup.getBoundingClientRect();
+    const handleRect = handle.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
+
+    expect(handleRect.height).toBe(groupRect.height);
+    expect(contentRect.left).toBeGreaterThanOrEqual(handleRect.right - 1);
+    expect(contentRect.right).toBeLessThanOrEqual(groupRect.right + 1);
   });
 });
