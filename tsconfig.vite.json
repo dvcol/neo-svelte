@@ -1,5 +1,5 @@
 {
-  "extends": ["@tsconfig/node24/tsconfig.json", "./tsconfig.build.json"],
+  "extends": ["@tsconfig/node26/tsconfig.json", "./tsconfig.build.json"],
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "bundler",
